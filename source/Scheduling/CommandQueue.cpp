@@ -27,23 +27,33 @@ FCommandQueue::~FCommandQueue()
 }
 
 FCommandQueue::FCommandQueue( FThreadPool& iPool )
-    : mPool( iPool )
+    : mQueue( tQueue() )
+    , mPool( iPool )
 {
 }
 
 void
 FCommandQueue::Flush()
 {
+    while( !mQueue.IsEmpty() )
+    {
+        FCommand* cmd = mQueue.Front();
+        mQueue.Pop();
+        mPool.ScheduleJob( cmd );
+    }
 }
 
 void
 FCommandQueue::Finish()
 {
+    Flush();
+    Fence();
 }
 
 void
 FCommandQueue::Fence()
 {
+    mPool.WaitForCompletion();
 }
 
 void

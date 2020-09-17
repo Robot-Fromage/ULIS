@@ -162,7 +162,7 @@ public:
 
 private:
     const FContextualDispatchTable* mContextualDispatchTable;
-    FCommandQueue& mQueue;
+    FCommandQueue& mCommandQueue;
     const FDevice& mDevice;
     const eFormat mFormat;
 };

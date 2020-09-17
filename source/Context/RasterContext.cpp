@@ -67,7 +67,7 @@ FRasterContext::FRasterContext(
     , eFormat iFormat
 )
     : mContextualDispatchTable( new  FContextualDispatchTable( iDevice, iFormat ) )
-    , mQueue( iQueue )
+    , mCommandQueue( iQueue )
     , mDevice( iDevice )
     , mFormat( iFormat )
 {
@@ -78,16 +78,19 @@ FRasterContext::FRasterContext(
 void
 FRasterContext::Flush()
 {
+    mCommandQueue.Flush();
 }
 
 void
 FRasterContext::Finish()
 {
+    mCommandQueue.Finish();
 }
 
 void
 FRasterContext::Fence()
 {
+    mCommandQueue.Fence();
 }
 
 /////////////////////////////////////////////////////
@@ -128,7 +131,7 @@ FRasterContext::Blend(
     ULIS_ASSERT( sched, "Error: No dispatch found." );
 
     // Bake and push command
-    mQueue.Push(
+    mCommandQueue.Push(
         new FCommand(
             new FBlendArgs( {
                   iSource
