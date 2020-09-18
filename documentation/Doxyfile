@@ -1259,8 +1259,8 @@ HTML_EXTRA_STYLESHEET  = "./documentation/style.css"
 HTML_EXTRA_FILES       =    "./documentation/image/doc.png"             \
                             "./documentation/image/folderclosed.png"    \
                             "./documentation/image/folderopen.png"      \
-                            "./meta/legal/CLUF_ULIS.pdf"                \
-                            "./meta/legal/EULA_ULIS.pdf"
+                            "./meta/legal/ULIS_CLUF.txt"                \
+                            "./meta/legal/ULIS_EULA.txt"
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to

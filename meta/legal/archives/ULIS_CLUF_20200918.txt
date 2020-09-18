@@ -1,0 +1,233 @@
+﻿CONTRAT DE LICENCE D’UTILISATION FINALE
+Utility Library for Imaging System (ULIS)
+Mise à jour : 18 septembre 2020
+
+Veuillez lire attentivement le présent contrat de licence d'utilisateur final (ci-après « CLUF » ou « Contrat »). Il s'agit d'un document juridique qui explique vos droits et obligations liés à votre utilisation d’Utility Library for Imaging System (ci-après « ULIS ») et du contenu associé. En téléchargeant ou en utilisant cette bibliothèque ou tout autre contenu connexe, vous acceptez d'être lié par les termes de ce CLUF. Si vous n'acceptez pas ou ne pouvez pas accepter les termes de ce CLUF, veuillez ne pas télécharger ou utiliser ULIS ou tout autre contenu connexe.
+Ce CLUF peut être périodiquement mis à jour ; la version la plus récente est disponible à l’adresse suivante https://github.com/Praxinos/ULIS. En continuant à utiliser ULIS après la publication mise-à-jour dudit Contrat, vous en acceptez les conditions.
+
+    ARTICLE 1. CHAMP D’APPLICATION
+        1.1. ULIS est une bibliothèque virtuelle regroupant un ensemble d’algorithmes permettant la gestion des pixels dans un contexte de création graphique (ci-après le « Produit » ou « ULIS »). Les ensemble d’algorithmes présents dans ULIS sont exprimés en code source (Ci-après les « Codes Sources »).
+        1.2. Avant d’accéder à ULIS, sous quel que support que ce soit et sur quelle que plateforme marchande que ce soit et d’en utiliser les Codes Sources associés, vous devez lire attentivement les conditions du présent CLUF, conclu entre la société PRAXINOS, société coopérative à responsabilité limitée, sise 7 Avenue de Blida à METZ (57000) France, immatriculée au Registre du Commerce et des Sociétés de METZ sous le numéro 843 876 764, (ci-après « PRAXINOS ») et Vous, personne physique, agissant dans le cadre de votre activité professionnelle ou non, en votre nom propre ou celui de votre employeur ou celui de tout autre entité légale (ci-après l’« Utilisateur » ou « Vous »).
+        1.3. Ce CLUF est un contrat de licence portant sur les Codes Sources et aucun cas un contrat de vente du Produit et/ou des Codes Sources.
+        1.4. En accédant à ULIS, vous déclarez et garantissez : 
+    • Être une personne physique âgée d'au moins dix-huit (18) ans, ou de l’âge de la majorité légale prévue par la loi du pays de votre lieu de résidence, ou être officiellement déclaré « mineur émancipé » dans le pays de votre lieu de résidence ;
+    • Être une personne disposant de la pleine capacité juridique à conclure le présent CLUF et disposant du pouvoir de vous engager ou d’engager votre employeur ou toute autre entité légale au bénéfice de laquelle vous agissez ; 	
+    • Avoir lu et accepté sans réserve le présent CLUF ;
+    • Exprimer votre consentement à l’utilisation du Produit conformément aux stipulations du présent CLUF ;
+    • Résider dans le pays indiqué dans votre adresse de facturation ;
+
+        1.5. SI VOUS ÊTES EN DÉSACCORD AVEC LES TERMES DU PRESENT CLUF, VEUILLEZ NE PAS ACCEDER A ULIS, NI A SES CODES SOURCES.
+Tous les droits qui vous sont accordés en vertu du présent CLUF sont sous réserve de votre respect des conditions dudit CLUF. 
+        1.6. Le présent CLUF complète les conditions générales de la plateforme « GitHub » sur laquelle ULIS est officiellement proposé à l’adresse suivante : https://github.com/Praxinos/ULIS . En accédant à cette plateforme exploitée par GitHub Inc., vous déclarez et garantissez être soumis aux conditions générales d’utilisation accessibles ici : https://docs.github.com/en/github/site-policy/github-terms-of-service ou tout autre document qui pourrait s’y substituer à l’avenir.
+
+    ARTICLE 2. OBJET 
+Le présent CLUF a pour objet de définir les conditions dans lesquelles PRAXINOS vous concède le droit non exclusif d’exploiter les Codes Sources associés à ULIS dans le cadre soit d’une Licence Standard, soit d’une Licence Étendue telles que déterminées ci-après.
+Licence Standard
+    • Gratuit 
+    • Pour un accès illimité
+    • Reproduction numérique sur tout média
+    • But non-commercial
+    • En dehors de toute Activité professionnelle
+    • Pour toute la durée des droits de propriété intellectuelle portant sur les Codes Sources
+
+Licence Étendue
+   Payant (abonnement mensuel ou annuel)
+   Pour un nombre d’accès autorisé limité
+   Reproduction numérique et physique sur tout média
+   But commercial et non-commercial
+   Dans le cadre d’une Activité professionnelle
+   Pendant toute la durée de l’abonnement
+
+    ARTICLE 3. DEFINITIONS
+Les termes désignés ci-après sont définis comme suit dans le présent CLUF : 
+Abonnement : désigne la souscription par l’Utilisateur aux Services pour une certaine durée et un nombre d’accès autorisé déterminé. 
+Services : désigne l’accès aux Codes Sources présents sur ULIS pendant la durée de l’Abonnement ainsi que la mise à disposition d’un service d’assistance technique.
+But commercial : désigne notamment toute utilisation directe ou indirecte des Codes Sources : 
+    • par une personne ou entité légale ayant pour objet de réaliser des bénéfices ;
+    • de façon à les intégrer dans un produit final destinés à la vente et/ou à la distribution et/ou à la promotion ;
+    • donnant lieu à une contrepartie, financière ou autre, sous quelque forme, à quelque titre et pour quelque motif que ce soit et quel qu’en soit le bénéficiaire ;
+    • à des fins de promotion, ou en lien avec la promotion, et quel qu’en soit le bénéficiaire ;
+    • par une entité dans le cadre, ou en relation avec, des activités générant des recettes ; 
+    • dans le cadre d’échange en ligne ou autrement contre une autre œuvre protégée par un droit de propriété intellectuelle, mais seulement lorsque sont générées des recettes de publicité ou de parrainage, directes ou indirectes, ou qu’intervient un paiement de quelque nature que ce soit en relation avec cet échange ; 
+Activité professionnelle : s’entend comme toute activité commerciale, industrielle, artisanale, libérale, agricole ainsi que toute activité exercée par une organisation sans but lucratif (fondation, association,…) agissant dans l’intérêt commun d’un public de professionnels.
+Licence Standard : désigne la licence sur les Codes Sources présents sur ULIS qui vous est concédée par PRAXINOS, à titre gratuit, dans le respect des conditions et sous les restrictions prévues à l’article 4 du présent CLUF.
+Licence Étendue : désigne la licence sur les Codes Sources présente sur ULIS qui vous est concédée par PRAXINOS, à titre onéreux, dans le respect des conditions et sous les restrictions prévues à l’article 5 du présent CLUF.
+Droit d’utilisation : désigne le droit de copier, de reproduire, de modifier, d’éditer, de synchroniser, de produire, d’afficher, de diffuser, de publier ou de faire tout autre usage d’un ou plusieurs Codes Sources.
+Parties : désignent collectivement PRAXINOS et l’Utilisateur ou pris individuellement l’un d’entre eux.
+
+    ARTICLE 4. CONDITIONS DE LA LICENCE STANDARD 
+        4.1. Aux termes de la Licence Standard, PRAXINOS vous concède, à titre gratuit, un Droit d’utilisation non-exclusif, personnel, permanent, mondial, non transférable, et incessible des Codes Sources présents sur ULIS : 
+    • En tant que reproduction numérique sur tout média ;
+    • Pour tout usage en dehors de toute Activité professionnelle ;
+    • Dans un But non-commercial ;
+        4.2. La présente Licence Standard vous est concédée pour toute la durée des droits de propriété intellectuelle attachés aux Codes Sources et reconnue par la législation française et les conventions internationales relatives à la propriété intellectuelle. 
+        4.3. Tout acte d’exploitation visant d’autres finalités est expressément exclu du périmètre de la Licence Standard et nécessite, le cas échéant, une Licence Étendue ou à défaut, l’accord écrit et préalable de PRAXINOS.
+        4.4. En vertu du caractère non-exclusif de la concession, vous comprenez que vous ne disposez d’aucun droit exclusif portant sur les Codes Sources, qui peuvent par conséquent être concédés à d’autres utilisateurs. Si vous souhaitez bénéficier d’une exclusivité sur les Codes Sources, veuillez prendre contact avec PRAXINOS.
+
+
+    ARTICLE 5. CONDITIONS DE LA LICENCE ETENDUE 
+        5.1. Aux termes de la Licence Étendue, PRAXINOS vous donne le droit d’accéder aux Services après souscription à un Abonnement mensuel ou annuel payant. 	
+        5.2. Souscription à la Licence Étendue et durée de l’Abonnement 
+La Licence Étendue n’est proposée que par la souscription d’un Abonnement directement auprès de PRAXINOS. 
+En souscrivant soit directement auprès de PRAXINOS, l’Utilisateur accepte les conditions du présent CLUF, dans la mesure où celles-ci lui sont présentées avant toute souscription à un Abonnement. A ce titre, l’Utilisateur reconnaît en avoir pris connaissance et les avoir expressément acceptées sans réserve avant la validation de sa souscription à l’Abonnement. 
+L’acceptation du présent CLUF vaut acceptation du prix explicité après réception d’une proposition commerciale de la part de PRAXINOS. Pour en savoir plus sur la politique tarifaire, veuillez vérifier les prix sur cette page internet : https://praxinos.coop/ulis.php 
+La date d’entrée en vigueur de l’Abonnement est celle figurant sur les factures d’Abonnement communiquées à l’Utilisateur et correspond au jour de la validation de la souscription de l’Abonnement par PRAXINOS.
+Au moment de la souscription, l’Utilisateur a le choix entre un Abonnement mensuel ou annuel. 
+    • Abonnement mensuel
+L’Abonnement est d’une durée d’un (1) mois à compter de la souscription, tacitement reconductible par périodes successives d’un (1) mois. Toutefois, l’Utilisateur a la possibilité de résilier l’Abonnement mensuel à tout moment, et ce, jusqu’à dix (10) jours calendaires avant la date d’expiration de la période d’Abonnement en cours, par lettre recommandée avec accusé de réception adressée à PRAXINOS (aux coordonnées postales prévues à l’article 18) ou par courrier électronique à l’adresse prévue au même article. 
+Toute demande de résiliation de l’Abonnement sera confirmée par e-mail, à l’adresse communiquée par l’Utilisateur lors de sa souscription. La résiliation de l’Abonnement mensuel ne prendra effet qu’au dernier jour de l’Abonnement. 
+    • Abonnement annuel 
+L’Abonnement est d’une durée de douze (12) mois à compter de la souscription, tacitement reconductible par périodes successives de même durée (à savoir, 12 mois). Toutefois, l’Utilisateur a la possibilité de résilier l’Abonnement annuel à tout moment, et ce, jusqu’à deux (2) mois calendaires avant la date d’expiration de la période d’Abonnement en cours, par lettre recommandée avec accusé de réception adressée à PRAXINOS (aux coordonnées postales prévues à l’article 18) ou par courrier électronique à l’adresse prévue au même article.
+Toute demande de résiliation de l’Abonnement sera confirmée par e-mail, à l’adresse communiquée par l’Utilisateur lors de sa souscription. La résiliation de l’Abonnement annuel ne prendra effet qu’à compter de la date d’anniversaire de l’Abonnement. 
+        5.3. Description de la Licence Étendue	
+La Licence Étendue donne l’accès aux Services qui comprennent : 
+    • Le Droit d’utilisation des Codes Sources présents sur ULIS : 
+        ◦ De toutes les façons autorisées en vertu de la Licence Standard ainsi que les reproductions physiques sur tout média ; 
+        ◦ Dans le cadre d’une Activité professionnelle ;
+        ◦ Dans un But commercial ;
+        ◦ Pour un nombre d’accès limité à un poste par licence
+    • Un service d’assistance technique par courrier électronique et/ou via un serveur dédié sur la plateforme « Discord » avec une garantie de réponse en quarante-huit (48) heures, du lundi neuf (9) heures au vendredi dix-huit (18) heures, sauf jours fériés en France. Ce service d’assistance technique est limité à une personne référente par licence. Le nom de la personne référente sera alors obligatoirement mentionné sur la facture. 
+Tout acte d’exploitation non compris dans les Services est expressément exclu du périmètre de la Licence Étendue et nécessite l’accord préalable et écrit de PRAXINOS. 
+L’Utilisateur s’engage à mettre tout en œuvre pour que les personnes autorisées ayant accès aux Codes Sources conservent secrets les identifiants et à ce qu’ils ne soient pas divulgués sous quelque forme que ce soit à d’autres personnes non autorisées. 
+
+Tout usage de l’accès de l’Utilisateur par une personne non autorisée engage la responsabilité de l’Utilisateur.
+
+L’Utilisateur est entièrement responsable de l’utilisation et de la conservation des identifiants. L’Utilisateur assume la responsabilité de la sécurité des postes individuels d’accès aux Services. Le prêt, le partage, le transfert ou la vente d’identifiants sont interdits et ne seront pas opposables à PRAXINOS.
+
+        5.4. Conditions financières
+    • Tarifs et révision
+Le prix des Abonnements est indiqué en euros, hors taxes. Le montant des taxes est indiqué au moment de la souscription à un Abonnement, et tient compte de la TVA applicable au jour de la souscription. 
+Le prix des Abonnements pourra être révisé et donnera lieu à une notification préalable d’information adressée à l’Utilisateur dans un délai raisonnable avant l’entrée en vigueur des nouveaux tarifs. A défaut de réponse de la part de l’Utilisateur avant l’entrée en vigueur des nouveaux tarifs, l’Utilisateur sera réputé avoir les avoir acceptés à compter de la reconduction de son Abonnement. En cas de désaccord avec les nouveaux tarifs avant leur entrée en vigueur, l’Utilisateur aura la possibilité de résilier l’Abonnement dans les délais et conditions prévues à l’article 5.2. 
+    • Modalités de règlement
+Les factures sont adressées exclusivement sous format électronique à l’adresse communiquée par l’Utilisateur lors de la souscription à l’Abonnement.
+Concernant l’Abonnement mensuel, toute facture est payable par l’Utilisateur dans son intégralité au jour de la souscription et à une fréquence mensuelle.
+Concernant l’Abonnement annuel, toute facture est payable dans son intégralité dans les trente (30) jours suivant son émission par PRAXINOS.  
+    • Défaut de paiement
+En cas de défaut de paiement d’une facture à l’échéance convenue, et sauf dispositions plus favorables applicables, l’Utilisateur se verra appliquer, de plein droit, sans qu’un rappel soit nécessaire : 
+    • des pénalités de retard calculées selon le taux d’intérêt appliqué par la Banque Centrale Européenne à son opération de refinancement la plus récente, majoré de dix (10) points de pourcentage, calculé par mensualité ;
+    • une indemnité forfaitaire pour frais de recouvrement d’un montant de quarante (40) euros (par facture en défaut de paiement) ou en cas dépassement de ce montant, des frais à hauteur des sommes engagées en vue de recouvrer la facture, et ce, sur présentation des justificatifs
+A défaut de tout paiement d’une facture à son échéance, PRAXINOS pourra de plein droit résoudre le présent CLUF, trente (30) jours après une mise en demeure restée sans effet adressée par lettre recommandée avec accusé de réception ou l’équivalent reconnu dans le pays de résidence de l’Utilisateur, et ce, sans préjudice de tous dommages-intérêts susceptibles d'être demandés.
+
+En outre, en cas de non-respect des conditions de paiement figurant ci-dessus, PRAXINOS se réserve le droit de suspendre en tout ou partie l’accès aux Services. 
+
+        5.5. Remboursement
+A moins que la loi l’exige, PRAXINOS n’est en aucune cas tenue d’effectuer des remboursements. Tous les frais payables au titre de l’Abonnement sont non remboursables, même si votre Abonnement prend fin avant son expiration. Vous autorisez PRAXINOS à facturer l’intégralité des frais de l’Abonnement pour la période convenue au moment de la souscription. 
+Toutefois, si en vertu des lois applicables, vous êtes en droit de recevoir un remboursement pour une partie ou l’intégralité des montants que vous avez déboursés au titre de l’Abonnement, ce remboursement pourra être effectué avec le mode de paiement que vous avez initialement utilisé pour effectuer votre souscription. Si vous résidez dans l’Union européenne, agissez à des fins non professionnelles et résiliez votre Abonnement dans les quatorze (14) jours suivant le paiement versé à PRAXINOS, et à condition que vous n’ayez pas encore téléchargé les Codes Sources, PRAXINOS vous remboursera l’intégralité du montant que vous avez versé en rapport avec ledit Abonnement résilié.	
+    ARTICLE 6. RESTRICTIONS GENERALES
+De manière générale, les droits concédés par PRAXINOS en vertu d’une Licence Standard ou d’une Licence Étendue ne vous permettent strictement pas : 
+    • D’utiliser les Codes Sources à des fins diffamatoires ou de quelle qu’autre manière illégale que ce soit ;
+    • D’utiliser les Codes Sources de façon permettant à d'autres de télécharger, extraire ou redistribuer lesdits Codes Sources en tant que fichier autonome (c'est-à-dire uniquement les Codes Sources eux-mêmes, séparés du projet ou de l'utilisation finale) ;
+    • De déclarer que vous êtes le créateur original d’une œuvre composée largement de Codes Sources sous licence. Ainsi, vous ne pouvez pas créer d'œuvres basées uniquement sur des Codes Sources sous licence et déclarer que vous en êtes l'auteur ;
+    • D’utiliser les Codes Sources (en tout ou en partie) et/ou d’enregistrer et/ou de tenter d’enregistrer les Codes Sources comme un élément innovant  d’un procédé sous-jacent brevetable et/ou comme un élément innovant pouvant seul faire l’objet d’une appropriation par un titre de brevet (dans quelque pays que ce soit) . De plus, vous n’avez pas le droit de déposer (dans quelque juridiction que ce soit) les Codes Sources (en tout ou en partie) auprès d’un organisme habilité à recevoir le dépôt de codes sources (Agence pour la Protection des Programmes (APP) en France) ;
+    • D’utiliser les Codes Sources (y compris les informations de légende, les mots-clés ou autres métadonnées associées auxdits Codes Sources) à des fins d’apprentissage machine et/ou d’intelligence artificielle, ou pour toute technologie conçue ou destinée à l’identification des personnes physiques, sauf autorisation expresse de PRAXINOS ;
+    • D’utiliser les informations de légende, les mots-clés, le texte d’accompagnement ou d’autres métadonnées associées aux Codes Sources séparément et indépendamment desdits Codes Sources, ni permettre à des tiers d’accéder à ou d’utiliser ces informations associées aux Codes Sources, sauf autorisation expresse de PRAXINOS ;
+    ARTICLE 7. PERSONNES AUTORISEES
+        7.1. Par principe, les droits qui vous sont concédés au titre d’une Licence Standard ou d’une Licence Etendue sont incessibles et ne peuvent, par conséquent, pas faire l’objet d’une sous-licence. Ces droits ne peuvent donc pas être cédés, ni être octroyés en sous-licence à des tiers. 
+        7.2. Toutefois, dans les cas où vous agissez pour le compte de votre employeur ou d’une entité légale (personne morale), ce dernier / cette dernière pourra utiliser les Codes Sources sous licence. Dans ce cas, vous déclarez et garantissez détenir la capacité de lier votre employeur / l’entité légale aux termes du présent CLUF. A défaut, votre employeur / l’entité légale ne saurait pouvoir utiliser lesdits Codes Sources.
+Les droits ne peuvent être concédés qu'à vous ou à votre employeur (ou l’entité légale), mais non les deux, selon celui qui est désigné comme « titulaire de licence » au moment de la souscription. 
+Par ailleurs, vous pouvez autoriser des sous-traitants ou distributeurs à utiliser les Codes Sources dans tout processus de production ou distribution lié à votre projet final. Toutefois, ces sous-traitants s’engagent à respecter les termes du présent CLUF. A ce titre, vous vous portez fort de la bonne exécution du CLUF par vos sous-traitants autorisés et demeurerez entièrement responsable à l’égard de PRAXINOS en cas de non-respect. 
+        7.3. En ce qui concerne la Licence Etendue – Conformément à l’article 5.3. du présent CLUF, seul un nombre déterminé de personnes autorisées pourra utiliser les Codes Sources. 
+Une augmentation du nombre de personnes autorisées pourra être demandée à PRAXINOS par tout moyen écrit et donnerait lieu à une facturation complémentaire et à une modification du présent CLUF par voie d’avenant. 
+    ARTICLE 8. PROPRIETE – ATTRIBUTION
+        8.1. Les Codes Sources concédés sous Licence Standard ou Licence Etendue sont la propriété de PRAXINOS et de ses partenaires (développeurs). A ce titre, tous les droits non expressément concédés par le présent CLUF sont conservés par PRAXINOS et ses partenaires.
+        8.2. Dans les cas d’utilisation de Codes Sources en vertu d’une Licence Standard, vous êtes tenus d’inclure un crédit au profit de PRAXINOS dans une taille raisonnable et à un emplacement raisonnablement visible. Dans les cas d’utilisation des Codes Sources en vertu d’une Licence Etendue, vous n’êtes pas tenus d’inclure un crédit au profit de PRAXINOS. 
+        8.3. Vous êtes autorisés à utiliser le nom « PRAXINOS » aux seules fins d’attribution dans les conditions prévues ci-dessus. Par conséquent, vous ne pouvez en aucun cas utiliser les signes distinctifs appartenant à PRAXINOS (noms, marques, logos…) sans son autorisation écrite préalable.
+    ARTICLE 9. LOGICIELS LIBRES OU « OPEN SOURCE »
+Certains Codes Sources peuvent, en tout ou partie, faire partie de licences dites « libres » ou « Open Source » (« Codes Sources Libres »). Ces éléments « libres » s’entendent comme  des éléments distribués avec l’intégralité de leurs programmes-sources, afin que l’ensemble des utilisateurs qui l’emploient puissent l’enrichir et le redistribuer à leur tour. 
+A ce titre, cela signifie que les propriétaires desdits programmes libres et des Codes Sources Libres ont choisi de concéder aux utilisateurs des droits tels que le droit de copier, de modifier et de redistribuer  le Code Source Libre. L’étendue des droits concédés aux utilisateurs est déterminée dans le cadre de licence-type plus ou moins permissives.  NB : Les licences dites « libres » ne sont pas nécessairement synonymes de gratuité.
+Des exemples de licences-type dites « libres » ou « Open Source » peuvent être consultés ci-après :  
+    • La Licence MIT : https://opensource.org/licenses/MIT 
+    • La Licence FTL :https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT 
+    • La Licence Apache 2.0 : https://www.apache.org/licenses/LICENSE-2.0  
+Les Codes Sources Libres appartiennent donc à des tiers et ils ne sont pas régis par les conditions du présent CLUF, mais par les conditions des licences-types qui leur sont associées. Il vous appartient ainsi de consulter lesdites licences-type pour en connaître le contenu et l’étendue des droits qui vous sont conférés sur les Codes Sources Libres.
+Aucune clause du présent CLUF ne limite vos droits ou ne vous en accorde qui remplacent les conditions des licences-types associées aux Codes Sources Libres.
+
+    ARTICLE 10. RESILIATION 
+        10.1. Résiliation de la Licence Standard
+            10.1.1. Par Vous
+La présente Licence Standard peut être résiliée par Vous à tout moment et ce : 
+    (i) En supprimant et détruisant tous les Codes Sources téléchargés par Vous-même et ceux en votre possession ainsi que tout matériel associé ;
+    (ii) En cessant l’utilisation des Codes Sources à toute fins ;
+            10.1.2. Par PRAXINOS
+PRAXINOS se réserve le droit de résilier de plein droit la présente Licence Standard et ce, du seul fait de l’inexécution des dispositions suivantes :  articles 1.3 ; 4 ; 6 ; 7 ; 8
+        10.2. Résiliation de la Licence Etendue
+            10.2.1. Terme de l’Abonnement 
+La présente Licence Etendue est par principe conclue pour la durée initiale de l’Abonnement souscrit, puis est tacitement reconduite pour des durées équivalentes. L’Utilisateur est en droit de résilier l’Abonnement conformément aux dispositions de l’article 5.2.
+            10.2.2. Inexécution des engagements contractuels 
+Chacune des parties se réserve le droit de résilier la présente Licence Etendue en cas de manquements contractuels moyennant l’envoi d’une mise en demeure de s’exécuter par lettre recommandée avec accusé de réception ou son équivalent existant dans le pays de résidence de l’Utilisateur, restée infructueuse pendant une durée de trente (30) jours à compter de sa réception.
+La mise en demeure fait référence au présent article pour produire tous ses effets. 
+Les engagements contractuels dont l’inexécution entraînera la résiliation de la Licence Etendue en vertu de la présente clause sont les suivants : 
+Engagements de PRAXINOS
+Articles 5.5 ; 11
+
+Engagements de l’Utilisateur
+Articles 1.3 ; 5.3 ; 5.4 ; 6 ; 7 ; 8
+
+Dans tous les cas, la partie lésée pourra demander à la partie défaillance des dommages et intérêts en réparation des préjudices subis et causés par l’inexécution des engagements contractuels.
+
+        10.3. Conséquences de la résiliation 
+A compter de la résiliation du présent CLUF, vous devez immédiatement (i) cesser d’utiliser les Codes Sources et les projets contenant les Codes Sources à quelque fin que ce soit ; (ii) détruire ou supprimer toutes les copies et archives des Codes Sources et de tout projet contenant les Codes Sources ou les documents connexes ; et (iii) si vous y êtes invité, confirmer par écrit à PRAXINOS que vous avez respecté ces exigences.
+
+    ARTICLE 11. GARANTIES
+        11.1. PRAXINOS garantit (i) être titulaire des droits de propriété intellectuelle (ii) lui permettant de conclure le présent CLUF et (iii) que celui-ci n'est pas susceptible de porter atteinte aux droits de tiers. (iv) Il garantit de même que les Codes Sources sont entièrement originaux et ne sont pas constitutifs en tout ou en partie ni de contrefaçon, ni de concurrence déloyale. 
+        11.2. A ce titre, PRAXINOS sera tenu de vous dédommager de l'intégralité des conséquences financières de toute action en contrefaçon ou autre qui serait dirigée à votre encontre à raison de l'utilisation des Codes Sources. Par conséquent, si tout ou partie des Codes Sources est reconnu constituer une contrefaçon ou une autre violation de droit de propriété intellectuelle, PRAXINOS devra, au choix de l'Utilisateur, soit lui procurer d’autres Code Sources ayant les mêmes fonctions, dans des délais compatibles avec l'activité de l'Utilisateur, soit obtenir à ses frais le droit pour l'Utilisateur de continuer à utiliser lesdits Code Sources, ou bien rembourser l'Utilisateur de tout ou partie du prix perçu au titre de l’Abonnement, nonobstant le droit de l'Utilisateur de demander l'indemnisation de son préjudice.
+        11.3. De son côté, l'Utilisateur s'engage à signaler immédiatement à PRAXINOS toute contrefaçon des Codes Sources dont il aurait connaissance, PRAXINOS étant alors libre de prendre les mesures qu'elle jugera appropriées.
+
+    ARTICLE 12. RESPONSABILITE
+        12.1. PRAXINOS est soumis à une obligation de moyens. Il garantit la conformité des Codes Sources aux spécifications décrites dans sa documentation. A ce titre, l’Utilisateur assume toutes les responsabilités, autres que celle de conformité des Codes Sources aux spécifications, et notamment celles qui concernent :
+    • l’adéquation des Codes Sources aux besoins de l’Utilisateur,
+    • l’exploitation des Codes Sources,
+    • la qualification et la compétence de son personnel aux fins d’utilisation et d’exploitation des Codes Sources.
+        12.2. L’Utilisateur est en outre responsable de la protection des données enregistrées et de la réparation des bases de données, des résultats obtenus, de la conformité de l’utilisation des Codes Sources à la législation applicable. Il appartient à l’Utilisateur de développer les procédures d’exploitation et de mettre en place les points de contrôle et mécanismes de sécurité appropriés à la sauvegarde et à la remise en état des données en cas d’anomalies dans le déroulement des programmes.
+        12.3. L’Utilisateur assume seul les éventuels dysfonctionnements et dommages dus à une modification des Codes Sources, même minime, effectuée avec ou sans l’autorisation de PRAXINOS. L’Utilisateur reconnaît expressément avoir reçu de PRAXINOS toutes les informations nécessaires lui permettant d’apprécier l’adéquation des Codes Sources à ses besoins et de prendre toutes les précautions utiles pour leur mise en œuvre et leur exploitation. PRAXINOS ne sera en aucun cas tenu de réparer d’éventuels dommages directs ou indirects, même s’il a été informé de tels dommages. L’Utilisateur sera seul responsable de l’utilisation des Codes Sources.
+        12.4. Dans le cadre de la Licence Standard, il est précisé que les Codes Sources sont fournis « en l’état », sans aucune garantie, dans les mesures permises par le droit applicable.
+        12.5. Dans le cadre la Licence Etendue, en cas de condamnation de PRAXINOS, il est toutefois convenu que sa responsabilité sera limitée au Montant annuel de l’Abonnement souscrit.
+        12.6. Aucune clause du présent CLUF, et en particulier cette clause n'a pour but d'exclure des responsabilités qui ne peuvent être exclues ou limitées en vertu de la loi applicable.
+
+    ARTICLE 13. CONFIDENTIALITE
+        13.1. Les « Informations confidentielles » renvoient aux Codes Sources et à toute autre information, documentation divulguée par PRAXINOS et considérée comme confidentielle au moment de sa divulgation, que cette dernière se fasse par voie écrite ou orale, à l'exception des informations pour lesquelles Vous pouvez attester :
+(a) qu'elles étaient déjà légitimement connues de Vous sans limitation quant à leur divulgation ; 
+(b) qu'elles sont ou deviennent, sans action ni manquement de votre part, connues d'une manière générale du secteur concerné ou du domaine public ; 
+(c) qu'elles vous ont été communiquées par un tiers dans son plein droit et sans restriction quant à leur divulgation ; ou 
+(d) qu'elles sont générées par Vous sans rapport avec les Informations confidentielles. 
+        13.2. Vous devez déployer tous les efforts nécessaires pour préserver et protéger en permanence la confidentialité des Informations confidentielles, à la fois pendant la durée du présent CLUF et au minimum trois (3) ans après sa résiliation ou sa cessation, quelle qu’en soit la cause. 
+En outre, tout code source que Vous avez reçu en application du présent CLUF doit être gardé confidentiel à perpétuité. 
+        13.3. Vous n'êtes pas autorisé à divulguer, diffuser, publier ou communiquer les Informations confidentielles à des tiers, sociétés, entreprises ou toute autre partie sans l'autorisation écrite préalable de PRAXINOS. Vous ne pouvez utiliser les Informations confidentielles que dans le cadre des activités autorisées par le présent CLUF. 
+        13.4. Si vous découvrez que les Informations confidentielles ont été utilisées ou divulguées de manière non autorisée ou que ce CLUF a été violé, vous devez en informer immédiatement PRAXINOS par écrit, et devez coopérer avec PRAXINOS de toute manière possible et raisonnable afin de reprendre possession desdites Informations confidentielles et de prévenir toute autre utilisation non autorisée. 
+        13.5. Dans les cas où vous seriez légalement tenu de divulguer les Informations confidentielles, vous devrez au préalable (i) en informer immédiatement PRAXINOS de sorte qu’elle ait la possibilité de contester la divulgation, (ii) faire valoir le caractère privilégié et confidentiel des Informations confidentielles et (iii) coopérer pleinement avec PRAXINOS afin d'éviter une telle divulgation et/ou d'obtenir une ordonnance conservatoire permettant de restreindre l'étendue des informations à divulguer et/ou leur utilisation. 
+Si cette protection n'est pas possible, vous ne devez divulguer les Informations confidentielles que dans les limites requises par la loi en vigueur.
+
+    ARTICLE 14. CIRCULATION
+        14.1. Nonobstant les dispositions prévues à l’article 7, le présent CLUF étant conclu intuitu personae, les Parties s'interdisent, d'une part de transférer, pour quelque cause et sous quelque forme que ce soit, à titre onéreux ou gratuit, le présent CLUF ou l'un quelconque de leurs droits et obligations à un tiers et, d'autre part de confier à un tiers, l'exécution de tout ou partie de leurs obligations contractuelles.
+        14.2. Cependant, ces interdictions ne pourront pas être opposées aux obligations légales d'ordre public, ni à l'autorisation écrite et préalable des Parties.
+    ARTICLE 15. DIVISIBILITE – MODIFICATION - INTEGRALITE
+        15.1. La nullité ou l'inapplicabilité de l'une quelconque des stipulations du présent CLUF n'emportera pas nullité des autres stipulations qui conserveront toute leur force et leur portée.
+Cependant, les Parties pourront d'un commun accord, convenir de remplacer la ou les stipulations invalidées.
+        15.2. Le présent CLUF ne pourra être modifié que par voie d'avenant signé par toutes les Parties au contrat.
+        15.3. Il représente l'intégralité des engagements existant entre les Parties. Il remplace et annule tout engagement oral ou écrit antérieur relatif à l'objet du présent CLUF.
+    ARTICLE 16. TOLERANCES
+Il est formellement convenu que toute tolérance ou renonciation d'une des Parties, dans l'application de tout ou partie des engagements prévus au présent CLUF, quelles qu'en aient pu être la fréquence et la durée, ne saurait valoir modification du présent CLUF, ni générer un droit quelconque.
+    ARTICLE 17. MESURES D’INJONCTION
+        17.1. Vous reconnaissez que les Codes Sources consistent en des secrets de fabrique de grande valeur et des informations appartenant à PRAXINOS, et que toute violation effective ou potentielle de l’article 6 (Restrictions Générales) du présent CLUF constituera un dommage immédiat et irréparable à l'encontre de PRAXINOS pour lequel des dommages et intérêts constitueraient une réparation insuffisante. 
+        17.2. A ce titre, Vous reconnaissez que PRAXINOS a le droit de demander une mesure d’injonction (ou une mesure juridique de nature équivalente) dans toute juridiction, sans Vous aviser ou sans possibilité de réparation. 
+    ARTICLE 18. ELECTION DE DOMICILE – NOTIFICATION 
+        18.1. Sauf dispositions contraires prévues dans le présent CLUF, pour l'exécution du présent et pour toute procédure éventuelle qui pourrait en être la suite ou la conséquence, les Parties élisent domicile aux adresses suivantes : 
+    • Pour PRAXINOS : 7 Avenue de Blida à METZ (57000) France
+    • Pour l’Utilisateur : Adresse postale utilisée au moment de la souscription à un Abonnement (Adresse de facturation) ou à défaut, toute autre adresse postale communiquée sur demande de PRAXINOS.
+Tout changement de domicile ne sera opposable qu'à compter de la réception de sa notification par lettre recommandée avec demande d'avis de réception (ou son équivalent dans le pays de résidence de la Partie émettrice) par l'autre Partie.
+        18.2. Pour toute notification de nature usuelle (questions, service d’assistance technique, précisions sur le présent CLUF), les Parties échangeront par voie électronique aux adresse e-mail suivantes : 
+    • Pour PRAXINOS : contact@praxinos.coop  ou Discord : https://discord.gg/gEd6pj7 
+    • Pour l’Utilisateur : Adresse e-mail communiquée au moment de la souscription à un Abonnement ou à défaut, toute autre adresse e-mail communiquée sur demande de PRAXINOS.
+L’Utilisateur s’engage à fournir une adresse e-mail valide et à la consulter régulièrement. 
+    ARTICLE 19. CONVENTION DE PREUVE
+        19.1. Les communications effectuées par le biais de courrier électronique sont des modes de communication valablement admis à titre de preuve par l’Utilisateur et PRAXINOS. 
+        19.2. Toutes les informations enregistrées dans les bases de données informatiques de PRAXINOS relatives notamment aux souscriptions d’Abonnements, aux paiements des factures, ont, jusqu'à preuve du contraire, la même force probante qu'un écrit signé sur un support papier, tant en ce qui concerne leur contenu qu'en ce qui concerne la date et l'heure à laquelle ils ont été effectués et/ou reçus. Ces traces inaltérables, sûres et fiables sont gravées et conservées dans les systèmes informatiques de PRAXINOS.
+        19.3. Les documents de PRAXINOS reproduisant ces informations, ainsi que les copies ou reproductions de documents produits par PRAXINOS ont la même force probante que l'original, jusqu'à preuve du contraire.
+    ARTICLE 20. LANGUE DU CONTRAT
+Les Parties soumettent le présent contrat au droit français qui est rédigé en langue française. Si une version anglaise du présent contrat venait à être faite, la version française prévaudrait en cas de conflit d’interprétation.
+    ARTICLE 21. DROIT APPLICABLE – LITIGES  
+        21.1. De convention expresse entre les Parties, le présent CLUF est soumis au droit français, à l'exclusion de toute autre législation dans la mesure du possible. Il est expressément convenu entre les Parties que la Convention de Vienne sur les contrats de vente internationale de marchandises (CVIM) ne s'applique pas au présent CLUF.
+        21.2. En vue de trouver ensemble une solution à tout litige qui surviendrait à l’occasion de la conclusion, de l’interprétation, de l'exécution et/ou de la rupture du présent CLUF, les Parties tenteront d'abord de le résoudre à l'amiable.
+La présente procédure de règlement amiable constitue un préalable obligatoire à l'introduction d'une action en justice entre les Parties. Toute action introduite en justice en violation de la présente clause serait déclarée irrecevable.
+        21.3. EN CAS D’ECHEC DE LA RESOLUTION AMIABLE DU LITIGE DANS UN DELAI DE 30 JOURS A COMPTER DE SA SURVENANCE, ET SAUF DISPOSITIONS IMPERATIVES PLUS FAVORABLES A L’UTILISATEUR, TOUTE CONTESTATION OU LITIGE RELATIF A LA FORMATION, L’INTERPRETATION, L’EXECUTION OU LA FIN DES PRESENTES OU EN RELATION AVEC LE PRESENT CLUF ET QUI N’AURAIT PU ETRE RESOLUE AMIABLEMENT SERA SOUMIS AUX JURIDICTIONS COMPETENTES DE METZ (FRANCE).
+
