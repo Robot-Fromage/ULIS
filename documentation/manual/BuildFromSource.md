@@ -49,12 +49,15 @@ The following compilers are officially supported and frequently tested:
 - MinGW GCC
 
 # Getting Started {#getting-started}
-The build process is very similar for all the following platforms.  
+First and foremost, you have to clone the repo and checkout a stable commit, we recommend building the release and not the latest dev state, unless you are willing to contribute or try the possibly unstable latest features.
+Then the build process is very similar for all the following platforms.  
 The steps involved describe commands typed in the shell or command prompt, assuming both cmake and git are available from the path.  
 This is the typical out of source build process with CMake:
-
 ```d
     git clone https://github.com/Praxinos/ULIS
+    cd ULIS
+    git checkout release
+    cd ..
     mkdir ULIS_Build
     cd ULIS_Build
     cmake -G "Generator" ../ULIS
