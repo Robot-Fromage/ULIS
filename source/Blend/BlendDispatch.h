@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Blend/BlendArgs.h"
 #include "Dispatch/Dispatcher.h"
 #include "Scheduling/Command.h"
 
@@ -26,7 +27,6 @@
 #include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
 
 ULIS_NAMESPACE_BEGIN
-
 /////////////////////////////////////////////////////
 // Blend
 ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector,      fpCommandScheduler )

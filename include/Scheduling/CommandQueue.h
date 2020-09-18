@@ -19,6 +19,7 @@
 ULIS_NAMESPACE_BEGIN
 // Export of TQueue< FCommand >
 template class ULIS_API TQueue< FCommand* >;
+
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue
 /// @brief      The FCommandQueue class provides a way to enqueue tasks for being

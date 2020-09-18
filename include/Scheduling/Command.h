@@ -19,7 +19,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
-typedef void (*fpCommandScheduler)( FCommand* );
+typedef void (*fpCommandScheduler)( const ICommandArgs* );
 
 /////////////////////////////////////////////////////
 /// @class      FCommand
@@ -39,10 +39,12 @@ public:
 
     /*! Constructor */
     FCommand(
-          ICommandArgs* iArgs
+          fpCommandScheduler iSched
+        , const ICommandArgs* iArgs
         , const FSchedulePolicy& iPolicy
+        , uint32 iNumWait
+        , const FTaskEvent* iWaitList
         , FTaskEvent* iEvent
-        , fpCommandScheduler iSched
     );
 
     FCommand() = delete;
@@ -51,11 +53,16 @@ public:
     FCommand& operator=( const FCommand& ) = delete;
     FCommand& operator=( FCommand&& ) = delete;
 
+    bool IsReady() const;
+    void Execute();
+
 private:
-    ICommandArgs*       mArgs;
-    FTaskEvent*         mEvent;
-    FSchedulePolicy     mPolicy;
     fpCommandScheduler  mSched;
+    const ICommandArgs* mArgs;
+    FSchedulePolicy     mPolicy;
+    uint32              mNumWait;
+    const FTaskEvent*   mWaitList;
+    FTaskEvent*         mEvent;
 };
 
 ULIS_NAMESPACE_END

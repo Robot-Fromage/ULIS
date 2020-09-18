@@ -26,7 +26,7 @@
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FBlendArgs* iArgs ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
@@ -70,7 +70,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* i
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( const FBlendArgs* iArgs ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -89,7 +89,7 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const FBle
 
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendArgs* iArgs ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
@@ -116,7 +116,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleAlphaBlendMT_Separable_MEM_Generic( const FBlendArgs* iArgs ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

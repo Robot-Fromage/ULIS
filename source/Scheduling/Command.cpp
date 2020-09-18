@@ -23,16 +23,32 @@ FCommand::~FCommand()
 }
 
 FCommand::FCommand(
-      ICommandArgs* iArgs
+      fpCommandScheduler iSched
+    , const ICommandArgs* iArgs
     , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FTaskEvent* iWaitList
     , FTaskEvent* iEvent
-    , fpCommandScheduler iSched
 )
-    : mArgs( iArgs )
+    : mSched( iSched )
+    , mArgs( iArgs )
     , mPolicy( iPolicy )
+    , mNumWait( iNumWait )
+    , mWaitList( iWaitList )
     , mEvent( iEvent )
-    , mSched( iSched )
 {
+}
+
+bool
+FCommand::IsReady() const
+{
+    return  true;
+}
+
+void
+FCommand::Execute()
+{
+    mSched( mArgs );
 }
 
 ULIS_NAMESPACE_END

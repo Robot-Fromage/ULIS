@@ -26,7 +26,7 @@
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendArgs* iArgs ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
@@ -58,7 +58,7 @@ InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint
 
 template< typename T >
 void
-ScheduleTiledBlendMT_Separable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleTiledBlendMT_Separable_MEM_Generic( const FBlendArgs* iArgs ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

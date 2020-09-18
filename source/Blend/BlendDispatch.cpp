@@ -14,7 +14,6 @@
 #pragma once
 #include "Blend/BlendDispatch.h"
 #include "Blend/Modes.h"
-#include "Blend/BlendArgs.h"
 
 // Include SSE RGBA8 Implementation
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT

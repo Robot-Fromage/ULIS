@@ -26,7 +26,7 @@
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FBlendArgs* iArgs ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
@@ -73,7 +73,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, 
 
 template< typename T >
 void
-ScheduleBlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleBlendMT_Separable_MEM_Generic_Subpixel( const FBlendArgs* iArgs ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -92,7 +92,7 @@ ScheduleBlendMT_Separable_MEM_Generic_Subpixel( std::shared_ptr< const FBlendArg
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, std::shared_ptr< const FBlendArgs > iInfo ) {
+InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendArgs* iArgs ) {
     const FBlendArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
@@ -121,7 +121,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iB
 
 template< typename T >
 void
-ScheduleBlendMT_Separable_MEM_Generic( std::shared_ptr< const FBlendArgs > iInfo ) {
+ScheduleBlendMT_Separable_MEM_Generic( const FBlendArgs* iArgs ) {
     const FBlendArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

@@ -133,7 +133,8 @@ FRasterContext::Blend(
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
-            new FBlendArgs( {
+              sched
+            , new FBlendArgs( {
                   iSource
                 , iBackdrop
                 , src_roi
@@ -147,8 +148,9 @@ FRasterContext::Blend(
                 , dst_fit
             } )
             , iPolicy
+            , iNumWait
+            , iWaitList
             , iEvent
-            , sched
         )
     );
 }

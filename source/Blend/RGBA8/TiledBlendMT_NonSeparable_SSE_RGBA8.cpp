@@ -44,7 +44,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
       const uint8* iSrc
     , uint8* iBdp
     , int32 iLine
-    , std::shared_ptr< const FBlendArgs > iInfo
+    , const FBlendArgs* iArgs
     , const Vec4i iIDT
 )
 {
@@ -85,7 +85,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
 
 void
 ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8(
-    std::shared_ptr< const FBlendArgs > iInfo
+    const FBlendArgs* iArgs
 )
 {
     const FBlendArgs&   info        = *iInfo;
