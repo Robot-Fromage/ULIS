@@ -14,13 +14,26 @@
 #pragma once
 #include "Core/Core.h"
 #include "Dispatch/SpecializationCondition.h"
+#include "Scheduling/Command.h"
 #include "System/Device.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// ResolveScheduleCall
+template< typename ARGS, void (*IMP)( const ARGS* ) >
+static ULIS_FORCEINLINE void ResolveScheduleCall( const ICommandArgs* iArgs )
+{
+    const ARGS* args = dynamic_cast< const ARGS* >( iArgs );
+    ULIS_ASSERT( args, "Bad cast" );
+    IMP( args );
+}
+
+/////////////////////////////////////////////////////
+// TDispatcher
 template< typename IMP >
 class TDispatcher {
 public:
-    static ULIS_FORCEINLINE typename IMP::fpQuery Query( const FDevice& iDevice, eFormat iFormat ) {
+    static ULIS_FORCEINLINE typename fpCommandScheduler Query( const FDevice& iDevice, eFormat iFormat ) {
         for( int i = 0; i < IMP::spec_size; ++i ) {
             if( IMP::spec_table[i].select_cond( iFormat ) ) {
                 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
@@ -47,7 +60,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( const FDevice& iDevice, eFormat iFormat ) {
+    static ULIS_FORCEINLINE typename fpCommandScheduler QueryGeneric( const FDevice& iDevice, eFormat iFormat ) {
         #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
             if( iDevice.HasHardwareAVX2() )
                 return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic;
@@ -65,41 +78,42 @@ private:
 /////////////////////////////////////////////////////
 // Macro Helper for Dispatcher definition
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
-    #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                     \
-    template< typename T > const typename TAG::fpQuery TAG::TGenericDispatchGroup< T >::select_AVX_Generic = AVX;
+    #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX ) \
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_AVX_Generic = &ResolveScheduleCall< TAG::tArgs, AVX >;
 #else
-    #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                     \
-    template< typename T > const typename TAG::fpQuery TAG::TGenericDispatchGroup< T >::select_AVX_Generic = nullptr;
+    #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX ) \
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_AVX_Generic = nullptr;
 #endif
 
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-    #define ULIS_DISPATCH_SELECT_GENSSE( TAG, SSE )                                                                     \
-    template< typename T > const typename TAG::fpQuery TAG::TGenericDispatchGroup< T >::select_SSE_Generic = SSE;
+    #define ULIS_DISPATCH_SELECT_GENSSE( TAG, SSE ) \
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_SSE_Generic = &ResolveScheduleCall< TAG::tArgs, SSE >;
 #else
-    #define ULIS_DISPATCH_SELECT_GENSSE( TAG, AVX )                                                                     \
-    template< typename T > const typename TAG::fpQuery TAG::TGenericDispatchGroup< T >::select_SSE_Generic = nullptr;
+    #define ULIS_DISPATCH_SELECT_GENSSE( TAG, AVX ) \
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_SSE_Generic = nullptr;
 #endif
 
-#define ULIS_DISPATCH_SELECT_GENMEM( TAG, MEM )                                                                         \
-    template< typename T > const typename TAG::fpQuery TAG::TGenericDispatchGroup< T >::select_MEM_Generic = MEM;
+#define ULIS_DISPATCH_SELECT_GENMEM( TAG, MEM ) \
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_MEM_Generic = &ResolveScheduleCall< TAG::tArgs, MEM >;
 
-#define ULIS_DECLARE_DISPATCHER( TAG, FPT )         \
-struct TAG {                                        \
-    typedef FPT fpQuery;                            \
-    struct FSpecDispatchGroup {                     \
-        const fpCond    select_cond;                \
-        const fpQuery   select_AVX;                 \
-        const fpQuery   select_SSE;                 \
-        const fpQuery   select_MEM;                 \
-    };                                              \
-    static const FSpecDispatchGroup spec_table[];   \
-    static const int spec_size;                     \
-    template< typename T >                          \
-    struct TGenericDispatchGroup {                  \
-        static const fpQuery select_AVX_Generic;    \
-        static const fpQuery select_SSE_Generic;    \
-        static const fpQuery select_MEM_Generic;    \
-    };                                              \
+#define ULIS_DECLARE_DISPATCHER( TAG, ARG )                 \
+struct TAG {                                                \
+    typedef ARG tArgs;                                      \
+    typedef void (*fpQuery)( const tArgs* iArgs );          \
+    struct FSpecDispatchGroup {                             \
+        const fpCond    select_cond;                        \
+        const fpCommandScheduler   select_AVX;              \
+        const fpCommandScheduler   select_SSE;              \
+        const fpCommandScheduler   select_MEM;              \
+    };                                                      \
+    static const FSpecDispatchGroup spec_table[];           \
+    static const int spec_size;                             \
+    template< typename T >                                  \
+    struct TGenericDispatchGroup {                          \
+        static const fpCommandScheduler select_AVX_Generic; \
+        static const fpCommandScheduler select_SSE_Generic; \
+        static const fpCommandScheduler select_MEM_Generic; \
+    };                                                      \
 };
 
 #define ULIS_DEFINE_DISPATCHER_GENERIC_GROUP( TAG, GENAVX, GENSSE, GENMEM ) \
@@ -114,15 +128,15 @@ const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, &ResolveScheduleCall< tArgs, _AVX >, &ResolveScheduleCall< tArgs, _SSE >, &ResolveScheduleCall< tArgs, _MEM > },
     #else
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCall< tArgs, _SSE >, &ResolveScheduleCall< tArgs, _MEM > },
     #endif
 #else
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCall< tArgs, _SSE >, &ResolveScheduleCall< tArgs, _MEM > },
     #else
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, &ResolveScheduleCall< tArgs, _MEM > },
     #endif
 #endif
 
