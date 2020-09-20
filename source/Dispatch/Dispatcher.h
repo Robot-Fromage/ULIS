@@ -99,7 +99,6 @@ private:
 #define ULIS_DECLARE_DISPATCHER( TAG, ARG )                 \
 struct TAG {                                                \
     typedef ARG tArgs;                                      \
-    typedef void (*fpQuery)( const tArgs* iArgs );          \
     struct FSpecDispatchGroup {                             \
         const fpCond    select_cond;                        \
         const fpCommandScheduler   select_AVX;              \

@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Blend/BlendDispatch.h"
-#include "Blend/Modes.h"
 
 // Include SSE RGBA8 Implementation
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
