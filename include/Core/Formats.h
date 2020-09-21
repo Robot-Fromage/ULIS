@@ -21,8 +21,12 @@
 //          1098 7654 3210 9876     5432 1098 7654 3210
 //          XXXX XILP CCCC BBBB     ASRF MMMM NNNN TTTT
 //
-//    Example: RGBA8
-//                            1     1000 0010 0011 0000
+//  Example:
+//      Format_RGBA8
+//          0000 0100 0101 0001     1000 0011 0011 0000
+//
+//      Format_BGRAF_Premultiplied_Planar_Linear
+//          0000 0011 0100 0010     1111 0011 0011 0011
 //
 //          Captions:
 //          T: Type                 R: Reverse
