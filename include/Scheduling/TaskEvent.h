@@ -22,6 +22,7 @@ enum eTaskStatus : uint8 {
     , TaskStatus_Processing
     , TaskStatus_Finished
 };
+
 /////////////////////////////////////////////////////
 /// @class      FTaskEvent
 /// @brief      The FTaskEvent class provides a way to get asynchronous status
@@ -49,9 +50,6 @@ public:
 
     /*! Getter for the task policy */
     const FSchedulePolicy& Policy() const;
-
-    /*! Static deleter for FTaskEvent */
-    static void XDelete( FTaskEvent* iEvent );
 
 private:
     FSchedulePolicy mPolicy;
