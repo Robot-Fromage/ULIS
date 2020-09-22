@@ -38,6 +38,11 @@ FCommandQueue::Flush()
     while( !mQueue.IsEmpty() )
     {
         FCommand* cmd = mQueue.Front();
+
+        FTaskEvent* evt = cmd->Event();
+        if( evt )
+            evt->SetScheduled();
+
         mQueue.Pop();
         mPool.ScheduleJob( cmd );
     }
@@ -60,6 +65,8 @@ void
 FCommandQueue::Push( FCommand* iCommand )
 {
     mQueue.Push( iCommand );
+    if( iCommand->Policy().FlowPolicy() == eScheduleFlowPolicy::ScheduleFlow_Blocking )
+        Finish();
 }
 
 ULIS_NAMESPACE_END
