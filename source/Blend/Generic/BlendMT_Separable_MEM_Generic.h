@@ -122,20 +122,19 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iB
 template< typename T >
 void
 ScheduleBlendMT_Separable_MEM_Generic( const FBlendArgs* iArgs ) {
-    const FBlendArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->Bits();
-    uint8*              bdp         = info.backdrop->Bits();
-    const uint32         src_bps     = info.source->BytesPerScanLine();
-    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
-    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.backdropWorkingRect.h
-                                   , InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >
-                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                   , pLINE , iInfo );
+    const uint8*    src         = iArgs->source->Bits();
+    uint8*          bdp         = iArgs->backdrop->Bits();
+    const uint32    src_bps     = iArgs->source->BytesPerScanLine();
+    const uint32    bdp_bps     = iArgs->backdrop->BytesPerScanLine();
+    const uint32    src_decal_y = iArgs->shift.y + iArgs->sourceRect.y;
+    const uint32    src_decal_x = ( iArgs->shift.x + iArgs->sourceRect.x )  * iArgs->source->BytesPerPixel();
+    const uint32    bdp_decal_x = ( iArgs->backdropWorkingRect.x )          * iArgs->source->BytesPerPixel();
+    ULIS_MACRO_INLINE_PARALLEL_FOR( iArgs->perfIntent, iArgs->pool, iArgs->blocking
+                                  , iArgs->backdropWorkingRect.h
+                                  , InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >
+                                  , src + ( ( src_decal_y + pLINE )                     * src_bps ) + src_decal_x
+                                  , bdp + ( ( iArgs->backdropWorkingRect.y + pLINE )    * bdp_bps ) + bdp_decal_x
+                                  , pLINE , iInfo );
 }
 
 ULIS_NAMESPACE_END
