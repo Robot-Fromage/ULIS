@@ -60,7 +60,7 @@ FThreadPool::GetNumWorkers() const
 uint32
 FThreadPool::MaxWorkers()
 {
-    return  std::thread::hardware_concurrency();
+    return  d->GetNumWorkers();
 }
 
 ULIS_NAMESPACE_END
