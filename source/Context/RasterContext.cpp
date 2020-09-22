@@ -126,8 +126,6 @@ FRasterContext::Blend(
         case BlendQualifier_Separable       : sched = mContextualDispatchTable->mScheduleBlendSeparable;
         case BlendQualifier_NonSeparable    : sched = mContextualDispatchTable->mScheduleBlendNonSeparable;
     }
-
-    // Assert implementation found
     ULIS_ASSERT( sched, "Error: No dispatch found." );
 
     // Bake and push command
@@ -170,6 +168,7 @@ FRasterContext::BlendAA(
     , FTaskEvent* iEvent
 )
 {
+    // Select implementation
     fpCommandScheduler sched = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {
         case BlendQualifier_Misc            : sched = mContextualDispatchTable->mScheduleBlendMiscSubpixel;
