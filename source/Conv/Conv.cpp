@@ -42,21 +42,23 @@ FColor Conv( const ISample& iSrc, eFormat iDst ) {
     return  dst;
 }
 
-void Conv( FOldThreadPool*           iOldThreadPool
-         , bool                   iBlocking
-         , uint32                 iPerfIntent
-         , const FHostDeviceInfo& iHostDeviceInfo
-         , bool                   iCallCB
-         , const FBlock*          iSource
-         , FBlock*                iDestination )
+void Conv(
+      FOldThreadPool*           iOldThreadPool
+    , bool                      iBlocking
+    , uint32                    iPerfIntent
+    , const FHostDeviceInfo&    iHostDeviceInfo
+    , bool                      iCallCB
+    , const FBlock*             iSource
+    , FBlock*                   iDestination
+)
 {
     // Assertions
-    ULIS_ASSERT( iSource,                                      "Bad source."                                          );
-    ULIS_ASSERT( iDestination,                                 "Bad destination."                                     );
-    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool"                                              );
-    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
-    ULIS_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
+    ULIS_ASSERT( iSource,                                       "Bad source."                                           );
+    ULIS_ASSERT( iDestination,                                  "Bad destination."                                      );
+    ULIS_ASSERT( iOldThreadPool,                                "Bad pool"                                              );
+    ULIS_ASSERT( !iCallCB || iBlocking,                         "Callback flag is specified on non-blocking operation." );
+    ULIS_ASSERT( iSource->Width()  == iDestination->Width(),    "Blocks sizes don't match"                              );
+    ULIS_ASSERT( iSource->Height() == iDestination->Height(),   "Blocks sizes don't match"                              );
 
     // Check no-op
     if( iSource == iDestination )
@@ -73,14 +75,14 @@ void Conv( FOldThreadPool*           iOldThreadPool
     ULIS_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params and call
-    const uint8*    src = iSource->Bits();
-    uint8*          dst = iDestination->Bits();
-    uint32           src_bps = iSource->BytesPerScanLine();
-    uint32           dst_bps = iDestination->BytesPerScanLine();
-    const int   max = iSource->Height();
-    const uint32 len = iSource->Width();
-    const FFormat& srcnfo = iSource->FormatInfo();
-    const FFormat& dstnfo = iDestination->FormatInfo();
+    const uint8*    src     = iSource->Bits();
+    uint8*          dst     = iDestination->Bits();
+    uint32          src_bps = iSource->BytesPerScanLine();
+    uint32          dst_bps = iDestination->BytesPerScanLine();
+    const int       max     = iSource->Height();
+    const uint32    len     = iSource->Width();
+    const FFormat&  srcnfo  = iSource->FormatInfo();
+    const FFormat&  dstnfo  = iDestination->FormatInfo();
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , fptr
