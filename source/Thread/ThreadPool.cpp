@@ -60,7 +60,7 @@ FThreadPool::GetNumWorkers() const
 uint32
 FThreadPool::MaxWorkers()
 {
-    return  d->GetNumWorkers();
+    return  FThreadPool_Private::MaxWorkers();
 }
 
 ULIS_NAMESPACE_END
