@@ -88,7 +88,7 @@ FThreadPool::FThreadPool_Private::GetNumWorkers() const
 uint32
 FThreadPool::FThreadPool_Private::MaxWorkers()
 {
-    return  1;
+    return  std::thread::hardware_concurrency();
 }
 
 ULIS_NAMESPACE_END
