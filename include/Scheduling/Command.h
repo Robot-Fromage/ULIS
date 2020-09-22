@@ -47,14 +47,34 @@ public:
         , FTaskEvent* iEvent
     );
 
+    /*! Explicitely deleted default constructor. */
     FCommand() = delete;
+
+    /*! Explicitely deleted copy constructor. */
     FCommand( const FCommand& ) = delete;
+
+    /*! Explicitely deleted move constructor. */
     FCommand( FCommand&& ) = delete;
+
+    /*! Explicitely deleted copy assignment operator. */
     FCommand& operator=( const FCommand& ) = delete;
+
+    /*! Explicitely deleted move assignment operator. */
     FCommand& operator=( FCommand&& ) = delete;
 
+    /*!
+        Check wether the command is ready to execute ( according to the event wait list ).
+    */
     bool IsReady() const;
+
+    /*! Start scheduling command. */
     void Execute();
+
+    /*! Get the policy. */
+    const FSchedulePolicy& Policy() const;
+
+    /*! Get the event */
+    FTaskEvent* Event() const;
 
 private:
     fpCommandScheduler  mSched;
