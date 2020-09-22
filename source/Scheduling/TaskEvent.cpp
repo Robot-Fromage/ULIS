@@ -34,5 +34,29 @@ FTaskEvent::Policy() const
     return  mPolicy;
 }
 
+eTaskStatus
+FTaskEvent::Status() const
+{
+    return  mStatus;
+}
+
+void
+FTaskEvent::SetScheduled()
+{
+    mStatus = eTaskStatus::TaskStatus_Scheduled;
+}
+
+void
+FTaskEvent::SetProcessing()
+{
+    mStatus = eTaskStatus::TaskStatus_Processing;
+}
+
+void
+FTaskEvent::SetFinished()
+{
+    mStatus = eTaskStatus::TaskStatus_Finished;
+}
+
 ULIS_NAMESPACE_END
 

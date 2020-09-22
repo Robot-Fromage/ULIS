@@ -41,6 +41,11 @@ enum eTaskStatus : uint8 {
 ///             \sa FCommandQueue
 class ULIS_API FTaskEvent
 {
+    friend class FRasterContext;
+    friend class FCommandQueue;
+    friend class FThreadPool;
+    friend class FThreadPool_Private;
+
 public:
     /*! Destructor */
     ~FTaskEvent();
@@ -50,6 +55,20 @@ public:
 
     /*! Getter for the task policy */
     const FSchedulePolicy& Policy() const;
+
+    /*! Getter for status */
+    eTaskStatus Status() const;
+
+
+private:
+    /*! Set status to scheduled */
+    void SetScheduled();
+
+    /*! Set status to scheduled */
+    void SetProcessing();
+
+    /*! Set status to scheduled */
+    void SetFinished();
 
 private:
     FSchedulePolicy mPolicy;
