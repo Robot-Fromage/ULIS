@@ -63,8 +63,19 @@ private:
     */
     void Push( FCommand* iCommand );
 
+    /*!
+        Cleanse the idle queue.
+    */
+    void CleanseIdle();
+
+    /*!
+        Cleanse the scheduled queue.
+    */
+    void CleanseScheduled();
+
 private:
-    tQueue mQueue;
+    tQueue mIdleQueue;
+    tQueue mScheduledQueue;
     FThreadPool& mPool;
 };
 

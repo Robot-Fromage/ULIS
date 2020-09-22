@@ -46,9 +46,9 @@ FCommand::IsReady() const
 }
 
 void
-FCommand::Execute()
+FCommand::Execute( FThreadPool& iPool )
 {
-    mSched( mArgs );
+    mSched( mArgs, mPolicy, iPool );
 }
 
 const FSchedulePolicy&

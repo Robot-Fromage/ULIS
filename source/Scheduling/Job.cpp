@@ -20,7 +20,12 @@ FJob::~FJob()
 {
 }
 
-FJob::FJob()
+FJob::FJob(
+      fpScheduledJob iTask
+    , FCommand* iParent
+)
+    : mTask( iTask )
+    , mParent( iParent )
 {
 }
 

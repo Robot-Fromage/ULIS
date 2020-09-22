@@ -19,7 +19,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
-typedef void (*fpCommandScheduler)( const ICommandArgs* );
+typedef void (*fpCommandScheduler)( const ICommandArgs*, const FSchedulePolicy&, FThreadPool& );
 
 /////////////////////////////////////////////////////
 /// @class      FCommand
@@ -68,7 +68,7 @@ public:
     bool IsReady() const;
 
     /*! Start scheduling command. */
-    void Execute();
+    void Execute( FThreadPool& iPool );
 
     /*! Get the policy. */
     const FSchedulePolicy& Policy() const;

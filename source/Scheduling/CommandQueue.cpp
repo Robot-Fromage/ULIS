@@ -18,16 +18,13 @@
 ULIS_NAMESPACE_BEGIN
 FCommandQueue::~FCommandQueue()
 {
-    while( !mQueue.IsEmpty() )
-    {
-        FCommand* cmd = mQueue.Front();
-        delete  cmd;
-        mQueue.Pop();
-    }
+    CleanseIdle();
+    CleanseScheduled();
 }
 
 FCommandQueue::FCommandQueue( FThreadPool& iPool )
-    : mQueue( tQueue() )
+    : mIdleQueue( tQueue() )
+    , mScheduledQueue( tQueue() )
     , mPool( iPool )
 {
 }
@@ -35,16 +32,20 @@ FCommandQueue::FCommandQueue( FThreadPool& iPool )
 void
 FCommandQueue::Flush()
 {
-    while( !mQueue.IsEmpty() )
+    while( !mIdleQueue.IsEmpty() )
     {
-        FCommand* cmd = mQueue.Front();
+        FCommand* cmd = mIdleQueue.Front();
+        mIdleQueue.Pop();
 
-        FTaskEvent* evt = cmd->Event();
-        if( evt )
-            evt->SetScheduled();
-
-        mQueue.Pop();
-        mPool.ScheduleJob( cmd );
+        if( cmd->IsReady() ) {
+            FTaskEvent* evt = cmd->Event();
+            if( evt )
+                evt->SetScheduled();
+            mScheduledQueue.Push( cmd );
+            cmd->Execute( mPool );
+        } else {
+            mIdleQueue.Push( cmd );
+        }
     }
 }
 
@@ -59,14 +60,37 @@ void
 FCommandQueue::Fence()
 {
     mPool.WaitForCompletion();
+    CleanseScheduled();
 }
 
 void
 FCommandQueue::Push( FCommand* iCommand )
 {
-    mQueue.Push( iCommand );
+    mIdleQueue.Push( iCommand );
     if( iCommand->Policy().FlowPolicy() == eScheduleFlowPolicy::ScheduleFlow_Blocking )
         Finish();
+}
+
+void
+FCommandQueue::CleanseIdle()
+{
+    while( !mIdleQueue.IsEmpty() )
+    {
+        FCommand* cmd = mIdleQueue.Front();
+        delete  cmd;
+        mIdleQueue.Pop();
+    }
+}
+
+void
+FCommandQueue::CleanseScheduled()
+{
+    while( !mScheduledQueue.IsEmpty() )
+    {
+        FCommand* cmd = mScheduledQueue.Front();
+        delete  cmd;
+        mScheduledQueue.Pop();
+    }
 }
 
 ULIS_NAMESPACE_END

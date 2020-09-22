@@ -13,8 +13,14 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Scheduling/Command.h"
+#include "Scheduling/CommandArgs.h"
+#include "Scheduling/SchedulePolicy.h"
+#include "Scheduling/TaskEvent.h"
 
 ULIS_NAMESPACE_BEGIN
+class FJob;
+typedef void (*fpScheduledJob)( const ICommandArgs*, void* );
 /////////////////////////////////////////////////////
 /// @class      FJob
 /// @brief      The FJob class provides a way to store awaiting scheduled Jobs,
@@ -32,7 +38,10 @@ public:
     ~FJob();
 
     /*! Constructor */
-    FJob();
+    FJob(
+          fpScheduledJob iTask
+        , FCommand* iParent
+    );
 
     /*! Explicitely deleted default constructor. */
     FJob() = delete;
@@ -48,6 +57,10 @@ public:
 
     /*! Explicitely deleted move assignment operator. */
     FJob& operator=( FJob&& ) = delete;
+
+private:
+    fpScheduledJob mTask;
+    FCommand* mParent;
 };
 
 ULIS_NAMESPACE_END
