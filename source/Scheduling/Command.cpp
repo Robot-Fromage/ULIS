@@ -51,5 +51,17 @@ FCommand::Execute()
     mSched( mArgs );
 }
 
+const FSchedulePolicy&
+FCommand::Policy() const
+{
+    return  mPolicy;
+}
+
+FTaskEvent*
+FCommand::Event() const
+{
+    return  mEvent;
+}
+
 ULIS_NAMESPACE_END
 
