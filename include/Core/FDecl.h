@@ -42,6 +42,7 @@ class   FWString;
 class   FSchedulePolicy;
 class   FTaskEvent;
 class   FCommand;
+class   FJob;
 class   FCommandQueue;
 
 template< typename T > class TArray;
