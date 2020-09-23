@@ -41,7 +41,7 @@ public:
     /*! Constructor */
     FCommandQueue( FThreadPool& iPool );
 
-public:
+private:
     /*!
         Issue all commands and return immediately.
     */
@@ -57,7 +57,6 @@ public:
     */
     void Fence();
 
-private:
     /*!
         Push, insert a new command at the end of the queue.
     */
@@ -66,12 +65,12 @@ private:
     /*!
         Cleanse the idle queue.
     */
-    void CleanseIdle();
+    void UnsafeCleanseIdle();
 
     /*!
         Cleanse the scheduled queue.
     */
-    void CleanseScheduled();
+    void UnsafeCleanseScheduled();
 
 private:
     tQueue mIdleQueue;

@@ -18,8 +18,9 @@
 ULIS_NAMESPACE_BEGIN
 FCommandQueue::~FCommandQueue()
 {
-    CleanseIdle();
-    CleanseScheduled();
+    UnsafeCleanseIdle();
+    Finish();
+    UnsafeCleanseScheduled();
 }
 
 FCommandQueue::FCommandQueue( FThreadPool& iPool )
@@ -60,7 +61,7 @@ void
 FCommandQueue::Fence()
 {
     mPool.WaitForCompletion();
-    CleanseScheduled();
+    UnsafeCleanseScheduled();
 }
 
 void
@@ -72,7 +73,7 @@ FCommandQueue::Push( FCommand* iCommand )
 }
 
 void
-FCommandQueue::CleanseIdle()
+FCommandQueue::UnsafeCleanseIdle()
 {
     while( !mIdleQueue.IsEmpty() )
     {
@@ -83,7 +84,7 @@ FCommandQueue::CleanseIdle()
 }
 
 void
-FCommandQueue::CleanseScheduled()
+FCommandQueue::UnsafeCleanseScheduled()
 {
     while( !mScheduledQueue.IsEmpty() )
     {
