@@ -132,7 +132,7 @@ FRasterContext::Blend(
     mCommandQueue.Push(
         new FCommand(
               sched
-            , new FBlendCommandArgs( {
+            , new FBlendCommandArgs(
                   iSource
                 , iBackdrop
                 , src_roi
@@ -144,7 +144,7 @@ FRasterContext::Blend(
                 , dst_fit.Position() - dst_target.Position()
                 , dst_fit.Size()
                 , dst_fit
-            } )
+            )
             , iPolicy
             , iNumWait
             , iWaitList
