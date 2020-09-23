@@ -20,7 +20,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FJob;
-typedef void (*fpScheduledJob)( const ICommandArgs*, void* );
+typedef void (*fpScheduledJob)( const IJobArgs*, const ICommandArgs* );
 /////////////////////////////////////////////////////
 /// @class      FJob
 /// @brief      The FJob class provides a way to store awaiting scheduled Jobs,
@@ -39,7 +39,8 @@ public:
 
     /*! Constructor */
     FJob(
-          fpScheduledJob iTask
+          uint32 iNumTasks
+        , fpScheduledJob* iTasks
         , FCommand* iParent
     );
 
@@ -59,7 +60,8 @@ public:
     FJob& operator=( FJob&& ) = delete;
 
 private:
-    fpScheduledJob mTask;
+    uint32 mNumTasks;
+    fpScheduledJob* mTasks;
     FCommand* mParent;
 };
 

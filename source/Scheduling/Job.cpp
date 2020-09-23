@@ -21,10 +21,12 @@ FJob::~FJob()
 }
 
 FJob::FJob(
-      fpScheduledJob iTask
+      uint32 iNumTasks
+    , fpScheduledJob* iTasks
     , FCommand* iParent
 )
-    : mTask( iTask )
+    : mNumTasks( iNumTasks )
+    , mTasks( iTasks )
     , mParent( iParent )
 {
 }
