@@ -26,8 +26,8 @@
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendArgs* iArgs ) {
-    const FBlendArgs&   info    = *iInfo;
+InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendCommandArgs* iArgs ) {
+    const FBlendCommandArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
     uint8*              bdp     = iBdp;
@@ -77,8 +77,8 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, u
 
 template< typename T >
 void
-ScheduleTiledBlendMT_NonSeparable_MEM_Generic( const FBlendArgs* iArgs ) {
-    const FBlendArgs&   info        = *iInfo;
+ScheduleTiledBlendMT_NonSeparable_MEM_Generic( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+    const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();

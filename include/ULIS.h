@@ -85,7 +85,7 @@
 #include "Context/RasterContext.h"
 // Scheduling
 #include "Scheduling/Command.h"
-#include "Scheduling/CommandArgs.h"
+#include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/TaskEvent.h"

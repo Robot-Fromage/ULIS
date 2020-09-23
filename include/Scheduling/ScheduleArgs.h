@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         CommmandArgs.h
+* @file         ScheduleArgs.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the ICommmandArgs class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -22,13 +22,25 @@ ULIS_NAMESPACE_BEGIN
 ///             coordination with a FOldThreadPool and a FCommandQueue.
 /// @details    The ICommandArgs does nothing special by itself, it is meant to
 ///             be used in a polymorphic way.
-///
-///             \sa FBlendArgs
 class ULIS_API ICommandArgs {
 public:
     /*! Destructor */
     virtual ~ICommandArgs() = 0;
 };
+
+/////////////////////////////////////////////////////
+/// @class      IJobArgs
+/// @brief      The IJobArgs class provides a virtual base class to implement
+///             the arguments objects for each type of operations, used in
+///             coordination with a FOldThreadPool and a FCommandQueue.
+/// @details    The IJobArgs does nothing special by itself, it is meant to
+///             be used in a polymorphic way.
+class ULIS_API IJobArgs {
+public:
+    /*! Destructor */
+    virtual ~IJobArgs() = 0;
+};
+
 
 ULIS_NAMESPACE_END
 

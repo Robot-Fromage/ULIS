@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Scheduling/CommandArgs.h"
+#include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/TaskEvent.h"
 

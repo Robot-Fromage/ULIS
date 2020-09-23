@@ -7,7 +7,7 @@
 *
 * @file         BlendArgs.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FBlendArgs structure.
+* @brief        This file provides the declaration for the FBlendCommandArgs structure.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -16,12 +16,12 @@
 #include "Blend/Modes.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Scheduling/CommandArgs.h"
+#include "Scheduling/ScheduleArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FBlendArgs
-class FBlendArgs
+// FBlendCommandArgs
+class FBlendCommandArgs final
     : public ICommandArgs
 {
 public:
@@ -39,9 +39,28 @@ public:
         FRectI backdropWorkingRect;
     } bulk;
 
-    virtual ~FBlendArgs() {};
-    FBlendArgs( const FArgs& ) = delete;
-    FBlendArgs( FArgs&& iInit ) : bulk( std::forward< FArgs >( iInit ) ) {}
+    virtual ~FBlendCommandArgs() override {};
+    FBlendCommandArgs( const FArgs& ) = delete;
+    FBlendCommandArgs( FArgs&& iInit ) : bulk( std::forward< FArgs >( iInit ) ) {}
+};
+
+
+/////////////////////////////////////////////////////
+// FBlendJobArgs
+class FBlendJobArgs final
+    : public IJobArgs
+{
+public:
+    struct FArgs {
+        const uint32 line;
+        const uint32 src_bps;
+        const uint8* src;
+        uint8* bdp;
+    } bulk;
+
+    virtual ~FBlendJobArgs() override {};
+    FBlendJobArgs( const FArgs& ) = delete;
+    FBlendJobArgs( FArgs&& iInit ) : bulk( std::forward< FArgs >( iInit ) ) {}
 };
 
 ULIS_NAMESPACE_END

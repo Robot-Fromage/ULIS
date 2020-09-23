@@ -22,12 +22,14 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
     , uint8* iBdp
     , int32 iLine
     , const uint32 iSrcBps
-    , const FBlendArgs* iArgs
+    , const FBlendCommandArgs* iArgs
 );
 
 void
 ScheduleAlphaBlendMT_Separable_AVX_RGBA8_Subpixel(
-    const FBlendArgs* iArgs
+      const FBlendCommandArgs* iArgs
+    , const FSchedulePolicy& iPolicy
+    , FThreadPool& iPool
 );
 
 void
@@ -35,12 +37,14 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
       const uint8* iSrc
     , uint8* iBdp
     , int32 iLine
-    , const FBlendArgs* iArgs
+    , const FBlendCommandArgs* iArgs
 );
 
 void
 ScheduleAlphaBlendMT_Separable_AVX_RGBA8(
-    const FBlendArgs* iArgs
+      const FBlendCommandArgs* iArgs
+    , const FSchedulePolicy& iPolicy
+    , FThreadPool& iPool
 );
 
 ULIS_NAMESPACE_END

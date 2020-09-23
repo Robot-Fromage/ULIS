@@ -21,13 +21,13 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FBlendArgs* iArgs ) {
-    const FBlendArgs&   info    = *iInfo;
+InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( FBlendJobArgs iJobArgs, const FBlendCommandArgs* iCommandArgs ) {
+    const FBlendCommandArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
@@ -70,8 +70,8 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* i
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( const FBlendArgs* iArgs ) {
-    const FBlendArgs&   info        = *iInfo;
+ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+    const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();
@@ -89,8 +89,8 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( const FBlendArgs* iArgs ) {
 
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendArgs* iArgs ) {
-    const FBlendArgs&   info    = *iInfo;
+InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( FBlendJobArgs iJobArgs, const FBlendCommandArgs* iArgs ) {
+    const FBlendCommandArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
@@ -116,7 +116,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic( const FBlendArgs* iArgs ) {
+ScheduleAlphaBlendMT_Separable_MEM_Generic( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
     const uint8* src            = iArgs->source->Bits();
     uint8* bdp                  = iArgs->backdrop->Bits();
     const uint32 src_bps        = iArgs->source->BytesPerScanLine();

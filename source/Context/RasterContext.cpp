@@ -132,7 +132,7 @@ FRasterContext::Blend(
     mCommandQueue.Push(
         new FCommand(
               sched
-            , new FBlendArgs( {
+            , new FBlendCommandArgs( {
                   iSource
                 , iBackdrop
                 , src_roi

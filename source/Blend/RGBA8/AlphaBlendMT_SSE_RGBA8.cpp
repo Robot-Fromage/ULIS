@@ -20,7 +20,7 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
@@ -37,10 +37,10 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
     , uint8* iBdp
     , int32 iLine
     , const uint32 iSrcBps
-    , const FBlendArgs* iArgs
+    , const FBlendCommandArgs* iArgs
 )
 {
-    const FBlendArgs&   info    = *iInfo;
+    const FBlendCommandArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
@@ -102,10 +102,12 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
 
 void
 ScheduleAlphaBlendMT_Separable_SSE_RGBA8_Subpixel(
-    const FBlendArgs* iArgs
+      const FBlendCommandArgs* iArgs
+    , const FSchedulePolicy& iPolicy
+    , FThreadPool& iPool
 )
 {
-    const FBlendArgs&   info        = *iInfo;
+    const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();
@@ -126,10 +128,10 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8(
       const uint8* iSrc
     , uint8* iBdp
     , int32 iLine
-    , const FBlendArgs* iArgs
+    , const FBlendCommandArgs* iArgs
 )
 {
-    const FBlendArgs&   info    = *iInfo;
+    const FBlendCommandArgs&   info    = *iInfo;
     const FFormat&  fmt     = info.source->FormatInfo();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
@@ -164,10 +166,12 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8(
 
 void
 ScheduleAlphaBlendMT_Separable_SSE_RGBA8(
-    const FBlendArgs* iArgs
+      const FBlendCommandArgs* iArgs
+    , const FSchedulePolicy& iPolicy
+    , FThreadPool& iPool
 )
 {
-    const FBlendArgs&   info        = *iInfo;
+    const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
     const uint32         src_bps     = info.source->BytesPerScanLine();

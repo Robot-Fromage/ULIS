@@ -42,6 +42,13 @@ FCommand::FCommand(
 bool
 FCommand::IsReady() const
 {
+    if( mNumWait == 0 )
+        return  true;
+
+    for( uint32 i = 0; i < mNumWait; ++i )
+        if( mWaitList[i].Status() != eTaskStatus::TaskStatus_Finished )
+            return  false;
+
     return  true;
 }
 
