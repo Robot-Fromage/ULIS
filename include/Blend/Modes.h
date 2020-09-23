@@ -17,7 +17,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // eBlendMode
-enum eBlendMode
+enum eBlendMode : uint8
 {
       Blend_Normal
     , Blend_Top
@@ -111,7 +111,7 @@ static const char* kwBlendMode[] =
 
 /////////////////////////////////////////////////////
 // eAlphaMode
-enum eAlphaMode
+enum eAlphaMode : uint8
 {
       Alpha_Normal
     , Alpha_Erase
@@ -142,7 +142,7 @@ static const char* kwAlphaMode[] =
 
 /////////////////////////////////////////////////////
 // eBlendQualifier
-enum eBlendQualifier
+enum eBlendQualifier : uint8
 {
       BlendQualifier_Separable
     , BlendQualifier_NonSeparable
