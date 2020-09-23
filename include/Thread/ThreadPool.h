@@ -36,7 +36,7 @@ class ULIS_API FThreadPool
 public:
     ~FThreadPool();
     FThreadPool( uint32 iNumWorkers = MaxWorkers() );
-    void ScheduleJob( FCommand* iCommand );
+    void ScheduleJob( FJob* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;

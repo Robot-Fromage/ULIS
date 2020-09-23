@@ -29,7 +29,7 @@ class ULIS_API FThreadPool::FThreadPool_Private
 public:
     ~FThreadPool_Private();
     FThreadPool_Private( uint32 iNumWorkers );
-    void ScheduleJob( FCommand* iCommand );
+    void ScheduleJob( FJob* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
@@ -45,7 +45,7 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleJob( FCommand* iCommand )
+FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
 {
 }
 
