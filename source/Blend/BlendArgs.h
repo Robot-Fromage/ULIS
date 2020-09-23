@@ -25,25 +25,46 @@ class FBlendCommandArgs final
     : public ICommandArgs
 {
 public:
-    struct FArgs {
-        const FBlock& source;
-        FBlock& backdrop;
-        FRectI sourceRect;
-        FVec2F subpixelComponent;
-        FVec2F buspixelComponent;
-        eBlendMode blendingMode;
-        eAlphaMode alphaMode;
-        ufloat opacity;
-        FVec2I shift;
-        FVec2I backdropCoverage;
-        FRectI backdropWorkingRect;
-    } bulk;
-
     virtual ~FBlendCommandArgs() override {};
-    FBlendCommandArgs( const FArgs& ) = delete;
-    FBlendCommandArgs( FArgs&& iInit ) : bulk( std::forward< FArgs >( iInit ) ) {}
-};
+    FBlendCommandArgs(
+          const FBlock& iSource
+        , FBlock& iBackdrop
+        , FRectI iSourceRect
+        , FVec2F iSubpixelComponent
+        , FVec2F iBuspixelComponent
+        , eBlendMode iBlendingMode
+        , eAlphaMode iAlphaMode
+        , ufloat iOpacity
+        , FVec2I iShift
+        , FVec2I iBackdropCoverage
+        , FRectI iBackdropWorkingRect
+    )
+        : ICommandArgs()
+        , source( iSource )
+        , backdrop( iBackdrop )
+        , sourceRect( iSourceRect )
+        , subpixelComponent( iSubpixelComponent )
+        , buspixelComponent( iBuspixelComponent )
+        , blendingMode( iBlendingMode )
+        , alphaMode( iAlphaMode )
+        , opacity( iOpacity )
+        , shift( iShift )
+        , backdropCoverage( iBackdropCoverage )
+        , backdropWorkingRect( iBackdropWorkingRect )
+        {}
 
+    const FBlock& source;
+    FBlock& backdrop;
+    FRectI sourceRect;
+    FVec2F subpixelComponent;
+    FVec2F buspixelComponent;
+    eBlendMode blendingMode;
+    eAlphaMode alphaMode;
+    ufloat opacity;
+    FVec2I shift;
+    FVec2I backdropCoverage;
+    FRectI backdropWorkingRect;
+};
 
 /////////////////////////////////////////////////////
 // FBlendJobArgs
@@ -51,16 +72,25 @@ class FBlendJobArgs final
     : public IJobArgs
 {
 public:
-    struct FArgs {
-        const uint32 line;
-        const uint32 src_bps;
-        const uint8* src;
-        uint8* bdp;
-    } bulk;
 
     virtual ~FBlendJobArgs() override {};
-    FBlendJobArgs( const FArgs& ) = delete;
-    FBlendJobArgs( FArgs&& iInit ) : bulk( std::forward< FArgs >( iInit ) ) {}
+    FBlendJobArgs(
+          const uint32 iLine
+        , const uint32 iSrc_bps
+        , const uint8* iSrc
+        , uint8* iBdp
+    )
+        : IJobArgs()
+        , line( iLine )
+        , src_bps( iSrc_bps )
+        , src( iSrc )
+        , bdp( iBdp )
+    {}
+
+    const uint32 line;
+    const uint32 src_bps;
+    const uint8* src;
+    uint8* bdp;
 };
 
 ULIS_NAMESPACE_END
