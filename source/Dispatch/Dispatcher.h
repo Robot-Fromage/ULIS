@@ -19,16 +19,6 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// ResolveScheduleCall
-template< typename ARGS, void (*IMP)( const ARGS* ) >
-static ULIS_FORCEINLINE void ResolveScheduleCall( const ICommandArgs* iArgs )
-{
-    const ARGS* args = dynamic_cast< const ARGS* >( iArgs );
-    ULIS_ASSERT( args, "Bad cast" );
-    IMP( args );
-}
-
-/////////////////////////////////////////////////////
 // TDispatcher
 template< typename IMP >
 class TDispatcher {
@@ -79,7 +69,7 @@ private:
 // Macro Helper for Dispatcher definition
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX ) \
-    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_AVX_Generic = &ResolveScheduleCall< TAG::tArgs, AVX >;
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_AVX_Generic = &ResolveScheduleCommandCall< TAG::tArgs, AVX >;
 #else
     #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX ) \
     template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_AVX_Generic = nullptr;
@@ -87,14 +77,14 @@ private:
 
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
     #define ULIS_DISPATCH_SELECT_GENSSE( TAG, SSE ) \
-    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_SSE_Generic = &ResolveScheduleCall< TAG::tArgs, SSE >;
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_SSE_Generic = &ResolveScheduleCommandCall< TAG::tArgs, SSE >;
 #else
     #define ULIS_DISPATCH_SELECT_GENSSE( TAG, AVX ) \
     template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_SSE_Generic = nullptr;
 #endif
 
 #define ULIS_DISPATCH_SELECT_GENMEM( TAG, MEM ) \
-    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_MEM_Generic = &ResolveScheduleCall< TAG::tArgs, MEM >;
+    template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_MEM_Generic = &ResolveScheduleCommandCall< TAG::tArgs, MEM >;
 
 #define ULIS_DECLARE_DISPATCHER( TAG, ARG )                 \
 struct TAG {                                                \
@@ -127,15 +117,15 @@ const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, &ResolveScheduleCall< tArgs, _AVX >, &ResolveScheduleCall< tArgs, _SSE >, &ResolveScheduleCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, &ResolveScheduleCommandCall< tArgs, _AVX >, &ResolveScheduleCommandCall< tArgs, _SSE >, &ResolveScheduleCommandCall< tArgs, _MEM > },
     #else
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCall< tArgs, _SSE >, &ResolveScheduleCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCommandCall< tArgs, _SSE >, &ResolveScheduleCommandCall< tArgs, _MEM > },
     #endif
 #else
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCall< tArgs, _SSE >, &ResolveScheduleCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCommandCall< tArgs, _SSE >, &ResolveScheduleCommandCall< tArgs, _MEM > },
     #else
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, &ResolveScheduleCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, &ResolveScheduleCommandCall< tArgs, _MEM > },
     #endif
 #endif
 

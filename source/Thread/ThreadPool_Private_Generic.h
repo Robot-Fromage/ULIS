@@ -14,11 +14,12 @@
 */
 #pragma once
 #include "Thread/ThreadPool.h"
+#include "Memory/Array.h"
+#include "Memory/Queue.h"
+#include "Scheduling/Job.h"
 #include <atomic>
 #include <condition_variable>
 #include <deque>
-#include "Memory/Array.h"
-#include "Memory/Queue.h"
 #include <functional>
 #include <mutex>
 #include <random>
@@ -45,43 +46,83 @@ public:
     static uint32 MaxWorkers();
 
 private:
+    void ThreadProcess();
+
+private:
     // Private Data
-    unsigned int                        busy;
-    bool                                stop;
-    std::vector< std::thread >          workers;
-    std::deque< std::function<void()> > tasks;
-    std::mutex                          queue_mutex;
-    std::condition_variable             cv_task;
-    std::condition_variable             cv_finished;
+    uint32                              mNumBusy;
+    bool                                bStop;
+    std::vector< std::thread >          mWorkers;
+    std::deque< FJob* >                 mTasks;
+    std::mutex                          mQueueMutex;
+    std::condition_variable             cvTask;
+    std::condition_variable             cvFinished;
 };
 
 FThreadPool::FThreadPool_Private::~FThreadPool_Private()
 {
+    // Notify stop condition
+    std::unique_lock< std::mutex > latch( mQueueMutex );
+    bStop = true;
+    cvTask.notify_all();
+    latch.unlock();
+
+    // Join all threads
+    for( auto& t : mWorkers )
+        t.join();
 }
 
 FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
+    : mNumBusy( 0 )
+    , bStop( false )
 {
+    uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
+    for( uint32 i = 0; i < max; ++i )
+        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::ThreadProcess, this ) );
 }
 
 void
 FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
 {
+    std::unique_lock< std::mutex > lock( mQueueMutex );
+    mTasks.push_back( iJob );
+    cvTask.notify_one();
 }
 
 void
 FThreadPool::FThreadPool_Private::WaitForCompletion()
 {
+    std::unique_lock< std::mutex > lock( mQueueMutex );
+    cvFinished.wait( lock, [ this ](){ return mTasks.empty() && ( mNumBusy == 0 ); } );
 }
 
 void
 FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
 {
+    WaitForCompletion();
+
+    // Notify stop condition
+    std::unique_lock< std::mutex > latch( mQueueMutex );
+    bStop = true;
+    cvTask.notify_all();
+    latch.unlock();
+
+    // Join all threads
+    for( auto& t : mWorkers )
+        t.join();
+
+    bStop = false;
+
+    uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
+    mWorkers.clear();
+    for( uint32 i = 0; i < max; ++i )
+        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::ThreadProcess, this ) );
 }
 
 uint32
 FThreadPool::FThreadPool_Private::GetNumWorkers() const
 {
-    return  1;
+    return  static_cast< uint32 >( mWorkers.size() );
 }
 
 //static
@@ -89,6 +130,39 @@ uint32
 FThreadPool::FThreadPool_Private::MaxWorkers()
 {
     return  std::thread::hardware_concurrency();
+}
+
+void
+FThreadPool::FThreadPool_Private::ThreadProcess()
+{
+    while( true )
+    {
+        std::unique_lock< std::mutex > latch( mQueueMutex );
+        cvTask.wait( latch, [ this ](){ return bStop || !mTasks.empty(); } );
+        if( !mTasks.empty() )
+        {
+            // got work. set busy.
+            ++mNumBusy;
+
+            // pull from queue
+            FJob* fn = mTasks.front();
+            mTasks.pop_front();
+
+            // release lock. run async
+            latch.unlock();
+
+            // run function outside context
+            fn->Execute();
+
+            latch.lock();
+            --mNumBusy;
+            cvFinished.notify_one();
+        }
+        else if( bStop )
+        {
+            break;
+        }
+    }
 }
 
 ULIS_NAMESPACE_END

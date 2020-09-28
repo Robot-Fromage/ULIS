@@ -21,6 +21,19 @@
 ULIS_NAMESPACE_BEGIN
 class FJob;
 typedef void (*fpScheduledJob)( const IJobArgs*, const ICommandArgs* );
+
+/////////////////////////////////////////////////////
+// ResolveScheduleCommandCall
+template< typename T, typename U, void (*IMP)( const T*, const U* ) >
+static ULIS_FORCEINLINE void ResolveScheduledJobCall( const IJobArgs* iJobArgs, const ICommandArgs* iCommandArgs )
+{
+    const T* job_args = dynamic_cast< const T* >( iJobArgs );
+    const T* cmd_args = dynamic_cast< const U* >( iCommandArgs );
+    ULIS_ASSERT( job_args, "Bad cast" );
+    ULIS_ASSERT( cmd_args, "Bad cast" );
+    IMP( job_args, cmd_args );
+}
+
 /////////////////////////////////////////////////////
 /// @class      FJob
 /// @brief      The FJob class provides a way to store awaiting scheduled Jobs,
@@ -58,6 +71,9 @@ public:
 
     /*! Explicitely deleted move assignment operator. */
     FJob& operator=( FJob&& ) = delete;
+
+    /*! Start exec job tasks. */
+    void Execute();
 
 private:
     uint32 mNumTasks;

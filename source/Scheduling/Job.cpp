@@ -31,5 +31,12 @@ FJob::FJob(
 {
 }
 
+void
+FJob::Execute()
+{
+    for( uint32 i = 0; i < mNumTasks; ++i )
+        mTasks[i]( nullptr, nullptr );
+}
+
 ULIS_NAMESPACE_END
 

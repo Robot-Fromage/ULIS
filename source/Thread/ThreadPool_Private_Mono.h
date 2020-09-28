@@ -14,6 +14,7 @@
 */
 #pragma once
 #include "Thread/ThreadPool.h"
+#include "Scheduling/Job.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -47,6 +48,7 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 void
 FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
 {
+    iJob->Execute();
 }
 
 void
