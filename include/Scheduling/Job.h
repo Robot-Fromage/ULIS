@@ -54,7 +54,9 @@ public:
     FJob(
           uint32 iNumTasks
         , fpScheduledJob* iTasks
-        , FCommand* iParent
+        , const IJobArgs* iArgs
+        , const FCommand* iParent
+        , FTaskEvent* iEvent
     );
 
     /*! Explicitely deleted default constructor. */
@@ -78,7 +80,9 @@ public:
 private:
     uint32 mNumTasks;
     fpScheduledJob* mTasks;
-    FCommand* mParent;
+    const IJobArgs* mArgs;
+    const FCommand* mParent;
+    FTaskEvent* mEvent;
 };
 
 ULIS_NAMESPACE_END

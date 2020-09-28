@@ -23,11 +23,15 @@ FJob::~FJob()
 FJob::FJob(
       uint32 iNumTasks
     , fpScheduledJob* iTasks
-    , FCommand* iParent
+    , const IJobArgs* iArgs
+    , const FCommand* iParent
+    , FTaskEvent* iEvent
 )
     : mNumTasks( iNumTasks )
     , mTasks( iTasks )
+    , mArgs( iArgs )
     , mParent( iParent )
+    , mEvent( iEvent )
 {
 }
 
