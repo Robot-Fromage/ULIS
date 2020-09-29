@@ -14,10 +14,10 @@
 #pragma once
 #include "Core/Core.h"
 #include "Core/Callback.h"
+#include "Image/Color.h"
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"
 #include "Image/Pixel.h"
-#include "Image/Color.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 
