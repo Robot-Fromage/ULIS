@@ -13,6 +13,7 @@ ULIS uses multiple mechanisms for dispatching implementations of image processin
     + [Implementation Variants](@ref implementation-variants)
     + [CPU vs GPU](@ref cpu-vs-gpu)
 - [Asynchronous Hierarchy Model](@ref asynchronous-hierarchy-model)
+
 ---
 
 ## Overview {#overview}
@@ -70,7 +71,6 @@ The asynchronous mechanisms are enabled by a set of concepts that interact toget
 - Commands ( FCommand )
 - Jobs ( FJob )
 - Tasks ( fpScheduledJob )
-
 
 
 
