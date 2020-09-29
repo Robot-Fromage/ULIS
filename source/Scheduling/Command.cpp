@@ -70,5 +70,11 @@ FCommand::Event() const
     return  mEvent;
 }
 
+const ICommandArgs*
+FCommand::Args() const
+{
+    return  mArgs;
+}
+
 ULIS_NAMESPACE_END
 

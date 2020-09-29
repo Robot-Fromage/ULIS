@@ -86,6 +86,9 @@ public:
     /*! Get the event */
     FTaskEvent* Event() const;
 
+    /*! Get the args */
+    const ICommandArgs* Args() const;
+
 private:
     fpCommandScheduler  mSched;
     const ICommandArgs* mArgs;
