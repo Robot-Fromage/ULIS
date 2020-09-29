@@ -53,9 +53,9 @@ private:
     uint32                              mNumBusy;
     bool                                bStop;
     std::vector< std::thread >          mWorkers;
-    std::deque< FJob* >                 mTasks;
+    std::deque< FJob* >                 mJobs;
     std::mutex                          mQueueMutex;
-    std::condition_variable             cvTask;
+    std::condition_variable             cvJob;
     std::condition_variable             cvFinished;
 };
 
@@ -64,7 +64,7 @@ FThreadPool::FThreadPool_Private::~FThreadPool_Private()
     // Notify stop condition
     std::unique_lock< std::mutex > latch( mQueueMutex );
     bStop = true;
-    cvTask.notify_all();
+    cvJob.notify_all();
     latch.unlock();
 
     // Join all threads
@@ -85,15 +85,15 @@ void
 FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
 {
     std::unique_lock< std::mutex > lock( mQueueMutex );
-    mTasks.push_back( iJob );
-    cvTask.notify_one();
+    mJobs.push_back( iJob );
+    cvJob.notify_one();
 }
 
 void
 FThreadPool::FThreadPool_Private::WaitForCompletion()
 {
     std::unique_lock< std::mutex > lock( mQueueMutex );
-    cvFinished.wait( lock, [ this ](){ return mTasks.empty() && ( mNumBusy == 0 ); } );
+    cvFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ); } );
 }
 
 void
@@ -104,7 +104,7 @@ FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
     // Notify stop condition
     std::unique_lock< std::mutex > latch( mQueueMutex );
     bStop = true;
-    cvTask.notify_all();
+    cvJob.notify_all();
     latch.unlock();
 
     // Join all threads
@@ -138,23 +138,35 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
     while( true )
     {
         std::unique_lock< std::mutex > latch( mQueueMutex );
-        cvTask.wait( latch, [ this ](){ return bStop || !mTasks.empty(); } );
-        if( !mTasks.empty() )
+        cvJob.wait( latch, [ this ](){ return bStop || !mJobs.empty(); } );
+        if( !mJobs.empty() )
         {
             // got work. set busy.
             ++mNumBusy;
 
             // pull from queue
-            FJob* fn = mTasks.front();
-            mTasks.pop_front();
+            FJob* job = mJobs.front();
+            mJobs.pop_front();
+
+            // Gather event and set processing if there
+            FTaskEvent* evt = job->Parent()->Event();
+            if( evt )
+                evt->SetProcessing();
 
             // release lock. run async
             latch.unlock();
 
             // run function outside context
-            fn->Execute();
+            job->Execute();
 
+            // lock again, run sync.
             latch.lock();
+
+            // check event status
+            //if( evt )
+            //    evt->SetFinished();
+
+            // Managing internals
             --mNumBusy;
             cvFinished.notify_one();
         }

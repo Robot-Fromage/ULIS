@@ -48,7 +48,15 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 void
 FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
 {
+    FTaskEvent* evt = iJob->Parent()->Event();
+
+    if( evt )
+        evt->SetProcessing();
+
     iJob->Execute();
+
+    if( evt )
+        evt->SetFinished();
 }
 
 void
