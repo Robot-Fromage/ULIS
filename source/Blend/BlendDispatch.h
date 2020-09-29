@@ -27,10 +27,6 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Typedef scheduler
-typedef void (*fpBlendScheduler)( const FBlendCommandArgs* iArgs );
-
-/////////////////////////////////////////////////////
 // Blend
 ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector,      FBlendCommandArgs )
 ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableInvocationSchedulerSelector,   FBlendCommandArgs )
