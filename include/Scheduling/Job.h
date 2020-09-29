@@ -56,7 +56,6 @@ public:
         , fpScheduledJob* iTasks
         , const IJobArgs* iArgs
         , const FCommand* iParent
-        , FTaskEvent* iEvent
     );
 
     /*! Explicitely deleted default constructor. */
@@ -77,12 +76,14 @@ public:
     /*! Start exec job tasks. */
     void Execute();
 
+    /*! Return the parent command */
+    const FCommand* Parent() const;
+
 private:
     uint32 mNumTasks;
     fpScheduledJob* mTasks;
     const IJobArgs* mArgs;
     const FCommand* mParent;
-    FTaskEvent* mEvent;
 };
 
 ULIS_NAMESPACE_END

@@ -25,13 +25,11 @@ FJob::FJob(
     , fpScheduledJob* iTasks
     , const IJobArgs* iArgs
     , const FCommand* iParent
-    , FTaskEvent* iEvent
 )
     : mNumTasks( iNumTasks )
     , mTasks( iTasks )
     , mArgs( iArgs )
     , mParent( iParent )
-    , mEvent( iEvent )
 {
 }
 
@@ -39,7 +37,13 @@ void
 FJob::Execute()
 {
     for( uint32 i = 0; i < mNumTasks; ++i )
-        mTasks[i]( nullptr, nullptr );
+        mTasks[i]( &mArgs[i], mParent->Args() );
+}
+
+const FCommand*
+FJob::Parent() const
+{
+    return  mParent;
 }
 
 ULIS_NAMESPACE_END
