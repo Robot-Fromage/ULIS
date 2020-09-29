@@ -74,8 +74,8 @@ The asynchronous mechanisms are enabled by a set of concepts that interact toget
 
 Pools are thread pools, they continuously run (attached) threads which implementations depend on the platform, can be posix or windows threads. They are implemented using C++14 std::thread library. Their intent is to have thread running continuously in a spin lock and detecting when jobs are submitted to the pool, taking one job and processing it on a given core in an asynchronous fashion.  
 Command Queues are queues that contain commands. Commands are stored there until the queue is flushed and all commands are unrolled into jobs that are scheduled into the thread pool.  
-Contexts are structures than enable a runtime cached version of the dispatched implementations of the commands.  
+Contexts are structures than enable accessing a runtime cached version of the dispatched implementations of the commands, and then storing them in a queue until flush.  
 Commands are objects that hold arguments related to a particular operation, they are broken down into jobs upon flush.  
-Jobs are sub parts of a command operation, each job will be processed by a different thread. A command can be broken into one or more jobs. Jobs related to how image processing algorithms can be broken down in terms of chunks or scanlines.  
+Jobs are sub parts of a command operation, each job will be processed by a different thread. A command can be broken into one or more jobs. Jobs related to how image processing algorithms can be broken down in terms of chunks or scanlines. Jobs are associated with a given parent command and the arguments necessary for the operation, as well as arguments related to the particular job ( like the scanline that will be written by the job ).  
 Tasks are sub parts of a job. They enable processing of non-contiguous buffer parts of a same job within a single core without rentering the scheduling process, for example processing a tile that spreads across multiple scanline, within a single core.  
 
