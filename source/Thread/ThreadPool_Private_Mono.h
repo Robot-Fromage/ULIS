@@ -25,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 ///             without actual multi threading support.
 ///
 ///             \sa FThreadPool
-class ULIS_API FThreadPool::FThreadPool_Private
+class FThreadPool::FThreadPool_Private
 {
 public:
     ~FThreadPool_Private();
