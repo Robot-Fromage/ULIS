@@ -13,6 +13,10 @@
 
 ## Overview
 ULIS is a rendering library written in C++. It is aimed at software rasterization and digital image processing.
+- [Official Github Repository](https://github.com/Praxinos/ULIS)
+- [Praxinos Website](https://praxinos.coop/)
+- [Documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/)
+- [License](LICENSE.md)
 
 ## Samples
 ![](meta/image/sample/BlendNormals.png) | ![](meta/image/sample/Unicode.png)    | ![](meta/image/sample/Transforms.png)
@@ -23,15 +27,6 @@ ULIS is a rendering library written in C++. It is aimed at software rasterizatio
 <p align="center">
     <img src="meta/git/workflow.png">
 </p>
-
-## Links
-- [Official Github Repository](https://github.com/Praxinos/ULIS)  
-- [Praxinos Website](https://praxinos.coop/)  
-- [Documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/)
-
-## License
-The ULIS repository and all related materials are licensed under a proprietary license, check LICENSE.md and the EULA and CLUF provided within the repository.  
-The access and use of ULIS is free of charge for open-source non-commercial projects. For commercial purposes, the user is required to contact Praxinos to subscribe for a monthly or yearly plan, and enjoy technical support from the Praxinos team. If, after reading the EULA or CLUF, you are left with doubts or questions about a certain clause or need more information, feel free to contact Praxinos.
 
 ## Build and Documentation
 Check the [documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/) for the API reference and details on the build process.  
