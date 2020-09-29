@@ -1,10 +1,10 @@
-# Dispatch Guidelines
-ULIS uses multiple mechanisms for dispatching implementations of image processing algorithms according to various factors, we discuss these factors.
+# Asynchronous Model And Dispatch Guidelines
+ULIS uses multiple mechanisms for dispatching implementations of image processing algorithms, and dispatch them on multithreaded systems, according to various factors.
 
 ---
 
 ## Table of Contents
-- [Overview](@ref overview)
+- [Dispatch Concepts Overview](@ref overview)
     + [Compile Time Intrinsic Set Support](@ref compile-time-intrinsic-set-support)
     + [Runtime Host Device Features](@ref runtime-host-device-features)
     + [Runtime Performance Intents](@ref runtime-performance-intents)
@@ -12,7 +12,7 @@ ULIS uses multiple mechanisms for dispatching implementations of image processin
     + [Multithreaded Scheduling Options](@ref multithreaded-scheduling-options)
     + [Implementation Variants](@ref implementation-variants)
     + [CPU vs GPU](@ref cpu-vs-gpu)
-
+- [Asynchronous Hierarchy Model](@ref asynchronous-hierarchy-model)
 ---
 
 ## Overview {#overview}
@@ -61,4 +61,16 @@ Some algorithms may be dispatched on the CPU or on the GPU depending on the natu
 > Most of the points made here apply to methods dispatched on CPU, but some dispatch mechanisms apply to GPU implementations too.  
 
 ---
+
+## Asynchronous Hierarchy Model {#asynchronous-hierarchy-model}
+The asynchronous mechanisms are enabled by a set of concepts that interact together. Amongst them, we can find:
+- Pools ( FThreadPool )
+- Command Queues ( FCommandQueue )
+- Contexts ( FRasterContext )
+- Commands ( FCommand )
+- Jobs ( FJob )
+- Tasks ( fpScheduledJob )
+
+
+
 
