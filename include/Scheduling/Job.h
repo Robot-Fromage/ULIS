@@ -20,7 +20,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FJob;
-typedef void (*fpScheduledJob)( const IJobArgs*, const ICommandArgs* );
+typedef void (*fpTask)( const IJobArgs*, const ICommandArgs* );
 
 /////////////////////////////////////////////////////
 // ResolveScheduleCommandCall
@@ -53,7 +53,7 @@ public:
     /*! Constructor */
     FJob(
           uint32 iNumTasks
-        , fpScheduledJob* iTasks
+        , fpTask* iTasks
         , const IJobArgs* iArgs
         , const FCommand* iParent
     );
@@ -81,7 +81,7 @@ public:
 
 private:
     uint32 mNumTasks;
-    fpScheduledJob* mTasks;
+    fpTask* mTasks;
     const IJobArgs* mArgs;
     const FCommand* mParent;
 };

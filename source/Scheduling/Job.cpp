@@ -22,7 +22,7 @@ FJob::~FJob()
 
 FJob::FJob(
       uint32 iNumTasks
-    , fpScheduledJob* iTasks
+    , fpTask* iTasks
     , const IJobArgs* iArgs
     , const FCommand* iParent
 )
