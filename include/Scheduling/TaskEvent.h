@@ -53,9 +53,6 @@ public:
     /*! Constructor */
     FTaskEvent();
 
-    /*! Getter for the task policy */
-    const FSchedulePolicy& Policy() const;
-
     /*! Getter for status */
     eTaskStatus Status() const;
 
@@ -71,7 +68,6 @@ private:
     void SetFinished();
 
 private:
-    FSchedulePolicy mPolicy;
     eTaskStatus     mStatus;
 };
 

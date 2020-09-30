@@ -21,17 +21,9 @@ FTaskEvent::~FTaskEvent()
 }
 
 FTaskEvent::FTaskEvent()
-    : mPolicy( FSchedulePolicy() )
-    , mStatus( TaskStatus_Idle )
+    : mStatus( TaskStatus_Idle )
 {
     // Nothing ATM
-}
-
-const
-FSchedulePolicy&
-FTaskEvent::Policy() const
-{
-    return  mPolicy;
 }
 
 eTaskStatus
