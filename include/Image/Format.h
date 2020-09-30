@@ -16,30 +16,30 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FFormat
-/// @brief      The FFormat class provides a way to store cached information
+/// @class      FFormatMetrics
+/// @brief      The FFormatMetrics class provides a way to store cached information
 ///             extrapolated from the eFormat bitfield.
-/// @details    The FFormat class is meant to be used when cached format info
+/// @details    The FFormatMetrics class is meant to be used when cached format info
 ///             is needed for organization of documents or in various
 ///             algorithms.
 ///
 ///             \sa IHasFormat
-struct ULIS_API FFormat
+struct ULIS_API FFormatMetrics
 {
     /*! Destructor. */
-    ~FFormat();
+    ~FFormatMetrics();
 
     /*! Constructor from eFormat. */
-    FFormat( eFormat iFMT );
+    FFormatMetrics( eFormat iFMT );
 
     /*! Copy constructor. */
-    FFormat( const FFormat& iOther );
+    FFormatMetrics( const FFormatMetrics& iOther );
 
     /*! Move constructor. */
-    FFormat( FFormat&& iOther );
+    FFormatMetrics( FFormatMetrics&& iOther );
 
     /*! Copy assignment operator. */
-    FFormat& operator=( const FFormat& iOther );
+    FFormatMetrics& operator=( const FFormatMetrics& iOther );
 
     /*! Cached Index Table */
     uint8*      IDT;
@@ -81,10 +81,10 @@ struct ULIS_API FFormat
 /// @class      IHasFormat
 /// @brief      The IHasFormat class provides an interface for accessing format
 ///             informations for image related classes that have a format.
-/// @details    The IHasFormat class provides acces to a FFormat and interfaces
+/// @details    The IHasFormat class provides acces to a FFormatMetrics and interfaces
 ///             for easy access to format information.
 ///
-///             \sa FFormat
+///             \sa FFormatMetrics
 class ULIS_API IHasFormat
 {
 protected:
@@ -94,13 +94,13 @@ protected:
 
     /*! Constructor from eFormat. */
     IHasFormat( eFormat iFormat )
-        : mFormatInfo( iFormat )
+        : mFormatMetrics( iFormat )
     {}
 
 public:
-    /*! Return the underlying FFormat struct. */
-    ULIS_FORCEINLINE const FFormat& FormatInfo() const {
-        return  mFormatInfo;
+    /*! Return the underlying FFormatMetrics struct. */
+    ULIS_FORCEINLINE const FFormatMetrics& FormatMetrics() const {
+        return  mFormatMetrics;
     }
 
     /*!
@@ -117,77 +117,77 @@ public:
     For eFormat::Format_BGRA8, the index table might look like this: [2,1,0,3]
     */
     ULIS_FORCEINLINE const uint8* IndexTable() const {
-        return  mFormatInfo.IDT;
+        return  mFormatMetrics.IDT;
     }
 
     /*! Return the underlying eFormat value. */
     ULIS_FORCEINLINE eFormat Format() const {
-        return  mFormatInfo.FMT;
+        return  mFormatMetrics.FMT;
     }
 
     /*! Return the extrapolated eType type. */
     ULIS_FORCEINLINE eType Type() const {
-        return  mFormatInfo.TP;
+        return  mFormatMetrics.TP;
     }
 
     /*! Return the extrapolated eColorModel model. */
     ULIS_FORCEINLINE eColorModel Model() const {
-        return  mFormatInfo.CM;
+        return  mFormatMetrics.CM;
     }
 
     /*! Return the number of bytes per sample ( per channel ). For eFormat::Format_RGBA8, this value is 1. */
     ULIS_FORCEINLINE uint8 BytesPerSample() const {
-        return  mFormatInfo.BPC;
+        return  mFormatMetrics.BPC;
     }
 
     /*! Return the number of color channels, alpha is not part of the color channels. For RGB, this value is 3. */
     ULIS_FORCEINLINE uint8 NumColorChannels() const {
-        return  mFormatInfo.NCC;
+        return  mFormatMetrics.NCC;
     }
 
     /*! Return wether the format has an extra alpha channel. */
     ULIS_FORCEINLINE bool HasAlpha() const {
-        return  mFormatInfo.HEA;
+        return  mFormatMetrics.HEA;
     }
 
     /*! Return the number of samples or channels, alpha is taken into account. For eFormat::Format_RGBA8, this value is 4. */
     ULIS_FORCEINLINE uint8 SamplesPerPixel() const {
-        return  mFormatInfo.SPP;
+        return  mFormatMetrics.SPP;
     }
 
     /*! Return the number of bytes per pixel. For eFormat::Format_RGBA8, this value is 4. */
     ULIS_FORCEINLINE uint8 BytesPerPixel() const {
-        return  mFormatInfo.BPP;
+        return  mFormatMetrics.BPP;
     }
 
     /*! Return the redirected index of the alpha channel. */
     ULIS_FORCEINLINE uint8 AlphaIndex() const {
-        return  mFormatInfo.AID;
+        return  mFormatMetrics.AID;
     }
 
     /*! Return wether the layout is reversed or not. */
     ULIS_FORCEINLINE bool Reversed() const {
-        return  mFormatInfo.REV;
+        return  mFormatMetrics.REV;
     }
 
     /*! Return wether the layout is swapped or not. */
     ULIS_FORCEINLINE bool Swapped() const {
-        return  mFormatInfo.SWA;
+        return  mFormatMetrics.SWA;
     }
 
     /*! Return wether the format is premultiplied or not. */
     ULIS_FORCEINLINE bool Premultiplied() const {
-        return  mFormatInfo.PRE;
+        return  mFormatMetrics.PRE;
     }
 
     /*! Return wether the format is linear or not. */
     ULIS_FORCEINLINE bool Linear() const {
-        return  mFormatInfo.LIN;
+        return  mFormatMetrics.LIN;
     }
 
     /*! Return wether the format default profile identifier. */
     ULIS_FORCEINLINE uint8 DefaultProfileCode() const {
-        return  mFormatInfo.PRO;
+        return  mFormatMetrics.PRO;
     }
 
     /*!
@@ -196,8 +196,8 @@ public:
     \sa IndexTable()
     */
     ULIS_FORCEINLINE uint8 RedirectedIndex( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex >= 0 && iIndex < mFormatInfo.SPP, "Bad Index" );
-        return  mFormatInfo.IDT[ iIndex ];
+        ULIS_ASSERT( iIndex >= 0 && iIndex < mFormatMetrics.SPP, "Bad Index" );
+        return  mFormatMetrics.IDT[ iIndex ];
     }
 
 protected:
@@ -210,11 +210,11 @@ protected:
     allowed. These circumstances are defined by the child classes.
     */
     ULIS_FORCEINLINE void ReinterpretFormat( eFormat iFormat ) {
-        mFormatInfo = FFormat( iFormat );
+        mFormatMetrics = FFormatMetrics( iFormat );
     }
 
 private:
-    FFormat mFormatInfo; ///< The FormatInfo.
+    FFormatMetrics mFormatMetrics; ///< The FormatMetrics.
 };
 
 ULIS_NAMESPACE_END

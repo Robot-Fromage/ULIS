@@ -24,7 +24,7 @@ void DrawDotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
 
     uint8* ptr = iDst->PixelBits( iPos.x, iPos.y );
     fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iColor.Format(), iDst->Format() );
-    fptr( iColor.FormatInfo(), iColor.Bits(), iDst->FormatInfo(), ptr, 1 );
+    fptr( iColor.FormatMetrics(), iColor.Bits(), iDst->FormatMetrics(), ptr, 1 );
 }
 
 void DrawHorizontalLineNoAA_UnsafeColor( FBlock* iDst, const uint8* iCorrectColor, int iX1, int iX2, int iY ) {

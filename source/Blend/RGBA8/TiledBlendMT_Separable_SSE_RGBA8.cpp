@@ -33,7 +33,7 @@ InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8(
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
     uint8*              bdp     = iBdp;
 

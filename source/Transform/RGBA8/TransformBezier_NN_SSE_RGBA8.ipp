@@ -25,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 void
 InvokeTransformBezierMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormat&      fmt     = info.destination->FormatInfo();
+    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
     const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
     const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );

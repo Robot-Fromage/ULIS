@@ -28,7 +28,7 @@ template< typename T >
 void
 InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendCommandArgs* iArgs ) {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
     uint8*              bdp     = iBdp;
 

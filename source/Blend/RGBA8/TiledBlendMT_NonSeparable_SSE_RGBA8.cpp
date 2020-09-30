@@ -49,7 +49,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
     uint8*              bdp     = iBdp;
 
@@ -99,7 +99,7 @@ ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8(
     const uint32         src_decal_x = ( info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
-    BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
+    BuildRGBA8IndexTable( info.source->FormatMetrics().RSC, &idt );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8

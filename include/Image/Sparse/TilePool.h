@@ -40,7 +40,7 @@ public:
     virtual uint32                                      EmptyCRC32Hash()                        const       = 0;
     virtual const FBlock*                               EmptyTile()                             const       = 0;
     virtual eFormat                                     TileFormat()                            const       = 0;
-    virtual const FFormat&                          TileFormatInfo()                        const       = 0;
+    virtual const FFormatMetrics&                          TileFormatMetrics()                        const       = 0;
     virtual const FColorSpace*                        TileColorProfile()                      const       = 0;
     virtual uint64                                      CurrentRAMUsage()                       const       = 0;
     virtual uint64                                      CurrentSwapUsage()                      const       = 0;

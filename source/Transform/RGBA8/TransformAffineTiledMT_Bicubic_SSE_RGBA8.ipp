@@ -27,7 +27,7 @@ ULIS_NAMESPACE_BEGIN
 void
 InvokeTransformAffineTiledMTProcessScanline_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormat&      fmt     = info.destination->FormatInfo();
+    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
 
     FVec3F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
@@ -103,7 +103,7 @@ TransformAffineTiledMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs 
     const uint32             dst_decal_y = info.dst_roi.y;
     const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     Vec4i idt( 0, 1, 2, 3 );
-    idt.insert( info.source->FormatInfo().AID, 4 );
+    idt.insert( info.source->FormatMetrics().AID, 4 );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeTransformAffineTiledMTProcessScanline_Bicubic_SSE_RGBA8

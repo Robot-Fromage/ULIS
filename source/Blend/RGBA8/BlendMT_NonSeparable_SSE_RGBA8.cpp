@@ -50,7 +50,7 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel(
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
 
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
@@ -131,7 +131,7 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
-    BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
+    BuildRGBA8IndexTable( info.source->FormatMetrics().RSC, &idt );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.backdropWorkingRect.h
                                    , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel
@@ -150,7 +150,7 @@ InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
         ufloat alpha_bdp    = iBdp[fmt.AID] / 255.f;
@@ -196,7 +196,7 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8(
     const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
     const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
     Vec4i idt;
-    BuildRGBA8IndexTable( info.source->FormatInfo().RSC, &idt );
+    BuildRGBA8IndexTable( info.source->FormatMetrics().RSC, &idt );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                 , info.backdropWorkingRect.h
                                 , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8

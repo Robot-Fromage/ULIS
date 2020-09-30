@@ -29,7 +29,7 @@ float AlphaBlendChannel( float iCs, float iCb, float iAs, float iAb, float iAr )
 template< typename T >
 void
 RasterBitmap( std::shared_ptr< _FPrivateTextInfo > iTextParams, FT_Bitmap* iBitmap, FT_Int iX, FT_Int iY ) {
-    const FFormat& fmtInfo = iTextParams->destination->FormatInfo();
+    const FFormatMetrics& fmtInfo = iTextParams->destination->FormatMetrics();
     int width = iTextParams->destination->Width();
     int height = iTextParams->destination->Height();
     int bps = iTextParams->destination->BytesPerScanLine();

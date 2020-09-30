@@ -28,7 +28,7 @@ template< typename T >
 void
 InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( FBlendJobArgs iJobArgs, const FBlendCommandArgs* iCommandArgs ) {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 
@@ -91,7 +91,7 @@ template< typename T >
 void
 InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( FBlendJobArgs iJobArgs, const FBlendCommandArgs* iArgs ) {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 

@@ -40,10 +40,10 @@ FBlock::FBlock(
 {
     ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    mBytesPerScanline = mWidth * FormatInfo().BPP;
+    mBytesPerScanline = mWidth * FormatMetrics().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 
-    uint32 num = mWidth * mHeight * FormatInfo().SPP;
+    uint32 num = mWidth * mHeight * FormatMetrics().SPP;
     ULIS_ASSERT( num != 0, "Cannot allocate a buffer of size 0" );
 
     mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
@@ -71,7 +71,7 @@ FBlock::FBlock(
 {
     ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    mBytesPerScanline = mWidth * FormatInfo().BPP;
+    mBytesPerScanline = mWidth * FormatMetrics().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 }
 
@@ -145,7 +145,7 @@ FBlock::PixelBits( uint16 iX, uint16 iY )
 {
     ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
-    return  mBitmap + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
+    return  mBitmap + ( iX * FormatMetrics().BPP + iY * mBytesPerScanline );
 }
 
 const uint8*
@@ -166,7 +166,7 @@ FBlock::PixelBits( uint16 iX, uint16 iY ) const
 {
     ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
     ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
-    return  mBitmap + ( iX * FormatInfo().BPP + iY * mBytesPerScanline );
+    return  mBitmap + ( iX * FormatMetrics().BPP + iY * mBytesPerScanline );
 }
 
 uint16
@@ -294,7 +294,7 @@ FBlock::LoadFromData(
     mOnInvalid = iOnInvalid;
     mOnCleanup = iOnCleanup;
 
-    mBytesPerScanline = mWidth * FormatInfo().BPP;
+    mBytesPerScanline = mWidth * FormatMetrics().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 }
 

@@ -14,11 +14,11 @@
 #include "Image/Format.h"
 
 ULIS_NAMESPACE_BEGIN
-FFormat::~FFormat() {
+FFormatMetrics::~FFormatMetrics() {
     if( IDT ) delete [] IDT;
 }
 
-FFormat::FFormat( eFormat iFMT )
+FFormatMetrics::FFormatMetrics( eFormat iFMT )
     : IDT( nullptr )
     , FMT( iFMT )
     , TP( static_cast< eType >( ULIS_R_TYPE( FMT ) ) )
@@ -47,7 +47,7 @@ FFormat::FFormat( eFormat iFMT )
     }
 }
 
-FFormat::FFormat( const FFormat& iOther )
+FFormatMetrics::FFormatMetrics( const FFormatMetrics& iOther )
     : IDT( nullptr )
     , FMT( iOther.FMT )
     , TP( iOther.TP )
@@ -70,8 +70,8 @@ FFormat::FFormat( const FFormat& iOther )
     memcpy( IDT, iOther.IDT, SPP );
 }
 
-FFormat&
-FFormat::operator=( const FFormat& iOther )
+FFormatMetrics&
+FFormatMetrics::operator=( const FFormatMetrics& iOther )
 {
     if( IDT ) delete [] IDT;
     FMT = iOther.FMT;
@@ -96,7 +96,7 @@ FFormat::operator=( const FFormat& iOther )
     return  *this;
 }
 
-FFormat::FFormat( FFormat&& iOther )
+FFormatMetrics::FFormatMetrics( FFormatMetrics&& iOther )
     : IDT( iOther.IDT )
     , FMT( iOther.FMT )
     , TP( iOther.TP )

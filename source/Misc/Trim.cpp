@@ -23,7 +23,7 @@
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-void InvokeDetectTrimAlphaEdge( int32 iLine, size_t iW, const uint8* iSrc, const FFormat& iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot ) {
+void InvokeDetectTrimAlphaEdge( int32 iLine, size_t iW, const uint8* iSrc, const FFormatMetrics& iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot ) {
     const T* src = reinterpret_cast< const T* >( iSrc );
     for( int i = 0; i < iW; ++i ) {
         if( *( src + iFmt.AID ) > MinType< T >() ) {
@@ -36,7 +36,7 @@ void InvokeDetectTrimAlphaEdge( int32 iLine, size_t iW, const uint8* iSrc, const
     }
 }
 
-typedef void (*fpDispatchedDetectTrimAlphaEdgeInvoke)( int32 iLine, size_t iW, const uint8* iSrc, const FFormat& iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot );
+typedef void (*fpDispatchedDetectTrimAlphaEdgeInvoke)( int32 iLine, size_t iW, const uint8* iSrc, const FFormatMetrics& iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot );
 fpDispatchedDetectTrimAlphaEdgeInvoke QueryDispatchedDetectTrimAlphaEdgeInvokeForParameters( eType iType ) {
         switch( iType ) {
         case TYPE_UINT8     : return  InvokeDetectTrimAlphaEdge< uint8 >;
@@ -61,7 +61,7 @@ FRectI GetTrimmedTransparencyRect( FOldThreadPool*            iOldThreadPool
     ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Format info
-    const FFormat& fmt( iSource->FormatInfo() );
+    const FFormatMetrics& fmt( iSource->FormatMetrics() );
 
     if( !fmt.HEA )
         return  iSource->Rect();

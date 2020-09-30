@@ -19,26 +19,26 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch Tests
-static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBA8( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBA8;
+static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBA8( const FFormatMetrics& iFormatMetrics ) {
+    return  ( iFormatMetrics.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBA8;
 }
 
-static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBAF( const FFormat& iFormatInfo ) {
-    return  ( iFormatInfo.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBAF;
+static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBAF( const FFormatMetrics& iFormatMetrics ) {
+    return  ( iFormatMetrics.FMT & ULIS_FORMAT_MASK_LAYOUT ) == eFormat::Format_RGBAF;
 }
 
 /////////////////////////////////////////////////////
 // Dispatch typedefs
-typedef bool (*fpOldCond)( const FFormat& iFormatInfo );
+typedef bool (*fpOldCond)( const FFormatMetrics& iFormatMetrics );
 
 /////////////////////////////////////////////////////
 // Actual Dispatch Implementation
 template< typename IMP >
 class TOldDispatcher {
 public:
-    static ULIS_FORCEINLINE typename IMP::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename IMP::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename IMP::tExtra& iExtra ) {
         for( int i = 0; i < IMP::spec_size; ++i ) {
-            if( IMP::spec_table[i].select_cond( iFormatInfo ) ) {
+            if( IMP::spec_table[i].select_cond( iFormatMetrics ) ) {
                 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
                     if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                         return  IMP::spec_table[i].select_AVX( iExtra );
@@ -53,8 +53,8 @@ public:
             }
         }
 
-        #define TMP_CALL( _TYPE_ID, _E0, _E2, _E3 ) return  QueryGeneric< _E0 >( iPerfIntent, iHostDeviceInfo, iFormatInfo, iExtra );
-        ULIS_SWITCH_FOR_ALL_DO( iFormatInfo.TP, ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+        #define TMP_CALL( _TYPE_ID, _E0, _E2, _E3 ) return  QueryGeneric< _E0 >( iPerfIntent, iHostDeviceInfo, iFormatMetrics, iExtra );
+        ULIS_SWITCH_FOR_ALL_DO( iFormatMetrics.TP, ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
         #undef TMP_CALL
 
         ULIS_ASSERT( false, "No Dispatch found." );
@@ -63,7 +63,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo, const typename IMP::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename IMP::tExtra& iExtra ) {
         #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
             if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                 return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );

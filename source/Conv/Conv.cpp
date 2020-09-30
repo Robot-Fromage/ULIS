@@ -27,7 +27,7 @@ void Conv( const ISample& iSrc, ISample& iDst ) {
         memcpy( iDst.Bits(), iSrc.Bits(), iDst.BytesPerPixel() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst.Format() );
-        fptr( iSrc.FormatInfo(), iSrc.Bits(), iDst.FormatInfo(), iDst.Bits(), 1 );
+        fptr( iSrc.FormatMetrics(), iSrc.Bits(), iDst.FormatMetrics(), iDst.Bits(), 1 );
     }
 }
 
@@ -37,7 +37,7 @@ FColor Conv( const ISample& iSrc, eFormat iDst ) {
         memcpy( dst.Bits(), iSrc.Bits(), dst.BytesPerPixel() );
     } else {
         fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst );
-        fptr( iSrc.FormatInfo(), iSrc.Bits(), dst.FormatInfo(), dst.Bits(), 1 );
+        fptr( iSrc.FormatMetrics(), iSrc.Bits(), dst.FormatMetrics(), dst.Bits(), 1 );
     }
     return  dst;
 }
@@ -81,8 +81,8 @@ void Conv(
     uint32          dst_bps = iDestination->BytesPerScanLine();
     const int       max     = iSource->Height();
     const uint32    len     = iSource->Width();
-    const FFormat&  srcnfo  = iSource->FormatInfo();
-    const FFormat&  dstnfo  = iDestination->FormatInfo();
+    const FFormatMetrics&  srcnfo  = iSource->FormatMetrics();
+    const FFormatMetrics&  dstnfo  = iDestination->FormatMetrics();
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , fptr

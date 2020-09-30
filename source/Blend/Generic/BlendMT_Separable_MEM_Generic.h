@@ -28,7 +28,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FBlendCommandArgs* iArgs ) {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
@@ -94,7 +94,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendCommandArgs* iArgs ) {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 

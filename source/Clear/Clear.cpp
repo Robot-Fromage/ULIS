@@ -66,7 +66,7 @@ void Clear_imp( FOldThreadPool*            iOldThreadPool
               , FBlock*                 iDestination
               , const FRectI&            iArea )
 {
-    const FFormat&  fmt     = iDestination->FormatInfo();
+    const FFormatMetrics&  fmt     = iDestination->FormatMetrics();
     const uint32         bpp     = fmt.BPP;
     const uint32         w       = iDestination->Width();
     const uint32         bps     = iDestination->BytesPerScanLine();

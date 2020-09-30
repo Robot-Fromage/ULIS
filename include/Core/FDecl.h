@@ -33,7 +33,7 @@ class   FStructuringElement;
 struct  FPerfInfo;
 struct  FHostDeviceInfo;
 class   FDevice;
-struct  FFormat;
+struct  FFormatMetrics;
 struct  FTileElement;
 class   ITiledBlock;
 class   ITilePool;

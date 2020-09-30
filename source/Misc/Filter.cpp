@@ -58,7 +58,7 @@ void Filter( FOldThreadPool*           iOldThreadPool
     ULIS_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
-    const FFormat& srcFormatInfo( iSource->FormatInfo() );
+    const FFormatMetrics& srcFormatMetrics( iSource->FormatMetrics() );
 
     // Bake Params and call
     const uint8*    src     = iSource->Bits();
@@ -68,7 +68,7 @@ void Filter( FOldThreadPool*           iOldThreadPool
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , InvokeFilter
-                                   , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
+                                   , len, iSource, src + ( pLINE * src_bps ), srcFormatMetrics.BPP, iFunc );
 }
 
 void FilterInPlace( FOldThreadPool*            iOldThreadPool
@@ -85,7 +85,7 @@ void FilterInPlace( FOldThreadPool*            iOldThreadPool
     ULIS_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
-    const FFormat& srcFormatInfo( iSource->FormatInfo() );
+    const FFormatMetrics& srcFormatMetrics( iSource->FormatMetrics() );
 
     // Bake Params and call
     uint8*      src     = iSource->Bits();
@@ -95,7 +95,7 @@ void FilterInPlace( FOldThreadPool*            iOldThreadPool
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
                                    , InvokeFilterInPlace
-                                   , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
+                                   , len, iSource, src + ( pLINE * src_bps ), srcFormatMetrics.BPP, iFunc );
 
     iSource->Dirty( iCallCB );
 }
@@ -119,8 +119,8 @@ void FilterInto( FOldThreadPool*              iOldThreadPool
     ULIS_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
-    const FFormat& srcFormatInfo( iSource->FormatInfo() );
-    const FFormat& dstFormatInfo( iDestination->FormatInfo() );
+    const FFormatMetrics& srcFormatMetrics( iSource->FormatMetrics() );
+    const FFormatMetrics& dstFormatMetrics( iDestination->FormatMetrics() );
 
     // Bake Params and call
     const uint8*    src     = iSource->Bits();
@@ -135,10 +135,10 @@ void FilterInto( FOldThreadPool*              iOldThreadPool
                                    , len
                                    , iSource
                                    , src + ( pLINE * src_bps )
-                                   , srcFormatInfo.BPP
+                                   , srcFormatMetrics.BPP
                                    , iDestination
                                    , dst + ( pLINE * dst_bps )
-                                   , dstFormatInfo.BPP
+                                   , dstFormatMetrics.BPP
                                    , iFunc );
     iDestination->Dirty( iCallCB );
 }

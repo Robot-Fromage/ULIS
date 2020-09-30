@@ -29,7 +29,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FBlendCommandArgs* iArgs ) {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 
@@ -46,7 +46,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSr
     uint8* result = new uint8[ fmt.SPP ];
 
     // Query dispatched method
-    FFormat rgbfFormatInfo( eFormat::Format_RGBF );
+    FFormatMetrics rgbfFormatMetrics( eFormat::Format_RGBF );
     fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
     ULIS_ASSERT( conv_forward_fptr, "No Conversion invocation found" );
@@ -78,12 +78,12 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSr
             FLOAT2TYPE( src_sample.Bits(), r, srcvf );
         }
 
-        conv_forward_fptr( fmt, src_sample.Bits(), rgbfFormatInfo, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( fmt, bdp, rgbfFormatInfo, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, src_sample.Bits(), rgbfFormatMetrics, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, bdp, rgbfFormatMetrics, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( rgbfFormatInfo, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
+        conv_backward_fptr( rgbfFormatMetrics, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
@@ -121,7 +121,7 @@ template< typename T >
 void
 InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendCommandArgs* iArgs ) {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 
@@ -131,7 +131,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8*
     uint8* result = new uint8[ fmt.SPP ];
 
     // Query dispatched method
-    FFormat rgbfFormatInfo( eFormat::Format_RGBF );
+    FFormatMetrics rgbfFormatMetrics( eFormat::Format_RGBF );
     fpConversionInvocation conv_forward_fptr = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
     ULIS_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
@@ -145,12 +145,12 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8*
         float alpha_result;
         ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        conv_forward_fptr( fmt, src, rgbfFormatInfo, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( fmt, bdp, rgbfFormatInfo, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, src, rgbfFormatMetrics, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
+        conv_forward_fptr( fmt, bdp, rgbfFormatMetrics, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS_SWITCH_FOR_ALL_DO( info.blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( rgbfFormatInfo, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
+        conv_backward_fptr( rgbfFormatMetrics, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];

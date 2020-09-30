@@ -16,10 +16,10 @@ using namespace ::ul3;
 
 int
 main() {
-    constexpr auto bb = sizeof( FFormat );
-    constexpr auto zz = offsetof( FFormat, SWA );
-    FFormat ll( static_cast< eFormat >( 0 ) );
-    FFormat* LL = &ll;
+    constexpr auto bb = sizeof( FFormatMetrics );
+    constexpr auto zz = offsetof( FFormatMetrics, SWA );
+    FFormatMetrics ll( static_cast< eFormat >( 0 ) );
+    FFormatMetrics* LL = &ll;
     uint8*      * IDT   = &ll.IDT;
     eFormat     * FMT   = &ll.FMT;
     eType       * TP    = &ll.TP ;

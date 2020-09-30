@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T > void
 InvokeTransformPerspectiveMTProcessScanline_NN_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormat&      fmt     = info.destination->FormatInfo();
+    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
 
     FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );

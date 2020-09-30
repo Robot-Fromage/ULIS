@@ -42,7 +42,7 @@ FBlock* XGetSummedAreaTable( FOldThreadPool*             iOldThreadPool
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
-    fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
+    fpDispatchedSATFunc fptr = QueryDispatchedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatMetrics() );
     ULIS_ASSERT( fptr, "No dispatch function found." );
     fptr( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 
@@ -70,7 +70,7 @@ FBlock* XGetPremultipliedSummedAreaTable( FOldThreadPool*             iOldThread
     FBlock* sat = new FBlock( iSource->Width(), iSource->Height(), satFormat );
 
     // Query dispatched method
-    fpDispatchedSATFunc fptr = QueryDispatchedPremultipliedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatInfo() );
+    fpDispatchedSATFunc fptr = QueryDispatchedPremultipliedSATFunctionForParameters( iPerfIntent, iHostDeviceInfo, iSource->FormatMetrics() );
     ULIS_ASSERT( fptr, "No dispatch function found." );
     fptr( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iSource, sat );
 

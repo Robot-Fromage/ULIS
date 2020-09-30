@@ -103,21 +103,21 @@ Extract( FOldThreadPool*           iOldThreadPool
         return;
 
     // Format info
-    const FFormat& srcFormatInfo( iSource->FormatInfo() );
-    const FFormat& dstFormatInfo( iDestination->FormatInfo() );
+    const FFormatMetrics& srcFormatMetrics( iSource->FormatMetrics() );
+    const FFormatMetrics& dstFormatMetrics( iDestination->FormatMetrics() );
 
     // Channels
     std::vector< uint8 > sourceChannelsToExtract;
     std::vector< uint8 > destinationChannelsToExtract;
-    uint8 max_channels_both = FMath::Min( FMath::Max( srcFormatInfo.SPP, dstFormatInfo.SPP ), static_cast< uint8 >( ULIS_MAX_CHANNELS ) );
+    uint8 max_channels_both = FMath::Min( FMath::Max( srcFormatMetrics.SPP, dstFormatMetrics.SPP ), static_cast< uint8 >( ULIS_MAX_CHANNELS ) );
     sourceChannelsToExtract.reserve( max_channels_both );
     destinationChannelsToExtract.reserve( max_channels_both );
     for( int i = 0; i < max_channels_both; ++i ) {
         if( iSourceExtractMask & ( 1 << i ) )
-            sourceChannelsToExtract.push_back( iSourceRawIndicesFlag ? i : srcFormatInfo.IDT[i] );
+            sourceChannelsToExtract.push_back( iSourceRawIndicesFlag ? i : srcFormatMetrics.IDT[i] );
 
         if( iDestinationExtractMask & ( 1 << i ) )
-            destinationChannelsToExtract.push_back( iDestinationRawIndicesFlag ? i : dstFormatInfo.IDT[i] );
+            destinationChannelsToExtract.push_back( iDestinationRawIndicesFlag ? i : dstFormatMetrics.IDT[i] );
     }
 
     ULIS_ASSERT( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map" );
@@ -146,7 +146,7 @@ Extract( FOldThreadPool*           iOldThreadPool
     #define DST dsb + ( pLINE * dst_bps )
     const int       max = iSource->Height();
     const size_t    len = iSource->Width();
-    fpDispatchedExtractInvoke fptr = QueryDispatchedExtractInvokeForParameters( srcFormatInfo.TP, dstFormatInfo.TP );
+    fpDispatchedExtractInvoke fptr = QueryDispatchedExtractInvokeForParameters( srcFormatMetrics.TP, dstFormatMetrics.TP );
     ULIS_ASSERT( fptr, "No dispatch invocation found." );
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max

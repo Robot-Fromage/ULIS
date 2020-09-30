@@ -49,7 +49,7 @@ public:
     uint32                                      EmptyCRC32Hash()                        const;
     const FBlock*                               EmptyTile()                             const;
     eFormat                                     TileFormat()                            const;
-    const FFormat&                          TileFormatInfo()                        const;
+    const FFormatMetrics&                          TileFormatMetrics()                        const;
     const FColorSpace*                        TileColorProfile()                      const;
     uint64                                      CurrentRAMUsage()                       const;
     uint64                                      CurrentSwapUsage()                      const;

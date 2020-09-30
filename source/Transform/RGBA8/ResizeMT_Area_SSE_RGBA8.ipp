@@ -25,8 +25,8 @@ ULIS_NAMESPACE_BEGIN
 void
 InvokeResizeMTProcessScanline_Area_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo, const Vec4i iIDT ) {
     const FResizeArgs&  info    = *iInfo;
-    const FFormat&  fmt     = info.destination->FormatInfo();
-    const FFormat&  sat_fmt = info.optionalSAT->FormatInfo();
+    const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
+    const FFormatMetrics&  sat_fmt = info.optionalSAT->FormatMetrics();
     uint8*          dst     = iDst;
 
     FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
@@ -106,7 +106,7 @@ ResizeMT_Area_SSE_RGBA8( std::shared_ptr< const FResizeArgs > iInfo ) {
     const uint32         dst_decal_y = info.dst_roi.y;
     const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     Vec4i idt( 0, 1, 2, 3 );
-    idt.insert( info.source->FormatInfo().AID, 4 );
+    idt.insert( info.source->FormatMetrics().AID, 4 );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
                                    , InvokeResizeMTProcessScanline_Area_SSE_RGBA8

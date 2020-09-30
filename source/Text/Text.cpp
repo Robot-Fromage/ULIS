@@ -61,7 +61,7 @@ RenderText( FOldThreadPool*            iOldThreadPool
     { // Conv
         fpConversionInvocation fptrconv = QueryDispatchedConversionInvocation( iColor.Format(), iDestination->Format() );
         ULIS_ASSERT( fptrconv, "No Conversion invocation found" );
-        fptrconv( iColor.FormatInfo(), iColor.Bits(), iDestination->FormatInfo(), alias.color, 1 );
+        fptrconv( iColor.FormatMetrics(), iColor.Bits(), iDestination->FormatMetrics(), alias.color, 1 );
     }
 
     { // Mat

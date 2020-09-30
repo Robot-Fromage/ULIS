@@ -33,7 +33,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
     const bool notLastLine  = iLine < info.backdropCoverage.y;
@@ -176,7 +176,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8(
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
-    const FFormat&  fmt     = info.source->FormatInfo();
+    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
     uint8*              bdp     = iBdp;
 

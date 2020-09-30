@@ -22,7 +22,7 @@
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >
-void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormat& iFmt ) {
+void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormatMetrics& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         for( int j = 0; j < iFmt.NCC; ++j ) {
@@ -34,7 +34,7 @@ void InvokesRGB2Linear( size_t iW, uint8* iDst, const FFormat& iFmt ) {
 }
 
 template< typename T >
-void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormat& iFmt ) {
+void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormatMetrics& iFmt ) {
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
         for( int j = 0; j < iFmt.NCC; ++j ) {
@@ -45,7 +45,7 @@ void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormat& iFmt ) {
     }
 }
 
-typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, uint8* iDst, const FFormat& iFmt );
+typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt );
 fpDispatchedGammaCompressInvoke QueryDispatchedsRGB2LinearInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokesRGB2Linear< uint8 >;
@@ -93,7 +93,7 @@ ApplysRGB2Linear( FOldThreadPool*           iOldThreadPool
     ULIS_ASSERT( fptr, "No dispatch invocation found." );
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
+                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatMetrics() )
     iDestination->Dirty( iCallCB );
 }
 
@@ -122,7 +122,7 @@ ApplyLinear2sRGB( FOldThreadPool*           iOldThreadPool
     ULIS_ASSERT( fptr, "No dispatch invocation found." );
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatInfo() )
+                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatMetrics() )
     iDestination->Dirty( iCallCB );
 }
 

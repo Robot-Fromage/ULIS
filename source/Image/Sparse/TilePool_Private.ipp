@@ -72,7 +72,7 @@ template< uint8 _MICRO, uint8 _MACRO > const FVec2I&        TTilePool< _MICRO, _
 template< uint8 _MICRO, uint8 _MACRO > uint32               TTilePool< _MICRO, _MACRO >::EmptyCRC32Hash()                           const   { return  mEmptyCRC32Hash;                              }
 template< uint8 _MICRO, uint8 _MACRO > const FBlock*        TTilePool< _MICRO, _MACRO >::EmptyTile()                                const   { return  mEmptyTile;                                   }
 template< uint8 _MICRO, uint8 _MACRO > eFormat              TTilePool< _MICRO, _MACRO >::TileFormat()                               const   { return  mTileFormat;                                  }
-template< uint8 _MICRO, uint8 _MACRO > const FFormat&   TTilePool< _MICRO, _MACRO >::TileFormatInfo()                           const   { return  mEmptyTile->FormatInfo();                     }
+template< uint8 _MICRO, uint8 _MACRO > const FFormatMetrics&   TTilePool< _MICRO, _MACRO >::TileFormatMetrics()                           const   { return  mEmptyTile->FormatMetrics();                     }
 template< uint8 _MICRO, uint8 _MACRO > const FColorSpace* TTilePool< _MICRO, _MACRO >::TileColorProfile()                         const   { return  mTileColorProfile;                            }
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentRAMUsage()                          const   { return  mCurrentRAMUsageAtomic.load();                }
 template< uint8 _MICRO, uint8 _MACRO > uint64               TTilePool< _MICRO, _MACRO >::CurrentSwapUsage()                         const   { return  0;                                            }

@@ -25,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 void 
 InvokeComputePremultipliedSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, const uint8* iSrc, uint8* iDst ) {
-    const FFormat& fmt = iSAT->FormatInfo();
+    const FFormatMetrics& fmt = iSAT->FormatMetrics();
     const T* src = reinterpret_cast< const T* >( iSrc )  + fmt.SPP;
     float*   dst = reinterpret_cast< float* >( iDst )    + fmt.SPP;
 
@@ -50,7 +50,7 @@ InvokeComputePremultipliedSummedAreaTable_XPass_MEM_Generic( const uint32 iLen, 
 template< typename T >
 void 
 InvokeComputePremultipliedSummedAreaTable_YPass_MEM_Generic( const uint32 iLen, FBlock* iSAT, uint8* iDst ) {
-    const FFormat& fmt = iSAT->FormatInfo();
+    const FFormatMetrics& fmt = iSAT->FormatMetrics();
     const uint32 stride = iSAT->Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( iDst ) + stride;
 
@@ -80,7 +80,7 @@ void ComputePremultipliedSummedAreaTable_MEM_Generic( FOldThreadPool*           
     const int       h       = iSource->Height();
 
     {
-        const FFormat& fmt = iSAT->FormatInfo();
+        const FFormatMetrics& fmt = iSAT->FormatMetrics();
         const T* wsrc = reinterpret_cast< const T* >( src );
         float*   wdst = reinterpret_cast< float* >( bdp );
         const uint32 stride = iSAT->Width()   * fmt.SPP;
@@ -163,7 +163,7 @@ void ComputePremultipliedSummedAreaTable_SSE42_RGBA8( FOldThreadPool*           
     const uint32     bdp_bpp = iSAT->BytesPerPixel();
     const int       w       = iSource->Width();
     const int       h       = iSource->Height();
-    const FFormat& fmt = iSAT->FormatInfo();
+    const FFormatMetrics& fmt = iSAT->FormatMetrics();
     {
         const uint8* wsrc = reinterpret_cast< const uint8* >( src );
         float*   wdst = reinterpret_cast< float* >( bdp );
@@ -204,12 +204,12 @@ typedef void (*fpDispatchedSATFunc)( FOldThreadPool*             iOldThreadPool
 
 template< typename T >
 fpDispatchedSATFunc
-QueryDispatchedPremultipliedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
+QueryDispatchedPremultipliedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     return  ComputePremultipliedSummedAreaTable_MEM_Generic< T >;
 }
 
 fpDispatchedSATFunc
-QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
+QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
         if( iHostDeviceInfo.HW_SSE42 )
             return  ComputePremultipliedSummedAreaTable_SSE42_RGBA8;
@@ -221,33 +221,33 @@ QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, 
 
 template< typename T >
 fpDispatchedSATFunc
-QueryDispatchedPremultipliedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
-    return  QueryDispatchedPremultipliedSATFunctionForParameters_Generic< T >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+QueryDispatchedPremultipliedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
+    return  QueryDispatchedPremultipliedSATFunctionForParameters_Generic< T >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
 }
 
 template<>
 fpDispatchedSATFunc
-QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
+QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     // RGBA8 Signature, any layout
-    if( iFormatInfo.HEA
-     && iFormatInfo.NCC == 3
-     && iFormatInfo.CM  == CM_RGB
+    if( iFormatMetrics.HEA
+     && iFormatMetrics.NCC == 3
+     && iFormatMetrics.CM  == CM_RGB
      && ( iPerfIntent & ULIS_PERF_SSE42 || iPerfIntent & ULIS_PERF_AVX2 )
      && ( iHostDeviceInfo.HW_SSE42 || iHostDeviceInfo.HW_AVX2 ) ) {
-        return  QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+        return  QueryDispatchedPremultipliedSATFunctionForParameters_RGBA8( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
     }
 
-    return  QueryDispatchedPremultipliedSATFunctionForParameters_Generic< uint8 >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+    return  QueryDispatchedPremultipliedSATFunctionForParameters_Generic< uint8 >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
 }
 
 fpDispatchedSATFunc
-QueryDispatchedPremultipliedSATFunctionForParameters( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormat& iFormatInfo ) {
-    switch( iFormatInfo.TP ) {
-        case TYPE_UINT8     : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8   >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
-        case TYPE_UINT16    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint16  >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
-        case TYPE_UINT32    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint32  >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
-        case TYPE_UFLOAT    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< ufloat  >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
-        case TYPE_UDOUBLE   : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< udouble >( iPerfIntent, iHostDeviceInfo, iFormatInfo );
+QueryDispatchedPremultipliedSATFunctionForParameters( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
+    switch( iFormatMetrics.TP ) {
+        case TYPE_UINT8     : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8   >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case TYPE_UINT16    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint16  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case TYPE_UINT32    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint32  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case TYPE_UFLOAT    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< ufloat  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case TYPE_UDOUBLE   : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< udouble >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
     }
     return  nullptr;
 }

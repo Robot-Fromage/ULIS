@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T > void
 InvokeTransformAffineMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
-    const FFormat&      fmt     = info.destination->FormatInfo();
+    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
 
     FVec3F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );

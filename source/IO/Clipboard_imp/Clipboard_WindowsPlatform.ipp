@@ -78,8 +78,8 @@ FBlock* XLoadFromClipboard( FOldThreadPool*            iOldThreadPool
     uint8*          dsb         = ret->Bits();
     #define SRC srb - ( pLINE * src_bps )
     #define DST dsb + ( pLINE * dst_bps )
-    const FFormat& srcnfo = tmp.FormatInfo();
-    const FFormat& dstnfo = ret->FormatInfo();
+    const FFormatMetrics& srcnfo = tmp.FormatMetrics();
+    const FFormatMetrics& dstnfo = ret->FormatMetrics();
 
     // Call
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, ULIS_BLOCKING

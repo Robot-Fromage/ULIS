@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Invocation Implementation
 template< typename T >
-void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormat& iFmt, std::shared_ptr< FColor > iColor ) {
+void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormatMetrics& iFmt, std::shared_ptr< FColor > iColor ) {
     const uint8* src = iColor->Bits();
     T* dst = reinterpret_cast< T* >( iDst );
     for( int i = 0; i < iW; ++i ) {
@@ -37,7 +37,7 @@ void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormat& iFmt, std::
 
 /////////////////////////////////////////////////////
 // Dispatch
-typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormat& iFmt, std::shared_ptr< FColor > iColor );
+typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt, std::shared_ptr< FColor > iColor );
 fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForParameters( eType iType ) {
     switch( iType ) {
         case TYPE_UINT8     : return  InvokeFillPreserveAlpha< uint8 >;
@@ -91,7 +91,7 @@ FillPreserveAlpha( FOldThreadPool*             iOldThreadPool
     // Call
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
-                                   , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, iDestination->FormatInfo(), color )
+                                   , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, iDestination->FormatMetrics(), color )
 
     // Invalid
     iDestination->Dirty( roi, iCallCB );
