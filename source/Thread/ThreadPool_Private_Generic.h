@@ -162,6 +162,7 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             //FTaskEvent* evt = job->Parent()->Event();
             //if( evt )
             //    evt->SetFinished();
+            delete job;
 
             // Managing internals
             --mNumBusy;

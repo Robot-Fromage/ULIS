@@ -53,6 +53,8 @@ FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
     FTaskEvent* evt = iJob->Parent()->Event();
     if( evt )
         evt->SetFinished();
+
+    delete  iJob;
 }
 
 void
