@@ -19,7 +19,6 @@ ULIS_NAMESPACE_BEGIN
 enum eTaskStatus : uint8 {
       TaskStatus_Idle
     , TaskStatus_Scheduled
-    , TaskStatus_Processing
     , TaskStatus_Finished
 };
 
@@ -60,9 +59,6 @@ public:
 private:
     /*! Set status to scheduled */
     void SetScheduled();
-
-    /*! Set status to scheduled */
-    void SetProcessing();
 
     /*! Set status to scheduled */
     void SetFinished();

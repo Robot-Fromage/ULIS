@@ -148,10 +148,6 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             FJob* job = mJobs.front();
             mJobs.pop_front();
 
-            // Gather event and set processing if there
-            FTaskEvent* evt = job->Parent()->Event();
-            if( evt )
-                evt->SetProcessing();
 
             // release lock. run async
             latch.unlock();
@@ -162,7 +158,8 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             // lock again, run sync.
             latch.lock();
 
-            // check event status
+            // Gather event and set status if needed
+            //FTaskEvent* evt = job->Parent()->Event();
             //if( evt )
             //    evt->SetFinished();
 

@@ -37,13 +37,6 @@ FTaskEvent::SetScheduled()
 {
     mStatus = eTaskStatus::TaskStatus_Scheduled;
 }
-
-void
-FTaskEvent::SetProcessing()
-{
-    mStatus = eTaskStatus::TaskStatus_Processing;
-}
-
 void
 FTaskEvent::SetFinished()
 {
