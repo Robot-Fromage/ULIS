@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename IMP >
 class TDispatcher {
 public:
-    static ULIS_FORCEINLINE typename fpCommandScheduler Query( const FDevice& iDevice, eFormat iFormat ) {
+    static ULIS_FORCEINLINE typename fpCommandScheduler Query( const FHardwareMetrics& iDevice, eFormat iFormat ) {
         for( int i = 0; i < IMP::spec_size; ++i ) {
             if( IMP::spec_table[i].select_cond( iFormat ) ) {
                 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
@@ -51,7 +51,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE typename fpCommandScheduler QueryGeneric( const FDevice& iDevice, eFormat iFormat ) {
+    static ULIS_FORCEINLINE typename fpCommandScheduler QueryGeneric( const FHardwareMetrics& iDevice, eFormat iFormat ) {
         #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
             if( iDevice.HasHardwareAVX2() )
                 return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic;

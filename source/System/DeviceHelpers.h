@@ -7,7 +7,7 @@
 *
 * @file         DeviceHelpers.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for FDevice macro helpers tools.
+* @brief        This file provides the definition for FHardwareMetrics macro helpers tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

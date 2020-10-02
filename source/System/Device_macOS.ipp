@@ -7,7 +7,7 @@
 *
 * @file         Device_macOS.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FDevice tools.
+* @brief        This file provides the definition for the FHardwareMetrics tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -108,7 +108,7 @@ cache_size() {
 
 } // namespace detail
 
-FDevice::FDevice()
+FHardwareMetrics::FHardwareMetrics()
     : bField( 0 )
     , mMaxWorkers( std::thread::hardware_concurrency() )
     , mL1CacheSize( detail::cache_size() )

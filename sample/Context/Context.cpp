@@ -21,16 +21,27 @@
 
 #include <chrono>
 
+using namespace ::ULIS;
+
 int
 main( int argc, char *argv[] ) {
-    ::ULIS::FThreadPool pool;
-    ::ULIS::FCommandQueue queue( pool );
-    ::ULIS::eFormat format = ::ULIS::Format_RGBA8;
-    ::ULIS::FDevice host;
-    ::ULIS::FRasterContext ctx( queue, host, format );
+    FThreadPool pool;
+    FCommandQueue queue( pool );
+    eFormat format = Format_RGBA8;
+    FRasterContext ctx( queue, format );
 
-    ::ULIS::FString pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
-    ::ULIS::FString pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
+    FBlock blockA( 256, 256, format );
+    FBlock blockB( 256, 256, format );
+    FBlock blockC( 256, 256, format );
+
+    FEvent blendEventBA;
+    FEvent blendEventCA;
+
+    FSchedulePolicy policy;
+
+    ctx.Blend( blockB, blockA, blockB.Rect(), FVec2F(), Blend_Normal, Alpha_Normal, 1.f, policy, 0, 0, &blendEventBA );
+    ctx.Blend( blockC, blockA, blockC.Rect(), FVec2F(), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &blendEventBA, 0 );
+    ctx.Finish();
 
     return  0;
 }

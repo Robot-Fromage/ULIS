@@ -17,16 +17,31 @@
 #include "Scheduling/CommandQueue.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Safety Checks for Events
 void EventHookCheck_imp( const FEvent* iEvent )
 {
     if( iEvent )
-        ULIS_ASSERT( !( iEvent->Hooked() ), "Reusing an event multiple times is illegal !" );
+        ULIS_ASSERT( !( iEvent->Hooked() ), "Reusing an event multiple times is illegal and will lead to corrupted concurrency state." );
+}
+
+void EventSelfCheck_imp( uint32 iNumWait, const FEvent* iWaitList, const FEvent* iEvent )
+{
+    if( iNumWait )
+    {
+        for( uint32 i = 0; i < iNumWait; ++i )
+        {
+            ULIS_ASSERT( &iWaitList[i] != iEvent, "Event waiting for itself is illegal and will lead to an infinite loop." );
+        }
+    }
 }
 
 #if defined( ULIS_DEBUG )
 #define EventHookCheck( EV ) EventHookCheck_imp( EV );
+#define EventSelfCheck( NUM, LIST, EV ) EventSelfCheck_imp( NUM, LIST, EV );
 #else
 #define EventHookCheck( EV )
+#define EventSelfCheck( NUM, LIST, EV )
 #endif
 
 /////////////////////////////////////////////////////
@@ -37,20 +52,14 @@ struct FRasterContext::FContextualDispatchTable
 
 public:
     /*! Constructor */
-    FContextualDispatchTable( const FDevice& iDevice, eFormat iFormat )
-        : mScheduleBlendSeparable(              TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >             ::Query( iDevice, iFormat ) )
-        , mScheduleBlendNonSeparable(           TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >          ::Query( iDevice, iFormat ) )
-        , mScheduleBlendMisc(                   TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >                  ::Query( iDevice, iFormat ) )
-        , mScheduleBlendSeparableSubpixel(      TDispatcher< FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector >     ::Query( iDevice, iFormat ) )
-        , mScheduleBlendNonSeparableSubpixel(   TDispatcher< FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector >  ::Query( iDevice, iFormat ) )
-        , mScheduleBlendMiscSubpixel(           TDispatcher< FDispatchedBlendMiscSubpixelInvocationSchedulerSelector >          ::Query( iDevice, iFormat ) )
+    FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat )
+        : mScheduleBlendSeparable(              TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >             ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleBlendNonSeparable(           TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleBlendMisc(                   TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >                  ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleBlendSeparableSubpixel(      TDispatcher< FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector >     ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleBlendNonSeparableSubpixel(   TDispatcher< FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector >  ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleBlendMiscSubpixel(           TDispatcher< FDispatchedBlendMiscSubpixelInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat ) )
     {
-        ULIS_ASSERT( mScheduleBlendSeparable,               "Error: No dispatch found." );
-        ULIS_ASSERT( mScheduleBlendNonSeparable,            "Error: No dispatch found." );
-        ULIS_ASSERT( mScheduleBlendMisc,                    "Error: No dispatch found." );
-        ULIS_ASSERT( mScheduleBlendSeparableSubpixel,       "Error: No dispatch found." );
-        ULIS_ASSERT( mScheduleBlendNonSeparableSubpixel,    "Error: No dispatch found." );
-        ULIS_ASSERT( mScheduleBlendMiscSubpixel,            "Error: No dispatch found." );
     }
 
     /*! Destructor */
@@ -75,13 +84,12 @@ FRasterContext::~FRasterContext()
 
 FRasterContext::FRasterContext(
       FCommandQueue& iQueue
-    , const FDevice& iDevice
     , eFormat iFormat
 )
-    : mContextualDispatchTable( new  FContextualDispatchTable( iDevice, iFormat ) )
-    , mCommandQueue( iQueue )
-    , mDevice( iDevice )
+    : mCommandQueue( iQueue )
     , mFormat( iFormat )
+    , mHardwareMetrics( FHardwareMetrics() )
+    , mContextualDispatchTable( new  FContextualDispatchTable( mHardwareMetrics, mFormat ) )
 {
 }
 
@@ -105,6 +113,12 @@ FRasterContext::Fence()
     mCommandQueue.Fence();
 }
 
+eFormat
+FRasterContext::Format() const
+{
+    return  mFormat;
+}
+
 /////////////////////////////////////////////////////
 // FRasterContext: Blend
 void
@@ -124,6 +138,7 @@ FRasterContext::Blend(
 {
     // Debug Safety Checks
     EventHookCheck( iEvent );
+    EventSelfCheck( iNumWait, iWaitList, iEvent );
 
     // Sanitize geometry
     FRectI src_roi = iSourceRect & iSource.Rect();
@@ -141,7 +156,6 @@ FRasterContext::Blend(
         case BlendQualifier_Separable       : sched = mContextualDispatchTable->mScheduleBlendSeparable;
         case BlendQualifier_NonSeparable    : sched = mContextualDispatchTable->mScheduleBlendNonSeparable;
     }
-    ULIS_ASSERT( sched, "Error: No dispatch found." );
 
     // Bake and push command
     mCommandQueue.Push(
@@ -185,6 +199,7 @@ FRasterContext::BlendAA(
 {
     // Debug Safety Checks
     EventHookCheck( iEvent );
+    EventSelfCheck( iNumWait, iWaitList, iEvent );
 
     // Select implementation
     fpCommandScheduler sched = nullptr;
@@ -193,7 +208,6 @@ FRasterContext::BlendAA(
         case BlendQualifier_Separable       : sched = mContextualDispatchTable->mScheduleBlendSeparableSubpixel;
         case BlendQualifier_NonSeparable    : sched = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
     }
-    ULIS_ASSERT( sched, "Error: No dispatch found." );
 }
 
 ULIS_NAMESPACE_END

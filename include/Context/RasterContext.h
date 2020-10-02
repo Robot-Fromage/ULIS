@@ -31,7 +31,7 @@ ULIS_NAMESPACE_BEGIN
 ///             device and its support for SIMD features or thread support.
 ///
 ///             There can be multiple FRasterContext object instances for
-///             different formats, each sharing the same FDevice. Keep in mind
+///             different formats, each sharing the same FHardwareMetrics. Keep in mind
 ///             this object is rather heavy as it caches the pre-dispatched
 ///             paths to the specific implementations of each feature it exposes.
 ///
@@ -45,7 +45,7 @@ ULIS_NAMESPACE_BEGIN
 ///
 ///             \sa FBlock
 ///             \sa FOldThreadPool
-///             \sa FDevice
+///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
 class ULIS_API FRasterContext
 {
@@ -65,7 +65,6 @@ public:
     */
     FRasterContext(
           FCommandQueue& iQueue
-        , const FDevice& iDevice
         , eFormat iFormat
     );
 
@@ -86,6 +85,11 @@ public:
         Wait for completion of all already issued commands
     */
     void Fence();
+
+    /*!
+        Getter for the context format
+    */
+    eFormat Format() const;
 
 public:
 /////////////////////////////////////////////////////
@@ -161,10 +165,10 @@ public:
     );
 
 private:
-    const FContextualDispatchTable* mContextualDispatchTable;
     FCommandQueue& mCommandQueue;
-    const FDevice& mDevice;
+    FHardwareMetrics mHardwareMetrics;
     const eFormat mFormat;
+    const FContextualDispatchTable* mContextualDispatchTable;
 };
 
 ULIS_NAMESPACE_END

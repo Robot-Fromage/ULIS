@@ -25,7 +25,7 @@ class FBlendCommandArgs final
     : public ICommandArgs
 {
 public:
-    virtual ~FBlendCommandArgs() override {};
+    ~FBlendCommandArgs() override {};
     FBlendCommandArgs(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -73,7 +73,7 @@ class FBlendJobArgs final
 {
 public:
 
-    virtual ~FBlendJobArgs() override {};
+    ~FBlendJobArgs() override {};
     FBlendJobArgs(
           const uint32 iLine
         , const uint32 iSrc_bps

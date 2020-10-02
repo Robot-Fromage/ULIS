@@ -27,7 +27,7 @@ ULIS_NAMESPACE_BEGIN
 ///             behaviour anyway with no change to application logic, but it
 ///             processes it in a linear monothreaded fashion.
 ///
-///             \sa FDevice
+///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
 class ULIS_API FThreadPool
 {

@@ -7,7 +7,7 @@
 *
 * @file         Device.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FDevice tools.
+* @brief        This file provides the declaration for the FHardwareMetrics tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -16,11 +16,11 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FDevice
-/// @brief      The FDevice class provides a mean of fetching and reading
+/// @class      FHardwareMetrics
+/// @brief      The FHardwareMetrics class provides a mean of fetching and reading
 ///             informations about the CPU in a single-CPU, multicore environment.
 ///
-/// @details    FDevice provides functions to fetch wether support for 64bit
+/// @details    FHardwareMetrics provides functions to fetch wether support for 64bit
 ///             features or SIMD extensions are supported on the CPU that runs
 ///             the compiled code, at runtime. It has no relation wathsoever with
 ///             the computer that compiled the code in the first place, it is a
@@ -31,13 +31,13 @@ ULIS_NAMESPACE_BEGIN
 ///             to its support for the features sets or for 64bit features, although
 ///             64bit is always assumed to be true within ULIS.
 ///
-///             FDevice also provides some insight about the hardware such as the
+///             FHardwareMetrics also provides some insight about the hardware such as the
 ///             number of available cores, or the size of cache lines.
-class ULIS_API FDevice
+class ULIS_API FHardwareMetrics
 {
 public:
     /*! Constructor. */
-    FDevice();
+    FHardwareMetrics();
 
 public:
     bool IsHardwareAMD() const;

@@ -7,7 +7,7 @@
 *
 * @file         Device_Generic.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FDevice tools.
+* @brief        This file provides the definition for the FHardwareMetrics tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -17,7 +17,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-FDevice::FDevice()
+FHardwareMetrics::FHardwareMetrics()
     : bField( 0 )
     , mMaxWorkers( 1 )
     , mL1CacheSize( 65536 )

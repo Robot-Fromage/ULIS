@@ -32,7 +32,7 @@ class   FKernel;
 class   FStructuringElement;
 struct  FPerfInfo;
 struct  FHostDeviceInfo;
-class   FDevice;
+class   FHardwareMetrics;
 struct  FFormatMetrics;
 struct  FTileElement;
 class   ITiledBlock;

@@ -29,7 +29,7 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FRasterContext
 ///             \sa FSchedulePolicy
 ///             \sa FOldThreadPool
-///             \sa FDevice
+///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
 class ULIS_API FEvent
 {

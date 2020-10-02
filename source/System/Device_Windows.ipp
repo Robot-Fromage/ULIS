@@ -7,7 +7,7 @@
 *
 * @file         Device_Windows.ipp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FDevice tools.
+* @brief        This file provides the definition for the FHardwareMetrics tools.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -132,7 +132,7 @@ void cache_info( uint8 iLevel, uint64 *oCacheSize, uint64* oLineSize ) {
 
 } // namespace detail
 
-FDevice::FDevice()
+FHardwareMetrics::FHardwareMetrics()
     : bField( 0 )
     , mMaxWorkers( std::thread::hardware_concurrency() )
     , mL1CacheSize( 65536 )

@@ -49,7 +49,7 @@ typedef uint8 tSchedulePolicy;
 ///
 ///             \sa FRasterContext
 ///             \sa FOldThreadPool
-///             \sa FDevice
+///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
 class ULIS_API FSchedulePolicy
 {
