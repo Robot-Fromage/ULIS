@@ -17,6 +17,18 @@
 #include "Scheduling/CommandQueue.h"
 
 ULIS_NAMESPACE_BEGIN
+void EventHookCheck_imp( const FEvent* iEvent )
+{
+    if( iEvent )
+        ULIS_ASSERT( !( iEvent->Hooked() ), "Reusing an event multiple times is illegal !" );
+}
+
+#if defined( ULIS_DEBUG )
+#define EventHookCheck( EV ) EventHookCheck_imp( EV );
+#else
+#define EventHookCheck( EV )
+#endif
+
 /////////////////////////////////////////////////////
 // FRasterContext::FContextualDispatchTable
 struct FRasterContext::FContextualDispatchTable
@@ -106,10 +118,13 @@ FRasterContext::Blend(
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
-    , const FTaskEvent* iWaitList
-    , FTaskEvent* iEvent
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
 {
+    // Debug Safety Checks
+    EventHookCheck( iEvent );
+
     // Sanitize geometry
     FRectI src_roi = iSourceRect & iSource.Rect();
     FRectI dst_target = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
@@ -164,10 +179,13 @@ FRasterContext::BlendAA(
     , ufloat iOpacity
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
-    , const FTaskEvent* iWaitList
-    , FTaskEvent* iEvent
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
 {
+    // Debug Safety Checks
+    EventHookCheck( iEvent );
+
     // Select implementation
     fpCommandScheduler sched = nullptr;
     switch( BlendingModeQualifier( iBlendingMode ) ) {

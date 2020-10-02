@@ -50,7 +50,7 @@ FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
 {
     iJob->Execute();
 
-    FTaskEvent* evt = iJob->Parent()->Event();
+    FEvent* evt = iJob->Parent()->Event();
     if( evt )
         evt->SetFinished();
 

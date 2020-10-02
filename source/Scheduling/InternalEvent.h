@@ -5,30 +5,23 @@
 *   ULIS
 *__________________
 *
-* @file         TaskEvent.h
+* @file         InternalEvent.h
 * @author       Clement Berthaud
-* @brief        This file provides declaration for the FTaskEvent class.
+* @brief        This file provides declaration for the FInternalEvent class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
-#include "Scheduling/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
-enum eTaskStatus : uint8 {
-      TaskStatus_Idle
-    , TaskStatus_Scheduled
-    , TaskStatus_Finished
-};
-
 /////////////////////////////////////////////////////
-/// @class      FTaskEvent
-/// @brief      The FTaskEvent class provides a way to get asynchronous status
+/// @class      FInternalEvent
+/// @brief      The FInternalEvent class provides a way to get asynchronous status
 ///             information about how a task is being processed, once it has been
 ///             dispatched and scheduled on a multithreaded system, in
 ///             coordination with a FOldThreadPool and a FCommandQueue.
-/// @details    The FTaskEvent allows to get a handle of the chosen policy for
+/// @details    The FInternalEvent allows to get a handle of the chosen policy for
 ///             a given task, and wether it has been completed or not. It is used
 ///             in conjunction with FOldThreadPool, FSchedulePolicy, FCommandQueue
 ///             and FRasterContext.
@@ -38,33 +31,24 @@ enum eTaskStatus : uint8 {
 ///             \sa FOldThreadPool
 ///             \sa FDevice
 ///             \sa FCommandQueue
-class ULIS_API FTaskEvent
+class ULIS_API FInternalEvent
 {
-    friend class FRasterContext;
-    friend class FCommandQueue;
-    friend class FThreadPool;
-    friend class FThreadPool_Private;
-
 public:
     /*! Destructor */
-    ~FTaskEvent();
+    ~FInternalEvent();
 
     /*! Constructor */
-    FTaskEvent();
+    FInternalEvent();
 
-    /*! Getter for status */
-    eTaskStatus Status() const;
+public:
+    /*! Start tracking event */
+    void Track( FEvent* iEvent );
 
-
-private:
-    /*! Set status to scheduled */
-    void SetScheduled();
-
-    /*! Set status to scheduled */
-    void SetFinished();
+    /*! Stop tracking event */
+    void Untrack();
 
 private:
-    eTaskStatus     mStatus;
+    FEvent* mHook;
 };
 
 ULIS_NAMESPACE_END

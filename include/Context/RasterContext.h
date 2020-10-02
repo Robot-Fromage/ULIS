@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
-#include "Scheduling/TaskEvent.h"
+#include "Scheduling/Event.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -119,8 +119,8 @@ public:
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
-        , const FTaskEvent* iWaitList = nullptr
-        , FTaskEvent* iEvent = nullptr
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
     );
 
     /*!
@@ -156,8 +156,8 @@ public:
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
-        , const FTaskEvent* iWaitList = nullptr
-        , FTaskEvent* iEvent = nullptr
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
     );
 
 private:

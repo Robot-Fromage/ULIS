@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SchedulePolicy.h"
-#include "Scheduling/TaskEvent.h"
+#include "Scheduling/Event.h"
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
@@ -37,7 +37,7 @@ static ULIS_FORCEINLINE void ResolveScheduleCommandCall( const ICommandArgs* iAr
 ///             a command queue, with all informations needed for scheduling and
 ///             arguments about the operation.
 /// @details    The FCommand is used by FCommandQueue and stores information about
-///             a command which status is read through a FTaskEvent, which
+///             a command which status is read through a FEvent, which
 ///             scheduling information is stored in a FSchedulePolicy, and
 ///             which operation arguments are stored in a ICommandArgs child class.
 ///
@@ -53,8 +53,8 @@ public:
         , const ICommandArgs* iArgs
         , const FSchedulePolicy& iPolicy
         , uint32 iNumWait
-        , const FTaskEvent* iWaitList
-        , FTaskEvent* iEvent
+        , const FEvent* iWaitList
+        , FEvent* iEvent
     );
 
     /*! Explicitely deleted default constructor. */
@@ -84,7 +84,7 @@ public:
     const FSchedulePolicy& Policy() const;
 
     /*! Get the event */
-    FTaskEvent* Event() const;
+    FEvent* Event() const;
 
     /*! Get the args */
     const ICommandArgs* Args() const;
@@ -94,8 +94,8 @@ private:
     const ICommandArgs* mArgs;
     FSchedulePolicy     mPolicy;
     uint32              mNumWait;
-    const FTaskEvent*   mWaitList;
-    FTaskEvent*         mEvent;
+    const FEvent*   mWaitList;
+    FEvent*         mEvent;
 };
 
 ULIS_NAMESPACE_END

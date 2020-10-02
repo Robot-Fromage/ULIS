@@ -39,7 +39,7 @@ FCommandQueue::Flush()
         mIdleQueue.Pop();
 
         if( cmd->IsReady() ) {
-            FTaskEvent* evt = cmd->Event();
+            FEvent* evt = cmd->Event();
             if( evt )
                 evt->SetScheduled();
             mScheduledQueue.Push( cmd );

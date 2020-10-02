@@ -159,7 +159,7 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             latch.lock();
 
             // Gather event and set status if needed
-            //FTaskEvent* evt = job->Parent()->Event();
+            //FEvent* evt = job->Parent()->Event();
             //if( evt )
             //    evt->SetFinished();
             delete job;

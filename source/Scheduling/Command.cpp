@@ -27,8 +27,8 @@ FCommand::FCommand(
     , const ICommandArgs* iArgs
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
-    , const FTaskEvent* iWaitList
-    , FTaskEvent* iEvent
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
     : mSched( iSched )
     , mArgs( iArgs )
@@ -46,7 +46,7 @@ FCommand::IsReady() const
         return  true;
 
     for( uint32 i = 0; i < mNumWait; ++i )
-        if( mWaitList[i].Status() != eTaskStatus::TaskStatus_Finished )
+        if( mWaitList[i].Status() != eEventStatus::EventStatus_Finished )
             return  false;
 
     return  true;
@@ -64,7 +64,7 @@ FCommand::Policy() const
     return  mPolicy;
 }
 
-FTaskEvent*
+FEvent*
 FCommand::Event() const
 {
     return  mEvent;

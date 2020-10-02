@@ -16,7 +16,7 @@
 #include "Scheduling/Command.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SchedulePolicy.h"
-#include "Scheduling/TaskEvent.h"
+#include "Scheduling/Event.h"
 
 ULIS_NAMESPACE_BEGIN
 class FJob;
