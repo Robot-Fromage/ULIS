@@ -17,7 +17,6 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
-#include "Scheduling/Event.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

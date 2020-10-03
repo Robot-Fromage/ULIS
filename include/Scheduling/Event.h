@@ -16,6 +16,32 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
+// eEventStatus
+enum eEventStatus : uint8
+{
+      EventStatus_Error
+    , EventStatus_Queued
+    , EventStatus_Scheduled
+    , EventStatus_Processing
+    , EventStatus_Finished
+};
+
+
+/////////////////////////////////////////////////////
+// Safety Checks for Events
+void EventHookCheck_imp( const FEvent* iEvent );
+void EventSelfCheck_imp( uint32 iNumWait, const FEvent* iWaitList, const FEvent* iEvent );
+
+#if defined( ULIS_DEBUG )
+#define EventHookCheck( EV ) EventHookCheck_imp( EV );
+#define EventSelfCheck( NUM, LIST, EV ) EventSelfCheck_imp( NUM, LIST, EV );
+#else
+#define EventHookCheck( EV )
+#define EventSelfCheck( NUM, LIST, EV )
+#endif
+#define EventChecks( NUM, LIST, EV ) EventHookCheck( EV ); EventSelfCheck( NUM, LIST, EV );
+
+/////////////////////////////////////////////////////
 /// @class      FEvent
 /// @brief      The FEvent class provides a way to get asynchronous status
 ///             information about how a task is being processed, once it has been
@@ -33,11 +59,10 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FCommandQueue
 class ULIS_API FEvent
 {
+    class FEvent_Private;
     friend class FRasterContext;
-    friend class FCommandQueue;
-    friend class FThreadPool;
-    friend class FThreadPool_Private;
     friend class FInternalEvent;
+    friend void EventHookCheck_imp( const FEvent* iEvent );
 
 public:
     /*! Destructor */
@@ -47,24 +72,10 @@ public:
     FEvent();
 
     /*! Getter for status */
-    bool Finished() const;
-
-    /*! Check wether the Event is already hooked or not */
-    bool Hooked() const;
+    eEventStatus Status() const;
 
 private:
-    /*! Set status to finished */
-    void SetFinished();
-
-    /*! Hook internal event */
-    void Hook( FInternalEvent* iHandle );
-
-    /*! Getter for internal event */
-    FInternalEvent* Handle() const;
-
-private:
-    bool bFinished;
-    FInternalEvent* mHandle;
+    FEvent_Private* d;
 };
 
 ULIS_NAMESPACE_END

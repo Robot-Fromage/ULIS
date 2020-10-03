@@ -13,51 +13,44 @@
 */
 #pragma once
 #include "Scheduling/Event.h"
-#include "Scheduling/InternalEvent.h"
+#include "Scheduling/Event_Private.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Safety Checks for Events
+void EventHookCheck_imp( const FEvent* iEvent )
+{
+    if( iEvent )
+        ULIS_ASSERT( !( iEvent->d->Hooked() ), "Reusing an event multiple times is illegal and will lead to corrupted concurrency state." );
+}
+
+void EventSelfCheck_imp( uint32 iNumWait, const FEvent* iWaitList, const FEvent* iEvent )
+{
+    if( iNumWait )
+    {
+        for( uint32 i = 0; i < iNumWait; ++i )
+        {
+            ULIS_ASSERT( &iWaitList[i] != iEvent, "Event waiting for itself is illegal and will lead to an infinite loop." );
+        }
+    }
+}
+
+/////////////////////////////////////////////////////
+// FEvent
 FEvent::~FEvent()
 {
-    if( mHandle )
-        mHandle->Untrack();
+    delete  d;
 }
 
 FEvent::FEvent()
-    : bFinished( false )
-    , mHandle( nullptr )
+    : d( new FEvent_Private() )
 {
 }
 
-bool
-FEvent::Finished() const
+eEventStatus
+FEvent::Status() const
 {
-    return  bFinished;
-}
-
-void
-FEvent::SetFinished()
-{
-    bFinished = true;
-}
-
-void
-FEvent::Hook( FInternalEvent* iHandle )
-{
-    ULIS_ASSERT( iHandle, "Bad handle" );
-    mHandle = iHandle;
-    mHandle->Track( this );
-}
-
-FInternalEvent*
-FEvent::Handle() const
-{
-    return  mHandle;
-}
-
-bool
-FEvent::Hooked() const
-{
-    return  static_cast< bool >( mHandle != nullptr );
+    return  d->Status();
 }
 
 ULIS_NAMESPACE_END

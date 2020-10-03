@@ -118,15 +118,31 @@ const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, &ResolveScheduleCommandCall< tArgs, _AVX >, &ResolveScheduleCommandCall< tArgs, _SSE >, &ResolveScheduleCommandCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM )    \
+            { _COND                                                                 \
+            , &ResolveScheduleCommandCall< tArgs, _AVX >                            \
+            , &ResolveScheduleCommandCall< tArgs, _SSE >                            \
+            , &ResolveScheduleCommandCall< tArgs, _MEM > },
     #else
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCommandCall< tArgs, _SSE >, &ResolveScheduleCommandCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM )    \
+            { _COND                                                                 \
+            , nullptr                                                               \
+            , &ResolveScheduleCommandCall< tArgs, _SSE >                            \
+            , &ResolveScheduleCommandCall< tArgs, _MEM > },
     #endif
 #else
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, &ResolveScheduleCommandCall< tArgs, _SSE >, &ResolveScheduleCommandCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM )    \
+            { _COND                                                                 \
+            , nullptr                                                               \
+            , &ResolveScheduleCommandCall< tArgs, _SSE >                            \
+            , &ResolveScheduleCommandCall< tArgs, _MEM > },
     #else
-        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, &ResolveScheduleCommandCall< tArgs, _MEM > },
+        #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM )    \
+            { _COND                                                                 \
+            , nullptr                                                               \
+            , nullptr                                                               \
+            , &ResolveScheduleCommandCall< tArgs, _MEM > },
     #endif
 #endif
 

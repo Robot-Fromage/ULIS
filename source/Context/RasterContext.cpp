@@ -15,35 +15,11 @@
 #include "Context/RasterContext.h"
 #include "Blend/BlendDispatch.h"
 #include "Scheduling/CommandQueue.h"
+#include "Scheduling/Event.h"
+#include "Scheduling/Event_Private.h"
+#include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// Safety Checks for Events
-void EventHookCheck_imp( const FEvent* iEvent )
-{
-    if( iEvent )
-        ULIS_ASSERT( !( iEvent->Hooked() ), "Reusing an event multiple times is illegal and will lead to corrupted concurrency state." );
-}
-
-void EventSelfCheck_imp( uint32 iNumWait, const FEvent* iWaitList, const FEvent* iEvent )
-{
-    if( iNumWait )
-    {
-        for( uint32 i = 0; i < iNumWait; ++i )
-        {
-            ULIS_ASSERT( &iWaitList[i] != iEvent, "Event waiting for itself is illegal and will lead to an infinite loop." );
-        }
-    }
-}
-
-#if defined( ULIS_DEBUG )
-#define EventHookCheck( EV ) EventHookCheck_imp( EV );
-#define EventSelfCheck( NUM, LIST, EV ) EventSelfCheck_imp( NUM, LIST, EV );
-#else
-#define EventHookCheck( EV )
-#define EventSelfCheck( NUM, LIST, EV )
-#endif
-
 /////////////////////////////////////////////////////
 // FRasterContext::FContextualDispatchTable
 struct FRasterContext::FContextualDispatchTable
@@ -65,6 +41,24 @@ public:
     /*! Destructor */
     ~FContextualDispatchTable()
     {}
+
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleBlend( eBlendMode iBlendingMode ) const
+    {
+        switch( BlendingModeQualifier( iBlendingMode ) ) {
+            case BlendQualifier_Misc            : return  mScheduleBlendMisc;
+            case BlendQualifier_Separable       : return  mScheduleBlendSeparable;
+            case BlendQualifier_NonSeparable    : return  mScheduleBlendNonSeparable;
+        }
+    }
+
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleBlendSubpixel( eBlendMode iBlendingMode ) const
+    {
+        switch( BlendingModeQualifier( iBlendingMode ) ) {
+            case BlendQualifier_Misc            : return  mScheduleBlendMiscSubpixel;
+            case BlendQualifier_Separable       : return  mScheduleBlendSeparableSubpixel;
+            case BlendQualifier_NonSeparable    : return  mScheduleBlendNonSeparableSubpixel;
+        }
+    }
 
 private:
     const fpCommandScheduler mScheduleBlendSeparable;
@@ -136,9 +130,7 @@ FRasterContext::Blend(
     , FEvent* iEvent
 )
 {
-    // Debug Safety Checks
-    EventHookCheck( iEvent );
-    EventSelfCheck( iNumWait, iWaitList, iEvent );
+    EventChecks( iNumWait, iWaitList, iEvent );
 
     // Sanitize geometry
     FRectI src_roi = iSourceRect & iSource.Rect();
@@ -149,18 +141,10 @@ FRasterContext::Blend(
     if( dst_fit.Area() <= 0 )
         return;
 
-    // Select implementation
-    fpCommandScheduler sched = nullptr;
-    switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BlendQualifier_Misc            : sched = mContextualDispatchTable->mScheduleBlendMisc;
-        case BlendQualifier_Separable       : sched = mContextualDispatchTable->mScheduleBlendSeparable;
-        case BlendQualifier_NonSeparable    : sched = mContextualDispatchTable->mScheduleBlendNonSeparable;
-    }
-
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
-              sched
+              mContextualDispatchTable->QueryScheduleBlend( iBlendingMode )
             , new FBlendCommandArgs(
                   iSource
                 , iBackdrop
@@ -197,17 +181,7 @@ FRasterContext::BlendAA(
     , FEvent* iEvent
 )
 {
-    // Debug Safety Checks
-    EventHookCheck( iEvent );
-    EventSelfCheck( iNumWait, iWaitList, iEvent );
-
-    // Select implementation
-    fpCommandScheduler sched = nullptr;
-    switch( BlendingModeQualifier( iBlendingMode ) ) {
-        case BlendQualifier_Misc            : sched = mContextualDispatchTable->mScheduleBlendMiscSubpixel;
-        case BlendQualifier_Separable       : sched = mContextualDispatchTable->mScheduleBlendSeparableSubpixel;
-        case BlendQualifier_NonSeparable    : sched = mContextualDispatchTable->mScheduleBlendNonSeparableSubpixel;
-    }
+    EventChecks( iNumWait, iWaitList, iEvent );
 }
 
 ULIS_NAMESPACE_END
