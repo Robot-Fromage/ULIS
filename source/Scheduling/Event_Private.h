@@ -26,9 +26,9 @@ ULIS_NAMESPACE_BEGIN
 /// @details    The FEvent_Private allows to get a handle of the chosen policy for
 ///             a given task, and wether it has been completed or not. It is used
 ///             in conjunction with FOldThreadPool, FSchedulePolicy, FCommandQueue
-///             and FRasterContext.
+///             and FContext.
 ///
-///             \sa FRasterContext
+///             \sa FContext
 ///             \sa FSchedulePolicy
 ///             \sa FOldThreadPool
 ///             \sa FHardwareMetrics

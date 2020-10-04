@@ -5,14 +5,14 @@
 *   ULIS
 *__________________
 *
-* @file         FRasterContext.cpp
+* @file         FContext.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FRasterContext class.
+* @brief        This file provides the definition for the FContext class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Context/RasterContext.h"
+#include "Context/Context.h"
 #include "Blend/BlendDispatch.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/Event.h"
@@ -21,10 +21,10 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FRasterContext::FContextualDispatchTable
-struct FRasterContext::FContextualDispatchTable
+// FContext::FContextualDispatchTable
+struct FContext::FContextualDispatchTable
 {
-    friend class FRasterContext;
+    friend class FContext;
 
 public:
     /*! Constructor */
@@ -70,13 +70,13 @@ private:
 };
 
 /////////////////////////////////////////////////////
-// FRasterContext: Construction / Destruction
-FRasterContext::~FRasterContext()
+// FContext: Construction / Destruction
+FContext::~FContext()
 {
     delete  mContextualDispatchTable;
 }
 
-FRasterContext::FRasterContext(
+FContext::FContext(
       FCommandQueue& iQueue
     , eFormat iFormat
 )
@@ -88,35 +88,35 @@ FRasterContext::FRasterContext(
 }
 
 /////////////////////////////////////////////////////
-// FRasterContext: Control Flow
+// FContext: Control Flow
 void
-FRasterContext::Flush()
+FContext::Flush()
 {
     mCommandQueue.Flush();
 }
 
 void
-FRasterContext::Finish()
+FContext::Finish()
 {
     mCommandQueue.Finish();
 }
 
 void
-FRasterContext::Fence()
+FContext::Fence()
 {
     mCommandQueue.Fence();
 }
 
 eFormat
-FRasterContext::Format() const
+FContext::Format() const
 {
     return  mFormat;
 }
 
 /////////////////////////////////////////////////////
-// FRasterContext: Blend
+// FContext: Blend
 void
-FRasterContext::Blend(
+FContext::Blend(
       const FBlock& iSource
     , FBlock& iBackdrop
     , const FRectI& iSourceRect
@@ -165,7 +165,7 @@ FRasterContext::Blend(
 }
 
 void
-FRasterContext::BlendAA(
+FContext::BlendAA(
       const FBlock& iSource
     , FBlock& iBackdrop
     , const FRectI& iSourceRect

@@ -27,7 +27,7 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    FRasterContext ctx( queue, Format_RGBA8 );
+    FContext ctx( queue, Format_RGBA8 );
     FBlock blockA( 256, 256, Format_RGBA8 );
     FBlock blockB( 256, 256, Format_RGBA8 );
     FBlock blockC( 256, 256, Format_RGBA8 );

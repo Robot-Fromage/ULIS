@@ -82,7 +82,7 @@
 #include "Transform/Methods.h"
 #include "Transform/Transform.h"
 // Context
-#include "Context/RasterContext.h"
+#include "Context/Context.h"
 // Scheduling
 #include "Scheduling/Command.h"
 #include "Scheduling/ScheduleArgs.h"

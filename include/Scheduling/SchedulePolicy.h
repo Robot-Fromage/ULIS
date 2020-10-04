@@ -47,7 +47,7 @@ typedef uint8 tSchedulePolicy;
 ///             Wether the scheduling is done on a chunk basis, or on a scanline
 ///             basis, for example.
 ///
-///             \sa FRasterContext
+///             \sa FContext
 ///             \sa FOldThreadPool
 ///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
