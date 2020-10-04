@@ -13,9 +13,13 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Memory/Array.h"
 #include <memory>
 
 ULIS_NAMESPACE_BEGIN
+class FInternalEvent;
+typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
+
 /////////////////////////////////////////////////////
 /// @class      FInternalEvent
 /// @brief      The FInternalEvent class provides a way to get asynchronous status
@@ -32,25 +36,31 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FOldThreadPool
 ///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
-class ULIS_API FInternalEvent
+class FInternalEvent
 {
 public:
     /*! Destructor */
     ~FInternalEvent();
 
+private:
     /*! Constructor */
-    FInternalEvent( FEvent* iEvent );
+    FInternalEvent();
 
-    static FSharedInternalEvent MakeShared( FEvent* iEvent );
-
-    /*! Stop tracking event */
-    void Untrack();
+public:
+    static FSharedInternalEvent Make();
+    const TArray< FSharedInternalEvent >& WaitList() const;
+    void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
+    bool IsCommandBound() const;
+    void BindCommand( FCommand* iCommand );
+    void CheckCyclicSelfReference() const;
 
 private:
-    FEvent* mHook;
-};
+    void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
 
-typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
+private:
+    TArray< FSharedInternalEvent > mWaitList;
+    FCommand* mCommand;
+};
 
 ULIS_NAMESPACE_END
 

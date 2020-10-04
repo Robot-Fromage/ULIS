@@ -13,28 +13,69 @@
 */
 #pragma once
 #include "Scheduling/InternalEvent.h"
+#include "Scheduling/Event.h"
+#include "Scheduling/Event_Private.h"
 
 ULIS_NAMESPACE_BEGIN
 FInternalEvent::~FInternalEvent()
 {
 }
 
-FInternalEvent::FInternalEvent( FEvent* iEvent )
-    : mHook( iEvent )
+FInternalEvent::FInternalEvent()
+    : mWaitList( TArray< FSharedInternalEvent >() )
+    , mCommand( nullptr )
 {
 }
 
 //static
 FSharedInternalEvent
-FInternalEvent::MakeShared( FEvent* iEvent )
+FInternalEvent::Make()
 {
-    return  std::make_shared< FInternalEvent >( iEvent );
+    return  std::make_shared< FInternalEvent >();
+}
+
+const TArray< FSharedInternalEvent >&
+FInternalEvent::WaitList() const
+{
+    return  mWaitList;
 }
 
 void
-FInternalEvent::Untrack()
+FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
 {
-    mHook = nullptr;
+    for( uint32 i = 0; i < iNumWait; ++i )
+    {
+        mWaitList.PushBack( iWaitList[i].d->m );
+    }
+}
+
+bool
+FInternalEvent::IsCommandBound() const
+{
+    return  mCommand != nullptr;
+}
+
+void
+FInternalEvent::BindCommand( FCommand* iCommand )
+{
+    mCommand = iCommand;
+}
+
+void
+FInternalEvent::CheckCyclicSelfReference() const
+{
+    CheckCyclicSelfReference_imp( this );
+}
+
+void
+FInternalEvent::CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const
+{
+    for( uint32 i = 0; i < mWaitList.Size(); ++i )
+    {
+        FInternalEvent* pin = mWaitList[i].get();
+        ULIS_ASSERT( pin != iPin, "Bad self reference in wait list." );
+        pin->CheckCyclicSelfReference_imp( iPin );
+    }
 }
 
 ULIS_NAMESPACE_END

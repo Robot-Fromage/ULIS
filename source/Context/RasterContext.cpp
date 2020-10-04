@@ -130,9 +130,6 @@ FRasterContext::Blend(
     , FEvent* iEvent
 )
 {
-    // Bake Event
-    EventChecks( iNumWait, iWaitList, iEvent );
-
     // Sanitize geometry
     FRectI src_roi = iSourceRect & iSource.Rect();
     FRectI dst_target = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
@@ -182,7 +179,6 @@ FRasterContext::BlendAA(
     , FEvent* iEvent
 )
 {
-    EventChecks( iNumWait, iWaitList, iEvent );
 }
 
 ULIS_NAMESPACE_END

@@ -14,13 +14,12 @@
 #pragma once
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
-#include <memory>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FEvent::FEvent_Private
-FEvent::FEvent_Private::FEvent_Private( FEvent* iUserEvent )
-    : mHandle( FInternalEvent::MakeShared( iUserEvent ) )
+FEvent::FEvent_Private::FEvent_Private()
+    : m( FInternalEvent::Make() )
 {}
 
 ULIS_NAMESPACE_END

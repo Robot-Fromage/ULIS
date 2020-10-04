@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Scheduling/Event.h"
+#include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -34,11 +35,13 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FCommandQueue
 class FEvent::FEvent_Private
 {
+    friend class FInternalEvent;
+
 public:
-    FEvent_Private( FEvent* iUserEvent );
+    FEvent_Private();
 
 private:
-    std::shared_ptr< FInternalEvent > mHandle;
+    FSharedInternalEvent m;
 };
 
 ULIS_NAMESPACE_END
