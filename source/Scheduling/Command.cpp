@@ -13,6 +13,9 @@
 */
 #pragma once
 #include "Scheduling/Command.h"
+#include "Scheduling/Event.h"
+#include "Scheduling/Event_Private.h"
+#include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
 

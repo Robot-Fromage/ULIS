@@ -31,6 +31,7 @@ template class ULIS_API TQueue< FCommand* >;
 ///             \sa FOldThreadPool
 class ULIS_API FCommandQueue
 {
+    class FCommandQueue_Private;
     friend class FContext;
     typedef TQueue< FCommand* > tQueue;
 
