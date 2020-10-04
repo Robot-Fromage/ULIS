@@ -19,15 +19,16 @@ FInternalEvent::~FInternalEvent()
 {
 }
 
-FInternalEvent::FInternalEvent()
-    : mHook( nullptr )
+FInternalEvent::FInternalEvent( FEvent* iEvent )
+    : mHook( iEvent )
 {
 }
 
-void
-FInternalEvent::Track( FEvent* iEvent )
+//static
+FSharedInternalEvent
+FInternalEvent::MakeShared( FEvent* iEvent )
 {
-    mHook = iEvent;
+    return  std::make_shared< FInternalEvent >( iEvent );
 }
 
 void

@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include <memory>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -38,11 +39,9 @@ public:
     ~FInternalEvent();
 
     /*! Constructor */
-    FInternalEvent();
+    FInternalEvent( FEvent* iEvent );
 
-public:
-    /*! Start tracking event */
-    void Track( FEvent* iEvent );
+    static FSharedInternalEvent MakeShared( FEvent* iEvent );
 
     /*! Stop tracking event */
     void Untrack();
@@ -50,6 +49,8 @@ public:
 private:
     FEvent* mHook;
 };
+
+typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 
 ULIS_NAMESPACE_END
 

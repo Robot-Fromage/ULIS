@@ -19,28 +19,9 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FEvent::FEvent_Private
-FEvent::FEvent_Private::FEvent_Private()
-    : mHandle( nullptr )
+FEvent::FEvent_Private::FEvent_Private( FEvent* iUserEvent )
+    : mHandle( FInternalEvent::MakeShared( iUserEvent ) )
 {}
-
-
-bool
-FEvent::FEvent_Private::Hooked() const
-{
-    return  mHandle != nullptr;
-}
-
-void
-FEvent::FEvent_Private::Hook( std::shared_ptr< FInternalEvent > iHandle )
-{
-    mHandle = iHandle;
-}
-
-eEventStatus
-FEvent::FEvent_Private::Status() const
-{
-    return  EventStatus_Error;
-}
 
 ULIS_NAMESPACE_END
 

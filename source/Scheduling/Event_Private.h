@@ -35,10 +35,7 @@ ULIS_NAMESPACE_BEGIN
 class FEvent::FEvent_Private
 {
 public:
-    FEvent_Private();
-    bool Hooked() const;
-    void Hook( std::shared_ptr< FInternalEvent > iHandle );
-    eEventStatus Status() const;
+    FEvent_Private( FEvent* iUserEvent );
 
 private:
     std::shared_ptr< FInternalEvent > mHandle;

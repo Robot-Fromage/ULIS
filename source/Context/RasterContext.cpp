@@ -130,6 +130,7 @@ FRasterContext::Blend(
     , FEvent* iEvent
 )
 {
+    // Bake Event
     EventChecks( iNumWait, iWaitList, iEvent );
 
     // Sanitize geometry

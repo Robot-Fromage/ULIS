@@ -27,12 +27,10 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat format = Format_RGBA8;
-    FRasterContext ctx( queue, format );
-
-    FBlock blockA( 256, 256, format );
-    FBlock blockB( 256, 256, format );
-    FBlock blockC( 256, 256, format );
+    FRasterContext ctx( queue, Format_RGBA8 );
+    FBlock blockA( 256, 256, Format_RGBA8 );
+    FBlock blockB( 256, 256, Format_RGBA8 );
+    FBlock blockC( 256, 256, Format_RGBA8 );
 
     FEvent blendEventBA;
     FEvent blendEventCA;
