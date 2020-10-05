@@ -20,11 +20,6 @@ enum eScheduleRunPolicy : uint8 {
     , ScheduleRun_Multi = 1
 };
 
-enum eScheduleFlowPolicy : uint8 {
-      ScheduleFlow_Blocking = 0
-    , ScheduleFlow_NonBlocking = 2
-};
-
 enum eScheduleModePolicy : uint8 {
       ScheduleMode_Scanlines = 0
     , ScheduleMode_Chunks = 4
@@ -61,17 +56,13 @@ public:
     */
     FSchedulePolicy(
           eScheduleRunPolicy iRun = ScheduleRun_Mono
-        , eScheduleFlowPolicy iFlow = ScheduleFlow_Blocking
         , eScheduleModePolicy iMode = ScheduleMode_Scanlines
         , eScheduleParameterPolicy iParam = ScheduleParameter_Count
-        , uint32 iValue = 1
+        , int64 iValue = -1
     );
 
     /*! Getter for the Run Policy. */
     eScheduleRunPolicy RunPolicy() const;
-
-    /*! Getter for the Flow Policy. */
-    eScheduleFlowPolicy FlowPolicy() const;
 
     /*! Getter for the Mode Policy. */
     eScheduleModePolicy ModePolicy() const;
@@ -80,14 +71,13 @@ public:
     eScheduleParameterPolicy ParameterPolicy() const;
 
     /*! Getter for the Parameter Value. */
-    uint32 Value() const;
+    int64 Value() const;
 
 private:
     eScheduleRunPolicy          mRun;
-    eScheduleFlowPolicy         mFlow;
     eScheduleModePolicy         mMode;
     eScheduleParameterPolicy    mParameter;
-    uint32                      mValue;
+    int64                       mValue;
 };
 
 ULIS_NAMESPACE_END
