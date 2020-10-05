@@ -16,6 +16,7 @@
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/Event.h"
+#include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
@@ -72,19 +73,8 @@ public:
     /*! Explicitely deleted move assignment operator. */
     FCommand& operator=( FCommand&& ) = delete;
 
-    /*!
-        Check wether the command is ready to execute ( according to the event wait list ).
-    */
-    bool IsReady() const;
-
     /*! Start scheduling command. */
     void Execute( FThreadPool& iPool );
-
-    /*! Get the policy. */
-    const FSchedulePolicy& Policy() const;
-
-    /*! Get the event */
-    FEvent* Event() const;
 
     /*! Get the args */
     const ICommandArgs* Args() const;
@@ -92,10 +82,7 @@ public:
 private:
     fpCommandScheduler  mSched;
     const ICommandArgs* mArgs;
-    FSchedulePolicy     mPolicy;
-    uint32              mNumWait;
-    const FEvent*   mWaitList;
-    FEvent*         mEvent;
+    FSharedInternalEvent mEvent;
 };
 
 ULIS_NAMESPACE_END

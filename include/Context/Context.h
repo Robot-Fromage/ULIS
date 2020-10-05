@@ -17,6 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
+#include "System/Device.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -165,7 +166,7 @@ public:
 
 private:
     FCommandQueue& mCommandQueue;
-    FHardwareMetrics mHardwareMetrics;
+    const FHardwareMetrics mHardwareMetrics;
     const eFormat mFormat;
     const FContextualDispatchTable* mContextualDispatchTable;
 };

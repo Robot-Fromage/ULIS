@@ -70,6 +70,7 @@ FCommandQueue::FCommandQueue_Private::Fence()
 void
 FCommandQueue::FCommandQueue_Private::Push( FCommand* iCommand )
 {
+    ULIS_ASSERT( iCommand, "Error: no input command" );
     mQueue.Push( iCommand );
     if( iCommand->Policy().FlowPolicy() == eScheduleFlowPolicy::ScheduleFlow_Blocking )
         Finish();

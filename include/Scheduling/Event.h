@@ -47,6 +47,7 @@ class ULIS_API FEvent
     class FEvent_Private;
     friend class FInternalEvent;
     friend class FContext;
+    friend class FCommand;
 
 public:
     /*! Destructor */

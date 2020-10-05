@@ -35,42 +35,24 @@ FCommand::FCommand(
 )
     : mSched( iSched )
     , mArgs( iArgs )
-    , mPolicy( iPolicy )
-    , mNumWait( iNumWait )
-    , mWaitList( iWaitList )
-    , mEvent( iEvent )
+    , mEvent( nullptr )
 {
-}
+    // Bind Event
+    if( iEvent )
+    {
+        mEvent = iEvent->d->m;
+        ULIS_ASSERT( mEvent->IsCommandBound(), "Cannot reuse an event that is already bound to a command" );
+        mEvent->BuildWaitList( iNumWait, iWaitList );
+        mEvent->BindCommand( this );
+    }
+    else
+    {
+        mEvent = FInternalEvent::Make();
+        mEvent->BindCommand( this );
+    }
 
-bool
-FCommand::IsReady() const
-{
-    if( mNumWait == 0 )
-        return  true;
-
-    for( uint32 i = 0; i < mNumWait; ++i )
-        if( mWaitList[i].Status() != eEventStatus::EventStatus_Finished )
-            return  false;
-
-    return  true;
-}
-
-void
-FCommand::Execute( FThreadPool& iPool )
-{
-    mSched( mArgs, mPolicy, iPool );
-}
-
-const FSchedulePolicy&
-FCommand::Policy() const
-{
-    return  mPolicy;
-}
-
-FEvent*
-FCommand::Event() const
-{
-    return  mEvent;
+    // Start Scheduling
+    //mSched( mArgs, iPolicy, iPool );
 }
 
 const ICommandArgs*

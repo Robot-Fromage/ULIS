@@ -179,7 +179,7 @@ struct TRectangle
     }
 
     /*! Return the sanitized version of this rect. */
-    TRectangle< T > Sanitized() {
+    TRectangle< T > Sanitized() const {
         TRectangle< T > ret = *this;
         ret.Sanitize();
         return  ret;

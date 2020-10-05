@@ -40,14 +40,16 @@ FContext::Blend(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
+
     // Sanitize geometry
-    FRectI src_roi = iSourceRect & iSource.Rect();
-    FRectI dst_target = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
-    FRectI dst_fit    = dst_target & iBackdrop.Rect();
+    FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
+    FRectI dst_aim = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
+    FRectI dst_fit = dst_aim & iBackdrop.Rect();
 
     // Check no-op
     if( dst_fit.Area() <= 0 )
-        return;
+        return; // CHECK: return no op should make the event finished !
 
     // Bake and push command
     mCommandQueue.Push(
@@ -62,7 +64,7 @@ FContext::Blend(
                 , iBlendingMode
                 , iAlphaMode
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
-                , dst_fit.Position() - dst_target.Position()
+                , dst_fit.Position() - dst_aim.Position()
                 , dst_fit.Size()
                 , dst_fit
             )

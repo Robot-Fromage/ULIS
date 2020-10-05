@@ -47,6 +47,10 @@ FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
     {
         mWaitList.PushBack( iWaitList[i].d->m );
     }
+
+#if defined( ULIS_DEBUG )
+    CheckCyclicSelfReference();
+#endif
 }
 
 bool
