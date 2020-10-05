@@ -45,7 +45,7 @@ static ULIS_FORCEINLINE void ResolveScheduledJobCall( const IJobArgs* iJobArgs, 
 ///
 ///             \sa FCommandQueue
 ///             \sa FThreadPool
-class ULIS_API FJob {
+class FJob {
 public:
     /*! Destructor */
     ~FJob();

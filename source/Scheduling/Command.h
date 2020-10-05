@@ -42,7 +42,7 @@ static ULIS_FORCEINLINE void ResolveScheduleCommandCall( const ICommandArgs* iAr
 ///             which operation arguments are stored in a ICommandArgs child class.
 ///
 ///             \sa FCommandQueue
-class ULIS_API FCommand {
+class FCommand {
 public:
     /*! Destructor */
     ~FCommand();
