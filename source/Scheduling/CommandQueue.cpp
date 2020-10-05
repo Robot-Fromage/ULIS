@@ -13,85 +13,41 @@
 */
 #pragma once
 #include "Scheduling/CommandQueue.h"
-#include "Thread/ThreadPool.h"
+#include "Scheduling/CommandQueue_Private.h"
 
 ULIS_NAMESPACE_BEGIN
 FCommandQueue::~FCommandQueue()
 {
-    UnsafeCleanseIdle();
-    Finish();
-    UnsafeCleanseScheduled();
+    delete  d;
 }
 
 FCommandQueue::FCommandQueue( FThreadPool& iPool )
-    : mIdleQueue( tQueue() )
-    , mScheduledQueue( tQueue() )
-    , mPool( iPool )
+    : d( new  FCommandQueue_Private( iPool ) )
 {
 }
 
 void
 FCommandQueue::Flush()
 {
-    while( !mIdleQueue.IsEmpty() )
-    {
-        FCommand* cmd = mIdleQueue.Front();
-        mIdleQueue.Pop();
-
-        if( cmd->IsReady() ) {
-            FEvent* evt = cmd->Event();
-            if( evt )
-                evt->SetScheduled();
-            mScheduledQueue.Push( cmd );
-            cmd->Execute( mPool );
-        } else {
-            mIdleQueue.Push( cmd );
-        }
-    }
+    d->Flush();
 }
 
 void
 FCommandQueue::Finish()
 {
-    Flush();
-    Fence();
+    d->Finish();
 }
 
 void
 FCommandQueue::Fence()
 {
-    mPool.WaitForCompletion();
-    UnsafeCleanseScheduled();
+    d->Fence();
 }
 
 void
 FCommandQueue::Push( FCommand* iCommand )
 {
-    mIdleQueue.Push( iCommand );
-    if( iCommand->Policy().FlowPolicy() == eScheduleFlowPolicy::ScheduleFlow_Blocking )
-        Finish();
-}
-
-void
-FCommandQueue::UnsafeCleanseIdle()
-{
-    while( !mIdleQueue.IsEmpty() )
-    {
-        FCommand* cmd = mIdleQueue.Front();
-        delete  cmd;
-        mIdleQueue.Pop();
-    }
-}
-
-void
-FCommandQueue::UnsafeCleanseScheduled()
-{
-    while( !mScheduledQueue.IsEmpty() )
-    {
-        FCommand* cmd = mScheduledQueue.Front();
-        delete  cmd;
-        mScheduledQueue.Pop();
-    }
+    d->Push( iCommand );
 }
 
 ULIS_NAMESPACE_END

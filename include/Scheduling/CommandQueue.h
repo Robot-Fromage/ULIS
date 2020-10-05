@@ -13,13 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Memory/Queue.h"
-#include "Scheduling/Command.h"
 
 ULIS_NAMESPACE_BEGIN
-// Export of TQueue< FCommand >
-template class ULIS_API TQueue< FCommand* >;
-
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue
 /// @brief      The FCommandQueue class provides a way to enqueue tasks for being
@@ -33,7 +28,6 @@ class ULIS_API FCommandQueue
 {
     class FCommandQueue_Private;
     friend class FContext;
-    typedef TQueue< FCommand* > tQueue;
 
 public:
     /*! Destructor */
@@ -63,20 +57,8 @@ private:
     */
     void Push( FCommand* iCommand );
 
-    /*!
-        Cleanse the idle queue.
-    */
-    void UnsafeCleanseIdle();
-
-    /*!
-        Cleanse the scheduled queue.
-    */
-    void UnsafeCleanseScheduled();
-
 private:
-    tQueue mIdleQueue;
-    tQueue mScheduledQueue;
-    FThreadPool& mPool;
+    FCommandQueue_Private* d;
 };
 
 ULIS_NAMESPACE_END

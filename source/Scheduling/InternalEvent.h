@@ -15,6 +15,7 @@
 #include "Core/Core.h"
 #include "Memory/Array.h"
 #include <memory>
+#include <chrono>
 
 ULIS_NAMESPACE_BEGIN
 class FInternalEvent;
@@ -60,6 +61,9 @@ private:
 private:
     TArray< FSharedInternalEvent > mWaitList;
     FCommand* mCommand;
+    uint32 mNumJobsRemaining;
+    uint32 mStartTime;
+    uint32 mEndTime;
 };
 
 ULIS_NAMESPACE_END
