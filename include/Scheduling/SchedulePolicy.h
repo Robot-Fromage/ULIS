@@ -35,8 +35,6 @@ enum eScheduleParameterPolicy : uint8 {
     , ScheduleParameter_Length = 8
 };
 
-typedef uint8 tSchedulePolicy;
-
 /////////////////////////////////////////////////////
 /// @class      FSchedulePolicy
 /// @brief      The FSchedulePolicy class provides a way to control how a task
