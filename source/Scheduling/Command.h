@@ -20,7 +20,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
-typedef void (*fpCommandScheduler)( const ICommandArgs*, const FSchedulePolicy&, FThreadPool& );
+typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, FThreadPool& );
 
 /////////////////////////////////////////////////////
 // ResolveScheduleCommandCall

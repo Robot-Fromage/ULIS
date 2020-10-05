@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Memory/Array.h"
+#include "Scheduling/Event.h"
 #include <memory>
 #include <chrono>
 
@@ -64,6 +65,7 @@ private:
     uint32 mNumJobsRemaining;
     uint32 mStartTime;
     uint32 mEndTime;
+    eEventStatus mStatus;
 };
 
 ULIS_NAMESPACE_END

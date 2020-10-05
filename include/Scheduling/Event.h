@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 // eEventStatus
 enum eEventStatus : uint8
 {
-      EventStatus_Error
+      EventStatus_Idle
     , EventStatus_Queued
     , EventStatus_Scheduled
     , EventStatus_Processing

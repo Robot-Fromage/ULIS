@@ -27,7 +27,7 @@
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FBlendCommandArgs* iArgs ) {
+InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FCommand* iCommand ) {
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
@@ -100,7 +100,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel( const uint8* iSr
 
 template< typename T >
 void
-ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
     const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -119,7 +119,7 @@ ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel( const FBlendCommandArgs* iArg
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendCommandArgs* iArgs ) {
+InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FCommand* iCommand ) {
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
@@ -167,7 +167,7 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic( const uint8* iSrc, uint8*
 
 template< typename T >
 void
-ScheduleBlendMT_NonSeparable_MEM_Generic( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+ScheduleBlendMT_NonSeparable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
     const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

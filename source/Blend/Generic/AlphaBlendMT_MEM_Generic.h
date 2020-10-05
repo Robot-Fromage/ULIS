@@ -26,7 +26,7 @@
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( FBlendJobArgs iJobArgs, const FBlendCommandArgs* iCommandArgs ) {
+InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( FBlendJobArgs iJobArgs, const FCommand* iCommand ) {
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
@@ -70,7 +70,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( FBlendJobArgs 
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
     const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -89,7 +89,7 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( const FBlendCommandArgs* iA
 
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( FBlendJobArgs iJobArgs, const FBlendCommandArgs* iArgs ) {
+InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( FBlendJobArgs iJobArgs, const FCommand* iCommand ) {
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
@@ -116,7 +116,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( FBlendJobArgs iJobArgs,
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
     const uint8* src            = iArgs->source->Bits();
     uint8* bdp                  = iArgs->backdrop->Bits();
     const uint32 src_bps        = iArgs->source->BytesPerScanLine();

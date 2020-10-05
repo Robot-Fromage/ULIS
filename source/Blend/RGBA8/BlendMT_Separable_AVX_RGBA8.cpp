@@ -29,7 +29,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
     , uint8* iBdp
     , int32 iLine
     , const uint32 iSrcBps
-    , const FBlendCommandArgs* iArgs
+    , const FCommand* iCommand
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
@@ -146,7 +146,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
 
 void
 ScheduleBlendMT_Separable_AVX_RGBA8_Subpixel(
-      const FBlendCommandArgs* iArgs
+      FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , FThreadPool& iPool
 )
@@ -172,7 +172,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8(
       const uint8* iSrc
     , uint8* iBdp
     , int32 iLine
-    , const FBlendCommandArgs* iArgs
+    , const FCommand* iCommand
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
@@ -235,7 +235,7 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8(
 
 void
 ScheduleBlendMT_Separable_AVX_RGBA8(
-      const FBlendCommandArgs* iArgs
+      FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , FThreadPool& iPool
 )

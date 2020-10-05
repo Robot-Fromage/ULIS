@@ -24,6 +24,7 @@ FInternalEvent::~FInternalEvent()
 FInternalEvent::FInternalEvent()
     : mWaitList( TArray< FSharedInternalEvent >() )
     , mCommand( nullptr )
+    , mStatus( eEventStatus::EventStatus_Idle )
 {
 }
 

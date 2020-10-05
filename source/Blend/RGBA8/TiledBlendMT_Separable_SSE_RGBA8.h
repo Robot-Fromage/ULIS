@@ -21,12 +21,12 @@ InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8(
       const uint8* iSrc
     , uint8* iBdp
     , int32 iLine
-    , const FBlendCommandArgs* iArgs
+    , const FCommand* iCommand
 );
 
 void
 ScheduleTiledBlendMT_Separable_SSE_RGBA8(
-      const FBlendCommandArgs* iArgs
+      FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , FThreadPool& iPool
 );

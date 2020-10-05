@@ -26,7 +26,7 @@
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FBlendCommandArgs* iArgs ) {
+InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FCommand* iCommand ) {
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc + info.shift.x * fmt.BPP;
@@ -79,7 +79,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic( const uint8* iSrc, uint8* iB
 
 template< typename T >
 void
-ScheduleTiledBlendMT_Misc_MEM_Generic( const FBlendCommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+ScheduleTiledBlendMT_Misc_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
     const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();

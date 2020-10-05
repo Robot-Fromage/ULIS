@@ -51,7 +51,7 @@ FCommand::FCommand(
         mEvent->BindCommand( this );
     }
 
-    // Start Scheduling
+    // Start Enqueuing Jobs
     //mSched( mArgs, iPolicy, iPool );
 }
 
