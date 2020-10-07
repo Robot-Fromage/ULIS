@@ -70,7 +70,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( FBlendJobArgs 
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
+ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
     const FBlendCommandArgs&   info        = *iInfo;
     const uint8*        src         = info.source->Bits();
     uint8*              bdp         = info.backdrop->Bits();
@@ -117,19 +117,39 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( FBlendJobArgs iJobArgs,
 template< typename T >
 void
 ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
-    const uint8* src            = iArgs->source->Bits();
-    uint8* bdp                  = iArgs->backdrop->Bits();
-    const uint32 src_bps        = iArgs->source->BytesPerScanLine();
-    const uint32 bdp_bps        = iArgs->backdrop->BytesPerScanLine();
-    const uint32 src_decal_y    = iArgs->shift.y + iArgs->sourceRect.y;
-    const uint32 src_decal_x    = ( iArgs->shift.x + iArgs->sourceRect.x )  * iArgs->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( iArgs->backdropWorkingRect.x )          * iArgs->source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iArgs->perfIntent, iArgs->pool, iArgs->blocking
-                                  , iArgs->backdropWorkingRect.h
+    FBlendCommandArgs* args     = dynamic_cast< FBlendCommandArgs* >( iCommand->Args() );
+    const uint8* src            = args->source->Bits();
+    uint8* bdp                  = args->backdrop->Bits();
+    const uint32 src_bps        = args->source->BytesPerScanLine();
+    const uint32 bdp_bps        = args->backdrop->BytesPerScanLine();
+    const uint32 src_decal_y    = args->shift.y + args->sourceRect.y;
+    const uint32 src_decal_x    = ( args->shift.x + args->sourceRect.x )  * args->source->BytesPerPixel();
+    const uint32 bdp_decal_x    = ( args->backdropWorkingRect.x )          * args->source->BytesPerPixel();
+    ULIS_MACRO_INLINE_PARALLEL_FOR( args->perfIntent, args->pool, args->blocking
+                                  , args->backdropWorkingRect.h
                                   , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
                                   , src + ( ( src_decal_y + pLINE )                     * src_bps ) + src_decal_x
-                                  , bdp + ( ( iArgs->backdropWorkingRect.y + pLINE )    * bdp_bps ) + bdp_decal_x
+                                  , bdp + ( ( args->backdropWorkingRect.y + pLINE )    * bdp_bps ) + bdp_decal_x
                                   , pLINE , iInfo );
+
+    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
+    {
+        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks )
+        {
+        }
+        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
+        {
+        }
+    }
+    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
+    {
+        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks )
+        {
+        }
+        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
+        {
+        }
+    }
 }
 
 ULIS_NAMESPACE_END

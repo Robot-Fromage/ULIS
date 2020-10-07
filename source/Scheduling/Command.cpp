@@ -33,8 +33,7 @@ FCommand::FCommand(
     , const FEvent* iWaitList
     , FEvent* iEvent
 )
-    : mSched( iSched )
-    , mArgs( iArgs )
+    : mArgs( iArgs )
     , mEvent( nullptr )
 {
     // Bind Event
@@ -52,7 +51,7 @@ FCommand::FCommand(
     }
 
     // Start Enqueuing Jobs
-    //mSched( mArgs, iPolicy, iPool );
+    iSched( this, iPolicy );
 }
 
 const ICommandArgs*

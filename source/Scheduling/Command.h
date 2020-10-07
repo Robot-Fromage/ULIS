@@ -80,7 +80,6 @@ public:
     const ICommandArgs* Args() const;
 
 private:
-    fpCommandScheduler  mSched;
     const ICommandArgs* mArgs;
     FSharedInternalEvent mEvent;
 };
