@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Memory/Array.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/Event.h"
@@ -20,7 +21,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
-typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, FThreadPool& );
+typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy& );
 
 /////////////////////////////////////////////////////
 // ResolveScheduleCommandCall
@@ -73,15 +74,15 @@ public:
     /*! Explicitely deleted move assignment operator. */
     FCommand& operator=( FCommand&& ) = delete;
 
-    /*! Start scheduling command. */
-    void Execute( FThreadPool& iPool );
-
     /*! Get the args */
     const ICommandArgs* Args() const;
+
+    void AddJob( FJob* iJob );
 
 private:
     const ICommandArgs* mArgs;
     FSharedInternalEvent mEvent;
+    TArray< FJob* > mJobs;
 };
 
 ULIS_NAMESPACE_END

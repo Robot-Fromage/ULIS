@@ -89,7 +89,7 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( FCommand* iCommand, const F
 
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( FBlendJobArgs iJobArgs, const FCommand* iCommand ) {
+InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const FBlendJobArgs* iJobArgs, const FCommand* iCommand ) {
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
@@ -134,20 +134,35 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FScheduleP
 
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
-        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks )
-        {
-        }
-        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        {
-        }
+        // Mono: Single Job - Multi Tasks
+        // Same for both policies: Blend doesn't support chunk based scheduling
+        // as of now
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
+        FBlendJobArgs* job_args = new FBlendJobArgs[ args->backdropWorkingRect.h ];
+        for( int i = 0; i < args->backdropWorkingRect.h; ++i )
+            job_args[i] = FBlendJobArgs( i, src_bps, src, bdp );
+        FJob* job = new FJob(
+                    args->backdropWorkingRect.h
+                , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
+                , job_args );
+        iCommand->AddJob( job );
     }
     else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
     {
-        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks )
-        {
-        }
-        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        {
+        // Multi: Multi Jobs - Single Task
+        // Same for both policies: Blend doesn't support chunk based scheduling
+        // as of now
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
+        for( int i = 0; i < args->backdropWorkingRect.h; ++i ) {
+            FBlendJobArgs* job_args = new FBlendJobArgs[ 1 ];
+            job_args[0] = FBlendJobArgs( i, src_bps, src, bdp );
+            FJob* job = new FJob(
+                      args->backdropWorkingRect.h
+                    , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
+                    , job_args );
+            iCommand->AddJob( job );
         }
     }
 }

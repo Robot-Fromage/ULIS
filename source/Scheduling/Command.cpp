@@ -35,6 +35,7 @@ FCommand::FCommand(
 )
     : mArgs( iArgs )
     , mEvent( nullptr )
+    , mJobs( TArray< FJob* >() )
 {
     // Bind Event
     if( iEvent )
@@ -58,6 +59,12 @@ const ICommandArgs*
 FCommand::Args() const
 {
     return  mArgs;
+}
+
+void
+FCommand::AddJob( FJob* iJob )
+{
+    mJobs.EmplaceBack( iJob );
 }
 
 ULIS_NAMESPACE_END

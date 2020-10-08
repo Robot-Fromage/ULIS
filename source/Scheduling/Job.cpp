@@ -22,14 +22,12 @@ FJob::~FJob()
 
 FJob::FJob(
       uint32 iNumTasks
-    , fpTask* iTasks
+    , fpTask iTask
     , const IJobArgs* iArgs
-    , const FCommand* iParent
 )
     : mNumTasks( iNumTasks )
-    , mTasks( iTasks )
+    , mTask( iTask )
     , mArgs( iArgs )
-    , mParent( iParent )
 {
 }
 

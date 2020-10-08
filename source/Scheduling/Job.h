@@ -53,9 +53,8 @@ public:
     /*! Constructor */
     FJob(
           uint32 iNumTasks
-        , fpTask* iTasks
+        , fpTask iTask
         , const IJobArgs* iArgs
-        , const FCommand* iParent
     );
 
     /*! Explicitely deleted default constructor. */
@@ -81,7 +80,7 @@ public:
 
 private:
     uint32 mNumTasks;
-    fpTask* mTasks;
+    fpTask mTask;
     const IJobArgs* mArgs;
     const FCommand* mParent;
 };
