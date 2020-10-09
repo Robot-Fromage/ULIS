@@ -89,8 +89,8 @@ public:
 
     const uint32 line;
     const uint32 src_bps;
-    const uint8* src;
-    uint8* bdp;
+    const uint8* ULIS_RESTRICT src;
+    uint8* ULIS_RESTRICT bdp;
 };
 
 ULIS_NAMESPACE_END

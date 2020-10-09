@@ -90,12 +90,13 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( FCommand* iCommand, const F
 template< typename T >
 void
 InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const FBlendJobArgs* iJobArgs, const FCommand* iCommand ) {
-    const FBlendCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
-    const uint8*        src     = iSrc;
-    uint8*              bdp     = iBdp;
+    const FBlendCommandArgs*    cmd_args    = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
+    const FBlendJobArgs*        job_args    = iJobArgs;
+    const FFormatMetrics&       fmt         = cmd_args->source.FormatMetrics();
+    const uint8 ULIS_RESTRICT * src         = job_args->src;
+    uint8 ULIS_RESTRICT*        bdp         = job_args->bdp;
 
-    for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cmd_args->backdropWorkingRect.w; ++x ) {
         const float alpha_src   = TYPE2FLOAT( src, fmt.AID ) * info.opacityValue;
         const float alpha_bdp   = TYPE2FLOAT( bdp, fmt.AID );
         const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
@@ -116,59 +117,11 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const FBlendJobArgs* iJ
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
-    FBlendCommandArgs* args     = dynamic_cast< FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = args->source->Bits();
-    uint8* bdp                  = args->backdrop->Bits();
-    const uint32 src_bps        = args->source->BytesPerScanLine();
-    const uint32 bdp_bps        = args->backdrop->BytesPerScanLine();
-    const uint32 src_decal_y    = args->shift.y + args->sourceRect.y;
-    const uint32 src_decal_x    = ( args->shift.x + args->sourceRect.x ) * args->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( args->backdropWorkingRect.x ) * args->source->BytesPerPixel();
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-    {
-        // Mono: Single Job - Multi Tasks
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs* job_args = new FBlendJobArgs[ args->backdropWorkingRect.h ];
-        for( int i = 0; i < args->backdropWorkingRect.h; ++i )
-            job_args[i] = FBlendJobArgs(
-                  i
-                , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-            );
-        FJob* job = new FJob(
-              args->backdropWorkingRect.h
-            , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
-            , job_args );
-        iCommand->AddJob( job );
-    }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
-    {
-        // Multi: Multi Jobs - Single Task
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        for( int i = 0; i < args->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs* job_args = new FBlendJobArgs[ 1 ];
-            job_args[0] = FBlendJobArgs(
-                  i
-                , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-            );
-            FJob* job = new FJob(
-                  1
-                , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
-                , job_args );
-            iCommand->AddJob( job );
-        }
-    }
+ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
+    RangeBasedScheduling_MEM_Generic< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T > >
 }
+
+
 
 ULIS_NAMESPACE_END
 

@@ -13,6 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "BlendArgs.h"
 
 /////////////////////////////////////////////////////
 // Static Values Helpers for Misc Compositing Operations
@@ -57,3 +58,62 @@ static const float gBayer8x8Matrix[8][8] = {
 #define ULIS_ASSIGN_ALPHASSEF( iAlphaMode, iTarget, iSrc, iBdp )   ULIS_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS_FOR_ALL_AM_DO, ULIS_ACTION_ASSIGN_ALPHASSEF, iTarget, iSrc, iBdp )
 #define ULIS_ASSIGN_ALPHAAVXF( iAlphaMode, iTarget, iSrc, iBdp )   ULIS_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS_FOR_ALL_AM_DO, ULIS_ACTION_ASSIGN_ALPHAAVXF, iTarget, iSrc, iBdp )
 
+ULIS_NAMESPACE_BEGIN
+template< void (*IMP)( const FBlendJobArgs*, const FBlendCommandArgs* ) >
+ULIS_FORCEINLINE
+static
+void
+RangeBasedScheduling_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
+    const FBlendCommandArgs* args = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
+    const uint8* src            = args->source->Bits();
+    uint8* bdp                  = args->backdrop->Bits();
+    const uint32 src_bps        = args->source->BytesPerScanLine();
+    const uint32 bdp_bps        = args->backdrop->BytesPerScanLine();
+    const uint32 src_decal_y    = args->shift.y + args->sourceRect.y;
+    const uint32 src_decal_x    = ( args->shift.x + args->sourceRect.x ) * args->source->BytesPerPixel();
+    const uint32 bdp_decal_x    = ( args->backdropWorkingRect.x ) * args->source->BytesPerPixel();
+    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
+    {
+        // Mono: Single Job - Multi Tasks
+        // Same for both policies: Blend doesn't support chunk based scheduling
+        // as of now
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
+        FBlendJobArgs* job_args = new FBlendJobArgs[ args->backdropWorkingRect.h ];
+        for( int i = 0; i < args->backdropWorkingRect.h; ++i )
+            job_args[i] = FBlendJobArgs(
+                  i
+                , src_bps
+                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
+            );
+        FJob* job = new FJob(
+              args->backdropWorkingRect.h
+            , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
+            , job_args );
+        iCommand->AddJob( job );
+    }
+    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
+    {
+        // Multi: Multi Jobs - Single Task
+        // Same for both policies: Blend doesn't support chunk based scheduling
+        // as of now
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
+        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
+        for( int i = 0; i < args->backdropWorkingRect.h; ++i ) {
+            FBlendJobArgs* job_args = new FBlendJobArgs[ 1 ];
+            job_args[0] = FBlendJobArgs(
+                  i
+                , src_bps
+                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
+            );
+            FJob* job = new FJob(
+                  1
+                , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
+                , job_args );
+            iCommand->AddJob( job );
+        }
+    }
+}
+ULIS_NAMESPACE_END
