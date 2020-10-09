@@ -82,7 +82,7 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 #define ULIS_SWITCH_FOR_ALL_DO( iValue, _SUBSET, _ACTION, _E1, _E2, _E3 )  switch( iValue ) { _SUBSET( ULIS_COMP_OP_CASE_DO, _ACTION, _E1, _E2, _E3 ) }
 
 // Macro for all types for template instanciation
-#define ULIS_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )     \
+#define ULIS_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )      \
     X( uint8,   _E0, _E1, _E2, _E3 )                        \
     X( uint16,  _E0, _E1, _E2, _E3 )                        \
     X( uint32,  _E0, _E1, _E2, _E3 )                        \
@@ -90,7 +90,7 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
     X( udouble, _E0, _E1, _E2, _E3 )
 
 // Macro for all types ID for template instanciation
-#define ULIS_FOR_ALL_TYPES_ID_DO( X, _E0, _E1, _E2, _E3 )  \
+#define ULIS_FOR_ALL_TYPES_ID_DO( X, _E0, _E1, _E2, _E3 )   \
     X( TYPE_UINT8,      _E0, uint8, _E2, _E3 )              \
     X( TYPE_UINT16,     _E0, uint16, _E2, _E3 )             \
     X( TYPE_UINT32,     _E0, uint32, _E2, _E3 )             \
@@ -98,7 +98,7 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
     X( TYPE_UDOUBLE,    _E0, udouble, _E2, _E3 )
 
 // Macro for all types for combination template instanciation
-#define ULIS_FOR_ALL_TYPES_COMBINATIONS_DO( X )    \
+#define ULIS_FOR_ALL_TYPES_COMBINATIONS_DO( X )     \
     X( uint8,   uint8    )                          \
     X( uint8,   uint16   )                          \
     X( uint8,   uint32   )                          \

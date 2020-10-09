@@ -71,41 +71,28 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( FBlendJobArgs 
 template< typename T >
 void
 ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->Bits();
-    uint8*              bdp         = info.backdrop->Bits();
-    const uint32         src_bps     = info.source->BytesPerScanLine();
-    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
-    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.backdropWorkingRect.h
-                                   , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T >
-                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                   , pLINE , src_bps, iInfo );
+    RangeBasedScheduling_MEM_Generic< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T > >
 }
 
 template< typename T >
 void
 InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic( const FBlendJobArgs* iJobArgs, const FCommand* iCommand ) {
-    const FBlendCommandArgs*    cmd_args    = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const FBlendJobArgs*        job_args    = iJobArgs;
-    const FFormatMetrics&       fmt         = cmd_args->source.FormatMetrics();
-    const uint8 ULIS_RESTRICT * src         = job_args->src;
-    uint8 ULIS_RESTRICT*        bdp         = job_args->bdp;
+    const FBlendCommandArgs*        cmd_args    = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
+    const FBlendJobArgs*            job_args    = iJobArgs;
+    const FFormatMetrics&           fmt         = cmd_args->source.FormatMetrics();
+    const uint8 ULIS_RESTRICT *     src         = job_args->src;
+    uint8       ULIS_RESTRICT *     bdp         = job_args->bdp;
 
     for( int x = 0; x < cmd_args->backdropWorkingRect.w; ++x ) {
-        const float alpha_src   = TYPE2FLOAT( src, fmt.AID ) * info.opacityValue;
-        const float alpha_bdp   = TYPE2FLOAT( bdp, fmt.AID );
-        const float alpha_comp  = AlphaNormalF( alpha_src, alpha_bdp );
-        const float var         = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
+        const ufloat alpha_src  = TYPE2FLOAT( src, fmt.AID ) * info.opacityValue;
+        const ufloat alpha_bdp  = TYPE2FLOAT( bdp, fmt.AID );
+        const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
+        const ufloat var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
-            uint8 r = fmt.IDT[j];
-            float srcvf = TYPE2FLOAT( src, r );
-            float bdpvf = TYPE2FLOAT( bdp, r );
+            const uint8 r = fmt.IDT[j];
+            const ufloat srcvf = TYPE2FLOAT( src, r );
+            const ufloat bdpvf = TYPE2FLOAT( bdp, r );
             FLOAT2TYPE( bdp, r, SeparableCompOpF< Blend_Normal >( srcvf, bdpvf, alpha_bdp, var ) );
         }
 
