@@ -123,15 +123,8 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FScheduleP
     const uint32 src_bps        = args->source->BytesPerScanLine();
     const uint32 bdp_bps        = args->backdrop->BytesPerScanLine();
     const uint32 src_decal_y    = args->shift.y + args->sourceRect.y;
-    const uint32 src_decal_x    = ( args->shift.x + args->sourceRect.x )  * args->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( args->backdropWorkingRect.x )          * args->source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( args->perfIntent, args->pool, args->blocking
-                                  , args->backdropWorkingRect.h
-                                  , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
-                                  , src + ( ( src_decal_y + pLINE )                     * src_bps ) + src_decal_x
-                                  , bdp + ( ( args->backdropWorkingRect.y + pLINE )    * bdp_bps ) + bdp_decal_x
-                                  , pLINE , iInfo );
-
+    const uint32 src_decal_x    = ( args->shift.x + args->sourceRect.x ) * args->source->BytesPerPixel();
+    const uint32 bdp_decal_x    = ( args->backdropWorkingRect.x ) * args->source->BytesPerPixel();
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
         // Mono: Single Job - Multi Tasks
@@ -141,11 +134,16 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FScheduleP
         //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
         FBlendJobArgs* job_args = new FBlendJobArgs[ args->backdropWorkingRect.h ];
         for( int i = 0; i < args->backdropWorkingRect.h; ++i )
-            job_args[i] = FBlendJobArgs( i, src_bps, src, bdp );
+            job_args[i] = FBlendJobArgs(
+                  i
+                , src_bps
+                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
+            );
         FJob* job = new FJob(
-                    args->backdropWorkingRect.h
-                , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
-                , job_args );
+              args->backdropWorkingRect.h
+            , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
+            , job_args );
         iCommand->AddJob( job );
     }
     else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
@@ -157,11 +155,16 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FScheduleP
         //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
         for( int i = 0; i < args->backdropWorkingRect.h; ++i ) {
             FBlendJobArgs* job_args = new FBlendJobArgs[ 1 ];
-            job_args[0] = FBlendJobArgs( i, src_bps, src, bdp );
+            job_args[0] = FBlendJobArgs(
+                  i
+                , src_bps
+                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
+            );
             FJob* job = new FJob(
-                      args->backdropWorkingRect.h
-                    , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
-                    , job_args );
+                  1
+                , InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T >
+                , job_args );
             iCommand->AddJob( job );
         }
     }
