@@ -113,6 +113,7 @@
 // Force Inline Utility
 #define ULIS_ENABLE_FORCEINLINE
 #define ULIS_ENABLE_VECTORCALL
+#define ULIS_ENABLE_RESTRICT
 
 #ifdef ULIS_ENABLE_FORCEINLINE
     #if defined(__clang__)
@@ -141,6 +142,20 @@
 #else
     #define ULIS_VECTORCALL
 #endif // ULIS_ENABLE_FORCEINLINE
+
+#ifdef ULIS_ENABLE_RESTRICT
+    #if defined(__clang__)
+    #define ULIS_RESTRICT __restrict
+    #elif defined(__GNUC__) || defined(__GNUG__)
+    #define ULIS_RESTRICT __restrict
+    #elif defined(_MSC_VER)
+    #define ULIS_RESTRICT __restrict
+    #else
+    #define ULIS_RESTRICT __restrict
+    #endif
+#else
+    #define ULIS_RESTRICT
+#endif // ULIS_ENABLE_RESTRICT
 
 /////////////////////////////////////////////////////
 // Export utility macros
