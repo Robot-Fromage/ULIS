@@ -23,7 +23,7 @@ class FJob;
 typedef void (*fpTask)( const IJobArgs*, const ICommandArgs* );
 
 /////////////////////////////////////////////////////
-// ResolveScheduleCommandCall
+// ResolveScheduledJobCall
 template< typename T, typename U, void (*IMP)( const T*, const U* ) >
 static ULIS_FORCEINLINE void ResolveScheduledJobCall( const IJobArgs* iJobArgs, const ICommandArgs* iCommandArgs )
 {

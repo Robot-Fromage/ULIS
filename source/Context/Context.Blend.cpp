@@ -7,7 +7,8 @@
 *
 * @file         Context.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FContext class.
+* @brief        This file provides the implementation of the blend API in 
+*               the FContext class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -23,8 +24,6 @@
 #include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// FContext: Blend
 void
 FContext::Blend(
       const FBlock& iSource
@@ -49,7 +48,7 @@ FContext::Blend(
 
     // Check no-op
     if( dst_fit.Area() <= 0 )
-        return; // CHECK: return no op should make the event finished !
+        return  FinishEventNoOP( iEvent );
 
     // Bake and push command
     mCommandQueue.Push(

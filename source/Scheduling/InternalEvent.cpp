@@ -83,5 +83,12 @@ FInternalEvent::CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const
     }
 }
 
+void
+FInternalEvent::SetFinished()
+{
+    mStatus = eEventStatus::EventStatus_Finished;
+}
+
+
 ULIS_NAMESPACE_END
 

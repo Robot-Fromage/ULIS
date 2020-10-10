@@ -7,7 +7,7 @@
 *
 * @file         BlendHelpers.h
 * @author       Clement Berthaud
-* @brief        This file provides some compositing helper macros.
+* @brief        This file provides some helper macros and functions for blending.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -29,8 +29,8 @@ static const float gBayer8x8Matrix[8][8] = {
 
 /////////////////////////////////////////////////////
 // Macro Helpers for Redundant Compositing Operations
-// TODO: this is quite clumsy at the moment, clean this by defining better macros for ASSIGN and
-// small helper functions, possibly inline, within the Blend translation unit(s).
+// TODO: this is quite clumsy at the moment, clean this by defining better
+// macros for ASSIGN and small helper functions, possibly inline.
 #define SampleSubpixelAlpha( _DST )                                                                                 \
     if( fmt.HEA ) {                                                                                                 \
         m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,              fmt.AID ) : 0.f;    \
@@ -59,19 +59,21 @@ static const float gBayer8x8Matrix[8][8] = {
 #define ULIS_ASSIGN_ALPHAAVXF( iAlphaMode, iTarget, iSrc, iBdp )   ULIS_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS_FOR_ALL_AM_DO, ULIS_ACTION_ASSIGN_ALPHAAVXF, iTarget, iSrc, iBdp )
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Helper for Redundant Job building and scheduling operations
 template< void (*IMP)( const FBlendJobArgs*, const FBlendCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
-RangeBasedScheduling_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs* args = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = args->source->Bits();
-    uint8* bdp                  = args->backdrop->Bits();
-    const uint32 src_bps        = args->source->BytesPerScanLine();
-    const uint32 bdp_bps        = args->backdrop->BytesPerScanLine();
-    const uint32 src_decal_y    = args->shift.y + args->sourceRect.y;
-    const uint32 src_decal_x    = ( args->shift.x + args->sourceRect.x ) * args->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( args->backdropWorkingRect.x ) * args->source->BytesPerPixel();
+BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
+    const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
+    const uint8* src            = cargs->source->Bits();
+    uint8* bdp                  = cargs->backdrop->Bits();
+    const uint32 src_bps        = cargs->source->BytesPerScanLine();
+    const uint32 bdp_bps        = cargs->backdrop->BytesPerScanLine();
+    const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
+    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source->BytesPerPixel();
+    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source->BytesPerPixel();
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
         // Mono: Single Job - Multi Tasks
@@ -79,18 +81,18 @@ RangeBasedScheduling_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPo
         // as of now
         //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
         //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs* job_args = new FBlendJobArgs[ args->backdropWorkingRect.h ];
-        for( int i = 0; i < args->backdropWorkingRect.h; ++i )
-            job_args[i] = FBlendJobArgs(
+        FBlendJobArgs* jargs = new FBlendJobArgs[ cargs->backdropWorkingRect.h ];
+        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
+            jargs[i] = FBlendJobArgs(
                   i
                 , src_bps
                 , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
+                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
             );
         FJob* job = new FJob(
-              args->backdropWorkingRect.h
+              cargs->backdropWorkingRect.h
             , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
-            , job_args );
+            , jargs );
         iCommand->AddJob( job );
     }
     else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
@@ -100,20 +102,22 @@ RangeBasedScheduling_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPo
         // as of now
         //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
         //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        for( int i = 0; i < args->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs* job_args = new FBlendJobArgs[ 1 ];
-            job_args[0] = FBlendJobArgs(
+        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
+            FBlendJobArgs* jargs = new FBlendJobArgs[ 1 ];
+            jargs[0] = FBlendJobArgs(
                   i
                 , src_bps
                 , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( args->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
+                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
             );
             FJob* job = new FJob(
                   1
                 , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
-                , job_args );
+                , jargs );
             iCommand->AddJob( job );
         }
     }
 }
+
 ULIS_NAMESPACE_END
+

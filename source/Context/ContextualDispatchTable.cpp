@@ -7,7 +7,7 @@
 *
 * @file         ContextualDispatchTable.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FContextualDispatchTable class.
+* @brief        This file provides the implementation for the FContextualDispatchTable class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

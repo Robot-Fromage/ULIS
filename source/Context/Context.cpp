@@ -7,7 +7,7 @@
 *
 * @file         Context.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FContext class.
+* @brief        This file provides the implementation for the FContext core API.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -63,6 +63,14 @@ eFormat
 FContext::Format() const
 {
     return  mFormat;
+}
+
+void
+FContext::FinishEventNoOP( FEvent* iEvent )
+{
+    if( iEvent ) {
+        iEvent->d->m->SetFinished();
+    }
 }
 
 ULIS_NAMESPACE_END

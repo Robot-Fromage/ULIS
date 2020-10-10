@@ -91,6 +91,9 @@ public:
     */
     eFormat Format() const;
 
+private:
+    void FinishEventNoOP( FEvent* iEvent );
+
 public:
 /////////////////////////////////////////////////////
 // Blend

@@ -65,12 +65,20 @@ Some algorithms may be dispatched on the CPU or on the GPU depending on the natu
 
 ## Asynchronous Hierarchy Model {#asynchronous-hierarchy-model}
 The asynchronous mechanisms are enabled by a set of concepts that interact together. Amongst them, we can find:
+- Host Device Hardware Information ( FHardwareMetrics )
+- Compile-Time Dispatchers ( TDispatcher )
+- Run-Time cached dispatch tables ( FContextualDispatchTable )
+- Dispatchers ( TDispatcher )
 - Pools ( FThreadPool )
 - Command Queues ( FCommandQueue )
-- Contexts ( FRasterContext )
+- Contexts ( FContext )
 - Commands ( FCommand )
 - Jobs ( FJob )
-- Tasks ( fpScheduledJob )
+- Tasks ( fpTask )
+- Events ( FEvent )
+- Scheduling Policies ( FSchedulePolicy )
+- Scheduler Functions ( e.g: ScheduleAlphaBlendMT_Separable_MEM_Generic )
+- Invocations ( e.g: InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic )
 
 Pools are thread pools, they continuously run (attached) threads which implementations depend on the platform, can be posix or windows threads. They are implemented using C++14 std::thread library. Their intent is to have thread running continuously in a spin lock and detecting when jobs are submitted to the pool, taking one job and processing it on a given core in an asynchronous fashion.  
 Command Queues are queues that contain commands. Commands are stored there until the queue is flushed and all commands are unrolled into jobs that are scheduled into the thread pool.  

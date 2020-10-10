@@ -25,12 +25,12 @@ typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy& );
 
 /////////////////////////////////////////////////////
 // ResolveScheduleCommandCall
-template< typename ARGS, void (*IMP)( const ARGS*, const FSchedulePolicy&, FThreadPool& ) >
-static ULIS_FORCEINLINE void ResolveScheduleCommandCall( const ICommandArgs* iArgs, const FSchedulePolicy& iPolicy, FThreadPool& iPool )
+template< typename ARGS, void (*IMP)( const ARGS*, const FSchedulePolicy& ) >
+static ULIS_FORCEINLINE void ResolveScheduleCommandCall( const ICommandArgs* iArgs, const FSchedulePolicy& iPolicy )
 {
     const ARGS* args = dynamic_cast< const ARGS* >( iArgs );
     ULIS_ASSERT( args, "Bad cast" );
-    IMP( args, iPolicy, iPool );
+    IMP( args, iPolicy );
 }
 
 /////////////////////////////////////////////////////

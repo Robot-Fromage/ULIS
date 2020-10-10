@@ -36,6 +36,7 @@ ULIS_NAMESPACE_BEGIN
 class FEvent::FEvent_Private
 {
     friend class FInternalEvent;
+    friend class FContext;
     friend class FCommand;
 
 public:
