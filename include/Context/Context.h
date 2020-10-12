@@ -68,6 +68,9 @@ public:
         , eFormat iFormat
     );
 
+    FContext( const FContext& ) = delete;
+    FContext& operator=( const FContext& ) = delete;
+
 public:
 /////////////////////////////////////////////////////
 // Control Flow

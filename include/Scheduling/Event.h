@@ -56,6 +56,9 @@ public:
     /*! Constructor */
     FEvent();
 
+    FEvent( const FEvent& ) = delete;
+    FEvent& operator=( const FEvent& ) = delete;
+
 private:
     FEvent_Private* d;
 };

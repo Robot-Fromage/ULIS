@@ -13,32 +13,21 @@
 */
 #include <ULIS>
 
-#include <QApplication>
-#include <QWidget>
-#include <QImage>
-#include <QPixmap>
-#include <QLabel>
-
-#include <chrono>
-
 using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    FContext ctx( queue, Format_RGBA8 );
-    FBlock blockA( 256, 256, Format_RGBA8 );
-    FBlock blockB( 256, 256, Format_RGBA8 );
-    FBlock blockC( 256, 256, Format_RGBA8 );
+    eFormat format = Format_RGBA8;
+    FContext ctx( FCommandQueue( pool ), format );
+    FBlock canvas( 256, 256, format );
+    FBlock test( 64, 64, format );
 
-    FEvent blendEventBA;
-    FEvent blendEventCA;
-
-    FSchedulePolicy policy;
-
-    ctx.Blend( blockB, blockA, blockB.Rect(), FVec2F(), Blend_Normal, Alpha_Normal, 1.f, policy, 0, 0, &blendEventBA );
-    ctx.Blend( blockC, blockA, blockC.Rect(), FVec2F(), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &blendEventBA, 0 );
+    FEvent eventBlendTile;
+    FSchedulePolicy policy( ScheduleRun_Mono );
+    ctx.Blend( test, canvas, test.Rect(), FVec2I( 0, 0 ),  Blend_Normal, Alpha_Normal, 1.f, policy, 0, 0, &eventBlendTile );
+    ctx.Blend( test, canvas, test.Rect(), FVec2F( 64, 0 ), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &eventBlendTile, 0 );
     ctx.Finish();
 
     return  0;

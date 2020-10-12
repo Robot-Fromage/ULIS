@@ -68,7 +68,6 @@
 #include "String/WString.h"
 // System
 #include "System/FilePathRegistry.h"
-#include "System/HostDeviceInfo.h"
 #include "System/Device.h"
 // Text
 #include "Text/Font.h"
@@ -76,7 +75,6 @@
 #include "Text/Text.h"
 #include "Text/TextEngine.h"
 // Thread
-#include "Thread/OldThreadInterface.h"
 #include "Thread/ThreadPool.h"
 // Transform
 #include "Transform/Methods.h"
@@ -84,8 +82,6 @@
 // Context
 #include "Context/Context.h"
 // Scheduling
-#include "Scheduling/Command.h"
-#include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/Event.h"

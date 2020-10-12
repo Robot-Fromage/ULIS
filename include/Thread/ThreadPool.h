@@ -36,6 +36,8 @@ class ULIS_API FThreadPool
 public:
     ~FThreadPool();
     FThreadPool( uint32 iNumWorkers = MaxWorkers() );
+    FThreadPool( const FThreadPool& ) = delete;
+    FThreadPool& operator=( const FThreadPool& ) = delete;
     void ScheduleJob( FJob* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );

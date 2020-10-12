@@ -36,7 +36,10 @@ public:
     /*! Constructor */
     FCommandQueue( FThreadPool& iPool );
 
-private:
+    FCommandQueue( const FCommandQueue& ) = delete;
+    FCommandQueue& operator=( const FCommandQueue& ) = delete;
+
+public:
     /*!
         Issue all commands and return immediately.
     */
@@ -52,6 +55,7 @@ private:
     */
     void Fence();
 
+private:
     /*!
         Push, insert a new command at the end of the queue.
     */
