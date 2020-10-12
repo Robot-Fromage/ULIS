@@ -21,12 +21,15 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, uint8* iBdp, int32 iLine, const uint32 iSrcBps, const FCommand* iCommand ) {
+InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
+      const FBlendJobArgs* jargs
+    , const FBlendCommandArgs* cargs
+)
+{
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
@@ -73,26 +76,21 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel( const uint8* iSrc, 
 
 template< typename T >
 void
-ScheduleBlendMT_Separable_MEM_Generic_Subpixel( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
-    const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->Bits();
-    uint8*              bdp         = info.backdrop->Bits();
-    const uint32         src_bps     = info.source->BytesPerScanLine();
-    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
-    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.backdropWorkingRect.h
-                                   , InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T >
-                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                   , pLINE , src_bps, iInfo );
+ScheduleBlendMT_Separable_MEM_Generic_Subpixel(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
+{
+    BuildBlendJobs< &InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
 }
 
 template< typename T >
 void
-InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iBdp, int32 iLine, const FCommand* iCommand ) {
+InvokeBlendMTProcessScanline_Separable_MEM_Generic(
+      const FBlendJobArgs* jargs
+    , const FBlendCommandArgs* cargs
+)
+{
     const FBlendCommandArgs&   info    = *iInfo;
     const FFormatMetrics&  fmt     = info.source->FormatMetrics();
     const uint8*        src     = iSrc;
@@ -121,20 +119,12 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic( const uint8* iSrc, uint8* iB
 
 template< typename T >
 void
-ScheduleBlendMT_Separable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy, FThreadPool& iPool ) {
-    const uint8*    src         = iArgs->source->Bits();
-    uint8*          bdp         = iArgs->backdrop->Bits();
-    const uint32    src_bps     = iArgs->source->BytesPerScanLine();
-    const uint32    bdp_bps     = iArgs->backdrop->BytesPerScanLine();
-    const uint32    src_decal_y = iArgs->shift.y + iArgs->sourceRect.y;
-    const uint32    src_decal_x = ( iArgs->shift.x + iArgs->sourceRect.x )  * iArgs->source->BytesPerPixel();
-    const uint32    bdp_decal_x = ( iArgs->backdropWorkingRect.x )          * iArgs->source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iArgs->perfIntent, iArgs->pool, iArgs->blocking
-                                  , iArgs->backdropWorkingRect.h
-                                  , InvokeBlendMTProcessScanline_Separable_MEM_Generic< T >
-                                  , src + ( ( src_decal_y + pLINE )                     * src_bps ) + src_decal_x
-                                  , bdp + ( ( iArgs->backdropWorkingRect.y + pLINE )    * bdp_bps ) + bdp_decal_x
-                                  , pLINE , iInfo );
+ScheduleBlendMT_Separable_MEM_Generic(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
+{
+    BuildBlendJobs< &InvokeBlendMTProcessScanline_Separable_MEM_Generic< T > >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END
