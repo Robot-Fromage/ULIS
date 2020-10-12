@@ -7,8 +7,8 @@
 *
 * @file         Context.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the implementation of the blend API in 
-*               the FContext class.
+* @brief        This file provides the implementation of the blend API entry
+*               points in the FContext class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -116,7 +116,7 @@ FContext::BlendAA(
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
-              mContextualDispatchTable->QueryScheduleBlend( iBlendingMode )
+              mContextualDispatchTable->QueryScheduleBlendSubpixel( iBlendingMode )
             , new FBlendCommandArgs(
                   iSource
                 , iBackdrop
