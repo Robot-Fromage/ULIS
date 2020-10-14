@@ -18,17 +18,14 @@
 ULIS_NAMESPACE_BEGIN
 void
 InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8(
-      const uint8* iSrc
-    , uint8* iBdp
-    , int32 iLine
-    , const FCommand* iCommand
+      const FBlendJobArgs* jargs
+    , const FBlendCommandArgs* cargs
 );
 
 void
 ScheduleTiledBlendMT_Separable_SSE_RGBA8(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
-    , FThreadPool& iPool
 );
 
 ULIS_NAMESPACE_END

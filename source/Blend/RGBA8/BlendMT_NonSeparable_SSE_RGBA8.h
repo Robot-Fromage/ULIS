@@ -20,35 +20,26 @@ ULIS_NAMESPACE_BEGIN
 
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel(
-      const uint8* iSrc
-    , uint8* iBdp
-    , int32 iLine
-    , const uint32 iSrcBps
-    , const FCommand* iCommand
-    , const Vec4i iIDT
+      const FBlendJobArgs* jargs
+    , const FBlendCommandArgs* cargs
 );
 
 void
 ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
-    , FThreadPool& iPool
 );
 
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
-      const uint8* iSrc
-    , uint8* iBdp
-    , int32 iLine
-    , const FCommand* iCommand
-    , const Vec4i iIDT
+      const FBlendJobArgs* jargs
+    , const FBlendCommandArgs* cargs
 );
 
 void
 ScheduleBlendMT_NonSeparable_SSE_RGBA8(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
-    , FThreadPool& iPool
 );
 
 ULIS_NAMESPACE_END
