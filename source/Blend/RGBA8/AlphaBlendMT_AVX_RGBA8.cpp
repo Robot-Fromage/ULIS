@@ -111,7 +111,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
 
         // Comp Alpha
         Vec8f alpha_bdp     = *( iBdp + fmt.AID ) / 255.f;
-        Vec8f alpha_src     = alpha_smp * info.opacityValue;
+        Vec8f alpha_src     = alpha_smp * info.opacity;
         Vec8f alpha_comp    = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
         Vec8f alpha_result = alpha_comp * 255.f;
@@ -174,7 +174,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
     const uint32 len = info.backdropWorkingRect.w / 2;
     for( uint32 i = 0; i < len; ++i ) {
         Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], iBdp[fmt.AID + 4] ) / 255.f;
-        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], iSrc[fmt.AID + 4] ) / 255.f * info.opacityValue;
+        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], iSrc[fmt.AID + 4] ) / 255.f * info.opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result = alpha_comp * 255.f;
@@ -198,7 +198,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
     // In case W is odd, process one last pixel.
     if( info.backdropWorkingRect.w % 2 ) {
         Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], 0 ) / 255.f;
-        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], 0 ) / 255.f * info.opacityValue;
+        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], 0 ) / 255.f * info.opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result = alpha_comp * 255.f;

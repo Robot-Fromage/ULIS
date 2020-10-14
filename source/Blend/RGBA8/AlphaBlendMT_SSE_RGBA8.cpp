@@ -79,7 +79,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
         smpch_smp = select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * TX + smpch_vv1 * UX ) / alpha_smp );
 
         Vec4f alpha_bdp     = *( iBdp + fmt.AID ) / 255.f;
-        Vec4f alpha_src     = alpha_smp * info.opacityValue;
+        Vec4f alpha_src     = alpha_smp * info.opacity;
         Vec4f alpha_comp    = AlphaNormalSSEF( alpha_src, alpha_bdp );
         Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
 
@@ -133,8 +133,8 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8(
     for( int x = 0; x < info.backdropWorkingRect.w; x+=2 ) {
         const uint8 alpha_bdp0 = bdp[fmt.AID];
         const uint8 alpha_bdp1 = bdp[fmt.AID + 4];
-        const uint8 alpha_src0 = static_cast< uint8 >( src[fmt.AID] * info.opacityValue );
-        const uint8 alpha_src1 = static_cast< uint8 >( src[fmt.AID + 4] * info.opacityValue );
+        const uint8 alpha_src0 = static_cast< uint8 >( src[fmt.AID] * info.opacity );
+        const uint8 alpha_src1 = static_cast< uint8 >( src[fmt.AID + 4] * info.opacity );
         const uint8 alpha_result0 = static_cast< uint8 >( ( alpha_src0 + alpha_bdp0 ) - ConvType< uint16, uint8 >( alpha_src0 * alpha_bdp0 ) );
         const uint8 alpha_result1 = static_cast< uint8 >( ( alpha_src1 + alpha_bdp1 ) - ConvType< uint16, uint8 >( alpha_src1 * alpha_bdp1 ) );
         const uint8 var0 = alpha_result0 == 0 ? 0 : ( alpha_src0 * 0xFF ) / alpha_result0;

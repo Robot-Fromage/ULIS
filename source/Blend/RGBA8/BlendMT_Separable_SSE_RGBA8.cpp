@@ -72,7 +72,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
         smpch_smp = select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * TX + smpch_vv1 * UX ) / alpha_smp );
 
         Vec4f alpha_bdp     = *( iBdp + fmt.AID ) / 255.f;
-        Vec4f alpha_src     = alpha_smp * info.opacityValue;
+        Vec4f alpha_src     = alpha_smp * info.opacity;
         Vec4f alpha_comp    = AlphaNormalSSEF( alpha_src, alpha_bdp );
         Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
         Vec4f alpha_result;
@@ -129,7 +129,7 @@ InvokeBlendMTProcessScanline_Separable_SSE_RGBA8(
 
     for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
         ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
-        ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * info.opacityValue;
+        ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * info.opacity;
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
         ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
