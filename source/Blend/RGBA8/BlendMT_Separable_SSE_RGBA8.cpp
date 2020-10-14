@@ -26,11 +26,8 @@
 ULIS_NAMESPACE_BEGIN
 void
 InvokeBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
-      const uint8* iSrc
-    , uint8* iBdp
-    , int32 iLine
-    , const uint32 iSrcBps
-    , const FCommand* iCommand
+      const FBlendJobArgs* jargs
+    , const FBlendCommandArgs* cargs
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
@@ -101,7 +98,6 @@ void
 ScheduleBlendMT_Separable_SSE_RGBA8_Subpixel(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
-    , FThreadPool& iPool
 )
 {
     const FBlendCommandArgs&   info        = *iInfo;
@@ -122,10 +118,8 @@ ScheduleBlendMT_Separable_SSE_RGBA8_Subpixel(
 
 void
 InvokeBlendMTProcessScanline_Separable_SSE_RGBA8(
-      const uint8* iSrc
-    , uint8* iBdp
-    , int32 iLine
-    , const FCommand* iCommand
+      const FBlendJobArgs* jargs
+    , const FBlendCommandArgs* cargs
 )
 {
     const FBlendCommandArgs&   info    = *iInfo;
@@ -163,7 +157,6 @@ void
 ScheduleBlendMT_Separable_SSE_RGBA8(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
-    , FThreadPool& iPool
 )
 {
     const FBlendCommandArgs&   info        = *iInfo;
