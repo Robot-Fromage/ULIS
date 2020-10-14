@@ -7,7 +7,12 @@
 *
 * @file         BlendMT_Misc_MEM_Generic.h
 * @author       Clement Berthaud
-* @brief        This file provides the implementation for a Blend specialization as described in the title.
+* @brief        This file provides the implementation for Blend composition
+*               operations, that involve misc computation ( channels are
+*               grouped altogether but doesn't involve a change of model )
+*               for generic formats, without optimisations.
+*               This versions should work with any color model and any depth
+*               or layout.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -30,39 +35,38 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FBlendCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
-    const uint8*        src     = iSrc;
-    uint8*              bdp     = iBdp;
+    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const uint8 ULIS_RESTRICT * src = jargs->src;
+    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
 
-    const bool notLastLine  = iLine < info.backdropCoverage.y;
-    const bool notFirstLine = iLine > 0;
-    const bool onLeftBorder = info.backdropWorkingRect.x == 0;
-    const bool hasLeftData  = info.sourceRect.x + info.shift.x > 0;
-    const bool hasTopData   = info.sourceRect.y + info.shift.y > 0;
+    const bool notLastLine  = jargs->line < cargs->backdropCoverage.y;
+    const bool notFirstLine = jargs->line > 0;
+    const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
+    const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
+    const bool hasTopData   = cargs->sourceRect.y + cargs->shift.y > 0;
 
-    switch( info.blendingMode ) {
+    switch( cargs->blendingMode ) {
         case Blend_Dissolve: {
-            int32 seedy = info.backdropWorkingRect.y + iLine + 1;
+            int32 seedy = cargs->backdropWorkingRect.y + jargs->line + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
-            float m11, m01, m10, m00, vv0, vv1, res;
+            ufloat m11, m01, m10, m00, vv0, vv1, res;
             m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,              fmt.AID ) : 0.f;
             m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,    fmt.AID ) : 0.f;
-            vv1 = m10 * info.subpixelComponent.y + m11 * info.buspixelComponent.y;
+            vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
-            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-                const bool notLastCol = x < info.backdropCoverage.x;
+            for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+                const bool notLastCol = x < cargs->backdropCoverage.x;
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
                 SampleSubpixelAlpha( res );
-                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
-                const float alpha_src   = res * info.opacityValue;
+                const ufloat alpha_bdp = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const ufloat alpha_src = res * cargs->opacity;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
-                float toss = ( localPRNGSeed % 65537 ) / 65537.f;
+                const ufloat toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
-                    float alpha_result;
-                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ufloat alpha_result;
+                    ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -73,25 +77,25 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic_Subpixel(
         }
 
         case Blend_BayerDither8x8: {
-            float m11, m01, m10, m00, vv0, vv1, res;
+            ufloat m11, m01, m10, m00, vv0, vv1, res;
             m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,              fmt.AID ) : 0.f;
             m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,    fmt.AID ) : 0.f;
-            vv1 = m10 * info.subpixelComponent.y + m11 * info.buspixelComponent.y;
+            vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
-            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-                const bool notLastCol = x < info.backdropCoverage.x;
+            for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+                const bool notLastCol = x < cargs->backdropCoverage.x;
                 m00 = m10;
                 m01 = m11;
                 vv0 = vv1;
                 SampleSubpixelAlpha( res );
-                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
-                const float alpha_src   = res * info.opacityValue;
-                const uint32 bayerX          = ( info.backdropWorkingRect.x + x )     % 8;
-                const uint32 bayerY          = ( info.backdropWorkingRect.y + iLine ) % 8;
-                const float bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
+                const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const ufloat alpha_src  = res * cargs->opacity;
+                const uint32 bayerX     = ( cargs->backdropWorkingRect.x + x )     % 8;
+                const uint32 bayerY     = ( cargs->backdropWorkingRect.y + jargs->line ) % 8;
+                const ufloat bayerEl = gBayer8x8Matrix[ bayerY ][ bayerX ];
                 if( alpha_src >= bayerEl ) {
-                    float alpha_result;
-                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ufloat alpha_result;
+                    ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -120,24 +124,23 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FBlendCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
-    const uint8*        src     = iSrc;
-    uint8*              bdp     = iBdp;
+    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const uint8 ULIS_RESTRICT * src = jargs->src;
+    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
 
-    switch( info.blendingMode ) {
+    switch( cargs->blendingMode ) {
         case Blend_Dissolve: {
-            int32 seedy = info.backdropWorkingRect.y + iLine + 1;
+            int32 seedy = cargs->backdropWorkingRect.y + jargs->line + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
-            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
-                const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
+            for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+                const ufloat alpha_bdp = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const ufloat alpha_src = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
-                float toss = ( localPRNGSeed % 65537 ) / 65537.f;
+                const ufloat toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
-                    float alpha_result;
-                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ufloat alpha_result;
+                    ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -148,13 +151,13 @@ InvokeBlendMTProcessScanline_Misc_MEM_Generic(
         }
 
         case Blend_BayerDither8x8: {
-            for( int x = 0; x < info.backdropWorkingRect.w; ++x ) {
-                const float alpha_bdp   = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
-                const float alpha_src   = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * info.opacityValue : info.opacityValue;
-                const float bayerEl     = gBayer8x8Matrix[ ( info.backdropWorkingRect.y + iLine ) % 8 ][ ( info.backdropWorkingRect.x + x ) % 8 ];
+            for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+                const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
+                const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
+                const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->backdropWorkingRect.y + jargs->line ) % 8 ][ ( cargs->backdropWorkingRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
-                    float alpha_result;
-                    ULIS_ASSIGN_ALPHAF( info.alphaMode, alpha_result, 1.f, alpha_bdp );
+                    ufloat alpha_result;
+                    ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }

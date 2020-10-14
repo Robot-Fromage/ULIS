@@ -20,7 +20,7 @@ main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat format = Format_RGBA8;
-    FContext ctx( FCommandQueue( pool ), format );
+    FContext ctx( queue, format );
     FBlock canvas( 256, 256, format );
     FBlock test( 64, 64, format );
 
