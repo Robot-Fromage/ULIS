@@ -33,7 +33,7 @@ Downscale( __m128i iVal ) {
 
 void
 InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
-      const FBlendJobArgs* jargs
+      const FBlendJobArgs_Separable_MEM_Generic* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -121,7 +121,7 @@ ScheduleAlphaBlendMT_Separable_SSE_RGBA8_Subpixel(
 
 void
 InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8(
-      const FBlendJobArgs* jargs
+      const FBlendJobArgs_Separable_MEM_Generic* jargs
     , const FBlendCommandArgs* cargs
 )
 {

@@ -67,14 +67,14 @@ public:
 };
 
 /////////////////////////////////////////////////////
-// FBlendJobArgs
-class FBlendJobArgs final
+// FBlendJobArgs_Separable_MEM_Generic
+class FBlendJobArgs_Separable_MEM_Generic final
     : public IJobArgs
 {
 public:
 
-    ~FBlendJobArgs() override {};
-    FBlendJobArgs(
+    ~FBlendJobArgs_Separable_MEM_Generic() override {};
+    FBlendJobArgs_Separable_MEM_Generic(
           const uint32 iLine
         , const uint32 iSrc_bps
         , const uint8* iSrc
@@ -91,6 +91,39 @@ public:
     const uint32 src_bps;
     const uint8* ULIS_RESTRICT src;
     uint8* ULIS_RESTRICT bdp;
+};
+
+/////////////////////////////////////////////////////
+// FBlendJobArgs_Separable_MEM_Generic
+class FBlendJobArgs_NonSeparable_MEM_Generic final
+    : public IJobArgs
+{
+public:
+
+    ~FBlendJobArgs_NonSeparable_MEM_Generic() override {};
+    FBlendJobArgs_NonSeparable_MEM_Generic(
+          const uint32 iLine
+        , const uint32 iSrc_bps
+        , const uint8* iSrc
+        , uint8* iBdp
+        , fpConversionInvocation iFwd
+        , fpConversionInvocation iBkd
+    )
+        : IJobArgs()
+        , line( iLine )
+        , src_bps( iSrc_bps )
+        , src( iSrc )
+        , bdp( iBdp )
+        , fwd( iFwd )
+        , bkd( iBkd )
+    {}
+
+    const uint32 line;
+    const uint32 src_bps;
+    const uint8* ULIS_RESTRICT src;
+    uint8* ULIS_RESTRICT bdp;
+    fpConversionInvocation fwd;
+    fpConversionInvocation bkd;
 };
 
 ULIS_NAMESPACE_END

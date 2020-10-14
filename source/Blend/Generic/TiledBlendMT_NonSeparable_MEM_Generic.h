@@ -27,7 +27,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic(
-      const FBlendJobArgs* jargs
+      const FBlendJobArgs_NonSeparable_MEM_Generic* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -42,8 +42,8 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic(
 
     // Query dispatched method
     FFormatMetrics rgbfFormatMetrics( eFormat::Format_RGBF );
-    fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
-    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
+    fpConversionInvocation conv_forward_fptr  = jargs->fwd;
+    fpConversionInvocation conv_backward_fptr = jargs->bkd;
     ULIS_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
     ULIS_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 
@@ -85,7 +85,7 @@ ScheduleTiledBlendMT_NonSeparable_MEM_Generic(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildTiledBlendJobs< &InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic< T > >( iCommand, iPolicy );
+    BuildTiledBlendJobs_NonSeparable_MEM_Generic< &InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic< T > >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

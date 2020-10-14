@@ -41,7 +41,7 @@ BuildRGBA8IndexTable(
 
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel(
-      const FBlendJobArgs* jargs
+      const FBlendJobArgs_Separable_MEM_Generic* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -137,7 +137,7 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
 
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
-      const FBlendJobArgs* jargs
+      const FBlendJobArgs_Separable_MEM_Generic* jargs
     , const FBlendCommandArgs* cargs
 )
 {
