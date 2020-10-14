@@ -39,17 +39,17 @@ static const float gBayer8x8Matrix[8][8] = {
         m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                        \
         m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                        \
     }                                                                                                               \
-    vv1     = m10 * info.subpixelComponent.y + m11 * info.buspixelComponent.y;                                      \
-    _DST    = vv0 * info.subpixelComponent.x + vv1 * info.buspixelComponent.x;
+    vv1     = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;                                  \
+    _DST    = vv0 * cargs->subpixelComponent.x + vv1 * cargs->buspixelComponent.x;
 
 #define SampleSubpixelChannel( _DST, _CHAN )                                                                                            \
     s11 = ( notLastCol  && notLastLine )                                    ?   TYPE2FLOAT( src,                        _CHAN ) : 0.f;  \
     s01 = ( notLastLine && ( x > 0 || hasLeftData ) )                       ?   TYPE2FLOAT( src - fmt.BPP,              _CHAN ) : 0.f;  \
     s10 = ( notLastCol && ( notFirstLine || hasTopData ) )                  ?   TYPE2FLOAT( src - iSrcBps,              _CHAN ) : 0.f;  \
     s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )    ?   TYPE2FLOAT( src - iSrcBps - fmt.BPP,    _CHAN ) : 0.f;  \
-    v1 = ( s00 * m00 ) * info.subpixelComponent.y + ( s01 * m01 ) * info.buspixelComponent.y;                                           \
-    v2 = ( s10 * m10 ) * info.subpixelComponent.y + ( s11 * m11 ) * info.buspixelComponent.y;                                           \
-    _DST = res == 0.f ? 0.f : ( ( v1 ) * info.subpixelComponent.x + ( v2 ) * info.buspixelComponent.x ) / res;
+    v1 = ( s00 * m00 ) * cargs->subpixelComponent.y + ( s01 * m01 ) * cargs->buspixelComponent.y;                                       \
+    v2 = ( s10 * m10 ) * cargs->subpixelComponent.y + ( s11 * m11 ) * cargs->buspixelComponent.y;                                       \
+    _DST = res == 0.f ? 0.f : ( ( v1 ) * cargs->subpixelComponent.x + ( v2 ) * cargs->buspixelComponent.x ) / res;
 
 #define ULIS_ACTION_ASSIGN_ALPHAF( _AM, iTarget, iSrc, iBdp )      iTarget = AlphaF< _AM >( iSrc, iBdp );
 #define ULIS_ACTION_ASSIGN_ALPHASSEF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaSSEF< _AM >( iSrc, iBdp );
@@ -144,7 +144,7 @@ BuildTiledBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
             jargs[i] = FBlendJobArgs(
                   i
                 , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
                 , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
             );
         FJob* job = new FJob(
@@ -165,7 +165,7 @@ BuildTiledBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
             jargs[0] = FBlendJobArgs(
                   i
                 , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
                 , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
             );
             FJob* job = new FJob(
