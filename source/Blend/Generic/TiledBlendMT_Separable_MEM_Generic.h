@@ -31,8 +31,8 @@ InvokeTiledBlendMTProcessScanline_Separable_MEM_Generic(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
-    const uint8 ULIS_RESTRICT * src = jargs->src;
-    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
         const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;

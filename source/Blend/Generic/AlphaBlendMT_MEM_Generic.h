@@ -36,8 +36,8 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
-    const uint8 ULIS_RESTRICT * src = jargs->src;
-    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     const bool notLastLine  = jargs->line < cargs->backdropCoverage.y;
     const bool notFirstLine = jargs->line > 0;
@@ -93,8 +93,8 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
-    const uint8 ULIS_RESTRICT * src = jargs->src;
-    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
         const ufloat alpha_src  = TYPE2FLOAT( src, fmt.AID ) * cargs->opacity;

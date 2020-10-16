@@ -12,8 +12,11 @@
 * @license      Please refer to LICENSE.md
 */
 
+
 int
 main() {
+    int a = 0;
+    int* __restrict src = &a;
     return  0;
 }
 

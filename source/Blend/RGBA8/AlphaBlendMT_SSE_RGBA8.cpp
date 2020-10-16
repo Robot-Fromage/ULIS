@@ -20,7 +20,6 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
@@ -37,10 +36,10 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FBlendCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
-    const uint8*        src     = iSrc;
-    uint8*              bdp     = iBdp;
+    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
+
     const bool notLastLine  = iLine < info.backdropCoverage.y;
     const bool notFirstLine = iLine > 0;
     const bool onLeftBorder = info.backdropWorkingRect.x == 0;
@@ -125,10 +124,10 @@ InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FBlendCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.source->FormatMetrics();
-    const uint8*        src     = iSrc;
-    uint8*              bdp     = iBdp;
+    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
+
     const __m128i FF = _mm_set1_epi16( 0xFF );
     for( int x = 0; x < info.backdropWorkingRect.w; x+=2 ) {
         const uint8 alpha_bdp0 = bdp[fmt.AID];

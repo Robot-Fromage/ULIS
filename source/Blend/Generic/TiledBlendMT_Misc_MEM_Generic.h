@@ -31,8 +31,8 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
-    const uint8 ULIS_RESTRICT * src = jargs->src;
-    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     switch( cargs->blendingMode ) {
         case Blend_Dissolve: {

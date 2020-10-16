@@ -37,8 +37,8 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
-    const uint8 ULIS_RESTRICT * src = jargs->src;
-    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     const bool notLastLine  = jargs->line < cargs->backdropCoverage.y;
     const bool notFirstLine = jargs->line > 0;
@@ -123,8 +123,8 @@ InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
-    const uint8 ULIS_RESTRICT * src = jargs->src;
-    uint8       ULIS_RESTRICT * bdp = jargs->bdp;
+    const uint8* ULIS_RESTRICT  src = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     FRGBF src_conv;
     FRGBF bdp_conv;
