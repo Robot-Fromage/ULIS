@@ -32,16 +32,16 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    const bool notLastLine  = iLine < info.backdropCoverage.y;
-    const bool notFirstLine = iLine > 0;
-    const bool onLeftBorder = info.backdropWorkingRect.x == 0;
-    const bool hasLeftData  = info.sourceRect.x + info.shift.x > 0;
-    const bool hasTopData   = info.sourceRect.y + info.shift.y > 0;
+    const bool notLastLine  = jargs->line < cargs->backdropCoverage.y;
+    const bool notFirstLine = jargs->line > 0;
+    const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
+    const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
+    const bool hasTopData   = cargs->sourceRect.y + cargs->shift.y > 0;
 
-    Vec8f TX( info.subpixelComponent.x );
-    Vec8f TY( info.subpixelComponent.y );
-    Vec8f UX( info.buspixelComponent.x );
-    Vec8f UY( info.buspixelComponent.y );
+    Vec8f TX( cargs->subpixelComponent.x );
+    Vec8f TY( cargs->subpixelComponent.y );
+    Vec8f UX( cargs->buspixelComponent.x );
+    Vec8f UY( cargs->buspixelComponent.y );
 
     //   The gain is not huge compared to SSE
     //   _X_ | _X_ | _X_ | _X_ | _X_ | ...
@@ -72,9 +72,9 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
     smpch_m10m20 = Vec8f( 0.f, fc10 );
     smpch_m11m21 = Vec8f( 0.f, fc11 );
 
-    for( int32 x = 0; x < info.backdropWorkingRect.w; x+=2 ) {
-        const bool notLastCol           = x     < info.backdropCoverage.x;
-        const bool notPenultimateCol    = x + 1 < info.backdropCoverage.x;
+    for( int32 x = 0; x < cargs->backdropWorkingRect.w; x+=2 ) {
+        const bool notLastCol           = x     < cargs->backdropCoverage.x;
+        const bool notPenultimateCol    = x + 1 < cargs->backdropCoverage.x;
         const bool cond00 = notLastCol          && ( notFirstLine || hasTopData );
         const bool cond10 = notPenultimateCol   && ( notFirstLine || hasTopData );
         const bool cond01 = notLastCol          && notLastLine;
@@ -109,7 +109,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
 
         // Comp Alpha
         Vec8f alpha_bdp     = *( iBdp + fmt.AID ) / 255.f;
-        Vec8f alpha_src     = alpha_smp * info.opacity;
+        Vec8f alpha_src     = alpha_smp * cargs->opacity;
         Vec8f alpha_comp    = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
         Vec8f alpha_result = alpha_comp * 255.f;
@@ -143,18 +143,18 @@ ScheduleAlphaBlendMT_Separable_AVX_RGBA8_Subpixel(
 )
 {
     const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->Bits();
-    uint8*              bdp         = info.backdrop->Bits();
-    const uint32         src_bps     = info.source->BytesPerScanLine();
-    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
-    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.backdropWorkingRect.h
+    const uint8*        src         = cargs->source->Bits();
+    uint8*              bdp         = cargs->backdrop->Bits();
+    const uint32         src_bps     = cargs->source->BytesPerScanLine();
+    const uint32         bdp_bps     = cargs->backdrop->BytesPerScanLine();
+    const uint32         src_decal_y = cargs->shift.y + cargs->sourceRect.y;
+    const uint32         src_decal_x = ( cargs->shift.x + cargs->sourceRect.x )  * cargs->source->BytesPerPixel();
+    const uint32         bdp_decal_x = ( cargs->backdropWorkingRect.x )        * cargs->source->BytesPerPixel();
+    ULIS_MACRO_INLINE_PARALLEL_FOR( cargs->perfIntent, cargs->pool, cargs->blocking
+                                   , cargs->backdropWorkingRect.h
                                    , InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel
                                    , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                   , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                   , bdp + ( ( cargs->backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
                                    , pLINE , src_bps, iInfo );
 }
 
@@ -168,10 +168,10 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    const uint32 len = info.backdropWorkingRect.w / 2;
+    const uint32 len = cargs->backdropWorkingRect.w / 2;
     for( uint32 i = 0; i < len; ++i ) {
         Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], iBdp[fmt.AID + 4] ) / 255.f;
-        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], iSrc[fmt.AID + 4] ) / 255.f * info.opacity;
+        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], iSrc[fmt.AID + 4] ) / 255.f * cargs->opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result = alpha_comp * 255.f;
@@ -193,9 +193,9 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
     }
 
     // In case W is odd, process one last pixel.
-    if( info.backdropWorkingRect.w % 2 ) {
+    if( cargs->backdropWorkingRect.w % 2 ) {
         Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], 0 ) / 255.f;
-        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], 0 ) / 255.f * info.opacity;
+        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], 0 ) / 255.f * cargs->opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result = alpha_comp * 255.f;
@@ -220,18 +220,18 @@ ScheduleAlphaBlendMT_Separable_AVX_RGBA8(
 )
 {
     const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = info.source->Bits();
-    uint8*              bdp         = info.backdrop->Bits();
-    const uint32         src_bps     = info.source->BytesPerScanLine();
-    const uint32         bdp_bps     = info.backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = info.shift.y + info.sourceRect.y;
-    const uint32         src_decal_x = ( info.shift.x + info.sourceRect.x )  * info.source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( info.backdropWorkingRect.x )        * info.source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                , info.backdropWorkingRect.h
+    const uint8*        src         = cargs->source->Bits();
+    uint8*              bdp         = cargs->backdrop->Bits();
+    const uint32         src_bps     = cargs->source->BytesPerScanLine();
+    const uint32         bdp_bps     = cargs->backdrop->BytesPerScanLine();
+    const uint32         src_decal_y = cargs->shift.y + cargs->sourceRect.y;
+    const uint32         src_decal_x = ( cargs->shift.x + cargs->sourceRect.x )  * cargs->source->BytesPerPixel();
+    const uint32         bdp_decal_x = ( cargs->backdropWorkingRect.x )        * cargs->source->BytesPerPixel();
+    ULIS_MACRO_INLINE_PARALLEL_FOR( cargs->perfIntent, cargs->pool, cargs->blocking
+                                , cargs->backdropWorkingRect.h
                                 , InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8
                                 , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                , bdp + ( ( info.backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
+                                , bdp + ( ( cargs->backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
                                 , pLINE , iInfo );
 }
 

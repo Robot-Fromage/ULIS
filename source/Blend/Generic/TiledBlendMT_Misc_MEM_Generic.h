@@ -36,7 +36,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic(
 
     switch( cargs->blendingMode ) {
         case Blend_Dissolve: {
-            int32 seedy = cargs->backdropWorkingRect.y + iLine + 1;
+            int32 seedy = cargs->backdropWorkingRect.y + jargs->line + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
             for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
@@ -62,7 +62,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic(
             for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
                 const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
                 const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
-                const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->backdropWorkingRect.y + iLine ) % 8 ][ ( cargs->backdropWorkingRect.x + x ) % 8 ];
+                const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->backdropWorkingRect.y + jargs->line ) % 8 ][ ( cargs->backdropWorkingRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
                     ufloat alpha_result;
                     ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
