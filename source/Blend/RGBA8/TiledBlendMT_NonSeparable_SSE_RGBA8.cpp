@@ -30,8 +30,9 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
-    const uint8* ULIS_RESTRICT  src = jargs->src;
-    uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
+    const uint8* ULIS_RESTRICT  base = jargs->src;
+    const uint8* ULIS_RESTRICT  src  = jargs->src;
+    uint8*       ULIS_RESTRICT  bdp  = jargs->bdp;
 
     for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
         ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
@@ -41,8 +42,8 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
         ufloat alpha_result;
         ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
 
-        Vec4f src_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
-        Vec4f bdp_chan = lookup4( iIDT, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
+        Vec4f src_chan = lookup4( jargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
+        Vec4f bdp_chan = lookup4( jargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
         src_chan.insert( 3, 0.f );
         bdp_chan.insert( 3, 0.f );
         Vec4f res_chan;
@@ -50,7 +51,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
         ULIS_SWITCH_FOR_ALL_DO( cargs->blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
-        res_chan = lookup4( iIDT, res_chan );
+        res_chan = lookup4( jargs->idt, res_chan );
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
@@ -59,7 +60,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
         src += 4;
         bdp += 4;
         if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
-            src = iSrc;
+            src = base;
     }
 }
 
