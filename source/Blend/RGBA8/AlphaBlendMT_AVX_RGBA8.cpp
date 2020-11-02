@@ -32,7 +32,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    const bool notLastLine  = jargs->line < cargs->backdropCoverage.y;
+    const bool notLastLine  = jargs->line < uint32( cargs->backdropCoverage.y );
     const bool notFirstLine = jargs->line > 0;
     const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
     const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
@@ -57,18 +57,18 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
     //            \ /   \ /
     //             |     |
     //          vv0vv1 vv1vv2 -> res
-    const uint8* p00 = iSrc - iSrcBps;
-    const uint8* p10 = iSrc - iSrcBps + 4;
-    const uint8* p01 = iSrc;
-    const uint8* p11 = iSrc + 4;
+    const uint8* p00 = src - jargs->src_bps;
+    const uint8* p10 = src - jargs->src_bps + 4;
+    const uint8* p01 = src;
+    const uint8* p11 = src + 4;
     Vec8f alpha_m00m10, alpha_m10m20, alpha_m01m11, alpha_m11m21, alpha_vv0, alpha_vv1, alpha_smp;
     Vec8f smpch_m00m10, smpch_m10m20, smpch_m01m11, smpch_m11m21, smpch_vv0, smpch_vv1, smpch_smp;
-    Vec4f alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( iSrc - 4 + fmt.AID - iSrcBps   ) / 255.f : 0.f;
-    Vec4f alpha_m11 = ( notLastLine && onLeftBorder && hasLeftData )      ? *( iSrc - 4 + fmt.AID             ) / 255.f : 0.f;
+    Vec4f alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( src - 4 + fmt.AID - jargs->src_bps   ) / 255.f : 0.f;
+    Vec4f alpha_m11 = ( notLastLine && onLeftBorder && hasLeftData )      ? *( src - 4 + fmt.AID             ) / 255.f : 0.f;
     alpha_m10m20 = Vec8f( 0.f, alpha_m10 );
     alpha_m11m21 = Vec8f( 0.f, alpha_m11 );
-    Vec4f fc10 = ( hasLeftData && ( notFirstLine || hasTopData ) )      ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( iSrc - 4 - iSrcBps     ) ) ) ) / 255.f : 0.f;
-    Vec4f fc11 = ( notLastLine && onLeftBorder && hasLeftData )         ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( iSrc - 4               ) ) ) ) / 255.f : 0.f;
+    Vec4f fc10 = ( hasLeftData && ( notFirstLine || hasTopData ) )      ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( src - 4 - jargs->src_bps     ) ) ) ) / 255.f : 0.f;
+    Vec4f fc11 = ( notLastLine && onLeftBorder && hasLeftData )         ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( src - 4               ) ) ) ) / 255.f : 0.f;
     smpch_m10m20 = Vec8f( 0.f, fc10 );
     smpch_m11m21 = Vec8f( 0.f, fc11 );
 
@@ -108,7 +108,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
         smpch_smp = select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * TX + smpch_vv1 * UX ) / alpha_smp );
 
         // Comp Alpha
-        Vec8f alpha_bdp     = *( iBdp + fmt.AID ) / 255.f;
+        Vec8f alpha_bdp     = *( bdp + fmt.AID ) / 255.f;
         Vec8f alpha_src     = alpha_smp * cargs->opacity;
         Vec8f alpha_comp    = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
@@ -116,7 +116,7 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
 
         // Comp Channels
         __m128i bdp128 = _mm_setzero_si128();
-        memcpy( &bdp128, iBdp, 8 );
+        memcpy( &bdp128, bdp, 8 );
         Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( bdp128 ) ) ) / 255.f;
         Vec8f   res_chan;
         res_chan = SeparableCompOpAVXF< Blend_Normal >( smpch_smp, bdp_chan, alpha_bdp, var ) * 255.f;
@@ -124,11 +124,11 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
         Vec8us _pack1 = compress( _pack0 );
         auto _pack = _mm_packus_epi16( _pack1, _pack1 );
-        _mm_storeu_si64( iBdp, _pack );
-        iBdp[fmt.AID]      = static_cast< uint8 >( alpha_result[0] );
-        iBdp[fmt.AID+4]    = static_cast< uint8 >( alpha_result[4] );
+        _mm_storeu_si64( bdp, _pack );
+        bdp[fmt.AID]      = static_cast< uint8 >( alpha_result[0] );
+        bdp[fmt.AID+4]    = static_cast< uint8 >( alpha_result[4] );
 
-        iBdp += 8;
+        bdp += 8;
         p00 += 8;
         p10 += 8;
         p01 += 8;
@@ -157,46 +157,46 @@ InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
 
     const uint32 len = cargs->backdropWorkingRect.w / 2;
     for( uint32 i = 0; i < len; ++i ) {
-        Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], iBdp[fmt.AID + 4] ) / 255.f;
-        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], iSrc[fmt.AID + 4] ) / 255.f * cargs->opacity;
+        Vec8f   alpha_bdp   = Vec8f( bdp[fmt.AID], bdp[fmt.AID + 4] ) / 255.f;
+        Vec8f   alpha_src   = Vec8f( src[fmt.AID], src[fmt.AID + 4] ) / 255.f * cargs->opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result = alpha_comp * 255.f;
 
-        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iSrc ) ) ) ) / 255.f;
-        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( iBdp ) ) ) ) / 255.f;
+        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( src ) ) ) ) / 255.f;
+        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( bdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
         res_chan = SeparableCompOpAVXF< Blend_Normal >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
         Vec8us _pack1 = compress( _pack0 );
         auto _pack = _mm_packus_epi16( _pack1, _pack1 );
-        _mm_storeu_si64( iBdp, _pack );
-        iBdp[fmt.AID]      = static_cast< uint8 >( alpha_result[0] );
-        iBdp[fmt.AID+4]    = static_cast< uint8 >( alpha_result[4] );
+        _mm_storeu_si64( bdp, _pack );
+        bdp[fmt.AID]      = static_cast< uint8 >( alpha_result[0] );
+        bdp[fmt.AID+4]    = static_cast< uint8 >( alpha_result[4] );
 
-        iSrc += 8;
-        iBdp += 8;
+        src += 8;
+        bdp += 8;
     }
 
     // In case W is odd, process one last pixel.
     if( cargs->backdropWorkingRect.w % 2 ) {
-        Vec8f   alpha_bdp   = Vec8f( iBdp[fmt.AID], 0 ) / 255.f;
-        Vec8f   alpha_src   = Vec8f( iSrc[fmt.AID], 0 ) / 255.f * cargs->opacity;
+        Vec8f   alpha_bdp   = Vec8f( bdp[fmt.AID], 0 ) / 255.f;
+        Vec8f   alpha_src   = Vec8f( src[fmt.AID], 0 ) / 255.f * cargs->opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result = alpha_comp * 255.f;
 
-        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iSrc ) ) ) ) / 255.f;
-        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( iBdp ) ) ) ) / 255.f;
+        Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( src ) ) ) ) / 255.f;
+        Vec8f   bdp_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( bdp ) ) ) ) / 255.f;
         Vec8f   res_chan;
         res_chan = SeparableCompOpAVXF< Blend_Normal >( src_chan, bdp_chan, alpha_bdp, var ) * 255.f;
 
         Vec8ui _pack0 = _mm256_cvtps_epi32( res_chan );
         Vec8us _pack1 = compress( _pack0 );
         auto _pack = _mm_packus_epi16( _pack1, _pack1 );
-        _mm_storeu_si32( iBdp, _pack );
-        iBdp[fmt.AID] = static_cast< uint8 >( alpha_result[0] );
+        _mm_storeu_si32( bdp, _pack );
+        bdp[fmt.AID] = static_cast< uint8 >( alpha_result[0] );
     }
 }
 
