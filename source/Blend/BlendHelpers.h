@@ -67,13 +67,13 @@ static
 void
 BuildBlendJobs_Separable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
     const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source->Bits();
-    uint8* bdp                  = cargs->backdrop->Bits();
-    const uint32 src_bps        = cargs->source->BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop->BytesPerScanLine();
+    const uint8* src            = cargs->source.Bits();
+    uint8* bdp                  = cargs->backdrop.Bits();
+    const uint32 src_bps        = cargs->source.BytesPerScanLine();
+    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
     const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source->BytesPerPixel();
+    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
+    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
         // Mono: Single Job - Multi Tasks
@@ -125,13 +125,13 @@ static
 void
 BuildBlendJobs_NonSeparable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
     const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source->Bits();
-    uint8* bdp                  = cargs->backdrop->Bits();
-    const uint32 src_bps        = cargs->source->BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop->BytesPerScanLine();
+    const uint8* src            = cargs->source.Bits();
+    uint8* bdp                  = cargs->backdrop.Bits();
+    const uint32 src_bps        = cargs->source.BytesPerScanLine();
+    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
     const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source->BytesPerPixel();
+    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
+    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
     const FFormatMetrics& fmt   = cargs->source.FormatMetrics();
     fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
@@ -190,13 +190,13 @@ static
 void
 BuildTiledBlendJobs_Separable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
     const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source->Bits();
-    uint8* bdp                  = cargs->backdrop->Bits();
-    const uint32 src_bps        = cargs->source->BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop->BytesPerScanLine();
+    const uint8* src            = cargs->source.Bits();
+    uint8* bdp                  = cargs->backdrop.Bits();
+    const uint32 src_bps        = cargs->source.BytesPerScanLine();
+    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
     const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source->BytesPerPixel();
+    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
+    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
         // Mono: Single Job - Multi Tasks
@@ -248,13 +248,13 @@ static
 void
 BuildTiledBlendJobs_NonSeparable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
     const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source->Bits();
-    uint8* bdp                  = cargs->backdrop->Bits();
-    const uint32 src_bps        = cargs->source->BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop->BytesPerScanLine();
+    const uint8* src            = cargs->source.Bits();
+    uint8* bdp                  = cargs->backdrop.Bits();
+    const uint32 src_bps        = cargs->source.BytesPerScanLine();
+    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
     const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source->BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source->BytesPerPixel();
+    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
+    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
     fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
