@@ -34,15 +34,15 @@ static const float gBayer8x8Matrix[8][8] = {
 // Macro Helpers for Redundant Compositing Operations
 // TODO: this is quite clumsy at the moment, clean this by defining better
 // macros for ASSIGN and small helper functions, possibly inline.
-#define SampleSubpixelAlpha( _DST )                                                                                 \
-    if( fmt.HEA ) {                                                                                                 \
-        m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,              fmt.AID ) : 0.f;    \
-        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - iSrcBps,    fmt.AID ) : 0.f;    \
-    } else {                                                                                                        \
-        m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                        \
-        m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                        \
-    }                                                                                                               \
-    vv1     = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;                                  \
+#define SampleSubpixelAlpha( _DST )                                                                                     \
+    if( fmt.HEA ) {                                                                                                     \
+        m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,                  fmt.AID ) : 0.f;    \
+        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - jargs->src_bps, fmt.AID ) : 0.f;    \
+    } else {                                                                                                            \
+        m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                            \
+        m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                            \
+    }                                                                                                                   \
+    vv1     = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;                                      \
     _DST    = vv0 * cargs->subpixelComponent.x + vv1 * cargs->buspixelComponent.x;
 
 #define SampleSubpixelChannel( _DST, _CHAN )                                                                                                \
@@ -338,7 +338,7 @@ BuildBlendJobs_NonSeparable_SSE_RGBA8( FCommand* iCommand, const FSchedulePolicy
     const FFormatMetrics& fmt   = cargs->source.FormatMetrics();
     fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
-    Vec4i idt = BuildRGBA8IndexTable( cargs->source->FormatMetrics().RSC );
+    Vec4i idt = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
         // Mono: Single Job - Multi Tasks
@@ -405,7 +405,7 @@ BuildTiledBlendJobs_NonSeparable_MEM_Generic( FCommand* iCommand, const FSchedul
     const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
     fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
-    Vec4i idt = BuildRGBA8IndexTable( cargs->source->FormatMetrics().RSC );
+    Vec4i idt = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
         // Mono: Single Job - Multi Tasks
