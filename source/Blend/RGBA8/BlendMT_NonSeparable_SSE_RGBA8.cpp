@@ -23,24 +23,9 @@
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
-ULIS_FORCEINLINE
-void
-BuildRGBA8IndexTable(
-      uint8 iRS
-    , Vec4i* oIDT
-)
-{
-    switch( iRS ) {
-        case 1:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i )                             ); break;
-        case 2:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); break;
-        case 3:  for( int i = 0; i < 4; ++i ) oIDT->insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); break;
-        default: for( int i = 0; i < 4; ++i ) oIDT->insert( i, i                                     ); break;
-    }
-}
-
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel(
-      const FBlendJobArgs_Separable_MEM_Generic* jargs
+      const FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -117,27 +102,12 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
     , const FSchedulePolicy& iPolicy
 )
 {
-    const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = cargs->source->Bits();
-    uint8*              bdp         = cargs->backdrop->Bits();
-    const uint32         src_bps     = cargs->source->BytesPerScanLine();
-    const uint32         bdp_bps     = cargs->backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = cargs->shift.y + cargs->sourceRect.y;
-    const uint32         src_decal_x = ( cargs->shift.x + cargs->sourceRect.x )  * cargs->source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( cargs->backdropWorkingRect.x )        * cargs->source->BytesPerPixel();
-    Vec4i idt;
-    BuildRGBA8IndexTable( cargs->source->FormatMetrics().RSC, &idt );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( cargs->perfIntent, cargs->pool, cargs->blocking
-                                   , cargs->backdropWorkingRect.h
-                                   , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel
-                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                   , bdp + ( ( cargs->backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                   , pLINE , src_bps, iInfo, idt );
+    BuildBlendJobs_NonSeparable_SSE_RGBA8< &InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel >( iCommand, iPolicy );
 }
 
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
-      const FBlendJobArgs_Separable_MEM_Generic* jargs
+      const FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -179,22 +149,7 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8(
     , const FSchedulePolicy& iPolicy
 )
 {
-    const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = cargs->source->Bits();
-    uint8*              bdp         = cargs->backdrop->Bits();
-    const uint32         src_bps     = cargs->source->BytesPerScanLine();
-    const uint32         bdp_bps     = cargs->backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = cargs->shift.y + cargs->sourceRect.y;
-    const uint32         src_decal_x = ( cargs->shift.x + cargs->sourceRect.x )  * cargs->source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( cargs->backdropWorkingRect.x )        * cargs->source->BytesPerPixel();
-    Vec4i idt;
-    BuildRGBA8IndexTable( cargs->source->FormatMetrics().RSC, &idt );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( cargs->perfIntent, cargs->pool, cargs->blocking
-                                , cargs->backdropWorkingRect.h
-                                , InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8
-                                , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                , bdp + ( ( cargs->backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                , pLINE , iInfo, idt );
+    BuildBlendJobs_NonSeparable_SSE_RGBA8< &InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8 >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

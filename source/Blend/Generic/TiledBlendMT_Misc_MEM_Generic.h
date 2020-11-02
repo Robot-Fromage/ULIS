@@ -26,7 +26,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic(
-      const FBlendJobArgs_Separable_MEM_Generic* jargs
+      const FBlendJobArgs_Separable* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -86,7 +86,7 @@ ScheduleTiledBlendMT_Misc_MEM_Generic(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildTiledBlendJobs_Separable_MEM_Generic< &InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic< T > >( iCommand, iPolicy );
+    BuildTiledBlendJobs_Separable< &InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic< T > >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

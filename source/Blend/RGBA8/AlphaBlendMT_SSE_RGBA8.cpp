@@ -32,7 +32,7 @@ Downscale( __m128i iVal ) {
 
 void
 InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel(
-      const FBlendJobArgs_Separable_MEM_Generic* jargs
+      const FBlendJobArgs_Separable* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -102,25 +102,12 @@ ScheduleAlphaBlendMT_Separable_SSE_RGBA8_Subpixel(
     , const FSchedulePolicy& iPolicy
 )
 {
-    const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = cargs->source->Bits();
-    uint8*              bdp         = cargs->backdrop->Bits();
-    const uint32         src_bps     = cargs->source->BytesPerScanLine();
-    const uint32         bdp_bps     = cargs->backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = cargs->shift.y + cargs->sourceRect.y;
-    const uint32         src_decal_x = ( cargs->shift.x + cargs->sourceRect.x )  * cargs->source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( cargs->backdropWorkingRect.x )        * cargs->source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( cargs->perfIntent, cargs->pool, cargs->blocking
-                                   , cargs->backdropWorkingRect.h
-                                   , InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel
-                                   , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                   , bdp + ( ( cargs->backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                   , pLINE , src_bps, iInfo );
+    BuildBlendJobs_Separable< &InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8_Subpixel >( iCommand, iPolicy );
 }
 
 void
 InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8(
-      const FBlendJobArgs_Separable_MEM_Generic* jargs
+      const FBlendJobArgs_Separable* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -163,20 +150,7 @@ ScheduleAlphaBlendMT_Separable_SSE_RGBA8(
     , const FSchedulePolicy& iPolicy
 )
 {
-    const FBlendCommandArgs&   info        = *iInfo;
-    const uint8*        src         = cargs->source->Bits();
-    uint8*              bdp         = cargs->backdrop->Bits();
-    const uint32         src_bps     = cargs->source->BytesPerScanLine();
-    const uint32         bdp_bps     = cargs->backdrop->BytesPerScanLine();
-    const uint32         src_decal_y = cargs->shift.y + cargs->sourceRect.y;
-    const uint32         src_decal_x = ( cargs->shift.x + cargs->sourceRect.x )  * cargs->source->BytesPerPixel();
-    const uint32         bdp_decal_x = ( cargs->backdropWorkingRect.x )        * cargs->source->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( cargs->perfIntent, cargs->pool, cargs->blocking
-                                , cargs->backdropWorkingRect.h
-                                , InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8
-                                , src + ( ( src_decal_y + pLINE )                * src_bps ) + src_decal_x
-                                , bdp + ( ( cargs->backdropWorkingRect.y + pLINE ) * bdp_bps ) + bdp_decal_x
-                                , pLINE , iInfo );
+    BuildBlendJobs_Separable< &InvokeAlphaBlendMTProcessScanline_Separable_SSE_RGBA8 >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END
