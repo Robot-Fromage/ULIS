@@ -17,7 +17,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T > void

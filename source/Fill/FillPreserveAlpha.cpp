@@ -18,7 +18,7 @@
 #include "Image/Pixel.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

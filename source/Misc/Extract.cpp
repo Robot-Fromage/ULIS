@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 #include <vector>
 
 ULIS_NAMESPACE_BEGIN

@@ -18,7 +18,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Transform/TransformArgs.h"
 #include "Transform/TransformHelpers.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 

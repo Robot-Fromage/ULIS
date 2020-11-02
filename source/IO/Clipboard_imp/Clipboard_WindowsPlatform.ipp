@@ -16,7 +16,7 @@
 #include "System/HostDeviceInfo.h"
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 
 #include <array>
 #include <algorithm>

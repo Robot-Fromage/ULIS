@@ -18,7 +18,7 @@
 #include "Image/Block.h"
 #include "Image/Pixel.h"
 #include "Math/Math.h"
-#include "Thread/OldThreadPool.h"
+#include "Thread/ThreadPool.h"
 #include "lcms2.h"
 
 ULIS_NAMESPACE_BEGIN
