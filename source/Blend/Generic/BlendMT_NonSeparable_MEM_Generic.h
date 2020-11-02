@@ -112,7 +112,7 @@ ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildTiledBlendJobs_NonSeparable_MEM_Generic< &InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
+    BuildBlendJobs_NonSeparable_MEM_Generic< &InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
 }
 
 template< typename T >
@@ -173,7 +173,7 @@ ScheduleBlendMT_NonSeparable_MEM_Generic(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildTiledBlendJobs_NonSeparable_MEM_Generic< &InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic< T > >( iCommand, iPolicy );
+    BuildBlendJobs_NonSeparable_MEM_Generic< &InvokeBlendMTProcessScanline_NonSeparable_MEM_Generic< T > >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

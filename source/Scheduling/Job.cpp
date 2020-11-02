@@ -35,7 +35,7 @@ void
 FJob::Execute()
 {
     for( uint32 i = 0; i < mNumTasks; ++i )
-        mTasks[i]( &mArgs[i], mParent->Args() );
+        mTask( &mArgs[i], mParent->Args() );
 }
 
 const FCommand*

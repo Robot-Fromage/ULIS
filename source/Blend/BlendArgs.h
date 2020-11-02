@@ -95,7 +95,7 @@ public:
 };
 
 /////////////////////////////////////////////////////
-// FBlendJobArgs_Separable_MEM_Generic
+// FBlendJobArgs_NonSeparable_MEM_Generic
 class FBlendJobArgs_NonSeparable_MEM_Generic final
     : public IJobArgs
 {

@@ -11,12 +11,17 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include <cstdint>
+#include <iostream>
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
 
+uint8 Downscale( uint16 iValue )  { return ( iValue + 1 + ( iValue>>8 ) ) >> 8; }
 
 int
 main() {
-    int a = 0;
-    int* __restrict src = &a;
+    std::cout << (int)( 65535 >> 8 );
     return  0;
 }
 
