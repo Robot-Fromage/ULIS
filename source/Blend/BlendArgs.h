@@ -55,8 +55,8 @@ public:
         , backdropWorkingRect( iBackdropWorkingRect )
         {}
 
-    const FBlock& const source;
-    FBlock& const backdrop;
+    const FBlock& source;
+    FBlock& backdrop;
     const FRectI sourceRect;
     const FVec2F subpixelComponent;
     const FVec2F buspixelComponent;
