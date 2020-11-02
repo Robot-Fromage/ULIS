@@ -45,8 +45,8 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
     const bool hasTopData   = cargs->sourceRect.y + cargs->shift.y > 0;
 
     ufloat m11, m01, m10, m00, vv0, vv1, res;
-    m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,              fmt.AID ) : 0.f;
-    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,    fmt.AID ) : 0.f;
+    m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;
+    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - jargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
     vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
     for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
