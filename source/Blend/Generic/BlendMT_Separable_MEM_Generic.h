@@ -38,7 +38,7 @@ InvokeBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    const bool notLastLine  = jargs->line < cargs->backdropCoverage.y;
+    const bool notLastLine  = jargs->line < uint32( cargs->backdropCoverage.y );
     const bool notFirstLine = jargs->line > 0;
     const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
     const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
