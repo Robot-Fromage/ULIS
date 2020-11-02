@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/GammaCompress.h"
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Conv/srgb2linear.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"

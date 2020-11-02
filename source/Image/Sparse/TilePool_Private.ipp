@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Clear/Clear.h"
 #include "Image/Block.h"
 #include "Image/Sparse/Tile.h"

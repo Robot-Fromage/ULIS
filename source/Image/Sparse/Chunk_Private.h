@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Copy/Copy.h"
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Draw/Draw.h"
 #include "Draw/Sparse/DrawSparse.h"
 #include "Image/Sparse/TiledBlock_Private.h"

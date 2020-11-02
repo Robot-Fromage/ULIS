@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/Sanitize.h"
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

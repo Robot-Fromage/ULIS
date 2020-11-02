@@ -13,7 +13,7 @@
 */
 #include "IO/Clipboard.h"
 #include "Image/Block.h"
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
 #include "Thread/ThreadPool.h"

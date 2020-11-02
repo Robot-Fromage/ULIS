@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Text/Text.h"
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Conv/Conv.h"
 #include "Conv/ConvBuffer.h"
 #include "Image/Block.h"

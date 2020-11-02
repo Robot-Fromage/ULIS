@@ -13,7 +13,7 @@
 */
 #include "Clear/Clear.h"
 #include "Image/Block.h"
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Thread/ThreadPool.h"

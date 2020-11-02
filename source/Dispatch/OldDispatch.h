@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "System/HostDeviceInfo.h"
+#include "System/Device.h"
 #include "Image/Format.h"
 
 ULIS_NAMESPACE_BEGIN
