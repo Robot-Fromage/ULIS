@@ -21,7 +21,7 @@ int main( int argc, char *argv[] ) {
 
 
     FThreadPool* pool = XCreateThreadPool();
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_SSE42;
     int size = 128;
     uint32 format = ULIS_FORMAT_BGRA8;

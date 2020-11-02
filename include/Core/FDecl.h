@@ -31,7 +31,7 @@ class   ITiledBlock;
 class   FKernel;
 class   FStructuringElement;
 struct  FPerfInfo;
-struct  FHostDeviceInfo;
+struct  FHardwareMetrics;
 class   FHardwareMetrics;
 struct  FFormatMetrics;
 struct  FTileElement;

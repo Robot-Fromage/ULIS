@@ -28,7 +28,7 @@ ULIS_NAMESPACE_BEGIN
 FBlock* XGetSummedAreaTable( FOldThreadPool*             iOldThreadPool
                            , bool                     iBlocking
                            , uint32                   iPerfIntent
-                           , const FHostDeviceInfo&   iHostDeviceInfo
+                           , const FHardwareMetrics&   iHostDeviceInfo
                            , bool                     iCallCB
                            , const FBlock*            iSource )
 {
@@ -56,7 +56,7 @@ FBlock* XGetSummedAreaTable( FOldThreadPool*             iOldThreadPool
 FBlock* XGetPremultipliedSummedAreaTable( FOldThreadPool*             iOldThreadPool
                                         , bool                     iBlocking
                                         , uint32                   iPerfIntent
-                                        , const FHostDeviceInfo&   iHostDeviceInfo
+                                        , const FHardwareMetrics&   iHostDeviceInfo
                                         , bool                     iCallCB
                                         , const FBlock*            iSource )
 {

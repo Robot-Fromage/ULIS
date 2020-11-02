@@ -26,7 +26,7 @@ using namespace ::ul3;
 int
 main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
 
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
     std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";

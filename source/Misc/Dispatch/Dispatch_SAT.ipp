@@ -55,7 +55,7 @@ template< typename T >
 void ComputeSummedAreaTable_MEM_Generic( FOldThreadPool*           iOldThreadPool
                                    , bool                       iBlocking
                                    , uint32                     iPerfIntent
-                                   , const FHostDeviceInfo&     iHostDeviceInfo
+                                   , const FHardwareMetrics&     iHostDeviceInfo
                                    , const FBlock*              iSource
                                    , FBlock*                    iSAT )
 {
@@ -126,7 +126,7 @@ InvokeComputeSummedAreaTable_YPass_SSE42_RGBA8( const uint32 iLen, const FBlock*
 void ComputeSummedAreaTable_SSE42_RGBA8( FOldThreadPool*             iOldThreadPool
                                        , bool                     iBlocking
                                        , uint32                   iPerfIntent
-                                       , const FHostDeviceInfo&   iHostDeviceInfo
+                                       , const FHardwareMetrics&   iHostDeviceInfo
                                        , const FBlock*            iSource
                                        , FBlock*                  iSAT )
 {
@@ -171,18 +171,18 @@ void ComputeSummedAreaTable_SSE42_RGBA8( FOldThreadPool*             iOldThreadP
 typedef void (*fpDispatchedSATFunc)( FOldThreadPool*             iOldThreadPool
                                    , bool                     iBlocking
                                    , uint32                   iPerfIntent
-                                   , const FHostDeviceInfo&   iHostDeviceInfo
+                                   , const FHardwareMetrics&   iHostDeviceInfo
                                    , const FBlock*            iSource
                                    , FBlock*                  iSAT );
 
 template< typename T >
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
+QueryDispatchedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     return  ComputeSummedAreaTable_MEM_Generic< T >;
 }
 
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
+QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
         if( iHostDeviceInfo.HW_SSE42 )
             return  ComputeSummedAreaTable_SSE42_RGBA8;
@@ -194,13 +194,13 @@ QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHostDe
 
 template< typename T >
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
+QueryDispatchedSATFunctionForParameters_imp( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     return  QueryDispatchedSATFunctionForParameters_Generic< T >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
 }
 
 template<>
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
+QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     // RGBA8 Signature, any layout
     if( iFormatMetrics.HEA
      && iFormatMetrics.NCC == 3
@@ -214,7 +214,7 @@ QueryDispatchedSATFunctionForParameters_imp< uint8 >( uint32 iPerfIntent, const 
 }
 
 fpDispatchedSATFunc
-QueryDispatchedSATFunctionForParameters( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
+QueryDispatchedSATFunctionForParameters( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     switch( iFormatMetrics.TP ) {
         case TYPE_UINT8     : return  QueryDispatchedSATFunctionForParameters_imp< uint8   >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
         case TYPE_UINT16    : return  QueryDispatchedSATFunctionForParameters_imp< uint16  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );

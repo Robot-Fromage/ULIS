@@ -26,7 +26,7 @@ using namespace ::ul3;
 int
 main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
 
     FTextEngine TextEngine;
     FFontRegistry fontRegistry( TextEngine );

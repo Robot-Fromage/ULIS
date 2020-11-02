@@ -74,7 +74,7 @@ void
 Premultiply( FOldThreadPool*           iOldThreadPool
            , bool                   iBlocking
            , uint32                 iPerfIntent
-           , const FHostDeviceInfo& iHostDeviceInfo
+           , const FHardwareMetrics& iHostDeviceInfo
            , bool                   iCallCB
            , FBlock*                iDestination )
 {
@@ -103,7 +103,7 @@ void
 Unpremultiply( FOldThreadPool*             iOldThreadPool
              , bool                     iBlocking
              , uint32                   iPerfIntent
-             , const FHostDeviceInfo&   iHostDeviceInfo
+             , const FHardwareMetrics&   iHostDeviceInfo
              , bool                     iCallCB
              , FBlock*                  iDestination )
 {

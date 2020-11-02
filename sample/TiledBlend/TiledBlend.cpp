@@ -27,7 +27,7 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool*    threadPool  = XCreateThreadPool();
     uint32          perfIntent  = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
-    FHostDeviceInfo host        = FHostDeviceInfo::Detect();
+    FHardwareMetrics host        = FHardwareMetrics::Detect();
 
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
     std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";

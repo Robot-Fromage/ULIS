@@ -35,7 +35,7 @@ static const char* kwImageFormat[] = {
 ULIS_API FBlock* XLoadFromFile( FOldThreadPool*           iOldThreadPool
                                , bool                   iBlocking
                                , uint32                 iPerfIntent
-                               , const FHostDeviceInfo& iHostDeviceInfo
+                               , const FHardwareMetrics& iHostDeviceInfo
                                , bool                   iCallCB
                                , const std::string&     iPath
                                , eFormat                iDesiredFormat );
@@ -43,7 +43,7 @@ ULIS_API FBlock* XLoadFromFile( FOldThreadPool*           iOldThreadPool
 ULIS_API void SaveToFile( FOldThreadPool*             iOldThreadPool
                          , bool                     iBlocking
                          , uint32                   iPerfIntent
-                         , const FHostDeviceInfo&   iHostDeviceInfo
+                         , const FHardwareMetrics&   iHostDeviceInfo
                          , bool                     iCallCB
                          , const FBlock*            iSource
                          , const std::string&       iPath

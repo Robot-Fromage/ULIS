@@ -73,7 +73,7 @@ void
 ApplysRGB2Linear( FOldThreadPool*           iOldThreadPool
                 , bool                   iBlocking
                 , uint32                 iPerfIntent
-                , const FHostDeviceInfo& iHostDeviceInfo
+                , const FHardwareMetrics& iHostDeviceInfo
                 , bool                   iCallCB
                 , FBlock*                iDestination )
 {
@@ -102,7 +102,7 @@ void
 ApplyLinear2sRGB( FOldThreadPool*           iOldThreadPool
                 , bool                   iBlocking
                 , uint32                 iPerfIntent
-                , const FHostDeviceInfo& iHostDeviceInfo
+                , const FHardwareMetrics& iHostDeviceInfo
                 , bool                   iCallCB
                 , FBlock*                iDestination )
 {

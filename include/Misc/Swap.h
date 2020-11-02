@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 ULIS_API void Swap( FOldThreadPool*           iOldThreadPool
                    , bool                   iBlocking
                    , uint32                 iPerfIntent
-                   , const FHostDeviceInfo& iHostDeviceInfo
+                   , const FHardwareMetrics& iHostDeviceInfo
                    , bool                   iCallCB
                    , FBlock*                iDestination
                    , uint8                  iChannel1

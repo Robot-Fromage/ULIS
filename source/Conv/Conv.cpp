@@ -46,7 +46,7 @@ void Conv(
       FOldThreadPool*           iOldThreadPool
     , bool                      iBlocking
     , uint32                    iPerfIntent
-    , const FHostDeviceInfo&    iHostDeviceInfo
+    , const FHardwareMetrics&    iHostDeviceInfo
     , bool                      iCallCB
     , const FBlock*             iSource
     , FBlock*                   iDestination
@@ -99,7 +99,7 @@ void Conv(
 FBlock* XConv( FOldThreadPool*           iOldThreadPool
              , bool                   iBlocking
              , uint32                 iPerfIntent
-             , const FHostDeviceInfo& iHostDeviceInfo
+             , const FHardwareMetrics& iHostDeviceInfo
              , bool                   iCallCB
              , const FBlock*          iSource
              , eFormat                iDestinationFormat )

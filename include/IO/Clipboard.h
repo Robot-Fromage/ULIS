@@ -19,14 +19,14 @@ ULIS_NAMESPACE_BEGIN
 ULIS_API FBlock* XLoadFromClipboard( FOldThreadPool*              iOldThreadPool
                                     , bool                      iBlocking
                                     , uint32                    iPerfIntent
-                                    , const FHostDeviceInfo&    iHostDeviceInfo
+                                    , const FHardwareMetrics&    iHostDeviceInfo
                                     , bool                      iCallCB
                                     , eFormat                   iDesiredFormat );
 
 ULIS_API void SaveToClipboard( FOldThreadPool*            iOldThreadPool
                               , bool                    iBlocking
                               , uint32                  iPerfIntent
-                              , const FHostDeviceInfo&  iHostDeviceInfo
+                              , const FHardwareMetrics&  iHostDeviceInfo
                               , bool                    iCallCB
                               , const FBlock*           iSource );
 

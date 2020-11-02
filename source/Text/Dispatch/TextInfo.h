@@ -24,7 +24,7 @@ struct _FPrivateTextInfo {
     FOldThreadPool*            pool;
     bool                    blocking;
     uint32                  perfIntent;
-    const FHostDeviceInfo*  hostDeviceInfo;
+    const FHardwareMetrics*  hostDeviceInfo;
     FBlock*                 destination;
     const std::wstring*     text;
     const FFont*            font;

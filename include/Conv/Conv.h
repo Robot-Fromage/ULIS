@@ -21,7 +21,7 @@ ULIS_API FColor Conv( const ISample& iSrc, eFormat iDst );
 ULIS_API void Conv( FOldThreadPool*           iOldThreadPool
                    , bool                   iBlocking
                    , uint32                 iPerfIntent
-                   , const FHostDeviceInfo& iHostDeviceInfo
+                   , const FHardwareMetrics& iHostDeviceInfo
                    , bool                   iCallCB
                    , const FBlock*          iSource
                    , FBlock*                iDestination );
@@ -29,7 +29,7 @@ ULIS_API void Conv( FOldThreadPool*           iOldThreadPool
 ULIS_API FBlock* XConv( FOldThreadPool*           iOldThreadPool
                        , bool                   iBlocking
                        , uint32                 iPerfIntent
-                       , const FHostDeviceInfo& iHostDeviceInfo
+                       , const FHardwareMetrics& iHostDeviceInfo
                        , bool                   iCallCB
                        , const FBlock*          iSource
                        , eFormat                iDestinationFormat );

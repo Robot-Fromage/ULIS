@@ -31,7 +31,7 @@ ULIS_NAMESPACE_BEGIN
 void TransformAffine( FOldThreadPool*              iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
-                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , const FHardwareMetrics&    iHostDeviceInfo
                     , bool                      iCallCB
                     , const FBlock*             iSource
                     , FBlock*                   iDestination
@@ -82,7 +82,7 @@ void TransformAffine( FOldThreadPool*              iOldThreadPool
 void TransformAffineTiled( FOldThreadPool*              iOldThreadPool
                          , bool                      iBlocking
                          , uint32                    iPerfIntent
-                         , const FHostDeviceInfo&    iHostDeviceInfo
+                         , const FHardwareMetrics&    iHostDeviceInfo
                          , bool                      iCallCB
                          , const FBlock*             iSource
                          , FBlock*                   iDestination
@@ -134,7 +134,7 @@ void TransformAffineTiled( FOldThreadPool*              iOldThreadPool
 void TransformPerspective( FOldThreadPool*         iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
-                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , const FHardwareMetrics&    iHostDeviceInfo
                     , bool                      iCallCB
                     , const FBlock*             iSource
                     , FBlock*                   iDestination
@@ -188,7 +188,7 @@ void TransformPerspective( FOldThreadPool*         iOldThreadPool
 void TransformBezier( FOldThreadPool*                                      iOldThreadPool
                     , bool                                              iBlocking
                     , uint32                                            iPerfIntent
-                    , const FHostDeviceInfo&                            iHostDeviceInfo
+                    , const FHardwareMetrics&                            iHostDeviceInfo
                     , bool                                              iCallCB
                     , const FBlock*                                     iSource
                     , FBlock*                                           iDestination
@@ -289,7 +289,7 @@ void TransformBezier( FOldThreadPool*                                      iOldT
 void Resize( FOldThreadPool*             iOldThreadPool
            , bool                     iBlocking
            , uint32                   iPerfIntent
-           , const FHostDeviceInfo&   iHostDeviceInfo
+           , const FHardwareMetrics&   iHostDeviceInfo
            , bool                     iCallCB
            , const FBlock*            iSource
            , FBlock*                  iDestination
@@ -363,7 +363,7 @@ void Resize( FOldThreadPool*             iOldThreadPool
 FBlock* XResize( FOldThreadPool*           iOldThreadPool
                , bool                   iBlocking
                , uint32                 iPerfIntent
-               , const FHostDeviceInfo& iHostDeviceInfo
+               , const FHardwareMetrics& iHostDeviceInfo
                , bool                   iCallCB
                , const FBlock*          iSource
                , const FRectI&           iSourceRect
@@ -389,7 +389,7 @@ FBlock* XResize( FOldThreadPool*           iOldThreadPool
 FBlock* XTransformAffine( FOldThreadPool*              iOldThreadPool
                         , bool                      iBlocking
                         , uint32                    iPerfIntent
-                        , const FHostDeviceInfo&    iHostDeviceInfo
+                        , const FHardwareMetrics&    iHostDeviceInfo
                         , bool                      iCallCB
                         , const FBlock*             iSource
                         , const FRectI&              iSourceRect
@@ -419,7 +419,7 @@ FBlock* XTransformAffine( FOldThreadPool*              iOldThreadPool
 FBlock* XTransformAffineTiled( FOldThreadPool*              iOldThreadPool
                              , bool                      iBlocking
                              , uint32                    iPerfIntent
-                             , const FHostDeviceInfo&    iHostDeviceInfo
+                             , const FHardwareMetrics&    iHostDeviceInfo
                              , bool                      iCallCB
                              , const FBlock*             iSource
                              , const FRectI&              iSourceRect
@@ -450,7 +450,7 @@ FBlock* XTransformAffineTiled( FOldThreadPool*              iOldThreadPool
 FBlock* XMakeTileableTransformedPattern( FOldThreadPool*              iOldThreadPool
                                        , bool                      iBlocking
                                        , uint32                    iPerfIntent
-                                       , const FHostDeviceInfo&    iHostDeviceInfo
+                                       , const FHardwareMetrics&    iHostDeviceInfo
                                        , bool                      iCallCB
                                        , const FBlock*             iSource
                                        , const FRectI&              iSourceRect
@@ -480,7 +480,7 @@ FBlock* XMakeTileableTransformedPattern( FOldThreadPool*              iOldThread
 FBlock* XTransformPerspective( FOldThreadPool*                 iOldThreadPool
                              , bool                         iBlocking
                              , uint32                       iPerfIntent
-                             , const FHostDeviceInfo&       iHostDeviceInfo
+                             , const FHardwareMetrics&       iHostDeviceInfo
                              , bool                         iCallCB
                              , const FBlock*                iSource
                              , const FRectI&                 iSourceRect

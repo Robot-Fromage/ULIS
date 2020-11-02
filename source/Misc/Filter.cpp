@@ -46,7 +46,7 @@ void InvokeFilterInto( const size_t iLen, const FBlock* iSrcBlock, const uint8* 
 void Filter( FOldThreadPool*           iOldThreadPool
            , bool                   iBlocking
            , uint32                 iPerfIntent
-           , const FHostDeviceInfo& iHostDeviceInfo
+           , const FHardwareMetrics& iHostDeviceInfo
            , bool                   iCallCB
            , const FBlock*          iSource
            , std::function< void( const FBlock* iBlock, const uint8* iPtr ) > iFunc )
@@ -74,7 +74,7 @@ void Filter( FOldThreadPool*           iOldThreadPool
 void FilterInPlace( FOldThreadPool*            iOldThreadPool
                   , bool                    iBlocking
                   , uint32                  iPerfIntent
-                  , const FHostDeviceInfo&  iHostDeviceInfo
+                  , const FHardwareMetrics&  iHostDeviceInfo
                   , bool                    iCallCB
                   , FBlock*                 iSource
                   , std::function< void( FBlock* iBlock, uint8* iPtr ) > iFunc )
@@ -103,7 +103,7 @@ void FilterInPlace( FOldThreadPool*            iOldThreadPool
 void FilterInto( FOldThreadPool*              iOldThreadPool
                , bool                      iBlocking
                , uint32                    iPerfIntent
-               , const FHostDeviceInfo&    iHostDeviceInfo
+               , const FHardwareMetrics&    iHostDeviceInfo
                , bool                      iCallCB
                , const FBlock*             iSource
                , FBlock*                   iDestination

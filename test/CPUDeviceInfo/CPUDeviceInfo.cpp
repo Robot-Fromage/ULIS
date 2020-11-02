@@ -14,7 +14,7 @@
 #include <ULIS3>
 
 int main( int argc, char *argv[] ) {
-    ::ul3::FHostDeviceInfo deviceInfo = ::ul3::FHostDeviceInfo::Detect();
+    ::ul3::FHardwareMetrics deviceInfo = ::ul3::FHardwareMetrics::Detect();
     const char* out[] = { "NO", "YES" };
     std::cout << "Vendor_AMD        : " << out[ deviceInfo.Vendor_AMD       ] << std::endl;
     std::cout << "Vendor_Intel      : " << out[ deviceInfo.Vendor_Intel     ] << std::endl;

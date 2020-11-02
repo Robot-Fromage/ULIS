@@ -35,7 +35,7 @@ main( int argc, char *argv[] ) {
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
     FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
 
     // Create two blocks: one in LAB, one in RGB for hosting the result conversion and display.
     // First block is LabD meaning layout in memory LabLabLabLab... with channel type double. No alpha, not needed here.

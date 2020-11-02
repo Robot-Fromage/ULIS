@@ -35,7 +35,7 @@ main( int argc, char *argv[] ) {
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
     FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42;
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
 
     // Start processing the block
     // Create one RGBA8 block to host the operations

@@ -34,7 +34,7 @@ SWindow::~SWindow() {
 
 
 SWindow::SWindow()
-    : mHost( FHostDeviceInfo::Detect() )
+    : mHost( FHardwareMetrics::Detect() )
     , mPool( XCreateThreadPool() )
     , mSRC( nullptr )
     , mDST( nullptr )

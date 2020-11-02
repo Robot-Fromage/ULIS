@@ -78,7 +78,7 @@ void
 Extract( FOldThreadPool*           iOldThreadPool
        , bool                   iBlocking
        , uint32                 iPerfIntent
-       , const FHostDeviceInfo& iHostDeviceInfo
+       , const FHardwareMetrics& iHostDeviceInfo
        , bool                   iCallCB
        , const FBlock*          iSource
        , bool                   iSourceRawIndicesFlag
@@ -159,7 +159,7 @@ Extract( FOldThreadPool*           iOldThreadPool
 FBlock* XExtract( FOldThreadPool*              iOldThreadPool
                 , bool                      iBlocking
                 , uint32                    iPerfIntent
-                , const FHostDeviceInfo&    iHostDeviceInfo
+                , const FHardwareMetrics&    iHostDeviceInfo
                 , bool                      iCallCB
                 , const FBlock*             iSource
                 , bool                      iSourceRawIndicesFlag

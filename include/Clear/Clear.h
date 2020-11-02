@@ -20,7 +20,7 @@ ULIS_NAMESPACE_BEGIN
 ULIS_API void Clear( FOldThreadPool*              iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
-                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , const FHardwareMetrics&    iHostDeviceInfo
                     , bool                      iCallCB
                     , FBlock*                   iDestination
                     , const FRectI&              iArea );

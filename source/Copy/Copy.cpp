@@ -61,7 +61,7 @@ void
 Copy_imp( FOldThreadPool*              iOldThreadPool
         , bool                      iBlocking
         , uint32                    iPerfIntent
-        , const FHostDeviceInfo&    iHostDeviceInfo
+        , const FHardwareMetrics&    iHostDeviceInfo
         , bool                      iCallCB
         , const FBlock*             iSource
         , FBlock*                   iDestination
@@ -106,7 +106,7 @@ Copy_imp( FOldThreadPool*              iOldThreadPool
 void Copy( FOldThreadPool*             iOldThreadPool
          , bool                     iBlocking
          , uint32                   iPerfIntent
-         , const FHostDeviceInfo&   iHostDeviceInfo
+         , const FHardwareMetrics&   iHostDeviceInfo
          , bool                     iCallCB
          , const FBlock*            iSource
          , FBlock*                  iDestination
@@ -147,7 +147,7 @@ void Copy( FOldThreadPool*             iOldThreadPool
 FBlock* XCopy( FOldThreadPool*           iOldThreadPool
              , bool                   iBlocking
              , uint32                 iPerfIntent
-             , const FHostDeviceInfo& iHostDeviceInfo
+             , const FHardwareMetrics& iHostDeviceInfo
              , bool                   iCallCB
              , const FBlock*          iSource
              , const FRectI&           iArea )

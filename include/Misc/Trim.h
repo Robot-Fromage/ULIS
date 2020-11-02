@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 ULIS_API FRectI GetTrimmedTransparencyRect( FOldThreadPool*            iOldThreadPool
                                           , bool                    iBlocking
                                           , uint32                  iPerfIntent
-                                          , const FHostDeviceInfo&  iHostDeviceInfo
+                                          , const FHardwareMetrics&  iHostDeviceInfo
                                           , bool                    iCallCB
                                           , const FBlock*           iSource );
 

@@ -71,7 +71,7 @@ struct TMultiDispatchTable {
 template< typename D >
 class TOldDispatcher {
 public:
-    static ULIS_FORCEINLINE typename D::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename D::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename D::fpQuery Query( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename D::tExtra& iExtra ) {
         for( int i = 0; i < D::spec_size; ++i ) {
             if( D::spec_table[i].select_cond( iFormatMetrics ) ) {
                 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
@@ -98,7 +98,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE typename D::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename D::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename D::fpQuery QueryGeneric( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename D::tExtra& iExtra ) {
         #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
             if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                 return  D:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
@@ -211,7 +211,7 @@ main() {
     const size_t size0 = FBlendDispatchTable::spec_size;
 
     uint32 intent = ULIS_PERF_SSE42;
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     FFormatMetrics format( ULIS_FORMAT_RGBA16 );
 
     int extra = 1;

@@ -35,7 +35,7 @@ main( int argc, char *argv[] ) {
     // Finally, detect host device to get runtime information about support for SSE and AVX features.
     FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = 0;
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
 
     // Collect hard-coded paths to images.
     std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";

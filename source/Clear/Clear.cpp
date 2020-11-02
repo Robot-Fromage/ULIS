@@ -61,7 +61,7 @@ void InvokeFillMTProcessScanline_MEM( uint8* iDst, uint32 iCount, const uint32 i
 void Clear_imp( FOldThreadPool*            iOldThreadPool
               , bool                    iBlocking
               , uint32                  iPerfIntent
-              , const FHostDeviceInfo&  iHostDeviceInfo
+              , const FHardwareMetrics&  iHostDeviceInfo
               , bool                    iCallCB
               , FBlock*                 iDestination
               , const FRectI&            iArea )
@@ -103,7 +103,7 @@ void Clear_imp( FOldThreadPool*            iOldThreadPool
  void Clear( FOldThreadPool*              iOldThreadPool
            , bool                      iBlocking
            , uint32                    iPerfIntent
-           , const FHostDeviceInfo&    iHostDeviceInfo
+           , const FHardwareMetrics&    iHostDeviceInfo
            , bool                      iCallCB
            , FBlock*                   iDestination
            , const FRectI&              iArea )

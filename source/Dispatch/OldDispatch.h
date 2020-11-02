@@ -36,7 +36,7 @@ typedef bool (*fpOldCond)( const FFormatMetrics& iFormatMetrics );
 template< typename IMP >
 class TOldDispatcher {
 public:
-    static ULIS_FORCEINLINE typename IMP::fpQuery Query( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename IMP::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery Query( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename IMP::tExtra& iExtra ) {
         for( int i = 0; i < IMP::spec_size; ++i ) {
             if( IMP::spec_table[i].select_cond( iFormatMetrics ) ) {
                 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
@@ -63,7 +63,7 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( uint32 iPerfIntent, const FHostDeviceInfo& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename IMP::tExtra& iExtra ) {
+    static ULIS_FORCEINLINE typename IMP::fpQuery QueryGeneric( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename IMP::tExtra& iExtra ) {
         #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
             if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                 return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );

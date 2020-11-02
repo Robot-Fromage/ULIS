@@ -40,7 +40,7 @@ SCanvas::~SCanvas() {
 
 
 SCanvas::SCanvas()
-    : mHost(        FHostDeviceInfo::Detect()           )
+    : mHost(        FHardwareMetrics::Detect()           )
     , mPool(        XCreateThreadPool()                 )
     , mCanvas(      nullptr                             )
     , mTextEngine(                                      )

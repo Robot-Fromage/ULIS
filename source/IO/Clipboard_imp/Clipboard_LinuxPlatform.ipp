@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 FBlock* XLoadFromClipboard( FOldThreadPool*            iOldThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
-                          , const FHostDeviceInfo&  iHostDeviceInfo
+                          , const FHardwareMetrics&  iHostDeviceInfo
                           , bool                    iCallCB
                           , eFormat                 iDesiredFormat )
 {
@@ -27,7 +27,7 @@ FBlock* XLoadFromClipboard( FOldThreadPool*            iOldThreadPool
 void SaveToClipboard( FOldThreadPool*              iOldThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
-                    , const FHostDeviceInfo&    iHostDeviceInfo
+                    , const FHardwareMetrics&    iHostDeviceInfo
                     , bool                      iCallCB
                     , const FBlock*             iSource )
 {

@@ -26,7 +26,7 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
     uint32 perfIntent = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     FBlock* blockA = new FBlock( 1024, 1024, ULIS_FORMAT_RGBA8 );
 
     ::ul3::Clear( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockA, blockA->Rect() );

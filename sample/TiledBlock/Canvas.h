@@ -37,7 +37,7 @@ private:
     Q_SLOT void tickEvent();
 
 private:
-    FHostDeviceInfo                     mHost;
+    FHardwareMetrics                     mHost;
     FThreadPool*                        mPool;
     FBlock*                             mCanvas;
     FBlock*                             mRAMUSAGEBLOCK1;

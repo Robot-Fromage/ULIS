@@ -40,7 +40,7 @@ int clear( int argc, char *argv[] ) {
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
     FBlock* block = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
@@ -67,7 +67,7 @@ int fill( int argc, char *argv[] ) {
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
     FBlock* block = new FBlock( size, size, format );
     FColor source( format );
@@ -95,7 +95,7 @@ int copy( int argc, char *argv[] ) {
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
@@ -127,7 +127,7 @@ int blend( int argc, char *argv[] ) {
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
@@ -158,7 +158,7 @@ int conv( int argc, char *argv[] ) {
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, dstFormat );
@@ -182,7 +182,7 @@ int clearRaw( int argc, char *argv[] ) {
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     FBlock* block = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
     for( uint32 l = 0; l < repeat; ++l )
@@ -202,7 +202,7 @@ int copyRaw( int argc, char *argv[] ) {
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
@@ -240,7 +240,7 @@ int transform( int argc, char *argv[] ) {
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FRectI dstmetrics = TransformAffineMetrics( src->Rect(), mat, method );
@@ -279,7 +279,7 @@ int text( int argc, char *argv[] ) {
     if( opt == "sse" ) optBit = ULIS_PERF_SSE42;
     if( opt == "avx" ) optBit = ULIS_PERF_AVX2;
     FThreadPool* pool = XCreateThreadPool( threads );
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
     uint32 perfIntent = ULIS_PERF_MT | optBit;
     FTextEngine TextEngine;
     FFontRegistry fontRegistry( TextEngine );

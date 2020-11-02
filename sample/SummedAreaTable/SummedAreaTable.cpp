@@ -21,7 +21,7 @@ main() {
     uint32 perfIntent2  = ULIS_PERF_MT;
     uint32 perfIntent3  = ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
     uint32 perfIntent4  = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
-    FHostDeviceInfo host = FHostDeviceInfo::Detect();
+    FHardwareMetrics host = FHardwareMetrics::Detect();
 
     int size = 9;
     FBlock* block = new FBlock( size, size, ULIS_FORMAT_RGBA8 );
