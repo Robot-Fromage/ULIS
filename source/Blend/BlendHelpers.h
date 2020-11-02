@@ -13,7 +13,10 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "BlendArgs.h"
+#include "Blend/BlendArgs.h"
+#include "Scheduling/SchedulePolicy.h"
+#include "Scheduling/Command.h"
+#include "Scheduling/Job.h"
 
 /////////////////////////////////////////////////////
 // Static Values Helpers for Misc Compositing Operations
