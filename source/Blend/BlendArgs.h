@@ -55,17 +55,17 @@ public:
         , backdropWorkingRect( iBackdropWorkingRect )
         {}
 
-    const FBlock& source;
-    FBlock& backdrop;
-    FRectI sourceRect;
-    FVec2F subpixelComponent;
-    FVec2F buspixelComponent;
-    eBlendMode blendingMode;
-    eAlphaMode alphaMode;
-    ufloat opacity;
-    FVec2I shift;
-    FVec2I backdropCoverage;
-    FRectI backdropWorkingRect;
+    const FBlock& const source;
+    FBlock& const backdrop;
+    const FRectI sourceRect;
+    const FVec2F subpixelComponent;
+    const FVec2F buspixelComponent;
+    const eBlendMode blendingMode;
+    const eAlphaMode alphaMode;
+    const ufloat opacity;
+    const FVec2I shift;
+    const FVec2I backdropCoverage;
+    const FRectI backdropWorkingRect;
 };
 
 /////////////////////////////////////////////////////
@@ -91,8 +91,8 @@ public:
 
     const uint32 line;
     const uint32 src_bps;
-    const uint8* ULIS_RESTRICT src;
-    uint8* ULIS_RESTRICT bdp;
+    const uint8* const ULIS_RESTRICT src;
+    uint8* const ULIS_RESTRICT bdp;
 };
 
 /////////////////////////////////////////////////////
@@ -122,10 +122,10 @@ public:
 
     const uint32 line;
     const uint32 src_bps;
-    const uint8* ULIS_RESTRICT src;
-    uint8* ULIS_RESTRICT bdp;
-    fpConversionInvocation fwd;
-    fpConversionInvocation bkd;
+    const uint8* const ULIS_RESTRICT src;
+    uint8* const ULIS_RESTRICT bdp;
+    const fpConversionInvocation fwd;
+    const fpConversionInvocation bkd;
 };
 
 /////////////////////////////////////////////////////
@@ -157,11 +157,11 @@ public:
 
     const uint32 line;
     const uint32 src_bps;
-    const uint8* ULIS_RESTRICT src;
-    uint8* ULIS_RESTRICT bdp;
-    fpConversionInvocation fwd;
-    fpConversionInvocation bkd;
-    Vec4i idt;
+    const uint8* const ULIS_RESTRICT src;
+    uint8* const ULIS_RESTRICT bdp;
+    const fpConversionInvocation fwd;
+    const fpConversionInvocation bkd;
+    const Vec4i idt;
 };
 
 ULIS_NAMESPACE_END
