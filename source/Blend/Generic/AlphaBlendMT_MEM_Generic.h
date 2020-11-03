@@ -31,7 +31,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
 InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -82,13 +82,13 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildBlendJobs_Separable< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
+    BuildBlendJobs< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
 }
 
 template< typename T >
 void
 InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -122,7 +122,7 @@ ScheduleAlphaBlendMT_Separable_MEM_Generic(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildBlendJobs_Separable< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T > >( iCommand, iPolicy );
+    BuildBlendJobs< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T > >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

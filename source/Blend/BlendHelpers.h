@@ -77,281 +77,52 @@ BuildRGBA8IndexTable( uint8 iRS )
     }
 }
 
-template< void (*IMP)( const FBlendJobArgs_Separable*, const FBlendCommandArgs* ) >
 ULIS_FORCEINLINE
 static
-void
-BuildBlendJobs_Separable( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source.Bits();
-    uint8* bdp                  = cargs->backdrop.Bits();
-    const uint32 src_bps        = cargs->source.BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
-    const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-    {
-        // Mono: Single Job - Multi Tasks
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs_Separable* jargs = new FBlendJobArgs_Separable[ cargs->backdropWorkingRect.h ];
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            jargs[i] = FBlendJobArgs_Separable(
-                  i
-                , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-            );
-        FJob* job = new FJob(
-              cargs->backdropWorkingRect.h
-            , &ResolveScheduledJobCall< FBlendJobArgs_Separable, FBlendCommandArgs, IMP >
-            , jargs );
-        iCommand->AddJob( job );
-    }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
-    {
-        // Multi: Multi Jobs - Single Task
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs_Separable* jargs = new FBlendJobArgs_Separable[ 1 ];
-            jargs[0] = FBlendJobArgs_Separable(
-                  i
-                , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-            );
-            FJob* job = new FJob(
-                  1
-                , &ResolveScheduledJobCall< FBlendJobArgs_Separable, FBlendCommandArgs, IMP >
-                , jargs );
-            iCommand->AddJob( job );
-        }
+const uint8*
+ComputeBufferPosition(
+      const uint8* iBase
+    , const int iSourceRectY
+    , const int iShiftY
+    , const int iSourceRectH
+    , const uint32 iSrcBps
+    , const uint32 iSrcDecalX
+    , const uint32 iSrcDecalY
+    , const int iLine
+    , const bool iTiled
+)
+{
+    if( iTiled ) {
+        return  iBase + ( ( iSourceRectY + ( ( iShiftY + iLine ) % iSourceRectH ) ) * iSrcBps ) + iSrcDecalX;
+    } else {
+        return  iBase + ( ( iSrcDecalY + iLine ) * iSrcBps ) + iSrcDecalX;
     }
 }
 
-template< void (*IMP)( const FBlendJobArgs_NonSeparable_MEM_Generic*, const FBlendCommandArgs* ) >
+template< void (*IMP)( const FBlendJobArgs*, const FBlendCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
-BuildBlendJobs_NonSeparable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source.Bits();
-    uint8* bdp                  = cargs->backdrop.Bits();
-    const uint32 src_bps        = cargs->source.BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
-    const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
-    const FFormatMetrics& fmt   = cargs->source.FormatMetrics();
-    fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
-    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
+BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool iTiled = false ) {
+    const FBlendCommandArgs* cargs              = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
+    const uint8* src                            = cargs->source.Bits();
+    uint8* bdp                                  = cargs->backdrop.Bits();
+    const uint32 src_bps                        = cargs->source.BytesPerScanLine();
+    const uint32 bdp_bps                        = cargs->backdrop.BytesPerScanLine();
+    const uint32 src_decal_y                    = cargs->shift.y + cargs->sourceRect.y;
+    const uint32 src_decal_x                    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
+    const uint32 bdp_decal_x                    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
+    fpConversionInvocation conv_forward_fptr    = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
+    fpConversionInvocation conv_backward_fptr   = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
+    Vec4i idt                                   = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
-        // Mono: Single Job - Multi Tasks
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs_NonSeparable_MEM_Generic* jargs = new FBlendJobArgs_NonSeparable_MEM_Generic[ cargs->backdropWorkingRect.h ];
+        FBlendJobArgs* jargs = new FBlendJobArgs[ cargs->backdropWorkingRect.h ];
         for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            jargs[i] = FBlendJobArgs_NonSeparable_MEM_Generic(
+            jargs[i] = FBlendJobArgs(
                   i
                 , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-            );
-        FJob* job = new FJob(
-              cargs->backdropWorkingRect.h
-            , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_MEM_Generic, FBlendCommandArgs, IMP >
-            , jargs );
-        iCommand->AddJob( job );
-    }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
-    {
-        // Multi: Multi Jobs - Single Task
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs_NonSeparable_MEM_Generic* jargs = new FBlendJobArgs_NonSeparable_MEM_Generic[ 1 ];
-            jargs[0] = FBlendJobArgs_NonSeparable_MEM_Generic(
-                  i
-                , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-            );
-            FJob* job = new FJob(
-                  1
-                , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_MEM_Generic, FBlendCommandArgs, IMP >
-                , jargs );
-            iCommand->AddJob( job );
-        }
-    }
-}
-
-template< void (*IMP)( const FBlendJobArgs_Separable*, const FBlendCommandArgs* ) >
-ULIS_FORCEINLINE
-static
-void
-BuildTiledBlendJobs_Separable( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source.Bits();
-    uint8* bdp                  = cargs->backdrop.Bits();
-    const uint32 src_bps        = cargs->source.BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
-    const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-    {
-        // Mono: Single Job - Multi Tasks
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs_Separable* jargs = new FBlendJobArgs_Separable[ cargs->backdropWorkingRect.h ];
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            jargs[i] = FBlendJobArgs_Separable(
-                  i
-                , src_bps
-                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-            );
-        FJob* job = new FJob(
-              cargs->backdropWorkingRect.h
-            , &ResolveScheduledJobCall< FBlendJobArgs_Separable, FBlendCommandArgs, IMP >
-            , jargs );
-        iCommand->AddJob( job );
-    }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
-    {
-        // Multi: Multi Jobs - Single Task
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs_Separable* jargs = new FBlendJobArgs_Separable[ 1 ];
-            jargs[0] = FBlendJobArgs_Separable(
-                  i
-                , src_bps
-                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-            );
-            FJob* job = new FJob(
-                  1
-                , &ResolveScheduledJobCall< FBlendJobArgs_Separable, FBlendCommandArgs, IMP >
-                , jargs );
-            iCommand->AddJob( job );
-        }
-    }
-}
-
-template< void (*IMP)( const FBlendJobArgs_NonSeparable_MEM_Generic*, const FBlendCommandArgs* ) >
-ULIS_FORCEINLINE
-static
-void
-BuildTiledBlendJobs_NonSeparable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source.Bits();
-    uint8* bdp                  = cargs->backdrop.Bits();
-    const uint32 src_bps        = cargs->source.BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
-    const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
-    fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
-    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-    {
-        // Mono: Single Job - Multi Tasks
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs_NonSeparable_MEM_Generic* jargs = new FBlendJobArgs_NonSeparable_MEM_Generic[ cargs->backdropWorkingRect.h ];
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            jargs[i] = FBlendJobArgs_NonSeparable_MEM_Generic(
-                  i
-                , src_bps
-                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-            );
-        FJob* job = new FJob(
-              cargs->backdropWorkingRect.h
-            , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_MEM_Generic, FBlendCommandArgs, IMP >
-            , jargs );
-        iCommand->AddJob( job );
-    }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
-    {
-        // Multi: Multi Jobs - Single Task
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs_NonSeparable_MEM_Generic* jargs = new FBlendJobArgs_NonSeparable_MEM_Generic[ 1 ];
-            jargs[0] = FBlendJobArgs_NonSeparable_MEM_Generic(
-                  i
-                , src_bps
-                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-            );
-            FJob* job = new FJob(
-                  1
-                , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_MEM_Generic, FBlendCommandArgs, IMP >
-                , jargs );
-            iCommand->AddJob( job );
-        }
-    }
-}
-
-template< void (*IMP)( const FBlendJobArgs_NonSeparable_SSE_RGBA8*, const FBlendCommandArgs* ) >
-ULIS_FORCEINLINE
-static
-void
-BuildBlendJobs_NonSeparable_SSE_RGBA8( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source.Bits();
-    uint8* bdp                  = cargs->backdrop.Bits();
-    const uint32 src_bps        = cargs->source.BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
-    const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
-    const FFormatMetrics& fmt   = cargs->source.FormatMetrics();
-    fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
-    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
-    Vec4i idt = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-    {
-        // Mono: Single Job - Multi Tasks
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs = new FBlendJobArgs_NonSeparable_SSE_RGBA8[ cargs->backdropWorkingRect.h ];
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            jargs[i] = FBlendJobArgs_NonSeparable_SSE_RGBA8(
-                  i
-                , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled );
                 , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
                 , conv_forward_fptr
                 , conv_backward_fptr
@@ -359,98 +130,23 @@ BuildBlendJobs_NonSeparable_SSE_RGBA8( FCommand* iCommand, const FSchedulePolicy
             );
         FJob* job = new FJob(
               cargs->backdropWorkingRect.h
-            , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_SSE_RGBA8, FBlendCommandArgs, IMP >
+            , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
             , jargs );
         iCommand->AddJob( job );
     }
     else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
     {
-        // Multi: Multi Jobs - Single Task
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
         for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs = new FBlendJobArgs_NonSeparable_SSE_RGBA8[ 1 ];
-            jargs[0] = FBlendJobArgs_NonSeparable_SSE_RGBA8(
+            FBlendJobArgs* jargs = new FBlendJobArgs[ 1 ];
+            jargs[0] = FBlendJobArgs(
                   i
                 , src_bps
-                , src + ( ( src_decal_y + i ) * src_bps ) + src_decal_x
+                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled );
                 , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-                , idt
             );
             FJob* job = new FJob(
                   1
-                , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_SSE_RGBA8, FBlendCommandArgs, IMP >
-                , jargs );
-            iCommand->AddJob( job );
-        }
-    }
-}
-
-template< void (*IMP)( const FBlendJobArgs_NonSeparable_SSE_RGBA8*, const FBlendCommandArgs* ) >
-ULIS_FORCEINLINE
-static
-void
-BuildTiledBlendJobs_NonSeparable_MEM_Generic( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
-    const FBlendCommandArgs* cargs = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src            = cargs->source.Bits();
-    uint8* bdp                  = cargs->backdrop.Bits();
-    const uint32 src_bps        = cargs->source.BytesPerScanLine();
-    const uint32 bdp_bps        = cargs->backdrop.BytesPerScanLine();
-    const uint32 src_decal_y    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
-    const uint32 bdp_decal_x    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
-    fpConversionInvocation conv_forward_fptr  = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
-    fpConversionInvocation conv_backward_fptr = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
-    Vec4i idt = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-    {
-        // Mono: Single Job - Multi Tasks
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs = new FBlendJobArgs_NonSeparable_SSE_RGBA8[ cargs->backdropWorkingRect.h ];
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            jargs[i] = FBlendJobArgs_NonSeparable_SSE_RGBA8(
-                  i
-                , src_bps
-                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-                , idt
-            );
-        FJob* job = new FJob(
-              cargs->backdropWorkingRect.h
-            , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_SSE_RGBA8, FBlendCommandArgs, IMP >
-            , jargs );
-        iCommand->AddJob( job );
-    }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
-    {
-        // Multi: Multi Jobs - Single Task
-        // Same for both policies: Blend doesn't support chunk based scheduling
-        // as of now
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        //iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs = new FBlendJobArgs_NonSeparable_SSE_RGBA8[ 1 ];
-            jargs[0] = FBlendJobArgs_NonSeparable_SSE_RGBA8(
-                  i
-                , src_bps
-                , src + ( ( cargs->sourceRect.y + ( ( cargs->shift.y + i ) % cargs->sourceRect.h ) ) * src_bps ) + src_decal_x
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-                , idt
-            );
-            FJob* job = new FJob(
-                  1
-                , &ResolveScheduledJobCall< FBlendJobArgs_NonSeparable_SSE_RGBA8, FBlendCommandArgs, IMP >
+                , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
                 , jargs );
             iCommand->AddJob( job );
         }

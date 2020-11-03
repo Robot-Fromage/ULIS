@@ -25,7 +25,7 @@
 ULIS_NAMESPACE_BEGIN
 void
 InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -68,7 +68,7 @@ ScheduleTiledBlendMT_Separable_SSE_RGBA8(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildTiledBlendJobs_Separable< &InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8 >( iCommand, iPolicy );
+    BuildBlendJobs< &InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8 >( iCommand, iPolicy, true );
 }
 
 ULIS_NAMESPACE_END

@@ -18,7 +18,7 @@
 ULIS_NAMESPACE_BEGIN
 void
 InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 
@@ -30,7 +30,7 @@ ScheduleAlphaBlendMT_Separable_AVX_RGBA8_Subpixel(
 
 void
 InvokeAlphaBlendMTProcessScanline_Separable_AVX_RGBA8(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 

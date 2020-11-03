@@ -18,7 +18,7 @@
 ULIS_NAMESPACE_BEGIN
 void
 InvokeTiledBlendMTProcessScanline_Separable_SSE_RGBA8(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 

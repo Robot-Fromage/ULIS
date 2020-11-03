@@ -24,7 +24,7 @@
 ULIS_NAMESPACE_BEGIN
 void
 InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -146,12 +146,12 @@ ScheduleBlendMT_Separable_AVX_RGBA8_Subpixel(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildBlendJobs_Separable< &InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel >( iCommand, iPolicy );
+    BuildBlendJobs< &InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel >( iCommand, iPolicy );
 }
 
 void
 InvokeBlendMTProcessScanline_Separable_AVX_RGBA8(
-      const FBlendJobArgs_Separable* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
@@ -218,7 +218,7 @@ ScheduleBlendMT_Separable_AVX_RGBA8(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildBlendJobs_Separable< &InvokeBlendMTProcessScanline_Separable_AVX_RGBA8 >( iCommand, iPolicy );
+    BuildBlendJobs< &InvokeBlendMTProcessScanline_Separable_AVX_RGBA8 >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

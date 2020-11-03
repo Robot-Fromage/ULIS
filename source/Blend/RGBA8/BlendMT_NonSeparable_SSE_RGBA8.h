@@ -20,7 +20,7 @@ ULIS_NAMESPACE_BEGIN
 
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel(
-      const FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 
@@ -32,7 +32,7 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
 
 void
 InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
-      const FBlendJobArgs_NonSeparable_SSE_RGBA8* jargs
+      const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 

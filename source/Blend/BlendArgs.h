@@ -69,74 +69,14 @@ public:
 };
 
 /////////////////////////////////////////////////////
-// FBlendJobArgs_Separable
-class FBlendJobArgs_Separable final
+// FBlendJobArgs
+class FBlendJobArgs final
     : public IJobArgs
 {
 public:
 
-    ~FBlendJobArgs_Separable() override {};
-    FBlendJobArgs_Separable(
-          const uint32 iLine
-        , const uint32 iSrc_bps
-        , const uint8* iSrc
-        , uint8* iBdp
-    )
-        : IJobArgs()
-        , line( iLine )
-        , src_bps( iSrc_bps )
-        , src( iSrc )
-        , bdp( iBdp )
-    {}
-
-    const uint32 line;
-    const uint32 src_bps;
-    const uint8* const ULIS_RESTRICT src;
-    uint8* const ULIS_RESTRICT bdp;
-};
-
-/////////////////////////////////////////////////////
-// FBlendJobArgs_NonSeparable_MEM_Generic
-class FBlendJobArgs_NonSeparable_MEM_Generic final
-    : public IJobArgs
-{
-public:
-
-    ~FBlendJobArgs_NonSeparable_MEM_Generic() override {};
-    FBlendJobArgs_NonSeparable_MEM_Generic(
-          const uint32 iLine
-        , const uint32 iSrc_bps
-        , const uint8* iSrc
-        , uint8* iBdp
-        , fpConversionInvocation iFwd
-        , fpConversionInvocation iBkd
-    )
-        : IJobArgs()
-        , line( iLine )
-        , src_bps( iSrc_bps )
-        , src( iSrc )
-        , bdp( iBdp )
-        , fwd( iFwd )
-        , bkd( iBkd )
-    {}
-
-    const uint32 line;
-    const uint32 src_bps;
-    const uint8* const ULIS_RESTRICT src;
-    uint8* const ULIS_RESTRICT bdp;
-    const fpConversionInvocation fwd;
-    const fpConversionInvocation bkd;
-};
-
-/////////////////////////////////////////////////////
-// FBlendJobArgs_NonSeparable_SSE_RGBA8
-class FBlendJobArgs_NonSeparable_SSE_RGBA8 final
-    : public IJobArgs
-{
-public:
-
-    ~FBlendJobArgs_NonSeparable_SSE_RGBA8() override {};
-    FBlendJobArgs_NonSeparable_SSE_RGBA8(
+    ~FBlendJobArgs() override {};
+    FBlendJobArgs(
           const uint32 iLine
         , const uint32 iSrc_bps
         , const uint8* iSrc
