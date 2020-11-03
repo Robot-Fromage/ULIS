@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FontRegistry.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the registry classes for the Font Registry tools.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Text/FontRegistry.h"
@@ -23,14 +23,14 @@
 #include <algorithm>
 #include <tuple>
 
-#ifdef ULIS2_WIN
+#ifdef ULIS3_WIN
 #include <Windows.h>
 #endif
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFontStyleKey
 //--------------------------------------------------------------------------------------
@@ -147,21 +147,21 @@ FFontRegistry::~FFontRegistry()
 FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
     : mFontEngine( iFontEngine )
 {
-    #ifdef ULIS2_WIN
+    #ifdef ULIS3_WIN
         std::string sysfpath;
         CHAR windir[MAX_PATH];
         auto err = GetWindowsDirectoryA( windir, MAX_PATH );
-        ULIS2_ASSERT( err, "Error loading Windows directory path during font retrieval." );
+        ULIS3_ASSERT( err, "Error loading Windows directory path during font retrieval." );
         sysfpath = std::string( windir );
         ReplaceAllOccurences( sysfpath, "\\", "/" );
         sysfpath += "/Fonts/";
         mLookupPaths.push_back( sysfpath );
-    #elif defined ULIS2_MACOS
+    #elif defined ULIS3_MACOS
         mLookupPaths.push_back( "/System/Library/Fonts/" );
         mLookupPaths.push_back( "/Library/Fonts/" );
         mLookupPaths.push_back( "~/Library/Fonts/" );
         mLookupPaths.push_back( "/Network/Library/Fonts/" );
-    #elif defined ULIS2_LINUX
+    #elif defined ULIS3_LINUX
         mLookupPaths.push_back( "/usr/share/fonts/" );
         mLookupPaths.push_back( "/usr/local/share/fonts/" );
         mLookupPaths.push_back( "~/.fonts/" );
@@ -203,7 +203,7 @@ FFontRegistry::Load() {
     for( auto it : reg.GetMap() ) {
         FT_Face face;
         FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.Handle() ), it.second.c_str(), 0, &face );
-        ULIS2_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
+        ULIS3_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
         std::string style( face->style_name );
@@ -296,5 +296,5 @@ FFontRegistry::FontEngine() const
     return  mFontEngine;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

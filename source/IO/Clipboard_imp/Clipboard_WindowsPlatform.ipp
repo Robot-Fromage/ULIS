@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clipboard_Windows.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the clipboard IO entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "IO/Clipboard.h"
@@ -25,7 +25,7 @@
 
 #include <clip.h>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
@@ -33,7 +33,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iCallCB
                           , tFormat                 iDesiredFormat )
 {
-    ULIS2_ASSERT( iThreadPool, "Bad pool." );
+    ULIS3_ASSERT( iThreadPool, "Bad pool." );
 
     if( !ClipboardHasImageData() )
         return  nullptr;
@@ -54,8 +54,8 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     if( bi->bmiHeader.biCompression != BI_RGB && bi->bmiHeader.biCompression != BI_BITFIELDS )  return  nullptr;
 
     tFormat srcFormat = 0;
-    if( bits_per_pixel == 24 ) srcFormat = ULIS2_FORMAT_BGR8;
-    if( bits_per_pixel == 32 ) srcFormat = ULIS2_FORMAT_BGRA8;
+    if( bits_per_pixel == 24 ) srcFormat = ULIS3_FORMAT_BGR8;
+    if( bits_per_pixel == 32 ) srcFormat = ULIS3_FORMAT_BGRA8;
 
     tByte* src = ( ((tByte*)bi) + bi->bmiHeader.biSize );
     tFormat dstFormat = iDesiredFormat;
@@ -65,8 +65,8 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     FBlock* ret = new FBlock( w, h, dstFormat );
 
     // Assertions
-    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( srcFormat, dstFormat );
-    ULIS2_ASSERT( fptr, "No Conversion invocation found" );
+    fpConversionInvocation fptr = QueryDispatchedConversionInvocation( srcFormat, dstFormat );
+    ULIS3_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params
     int             dc          = bits_per_pixel == 24 ? 3 & w : 0;
@@ -82,7 +82,7 @@ FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
     const FFormatInfo* dstnfo = &ret->FormatInfo();
 
     // Call
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS2_BLOCKING
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS3_BLOCKING
                                    , numLines
                                    , fptr, srcnfo, SRC, dstnfo, DST, len );
 
@@ -98,10 +98,10 @@ void SaveToClipboard( FThreadPool*              iThreadPool
                     , const FBlock*             iSource )
 {
     // Assertions
-    ULIS2_ASSERT( iSource,                  "Bad source."                                           );
-    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS3_ASSERT( iSource,                  "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
 
-    FBlock* tmpConv = XConv( iThreadPool, ULIS2_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ULIS2_FORMAT_BGRA8 );
+    FBlock* tmpConv = XConv( iThreadPool, ULIS3_BLOCKING, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ULIS3_FORMAT_BGRA8 );
 
     clip::image_spec spec;
     spec.width = tmpConv->Width();
@@ -128,5 +128,5 @@ bool ClipboardHasImageData() {
     return  hasImageData;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         SimpleFluid.cpp
 * @author       Clement Berthaud
-* @brief        SimpleFluid application for ULIS2.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        SimpleFluid application for ULIS3.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "SimpleFluid.h"
@@ -33,12 +33,13 @@ SWindow::~SWindow() {
     delete  mBGParticleColor;
     delete  mDarkParticleColor;
     delete  mLightParticleColor;
+    XDeleteThreadPool( mPool );
 }
 
 
 SWindow::SWindow()
     : mHost( FHostDeviceInfo::Detect() )
-    , mPool()
+    , mPool( XCreateThreadPool() )
     , mWetCanvas( nullptr )
     , mDryCanvas( nullptr )
     , mParticle( nullptr )
@@ -54,8 +55,8 @@ SWindow::SWindow()
     , mDarkParticleColor( nullptr )
     , mLightParticleColor( nullptr )
 {
-    mWetCanvas = new FBlock( 1280, 900, ULIS2_FORMAT_RGBA8 );
-    mDryCanvas = new FBlock( 1280, 900, ULIS2_FORMAT_RGBA8 );
+    mWetCanvas = new FBlock( 1280, 900, ULIS3_FORMAT_RGBA8 );
+    mDryCanvas = new FBlock( 1280, 900, ULIS3_FORMAT_RGBA8 );
     mParticles.reserve( 10000 );
     mImage = new QImage( mWetCanvas->DataPtr(), mWetCanvas->Width(), mWetCanvas->Height(), mWetCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
@@ -67,9 +68,9 @@ SWindow::SWindow()
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    mBGParticleColor        = new FPixelValue( ULIS2_FORMAT_RGBA8, { 240, 240, 240, 255 } );
-    mDarkParticleColor      = new FPixelValue( ULIS2_FORMAT_RGBA8, { 170, 40, 0, 255 } );
-    mLightParticleColor     = new FPixelValue( ULIS2_FORMAT_RGBA8, { 255, 130, 80, 255 } );
+    mBGParticleColor        = new FPixelValue( ULIS3_FORMAT_RGBA8, { 240, 240, 240, 255 } );
+    mDarkParticleColor      = new FPixelValue( ULIS3_FORMAT_RGBA8, { 170, 40, 0, 255 } );
+    mLightParticleColor     = new FPixelValue( ULIS3_FORMAT_RGBA8, { 255, 130, 80, 255 } );
     mCurrentParticleColor   = mBGParticleColor;
     mCurrentBlendingMode = BM_MULTIPY;
     mCurrentOpacity = 0.05f;
@@ -100,8 +101,8 @@ SWindow::mouseReleaseEvent( QMouseEvent* event ) {
 void
 SWindow::keyPressEvent( QKeyEvent* event ) {
     if( event->key() == Qt::Key_Backspace ) {
-        Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_MT | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mWetCanvas, mWetCanvas->Rect() );
-        Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_MT | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mDryCanvas, mDryCanvas->Rect() );
+        Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mWetCanvas, mWetCanvas->Rect() );
+        Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDryCanvas, mDryCanvas->Rect() );
         mParticles.clear();
     }
 
@@ -153,17 +154,17 @@ SWindow::tickEvent() {
         }
     }
 
-    //Clear( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mWetCanvas, mWetCanvas->Rect() );
-    Copy( &mPool, ULIS2_BLOCKING, ULIS2_PERF_MT | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mDryCanvas, mWetCanvas, mDryCanvas->Rect(), FVec2I() );
+    //Clear( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mWetCanvas, mWetCanvas->Rect() );
+    Copy( mPool, ULIS3_BLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mDryCanvas, mWetCanvas, mDryCanvas->Rect(), FVec2I() );
 
     FRect sourceRect = mParticle->Rect();
     for( size_t i = 0; i < mParticles.size(); ++i ) {
         mParticles[i].p.x += mParticles[i].v.x = mParticles[i].v.x * 0.9f;
         mParticles[i].p.y += mParticles[i].v.y = mParticles[i].v.y * 0.9f;
-        Blend( &mPool, ULIS2_BLOCKING, ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42, mHost, ULIS2_NOCB, mParticle, mWetCanvas, sourceRect, mParticles[i].p, ULIS2_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
+        Blend( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mWetCanvas, sourceRect, mParticles[i].p, ULIS3_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
 
         if( abs( mParticles[i].v.x ) + abs( mParticles[i].v.y ) <= 1 ) {
-            Blend( &mPool, ULIS2_BLOCKING, ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42, mHost, ULIS2_NOCB, mParticle, mDryCanvas, sourceRect, mParticles[i].p, ULIS2_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
+            Blend( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42, mHost, ULIS3_NOCB, mParticle, mDryCanvas, sourceRect, mParticles[i].p, ULIS3_NOAA, mCurrentBlendingMode, AM_NORMAL, mCurrentOpacity );
             mParticles.erase( mParticles.begin() + i );
             --i;
         }
@@ -179,9 +180,9 @@ SWindow::RedrawParticle() {
     if( mParticle )
         delete  mParticle;
 
-    mParticle = new FBlock( mParticleSize, mParticleSize, ULIS2_FORMAT_RGBA8 );
-    ClearRaw( mParticle, ULIS2_NOCB );
-    Fill( &mPool, ULIS2_BLOCKING, ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, mHost, ULIS2_NOCB, mParticle, *mCurrentParticleColor, mParticle->Rect() );
+    mParticle = new FBlock( mParticleSize, mParticleSize, ULIS3_FORMAT_RGBA8 );
+    ClearRaw( mParticle, ULIS3_NOCB );
+    Fill( mPool, ULIS3_BLOCKING, ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, mHost, ULIS3_NOCB, mParticle, *mCurrentParticleColor, mParticle->Rect() );
 
     if( mParticleSize > 1 ) {
         float midx = mParticle->Width() / 2.f;

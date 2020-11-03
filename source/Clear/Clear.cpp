@@ -1,24 +1,28 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clear.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the Clear entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        This file provides the implementations for the Clear functions.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
-#include "Base/HostDeviceInfo.h"
 #include "Data/Block.h"
+#include "Base/HostDeviceInfo.h"
 #include "Maths/Geometry.h"
 #include "Thread/ThreadPool.h"
 
-ULIS2_NAMESPACE_BEGIN
-#ifdef __AVX2__
+ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Invocations
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- AVX
+#ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
 void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSize iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 32; index += iStride ) {
@@ -28,9 +32,11 @@ void InvokeFillMTProcessScanline_AX2( tByte* iDst, const tSize iCount, const tSi
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
     memset( iDst, 0, iCount - index );
 }
-#endif // __AVX2__
+#endif // ULIS3_COMPILETIME_AVX2_SUPPORT
 
-#ifdef __SSE4_2__
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- SSE
+#ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
 void InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const tSize iStride ) {
     int64 index;
     for( index = 0; index < int64( iCount ) - 16; index += iStride ) {
@@ -42,51 +48,57 @@ void InvokeFillMTProcessScanline_SSE4_2( tByte* iDst, const tSize iCount, const 
 }
 #endif // __SE4_2__
 
-void InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, tSize iStride ) {
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
+void InvokeFillMTProcessScanline_MEM( tByte* iDst, tSize iCount, const tSize iStride ) {
+    // Full scanline width instead of many BPP clears
     memset( iDst, 0, iCount );
 }
 
+/////////////////////////////////////////////////////
+// Implementation
 void Clear_imp( FThreadPool*            iThreadPool
-           , bool                       iBlocking
-           , uint32                     iPerfIntent
-           , const FHostDeviceInfo&     iHostDeviceInfo
-           , bool                       iCallCB
-           , FBlock*                    iDestination
-           , const FRect&               iArea )
+              , bool                    iBlocking
+              , uint32                  iPerfIntent
+              , const FHostDeviceInfo&  iHostDeviceInfo
+              , bool                    iCallCB
+              , FBlock*                 iDestination
+              , const FRect&            iArea )
 {
-    const FFormatInfo& fmt = iDestination->FormatInfo();
-    const tSize bpp = fmt.BPP;
-    const tSize w   = iDestination->Width();
-    const tSize bps = iDestination->BytesPerScanLine();
-    const tSize dsh = iArea.x * bpp;
-    tByte*      dsb = iDestination->DataPtr() + dsh;
+    const FFormatInfo&  fmt     = iDestination->FormatInfo();
+    const tSize         bpp     = fmt.BPP;
+    const tSize         w       = iDestination->Width();
+    const tSize         bps     = iDestination->BytesPerScanLine();
+    const tSize         dsh     = iArea.x * bpp;
+    tByte*              dsb     = iDestination->DataPtr() + dsh;
+    const tSize         count   = iArea.w * bpp;
     #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
 
-    #ifdef __AVX2__
-    if( ( iPerfIntent & ULIS2_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
+    #ifdef ULIS3_COMPILETIME_AVX2_SUPPORT
+    if( ( iPerfIntent & ULIS3_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
         const tSize stride = 32;
-        const tSize count = iArea.w * bpp;
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_AX2, DST, count, stride )
     } else
     #endif
-    #ifdef __SSE4_2__
-    if( ( iPerfIntent & ULIS2_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
+    #ifdef ULIS3_COMPILETIME_SSE42_SUPPORT
+    if( ( iPerfIntent & ULIS3_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
         const tSize stride = 16;
-        const tSize count = iArea.w * bpp;
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
                                        , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
     } else
     #endif
     {
-        ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+        ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                        , iArea.h
-                                       , InvokeFillMTProcessScanline_MEM, DST, iArea.w, bpp )
+                                       , InvokeFillMTProcessScanline_MEM, DST, count, bpp )
     }
 }
 
+/////////////////////////////////////////////////////
+// Clear
  void Clear( FThreadPool*              iThreadPool
            , bool                      iBlocking
            , uint32                    iPerfIntent
@@ -96,9 +108,9 @@ void Clear_imp( FThreadPool*            iThreadPool
            , const FRect&              iArea )
 {
     // Assertions
-    ULIS2_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS2_ASSERT( iThreadPool,              "Bad pool."                                             );
-    ULIS2_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iDestination,             "Bad source."                                           );
+    ULIS3_ASSERT( iThreadPool,              "Bad pool."                                             );
+    ULIS3_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
     // Fit region of interest
     FRect roi = iArea & iDestination->Rect();
 
@@ -113,11 +125,13 @@ void Clear_imp( FThreadPool*            iThreadPool
     iDestination->Invalidate( roi, iCallCB );
 }
 
+/////////////////////////////////////////////////////
+// ClearRaw
 void ClearRaw( FBlock* iDst, bool iCallCB ) {
-    ULIS2_ASSERT( iDst, "Bad destination" );
+    ULIS3_ASSERT( iDst, "Bad destination" );
     memset( iDst->DataPtr(), 0, iDst->BytesTotal() );
     iDst->Invalidate( iCallCB );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

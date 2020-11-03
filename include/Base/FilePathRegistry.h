@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FilePathRegistry.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the FFilePathRegistry class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -16,11 +16,11 @@
 #include <unordered_map>
 #include <vector>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFilePathRegistry
 /// @brief      The FFilePathRegistry class provides a mean of storing and manipulating file paths registry with filters.
-class ULIS2_API FFilePathRegistry
+class ULIS3_API FFilePathRegistry
 {
 public:
     // Construction / Destruction
@@ -51,5 +51,5 @@ private:
     std::unordered_map< std::string, std::string >  mMap; // < Name, Path >
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

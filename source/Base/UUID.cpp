@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         UUID.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definition for weak UUID functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Base/UUID.h"
@@ -16,7 +16,7 @@
 #include <sstream>
 #include <random>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Weak UUID
 //--------------------------------------------------------------------------------------
@@ -47,5 +47,5 @@ std::string GenerateWeakUUID( uint8 len )
 }
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

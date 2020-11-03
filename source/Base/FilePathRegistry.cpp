@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         FilePathRegistry.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FFilePathRegistry class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Base/FilePathRegistry.h"
@@ -25,7 +25,7 @@
 
 using namespace cppfs;
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // ConstDefault
 static const std::string sDefaultRet = "";
@@ -181,5 +181,5 @@ FFilePathRegistry::CreateName( const std::string& iFile )
     return  path.baseName();
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

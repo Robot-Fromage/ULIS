@@ -9,7 +9,7 @@ file(
 )
 
 add_executable( Test ${source_list} )
-target_link_libraries( Test ULIS2 )
+target_link_libraries( Test ULIS3 )
 
 # For MSVC parse pretty filter names
 foreach(source IN LISTS source_list)

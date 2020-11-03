@@ -19,16 +19,30 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
-#   if _WIN32
-#       include "cpu_x86_Windows.ipp"
-#   elif defined(__GNUC__) || defined(__clang__)
-#       include "cpu_x86_Linux.ipp"
-#   else
-#       error "No cpuid intrinsic defined for compiler."
-#   endif
+#if defined( ULIS3_EMSCRIPTEN )
+    namespace FeatureDetector{
+        void cpu_x86::cpuid(int32_t out[4], int32_t x){
+        }
+
+        int xgetbv(unsigned int x){
+            return  0;
+        }
+        bool cpu_x86::detect_OS_x64(){
+            return true;
+        }
+    }
 #else
-#   error "No cpuid intrinsic defined for processor architecture."
+    #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
+    #   if _WIN32
+    #       include "cpu_x86_Windows.ipp"
+    #   elif defined(__GNUC__) || defined(__clang__)
+    #       include "cpu_x86_Linux.ipp"
+    #   else
+    #       error "No cpuid intrinsic defined for compiler."
+    #   endif
+    #else
+    #   error "No cpuid intrinsic defined for processor architecture."
+    #endif
 #endif
 
 #ifndef _XCR_XFEATURE_ENABLED_MASK

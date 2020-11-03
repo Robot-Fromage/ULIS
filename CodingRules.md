@@ -10,8 +10,6 @@ The following documents provides the **Coding Rules** for this project.
 |Abstract class         |**I**Class             |
 |Template class         |**T**Class             |
 |Template Abstract class|**TAbstract**Class     |
-- Class declaration `class FClass`
-- Class end: `}; // class FClass`
 
 #### Namespaces
 |Type           |Prefix                                 |
@@ -23,25 +21,17 @@ The following documents provides the **Coding Rules** for this project.
 - Explicit access from Global namespace: `::nApplication::nWindow:: ... `
 - Never use the `using` directive, unless in a local function or function-like scope, especially for `std::`
 
-#### Files
-- Organisation:
-    - One directory per namespace.
-    - One class per file.
-- Naming:
-    - Library + Path + Class Name + Extension ( `ULIS.Base.AlignedMemory.h` )
-
 ### Include Directives
 - Use `#pragma once`
 - Include directives should be sorted first by type, then by name in alphanumeric order:
-    - C++ Standard Library Headers
-    - C Headers
+    - Application
     - Library1
     - Library2
-    - Application
+    - C++ Standard Library Headers
+    - C Headers
     - Platform-Specific
-- Includes within Application files should use the full path:`#include "ULIS/Base/ULIS.Base.AlignedMemory.h"`
-- Includes within Application files use double quotes:`""`
-- Includes withing Library files use brackets:`<>`
+- Includes of Application files use double quotes:`""`
+- Includes of Library files use brackets:`<>`
 
 ### Member Variables
 - **Member variables** of class should generally be private and start with lowercase prefix "**m**":
@@ -54,14 +44,7 @@ The following documents provides the **Coding Rules** for this project.
     ```
 
 ### Typedefs
-- **`typedef`** on basic primitive type can be named however you like without prefix, but avoid clustering the namespace with too much semantic typedefs.
-    ```
-    typedef uint32_t    uint32;     // OK
-    typedef uint8_t     byte;       // Clumsy...
-    typedef uint8_t     small_size; // Not OK.
-    ```
-
-- **`typedef`** on template class can be named with uppercase prefix "**F**":
+- **`typedef`** on template class instanciations can be named with uppercase prefix "**F**":
     ```
     typedef TNode< int > FNodeInt; // OK.
     ```
@@ -122,7 +105,6 @@ The following documents provides the **Coding Rules** for this project.
 
 ### Templates
 - As powerfull as it can be, use templates sparingly as it can lead to unmanageable code quickly.
-    - This is the reason ULIS2 was made in the first place: to get rid of too many template paths generating so much symbols in the resulting binary it could weight well over 1Gb on disk.
 
 ### License Header
 - Doxygen style comments:
@@ -137,3 +119,41 @@ The following documents provides the **Coding Rules** for this project.
 * @brief    This file provides the declarations for the FExample class.
 */
 ```
+
+### CRT Objects Across DLL Boundaries, CRT Safety
+- Keep in mind that the library or module could be linked dynamically against other modules, libraries or programs, where it is not always possible to ensure CRT compatibility.
+Don't forget to add **XXX_API** in front of classes, structs and function declarations that are meant to be part of the public API. Avoid mixing inline functions in an exported class.
+Extra care is needed when using templates, when possible use explicit template instanciations and export these instanciations.
+Make sure heaps don't get mixed up, when allocating memory in an implementation file, it should be deleted in an implementation file too.
+Don't allocate from an inline function in a header and delete in a destructor implemented in a source either.
+Avoid using threads and std members as part of the public API.
+Use the private implementation idiom if needed.
+Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+
+### SIMD Optimization
+- If you wish to implement an optimized version of an algorithm, always make sure that a generic non optimized version is available first.
+When implementing such optimizations, enclose it in preprocessor directives to ensure the host that compiles the program has compile time support for the intrinsic you wish to use.
+It may be the case on one computer, but they might be missing on another compiler or version.
+Before calling an optimized version of a function, granted it was compiled on a computer that supported the instrinsics, make sure the computer that runs the code also supports the intrinsic with runtime checks.
+Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+
+### Intermediate Results In Non-Blocking Operations
+- If the API you expose performs a non-blocking operation and uses intermediate results, the function might return and the intermediate result that lives on the stack will get deleted before the workers finished processing the task.
+In that case, you should use a shared pointer to ensure all workers keep a reference to the intermediate result, until all of them are finished.
+In that respect, copying intermediate results by value might be valid most of the time for basic types, but is not guaranteed to work for intrinsics data structures as they might be stored in registers and not passed the same way as other variables.
+Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+
+### Type Consistency And Possible Loss Of Data.
+- Solve all warnings of the form "about C4244: conversion from 'X' to 'Y', possible loss of data".
+
+### Casts
+- Always use C++ style cast such as static_cast, dynamic_cast, and such. Never use c-style casts.
+
+### Cross-Platform
+- Always target the broadest set of platforms. Never make assumptions about the target OS ( the only exception is to always target 64-bit, we don't care about 32-bit ). If some feature need platform specific implementation, use the available macros to dispatch the appropriate implementation at compile time.
+
+### Aim For Zero Warnings
+- Aim for zero compile time warnings at all times.
+
+### Lines Limit Per File
+- Whenever possible, keep the line count per file as low as possible. A file that has over 500 lines of code is considered bloated.

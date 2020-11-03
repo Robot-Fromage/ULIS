@@ -21,4 +21,4 @@ if [ -f CMakeCache.txt ]; then
 fi
 
 ## Rebuild Project
-cmake -G "Xcode" ../../ULIS2
+cmake -G "Xcode" ../../ULIS3

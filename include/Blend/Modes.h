@@ -1,20 +1,20 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Modes.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the Blend and Alpha modes enums and related info.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // eBlendingMode
 enum eBlendingMode
@@ -140,14 +140,14 @@ static const char* kwAlphaMode[] =
     , "Invalid"
 };
 
-
+/////////////////////////////////////////////////////
+// eBlendingModeQualifier
 enum eBlendingModeQualifier
 {
       BMQ_SEPARABLE
     , BMQ_NONSEPARABLE
     , BMQ_MISC
 };
-
 
 static
 inline
@@ -171,12 +171,9 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     }
 }
 
-#define ULIS2_ENCODE_BM_AM( iBM, iAM )  uint32( uint32( iBM ) | ( uint32( iAM ) << 16 ) )
-#define ULIS2_DECODE_BM( iENCODED )     eBlendingMode( iENCODED & 0xFFFF )
-#define ULIS2_DECODE_AM( iENCODED )     eBlendingMode( ( iENCODED >> 16 ) & 0xFFFF )
-
-// Macro for all types for template instanciation
-#define ULIS2_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )  \
+/////////////////////////////////////////////////////
+// Macros
+#define ULIS3_FOR_ALL_SEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )  \
     X( BM_NORMAL            , _E0, _E1, _E2, _E3 )              \
     X( BM_TOP               , _E0, _E1, _E2, _E3 )              \
     X( BM_BACK              , _E0, _E1, _E2, _E3 )              \
@@ -207,7 +204,7 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( BM_AVERAGE           , _E0, _E1, _E2, _E3 )              \
     X( BM_NEGATION          , _E0, _E1, _E2, _E3 )
 
-#define ULIS2_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )   \
+#define ULIS3_FOR_ALL_NONSEPARABLE_BM_DO( X, _E0, _E1, _E2, _E3 )   \
     X( BM_DARKERCOLOR       , _E0, _E1, _E2, _E3 )                  \
     X( BM_LIGHTERCOLOR      , _E0, _E1, _E2, _E3 )                  \
     X( BM_HUE               , _E0, _E1, _E2, _E3 )                  \
@@ -218,16 +215,16 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( BM_WHITEOUT          , _E0, _E1, _E2, _E3 )                  \
     X( BM_ANGLECORRECTED    , _E0, _E1, _E2, _E3 )
 
-#define ULIS2_FOR_ALL_MISC_BM_DO( X, _E0, _E1, _E2, _E3 )   \
+#define ULIS3_FOR_ALL_MISC_BM_DO( X, _E0, _E1, _E2, _E3 )   \
     X( BM_DISSOLVE          , _E0, _E1, _E2, _E3 )          \
     X( BM_BAYERDITHER8x8    , _E0, _E1, _E2, _E3 )
 
-#define ULIS2_FOR_ALL_BM_DO( X, _E0, _E1, _E2, _E3 )            \
-    ULIS2_FOR_ALL_SEPARABLE_BM_DO(      X, _E0, _E1, _E2, _E3 ) \
-    ULIS2_FOR_ALL_NONSEPARABLE_BM_DO(   X, _E0, _E1, _E2, _E3 ) \
-    ULIS2_FOR_ALL_MISC_BM_DO(           X, _E0, _E1, _E2, _E3 )
+#define ULIS3_FOR_ALL_BM_DO( X, _E0, _E1, _E2, _E3 )            \
+    ULIS3_FOR_ALL_SEPARABLE_BM_DO(      X, _E0, _E1, _E2, _E3 ) \
+    ULIS3_FOR_ALL_NONSEPARABLE_BM_DO(   X, _E0, _E1, _E2, _E3 ) \
+    ULIS3_FOR_ALL_MISC_BM_DO(           X, _E0, _E1, _E2, _E3 )
 
-#define ULIS2_FOR_ALL_AM_DO( X, _E0, _E1, _E2, _E3 )    \
+#define ULIS3_FOR_ALL_AM_DO( X, _E0, _E1, _E2, _E3 )    \
     X( AM_NORMAL        , _E0, _E1, _E2, _E3 )          \
     X( AM_ERASE         , _E0, _E1, _E2, _E3 )          \
     X( AM_TOP           , _E0, _E1, _E2, _E3 )          \
@@ -238,5 +235,5 @@ BlendingModeQualifier( eBlendingMode iBlendingMode )
     X( AM_MIN           , _E0, _E1, _E2, _E3 )          \
     X( AM_MAX           , _E0, _E1, _E2, _E3 )
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

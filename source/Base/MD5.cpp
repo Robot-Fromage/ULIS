@@ -1,14 +1,14 @@
-// Copyright// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         MD5.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definitions for MD5 functions and FMD5 class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Base/MD5.h"
@@ -32,7 +32,7 @@
 #define S43 15
 #define S44 21
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FMD5
 //--------------------------------------------------------------------------------------
@@ -353,5 +353,5 @@ MD5( const uint8* iData, int iLen )
 }
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

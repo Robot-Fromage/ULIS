@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Draw.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the raster draw entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Raster/Draw.h"
@@ -17,13 +17,13 @@
 #include "Conv/Conv.h"
 #include "Maths/Maths.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 void DrawDotNoAA( FBlock* iDst, const FPixelValue& iColor, const FVec2I iPos ) {
     if( !iDst->Rect().HitTest( iPos ) )
         return;
 
     tByte* ptr = iDst->PixelPtr( iPos.x, iPos.y );
-    fpDispatchedConvInvoke fptr = QueryDispatchedConvInvokeForParameters( iColor.Format(), iDst->Format() );
+    fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iColor.Format(), iDst->Format() );
     fptr( &iColor.FormatInfo(), iColor.Ptr(), &iDst->FormatInfo(), ptr, 1 );
 }
 
@@ -89,5 +89,19 @@ void DrawRectOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& 
     DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, iRect.x + iRect.w );
 }
 
-ULIS2_NAMESPACE_END
+void DrawUniformGridOutlineNoAA( FBlock* iDst, const FPixelValue& iColor, const FRect& iRect, int iNumSubdiv ) {
+    FPixelValue color( iDst->Format() );
+    Conv( iColor, color );
+    tByte* src = color.Ptr();
+    int stepX = iRect.w / iNumSubdiv;
+    int stepY = iRect.h / iNumSubdiv;
+    for( int x = iRect.x; x <= iRect.x + iRect.w; x += stepX )
+        DrawVerticalLineNoAA_UnsafeColor(   iDst, src, iRect.y, iRect.y + iRect.h, x );
+
+    for( int y = iRect.y; y <= iRect.y + iRect.h; y += stepY )
+        DrawHorizontalLineNoAA_UnsafeColor( iDst, src, iRect.x, iRect.x + iRect.w, y );
+
+}
+
+ULIS3_NAMESPACE_END
 

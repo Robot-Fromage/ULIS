@@ -1,20 +1,20 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         HostDeviceInfo.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FCPU struct.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Base/HostDeviceInfo.h"
 #include "cpu_x86.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// FHostDeviceInfo
 FHostDeviceInfo::FHostDeviceInfo( bool iVendor_AMD
@@ -136,5 +136,5 @@ FHostDeviceInfo::Detect() {
                            , tmp.HW_AVX512_VBMI );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

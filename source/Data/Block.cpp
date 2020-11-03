@@ -1,23 +1,23 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Block.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FBlock class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Data/Block.h"
-//#include "Base/UUID.h"
-#include "Maths/Geometry.h"
 #include "Base/CRC32.h"
 #include "Base/MD5.h"
+//#include "Base/UUID.h"
+#include "Maths/Geometry.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FBlock
 //--------------------------------------------------------------------------------------
@@ -43,22 +43,15 @@ FBlock::FBlock( int iWidth
     //, mUUID( GenerateWeakUUID( 16 ) )
     , mInfo( iFormat )
 {
-    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
 
     tSize num = mWidth * mHeight * mInfo.SPP;
-    ULIS2_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" )
+    ULIS3_ASSERT( num != 0, "Cannot allocate an image bulk buffer of size 0" )
 
-    // For proper alignment
-    switch( Type() ) {
-        case TYPE_UINT8     :   mData = reinterpret_cast< tByte* >( new uint8   [ num ] ); break;
-        case TYPE_UINT16    :   mData = reinterpret_cast< tByte* >( new uint16  [ num ] ); break;
-        case TYPE_UINT32    :   mData = reinterpret_cast< tByte* >( new uint32  [ num ] ); break;
-        case TYPE_UFLOAT    :   mData = reinterpret_cast< tByte* >( new ufloat  [ num ] ); break;
-        case TYPE_UDOUBLE   :   mData = reinterpret_cast< tByte* >( new udouble [ num ] ); break;
-    }
+    mData = new tByte[ mBTT ];
 }
 
 
@@ -78,8 +71,8 @@ FBlock::FBlock( tByte* iData
     //, mUUID( GenerateWeakUUID( 16 ) )
     , mInfo( iFormat )
 {
-    ULIS2_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS2_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    ULIS3_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS3_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
 
@@ -98,8 +91,8 @@ FBlock::DataPtr()
 tByte*
 FBlock::PixelPtr( int iX, int iY )
 {
-    ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
-    ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
+    ULIS3_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" );
+    ULIS3_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" );
     return  mData + ( iX * mInfo.BPP + iY * mBPS );
 }
 
@@ -107,7 +100,7 @@ FBlock::PixelPtr( int iX, int iY )
 tByte*
 FBlock::ScanlinePtr( int iRow )
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" );
+    ULIS3_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" );
     return  mData + ( iRow * mBPS );
 }
 
@@ -129,8 +122,8 @@ FBlock::AssignProfile( FColorProfile* iProfile )
 const tByte*
 FBlock::PixelPtr( int iX, int iY ) const
 {
-    ULIS2_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" )
-    ULIS2_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" )
+    ULIS3_ASSERT( iX >= 0 && iX < static_cast< int >( mWidth ),     "Index out of range" )
+    ULIS3_ASSERT( iY >= 0 && iY < static_cast< int >( mHeight ),    "Index out of range" )
     return  mData + ( iX * mInfo.BPP + iY * mBPS );
 }
 
@@ -138,7 +131,7 @@ FBlock::PixelPtr( int iX, int iY ) const
 const tByte*
 FBlock::ScanlinePtr( int iRow ) const
 {
-    ULIS2_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" )
+    ULIS3_ASSERT( iRow >= 0 && iRow < static_cast< int >( mHeight ), "Index out of range" )
     return  mData + ( iRow * mBPS );
 }
 
@@ -156,6 +149,11 @@ FBlock::Height() const
     return  mHeight;
 }
 
+tSize
+FBlock::Length() const
+{
+    return  mWidth * mHeight;
+}
 
 tSize
 FBlock::BytesPerSample() const
@@ -251,7 +249,7 @@ FBlock::Profile() const
 uint8
 FBlock::RedirectedIndex( uint8 iIndex ) const
 {
-    ULIS2_ASSERT( iIndex >= 0 && iIndex < mInfo.SPP, "Bad Index" );
+    ULIS3_ASSERT( iIndex >= 0 && iIndex < mInfo.SPP, "Bad Index" );
     return  mInfo.IDT[ iIndex ];
 }
 
@@ -259,7 +257,7 @@ FBlock::RedirectedIndex( uint8 iIndex ) const
 uint8
 FBlock::AlphaIndex() const
 {
-    ULIS2_ASSERT( mInfo.HEA, "Bad Call" );
+    ULIS3_ASSERT( mInfo.HEA, "Bad Call" );
     return  mInfo.AID;
 }
 
@@ -277,10 +275,10 @@ FBlock::Invalidate( const FRect& iRect, bool iCall ) const
     if( !iCall )
         return;
 
-    ULIS2_ASSERT( iRect.x >= 0 && iRect.x < (int)mWidth,                            "Index out of range" );
-    ULIS2_ASSERT( iRect.y >= 0 && iRect.y < (int)mHeight,                           "Index out of range" );
-    ULIS2_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int)mWidth,       "Index out of range" );
-    ULIS2_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int)mHeight,      "Index out of range" );
+    ULIS3_ASSERT( iRect.x >= 0 && iRect.x < (int)mWidth,                            "Index out of range" );
+    ULIS3_ASSERT( iRect.y >= 0 && iRect.y < (int)mHeight,                           "Index out of range" );
+    ULIS3_ASSERT( iRect.x + iRect.w >= 1 && iRect.x + iRect.w <= (int)mWidth,       "Index out of range" );
+    ULIS3_ASSERT( iRect.y + iRect.h >= 1 && iRect.y + iRect.h <= (int)mHeight,      "Index out of range" );
     mOnInvalid.ExecuteIfBound( this, iRect );
 }
 
@@ -315,14 +313,14 @@ FBlock::PixelProxy( int iX, int iY ) const
 uint32
 FBlock::CRC32() const
 {
-    return  ::ULIS2::CRC32( mData, BytesTotal() );
+    return  ::ULIS3::CRC32( mData, BytesTotal() );
 }
 
 
 std::string
 FBlock::MD5() const
 {
-    return  ::ULIS2::MD5( mData, BytesTotal() );
+    return  ::ULIS3::MD5( mData, BytesTotal() );
 }
 
 
@@ -351,7 +349,7 @@ void
 FBlock::TweakFormat( tFormat iFormat )
 {
     FFormatInfo newInfo( iFormat );
-    ULIS2_ASSERT( newInfo.BPP == mInfo.BPP, "Bad tweak operation" );
+    ULIS3_ASSERT( newInfo.BPP == mInfo.BPP, "Bad tweak operation" );
     mInfo = newInfo;
     mBPS = mWidth * mInfo.BPP;
     mBTT = mHeight * mBPS;
@@ -379,5 +377,28 @@ FBlock::ReleaseOwnership() {
     mOnCleanup = FOnCleanup( &OnCleanup_DoNothing );
 }
 
-ULIS2_NAMESPACE_END
+void
+FBlock::ResyncNonOwnedData( tByte* iData ) {
+    mOnCleanup.ExecuteIfBound( mData );
+    ReleaseOwnership();
+    mData = iData;
+}
+
+/////////////////////////////////////////////////////
+// X ... Block
+// for safety with different CRT and heaps when using dynamic link on windows.
+FBlock* XCreateBlock( int iWidth, int iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
+    return  new FBlock( iWidth, iHeight, iFormat, iProfile, iOnInvalid, iOnCleanup );
+}
+
+FBlock* XCreateBlock( tByte* iData, int iWidth, int iHeight, tFormat iFormat, FColorProfile* iProfile, const FOnInvalid& iOnInvalid, const FOnCleanup& iOnCleanup ) {
+    return  new FBlock( iData, iWidth, iHeight, iFormat, iProfile, iOnInvalid, iOnCleanup );
+}
+
+void
+XDeleteBlock( FBlock* iBlock ) {
+    delete  iBlock;
+}
+
+ULIS3_NAMESPACE_END
 

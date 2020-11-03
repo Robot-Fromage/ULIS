@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Extract.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definitions for the Extract entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/Trim.h"
@@ -19,7 +19,7 @@
 #include "Thread/ThreadPool.h"
 #include <atomic>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
 template< typename T >
 void InvokeDetectTrimAlphaEdge( int32 iLine, size_t iW, const tByte* iSrc, const FFormatInfo* iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot ) {
@@ -55,9 +55,9 @@ FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
                                 , const FBlock*           iSource )
 {
     // Assertions
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
 
     // Format info
     const FFormatInfo& fmt( iSource->FormatInfo() );
@@ -74,13 +74,13 @@ FRect GetTrimmedTransparencyRect( FThreadPool*            iThreadPool
     std::atomic_int bot( 0 );
 
     fpDispatchedDetectTrimAlphaEdgeInvoke fptr = QueryDispatchedDetectTrimAlphaEdgeInvokeForParameters( iSource->Type() );
-    ULIS2_ASSERT( fptr, "No invocation found." );
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS2_BLOCKING
+    ULIS3_ASSERT( fptr, "No invocation found." );
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, ULIS3_BLOCKING
                                    , max
                                    , fptr, pLINE, len, src, &fmt, &left, &top, &right, &bot );
     iSource->Invalidate( iCallCB );
     return  FRect( left, top, ( right - left ) + 1, ( bot - top ) + 1 );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

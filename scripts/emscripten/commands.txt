@@ -1,0 +1,2 @@
+emcmake cmake ..\ULIS3\.
+emmake cmake --build .

@@ -28,7 +28,7 @@ if [ -f CMakeCache.txt ]; then
 fi
 
 ## Rebuild Project
-cmake -G "Sublime Text 2 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ../../../ULIS2
+cmake -G "Sublime Text 2 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ../../../ULIS3
 
 cd ..
 ## Make Debug dir for generated project if not exist
@@ -49,4 +49,4 @@ if [ -f CMakeCache.txt ]; then
 fi
 
 ## Rebuild Project
-cmake -G "Sublime Text 2 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../../../ULIS2
+cmake -G "Sublime Text 2 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../../../ULIS3

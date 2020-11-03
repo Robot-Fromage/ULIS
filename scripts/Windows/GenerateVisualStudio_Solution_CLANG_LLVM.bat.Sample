@@ -1,4 +1,4 @@
-REM Put this file in a neighbour directory of ULIS2 repository.
+REM Put this file in a neighbour directory of ULIS3 repository.
 
 @echo off
 setlocal
@@ -16,4 +16,4 @@ IF EXIST cmake_install.cmake ( del cmake_install.cmake )
 IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 
 :: Rebuild Project
-cmake -G "Visual Studio 15 2017 Win64" -T"llvm" ../../ULIS2
+cmake -G "Visual Studio 15 2017 Win64" -T"llvm" ../../ULIS3

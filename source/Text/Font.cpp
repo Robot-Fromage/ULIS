@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Font.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FFont class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Text/Font.h"
@@ -18,7 +18,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFont
 //--------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ FFont::FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily, co
 {
     std::string fpath = mFontRegistry.FuzzyFindFontPath( iFamily, iStyle );
     FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.Handle() ), fpath.c_str(), 0, reinterpret_cast< FT_Face* >( &mHandle ) );
-    ULIS2_ASSERT( !error, "Error initializing font handle" );
+    ULIS3_ASSERT( !error, "Error initializing font handle" );
 }
 
 
@@ -72,5 +72,5 @@ FFont::FontRegistry() const
 }
 
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

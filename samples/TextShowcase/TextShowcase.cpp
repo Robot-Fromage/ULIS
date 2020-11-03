@@ -1,17 +1,17 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         TextShowcase.cpp
 * @author       Clement Berthaud
-* @brief        TextShowcase application for ULIS2.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        TextShowcase application for ULIS3.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
+#include <ULIS3>
 
 #include <QApplication>
 #include <QWidget>
@@ -21,11 +21,11 @@
 
 #include <codecvt>
 
-using namespace ::ul2;
+using namespace ::ul3;
 
 int
 main( int argc, char *argv[] ) {
-    FThreadPool  threadPool;
+    FThreadPool* threadPool = XCreateThreadPool();
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     FFontEngine fontEngine;
@@ -40,10 +40,10 @@ main( int argc, char *argv[] ) {
     int canvasHeight = entryHeight * gridy;
 
     FRect globalRect( 0, 0, canvasWidth, canvasHeight );
-    FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, ULIS2_FORMAT_RGBA8 );
-    FPixelValue black( ULIS2_FORMAT_RGBA8, { 0, 0, 0, 255 } );
-    FPixelValue white( ULIS2_FORMAT_RGBA8, { 255, 255, 255, 255 } );
-    Fill( &threadPool, ULIS2_NONBLOCKING, ULIS2_PERF_MT | ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2, host, ULIS2_NOCB, blockCanvas, white, globalRect );
+    FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, ULIS3_FORMAT_RGBA8 );
+    FPixelValue black( ULIS3_FORMAT_RGBA8, { 0, 0, 0, 255 } );
+    FPixelValue white( ULIS3_FORMAT_RGBA8, { 255, 255, 255, 255 } );
+    Fill( threadPool, ULIS3_NONBLOCKING, ULIS3_PERF_MT | ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2, host, ULIS3_NOCB, blockCanvas, white, globalRect );
     std::cout << fontRegistry.NumStyles();
     int i = 0;
     for( auto family : fontRegistry.GetFamilies() ) {
@@ -59,7 +59,7 @@ main( int argc, char *argv[] ) {
             std::wstring_convert<convert_type, wchar_t> converter;
             std::wstring wtxt = converter.from_bytes(txt);
 
-            RenderText( &threadPool, ULIS2_BLOCKING, 0, host, ULIS2_NOCB, blockCanvas, wtxt, font, fontSize, black, FTransform2D( MakeTranslationMatrix( x, y ) ), ULIS2_NOAA );
+            RenderText( threadPool, ULIS3_BLOCKING, 0, host, ULIS3_NOCB, blockCanvas, wtxt, font, fontSize, black, FTransform2D::MakeTranslationTransform( x, y ), ULIS3_NOAA );
             ++i;
         }
     }
@@ -84,6 +84,7 @@ main( int argc, char *argv[] ) {
     delete  widget;
 
     delete  blockCanvas;
+    XDeleteThreadPool( threadPool );
 
     return  exit_code;
 }

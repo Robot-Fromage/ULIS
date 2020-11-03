@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Bezier.h
 * @author       Clement Berthaud
 * @brief        This file provides the Bezier methods declaration.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -17,16 +17,16 @@
 #include "Maths/Maths.h"
 #include <vector>
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Bezier Functions
-struct ULIS2_API FBezierLUTElement {
+struct FBezierLUTElement {
     FVec2F point;
     float length;
     float param;
 };
 
-struct ULIS2_API FBezierCubicControlPoint {
+struct FBezierCubicControlPoint {
     FVec2F point;
     FVec2F ctrlCW;
     FVec2F ctrlCCW;
@@ -100,7 +100,7 @@ template< class T > inline FRect CubicBezierConvexHullRect( const T& iP0, const 
     return  FRect::FromMinMax( xmin, ymin, xmax, ymax );
 }
 
-float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FBezierLUTElement >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThresholdSquared, float iLengthOffset = 0.f, float iParamOffset = 0.f, float iParamDepth = 1.f ) {
+ULIS3_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FBezierLUTElement >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThresholdSquared, float iLengthOffset = 0.f, float iParamOffset = 0.f, float iParamDepth = 1.f ) {
     FVec2F mid = CubicBezierPointAtParameter( iP0, iP1, iP2, iP3, 0.5f );
     float lengthSquaredSegmentA = ( iP0 - mid ).DistanceSquared();
     float lengthSquaredSegmentB = ( mid - iP3 ).DistanceSquared();
@@ -129,7 +129,7 @@ float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FBezierLUTElement >
 }
 
 
-float inline CubicBezierGenerateLinearLUT( std::vector< FBezierLUTElement >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThreshold ) {
+ULIS3_API float inline CubicBezierGenerateLinearLUT( std::vector< FBezierLUTElement >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThreshold ) {
     oArray->clear();
     oArray->push_back( { iP0, 0.f } );
     float length = CubicBezierGenerateLinearLUT_imp( oArray, iP0, iP1, iP2, iP3, iThreshold*iThreshold );
@@ -161,5 +161,5 @@ void inline CubicBezierRelinearizeLUT( const std::vector< FBezierLUTElement >& i
 }
 */
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

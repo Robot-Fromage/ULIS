@@ -1,20 +1,20 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         CPUDeviceInfo.cpp
 * @author       Clement Berthaud
-* @brief        CPUDeviceInfo application for ULIS2.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        CPUDeviceInfo application for ULIS3.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
+#include <ULIS3>
 
 int main( int argc, char *argv[] ) {
-    ::ul2::FHostDeviceInfo deviceInfo = ::ul2::FHostDeviceInfo::Detect();
+    ::ul3::FHostDeviceInfo deviceInfo = ::ul3::FHostDeviceInfo::Detect();
     const char* out[] = { "NO", "YES" };
     std::cout << "Vendor_AMD        : " << out[ deviceInfo.Vendor_AMD       ] << std::endl;
     std::cout << "Vendor_Intel      : " << out[ deviceInfo.Vendor_Intel     ] << std::endl;
@@ -53,6 +53,7 @@ int main( int argc, char *argv[] ) {
     std::cout << "HW_AVX512_DQ      : " << out[ deviceInfo.HW_AVX512_DQ     ] << std::endl;
     std::cout << "HW_AVX512_IFMA    : " << out[ deviceInfo.HW_AVX512_IFMA   ] << std::endl;
     std::cout << "HW_AVX512_VBMI    : " << out[ deviceInfo.HW_AVX512_VBMI   ] << std::endl;
+    std::cout << "MAX WORKERS       : " << ::ul3::MaxWorkers()                << std::endl;
     return  0;
 }
 

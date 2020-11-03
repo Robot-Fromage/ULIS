@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Dispatch.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic Text entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -16,7 +16,7 @@
 #include "Text/Dispatch/TextInfo.h"
 #include "Text/Dispatch/Generic/TraceTextMono_Generic.ipp"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 // Dispatch Typedefs ( implemented in dispatch.ipp but available from public API )
 typedef void (*fpDispatchedTextFunc)( std::shared_ptr< _FPrivateTextInfo > );
 
@@ -47,5 +47,5 @@ QueryDispatchedTextFunctionForParameters( eType iType ) {
     return  nullptr;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

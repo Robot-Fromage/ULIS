@@ -1,0 +1,1 @@
+gource -c 4 -s 1 --filename-time 2

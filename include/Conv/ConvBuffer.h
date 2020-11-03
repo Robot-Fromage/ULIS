@@ -1,21 +1,29 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         ConvBuffer.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the ConvBuffer entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Typedefs
+typedef void (*fpConversionInvocation)( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
+ULIS3_API fpConversionInvocation QueryDispatchedConversionInvocation( uint32 iSrcFormat, uint32 iDstFormat );
 
+/////////////////////////////////////////////////////
+// Explicit Conv Entry Points
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------ To Grey
 template< typename T1, typename T2 > void ConvBufferGreyToGrey( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToGrey(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToGrey(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -27,6 +35,8 @@ template< typename T1, typename T2 > void ConvBufferLabToGrey(  const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToGrey(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToGrey(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToRGB
 template< typename T1, typename T2 > void ConvBufferGreyToRGB(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToRGB(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToRGB(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -38,6 +48,8 @@ template< typename T1, typename T2 > void ConvBufferLabToRGB(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToRGB(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToRGB(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToHSV
 template< typename T1, typename T2 > void ConvBufferGreyToHSV(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToHSV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToHSV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -49,6 +61,8 @@ template< typename T1, typename T2 > void ConvBufferLabToHSV(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToHSV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToHSV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToHSL
 template< typename T1, typename T2 > void ConvBufferGreyToHSL(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToHSL(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToHSL(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -60,6 +74,8 @@ template< typename T1, typename T2 > void ConvBufferLabToHSL(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToHSL(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToHSL(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToCMY
 template< typename T1, typename T2 > void ConvBufferGreyToCMY(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToCMY(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToCMY(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -71,6 +87,8 @@ template< typename T1, typename T2 > void ConvBufferLabToCMY(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToCMY(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToCMY(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------- ToCMYK
 template< typename T1, typename T2 > void ConvBufferGreyToCMYK( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToCMYK(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToCMYK(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -82,6 +100,8 @@ template< typename T1, typename T2 > void ConvBufferLabToCMYK(  const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToCMYK(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToCMYK(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToYUV
 template< typename T1, typename T2 > void ConvBufferGreyToYUV(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToYUV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToYUV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -93,6 +113,8 @@ template< typename T1, typename T2 > void ConvBufferLabToYUV(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToYUV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToYUV(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToLab
 template< typename T1, typename T2 > void ConvBufferGreyToLab(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -104,6 +126,8 @@ template< typename T1, typename T2 > void ConvBufferLabToLab(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToLab(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToXYZ
 template< typename T1, typename T2 > void ConvBufferGreyToXYZ(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToXYZ(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToXYZ(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -115,6 +139,8 @@ template< typename T1, typename T2 > void ConvBufferLabToXYZ(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToXYZ(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToXYZ(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
+//--------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------- ToYxy
 template< typename T1, typename T2 > void ConvBufferGreyToYxy(  const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferRGBToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferHSVToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
@@ -126,8 +152,5 @@ template< typename T1, typename T2 > void ConvBufferLabToYxy(   const FFormatInf
 template< typename T1, typename T2 > void ConvBufferXYZToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 template< typename T1, typename T2 > void ConvBufferYxyToYxy(   const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
 
-typedef void (*fpDispatchedConvInvoke)( const FFormatInfo* iSrcFormat, const tByte* iSrc, const FFormatInfo* iDstFormat, tByte* iDst, tSize iLen );
-ULIS2_API fpDispatchedConvInvoke QueryDispatchedConvInvokeForParameters( uint32 iSrcFormat, uint32 iDstFormat );
-
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 
