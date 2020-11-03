@@ -65,6 +65,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Helper for Redundant Job building and scheduling operations
 ULIS_FORCEINLINE
+static
 Vec4i
 BuildRGBA8IndexTable( uint8 iRS )
 {
