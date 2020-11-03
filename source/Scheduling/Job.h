@@ -28,7 +28,7 @@ template< typename T, typename U, void (*IMP)( const T*, const U* ) >
 static ULIS_FORCEINLINE void ResolveScheduledJobCall( const IJobArgs* iJobArgs, const ICommandArgs* iCommandArgs )
 {
     const T* job_args = dynamic_cast< const T* >( iJobArgs );
-    const T* cmd_args = dynamic_cast< const U* >( iCommandArgs );
+    const U* cmd_args = dynamic_cast< const U* >( iCommandArgs );
     ULIS_ASSERT( job_args, "Bad cast" );
     ULIS_ASSERT( cmd_args, "Bad cast" );
     IMP( job_args, cmd_args );

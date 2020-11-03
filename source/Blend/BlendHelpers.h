@@ -113,6 +113,7 @@ BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool i
     const uint32 src_decal_y                    = cargs->shift.y + cargs->sourceRect.y;
     const uint32 src_decal_x                    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
     const uint32 bdp_decal_x                    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
+    const FFormatMetrics& fmt                   = cargs->source.FormatMetrics();
     fpConversionInvocation conv_forward_fptr    = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
     fpConversionInvocation conv_backward_fptr   = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
     Vec4i idt                                   = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
@@ -124,7 +125,7 @@ BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool i
             new ( buf + sizeof( FBlendJobArgs ) * i ) FBlendJobArgs(
                   i
                 , src_bps
-                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled );
+                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled )
                 , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
                 , conv_forward_fptr
                 , conv_backward_fptr
@@ -144,8 +145,11 @@ BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool i
             new ( buf ) FBlendJobArgs(
                   i
                 , src_bps
-                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled );
+                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled )
                 , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
+                , conv_forward_fptr
+                , conv_backward_fptr
+                , idt
             );
             FJob* job = new FJob(
                   1
