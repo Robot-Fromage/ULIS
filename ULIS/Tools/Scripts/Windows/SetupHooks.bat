@@ -1,0 +1,1 @@
+git config core.hooksPath ULIS/Tools/Scripts/Hooks/
