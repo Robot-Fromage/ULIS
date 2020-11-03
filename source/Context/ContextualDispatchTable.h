@@ -36,6 +36,7 @@ public:
             case BlendQualifier_Misc            : return  mScheduleBlendMisc;
             case BlendQualifier_Separable       : return  mScheduleBlendSeparable;
             case BlendQualifier_NonSeparable    : return  mScheduleBlendNonSeparable;
+            default: return  nullptr;
         }
     }
 
@@ -45,6 +46,7 @@ public:
             case BlendQualifier_Misc            : return  mScheduleBlendMiscSubpixel;
             case BlendQualifier_Separable       : return  mScheduleBlendSeparableSubpixel;
             case BlendQualifier_NonSeparable    : return  mScheduleBlendNonSeparableSubpixel;
+            default: return  nullptr;
         }
     }
 
