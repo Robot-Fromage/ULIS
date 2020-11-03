@@ -117,9 +117,10 @@ BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool i
     Vec4i idt                                   = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
-        FBlendJobArgs* jargs = new FBlendJobArgs[ cargs->backdropWorkingRect.h ];
+        uint8* buf = new uint8[ cargs->backdropWorkingRect.h * sizeof( FBlendJobArgs ) ];
+        FBlendJobArgs* jargs = reinterpret_cast< FBlendJobArgs* >( buf );
         for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            jargs[i] = FBlendJobArgs(
+            new ( buf + sizeof( FBlendJobArgs ) * i ) FBlendJobArgs(
                   i
                 , src_bps
                 , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled );
@@ -137,8 +138,9 @@ BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool i
     else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
     {
         for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            FBlendJobArgs* jargs = new FBlendJobArgs[ 1 ];
-            jargs[0] = FBlendJobArgs(
+            uint8* buf = new uint8[ sizeof( FBlendJobArgs ) ];
+            FBlendJobArgs* jargs = reinterpret_cast< FBlendJobArgs* >( buf );
+            new ( buf ) FBlendJobArgs(
                   i
                 , src_bps
                 , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled );
