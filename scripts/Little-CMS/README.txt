@@ -1,0 +1,1 @@
+This CMakeLists.txt file can be copied in the root of the Little-CMS repository to allow easy out of source build.

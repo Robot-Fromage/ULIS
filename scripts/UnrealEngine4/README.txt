@@ -1,0 +1,1 @@
+This ULIS2.Build.cs file can be used to turn the ULIS2 library into an UnrealEngine4 Editor Module. Simply make a distribution with the built binaries and includes, along with the required dependencies and copy the build.cs file to make a ThirdParty module.

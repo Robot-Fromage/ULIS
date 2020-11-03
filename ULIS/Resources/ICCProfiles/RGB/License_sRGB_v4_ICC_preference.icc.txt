@@ -1,7 +1,0 @@
- Terms of use
-
-To anyone who acknowledges that the file "sRGB_v4_ICC_preference.icc" is provided "AS IS" WITH NO EXPRESS OR IMPLIED WARRANTY, permission to use, copy and distribute this file for any purpose is hereby granted without fee, provided that the file is not changed including the ICC copyright notice tag, and that the name of ICC shall not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. ICC makes no representations about the suitability of this software for any purpose. 
-
- Display class version
-
-The sRGB_v4_ICC_preference.icc profile is of the profile class 'colorspace'. While ICC recommends this version is used, some applications fail to recognize colorspace class profiles. A workaround for such cases is to use a 'display' class version (identical in all respects except for the profile class field in the header, and the profileID value). The display class version is subject to the same terms of use as the colorspace class version. 

@@ -1,4 +1,4 @@
-Praxinos/ULIS repository is under the CC-BY-NC-ND-4.0 licence  
+Praxinos/ULIS2 repository is under the CC-BY-NC-ND-4.0 licence  
 https://creativecommons.org/licenses/by-nc-nd/4.0/
 
 Here is the text in english, you can also find other languages here :  
