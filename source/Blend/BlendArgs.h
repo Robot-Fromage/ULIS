@@ -18,6 +18,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Conv/ConvBuffer.h"
+#include "Image/Block.h"
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN

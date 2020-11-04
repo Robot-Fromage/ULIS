@@ -31,6 +31,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic(
 )
 {
     const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const uint8* ULIS_RESTRICT  base = jargs->src;
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
@@ -53,7 +54,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic(
                 src += fmt.BPP;
                 bdp += fmt.BPP;
                 if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
-                    src = iSrc;
+                    src = base;
             }
             break;
         }
@@ -72,7 +73,7 @@ InvokeTiledBlendMTProcessScanline_Misc_MEM_Generic(
                 src += fmt.BPP;
                 bdp += fmt.BPP;
                 if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
-                    src = iSrc;
+                    src = base;
             }
             break;
         }

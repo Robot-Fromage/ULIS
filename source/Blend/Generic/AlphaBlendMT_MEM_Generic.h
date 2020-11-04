@@ -39,15 +39,15 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    const bool notLastLine  = jargs->line < cargs->backdropCoverage.y;
+    const bool notLastLine  = jargs->line < uint32( cargs->backdropCoverage.y );
     const bool notFirstLine = jargs->line > 0;
     const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
     const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
     const bool hasTopData   = cargs->sourceRect.y + cargs->shift.y > 0;
 
     ufloat m11, m01, m10, m00, vv0, vv1, res;
-    m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,            fmt.AID ) : 0.f;
-    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - iSrcBps - fmt.BPP,  fmt.AID ) : 0.f;
+    m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;
+    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - jargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
     vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
     for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
