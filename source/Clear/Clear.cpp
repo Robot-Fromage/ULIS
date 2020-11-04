@@ -128,10 +128,9 @@ void Clear_imp( FOldThreadPool*            iOldThreadPool
 
 /////////////////////////////////////////////////////
 // ClearRaw
-void ClearRaw( FBlock* iDst, bool iCallCB ) {
-    ULIS_ASSERT( iDst, "Bad destination" );
-    memset( iDst->Bits(), 0, iDst->BytesTotal() );
-    iDst->Dirty( iCallCB );
+void ClearRaw( FBlock& iDst, bool iCallDirty ) {
+    memset( iDst.Bits(), 0, iDst.BytesTotal() );
+    iDst.Dirty( iCallDirty );
 }
 
 ULIS_NAMESPACE_END

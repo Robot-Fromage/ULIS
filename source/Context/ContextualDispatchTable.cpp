@@ -23,6 +23,11 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleBlendSeparableSubpixel(      TDispatcher< FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector >     ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleBlendNonSeparableSubpixel(   TDispatcher< FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector >  ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleBlendMiscSubpixel(           TDispatcher< FDispatchedBlendMiscSubpixelInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleAlphaBlend(                  TDispatcher< FDispatchedAlphaBlendSeparableInvocationSchedulerSelector >        ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleAlphaBlendSubpixel(          TDispatcher< FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector >::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleTiledBlendSeparable(         TDispatcher< FDispatchedTiledBlendSeparableInvocationSchedulerSelector >        ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleTiledBlendNonSeparable(      TDispatcher< FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector >     ::Query( iHardwareMetrics, iFormat ) )
+        , mScheduleTiledBlendMisc(              TDispatcher< FDispatchedTiledBlendMiscInvocationSchedulerSelector >             ::Query( iHardwareMetrics, iFormat ) )
 {}
 
 FContext::FContextualDispatchTable::~FContextualDispatchTable()

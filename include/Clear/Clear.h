@@ -27,7 +27,7 @@ ULIS_API void Clear( FOldThreadPool*              iOldThreadPool
 
 /////////////////////////////////////////////////////
 // ClearRaw
-ULIS_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
+ULIS_API void ClearRaw( FBlock& iSrc, bool iCallDirty = false );
 
 ULIS_NAMESPACE_END
 

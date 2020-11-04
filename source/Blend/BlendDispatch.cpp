@@ -72,5 +72,48 @@ ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendNonSeparableSubpi
 ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector )
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector )
 
+
+/////////////////////////////////////////////////////
+// AlphaBlend
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedAlphaBlendSeparableInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleAlphaBlendMT_Separable_AVX_RGBA8
+        , &ScheduleAlphaBlendMT_Separable_SSE_RGBA8
+        , &ScheduleAlphaBlendMT_Separable_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedAlphaBlendSeparableInvocationSchedulerSelector )
+
+/////////////////////////////////////////////////////
+// AlphaBlend Subpixel
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleAlphaBlendMT_Separable_AVX_RGBA8_Subpixel
+        , &ScheduleAlphaBlendMT_Separable_SSE_RGBA8_Subpixel
+        , &ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector )
+
+
+/////////////////////////////////////////////////////
+// TiledBlend
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTiledBlendSeparableInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTiledBlendMT_Separable_SSE_RGBA8
+        , &ScheduleTiledBlendMT_Separable_SSE_RGBA8
+        , &ScheduleTiledBlendMT_Separable_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTiledBlendSeparableInvocationSchedulerSelector )
+
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8
+        , &ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8
+        , &ScheduleTiledBlendMT_NonSeparable_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector )
+
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTiledBlendMiscInvocationSchedulerSelector )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTiledBlendMiscInvocationSchedulerSelector )
+
 ULIS_NAMESPACE_END
 

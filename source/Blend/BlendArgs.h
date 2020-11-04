@@ -27,19 +27,25 @@ class FBlendCommandArgs final
     : public ICommandArgs
 {
 public:
-    ~FBlendCommandArgs() override {};
+    ~FBlendCommandArgs() override
+    {
+        if( color )
+            delete color;
+    };
+
     FBlendCommandArgs(
           const FBlock& iSource
         , FBlock& iBackdrop
-        , FRectI iSourceRect
-        , FVec2F iSubpixelComponent
-        , FVec2F iBuspixelComponent
-        , eBlendMode iBlendingMode
-        , eAlphaMode iAlphaMode
-        , ufloat iOpacity
-        , FVec2I iShift
-        , FVec2I iBackdropCoverage
-        , FRectI iBackdropWorkingRect
+        , const FRectI& iSourceRect
+        , const FVec2F& iSubpixelComponent
+        , const FVec2F& iBuspixelComponent
+        , const eBlendMode iBlendingMode
+        , const eAlphaMode iAlphaMode
+        , const ufloat iOpacity
+        , const FVec2I& iShift
+        , const FVec2I& iBackdropCoverage
+        , const FRectI& iBackdropWorkingRect
+        , const FBlock* iColor = nullptr
     )
         : ICommandArgs()
         , source( iSource )
@@ -53,6 +59,7 @@ public:
         , shift( iShift )
         , backdropCoverage( iBackdropCoverage )
         , backdropWorkingRect( iBackdropWorkingRect )
+        , color( iColor )
         {}
 
     const FBlock& source;
@@ -66,6 +73,7 @@ public:
     const FVec2I shift;
     const FVec2I backdropCoverage;
     const FRectI backdropWorkingRect;
+    const FBlock* const color;
 };
 
 /////////////////////////////////////////////////////
@@ -80,10 +88,10 @@ public:
           const uint32 iLine
         , const uint32 iSrc_bps
         , const uint8* iSrc
-        , uint8* iBdp
-        , fpConversionInvocation iFwd
-        , fpConversionInvocation iBkd
-        , Vec4i iIDT
+        , uint8* const iBdp
+        , const fpConversionInvocation iFwd
+        , const fpConversionInvocation iBkd
+        , const Vec4i iIDT
     )
         : IJobArgs()
         , line( iLine )

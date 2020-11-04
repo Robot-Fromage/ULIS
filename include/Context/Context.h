@@ -170,6 +170,135 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+        Perform an alpha blend operation with iSource composited on top of
+        iBackdrop. iBackdrop is modified to receive the result of the
+        operation, while iSource is left untouched.
+
+        You can specify a sub-portion of the iSource image by specifying the
+        iSourceRect to the desired part of the picture. If you want to blend the
+        whole image, use the FBlock::Rect() method on the iSource block.
+        You can also specify where in iBackdrop the iSource FBlock should be
+        composited, in integer coordinates.
+
+        If the iSourceRect and/or iPosition lead to a destination geometry that
+        does not intersect the rectangular geometry of iBackdrop, the call will
+        not perform any computation and will return safely, so it is safe to
+        specify out-of-bounds positions.
+
+        \sa AlphaBlendAA()
+        \sa Blend()
+    */
+    void
+    AlphaBlend(
+          const FBlock& iSource
+        , FBlock& iBackdrop
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , ufloat iOpacity = 1.0f
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform an antialiased alpha blend operation with iSource composited on
+        top of iBackdrop. iBackdrop is modified to receive the result of the
+        operation, while iSource is left untouched.
+
+        An antialiasing blend accepts floating point coordinates and performs
+        antialiasing at the same time as it performs the compositing, this is
+        useful for drawing, sometimes also referred to as subpixel blending.
+
+        You can specify a sub-portion of the iSource image by specifying the
+        iSourceRect to the desired part of the picture. If you want to blend the
+        whole image, use the FBlock::Rect() method on the iSource block.
+        You can also specify where in iBackdrop the iSource FBlock should be
+        composited, in floating point coordinates.
+
+        If the iSourceRect and/or iPosition lead to a destination geometry that
+        does not intersect the rectangular geometry of iBackdrop, the call will
+        not perform any computation and will return safely, so it is safe to
+        specify out-of-bounds positions.
+
+        \sa AlphaBlend()
+        \sa BlendAA()
+    */
+    void
+    AlphaBlendAA(
+          const FBlock& iSource
+        , FBlock& iBackdrop
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
+        , ufloat iOpacity = 1.0f
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a tiled blend operation with iSource composited on top of
+        iBackdrop. iBackdrop is modified to receive the result of the
+        operation, while iSource is left untouched. iSource is tiled over the
+        specified surface to cover iBackdrop.
+
+        You can specify a sub-portion of the iSource image by specifying the
+        iSourceRect to the desired part of the picture. If you want to blend the
+        whole image, use the FBlock::Rect() method on the iSource block.
+        You can also specify where in iBackdrop the iSource FBlock should be
+        composited, in integer coordinates.
+
+        If the iSourceRect and/or iPosition lead to a destination geometry that
+        does not intersect the rectangular geometry of iBackdrop, the call will
+        not perform any computation and will return safely, so it is safe to
+        specify out-of-bounds positions.
+
+        \sa Blend()
+    */
+    void
+    BlendTiled(
+          const FBlock& iSource
+        , FBlock& iBackdrop
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iBackdropRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , eBlendMode iBlendingMode = Blend_Normal
+        , eAlphaMode iAlphaMode = Alpha_Normal
+        , ufloat iOpacity = 1.0f
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a blend operation of a single plain color composited on top of
+        iBackdrop. iBackdrop is modified to receive the result of the
+        operation, while iColor is left untouched.
+
+        If the specified rect and/or position lead to a destination geometry
+        that does not intersect the rectangular geometry of iBackdrop, the call
+        will not perform any computation and will return safely, so it is safe
+        to specify out-of-bounds positions.
+
+        \sa BlendTiled()
+    */
+    void
+    BlendColor(
+          const ISample& iColor
+        , FBlock& iBackdrop
+        , const FRectI& iBackdropRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , eBlendMode iBlendingMode = Blend_Normal
+        , eAlphaMode iAlphaMode = Alpha_Normal
+        , ufloat iOpacity = 1.0f
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FHardwareMetrics mHardwareMetrics;

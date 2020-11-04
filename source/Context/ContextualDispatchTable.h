@@ -50,6 +50,16 @@ public:
         }
     }
 
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleTiledBlendSubpixel( eBlendMode iBlendingMode ) const
+    {
+        switch( BlendingModeQualifier( iBlendingMode ) ) {
+            case BlendQualifier_Misc            : return  mScheduleTiledBlendSeparable;
+            case BlendQualifier_Separable       : return  mScheduleTiledBlendNonSeparable;
+            case BlendQualifier_NonSeparable    : return  mScheduleTiledBlendMisc;
+            default: return  nullptr;
+        }
+    }
+
 private:
     const fpCommandScheduler mScheduleBlendSeparable;
     const fpCommandScheduler mScheduleBlendNonSeparable;
@@ -57,6 +67,11 @@ private:
     const fpCommandScheduler mScheduleBlendSeparableSubpixel;
     const fpCommandScheduler mScheduleBlendNonSeparableSubpixel;
     const fpCommandScheduler mScheduleBlendMiscSubpixel;
+    const fpCommandScheduler mScheduleAlphaBlend;
+    const fpCommandScheduler mScheduleAlphaBlendSubpixel;
+    const fpCommandScheduler mScheduleTiledBlendSeparable;
+    const fpCommandScheduler mScheduleTiledBlendNonSeparable;
+    const fpCommandScheduler mScheduleTiledBlendMisc;
 };
 
 ULIS_NAMESPACE_END
