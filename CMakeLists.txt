@@ -29,7 +29,7 @@ endif()
 
 # Create solution
 project( ULIS )
-set( ULIS_VERSION_MAJOR 3 )
+set( ULIS_VERSION_MAJOR 4 )
 set( ULIS_VERSION_MINOR 0 )
 set( ULIS_VERSION_PATCH 0 )
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
