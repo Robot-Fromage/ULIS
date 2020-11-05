@@ -57,7 +57,9 @@ public:
     bool IsCommandBound() const;
     void BindCommand( FCommand* iCommand );
     void CheckCyclicSelfReference() const;
-    void SetFinished();
+    void SetStatus( eEventStatus iStatus );
+    eEventStatus Status() const;
+    bool IsReady() const;
 
 private:
     void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;

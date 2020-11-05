@@ -79,6 +79,12 @@ public:
 
     void AddJob( FJob* iJob );
 
+    bool IsReady() const;
+
+    FSharedInternalEvent Event() const;
+
+    void Execute( FThreadPool& iPool ) const;
+
 private:
     const ICommandArgs* mArgs;
     FSharedInternalEvent mEvent;

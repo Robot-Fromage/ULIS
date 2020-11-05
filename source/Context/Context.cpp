@@ -68,9 +68,8 @@ FContext::Format() const
 void
 FContext::FinishEventNoOP( FEvent* iEvent )
 {
-    if( iEvent ) {
-        iEvent->d->m->SetFinished();
-    }
+    if( iEvent )
+        iEvent->d->m->SetStatus( eEventStatus::EventStatus_Finished );
 }
 
 ULIS_NAMESPACE_END

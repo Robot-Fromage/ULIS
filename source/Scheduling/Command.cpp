@@ -16,6 +16,7 @@
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -23,6 +24,9 @@ FCommand::~FCommand()
 {
     if( mArgs )
         delete  mArgs;
+
+    for( uint64 i = 0; i < mJobs.Size(); ++i )
+        delete  mJobs[i];
 }
 
 FCommand::FCommand(
@@ -41,7 +45,7 @@ FCommand::FCommand(
     if( iEvent )
     {
         mEvent = iEvent->d->m;
-        ULIS_ASSERT( mEvent->IsCommandBound(), "Cannot reuse an event that is already bound to a command" );
+        ULIS_ASSERT( !( mEvent->IsCommandBound() ), "Cannot reuse an event that is already bound to a command" );
         mEvent->BuildWaitList( iNumWait, iWaitList );
         mEvent->BindCommand( this );
     }
@@ -65,6 +69,25 @@ void
 FCommand::AddJob( FJob* iJob )
 {
     mJobs.EmplaceBack( iJob );
+}
+
+bool
+FCommand::IsReady() const
+{
+    return  mEvent->IsReady();
+}
+
+FSharedInternalEvent
+FCommand::Event() const
+{
+    return  mEvent;
+}
+
+void
+FCommand::Execute( FThreadPool& iPool ) const
+{
+    for( uint64 i = 0; i < mJobs.Size(); ++i )
+        iPool.ScheduleJob( mJobs[i] );
 }
 
 ULIS_NAMESPACE_END

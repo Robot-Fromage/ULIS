@@ -43,10 +43,7 @@ FCommandQueue::FCommandQueue_Private::Flush()
         mQueue.Pop();
 
         if( cmd->IsReady() ) {
-            FEvent* evt = cmd->Event();
-            if( evt )
-                evt->SetScheduled();
-            mQueue.Push( cmd );
+            cmd->Event()->SetStatus( eEventStatus::EventStatus_Processing );
             cmd->Execute( mPool );
         } else {
             mQueue.Push( cmd );
@@ -71,9 +68,8 @@ void
 FCommandQueue::FCommandQueue_Private::Push( FCommand* iCommand )
 {
     ULIS_ASSERT( iCommand, "Error: no input command" );
+    iCommand->Event()->SetStatus( eEventStatus::EventStatus_Queued );
     mQueue.Push( iCommand );
-    //if( iCommand->Policy().FlowPolicy() == eScheduleFlowPolicy::ScheduleFlow_Blocking )
-    //    Finish();
 }
 
 ULIS_NAMESPACE_END

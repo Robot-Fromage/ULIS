@@ -45,9 +45,7 @@ void
 FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
 {
     for( uint32 i = 0; i < iNumWait; ++i )
-    {
         mWaitList.PushBack( iWaitList[i].d->m );
-    }
 
 #if defined( ULIS_DEBUG )
     CheckCyclicSelfReference();
@@ -84,9 +82,25 @@ FInternalEvent::CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const
 }
 
 void
-FInternalEvent::SetFinished()
+FInternalEvent::SetStatus( eEventStatus iStatus )
 {
-    mStatus = eEventStatus::EventStatus_Finished;
+    mStatus = iStatus;
+}
+
+eEventStatus
+FInternalEvent::Status() const
+{
+    return  mStatus;
+}
+
+bool
+FInternalEvent::IsReady() const
+{
+    for( uint32 i = 0; i < mWaitList.Size(); ++i )
+        if( mWaitList[i]->Status() != eEventStatus::EventStatus_Finished )
+            return  false;
+
+    return  true;
 }
 
 
