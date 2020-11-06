@@ -18,6 +18,14 @@ ULIS_NAMESPACE_BEGIN
 
 FJob::~FJob()
 {
+    // Cleanup assumes args were allocated as a raw buffer,
+    // and IJobArgs object were constructed in place.
+    // This requires to call the destructors manually,
+    // and delete the buffer through its original type.
+    for( uint32 i = 0; i < mNumTasks; ++i )
+        mArgs[i].~IJobArgs();
+
+    delete [] reinterpret_cast< const uint8* >( mArgs );
 }
 
 FJob::FJob(

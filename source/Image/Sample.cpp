@@ -30,7 +30,6 @@ ISample::operator==( const  ISample& iOther )  const {
     if( Format() != iOther.Format() )
         return  false;
 
-
     bool bytePerfectMatch = true;
     for( int i = 0; i < BytesPerPixel(); ++i ) {
         if( mSignal[i] != iOther.mSignal[i] ) {
