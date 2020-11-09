@@ -33,14 +33,17 @@ public:
     FClearCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
+        , const bool iWhole
     )
         : ICommandArgs()
         , block( iBlock )
         , rect( iRect )
+        , whole( iWhole )
         {}
 
     FBlock& block;
     const FRectI rect;
+    const bool whole;
 };
 
 /////////////////////////////////////////////////////
@@ -59,12 +62,10 @@ public:
         : IJobArgs()
         , dst( iDst )
         , count( iCount )
-        , stride( iStride )
     {}
 
     uint8* const ULIS_RESTRICT dst;
-    const uint32 count;
-    const uint32 stride;
+    const int64 count;
 };
 
 ULIS_NAMESPACE_END

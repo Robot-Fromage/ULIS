@@ -35,11 +35,17 @@ FContext::Clear(
 )
 {
     // Sanitize geometry
-    const FRectI src_roi = iRect.Sanitized() & iBlock.Rect();
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
 
     // Check no-op
     if( src_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
+
+    // Forward arguments baking
+    // Check wether the whole image buffer is to be cleaned.
+    // If so, chunk based scheduling policy are made available.
+    const bool whole = src_roi == src_rect;
 
     // Bake and push command
     mCommandQueue.Push(
@@ -48,6 +54,7 @@ FContext::Clear(
             , new FClearCommandArgs(
                   iBlock
                 , src_roi
+                , whole
             )
             , iPolicy
             , iNumWait

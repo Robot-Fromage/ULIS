@@ -22,21 +22,32 @@ ULIS_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
-void InvokeFillMTProcessScanline_AX2( uint8* iDst, const uint32 iCount, const uint32 iStride ) {
-    int64 index;
-    for( index = 0; index < int64( iCount ) - 32; index += iStride ) {
-        _mm256_storeu_si256( (__m256i*)iDst, _mm256_setzero_si256() );
-        iDst += iStride;
+void
+InvokeClearMTProcessScanline_AX2(
+      const FClearJobArgs* jargs
+    , const FClearCommandArgs* cargs
+)
+{
+    __m256i* ULIS_RESTRICT dst = reinterpret_cast< __m256i* >( jargs->dst );
+    int64 index = 0;
+    for( index = 0; index < jargs->count - 32; index += jargs->stride ) {
+        _mm256_storeu_si256( dst, _mm256_setzero_si256() );
+        ++dst;
     }
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
-    memset( iDst, 0, iCount - index );
+    memset( dst, 0, jargs->count - index );
 }
 #endif // ULIS_COMPILETIME_AVX2_SUPPORT
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-void InvokeFillMTProcessScanline_SSE4_2( uint8* iDst, const uint32 iCount, const uint32 iStride ) {
+void
+InvokeClearMTProcessScanline_SSE4_2(
+      const FClearJobArgs* jargs
+    , const FClearCommandArgs* cargs
+)
+{
     int64 index;
     for( index = 0; index < int64( iCount ) - 16; index += iStride ) {
         _mm_storeu_si128( (__m128i*)iDst, _mm_setzero_si128() );
@@ -49,7 +60,12 @@ void InvokeFillMTProcessScanline_SSE4_2( uint8* iDst, const uint32 iCount, const
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
-void InvokeFillMTProcessScanline_MEM( uint8* iDst, uint32 iCount, const uint32 iStride ) {
+void
+InvokeClearMTProcessScanline_MEM(
+      const FClearJobArgs* jargs
+    , const FClearCommandArgs* cargs
+)
+{
     // Full scanline width instead of many BPP clears
     memset( iDst, 0, iCount );
 }
@@ -96,32 +112,28 @@ void Clear_imp( FOldThreadPool*            iOldThreadPool
     }
 }
 
-/////////////////////////////////////////////////////
-// Clear
- void Clear( FOldThreadPool*              iOldThreadPool
-           , bool                      iBlocking
-           , uint32                    iPerfIntent
-           , const FHardwareMetrics&    iHostDeviceInfo
-           , bool                      iCallCB
-           , FBlock*                   iDestination
-           , const FRectI&              iArea )
+void
+ScheduleClearMT_AX2(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
 {
-    // Assertions
-    ULIS_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
-    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
-    // Fit region of interest
-    FRectI roi = iArea & iDestination->Rect();
+}
 
-    // Check no-op
-    if( roi.Area() <= 0 )
-        return;
+void
+ScheduleClearMT_SSE4_2(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
+{
+}
 
-    // Call
-    Clear_imp( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iDestination, iArea );
-
-    // Invalid
-    iDestination->Dirty( roi, iCallCB );
+void
+ScheduleClearMT_MEM(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
+{
 }
 
 ULIS_NAMESPACE_END
