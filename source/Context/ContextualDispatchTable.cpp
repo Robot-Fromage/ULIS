@@ -14,9 +14,11 @@
 #pragma once
 #include "Context/ContextualDispatchTable.h"
 #include "Blend/BlendDispatch.h"
+#include "Blend/ClearDispatch.h"
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat )
+        // Blend
         : mScheduleBlendSeparable(              TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >             ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleBlendNonSeparable(           TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleBlendMisc(                   TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >                  ::Query( iHardwareMetrics, iFormat ) )
@@ -28,6 +30,9 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleTiledBlendSeparable(         TDispatcher< FDispatchedTiledBlendSeparableInvocationSchedulerSelector >        ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleTiledBlendNonSeparable(      TDispatcher< FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector >     ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleTiledBlendMisc(              TDispatcher< FDispatchedTiledBlendMiscInvocationSchedulerSelector >             ::Query( iHardwareMetrics, iFormat ) )
+
+        // Clear
+        , mScheduleClear(                       TDispatcher< FDispatchedClearInvocationSchedulerSelector >                      ::Query( iHardwareMetrics, iFormat ) )
 {}
 
 FContext::FContextualDispatchTable::~FContextualDispatchTable()

@@ -299,6 +299,32 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+
+/////////////////////////////////////////////////////
+// Clear
+    /*!
+        Perform a clear operation on the input block.
+        iBlock is modified to be cleared.
+
+        You can specify a sub-portion of the iBlock image by specifying the
+        iRect to the desired part of the picture. If you want to clear the
+        whole image, use the FBlock::Rect() method on the iBlock.
+
+        If the iRect lead to a destination geometry that does not intersect the
+        rectangular geometry of iBlock, the call will not perform any
+        computation and will return safely, so it is safe to specify
+        out-of-bounds positions.
+    */
+    void
+    Clear(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FHardwareMetrics mHardwareMetrics;

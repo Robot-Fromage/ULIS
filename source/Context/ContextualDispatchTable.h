@@ -61,6 +61,7 @@ public:
     }
 
 private:
+    // Blend
     const fpCommandScheduler mScheduleBlendSeparable;
     const fpCommandScheduler mScheduleBlendNonSeparable;
     const fpCommandScheduler mScheduleBlendMisc;
@@ -72,6 +73,9 @@ private:
     const fpCommandScheduler mScheduleTiledBlendSeparable;
     const fpCommandScheduler mScheduleTiledBlendNonSeparable;
     const fpCommandScheduler mScheduleTiledBlendMisc;
+
+    // Clear
+    const fpCommandScheduler mScheduleClear;
 };
 
 ULIS_NAMESPACE_END
