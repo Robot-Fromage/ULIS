@@ -7,7 +7,7 @@
 *
 * @file         Clear.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the Clear entry point functions.
+* @brief        This file provides the declaration for the Clear invocations.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -15,19 +15,18 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// Clear
-ULIS_API void Clear( FOldThreadPool*              iOldThreadPool
-                    , bool                      iBlocking
-                    , uint32                    iPerfIntent
-                    , const FHardwareMetrics&    iHostDeviceInfo
-                    , bool                      iCallCB
-                    , FBlock*                   iDestination
-                    , const FRectI&              iArea );
-
-/////////////////////////////////////////////////////
-// ClearRaw
-ULIS_API void ClearRaw( FBlock& iSrc, bool iCallDirty = false );
-
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- AVX
+#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+void InvokeFillMTProcessScanline_AX2( uint8* iDst, const uint32 iCount, const uint32 iStride );
+#endif // ULIS_COMPILETIME_AVX2_SUPPORT
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- SSE
+#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+void InvokeFillMTProcessScanline_SSE4_2( uint8* iDst, const uint32 iCount, const uint32 iStride );
+#endif // __SE4_2__
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
+void InvokeFillMTProcessScanline_MEM( uint8* iDst, const uint32 iCount, const uint32 iStride );
 ULIS_NAMESPACE_END
 

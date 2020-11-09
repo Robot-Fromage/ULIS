@@ -13,10 +13,8 @@
 */
 #include "Clear/Clear.h"
 #include "Image/Block.h"
-#include "System/Device.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -124,13 +122,6 @@ void Clear_imp( FOldThreadPool*            iOldThreadPool
 
     // Invalid
     iDestination->Dirty( roi, iCallCB );
-}
-
-/////////////////////////////////////////////////////
-// ClearRaw
-void ClearRaw( FBlock& iDst, bool iCallDirty ) {
-    memset( iDst.Bits(), 0, iDst.BytesTotal() );
-    iDst.Dirty( iCallDirty );
 }
 
 ULIS_NAMESPACE_END
