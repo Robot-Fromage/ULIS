@@ -13,20 +13,44 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Clear/ClearArgs.h"
 
 ULIS_NAMESPACE_BEGIN
-//--------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------- AVX
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
-void InvokeFillMTProcessScanline_AX2( uint8* iDst, const uint32 iCount, const uint32 iStride );
-#endif // ULIS_COMPILETIME_AVX2_SUPPORT
-//--------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------- SSE
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-void InvokeFillMTProcessScanline_SSE4_2( uint8* iDst, const uint32 iCount, const uint32 iStride );
-#endif // __SE4_2__
-//--------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------- MEM
-void InvokeFillMTProcessScanline_MEM( uint8* iDst, const uint32 iCount, const uint32 iStride );
+void
+InvokeClearMTProcessScanline_AX2(
+      const FClearJobArgs* jargs
+    , const FClearCommandArgs* cargs
+);
+
+void
+InvokeClearMTProcessScanline_SSE4_2(
+      const FClearJobArgs* jargs
+    , const FClearCommandArgs* cargs
+);
+
+void
+InvokeClearMTProcessScanline_MEM(
+      const FClearJobArgs* jargs
+    , const FClearCommandArgs* cargs
+);
+
+void
+ScheduleClearMT_AX2(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+);
+
+void
+ScheduleClearMT_SSE4_2(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+);
+
+void
+ScheduleClearMT_MEM(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+);
+
 ULIS_NAMESPACE_END
 
