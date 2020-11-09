@@ -30,7 +30,7 @@ InvokeClearMTProcessScanline_AX2(
 {
     __m256i* ULIS_RESTRICT dst = reinterpret_cast< __m256i* >( jargs->dst );
     int64 index = 0;
-    for( index = 0; index < jargs->count - 32; index += jargs->stride ) {
+    for( index = 0; index < jargs->count - 32; index += 32 ) {
         _mm256_storeu_si256( dst, _mm256_setzero_si256() );
         ++dst;
     }
@@ -48,13 +48,14 @@ InvokeClearMTProcessScanline_SSE4_2(
     , const FClearCommandArgs* cargs
 )
 {
-    int64 index;
-    for( index = 0; index < int64( iCount ) - 16; index += iStride ) {
-        _mm_storeu_si128( (__m128i*)iDst, _mm_setzero_si128() );
-        iDst += iStride;
+    __m128i* ULIS_RESTRICT dst = reinterpret_cast< __m128i* >( jargs->dst );
+    int64 index = 0;
+    for( index = 0; index < jargs->count - 16; index += 16 ) {
+        _mm_storeu_si128( dst, _mm_setzero_si128() );
+        ++dst;
     }
     // Remaining unaligned scanline end: avoid concurrent write on 128 bit with SSE and perform a memset instead
-    memset( iDst, 0, iCount - index );
+    memset( dst, 0, jargs->count - index );
 }
 #endif // __SE4_2__
 
@@ -67,7 +68,7 @@ InvokeClearMTProcessScanline_MEM(
 )
 {
     // Full scanline width instead of many BPP clears
-    memset( iDst, 0, iCount );
+    memset( jargs->dst, 0, jargs->count );
 }
 
 /////////////////////////////////////////////////////
