@@ -16,7 +16,7 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Blend
+// Clear
 ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
 

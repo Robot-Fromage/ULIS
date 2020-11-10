@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
+#include "Clear/ClearHelpers.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
@@ -71,54 +72,13 @@ InvokeClearMTProcessScanline_MEM(
     memset( jargs->dst, 0, jargs->count );
 }
 
-/////////////////////////////////////////////////////
-// Implementation
-void Clear_imp( FOldThreadPool*            iOldThreadPool
-              , bool                    iBlocking
-              , uint32                  iPerfIntent
-              , const FHardwareMetrics&  iHostDeviceInfo
-              , bool                    iCallCB
-              , FBlock*                 iDestination
-              , const FRectI&            iArea )
-{
-    const FFormatMetrics&  fmt     = iDestination->FormatMetrics();
-    const uint32         bpp     = fmt.BPP;
-    const uint32         w       = iDestination->Width();
-    const uint32         bps     = iDestination->BytesPerScanLine();
-    const uint32         dsh     = iArea.x * bpp;
-    uint8*              dsb     = iDestination->Bits() + dsh;
-    const uint32         count   = iArea.w * bpp;
-    #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
-
-    #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
-    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
-        const uint32 stride = 32;
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                       , iArea.h
-                                       , InvokeFillMTProcessScanline_AX2, DST, count, stride )
-    } else
-    #endif
-    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
-        const uint32 stride = 16;
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                       , iArea.h
-                                       , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
-    } else
-    #endif
-    {
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                       , iArea.h
-                                       , InvokeFillMTProcessScanline_MEM, DST, count, bpp )
-    }
-}
-
 void
 ScheduleClearMT_AX2(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
 )
 {
+    BuildClearJobs< &InvokeClearMTProcessScanline_AX2 >( iCommand, iPolicy );
 }
 
 void
@@ -127,6 +87,7 @@ ScheduleClearMT_SSE4_2(
     , const FSchedulePolicy& iPolicy
 )
 {
+    BuildClearJobs< &InvokeClearMTProcessScanline_SSE4_2 >( iCommand, iPolicy );
 }
 
 void
@@ -135,6 +96,7 @@ ScheduleClearMT_MEM(
     , const FSchedulePolicy& iPolicy
 )
 {
+    BuildClearJobs< &InvokeClearMTProcessScanline_MEM >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

@@ -45,19 +45,12 @@ template< void (*IMP)( const FClearJobArgs*, const FClearCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
-BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool iTiled = false ) {
-    const FBlendCommandArgs* cargs              = dynamic_cast< const FBlendCommandArgs* >( iCommand->Args() );
-    const uint8* src                            = cargs->source.Bits();
-    uint8* bdp                                  = cargs->backdrop.Bits();
-    const uint32 src_bps                        = cargs->source.BytesPerScanLine();
-    const uint32 bdp_bps                        = cargs->backdrop.BytesPerScanLine();
-    const uint32 src_decal_y                    = cargs->shift.y + cargs->sourceRect.y;
-    const uint32 src_decal_x                    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
-    const uint32 bdp_decal_x                    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
-    const FFormatMetrics& fmt                   = cargs->source.FormatMetrics();
-    fpConversionInvocation conv_forward_fptr    = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
-    fpConversionInvocation conv_backward_fptr   = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
-    Vec4i idt                                   = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
+BuildClearJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
+    const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
+    uint8* dst                      = cargs->block.Bits();
+    const uint32 bps                = cargs->block.BytesPerScanLine();
+    const uint32 src_decal_x        = cargs->rect.x * cargs->block.BytesPerPixel();
+
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
         uint8* buf = new uint8[ cargs->backdropWorkingRect.h * sizeof( FBlendJobArgs ) ];
@@ -98,6 +91,48 @@ BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool i
                 , jargs );
             iCommand->AddJob( job );
         }
+    }
+}
+
+/////////////////////////////////////////////////////
+// Implementation
+void Clear_imp( FOldThreadPool*            iOldThreadPool
+              , bool                    iBlocking
+              , uint32                  iPerfIntent
+              , const FHardwareMetrics&  iHostDeviceInfo
+              , bool                    iCallCB
+              , FBlock*                 iDestination
+              , const FRectI&            iArea )
+{
+    const FFormatMetrics&  fmt     = iDestination->FormatMetrics();
+    const uint32         bpp     = fmt.BPP;
+    const uint32         w       = iDestination->Width();
+    const uint32         bps     = iDestination->BytesPerScanLine();
+    const uint32         dsh     = iArea.x * bpp;
+    uint8*              dsb     = iDestination->Bits() + dsh;
+    const uint32         count   = iArea.w * bpp;
+    #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
+
+    #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
+        const uint32 stride = 32;
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
+                                       , iArea.h
+                                       , InvokeFillMTProcessScanline_AX2, DST, count, stride )
+    } else
+    #endif
+    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
+        const uint32 stride = 16;
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
+                                       , iArea.h
+                                       , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
+    } else
+    #endif
+    {
+        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
+                                       , iArea.h
+                                       , InvokeFillMTProcessScanline_MEM, DST, count, bpp )
     }
 }
 

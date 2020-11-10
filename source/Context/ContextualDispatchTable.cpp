@@ -14,7 +14,7 @@
 #pragma once
 #include "Context/ContextualDispatchTable.h"
 #include "Blend/BlendDispatch.h"
-#include "Blend/ClearDispatch.h"
+#include "Clear/ClearDispatch.h"
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat )

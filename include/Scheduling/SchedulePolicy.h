@@ -22,12 +22,12 @@ enum eScheduleRunPolicy : uint8 {
 
 enum eScheduleModePolicy : uint8 {
       ScheduleMode_Scanlines = 0
-    , ScheduleMode_Chunks = 4
+    , ScheduleMode_Chunks = 1
 };
 
 enum eScheduleParameterPolicy : uint8 {
       ScheduleParameter_Count = 0
-    , ScheduleParameter_Length = 8
+    , ScheduleParameter_Length = 1
 };
 
 /////////////////////////////////////////////////////

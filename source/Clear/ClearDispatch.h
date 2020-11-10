@@ -22,9 +22,9 @@ ULIS_NAMESPACE_BEGIN
 ULIS_DECLARE_DISPATCHER( FDispatchedClearInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
       FDispatchedClearInvocationSchedulerSelector
-    , &ScheduleClearMT_MEM
-    , &ScheduleClearMT_SSE4_2
     , &ScheduleClearMT_AX2
+    , &ScheduleClearMT_SSE4_2
+    , &ScheduleClearMT_MEM
 )
 ULIS_NAMESPACE_END
 
