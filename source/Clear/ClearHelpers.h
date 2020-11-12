@@ -53,6 +53,37 @@ BuildClearJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
 
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {
+        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
+        {
+        }
+        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
+        {
+            if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
+            {
+            }
+            else // iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Length
+            {
+            }
+        }
+    }
+    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
+    {
+        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
+        {
+        }
+        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
+        {
+            if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
+            {
+            }
+            else // iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Length
+            {
+            }
+        }
+    }
+
+    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
+    {
         uint8* buf = new uint8[ cargs->backdropWorkingRect.h * sizeof( FBlendJobArgs ) ];
         FBlendJobArgs* jargs = reinterpret_cast< FBlendJobArgs* >( buf );
         for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
