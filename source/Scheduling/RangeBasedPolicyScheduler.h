@@ -16,9 +16,8 @@
 
 ULIS_NAMESPACE_BEGIN
 template<
-      typename TDelegateProcess
-    , typename TDelegateScanline
-    , typename TDelegateChunk
+      void (*TDelegateScanlines)( FCommand*, const FSchedulePolicy&, const int64, const int64 )
+    , void (*TDelegateChunks)( FCommand*, const FSchedulePolicy&, const int64, const int64 )
 >
 ULIS_FORCEINLINE
 static
@@ -35,7 +34,7 @@ RangeBasedPolicyScheduleJobs(
         if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
             goto mono_scanlines;
         else
-            if( !( cargs->whole ) )
+            if( !( iChunkAllowed ) )
                 goto mono_scanlines;
             else
                 goto mono_chunks;
@@ -43,7 +42,7 @@ RangeBasedPolicyScheduleJobs(
         if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
             goto multi_scanlines;
         else
-            if( !( cargs->whole ) )
+            if( !( iChunkAllowed ) )
                 goto multi_scanlines;
             else
                 if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
@@ -53,35 +52,35 @@ RangeBasedPolicyScheduleJobs(
 
 mono_scanlines:
     {
-        TDelegateScanline( iCommand, iPolicy, 1, cargs->rect.h );
+        TDelegateScanlines( iCommand, iPolicy, 1, iNumScanlines );
         return;
     }
 
 multi_scanlines:
     {
-        TDelegateScanline( iCommand, iPolicy, cargs->rect.h, 1 );
+        TDelegateScanlines( iCommand, iPolicy, iNumScanlines, 1 );
         return;
     }
 
 mono_chunks:
     {
-        TDelegateChunk( iCommand, iPolicy, btt, 1 );
+        TDelegateChunks( iCommand, iPolicy, iBytesTotal, 1 );
         return;
     }
 
 multi_chunks_count:
     {
         const int64 count = FMath::Max( iPolicy.Value(), int64(1) );
-        const int64 size = int64( FMath::Ceil( btt / float( count ) ) );
-        TDelegateChunk( iCommand, iPolicy, size, count );
+        const int64 size = int64( FMath::Ceil( iBytesTotal / float( count ) ) );
+        TDelegateChunks( iCommand, iPolicy, size, count );
         return;
     }
 
 multi_chunks_length:
     {
         const int64 size = FMath::Max( iPolicy.Value(), int64(1) );
-        const int64 count = int64( FMath::Ceil( btt / float( size ) ) );
-        TDelegateChunk( iCommand, iPolicy, size, count );
+        const int64 count = int64( FMath::Ceil( iBytesTotal / float( size ) ) );
+        TDelegateChunks( iCommand, iPolicy, size, count );
         return;
     }
 }

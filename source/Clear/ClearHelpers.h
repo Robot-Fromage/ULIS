@@ -97,9 +97,11 @@ BuildClearJobs(
     , const FSchedulePolicy& iPolicy
 )
 {
+
     const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
     const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
-
+    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< IMP >, &BuildClearJobs_Chunks< IMP > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->whole );
+    /*
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
         if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
             goto mono_scanlines;
@@ -153,6 +155,7 @@ multi_chunks_length:
         BuildClearJobs_Chunks< IMP >( iCommand, iPolicy, size, count );
         return;
     }
+    */
 }
 
 ULIS_NAMESPACE_END
