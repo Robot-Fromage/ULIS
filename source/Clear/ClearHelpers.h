@@ -20,7 +20,7 @@
 #include "Scheduling/RangeBasedPolicyScheduler.h"
 
 ULIS_NAMESPACE_BEGIN
-template< void (*IMP)( const FClearJobArgs*, const FClearCommandArgs* ) >
+template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
@@ -48,13 +48,13 @@ BuildClearJobs_Scanlines(
         );
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, IMP >
+            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, TDelegateInvoke >
             , jargs );
         iCommand->AddJob( job );
     }
 }
 
-template< void (*IMP)( const FClearJobArgs*, const FClearCommandArgs* ) >
+template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
@@ -80,7 +80,7 @@ BuildClearJobs_Chunks(
         );
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, IMP >
+            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, TDelegateInvoke >
             , jargs );
         iCommand->AddJob( job );
         index += iSize;
@@ -88,7 +88,7 @@ BuildClearJobs_Chunks(
     return;
 }
 
-template< void (*IMP)( const FClearJobArgs*, const FClearCommandArgs* ) >
+template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
@@ -99,7 +99,7 @@ BuildClearJobs(
 {
     const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
     const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
-    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< IMP >, &BuildClearJobs_Chunks< IMP > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->whole );
+    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< TDelegateInvoke >, &BuildClearJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->whole );
 }
 
 ULIS_NAMESPACE_END
