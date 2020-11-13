@@ -97,65 +97,9 @@ BuildClearJobs(
     , const FSchedulePolicy& iPolicy
 )
 {
-
     const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
     const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
     RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< IMP >, &BuildClearJobs_Chunks< IMP > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->whole );
-    /*
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
-            goto mono_scanlines;
-        else
-            if( !( cargs->whole ) )
-                goto mono_scanlines;
-            else
-                goto mono_chunks;
-    else
-        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
-            goto multi_scanlines;
-        else
-            if( !( cargs->whole ) )
-                goto multi_scanlines;
-            else
-                if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
-                    goto multi_chunks_count;
-                else
-                    goto multi_chunks_length;
-
-mono_scanlines:
-    {
-        BuildClearJobs_Scanlines< IMP >( iCommand, iPolicy, 1, cargs->rect.h );
-        return;
-    }
-
-multi_scanlines:
-    {
-        BuildClearJobs_Scanlines< IMP >( iCommand, iPolicy, cargs->rect.h, 1 );
-        return;
-    }
-
-mono_chunks:
-    {
-        BuildClearJobs_Chunks< IMP >( iCommand, iPolicy, btt, 1 );
-        return;
-    }
-
-multi_chunks_count:
-    {
-        const int64 count = FMath::Max( iPolicy.Value(), int64(1) );
-        const int64 size = int64( FMath::Ceil( btt / float( count ) ) );
-        BuildClearJobs_Chunks< IMP >( iCommand, iPolicy, size, count );
-        return;
-    }
-
-multi_chunks_length:
-    {
-        const int64 size = FMath::Max( iPolicy.Value(), int64(1) );
-        const int64 count = int64( FMath::Ceil( btt / float( size ) ) );
-        BuildClearJobs_Chunks< IMP >( iCommand, iPolicy, size, count );
-        return;
-    }
-    */
 }
 
 ULIS_NAMESPACE_END
