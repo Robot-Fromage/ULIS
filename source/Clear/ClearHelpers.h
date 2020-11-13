@@ -19,151 +19,131 @@
 #include "Scheduling/Job.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_FORCEINLINE
-static
-const uint8*
-ComputeBufferPosition(
-      const uint8* iBase
-    , const int iSourceRectY
-    , const int iShiftY
-    , const int iSourceRectH
-    , const uint32 iSrcBps
-    , const uint32 iSrcDecalX
-    , const uint32 iSrcDecalY
-    , const int iLine
-    , const bool iTiled
-)
-{
-    if( iTiled ) {
-        return  iBase + ( ( iSourceRectY + ( ( iShiftY + iLine ) % iSourceRectH ) ) * iSrcBps ) + iSrcDecalX;
-    } else {
-        return  iBase + ( ( iSrcDecalY + iLine ) * iSrcBps ) + iSrcDecalX;
-    }
-}
-
 template< void (*IMP)( const FClearJobArgs*, const FClearCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
 BuildClearJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy ) {
     const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
-    uint8* dst                      = cargs->block.Bits();
-    const uint32 bps                = cargs->block.BytesPerScanLine();
-    const uint32 src_decal_x        = cargs->rect.x * cargs->block.BytesPerPixel();
+    const FFormatMetrics& fmt       = cargs->block.FormatMetrics();
+    uint8* base                     = cargs->block.Bits() + cargs->rect.x * fmt.BPP;
+    const int64 bps                 = static_cast< int64 >( cargs->block.BytesPerScanLine() );
+    const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
 
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
-    {
         if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
-        {
-        }
-        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        {
-            if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
-            {
-            }
-            else // iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Length
-            {
-            }
-        }
-    }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
-    {
+            goto mono_scanlines;
+        else
+            if( !( cargs->whole ) )
+                goto mono_scanlines;
+            else
+                goto mono_chunks;
+    else
         if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
-        {
-        }
-        else // iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Chunks
-        {
-            if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
-            {
-            }
-            else // iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Length
-            {
-            }
-        }
-    }
+            goto multi_scanlines;
+        else
+            if( !( cargs->whole ) )
+                goto multi_scanlines;
+            else
+                if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
+                    goto multi_chunks_count;
+                else
+                    goto multi_chunks_length;
 
-    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
+mono_scanlines:
     {
-        uint8* buf = new uint8[ cargs->backdropWorkingRect.h * sizeof( FBlendJobArgs ) ];
-        FBlendJobArgs* jargs = reinterpret_cast< FBlendJobArgs* >( buf );
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i )
-            new ( buf + sizeof( FBlendJobArgs ) * i ) FBlendJobArgs(
-                  i
-                , src_bps
-                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled )
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-                , idt
+        uint8* buf = new uint8[ cargs->rect.h * sizeof( FClearJobArgs ) ];
+        FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
+        for( int i = 0; i < cargs->rect.h; ++i )
+            new ( buf + sizeof( FClearJobArgs ) * i ) FClearJobArgs(
+                  base + ( cargs->rect.y + i ) * bps
+                , bps
             );
         FJob* job = new FJob(
-              cargs->backdropWorkingRect.h
-            , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
+                cargs->rect.h
+            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, IMP >
             , jargs );
         iCommand->AddJob( job );
+        return;
     }
-    else // iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Multi
+
+multi_scanlines:
     {
-        for( int i = 0; i < cargs->backdropWorkingRect.h; ++i ) {
-            uint8* buf = new uint8[ sizeof( FBlendJobArgs ) ];
-            FBlendJobArgs* jargs = reinterpret_cast< FBlendJobArgs* >( buf );
-            new ( buf ) FBlendJobArgs(
-                  i
-                , src_bps
-                , ComputeBufferPosition( src, cargs->sourceRect.y, cargs->shift.y, cargs->sourceRect.h, src_bps, src_decal_x, src_decal_y, i, iTiled )
-                , bdp + ( ( cargs->backdropWorkingRect.y + i ) * bdp_bps ) + bdp_decal_x
-                , conv_forward_fptr
-                , conv_backward_fptr
-                , idt
+        for( int i = 0; i < cargs->rect.h; ++i ) {
+            uint8* buf = new uint8[ sizeof( FClearJobArgs ) ];
+            FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
+            new ( buf ) FClearJobArgs(
+                  base + ( cargs->rect.y + i ) * bps
+                , bps
             );
             FJob* job = new FJob(
                   1
-                , &ResolveScheduledJobCall< FBlendJobArgs, FBlendCommandArgs, IMP >
+                , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, IMP >
                 , jargs );
             iCommand->AddJob( job );
         }
+        return;
     }
-}
 
-/////////////////////////////////////////////////////
-// Implementation
-void Clear_imp( FOldThreadPool*            iOldThreadPool
-              , bool                    iBlocking
-              , uint32                  iPerfIntent
-              , const FHardwareMetrics&  iHostDeviceInfo
-              , bool                    iCallCB
-              , FBlock*                 iDestination
-              , const FRectI&            iArea )
-{
-    const FFormatMetrics&  fmt     = iDestination->FormatMetrics();
-    const uint32         bpp     = fmt.BPP;
-    const uint32         w       = iDestination->Width();
-    const uint32         bps     = iDestination->BytesPerScanLine();
-    const uint32         dsh     = iArea.x * bpp;
-    uint8*              dsb     = iDestination->Bits() + dsh;
-    const uint32         count   = iArea.w * bpp;
-    #define DST dsb + ( ( iArea.y + static_cast< int64 >( pLINE ) ) * static_cast< int64 >( bps ) )
-
-    #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
-    if( ( iPerfIntent & ULIS_PERF_AVX2 ) && iHostDeviceInfo.HW_AVX2 && bps >= 32 ) {
-        const uint32 stride = 32;
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                       , iArea.h
-                                       , InvokeFillMTProcessScanline_AX2, DST, count, stride )
-    } else
-    #endif
-    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-    if( ( iPerfIntent & ULIS_PERF_SSE42 ) && iHostDeviceInfo.HW_SSE42 && bps >= 16 ) {
-        const uint32 stride = 16;
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                       , iArea.h
-                                       , InvokeFillMTProcessScanline_SSE4_2, DST, count, stride )
-    } else
-    #endif
+mono_chunks:
     {
-        ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                       , iArea.h
-                                       , InvokeFillMTProcessScanline_MEM, DST, count, bpp )
+        uint8* buf = new uint8[ sizeof( FClearJobArgs ) ];
+        FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
+        new ( buf ) FClearJobArgs(
+              base
+            , btt
+        );
+        FJob* job = new FJob(
+              1
+            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, IMP >
+            , jargs );
+        iCommand->AddJob( job );
+        return;
+    }
+
+multi_chunks_count:
+    {
+        const int64 count = FMath::Max( iPolicy.Value(), int64(1) );
+        const int64 size = int64( FMath::Ceil( btt / float( count ) ) );
+        int64 index = 0;
+        for( int i = 0; i < count; ++i ) {
+            uint8* buf = new uint8[ sizeof( FClearJobArgs ) ];
+            FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
+            new ( buf ) FClearJobArgs(
+                  base + index
+                , FMath::Min( index + size, btt ) - index
+            );
+            FJob* job = new FJob(
+                  1
+                , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, IMP >
+                , jargs );
+            iCommand->AddJob( job );
+            index += size;
+        }
+        return;
+    }
+
+multi_chunks_length:
+    
+    {
+        const int64 size = FMath::Max( iPolicy.Value(), int64(1) );
+        const int64 count = int64( FMath::Ceil( btt / float( size ) ) );
+        int64 index = 0;
+        for( int i = 0; i < count; ++i ) {
+            uint8* buf = new uint8[ sizeof( FClearJobArgs ) ];
+            FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
+            new ( buf ) FClearJobArgs(
+                  base + index
+                , FMath::Min( index + size, btt ) - index
+            );
+            FJob* job = new FJob(
+                  1
+                , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, IMP >
+                , jargs );
+            iCommand->AddJob( job );
+            index += size;
+        }
+        return;
     }
 }
 

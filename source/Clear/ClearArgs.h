@@ -56,16 +56,15 @@ public:
     ~FClearJobArgs() override {};
     FClearJobArgs(
           uint8* const iDst
-        , const uint32 iCount
-        , const uint32 iStride
+        , const int64 iSize
     )
         : IJobArgs()
         , dst( iDst )
-        , count( iCount )
+        , size( iSize )
     {}
 
     uint8* const ULIS_RESTRICT dst;
-    const int64 count;
+    const int64 size;
 };
 
 ULIS_NAMESPACE_END
