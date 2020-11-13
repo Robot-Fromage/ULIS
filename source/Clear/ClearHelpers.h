@@ -17,6 +17,7 @@
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/Job.h"
+#include "Scheduling/RangeBasedPolicyScheduler.h"
 
 ULIS_NAMESPACE_BEGIN
 template< void (*IMP)( const FClearJobArgs*, const FClearCommandArgs* ) >
