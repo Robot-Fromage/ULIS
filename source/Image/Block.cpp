@@ -75,57 +75,6 @@ FBlock::FBlock(
     mBytesTotal = mHeight * mBytesPerScanline;
 }
 
-//static
-FBlock*
-FBlock::XMake(
-      uint16 iWidth
-    , uint16 iHeight
-    , eFormat iFormat
-    , FColorSpace* iColorSpace
-    , const FOnInvalid& iOnInvalid
-    , const FOnCleanup& iOnCleanup
-)
-{
-    return  new FBlock(
-          iWidth
-        , iHeight
-        , iFormat
-        , iColorSpace
-        , iOnInvalid
-        , iOnCleanup
-    );
-}
-
-//static
-FBlock*
-FBlock::XMake(
-      uint8* iData
-    , uint16 iWidth
-    , uint16 iHeight
-    , eFormat iFormat
-    , FColorSpace* iColorSpace
-    , const FOnInvalid& iOnInvalid
-    , const FOnCleanup& iOnCleanup
-)
-{
-    return  new FBlock(
-          iData
-        , iWidth
-        , iHeight
-        , iFormat
-        , iColorSpace
-        , iOnInvalid
-        , iOnCleanup
-    );
-}
-
-//static
-void
-FBlock::XDelete( FBlock* iBlock )
-{
-    delete  iBlock;
-}
-
 uint8*
 FBlock::Bits()
 {
@@ -138,7 +87,6 @@ FBlock::ScanlineBits( uint16 iRow )
     ULIS_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
     return  mBitmap + ( iRow * mBytesPerScanline );
 }
-
 
 uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY )
