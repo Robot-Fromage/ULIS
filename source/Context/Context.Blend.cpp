@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         Context.cpp
+* @file         Context.Blend.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the implementation of the blend API entry
 *               points in the FContext class.

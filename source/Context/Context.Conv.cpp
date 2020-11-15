@@ -5,9 +5,9 @@
 *   ULIS
 *__________________
 *
-* @file         Context.Clear.cpp
+* @file         Context.Conv.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the implementation of the clear API entry
+* @brief        This file provides the implementation of the conv API entry
 *               points in the FContext class.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
@@ -15,7 +15,6 @@
 #pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
-#include "Clear/ClearArgs.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
@@ -25,15 +24,18 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-FContext::Clear(
-          FBlock& iBlock
-        , const FRectI& iRect
+FContext::Conv(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FRectI& iSourceRect
+        , const FVec2I& iPosition
         , const FSchedulePolicy& iPolicy
         , uint32 iNumWait
         , const FEvent* iWaitList
         , FEvent* iEvent
 )
 {
+    /*
     // Sanitize geometry
     const FRectI src_rect = iBlock.Rect();
     const FRectI src_roi = iRect.Sanitized() & src_rect;
@@ -62,6 +64,7 @@ FContext::Clear(
             , iEvent
         )
     );
+    */
 }
 
 ULIS_NAMESPACE_END
