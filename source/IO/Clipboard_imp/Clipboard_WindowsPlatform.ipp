@@ -15,7 +15,7 @@
 #include "Image/Block.h"
 #include "System/Device.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvBuffer.h"
+#include "Conv/ConvDispatch.h"
 #include "Thread/ThreadPool.h"
 
 #include <array>

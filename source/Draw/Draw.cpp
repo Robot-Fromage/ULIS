@@ -13,7 +13,7 @@
 */
 #include "Draw/Draw.h"
 #include "Image/Block.h"
-#include "Conv/ConvBuffer.h"
+#include "Conv/ConvDispatch.h"
 #include "Conv/Conv.h"
 #include "Math/Math.h"
 

@@ -14,7 +14,7 @@
 #include "Text/Text.h"
 #include "System/Device.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvBuffer.h"
+#include "Conv/ConvDispatch.h"
 #include "Image/Block.h"
 #include "Image/Pixel.h"
 #include "Math/Geometry/Rectangle.h"
