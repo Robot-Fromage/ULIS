@@ -99,7 +99,7 @@ BuildClearJobs(
 {
     const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
     const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
-    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< TDelegateInvoke >, &BuildClearJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->whole );
+    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< TDelegateInvoke >, &BuildClearJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->contiguous );
 }
 
 ULIS_NAMESPACE_END

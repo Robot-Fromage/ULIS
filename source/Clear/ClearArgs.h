@@ -38,12 +38,12 @@ public:
         : ICommandArgs()
         , block( iBlock )
         , rect( iRect )
-        , whole( iWhole )
+        , contiguous( iWhole )
         {}
 
     FBlock& block;
     const FRectI rect;
-    const bool whole;
+    const bool contiguous;
 };
 
 /////////////////////////////////////////////////////
