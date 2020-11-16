@@ -15,6 +15,8 @@
 #pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
+#include "Conv/Conv.h"
+#include "Conv/ConvDispatch.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
@@ -24,7 +26,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-FContext::Conv(
+FContext::ConvertFormat(
           const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect
@@ -35,27 +37,34 @@ FContext::Conv(
         , FEvent* iEvent
 )
 {
-    /*
+    ULIS_ASSERT( &iSource != &iDestination,                 "Source and Backdrop are the same block." );
+
     // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iRect.Sanitized() & src_rect;
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( src_roi.Area() <= 0 )
+    if( dst_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
     // Forward arguments baking
     // Check wether the whole image buffer is to be cleaned.
     // If so, chunk based scheduling policy are made available.
-    const bool whole = src_roi == src_rect;
+    const bool whole = ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) );
 
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleClear
-            , new FClearCommandArgs(
-                  iBlock
+              &ScheduleConvertFormat
+            , new FConvCommandArgs(
+                  iSource
+                , iDestination
                 , src_roi
+                , dst_roi
+                , QueryDispatchedConversionInvocation( iSource.Format(), iDestination.Format() )
                 , whole
             )
             , iPolicy
@@ -64,7 +73,6 @@ FContext::Conv(
             , iEvent
         )
     );
-    */
 }
 
 ULIS_NAMESPACE_END
