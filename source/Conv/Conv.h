@@ -13,26 +13,23 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Conv/ConvArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_API void Conv( const ISample& iSrc, ISample& iDst );
 ULIS_API FColor Conv( const ISample& iSrc, eFormat iDst );
 
-ULIS_API void Conv( FOldThreadPool*           iOldThreadPool
-                   , bool                   iBlocking
-                   , uint32                 iPerfIntent
-                   , const FHardwareMetrics& iHostDeviceInfo
-                   , bool                   iCallCB
-                   , const FBlock*          iSource
-                   , FBlock*                iDestination );
+void
+InvokeConvertFormat(
+      const FConvJobArgs* jargs
+    , const FConvCommandArgs* cargs
+);
 
-ULIS_API FBlock* XConv( FOldThreadPool*           iOldThreadPool
-                       , bool                   iBlocking
-                       , uint32                 iPerfIntent
-                       , const FHardwareMetrics& iHostDeviceInfo
-                       , bool                   iCallCB
-                       , const FBlock*          iSource
-                       , eFormat                iDestinationFormat );
+void
+ScheduleConvertFormat(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+);
 
 ULIS_NAMESPACE_END
 

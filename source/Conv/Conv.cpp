@@ -12,13 +12,11 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Conv/Conv.h"
-#include "Conv/ConvBuffer.h"
-#include "Conv/srgb2linear.h"
+#include "Conv/ConvDispatch.h"
 #include "Copy/Copy.h"
 #include "Image/Block.h"
 #include "Image/Pixel.h"
 #include "Math/Math.h"
-#include "Thread/ThreadPool.h"
 #include "lcms2.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -40,6 +38,22 @@ FColor Conv( const ISample& iSrc, eFormat iDst ) {
         fptr( iSrc.FormatMetrics(), iSrc.Bits(), dst.FormatMetrics(), dst.Bits(), 1 );
     }
     return  dst;
+}
+
+void
+InvokeConvertFormat(
+      const FConvJobArgs* jargs
+    , const FConvCommandArgs* cargs
+)
+{
+}
+
+void
+ScheduleConvertFormat(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
+{
 }
 
 void Conv(
@@ -94,25 +108,6 @@ void Conv(
 
     // Invalid
     iDestination->Dirty( iDestination->Rect(), iCallCB );
-}
-
-FBlock* XConv( FOldThreadPool*           iOldThreadPool
-             , bool                   iBlocking
-             , uint32                 iPerfIntent
-             , const FHardwareMetrics& iHostDeviceInfo
-             , bool                   iCallCB
-             , const FBlock*          iSource
-             , eFormat                iDestinationFormat )
-{
-    // Assertions
-    ULIS_ASSERT( iSource,                                       "Bad source."                                          );
-    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool"                                              );
-    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-
-    // Alloc return buffer in desired format use the same size, then perform conversion
-    FBlock* ret = new FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
-    Conv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, ret );
-    return  ret;
 }
 
 ULIS_NAMESPACE_END
