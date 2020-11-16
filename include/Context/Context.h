@@ -343,7 +343,7 @@ public:
         specify out-of-bounds positions.
     */
     void
-    Conv(
+    ConvertFormat(
           const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
