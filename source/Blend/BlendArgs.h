@@ -17,7 +17,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
-#include "Conv/ConvBuffer.h"
+#include "Conv/ConvDispatch.h"
 #include "Image/Block.h"
 #include <vectorclass.h>
 
