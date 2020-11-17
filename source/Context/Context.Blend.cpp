@@ -40,8 +40,8 @@ FContext::Blend(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop,                    "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(),    "Formats mismatch." );
+    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
     const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
@@ -92,8 +92,8 @@ FContext::BlendAA(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop,                    "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(),    "Formats mismatch." );
+    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
     const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
@@ -152,8 +152,8 @@ FContext::AlphaBlend(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop,                    "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(),    "Formats mismatch." );
+    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
     const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
@@ -202,8 +202,8 @@ FContext::AlphaBlendAA(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop,                    "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(),    "Formats mismatch." );
+    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
     const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
@@ -265,8 +265,8 @@ FContext::BlendTiled(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop,                    "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(),    "Formats mismatch." );
+    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
     const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
