@@ -37,9 +37,15 @@ FContext::ConvertFormat(
         , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination,                 "Source and Backdrop are the same block." );
+    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
 
-    // Sanitize geometry
+    // In case of same format, we can optimize by using the faster Copy version,
+    // since no conversion is actually involved.
+    if( iSource.Format() == iDestination.Format(), "Formats mismatch." ) {
+        FContext::Copy( iSource, iDestination, iSourceRect, iPosition, iPolicy, iNumWait, iWaitList, iEvent );
+        return;
+    }
+
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
     const FRectI dst_rect = iDestination.Rect();
@@ -51,7 +57,7 @@ FContext::ConvertFormat(
         return  FinishEventNoOP( iEvent );
 
     // Forward arguments baking
-    // Check wether the whole image buffer is to be cleaned.
+    // Check wether the whole image buffer is to be converted.
     // If so, chunk based scheduling policy are made available.
     const bool whole = ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) );
 
