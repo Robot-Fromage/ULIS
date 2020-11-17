@@ -5,9 +5,9 @@
 *   ULIS
 *__________________
 *
-* @file         BlendHelpers.h
+* @file         ClearHelpers.h
 * @author       Clement Berthaud
-* @brief        This file provides some helper macros and functions for blending.
+* @brief        This file provides some helper macros and functions for clearing.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
