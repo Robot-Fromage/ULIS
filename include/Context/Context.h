@@ -354,6 +354,36 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+/////////////////////////////////////////////////////
+// Copy
+    /*!
+        Perform a copy operation with iSource copied into iDestination.
+        iDestination is modified to receive the result of the operation, while
+        iSource is left untouched.
+
+        You can specify a sub-portion of the iSource image by specifying the
+        iSourceRect to the desired part of the picture. If you want to convert
+        the whole image, use the FBlock::Rect() method on the iSource block.
+        You can also specify where in iDestination the iSource FBlock should be
+        copied, in integer coordinates.
+
+        If the iSourceRect and/or iPosition lead to a destination geometry that
+        does not intersect the rectangular geometry of iDestination, the call will
+        not perform any computation and will return safely, so it is safe to
+        specify out-of-bounds positions.
+    */
+    void
+    Copy(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FHardwareMetrics mHardwareMetrics;
