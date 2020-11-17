@@ -13,29 +13,45 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Copy/CopyArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 
-ULIS_API void Copy( FOldThreadPool*           iOldThreadPool
-                   , bool                   iBlocking
-                   , uint32                 iPerfIntent
-                   , const FHardwareMetrics& iHostDeviceInfo
-                   , bool                   iCallCB
-                   , const FBlock*          iSource
-                   , FBlock*                iDestination
-                   , const FRectI&           iArea
-                   , const FVec2I&          iPos );
+void
+InvokeCopyMTProcessScanline_AX2(
+      const FCopyJobArgs* jargs
+    , const FCopyCommandArgs* cargs
+);
 
-ULIS_API FBlock* XCopy( FOldThreadPool*           iOldThreadPool
-                       , bool                   iBlocking
-                       , uint32                 iPerfIntent
-                       , const FHardwareMetrics& iHostDeviceInfo
-                       , bool                   iCallCB
-                       , const FBlock*          iSource
-                       , const FRectI&           iArea );
+void
+InvokeCopyMTProcessScanline_SSE4_2(
+      const FCopyJobArgs* jargs
+    , const FCopyCommandArgs* cargs
+);
 
-ULIS_API void CopyRaw( const FBlock* iSrc, FBlock* iDst, bool iCallCB );
-ULIS_API FBlock* XCopyRaw( const FBlock* iSrc, bool iCallCB );
+void
+InvokeCopyMTProcessScanline_MEM(
+      const FCopyJobArgs* jargs
+    , const FCopyCommandArgs* cargs
+);
+
+void
+ScheduleCopyMT_AX2(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+);
+
+void
+ScheduleCopyMT_SSE4_2(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+);
+
+void
+ScheduleCopyMT_MEM(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+);
 
 ULIS_NAMESPACE_END
 
