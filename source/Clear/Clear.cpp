@@ -72,6 +72,8 @@ InvokeClearMTProcessScanline_MEM(
     memset( jargs->dst, 0, jargs->size );
 }
 
+/////////////////////////////////////////////////////
+// Schedulers
 void
 ScheduleClearMT_AX2(
       FCommand* iCommand
