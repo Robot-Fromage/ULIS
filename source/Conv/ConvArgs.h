@@ -31,26 +31,26 @@ public:
     };
 
     FConvCommandArgs(
-          const FBlock& iSource
-        , FBlock& iDestination
-        , const FRectI& iSourceRect
-        , const FRectI& iDestinationRect
+          const FBlock& iSrc
+        , FBlock& iDst
+        , const FRectI& iSrcRect
+        , const FRectI& iDstRect
         , const fpConversionInvocation iInvocation
         , const bool iContiguous
     )
         : ICommandArgs()
-        , source( iSource )
-        , destination( iDestination )
-        , sourceRect( iSourceRect )
-        , destinationRect( iDestinationRect )
+        , src( iSrc )
+        , dst( iDst )
+        , srcRect( iSrcRect )
+        , dstRect( iDstRect )
         , invocation( iInvocation )
         , contiguous( iContiguous )
         {}
 
-    const FBlock& source;
-    FBlock& destination;
-    const FRectI sourceRect;
-    const FRectI destinationRect;
+    const FBlock& src;
+    FBlock& dst;
+    const FRectI srcRect;
+    const FRectI dstRect;
     fpConversionInvocation invocation;
     const bool contiguous;
 };
@@ -64,14 +64,17 @@ public:
 
     ~FConvJobArgs() override {};
     FConvJobArgs(
-          uint8* const iDst
+          const uint8* const iSrc
+        , uint8* const iDst
         , const int64 iSize
     )
         : IJobArgs()
+        , src( iSrc )
         , dst( iDst )
         , size( iSize )
     {}
 
+    const uint8* const ULIS_RESTRICT src;
     uint8* const ULIS_RESTRICT dst;
     const int64 size;
 };
