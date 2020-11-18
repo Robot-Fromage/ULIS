@@ -12,7 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Conv/Conv.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvHelpers.h"
 #include "Copy/Copy.h"
 #include "Image/Block.h"
 #include "Image/Pixel.h"
@@ -46,6 +46,13 @@ InvokeConvertFormat(
     , const FConvCommandArgs* cargs
 )
 {
+    cargs->invocation(
+          cargs->src.FormatMetrics()
+        , jargs->src
+        , cargs->dst.FormatMetrics()
+        , jargs->dst
+        , static_cast< uint32 >( jargs->size )
+    );
 }
 
 void
@@ -54,60 +61,7 @@ ScheduleConvertFormat(
     , const FSchedulePolicy& iPolicy
 )
 {
-}
-
-void Conv(
-      FOldThreadPool*           iOldThreadPool
-    , bool                      iBlocking
-    , uint32                    iPerfIntent
-    , const FHardwareMetrics&    iHostDeviceInfo
-    , bool                      iCallCB
-    , const FBlock*             iSource
-    , FBlock*                   iDestination
-)
-{
-    // Assertions
-    ULIS_ASSERT( iSource,                                       "Bad source."                                           );
-    ULIS_ASSERT( iDestination,                                  "Bad destination."                                      );
-    ULIS_ASSERT( iOldThreadPool,                                "Bad pool"                                              );
-    ULIS_ASSERT( !iCallCB || iBlocking,                         "Callback flag is specified on non-blocking operation." );
-    ULIS_ASSERT( iSource->Width()  == iDestination->Width(),    "Blocks sizes don't match"                              );
-    ULIS_ASSERT( iSource->Height() == iDestination->Height(),   "Blocks sizes don't match"                              );
-
-    // Check no-op
-    if( iSource == iDestination )
-        return;
-
-    // Check same format perform copy ( faster ).
-    if( iSource->Format() == iDestination->Format() ) {
-        Copy( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, ULIS_NOCB, iSource, iDestination, iSource->Rect(), FVec2I() );
-        return;
-    }
-
-    // Query dispatched method
-    fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSource->Format(), iDestination->Format() );
-    ULIS_ASSERT( fptr, "No Conversion invocation found" );
-
-    // Bake Params and call
-    const uint8*    src     = iSource->Bits();
-    uint8*          dst     = iDestination->Bits();
-    uint32          src_bps = iSource->BytesPerScanLine();
-    uint32          dst_bps = iDestination->BytesPerScanLine();
-    const int       max     = iSource->Height();
-    const uint32    len     = iSource->Width();
-    const FFormatMetrics&  srcnfo  = iSource->FormatMetrics();
-    const FFormatMetrics&  dstnfo  = iDestination->FormatMetrics();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                   , max
-                                   , fptr
-                                   , srcnfo
-                                   , src + ( pLINE * src_bps )
-                                   , dstnfo
-                                   , dst + ( pLINE * dst_bps )
-                                   , len );
-
-    // Invalid
-    iDestination->Dirty( iDestination->Rect(), iCallCB );
+    BuildConvJobs< &InvokeConvertFormat >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END
