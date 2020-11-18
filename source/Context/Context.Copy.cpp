@@ -15,8 +15,7 @@
 #pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
-#include "Conv/Conv.h"
-#include "Conv/ConvDispatch.h"
+#include "Copy/CopyDispatch.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
@@ -58,13 +57,12 @@ FContext::Copy(
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
-              &ScheduleConvertFormat
-            , new FConvCommandArgs(
+              mContextualDispatchTable->mScheduleCopy
+            , new FCopyCommandArgs(
                   iSource
                 , iDestination
                 , src_roi
                 , dst_roi
-                , QueryDispatchedConversionInvocation( iSource.Format(), iDestination.Format() )
                 , whole
             )
             , iPolicy
