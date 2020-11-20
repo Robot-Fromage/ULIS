@@ -84,7 +84,7 @@ BuildConvJobs_Chunks(
 
     const uint8* const ULIS_RESTRICT src    = cargs->src.Bits();
     uint8* const ULIS_RESTRICT dst          = cargs->dst.Bits();
-    const int64 area                        = static_cast< int64 >( cargs->src.Rect().Area() );
+    const int64 dst_btt                     = static_cast< int64 >( cargs->dst.BytesTotal() );
 
     int64 index = 0;
     for( int i = 0; i < iCount; ++i )
@@ -94,7 +94,7 @@ BuildConvJobs_Chunks(
         new ( buf ) FConvJobArgs(
               src + index
             , dst + index
-            , FMath::Min( index + iSize, area ) - index
+            , FMath::Min( index + iSize, dst_btt ) - index
         );
         FJob* job = new FJob(
               1
@@ -116,8 +116,8 @@ BuildConvJobs(
 )
 {
     const FConvCommandArgs* cargs   = dynamic_cast< const FConvCommandArgs* >( iCommand->Args() );
-    const int64 area                = static_cast< int64 >( cargs->src.Rect().Area() );
-    RangeBasedPolicyScheduleJobs< &BuildConvJobs_Scanlines< TDelegateInvoke >, &BuildConvJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, area, cargs->dstRect.h, cargs->contiguous );
+    const int64 dst_btt             = static_cast< int64 >( cargs->dst.BytesTotal() );
+    RangeBasedPolicyScheduleJobs< &BuildConvJobs_Scanlines< TDelegateInvoke >, &BuildConvJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, dst_btt, cargs->dstRect.h, cargs->contiguous );
 }
 ULIS_NAMESPACE_END
 
