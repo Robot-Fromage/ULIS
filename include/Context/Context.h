@@ -14,6 +14,9 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Modes.h"
+#include "Image/Color.h"
+#include "Image/Pixel.h"
+#include "Image/Sample.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
@@ -378,6 +381,57 @@ public:
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+/////////////////////////////////////////////////////
+// Fill
+    /*!
+        Perform a fill operation in iBlock.
+        iBlock is modified to receive the result of the operation.
+
+        You can specify a sub-portion of the iBlock image by specifying the
+        iRect to the desired part of the picture. If you want to fill
+        the whole image, use the FBlock::Rect() method on the iBlock.
+
+        If the iRect lead to a destination geometry that does not intersect the
+        rectangular geometry of iBlock, the call will not perform any
+        computation and will return safely, so it is safe to specify
+        out-of-bounds positions.
+    */
+    void
+    Fill(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+/*!
+        Perform a fill operation in iBlock while preserving alpha.
+        The color will change but the alpha will remain intact.
+        iBlock is modified to receive the result of the operation.
+
+        You can specify a sub-portion of the iBlock image by specifying the
+        iRect to the desired part of the picture. If you want to fill
+        the whole image, use the FBlock::Rect() method on the iBlock.
+
+        If the iRect lead to a destination geometry that does not intersect the
+        rectangular geometry of iBlock, the call will not perform any
+        computation and will return safely, so it is safe to specify
+        out-of-bounds positions.
+    */
+    void
+    FillPreserveAlpha(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
