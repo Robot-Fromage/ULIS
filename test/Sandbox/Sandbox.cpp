@@ -17,11 +17,34 @@ typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 
-uint8 Downscale( uint16 iValue )  { return ( iValue + 1 + ( iValue>>8 ) ) >> 8; }
+class IJobArgs {
+public:
+    /*! Destructor */
+    virtual ~IJobArgs() {};
+};
+
+
+class FClearJobArgs final
+    : public IJobArgs
+{
+public:
+    ~FClearJobArgs() override {};
+    FClearJobArgs(
+          const uint8 iDst
+        , const uint8 iSize
+    )
+        : IJobArgs()
+        , dst( iDst )
+        , size( iSize )
+    {}
+
+    const uint8 dst;
+    const uint8 size;
+};
 
 int
 main() {
-    std::cout << (int)( 65535 >> 8 );
+    FClearJobArgs a( 1, 2 );
     return  0;
 }
 
