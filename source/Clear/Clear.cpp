@@ -7,17 +7,99 @@
 *
 * @file         Clear.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the implementations for the Clear functions.
+* @brief        This file provides the implementations for the Clear API.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Clear/Clear.h"
-#include "Clear/ClearHelpers.h"
 #include "Image/Block.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
+#include "Scheduling/RangeBasedPolicyScheduler.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Job Building
+template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
+ULIS_FORCEINLINE
+static
+void
+BuildClearJobs_Scanlines(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+    , const int64 iNumJobs
+    , const int64 iNumTasksPerJob
+)
+{
+    const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
+    const FFormatMetrics& fmt       = cargs->block.FormatMetrics();
+    uint8* const ULIS_RESTRICT dst  = cargs->block.Bits() + cargs->rect.x * fmt.BPP;
+    const int64 bps                 = static_cast< int64 >( cargs->block.BytesPerScanLine() );
+    const int64 size                = cargs->rect.w * fmt.BPP;
+
+    for( int i = 0; i < iNumJobs; ++i )
+    {
+        uint8* buf = new uint8[ iNumTasksPerJob * sizeof( FClearJobArgs ) ];
+        FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
+        for( int i = 0; i < iNumTasksPerJob; ++i )
+            new ( buf ) FClearJobArgs(
+              dst + ( cargs->rect.y + i ) * bps
+            , size
+        );
+        FJob* job = new FJob(
+              1
+            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, TDelegateInvoke >
+            , jargs );
+        iCommand->AddJob( job );
+    }
+}
+
+template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
+ULIS_FORCEINLINE
+static
+void
+BuildClearJobs_Chunks(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+    , const int64 iSize
+    , const int64 iCount
+)
+{
+    const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
+    uint8* const ULIS_RESTRICT dst  = cargs->block.Bits();
+    const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
+
+    int64 index = 0;
+    for( int i = 0; i < iCount; ++i )
+    {
+        uint8* buf = new uint8[ sizeof( FClearJobArgs ) ];
+        FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
+        new ( buf ) FClearJobArgs(
+              dst + index
+            , FMath::Min( index + iSize, btt ) - index
+        );
+        FJob* job = new FJob(
+              1
+            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, TDelegateInvoke >
+            , jargs );
+        iCommand->AddJob( job );
+        index += iSize;
+    }
+    return;
+}
+
+template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
+ULIS_FORCEINLINE
+static
+void
+BuildClearJobs(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
+{
+    const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
+    const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
+    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< TDelegateInvoke >, &BuildClearJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->contiguous );
+}
+
 /////////////////////////////////////////////////////
 // Invocations
 //--------------------------------------------------------------------------------------
@@ -100,6 +182,11 @@ ScheduleClearMT_MEM(
 {
     BuildClearJobs< &InvokeClearMTProcessScanline_MEM >( iCommand, iPolicy );
 }
+
+/////////////////////////////////////////////////////
+// Dispatch
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
