@@ -43,9 +43,10 @@ BuildConvJobs_Scanlines(
 )
 {
     const FConvCommandArgs* cargs           = dynamic_cast< const FConvCommandArgs* >( iCommand->Args() );
-    const FFormatMetrics& fmt               = cargs->src.FormatMetrics();
-    const uint8* const ULIS_RESTRICT src    = cargs->src.Bits() + cargs->srcRect.x * fmt.BPP;
-    uint8* const ULIS_RESTRICT dst          = cargs->dst.Bits() + cargs->dstRect.x * fmt.BPP;
+    const FFormatMetrics& src_fmt           = cargs->src.FormatMetrics();
+    const FFormatMetrics& dst_fmt           = cargs->dst.FormatMetrics();
+    const uint8* const ULIS_RESTRICT src    = cargs->src.Bits() + cargs->srcRect.x * src_fmt.BPP;
+    uint8* const ULIS_RESTRICT dst          = cargs->dst.Bits() + cargs->dstRect.x * dst_fmt.BPP;
     const int64 src_bps                     = static_cast< int64 >( cargs->src.BytesPerScanLine() );
     const int64 dst_bps                     = static_cast< int64 >( cargs->dst.BytesPerScanLine() );
     const int64 size                        = cargs->dstRect.w;
@@ -85,6 +86,7 @@ BuildConvJobs_Chunks(
     const uint8* const ULIS_RESTRICT src    = cargs->src.Bits();
     uint8* const ULIS_RESTRICT dst          = cargs->dst.Bits();
     const int64 dst_btt                     = static_cast< int64 >( cargs->dst.BytesTotal() );
+    const FFormatMetrics& dst_fmt           = cargs->dst.FormatMetrics();
 
     int64 index = 0;
     for( int i = 0; i < iCount; ++i )
