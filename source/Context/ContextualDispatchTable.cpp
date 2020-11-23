@@ -14,7 +14,7 @@
 #pragma once
 #include "Context/ContextualDispatchTable.h"
 #include "Blend/BlendDispatch.h"
-#include "Clear/ClearDispatch.h"
+#include "Clear/Clear.h"
 #include "Copy/CopyDispatch.h"
 
 ULIS_NAMESPACE_BEGIN
