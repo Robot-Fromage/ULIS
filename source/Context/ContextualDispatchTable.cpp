@@ -15,7 +15,7 @@
 #include "Context/ContextualDispatchTable.h"
 #include "Blend/BlendDispatch.h"
 #include "Clear/Clear.h"
-#include "Copy/CopyDispatch.h"
+#include "Copy/Copy.h"
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat )

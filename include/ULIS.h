@@ -14,6 +14,8 @@
 #pragma once
 // Blend
 #include "Blend/Modes.h"
+// Context
+#include "Context/Context.h"
 // Image
 #include "Image/Block.h"
 #include "Image/Color.h"
@@ -24,8 +26,8 @@
 // Maths
 #include "Math/Geometry/Matrix.h"
 #include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
 #include "Math/Geometry/Transformation2D.h"
+#include "Math/Geometry/Vector.h"
 #include "Math/Interpolation/Bezier.h"
 #include "Math/Interpolation/CatmullRom.h"
 #include "Math/Interpolation/Spline.h"
@@ -35,8 +37,6 @@
 #include "Memory/Memory.h"
 #include "Memory/ForwardList.h"
 #include "Memory/Queue.h"
-// Mix
-#include "Mix/Mix.h"
 // String
 #include "String/String.h"
 #include "String/WString.h"
@@ -52,10 +52,8 @@
 #include "Thread/ThreadPool.h"
 // Transform
 #include "Transform/Methods.h"
-// Context
-#include "Context/Context.h"
 // Scheduling
 #include "Scheduling/CommandQueue.h"
-#include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/Event.h"
+#include "Scheduling/SchedulePolicy.h"
 
