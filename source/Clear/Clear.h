@@ -16,7 +16,6 @@
 #include "Dispatch/Dispatcher.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/ScheduleArgs.h"
-#include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

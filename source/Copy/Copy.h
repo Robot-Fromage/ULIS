@@ -13,45 +13,82 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Copy/CopyArgs.h"
+#include "Dispatch/Dispatcher.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Scheduling/ScheduleArgs.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// FCopyCommandArgs
+class FCopyCommandArgs final
+    : public ICommandArgs
+{
+public:
+    ~FCopyCommandArgs() override
+    {
+    };
 
-void
-InvokeCopyMTProcessScanline_AX2(
-      const FCopyJobArgs* jargs
-    , const FCopyCommandArgs* cargs
-);
+    FCopyCommandArgs(
+          const FBlock& iSrc
+        , FBlock& iDst
+        , const FRectI& iSrcRect
+        , const FRectI& iDstRect
+        , const bool iContiguous
+    )
+        : ICommandArgs()
+        , src( iSrc )
+        , dst( iDst )
+        , srcRect( iSrcRect )
+        , dstRect( iDstRect )
+        , contiguous( iContiguous )
+        {}
 
-void
-InvokeCopyMTProcessScanline_SSE4_2(
-      const FCopyJobArgs* jargs
-    , const FCopyCommandArgs* cargs
-);
+    const FBlock& src;
+    FBlock& dst;
+    const FRectI srcRect;
+    const FRectI dstRect;
+    const bool contiguous;
+};
 
-void
-InvokeCopyMTProcessScanline_MEM(
-      const FCopyJobArgs* jargs
-    , const FCopyCommandArgs* cargs
-);
+/////////////////////////////////////////////////////
+// FCopyJobArgs
+class FCopyJobArgs final
+    : public IJobArgs
+{
+public:
 
-void
-ScheduleCopyMT_AX2(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+    ~FCopyJobArgs() override {};
+    FCopyJobArgs(
+          const uint8* const iSrc
+        , uint8* const iDst
+        , const int64 iSize
+    )
+        : IJobArgs()
+        , src( iSrc )
+        , dst( iDst )
+        , size( iSize )
+    {}
 
-void
-ScheduleCopyMT_SSE4_2(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+    const uint8* const ULIS_RESTRICT src;
+    uint8* const ULIS_RESTRICT dst;
+    const int64 size;
+};
 
-void
-ScheduleCopyMT_MEM(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+/////////////////////////////////////////////////////
+// Scheduler
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleCopyMT_AX2 );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleCopyMT_SSE4_2 );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleCopyMT_MEM );
+
+/////////////////////////////////////////////////////
+// Dispatch
+ULIS_DECLARE_DISPATCHER( FDispatchedCopyInvocationSchedulerSelector )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
+      FDispatchedCopyInvocationSchedulerSelector
+    , &ScheduleCopyMT_AX2
+    , &ScheduleCopyMT_SSE4_2
+    , &ScheduleCopyMT_MEM
+)
 
 ULIS_NAMESPACE_END
 
