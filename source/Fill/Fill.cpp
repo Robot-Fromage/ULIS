@@ -99,7 +99,7 @@ BuildFillJobs(
     , const FSchedulePolicy& iPolicy
 )
 {
-    const FFillCommandArgs* cargs  = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
+    const FFillCommandArgs* cargs   = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
     const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
     RangeBasedPolicyScheduleJobs< &BuildFillJobs_Scanlines< TDelegateInvoke >, &BuildFillJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->contiguous );
 }
@@ -115,6 +115,15 @@ InvokeFillMTProcessScanline_AX2(
     , const FFillCommandArgs* cargs
 )
 {
+    __m256i src = _mm256_lddqu_si256( reinterpret_cast< const __m256i* >( cargs->buffer ) );
+    __m256i* ULIS_RESTRICT dst = reinterpret_cast< __m256i* >( jargs->dst );
+    int64 index = 0;
+    for( index = 0; index < jargs->size - 32; index += 32 ) {
+        _mm256_storeu_si256( dst, src );
+        ++dst;
+    }
+    // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
+    memcpy( dst, cargs->buffer, jargs->size - index );
 }
 #endif // ULIS_COMPILETIME_AVX2_SUPPORT
 
@@ -127,6 +136,15 @@ InvokeFillMTProcessScanline_SSE4_2(
     , const FFillCommandArgs* cargs
 )
 {
+    __m128i src = _mm_lddqu_si128( reinterpret_cast< const __m128i* >( cargs->buffer ) );
+    __m128i* ULIS_RESTRICT dst = reinterpret_cast< __m128i* >( jargs->dst );
+    int64 index = 0;
+    for( index = 0; index < jargs->size - 16; index += 16 ) {
+        _mm_storeu_si128( dst, _mm_setzero_si128() );
+        ++dst;
+    }
+    // Remaining unaligned scanline end: avoid concurrent write on 128 bit with SSE and perform a memset instead
+    memcpy( dst, cargs->buffer, jargs->size - index );
 }
 #endif // __SE4_2__
 
@@ -138,6 +156,13 @@ InvokeFillMTProcessScanline_MEM(
     , const FFillCommandArgs* cargs
 )
 {
+    const uint8* src = cargs->buffer;
+    const uint8 stride = cargs->block.BytesPerPixel();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    for( uint32 i = 0; i < jargs->size; ++i ) {
+        memcpy( dst, src, stride );
+        dst += stride;
+    }
 }
 
 /////////////////////////////////////////////////////
@@ -148,7 +173,17 @@ ScheduleFillMT_AX2(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildFillJobs< &InvokeFillMTProcessScanline_AX2 >( iCommand, iPolicy );
+    const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
+    const uint8 bpp = cargs->block.BytesPerPixel();
+    const uint32 bps = cargs->block.BytesPerScanLine();
+
+    if( bpp <= 32 && bps >= 32 ) {
+        BuildFillJobs< &InvokeFillMTProcessScanline_AX2 >( iCommand, iPolicy );
+    } else if( bpp <= 16 && bps >= 16 ) {
+        BuildFillJobs< &InvokeFillMTProcessScanline_SSE4_2 >( iCommand, iPolicy );
+    } else {
+        BuildFillJobs< &InvokeFillMTProcessScanline_MEM >( iCommand, iPolicy );
+    }
 }
 
 void
@@ -157,7 +192,14 @@ ScheduleFillMT_SSE4_2(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildFillJobs< &InvokeFillMTProcessScanline_SSE4_2 >( iCommand, iPolicy );
+    const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
+    const uint8 bpp = cargs->block.BytesPerPixel();
+    const uint32 bps = cargs->block.BytesPerScanLine();
+    if( bpp <= 16 && bps >= 16 ) {
+        BuildFillJobs< &InvokeFillMTProcessScanline_SSE4_2 >( iCommand, iPolicy );
+    } else {
+        BuildFillJobs< &InvokeFillMTProcessScanline_MEM >( iCommand, iPolicy );
+    }
 }
 
 void
@@ -166,6 +208,9 @@ ScheduleFillMT_MEM(
     , const FSchedulePolicy& iPolicy
 )
 {
+    const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
+    const uint8 bpp = cargs->block.BytesPerPixel();
+    const uint32 bps = cargs->block.BytesPerScanLine();
     BuildFillJobs< &InvokeFillMTProcessScanline_MEM >( iCommand, iPolicy );
 }
 

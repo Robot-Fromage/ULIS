@@ -26,20 +26,27 @@ class FFillCommandArgs final
 public:
     ~FFillCommandArgs() override
     {
+        if( buffer )
+            delete [] buffer;
     };
 
     FFillCommandArgs(
           FBlock& iBlock
+        , FColor& iColor
         , const FRectI& iRect
         , const bool iWhole
     )
         : ICommandArgs()
         , block( iBlock )
+        , color( iColor )
+        , buffer( nullptr )
         , rect( iRect )
         , contiguous( iWhole )
         {}
 
     FBlock& block;
+    FColor color;
+    uint8* buffer;
     const FRectI rect;
     const bool contiguous;
 };
