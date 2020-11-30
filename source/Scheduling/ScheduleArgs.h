@@ -41,7 +41,21 @@ public:
     virtual ~IJobArgs() = 0;
 };
 
-#define ULIS_DECLARE_COMMAND_SCHEDULER( iName ) void iName ( FCommand* iCommand, const FSchedulePolicy& iPolicy, bool iContiguous = false );
+/////////////////////////////////////////////////////
+/// @class      FSimpleBufferJobArgs
+/// @brief      The FSimpleBufferJobArgs class provides a class to implement
+///             the arguments objects for operations, used on simple buffers.
+/// @details    FSimpleBufferJobArgs is usually used for simple operations on a
+///             single buffer, such as Clear or Fill, for instance.
+class FSimpleBufferJobArgs final
+    : public IJobArgs
+{
+public:
+    ~FSimpleBufferJobArgs() override {}
+
+    uint8* ULIS_RESTRICT dst;
+    int64 size;
+};
 
 ULIS_NAMESPACE_END
 
