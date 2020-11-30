@@ -48,16 +48,8 @@ class FClearJobArgs final
 {
 public:
     ~FClearJobArgs() override {};
-    FClearJobArgs(
-          uint8* const iDst
-        , const int64 iSize
-    )
-        : IJobArgs()
-        , dst( iDst )
-        , size( iSize )
-    {}
 
-    uint8* const ULIS_RESTRICT dst;
+    uint8* ULIS_RESTRICT dst;
     int64 size;
 };
 

@@ -24,7 +24,7 @@ template<
           const TJobArgs*
         , const TCommandArgs*
         )
-    , void(*TDelegateBuildJobScanline)(
+    , void(*TDelegateBuildJobScanlines)(
           const TCommandArgs*
         , const int64
         , const int64
@@ -47,8 +47,8 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
         uint8* buf = new uint8[ iNumTasksPerJob * sizeof( TJobArgs ) ];
         TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
         for( int i = 0; i < iNumTasksPerJob; ++i ) {
-            new ( buf ) TJobArgs();
-            TDelegateBuildJobScanline( cargs, iNumJobs, iNumTasksPerJob, i, jargs[i] );
+            new ( jargs + i ) TJobArgs();
+            TDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i, jargs[i] );
         }
         FJob* job = new FJob(
               1
@@ -67,7 +67,7 @@ template<
           const TJobArgs*
         , const TCommandArgs*
         )
-    , void(*TDelegateBuildJobScanline)(
+    , void(*TDelegateBuildJobChunks)(
           const TCommandArgs*
         , const int64
         , const int64
@@ -79,34 +79,174 @@ template<
 ULIS_FORCEINLINE
 static
 void
-RangeBasedSchedulingDelegateBuildJobs_Chunk(
+RangeBasedSchedulingDelegateBuildJobs_Chunks(
       FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
     , const int64 iSize
-    , const int64 iCount
+    , const int64 iNumChunks
 )
 {
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
-    int64 index = 0;
-    for( int i = 0; i < iCount; ++i )
+    int64 offset = 0;
+    for( int i = 0; i < iNumChunks; ++i )
     {
         uint8* buf = new uint8[ sizeof( TJobArgs ) ];
         TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
-        new ( buf ) TJobArgs();
-        TDelegateBuildJobScanline( cargs, iSize, iCount, index, i, jargs[i] );
+        new ( jargs ) TJobArgs();
+        TDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, jargs[i] );
 
         FJob* job = new FJob(
               1
             , &ResolveScheduledJobCall< TJobArgs, TCommandArgs, TDelegateInvoke >
             , jargs );
         iCommand->AddJob( job );
-        index += iSize;
+        offset += iSize;
     }
     return;
 }
 
 /////////////////////////////////////////////////////
 // Master Job Building
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+    , void(*TDelegateBuildJobScanlines)(
+          const TCommandArgs*
+        , const int64
+        , const int64
+        , const int64
+        , TJobArgs&
+        )
+    , void(*TDelegateBuildJobChunks)(
+          const TCommandArgs*
+        , const int64
+        , const int64
+        , const int64
+        , const int64
+        , TJobArgs&
+        )
+>
+ULIS_FORCEINLINE
+static
+void
+RangeBasedSchedulingBuildJobs(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+    , const int64 iBytesTotal
+    , const int64 iNumScanlines
+    , const bool iChunkAllowed
+)
+{
+    if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
+        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
+            goto mono_scanlines;
+        else
+            if( !( iChunkAllowed ) )
+                goto mono_scanlines;
+            else
+                goto mono_chunks;
+    else
+        if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
+            goto multi_scanlines;
+        else
+            if( !( iChunkAllowed ) )
+                goto multi_scanlines;
+            else
+                if( iPolicy.ParameterPolicy() == eScheduleParameterPolicy::ScheduleParameter_Count )
+                    goto multi_chunks_count;
+                else
+                    goto multi_chunks_length;
+
+mono_scanlines:
+    {
+        RangeBasedSchedulingDelegateBuildJobs_Scanlines<
+              TJobArgs
+            , TCommandArgs
+            , TDelegateInvoke
+            , TDelegateBuildJobScanlines
+        >
+        (
+              iCommand
+            , 1
+            , iNumScanlines
+        );
+        return;
+    }
+
+multi_scanlines:
+    {
+        RangeBasedSchedulingDelegateBuildJobs_Scanlines<
+              TJobArgs
+            , TCommandArgs
+            , TDelegateInvoke
+            , TDelegateBuildJobScanlines
+        >
+        (
+              iCommand
+            , iNumScanlines
+            , 1
+        );
+        return;
+    }
+
+mono_chunks:
+    {
+        RangeBasedSchedulingDelegateBuildJobs_Chunks<
+              TJobArgs
+            , TCommandArgs
+            , TDelegateInvoke
+            , TDelegateBuildJobChunks
+        >
+        (
+              iCommand
+            , iBytesTotal
+            , 1
+        );
+        return;
+    }
+
+multi_chunks_count:
+    {
+        const int64 count = FMath::Max( iPolicy.Value(), int64(1) );
+        const int64 size = int64( FMath::Ceil( iBytesTotal / float( count ) ) );
+        RangeBasedSchedulingDelegateBuildJobs_Chunks<
+              TJobArgs
+            , TCommandArgs
+            , TDelegateInvoke
+            , TDelegateBuildJobChunks
+        >
+        (
+              iCommand
+            , size
+            , count
+        );
+        return;
+    }
+
+multi_chunks_length:
+    {
+        const int64 size = FMath::Max( iPolicy.Value(), int64(1) );
+        const int64 count = int64( FMath::Ceil( iBytesTotal / float( size ) ) );
+        RangeBasedSchedulingDelegateBuildJobs_Chunks<
+              TJobArgs
+            , TCommandArgs
+            , TDelegateInvoke
+            , TDelegateBuildJobChunks
+        >
+        (
+              iCommand
+            , size
+            , count
+        );
+        return;
+    }
+}
+
+/////////////////////////////////////////////////////
+// Old Master Job Building
 template<
       void (*TDelegateScanlines)( FCommand*, const FSchedulePolicy&, const int64, const int64 )
     , void (*TDelegateChunks)( FCommand*, const FSchedulePolicy&, const int64, const int64 )
