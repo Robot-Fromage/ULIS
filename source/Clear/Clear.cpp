@@ -60,7 +60,7 @@ template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs
 ULIS_FORCEINLINE
 static
 void
-BuildClearJobs(
+ScheduleClearJobs(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , bool iContiguous
@@ -89,7 +89,7 @@ BuildClearJobs(
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
 void
-InvokeClearMTProcessScanline_AX2(
+InvokeClearMT_AX2(
       const FClearJobArgs* jargs
     , const FClearCommandArgs* cargs
 )
@@ -109,7 +109,7 @@ InvokeClearMTProcessScanline_AX2(
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 void
-InvokeClearMTProcessScanline_SSE4_2(
+InvokeClearMT_SSE4_2(
       const FClearJobArgs* jargs
     , const FClearCommandArgs* cargs
 )
@@ -128,7 +128,7 @@ InvokeClearMTProcessScanline_SSE4_2(
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
 void
-InvokeClearMTProcessScanline_MEM(
+InvokeClearMT_MEM(
       const FClearJobArgs* jargs
     , const FClearCommandArgs* cargs
 )
@@ -146,7 +146,7 @@ ScheduleClearMT_AX2(
     , bool iContiguous
 )
 {
-    BuildClearJobs< &InvokeClearMTProcessScanline_AX2 >( iCommand, iPolicy, iContiguous );
+    ScheduleClearJobs< &InvokeClearMT_AX2 >( iCommand, iPolicy, iContiguous );
 }
 
 void
@@ -156,7 +156,7 @@ ScheduleClearMT_SSE4_2(
     , bool iContiguous
 )
 {
-    BuildClearJobs< &InvokeClearMTProcessScanline_SSE4_2 >( iCommand, iPolicy, iContiguous );
+    ScheduleClearJobs< &InvokeClearMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
 }
 
 void
@@ -166,7 +166,7 @@ ScheduleClearMT_MEM(
     , bool iContiguous
 )
 {
-    BuildClearJobs< &InvokeClearMTProcessScanline_MEM >( iCommand, iPolicy, iContiguous );
+    ScheduleClearJobs< &InvokeClearMT_MEM >( iCommand, iPolicy, iContiguous );
 }
 
 /////////////////////////////////////////////////////
