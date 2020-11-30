@@ -19,7 +19,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Job Building
-template< void (*TDelegateInvoke)( const FFillJobArgs*, const FFillCommandArgs* ) >
+template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
@@ -38,22 +38,22 @@ BuildFillJobs_Scanlines(
 
     for( int i = 0; i < iNumJobs; ++i )
     {
-        uint8* buf = new uint8[ iNumTasksPerJob * sizeof( FFillJobArgs ) ];
-        FFillJobArgs* jargs = reinterpret_cast< FFillJobArgs* >( buf );
+        uint8* buf = new uint8[ iNumTasksPerJob * sizeof( FSimpleBufferJobArgs ) ];
+        FSimpleBufferJobArgs* jargs = reinterpret_cast< FSimpleBufferJobArgs* >( buf );
         for( int i = 0; i < iNumTasksPerJob; ++i )
-            new ( buf ) FFillJobArgs(
+            new ( buf ) FSimpleBufferJobArgs(
               dst + ( cargs->rect.y + i ) * bps
             , size
         );
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< FFillJobArgs, FFillCommandArgs, TDelegateInvoke >
+            , &ResolveScheduledJobCall< FSimpleBufferJobArgs, FFillCommandArgs, TDelegateInvoke >
             , jargs );
         iCommand->AddJob( job );
     }
 }
 
-template< void (*TDelegateInvoke)( const FFillJobArgs*, const FFillCommandArgs* ) >
+template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
@@ -71,15 +71,15 @@ BuildFillJobs_Chunks(
     int64 index = 0;
     for( int i = 0; i < iCount; ++i )
     {
-        uint8* buf = new uint8[ sizeof( FFillJobArgs ) ];
-        FFillJobArgs* jargs = reinterpret_cast< FFillJobArgs* >( buf );
-        new ( buf ) FFillJobArgs(
+        uint8* buf = new uint8[ sizeof( FSimpleBufferJobArgs ) ];
+        FSimpleBufferJobArgs* jargs = reinterpret_cast< FSimpleBufferJobArgs* >( buf );
+        new ( buf ) FSimpleBufferJobArgs(
               dst + index
             , FMath::Min( index + iSize, btt ) - index
         );
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< FFillJobArgs, FFillCommandArgs, TDelegateInvoke >
+            , &ResolveScheduledJobCall< FSimpleBufferJobArgs, FFillCommandArgs, TDelegateInvoke >
             , jargs );
         iCommand->AddJob( job );
         index += iSize;
@@ -87,7 +87,7 @@ BuildFillJobs_Chunks(
     return;
 }
 
-template< void (*TDelegateInvoke)( const FFillJobArgs*, const FFillCommandArgs* ) >
+template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillCommandArgs* ) >
 ULIS_FORCEINLINE
 static
 void
@@ -107,8 +107,8 @@ BuildFillJobs(
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
 void
-InvokeFillMTProcessScanline_AX2(
-      const FFillJobArgs* jargs
+InvokeFillMT_AX2(
+      const FSimpleBufferJobArgs* jargs
     , const FFillCommandArgs* cargs
 )
 {
@@ -128,8 +128,8 @@ InvokeFillMTProcessScanline_AX2(
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 void
-InvokeFillMTProcessScanline_SSE4_2(
-      const FFillJobArgs* jargs
+InvokeFillMT_SSE4_2(
+      const FSimpleBufferJobArgs* jargs
     , const FFillCommandArgs* cargs
 )
 {
@@ -148,8 +148,8 @@ InvokeFillMTProcessScanline_SSE4_2(
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
 void
-InvokeFillMTProcessScanline_MEM(
-      const FFillJobArgs* jargs
+InvokeFillMT_MEM(
+      const FSimpleBufferJobArgs* jargs
     , const FFillCommandArgs* cargs
 )
 {
@@ -175,11 +175,11 @@ ScheduleFillMT_AX2(
     const uint32 bps = cargs->block.BytesPerScanLine();
 
     if( bpp <= 32 && bps >= 32 ) {
-        BuildFillJobs< &InvokeFillMTProcessScanline_AX2 >( iCommand, iPolicy );
+        BuildFillJobs< &InvokeFillMT_AX2 >( iCommand, iPolicy );
     } else if( bpp <= 16 && bps >= 16 ) {
-        BuildFillJobs< &InvokeFillMTProcessScanline_SSE4_2 >( iCommand, iPolicy );
+        BuildFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy );
     } else {
-        BuildFillJobs< &InvokeFillMTProcessScanline_MEM >( iCommand, iPolicy );
+        BuildFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
     }
 }
 
@@ -193,9 +193,9 @@ ScheduleFillMT_SSE4_2(
     const uint8 bpp = cargs->block.BytesPerPixel();
     const uint32 bps = cargs->block.BytesPerScanLine();
     if( bpp <= 16 && bps >= 16 ) {
-        BuildFillJobs< &InvokeFillMTProcessScanline_SSE4_2 >( iCommand, iPolicy );
+        BuildFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy );
     } else {
-        BuildFillJobs< &InvokeFillMTProcessScanline_MEM >( iCommand, iPolicy );
+        BuildFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
     }
 }
 
@@ -208,7 +208,7 @@ ScheduleFillMT_MEM(
     const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
     const uint8 bpp = cargs->block.BytesPerPixel();
     const uint32 bps = cargs->block.BytesPerScanLine();
-    BuildFillJobs< &InvokeFillMTProcessScanline_MEM >( iCommand, iPolicy );
+    BuildFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
 }
 
 /////////////////////////////////////////////////////

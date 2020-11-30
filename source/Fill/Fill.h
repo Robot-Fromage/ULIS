@@ -53,26 +53,6 @@ public:
 };
 
 /////////////////////////////////////////////////////
-// FFillJobArgs
-class FFillJobArgs final
-    : public IJobArgs
-{
-public:
-    ~FFillJobArgs() override {};
-    FFillJobArgs(
-          uint8* const iDst
-        , const int64 iSize
-    )
-        : IJobArgs()
-        , dst( iDst )
-        , size( iSize )
-    {}
-
-    uint8* const ULIS_RESTRICT dst;
-    const int64 size;
-};
-
-/////////////////////////////////////////////////////
 // Scheduler
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AX2 );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_SSE4_2 );
