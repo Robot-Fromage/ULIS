@@ -31,17 +31,14 @@ public:
     FClearCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
-        , const bool iWhole
     )
         : ICommandArgs()
         , block( iBlock )
         , rect( iRect )
-        , contiguous( iWhole )
         {}
 
     FBlock& block;
     const FRectI rect;
-    const bool contiguous;
 };
 
 /////////////////////////////////////////////////////
@@ -61,7 +58,7 @@ public:
     {}
 
     uint8* const ULIS_RESTRICT dst;
-    const int64 size;
+    int64 size;
 };
 
 /////////////////////////////////////////////////////

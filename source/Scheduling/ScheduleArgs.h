@@ -41,7 +41,7 @@ public:
     virtual ~IJobArgs() = 0;
 };
 
-#define ULIS_DECLARE_COMMAND_SCHEDULER( iName ) void iName ( FCommand* iCommand, const FSchedulePolicy& iPolicy );
+#define ULIS_DECLARE_COMMAND_SCHEDULER( iName ) void iName ( FCommand* iCommand, const FSchedulePolicy& iPolicy, bool iContiguous = false );
 
 ULIS_NAMESPACE_END
 

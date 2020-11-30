@@ -94,11 +94,12 @@ void
 BuildClearJobs(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
+    , bool iContiguous
 )
 {
     const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
     const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
-    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< TDelegateInvoke >, &BuildClearJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->contiguous );
+    RangeBasedPolicyScheduleJobs< &BuildClearJobs_Scanlines< TDelegateInvoke >, &BuildClearJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, iContiguous );
 }
 
 /////////////////////////////////////////////////////
@@ -161,27 +162,30 @@ void
 ScheduleClearMT_AX2(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
+    , bool iContiguous
 )
 {
-    BuildClearJobs< &InvokeClearMTProcessScanline_AX2 >( iCommand, iPolicy );
+    BuildClearJobs< &InvokeClearMTProcessScanline_AX2 >( iCommand, iPolicy, iContiguous );
 }
 
 void
 ScheduleClearMT_SSE4_2(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
+    , bool iContiguous
 )
 {
-    BuildClearJobs< &InvokeClearMTProcessScanline_SSE4_2 >( iCommand, iPolicy );
+    BuildClearJobs< &InvokeClearMTProcessScanline_SSE4_2 >( iCommand, iPolicy, iContiguous );
 }
 
 void
 ScheduleClearMT_MEM(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
+    , bool iContiguous
 )
 {
-    BuildClearJobs< &InvokeClearMTProcessScanline_MEM >( iCommand, iPolicy );
+    BuildClearJobs< &InvokeClearMTProcessScanline_MEM >( iCommand, iPolicy, iContiguous );
 }
 
 /////////////////////////////////////////////////////

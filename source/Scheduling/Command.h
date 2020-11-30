@@ -21,16 +21,16 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
-typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy& );
+typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, bool );
 
 /////////////////////////////////////////////////////
 // ResolveScheduleCommandCall
-template< typename ARGS, void (*IMP)( const ARGS*, const FSchedulePolicy& ) >
-static ULIS_FORCEINLINE void ResolveScheduleCommandCall( const ICommandArgs* iArgs, const FSchedulePolicy& iPolicy )
+template< typename ARGS, void (*IMP)( const ARGS*, const FSchedulePolicy&, bool ) >
+static ULIS_FORCEINLINE void ResolveScheduleCommandCall( const ICommandArgs* iArgs, const FSchedulePolicy& iPolicy, bool iContiguous )
 {
     const ARGS* args = dynamic_cast< const ARGS* >( iArgs );
     ULIS_ASSERT( args, "Bad cast" );
-    IMP( args, iPolicy );
+    IMP( args, iPolicy, iContiguous );
 }
 
 /////////////////////////////////////////////////////
