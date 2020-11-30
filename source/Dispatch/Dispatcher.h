@@ -150,7 +150,7 @@ const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 };                                                                                              \
 const int TAG::spec_size = sizeof( TAG::spec_table ) / sizeof( TAG::FSpecDispatchGroup ) - 1;
 
-#define ULIS_NO_DISPATCHER_SPECIALIZATION_DEFINITION( TAG ) \
+#define ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( TAG ) \
 ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( TAG )      \
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( TAG )
 

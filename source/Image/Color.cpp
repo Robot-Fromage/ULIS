@@ -80,18 +80,18 @@ struct TColorInitializer< ufloat > {
     }
 };
 
-template<>
-struct TColorInitializer< udouble > {
-    template< typename U >
-    static
-    ULIS_FORCEINLINE
-    void
-    Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() <= oColor->SamplesPerPixel(), "Bad input values" );
-        for( int i = 0; i < iValues.size(); ++i )
-            oColor->SetChannelD( i, ConvType< U, udouble >( *( iValues.begin() + i ) ) );
-    }
-};
+//DISABLED:DOUBLEtemplate<>
+//DISABLED:DOUBLEstruct TColorInitializer< udouble > {
+//DISABLED:DOUBLE    template< typename U >
+//DISABLED:DOUBLE    static
+//DISABLED:DOUBLE    ULIS_FORCEINLINE
+//DISABLED:DOUBLE    void
+//DISABLED:DOUBLE    Run( FColor* oColor, const std::initializer_list< U > iValues ) {
+//DISABLED:DOUBLE        ULIS_ASSERT( iValues.size() <= oColor->SamplesPerPixel(), "Bad input values" );
+//DISABLED:DOUBLE        for( int i = 0; i < iValues.size(); ++i )
+//DISABLED:DOUBLE            oColor->SetChannelD( i, ConvType< U, udouble >( *( iValues.begin() + i ) ) );
+//DISABLED:DOUBLE    }
+//DISABLED:DOUBLE};
 
 } // namespace detail
 
@@ -206,11 +206,11 @@ FColor::GreyAF( ufloat iGrey, ufloat iA )
 }
 
 //static
-FColor
-FColor::GreyAD( udouble iGrey, udouble iA )
-{
-    return  FColor( eFormat::Format_GAD, { iGrey, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::GreyAD( udouble iGrey, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_GAD, { iGrey, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -241,11 +241,11 @@ FColor::RGBAF( ufloat iR, ufloat iG, ufloat iB, ufloat iA )
 }
 
 //static
-FColor
-FColor::RGBAD( udouble iR, udouble iG, udouble iB, udouble iA )
-{
-    return  FColor( eFormat::Format_RGBAD, { iR, iG, iB, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::RGBAD( udouble iR, udouble iG, udouble iB, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_RGBAD, { iR, iG, iB, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -276,11 +276,11 @@ FColor::HSVAF( ufloat iH, ufloat iS, ufloat iV, ufloat iA )
 }
 
 //static
-FColor
-FColor::HSVAD( udouble iH, udouble iS, udouble iV, udouble iA )
-{
-    return  FColor( eFormat::Format_HSVAD, { iH, iS, iV, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::HSVAD( udouble iH, udouble iS, udouble iV, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_HSVAD, { iH, iS, iV, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -311,11 +311,11 @@ FColor::HSLAF( ufloat iH, ufloat iS, ufloat iL, ufloat iA )
 }
 
 //static
-FColor
-FColor::HSLAD( udouble iH, udouble iS, udouble iL, udouble iA )
-{
-    return  FColor( eFormat::Format_HSLAD, { iH, iS, iL, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::HSLAD( udouble iH, udouble iS, udouble iL, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_HSLAD, { iH, iS, iL, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -346,11 +346,11 @@ FColor::CMYAF( ufloat iC, ufloat iM, ufloat iY, ufloat iA )
 }
 
 //static
-FColor
-FColor::CMYAD( udouble iC, udouble iM, udouble iY, udouble iA )
-{
-    return  FColor( eFormat::Format_CMYAD, { iC, iM, iY, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::CMYAD( udouble iC, udouble iM, udouble iY, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_CMYAD, { iC, iM, iY, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -381,11 +381,11 @@ FColor::CMYKAF( ufloat iC, ufloat iM, ufloat iY, ufloat iK, ufloat iA )
 }
 
 //static
-FColor
-FColor::CMYKAD( udouble iC, udouble iM, udouble iY, udouble iK, udouble iA )
-{
-    return  FColor( eFormat::Format_CMYKAD, { iC, iM, iY, iK, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::CMYKAD( udouble iC, udouble iM, udouble iY, udouble iK, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_CMYKAD, { iC, iM, iY, iK, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -416,11 +416,11 @@ FColor::YUVAF( ufloat iY, ufloat iU, ufloat iV, ufloat iA )
 }
 
 //static
-FColor
-FColor::YUVAD( udouble iY, udouble iU, udouble iV, udouble iA )
-{
-    return  FColor( eFormat::Format_YUVAD, { iY, iU, iV, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::YUVAD( udouble iY, udouble iU, udouble iV, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_YUVAD, { iY, iU, iV, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -451,11 +451,11 @@ FColor::LabAF( ufloat iL, ufloat ia, ufloat ib, ufloat iA )
 }
 
 //static
-FColor
-FColor::LabAD( udouble iL, udouble ia, udouble ib, udouble iA )
-{
-    return  FColor( eFormat::Format_LabAD, { iL, ia, ib, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::LabAD( udouble iL, udouble ia, udouble ib, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_LabAD, { iL, ia, ib, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -486,11 +486,11 @@ FColor::XYZAF( ufloat iX, ufloat iY, ufloat iZ, ufloat iA )
 }
 
 //static
-FColor
-FColor::XYZAD( udouble iX, udouble iY, udouble iZ, udouble iA )
-{
-    return  FColor( eFormat::Format_XYZAD, { iX, iY, iZ, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::XYZAD( udouble iX, udouble iY, udouble iZ, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_XYZAD, { iX, iY, iZ, iA } );
+//DISABLED:DOUBLE}
 
 //static
 FColor
@@ -521,18 +521,18 @@ FColor::YxyAF( ufloat iY, ufloat ix, ufloat iy, ufloat iA )
 }
 
 //static
-FColor
-FColor::YxyAD( udouble iY, udouble ix, udouble iy, udouble iA )
-{
-    return  FColor( eFormat::Format_YxyAD, { iY, ix, iy, iA } );
-}
+//DISABLED:DOUBLEFColor
+//DISABLED:DOUBLEFColor::YxyAD( udouble iY, udouble ix, udouble iy, udouble iA )
+//DISABLED:DOUBLE{
+//DISABLED:DOUBLE    return  FColor( eFormat::Format_YxyAD, { iY, ix, iy, iA } );
+//DISABLED:DOUBLE}
 
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint8 >, const FColorSpace* );
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint16 >, const FColorSpace* );
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
-template ULIS_API FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
+//DISABLED:DOUBLEtemplate ULIS_API FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 
 ULIS_NAMESPACE_END
 

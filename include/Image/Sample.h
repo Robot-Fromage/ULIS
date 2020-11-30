@@ -133,15 +133,15 @@ public:
         return  reinterpret_cast< ufloat* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
 
-    /*!
-    Obtain the value at the redirected channel index as udouble. It is undefined
-    behaviour to call this if the format is not of type udouble.
-    */
-    ULIS_FORCEINLINE udouble ChannelD( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UDOUBLE, "Bad type" );
-        return  reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ];
-    }
+    //DISABLED:DOUBLE/*!
+    //DISABLED:DOUBLEObtain the value at the redirected channel index as udouble. It is undefined
+    //DISABLED:DOUBLEbehaviour to call this if the format is not of type udouble.
+    //DISABLED:DOUBLE*/
+    //DISABLED:DOUBLEULIS_FORCEINLINE udouble ChannelD( uint8 iIndex ) const {
+    //DISABLED:DOUBLE    ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
+    //DISABLED:DOUBLE    ULIS_ASSERT( Type() == TYPE_UDOUBLE, "Bad type" );
+    //DISABLED:DOUBLE    return  reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ];
+    //DISABLED:DOUBLE}
 
     /*!
     Set the value at the redirected channel index as uint8. It is undefined
@@ -183,37 +183,37 @@ public:
         reinterpret_cast< ufloat* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
 
-    /*!
-    Set the value at the redirected channel index as udouble. It is undefined
-    behaviour to call this if the format is not of type udouble.
-    */
-    ULIS_FORCEINLINE void SetChannelD( uint8 iIndex, udouble iValue ) {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UDOUBLE, "Bad type" );
-        reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
-    }
+    //DISABLED:DOUBLE/*!
+    //DISABLED:DOUBLESet the value at the redirected channel index as udouble. It is undefined
+    //DISABLED:DOUBLEbehaviour to call this if the format is not of type udouble.
+    //DISABLED:DOUBLE*/
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetChannelD( uint8 iIndex, udouble iValue ) {
+    //DISABLED:DOUBLE    ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
+    //DISABLED:DOUBLE    ULIS_ASSERT( Type() == TYPE_UDOUBLE, "Bad type" );
+    //DISABLED:DOUBLE    reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
+    //DISABLED:DOUBLE}
 
     ULIS_FORCEINLINE uint8     Alpha8()    const { return  HasAlpha() ? Channel8( AlphaIndex() )   : MaxType< uint8 >();   }
     ULIS_FORCEINLINE uint16    Alpha16()   const { return  HasAlpha() ? Channel16( AlphaIndex() )  : MaxType< uint16 >();  }
     ULIS_FORCEINLINE uint32    Alpha32()   const { return  HasAlpha() ? Channel32( AlphaIndex() )  : MaxType< uint32 >();  }
     ULIS_FORCEINLINE float     AlphaF()    const { return  HasAlpha() ? ChannelF( AlphaIndex() )   : MaxType< ufloat >();  }
-    ULIS_FORCEINLINE double    AlphaD()    const { return  HasAlpha() ? ChannelD( AlphaIndex() )   : MaxType< udouble >(); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double    AlphaD()    const { return  HasAlpha() ? ChannelD( AlphaIndex() )   : MaxType< udouble >(); }
     ULIS_FORCEINLINE uint8     A8()        const { return  Alpha8();   }
     ULIS_FORCEINLINE uint16    A16()       const { return  Alpha16();  }
     ULIS_FORCEINLINE uint32    A32()       const { return  Alpha32();  }
     ULIS_FORCEINLINE float     AF()        const { return  AlphaF();   }
-    ULIS_FORCEINLINE double    AD()        const { return  AlphaD();   }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double    AD()        const { return  AlphaD();   }
 
     ULIS_FORCEINLINE void SetAlpha8(   uint8 iValue )  { if( HasAlpha() ) SetChannel8(  AlphaIndex(), iValue ); }
     ULIS_FORCEINLINE void SetAlpha16(  uint16 iValue ) { if( HasAlpha() ) SetChannel16( AlphaIndex(), iValue ); }
     ULIS_FORCEINLINE void SetAlpha32(  uint32 iValue ) { if( HasAlpha() ) SetChannel32( AlphaIndex(), iValue ); }
     ULIS_FORCEINLINE void SetAlphaF(   float iValue )  { if( HasAlpha() ) SetChannelF(  AlphaIndex(), iValue ); }
-    ULIS_FORCEINLINE void SetAlphaD(   double iValue ) { if( HasAlpha() ) SetChannelD(  AlphaIndex(), iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetAlphaD(   double iValue ) { if( HasAlpha() ) SetChannelD(  AlphaIndex(), iValue ); }
     ULIS_FORCEINLINE void SetA8(       uint8 iValue )  { SetAlpha8(  iValue ); }
     ULIS_FORCEINLINE void SetA16(      uint16 iValue ) { SetAlpha16( iValue ); }
     ULIS_FORCEINLINE void SetA32(      uint32 iValue ) { SetAlpha32( iValue ); }
     ULIS_FORCEINLINE void SetAF(       float iValue )  { SetAlphaF(  iValue ); }
-    ULIS_FORCEINLINE void SetAD(       double iValue ) { SetAlphaD(  iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetAD(       double iValue ) { SetAlphaD(  iValue ); }
 
     ULIS_FORCEINLINE uint8 Grey8()         const { return  Channel8( 0 ); }
     ULIS_FORCEINLINE uint8 Red8()          const { return  Channel8( 0 ); }
@@ -327,33 +327,33 @@ public:
     ULIS_FORCEINLINE float xF()            const { return  ChannelF( 1 ); }
     ULIS_FORCEINLINE float yF()            const { return  ChannelF( 2 ); }
 
-    ULIS_FORCEINLINE double GreyD()        const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double RedD()         const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double GreenD()       const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double BlueD()        const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double RD()           const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double GD()           const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double BD()           const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double HueD()         const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double SaturationD()  const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double LightnessD()   const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double ValueD()       const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double CyanD()        const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double MagentaD()     const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double YellowD()      const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double KeyD()         const { return  ChannelD( 3 ); }
-    ULIS_FORCEINLINE double LumaD()        const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double UD()           const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double VD()           const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double KD()           const { return  ChannelD( 3 ); }
-    ULIS_FORCEINLINE double XD()           const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double YD()           const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double ZD()           const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double LD()           const { return  ChannelD( 0 ); }
-    ULIS_FORCEINLINE double aD()           const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double bD()           const { return  ChannelD( 2 ); }
-    ULIS_FORCEINLINE double xD()           const { return  ChannelD( 1 ); }
-    ULIS_FORCEINLINE double yD()           const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double GreyD()        const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double RedD()         const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double GreenD()       const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double BlueD()        const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double RD()           const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double GD()           const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double BD()           const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double HueD()         const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double SaturationD()  const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double LightnessD()   const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double ValueD()       const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double CyanD()        const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double MagentaD()     const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double YellowD()      const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double KeyD()         const { return  ChannelD( 3 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double LumaD()        const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double UD()           const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double VD()           const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double KD()           const { return  ChannelD( 3 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double XD()           const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double YD()           const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double ZD()           const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double LD()           const { return  ChannelD( 0 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double aD()           const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double bD()           const { return  ChannelD( 2 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double xD()           const { return  ChannelD( 1 ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double yD()           const { return  ChannelD( 2 ); }
 
     ULIS_FORCEINLINE void SetGrey8(        uint8 iValue )  { SetChannel8( 0, iValue ); }
     ULIS_FORCEINLINE void SetRed8(         uint8 iValue )  { SetChannel8( 0, iValue ); }
@@ -467,33 +467,33 @@ public:
     ULIS_FORCEINLINE void SetxF(           ufloat iValue ) { SetChannelF( 1, iValue ); }
     ULIS_FORCEINLINE void SetyF(           ufloat iValue ) { SetChannelF( 2, iValue ); }
 
-    ULIS_FORCEINLINE void SetGreyD(        udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetRedD(         udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetGreenD(       udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetBlueD(        udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetRD(           udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetGD(           udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetBD(           udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetHueD(         udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetSaturationD(  udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetLightnessD(   udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetValueD(       udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetCyanD(        udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetMagentaD(     udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetYellowD(      udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetKeyD(         udouble iValue ) { SetChannelD( 3, iValue ); }
-    ULIS_FORCEINLINE void SetLumaD(        udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetUD(           udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetVD(           udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetKD(           udouble iValue ) { SetChannelD( 3, iValue ); }
-    ULIS_FORCEINLINE void SetXD(           udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetYD(           udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetZD(           udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetLD(           udouble iValue ) { SetChannelD( 0, iValue ); }
-    ULIS_FORCEINLINE void SetaD(           udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetbD(           udouble iValue ) { SetChannelD( 2, iValue ); }
-    ULIS_FORCEINLINE void SetxD(           udouble iValue ) { SetChannelD( 1, iValue ); }
-    ULIS_FORCEINLINE void SetyD(           udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetGreyD(        udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetRedD(         udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetGreenD(       udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetBlueD(        udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetRD(           udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetGD(           udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetBD(           udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetHueD(         udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetSaturationD(  udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetLightnessD(   udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetValueD(       udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetCyanD(        udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetMagentaD(     udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetYellowD(      udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetKeyD(         udouble iValue ) { SetChannelD( 3, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetLumaD(        udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetUD(           udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetVD(           udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetKD(           udouble iValue ) { SetChannelD( 3, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetXD(           udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetYD(           udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetZD(           udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetLD(           udouble iValue ) { SetChannelD( 0, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetaD(           udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetbD(           udouble iValue ) { SetChannelD( 2, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetxD(           udouble iValue ) { SetChannelD( 1, iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetyD(           udouble iValue ) { SetChannelD( 2, iValue ); }
 
 protected:
     uint8* mSignal;

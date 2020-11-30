@@ -165,8 +165,7 @@ ScheduleClearMT_MEM(
 
 /////////////////////////////////////////////////////
 // Dispatch
-ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
-ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

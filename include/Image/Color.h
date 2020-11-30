@@ -72,8 +72,8 @@ public:
     /*! Static maker, build a color from GAF values, the color will have format eFormat::Format_GAF */
     static FColor GreyAF( ufloat iGrey, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from GAD values, the color will have format eFormat::Format_GAD */
-    static FColor GreyAD( udouble iGrey, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from GAD values, the color will have format eFormat::Format_GAD */
+    //DISABLED:DOUBLEstatic FColor GreyAD( udouble iGrey, udouble iA = 1.0 );
 
     /*! Static maker, build a color from RGBA8 values, the color will have format eFormat::Format_RGBA8 */
     static FColor RGBA8( uint8 iR, uint8 iG, uint8 iB, uint8 iA = UINT8_MAX );
@@ -87,8 +87,8 @@ public:
     /*! Static maker, build a color from RGBAF values, the color will have format eFormat::Format_RGBAF */
     static FColor RGBAF( ufloat iR, ufloat iG, ufloat iB, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from RGBAD values, the color will have format eFormat::Format_RGBAD */
-    static FColor RGBAD( udouble iR, udouble iG, udouble iB, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from RGBAD values, the color will have format eFormat::Format_RGBAD */
+    //DISABLED:DOUBLEstatic FColor RGBAD( udouble iR, udouble iG, udouble iB, udouble iA = 1.0 );
 
     /*! Static maker, build a color from HSVA8 values, the color will have format eFormat::Format_HSVA8 */
     static FColor HSVA8( uint8 iH, uint8 iS, uint8 iV, uint8 iA = UINT8_MAX );
@@ -102,8 +102,8 @@ public:
     /*! Static maker, build a color from HSVAF values, the color will have format eFormat::Format_HSVAF */
     static FColor HSVAF( ufloat iH, ufloat iS, ufloat iV, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from HSVAD values, the color will have format eFormat::Format_HSVAD */
-    static FColor HSVAD( udouble iH, udouble iS, udouble iV, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from HSVAD values, the color will have format eFormat::Format_HSVAD */
+    //DISABLED:DOUBLEstatic FColor HSVAD( udouble iH, udouble iS, udouble iV, udouble iA = 1.0 );
 
     /*! Static maker, build a color from HSLA8 values, the color will have format eFormat::Format_HSLA8 */
     static FColor HSLA8( uint8 iH, uint8 iS, uint8 iL, uint8 iA = UINT8_MAX );
@@ -117,8 +117,8 @@ public:
     /*! Static maker, build a color from HSLAF values, the color will have format eFormat::Format_HSLAF */
     static FColor HSLAF( ufloat iH, ufloat iS, ufloat iL, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from HSLAD values, the color will have format eFormat::Format_HSLAD */
-    static FColor HSLAD( udouble iH, udouble iS, udouble iL, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from HSLAD values, the color will have format eFormat::Format_HSLAD */
+    //DISABLED:DOUBLEstatic FColor HSLAD( udouble iH, udouble iS, udouble iL, udouble iA = 1.0 );
 
     /*! Static maker, build a color from CMYA8 values, the color will have format eFormat::Format_CMYA8 */
     static FColor CMYA8( uint8 iC, uint8 iM, uint8 iY, uint8 iA = UINT8_MAX );
@@ -132,8 +132,8 @@ public:
     /*! Static maker, build a color from CMYAF values, the color will have format eFormat::Format_CMYAF */
     static FColor CMYAF( ufloat iC, ufloat iM, ufloat iY, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from CMYAD values, the color will have format eFormat::Format_CMYAD */
-    static FColor CMYAD( udouble iC, udouble iM, udouble iY, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from CMYAD values, the color will have format eFormat::Format_CMYAD */
+    //DISABLED:DOUBLEstatic FColor CMYAD( udouble iC, udouble iM, udouble iY, udouble iA = 1.0 );
 
     /*! Static maker, build a color from CMYKA8 values, the color will have format eFormat::Format_CMYKA8 */
     static FColor CMYKA8( uint8 iC, uint8 iM, uint8 iY, uint8 iK, uint8 iA = UINT8_MAX );
@@ -147,8 +147,8 @@ public:
     /*! Static maker, build a color from CMYKAF values, the color will have format eFormat::Format_CMYKAF */
     static FColor CMYKAF( ufloat iC, ufloat iM, ufloat iY, ufloat iK, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from CMYKAD values, the color will have format eFormat::Format_CMYKAD */
-    static FColor CMYKAD( udouble iC, udouble iM, udouble iY, udouble iK, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from CMYKAD values, the color will have format eFormat::Format_CMYKAD */
+    //DISABLED:DOUBLEstatic FColor CMYKAD( udouble iC, udouble iM, udouble iY, udouble iK, udouble iA = 1.0 );
 
     /*! Static maker, build a color from YUVA8 values, the color will have format eFormat::Format_YUVA8 */
     static FColor YUVA8( uint8 iY, uint8 iU, uint8 iV, uint8 iA = UINT8_MAX );
@@ -162,8 +162,8 @@ public:
     /*! Static maker, build a color from YUVAF values, the color will have format eFormat::Format_YUVAF */
     static FColor YUVAF( ufloat iY, ufloat iU, ufloat iV, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from YUVAD values, the color will have format eFormat::Format_YUVAD */
-    static FColor YUVAD( udouble iY, udouble iU, udouble iV, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from YUVAD values, the color will have format eFormat::Format_YUVAD */
+    //DISABLED:DOUBLEstatic FColor YUVAD( udouble iY, udouble iU, udouble iV, udouble iA = 1.0 );
 
     /*! Static maker, build a color from LabA8 values, the color will have format eFormat::Format_LabA8 */
     static FColor LabA8( uint8 iL, uint8 ia, uint8 ib, uint8 iA = UINT8_MAX );
@@ -177,8 +177,8 @@ public:
     /*! Static maker, build a color from LabAF values, the color will have format eFormat::Format_LabAF */
     static FColor LabAF( ufloat iL, ufloat ia, ufloat ib, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from LabAD values, the color will have format eFormat::Format_LabAD */
-    static FColor LabAD( udouble iL, udouble ia, udouble ib, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from LabAD values, the color will have format eFormat::Format_LabAD */
+    //DISABLED:DOUBLEstatic FColor LabAD( udouble iL, udouble ia, udouble ib, udouble iA = 1.0 );
 
     /*! Static maker, build a color from XYZA8 values, the color will have format eFormat::Format_XYZA8 */
     static FColor XYZA8( uint8 iX, uint8 iY, uint8 iZ, uint8 iA = UINT8_MAX );
@@ -192,8 +192,8 @@ public:
     /*! Static maker, build a color from XYZAF values, the color will have format eFormat::Format_XYZAF */
     static FColor XYZAF( ufloat iX, ufloat iY, ufloat iZ, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from XYZAD values, the color will have format eFormat::Format_XYZAD */
-    static FColor XYZAD( udouble iX, udouble iY, udouble iZ, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from XYZAD values, the color will have format eFormat::Format_XYZAD */
+    //DISABLED:DOUBLEstatic FColor XYZAD( udouble iX, udouble iY, udouble iZ, udouble iA = 1.0 );
 
     /*! Static maker, build a color from YxyA8 values, the color will have format eFormat::Format_YxyA8 */
     static FColor YxyA8( uint8 iY, uint8 ix, uint8 iy, uint8 iA = UINT8_MAX );
@@ -207,8 +207,8 @@ public:
     /*! Static maker, build a color from YxyAF values, the color will have format eFormat::Format_YxyAF */
     static FColor YxyAF( ufloat iY, ufloat ix, ufloat iy, ufloat iA = 1.f );
 
-    /*! Static maker, build a color from YxyAD values, the color will have format eFormat::Format_YxyAD */
-    static FColor YxyAD( udouble iY, udouble ix, udouble iy, udouble iA = 1.0 );
+    //DISABLED:DOUBLE/*! Static maker, build a color from YxyAD values, the color will have format eFormat::Format_YxyAD */
+    //DISABLED:DOUBLEstatic FColor YxyAD( udouble iY, udouble ix, udouble iy, udouble iA = 1.0 );
 };
 
 extern template FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );
@@ -216,7 +216,7 @@ extern template FColor::FColor( eFormat, std::initializer_list< uint8 >, const F
 extern template FColor::FColor( eFormat, std::initializer_list< uint16 >, const FColorSpace* );
 extern template FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
 extern template FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
-extern template FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
+//DISABLED:DOUBLEextern template FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 
 ULIS_NAMESPACE_END
 

@@ -40,7 +40,7 @@ typedef  double     udouble;    ///< Used for double images domain range values,
 #define ULIS_TYPE_UINT16   0x1
 #define ULIS_TYPE_UINT32   0x2
 #define ULIS_TYPE_UFLOAT   0x3
-#define ULIS_TYPE_UDOUBLE  0x4
+//DISABLED:DOUBLE#define ULIS_TYPE_UDOUBLE  0x4
 
 // Model codes
 #define ULIS_CM_ANY    0
@@ -95,7 +95,7 @@ enum eType {
     , TYPE_UINT16    = ULIS_TYPE_UINT16
     , TYPE_UINT32    = ULIS_TYPE_UINT32
     , TYPE_UFLOAT    = ULIS_TYPE_UFLOAT
-    , TYPE_UDOUBLE   = ULIS_TYPE_UDOUBLE
+    //DISABLED:DOUBLE, TYPE_UDOUBLE   = ULIS_TYPE_UDOUBLE
 };
 
 // Model enum

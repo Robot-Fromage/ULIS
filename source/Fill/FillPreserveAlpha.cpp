@@ -44,7 +44,7 @@ fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForPar
         case TYPE_UINT16    : return  InvokeFillPreserveAlpha< uint16 >;
         case TYPE_UINT32    : return  InvokeFillPreserveAlpha< uint32 >;
         case TYPE_UFLOAT    : return  InvokeFillPreserveAlpha< ufloat >;
-        case TYPE_UDOUBLE   : return  InvokeFillPreserveAlpha< udouble >;
+        //DISABLED:DOUBLEcase TYPE_UDOUBLE   : return  InvokeFillPreserveAlpha< udouble >;
     }
     return  nullptr;
 }
