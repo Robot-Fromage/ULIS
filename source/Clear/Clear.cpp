@@ -25,7 +25,7 @@ BuildClearJob_Scanlines(
     , const int64 iNumJobs
     , const int64 iNumTasksPerJob
     , const int64 iIndex
-    , FClearJobArgs& oJargs
+    , FSimpleBufferJobArgs& oJargs
 )
 {
     const FFormatMetrics& fmt       = iCargs->block.FormatMetrics();
@@ -43,7 +43,7 @@ BuildClearJob_Chunks(
     , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
-    , FClearJobArgs& oJargs
+    , FSimpleBufferJobArgs& oJargs
 )
 {
     uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits();
@@ -52,7 +52,7 @@ BuildClearJob_Chunks(
     oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
 }
 
-template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
+template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FClearCommandArgs* ) >
 void
 ScheduleClearJobs(
       FCommand* iCommand
@@ -62,7 +62,7 @@ ScheduleClearJobs(
 {
     const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
     RangeBasedSchedulingBuildJobs<
-          FClearJobArgs
+          FSimpleBufferJobArgs
         , FClearCommandArgs
         , TDelegateInvoke
         , BuildClearJob_Scanlines
@@ -84,7 +84,7 @@ ScheduleClearJobs(
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
 void
 InvokeClearMT_AX2(
-      const FClearJobArgs* jargs
+      const FSimpleBufferJobArgs* jargs
     , const FClearCommandArgs* cargs
 )
 {
@@ -104,7 +104,7 @@ InvokeClearMT_AX2(
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 void
 InvokeClearMT_SSE4_2(
-      const FClearJobArgs* jargs
+      const FSimpleBufferJobArgs* jargs
     , const FClearCommandArgs* cargs
 )
 {
@@ -123,7 +123,7 @@ InvokeClearMT_SSE4_2(
 //---------------------------------------------------------------------------------- MEM
 void
 InvokeClearMT_MEM(
-      const FClearJobArgs* jargs
+      const FSimpleBufferJobArgs* jargs
     , const FClearCommandArgs* cargs
 )
 {

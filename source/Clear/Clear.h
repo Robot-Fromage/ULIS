@@ -24,9 +24,7 @@ class FClearCommandArgs final
     : public ICommandArgs
 {
 public:
-    ~FClearCommandArgs() override
-    {
-    };
+    ~FClearCommandArgs() override {}
 
     FClearCommandArgs(
           FBlock& iBlock
@@ -39,18 +37,6 @@ public:
 
     FBlock& block;
     const FRectI rect;
-};
-
-/////////////////////////////////////////////////////
-// FClearJobArgs
-class FClearJobArgs final
-    : public IJobArgs
-{
-public:
-    ~FClearJobArgs() override {};
-
-    uint8* ULIS_RESTRICT dst;
-    int64 size;
 };
 
 /////////////////////////////////////////////////////
