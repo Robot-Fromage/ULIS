@@ -25,15 +25,15 @@ BuildClearJob_Scanlines(
     , const int64 iNumJobs
     , const int64 iNumTasksPerJob
     , const int64 iIndex
-    , FClearJobArgs& iJargs
+    , FClearJobArgs& oJargs
 )
 {
     const FFormatMetrics& fmt       = iCargs->block.FormatMetrics();
     uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits() + iCargs->rect.x * fmt.BPP;
     const int64 bps                 = static_cast< int64 >( iCargs->block.BytesPerScanLine() );
     const int64 size                = iCargs->rect.w * fmt.BPP;
-    iJargs.dst = dst + ( iCargs->rect.y + iIndex ) * bps;
-    iJargs.size = size;
+    oJargs.dst                      = dst + ( iCargs->rect.y + iIndex ) * bps;
+    oJargs.size                     = size;
 }
 
 void
@@ -43,13 +43,13 @@ BuildClearJob_Chunks(
     , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
-    , FClearJobArgs& iJargs
+    , FClearJobArgs& oJargs
 )
 {
     uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits();
     const int64 btt                 = static_cast< int64 >( iCargs->block.BytesTotal() );
-    iJargs.dst = dst + iIndex;
-    iJargs.size = FMath::Min( iOffset + iSize, btt ) - iOffset;
+    oJargs.dst                      = dst + iIndex;
+    oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
 }
 
 template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
