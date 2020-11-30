@@ -154,5 +154,7 @@ const int TAG::spec_size = sizeof( TAG::spec_table ) / sizeof( TAG::FSpecDispatc
 ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( TAG )      \
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( TAG )
 
+#define ULIS_DECLARE_COMMAND_SCHEDULER( iName ) void iName ( FCommand* iCommand, const FSchedulePolicy& iPolicy, bool iContiguous = false );
+
 ULIS_NAMESPACE_END
 
