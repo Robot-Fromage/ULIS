@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Dispatch/Dispatcher.h"
+#include "Image/Color.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/ScheduleArgs.h"
 

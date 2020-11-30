@@ -13,9 +13,6 @@
 */
 #include "Fill/Fill.h"
 #include "Image/Block.h"
-#include "Image/Color.h"
-#include "Image/Pixel.h"
-#include "Image/Sample.h"
 #include "Scheduling/RangeBasedPolicyScheduler.h"
 #include <vectorclass.h>
 
