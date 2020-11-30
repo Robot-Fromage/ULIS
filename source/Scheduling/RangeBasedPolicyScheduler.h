@@ -17,35 +17,42 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Scanline Job Building
-template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+    , void(*TDelegateBuildJobScanline)(
+          const TCommandArgs*
+        , const int64
+        , const int64
+        , const int64
+        , TJobArgs&
+        )
+>
 ULIS_FORCEINLINE
 static
 void
-BuildClearJobs_Scanlines(
+RangeBasedSchedulingDelegateBuildJobs_Scanlines(
       FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
     , const int64 iNumJobs
     , const int64 iNumTasksPerJob
 )
 {
-    const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
-    const FFormatMetrics& fmt       = cargs->block.FormatMetrics();
-    uint8* const ULIS_RESTRICT dst  = cargs->block.Bits() + cargs->rect.x * fmt.BPP;
-    const int64 bps                 = static_cast< int64 >( cargs->block.BytesPerScanLine() );
-    const int64 size                = cargs->rect.w * fmt.BPP;
-
-    for( int i = 0; i < iNumJobs; ++i )
+    const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
+    for( int64 i = 0; i < iNumJobs; ++i )
     {
-        uint8* buf = new uint8[ iNumTasksPerJob * sizeof( FClearJobArgs ) ];
-        FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
-        for( int i = 0; i < iNumTasksPerJob; ++i )
-            new ( buf ) FClearJobArgs(
-              dst + ( cargs->rect.y + i ) * bps
-            , size
-        );
+        uint8* buf = new uint8[ iNumTasksPerJob * sizeof( TJobArgs ) ];
+        TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
+        for( int i = 0; i < iNumTasksPerJob; ++i ) {
+            new ( buf ) TJobArgs();
+            TDelegateBuildJobScanline( cargs, iNumJobs, iNumTasksPerJob, i, jargs[i] );
+        }
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, TDelegateInvoke >
+            , &ResolveScheduledJobCall< TJobArgs, TCommandArgs, TDelegateInvoke >
             , jargs );
         iCommand->AddJob( job );
     }
@@ -53,33 +60,44 @@ BuildClearJobs_Scanlines(
 
 /////////////////////////////////////////////////////
 // Chunk Job Building
-template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+    , void(*TDelegateBuildJobScanline)(
+          const TCommandArgs*
+        , const int64
+        , const int64
+        , const int64
+        , const int64
+        , TJobArgs&
+        )
+>
 ULIS_FORCEINLINE
 static
 void
-BuildClearJobs_Chunks(
+RangeBasedSchedulingDelegateBuildJobs_Chunk(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , const int64 iSize
     , const int64 iCount
 )
 {
-    const FClearCommandArgs* cargs  = dynamic_cast< const FClearCommandArgs* >( iCommand->Args() );
-    uint8* const ULIS_RESTRICT dst  = cargs->block.Bits();
-    const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
-
+    const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
     int64 index = 0;
     for( int i = 0; i < iCount; ++i )
     {
-        uint8* buf = new uint8[ sizeof( FClearJobArgs ) ];
-        FClearJobArgs* jargs = reinterpret_cast< FClearJobArgs* >( buf );
-        new ( buf ) FClearJobArgs(
-              dst + index
-            , FMath::Min( index + iSize, btt ) - index
-        );
+        uint8* buf = new uint8[ sizeof( TJobArgs ) ];
+        TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
+        new ( buf ) TJobArgs();
+        TDelegateBuildJobScanline( cargs, iSize, iCount, index, i, jargs[i] );
+
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< FClearJobArgs, FClearCommandArgs, TDelegateInvoke >
+            , &ResolveScheduledJobCall< TJobArgs, TCommandArgs, TDelegateInvoke >
             , jargs );
         iCommand->AddJob( job );
         index += iSize;
