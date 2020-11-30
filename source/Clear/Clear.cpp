@@ -19,8 +19,6 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Job Building
-ULIS_FORCEINLINE
-static
 void
 BuildClearJob_Scanlines(
       const FClearCommandArgs* iCargs
@@ -38,8 +36,6 @@ BuildClearJob_Scanlines(
     iJargs.size = size;
 }
 
-ULIS_FORCEINLINE
-static
 void
 BuildClearJob_Chunks(
       const FClearCommandArgs* iCargs
@@ -57,8 +53,6 @@ BuildClearJob_Chunks(
 }
 
 template< void (*TDelegateInvoke)( const FClearJobArgs*, const FClearCommandArgs* ) >
-ULIS_FORCEINLINE
-static
 void
 ScheduleClearJobs(
       FCommand* iCommand
