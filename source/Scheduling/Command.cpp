@@ -33,6 +33,7 @@ FCommand::FCommand(
       fpCommandScheduler iSched
     , const ICommandArgs* iArgs
     , const FSchedulePolicy& iPolicy
+    , bool iContiguous
     , uint32 iNumWait
     , const FEvent* iWaitList
     , FEvent* iEvent
@@ -56,7 +57,7 @@ FCommand::FCommand(
     }
 
     // Start Enqueuing Jobs
-    iSched( this, iPolicy );
+    iSched( this, iPolicy, iContiguous );
 }
 
 const ICommandArgs*

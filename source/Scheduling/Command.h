@@ -54,6 +54,7 @@ public:
           fpCommandScheduler iSched
         , const ICommandArgs* iArgs
         , const FSchedulePolicy& iPolicy
+        , bool iContiguous
         , uint32 iNumWait
         , const FEvent* iWaitList
         , FEvent* iEvent
