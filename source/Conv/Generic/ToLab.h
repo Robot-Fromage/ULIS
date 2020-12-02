@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         ToLab.ipp
+* @file         ToLab.h
 * @author       Clement Berthaud
 * @brief        This file provides the definition for model conversion functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

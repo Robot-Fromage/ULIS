@@ -12,16 +12,16 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Conv/ConvDispatch.h"
-#include "Conv/Generic/ToGrey.ipp"
-#include "Conv/Generic/ToRGB.ipp"
-#include "Conv/Generic/ToHSV.ipp"
-#include "Conv/Generic/ToHSL.ipp"
-#include "Conv/Generic/ToCMY.ipp"
-#include "Conv/Generic/ToCMYK.ipp"
-#include "Conv/Generic/ToYUV.ipp"
-#include "Conv/Generic/ToLab.ipp"
-#include "Conv/Generic/ToXYZ.ipp"
-#include "Conv/Generic/ToYxy.ipp"
+#include "Conv/Generic/ToGrey.h"
+#include "Conv/Generic/ToRGB.h"
+#include "Conv/Generic/ToHSV.h"
+#include "Conv/Generic/ToHSL.h"
+#include "Conv/Generic/ToCMY.h"
+#include "Conv/Generic/ToCMYK.h"
+#include "Conv/Generic/ToYUV.h"
+#include "Conv/Generic/ToLab.h"
+#include "Conv/Generic/ToXYZ.h"
+#include "Conv/Generic/ToYxy.h"
 
 ULIS_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------------
