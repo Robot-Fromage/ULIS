@@ -42,11 +42,6 @@ FContext::Clear(
     if( src_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
-    // Forward arguments baking
-    // Check wether the whole image buffer is to be cleaned.
-    // If so, chunk based scheduling policy are made available.
-    const bool contiguous = src_roi == src_rect;
-
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
@@ -56,7 +51,7 @@ FContext::Clear(
                 , src_roi
             )
             , iPolicy
-            , contiguous
+            , src_roi == src_rect
             , iNumWait
             , iWaitList
             , iEvent

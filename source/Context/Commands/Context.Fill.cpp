@@ -45,9 +45,16 @@ FContext::Fill(
         return  FinishEventNoOP( iEvent );
 
     // Forward arguments baking
-    // Check wether the whole image buffer is to be cleaned.
-    // If so, chunk based scheduling policy are made available.
-    const bool whole = roi == rect;
+    // This one is a bit tricky so here is a breakdown of the steps:
+    FColor color    = Conv( iColor, iBlock.Format() );                          // iColor can be in any format, so first we convert it to the block format.
+    uint8* srcb     = color.Bits();
+    uint8 bpp       = iBlock.BytesPerPixel();                                   // We gather the Bytes Per Pixel for the format
+    uint32 size     = FMath::Max( uint32(32), uint32( bpp ) );                  // We define a size that is max of 32 ( avx2 ) and BPP ( bytes )
+    uint32 stride   = size - ( size % bpp );
+    uint8* buf      = new uint8[ size ];                                        // We allocate a buffer that is length size, it will be deleted in ~FFillCommandArgs()
+    for( uint32 i = 0; i < stride; i+= bpp )                                    // We repeat the color N times in the buffer ( as many can fit )
+        memcpy( (void*)( ( buf ) + i ), srcb, bpp );
+
 
     // Bake and push command
     mCommandQueue.Push(
@@ -55,11 +62,11 @@ FContext::Fill(
               mContextualDispatchTable->mScheduleClear
             , new FFillCommandArgs(
                   iBlock
-                , Conv( iColor, iBlock.Format() )
+                , buf
                 , roi
-                , whole
             )
             , iPolicy
+            , roi == rect
             , iNumWait
             , iWaitList
             , iEvent

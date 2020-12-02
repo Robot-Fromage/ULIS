@@ -32,16 +32,14 @@ public:
 
     FFillCommandArgs(
           FBlock& iBlock
+        , const uint8* iBuffer
         , const FRectI& iRect
     )
         : ICommandArgs()
         , block( iBlock )
+        , buffer( iBuffer )
         , rect( iRect )
         {}
-
-    void BuildBufferArg()
-    {
-    }
 
     FBlock& block;
     const uint8* buffer;
