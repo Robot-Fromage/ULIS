@@ -23,7 +23,7 @@ template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillComma
 ULIS_FORCEINLINE
 static
 void
-BuildFillJobs_Scanlines(
+ScheduleFillJobs_Scanlines(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , const int64 iNumJobs
@@ -57,7 +57,7 @@ template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillComma
 ULIS_FORCEINLINE
 static
 void
-BuildFillJobs_Chunks(
+ScheduleFillJobs_Chunks(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , const int64 iSize
@@ -91,14 +91,14 @@ template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillComma
 ULIS_FORCEINLINE
 static
 void
-BuildFillJobs(
+ScheduleFillJobs(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
 )
 {
     const FFillCommandArgs* cargs   = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
     const int64 btt                 = static_cast< int64 >( cargs->block.BytesTotal() );
-    RangeBasedPolicyScheduleJobs< &BuildFillJobs_Scanlines< TDelegateInvoke >, &BuildFillJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->contiguous );
+    RangeBasedPolicyScheduleJobs< &ScheduleFillJobs_Scanlines< TDelegateInvoke >, &ScheduleFillJobs_Chunks< TDelegateInvoke > >( iCommand, iPolicy, btt, cargs->rect.h, cargs->contiguous );
 }
 
 /////////////////////////////////////////////////////
@@ -175,11 +175,11 @@ ScheduleFillMT_AX2(
     const uint32 bps = cargs->block.BytesPerScanLine();
 
     if( bpp <= 32 && bps >= 32 ) {
-        BuildFillJobs< &InvokeFillMT_AX2 >( iCommand, iPolicy );
+        ScheduleFillJobs< &InvokeFillMT_AX2 >( iCommand, iPolicy );
     } else if( bpp <= 16 && bps >= 16 ) {
-        BuildFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy );
+        ScheduleFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy );
     } else {
-        BuildFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
+        ScheduleFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
     }
 }
 
@@ -193,9 +193,9 @@ ScheduleFillMT_SSE4_2(
     const uint8 bpp = cargs->block.BytesPerPixel();
     const uint32 bps = cargs->block.BytesPerScanLine();
     if( bpp <= 16 && bps >= 16 ) {
-        BuildFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy );
+        ScheduleFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy );
     } else {
-        BuildFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
+        ScheduleFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
     }
 }
 
@@ -208,7 +208,7 @@ ScheduleFillMT_MEM(
     const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
     const uint8 bpp = cargs->block.BytesPerPixel();
     const uint32 bps = cargs->block.BytesPerScanLine();
-    BuildFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
+    ScheduleFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy );
 }
 
 /////////////////////////////////////////////////////
