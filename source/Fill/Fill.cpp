@@ -7,7 +7,7 @@
 *
 * @file         Fill.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the Fill entry point functions.
+* @brief        This file provides the definitions for the Fill API.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

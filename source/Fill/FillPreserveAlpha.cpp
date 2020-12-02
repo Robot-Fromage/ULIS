@@ -7,95 +7,85 @@
 *
 * @file         FillPreserveAlpha.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the FillPreserveAlpha entry point functions.
+* @brief        This file provides the definitions for the FillPreserveAlpha API.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Fill/FillPreserveAlpha.h"
-#include "System/Device.h"
-#include "Conv/Conv.h"
 #include "Image/Block.h"
-#include "Image/Pixel.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
+#include "Scheduling/RangeBasedPolicyScheduler.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Invocation Implementation
+// Job Building
+template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillPreserveAlphaCommandArgs* ) >
+void
+ScheduleFillPreserveAlphaJobs(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+    , bool iContiguous
+)
+{
+    const FFillPreserveAlphaCommandArgs* cargs  = dynamic_cast< const FFillPreserveAlphaCommandArgs* >( iCommand->Args() );
+    RangeBasedSchedulingBuildJobs<
+          FSimpleBufferJobArgs
+        , FFillCommandArgs
+        , TDelegateInvoke
+        , BuildFillJob_Scanlines
+        , BuildFillJob_Chunks
+    >
+    (
+          iCommand
+        , iPolicy
+        , static_cast< int64 >( cargs->block.BytesTotal() )
+        , cargs->rect.h
+        , iContiguous
+    );
+}
+
+/////////////////////////////////////////////////////
+// Invocations
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
 template< typename T >
-void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormatMetrics& iFmt, std::shared_ptr< FColor > iColor ) {
-    const uint8* src = iColor->Bits();
-    T* dst = reinterpret_cast< T* >( iDst );
-    for( int i = 0; i < iW; ++i ) {
+void
+InvokeFillPreserveAlphaMT_MEM(
+      const FSimpleBufferJobArgs* jargs
+    , const FFillPreserveAlphaCommandArgs* cargs
+)
+{
+    const uint8* src = cargs->color.Bits();
+    const FFormatMetrics& fmt = cargs->block.Format();
+    const uint8 stride = cargs->block.BytesPerPixel();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    for( uint32 i = 0; i < jargs->size; ++i ) {
         const T alpha = dst[ iFmt.AID ];
-        memcpy( dst, src, iFmt.BPP );
-        dst[ iFmt.AID ] = alpha;
-        dst += iFmt.SPP;
+        memcpy( dst, src, stride );
+        dst[ fmt.AID ] = alpha;
+        dst += stride;
     }
+}
+
+/////////////////////////////////////////////////////
+// Schedulers
+template< typename T >
+void
+ScheduleFillPreserveAlphaMT_MEM(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+    , bool iContiguous
+)
+{
+    const FFillPreserveAlphaCommandArgs* cargs = dynamic_cast< const FFillPreserveAlphaCommandArgs* >( iCommand->Args() );
+    const uint8 bpp = cargs->block.BytesPerPixel();
+    const uint32 bps = cargs->block.BytesPerScanLine();
+    ScheduleFillPreserveAlphaJobs< &InvokeFillPreserveAlphaMT_MEM< T > >( iCommand, iPolicy, iContiguous );
 }
 
 /////////////////////////////////////////////////////
 // Dispatch
-typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt, std::shared_ptr< FColor > iColor );
-fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForParameters( eType iType ) {
-    switch( iType ) {
-        case Type_uint8     : return  InvokeFillPreserveAlpha< uint8 >;
-        case Type_uint16    : return  InvokeFillPreserveAlpha< uint16 >;
-        case Type_uint32    : return  InvokeFillPreserveAlpha< uint32 >;
-        case Type_ufloat    : return  InvokeFillPreserveAlpha< ufloat >;
-        //DISABLED:DOUBLEcase TYPE_UDOUBLE   : return  InvokeFillPreserveAlpha< udouble >;
-    }
-    return  nullptr;
-}
-
-/////////////////////////////////////////////////////
-// FillPreserveAlpha
-void
-FillPreserveAlpha( FOldThreadPool*             iOldThreadPool
-                 , bool                     iBlocking
-                 , uint32                   iPerfIntent
-                 , const FHardwareMetrics&   iHostDeviceInfo
-                 , bool                     iCallCB
-                 , FBlock*                  iDestination
-                 , const ISample&            iColor
-                 , const FRectI&             iArea )
-{
-    // Assertions
-    ULIS_ASSERT( iDestination,             "Bad source."                                           );
-    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
-    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
-
-    if( !( iDestination->HasAlpha() ) )
-        return;
-
-    // Fit region of interest
-    FRectI roi = iArea & iDestination->Rect();
-
-    // Check no-op
-    if( roi.Area() <= 0 )
-        return;
-
-    // Query
-    fpDispatchedFillPreserveAlphaInvoke fptr = QueryDispatchedFillPreserveAlphaInvokeForParameters( iDestination->Type() );
-    ULIS_ASSERT( fptr, "No invocation found." );
-
-    // Bake color param, shared Ptr for thread safety and scope life time extension in non blocking multithreaded processing
-    std::shared_ptr< FColor > color = std::make_shared< FColor >( iDestination->Format() );
-    Conv( iColor, *color );
-    uint8*          dst = iDestination->Bits();
-    size_t          bps = iDestination->BytesPerScanLine();
-    const int       max = roi.h;
-    const size_t    len = roi.w;
-
-    // Call
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                   , max
-                                   , fptr, len, dst + ( ( roi.y + pLINE ) * bps ) + roi.x, iDestination->FormatMetrics(), color )
-
-    // Invalid
-    iDestination->Dirty( roi, iCallCB );
-}
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

@@ -7,7 +7,7 @@
 *
 * @file         Fill.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the Fill entry point functions.
+* @brief        This file provides the declaration for the Fill API.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -28,7 +28,7 @@ public:
     ~FFillCommandArgs() override
     {
         delete [] buffer;
-    };
+    }
 
     FFillCommandArgs(
           FBlock& iBlock

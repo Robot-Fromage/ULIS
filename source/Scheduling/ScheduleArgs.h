@@ -13,6 +13,8 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Image/Block.h"
+#include "Math/Geometry/Rectangle.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -42,6 +44,30 @@ public:
 };
 
 /////////////////////////////////////////////////////
+/// @class      FSimpleBufferCommandArgs
+/// @brief      The FSimpleBufferCommandArgs class provides a class to implement
+///             the arguments objects for operations, used on simple buffers.
+/// @details    FSimpleBufferCommandArgs is usually used for simple operations on a
+///             single buffer, such as Clear or Fill, for instance.
+class FSimpleBufferCommandArgs
+    : public ICommandArgs
+{
+public:
+    virtual ~FSimpleBufferCommandArgs() override {}
+    FSimpleBufferCommandArgs(
+          FBlock& iBlock
+        , const FRectI& iRect
+    )
+        : ICommandArgs()
+        , block( iBlock )
+        , rect( iRect )
+    {}
+
+    FBlock& block;
+    const FRectI rect;
+};
+
+/////////////////////////////////////////////////////
 /// @class      FSimpleBufferJobArgs
 /// @brief      The FSimpleBufferJobArgs class provides a class to implement
 ///             the arguments objects for operations, used on simple buffers.
@@ -56,6 +82,41 @@ public:
     uint8* ULIS_RESTRICT dst;
     int64 size;
 };
+
+/////////////////////////////////////////////////////
+// Job Building
+void
+BuildSimpleBufferJob_Scanlines(
+      const FSimpleBufferCommandArgs* iCargs
+    , const int64 iNumJobs
+    , const int64 iNumTasksPerJob
+    , const int64 iIndex
+    , FSimpleBufferJobArgs& oJargs
+)
+{
+    const FFormatMetrics& fmt       = iCargs->block.FormatMetrics();
+    uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits() + iCargs->rect.x * fmt.BPP;
+    const int64 bps                 = static_cast< int64 >( iCargs->block.BytesPerScanLine() );
+    const int64 size                = iCargs->rect.w * fmt.BPP;
+    oJargs.dst                      = dst + ( iCargs->rect.y + iIndex ) * bps;
+    oJargs.size                     = size;
+}
+
+void
+BuildSimpleBufferJob_Chunks(
+      const FSimpleBufferCommandArgs* iCargs
+    , const int64 iSize
+    , const int64 iCount
+    , const int64 iOffset
+    , const int64 iIndex
+    , FSimpleBufferJobArgs& oJargs
+)
+{
+    uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits();
+    const int64 btt                 = static_cast< int64 >( iCargs->block.BytesTotal() );
+    oJargs.dst                      = dst + iIndex;
+    oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
+}
 
 ULIS_NAMESPACE_END
 
