@@ -105,7 +105,7 @@ BuildSimpleBufferJob_Scanlines(
 void
 BuildSimpleBufferJob_Chunks(
       const FSimpleBufferCommandArgs* iCargs
-    , const int64 iSize
+    , const int64 iSize 
     , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
@@ -117,6 +117,39 @@ BuildSimpleBufferJob_Chunks(
     oJargs.dst                      = dst + iIndex;
     oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
 }
+
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+>
+void
+ScheduleSimpleBufferJobs(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+    , bool iContiguous
+)
+{
+    const FSimpleBufferCommandArgs* cargs  = dynamic_cast< const FSimpleBufferCommandArgs* >( iCommand->Args() );
+    RangeBasedSchedulingBuildJobs<
+          FSimpleBufferJobArgs
+        , FSimpleBufferCommandArgs
+        , TDelegateInvoke
+        , BuildSimpleBufferJob_Scanlines
+        , BuildSimpleBufferJob_Chunks
+    >
+    (
+          iCommand
+        , iPolicy
+        , static_cast< int64 >( cargs->block.BytesTotal() )
+        , cargs->rect.h
+        , iContiguous
+    );
+}
+
 
 ULIS_NAMESPACE_END
 
