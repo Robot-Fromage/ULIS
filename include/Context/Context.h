@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/Modes.h"
 #include "Image/Color.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"

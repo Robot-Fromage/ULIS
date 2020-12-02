@@ -40,10 +40,10 @@ void InvokeFillPreserveAlpha( size_t iW, uint8* iDst, const FFormatMetrics& iFmt
 typedef void (*fpDispatchedFillPreserveAlphaInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt, std::shared_ptr< FColor > iColor );
 fpDispatchedFillPreserveAlphaInvoke QueryDispatchedFillPreserveAlphaInvokeForParameters( eType iType ) {
     switch( iType ) {
-        case TYPE_UINT8     : return  InvokeFillPreserveAlpha< uint8 >;
-        case TYPE_UINT16    : return  InvokeFillPreserveAlpha< uint16 >;
-        case TYPE_UINT32    : return  InvokeFillPreserveAlpha< uint32 >;
-        case TYPE_UFLOAT    : return  InvokeFillPreserveAlpha< ufloat >;
+        case Type_uint8     : return  InvokeFillPreserveAlpha< uint8 >;
+        case Type_uint16    : return  InvokeFillPreserveAlpha< uint16 >;
+        case Type_uint32    : return  InvokeFillPreserveAlpha< uint32 >;
+        case Type_ufloat    : return  InvokeFillPreserveAlpha< ufloat >;
         //DISABLED:DOUBLEcase TYPE_UDOUBLE   : return  InvokeFillPreserveAlpha< udouble >;
     }
     return  nullptr;

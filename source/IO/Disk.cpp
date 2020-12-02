@@ -60,9 +60,9 @@ XLoadFromFile( FOldThreadPool*             iOldThreadPool
     if( !file.read( buffer.data(), size ) )
         return  nullptr;
 
-    eType type = TYPE_UINT8;
-    type = stbi_is_16_bit_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )  ? TYPE_UINT16 : type;
-    type = stbi_is_hdr_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )     ? TYPE_UFLOAT : type;
+    eType type = Type_uint8;
+    type = stbi_is_16_bit_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )  ? Type_uint16 : type;
+    type = stbi_is_hdr_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )     ? Type_ufloat : type;
 
     int desiredChannels = STBI_default;
     eColorModel desiredModel = static_cast< eColorModel >( ULIS_R_MODEL( iDesiredFormat ) );
@@ -77,9 +77,9 @@ XLoadFromFile( FOldThreadPool*             iOldThreadPool
     width = height = channels = depth = 1;
     bool floating;
     switch( type ) {
-        case TYPE_UINT8:    data = (uint8*)stbi_load(       iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 1;    floating = false;   break;
-        case TYPE_UINT16:   data = (uint8*)stbi_load_16(    iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 2;    floating = false;   break;
-        case TYPE_UFLOAT:   data = (uint8*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
+        case Type_uint8:    data = (uint8*)stbi_load(       iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 1;    floating = false;   break;
+        case Type_uint16:   data = (uint8*)stbi_load_16(    iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 2;    floating = false;   break;
+        case Type_ufloat:   data = (uint8*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
     }
 
     ULIS_ASSERT( data, "Error bad input file" )
@@ -131,7 +131,7 @@ void SaveToFile( FOldThreadPool*           iOldThreadPool
 
     bool layout_valid   = ULIS_R_RS( format ) == 0;
     bool model_valid    = model == CM_GREY || model == CM_RGB;
-    bool type_valid     = ( iImageFormat != IM_HDR && type == TYPE_UINT8 ) || ( iImageFormat == IM_HDR && type == TYPE_UFLOAT && model == CM_RGB );
+    bool type_valid     = ( iImageFormat != IM_HDR && type == Type_uint8 ) || ( iImageFormat == IM_HDR && type == Type_ufloat && model == CM_RGB );
 
     int w = iSource->Width();
     int h = iSource->Height();

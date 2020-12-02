@@ -48,10 +48,10 @@ void InvokeLinear2sRGB( size_t iW, uint8* iDst, const FFormatMetrics& iFmt ) {
 typedef void (*fpDispatchedGammaCompressInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt );
 fpDispatchedGammaCompressInvoke QueryDispatchedsRGB2LinearInvokeForParameters( eType iType ) {
     switch( iType ) {
-        case TYPE_UINT8     : return  InvokesRGB2Linear< uint8 >;
-        case TYPE_UINT16    : return  InvokesRGB2Linear< uint16 >;
-        case TYPE_UINT32    : return  InvokesRGB2Linear< uint32 >;
-        case TYPE_UFLOAT    : return  InvokesRGB2Linear< ufloat >;
+        case Type_uint8     : return  InvokesRGB2Linear< uint8 >;
+        case Type_uint16    : return  InvokesRGB2Linear< uint16 >;
+        case Type_uint32    : return  InvokesRGB2Linear< uint32 >;
+        case Type_ufloat    : return  InvokesRGB2Linear< ufloat >;
         case TYPE_UDOUBLE   : return  InvokesRGB2Linear< udouble >;
     }
     return  nullptr;
@@ -59,10 +59,10 @@ fpDispatchedGammaCompressInvoke QueryDispatchedsRGB2LinearInvokeForParameters( e
 
 fpDispatchedGammaCompressInvoke QueryDispatchedLinear2sRGBInvokeForParameters( eType iType ) {
     switch( iType ) {
-        case TYPE_UINT8     : return  InvokeLinear2sRGB< uint8 >;
-        case TYPE_UINT16    : return  InvokeLinear2sRGB< uint16 >;
-        case TYPE_UINT32    : return  InvokeLinear2sRGB< uint32 >;
-        case TYPE_UFLOAT    : return  InvokeLinear2sRGB< ufloat >;
+        case Type_uint8     : return  InvokeLinear2sRGB< uint8 >;
+        case Type_uint16    : return  InvokeLinear2sRGB< uint16 >;
+        case Type_uint32    : return  InvokeLinear2sRGB< uint32 >;
+        case Type_ufloat    : return  InvokeLinear2sRGB< ufloat >;
         case TYPE_UDOUBLE   : return  InvokeLinear2sRGB< udouble >;
     }
     return  nullptr;

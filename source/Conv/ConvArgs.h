@@ -15,9 +15,7 @@
 #include "Core/Core.h"
 #include "Conv/ConvDispatch.h"
 #include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
-#include "Image/Block.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

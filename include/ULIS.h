@@ -12,8 +12,6 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-// Blend
-#include "Blend/Modes.h"
 // Context
 #include "Context/Context.h"
 // Image

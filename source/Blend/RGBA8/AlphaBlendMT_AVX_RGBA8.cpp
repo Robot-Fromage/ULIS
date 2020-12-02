@@ -13,7 +13,6 @@
 */
 #include "Blend/RGBA8/AlphaBlendMT_AVX_RGBA8.h"
 #include "Blend/BlendHelpers.h"
-#include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncAVX.h"
 #include "Blend/Func/SeparableBlendFuncAVXF.h"
 #include "Image/Block.h"

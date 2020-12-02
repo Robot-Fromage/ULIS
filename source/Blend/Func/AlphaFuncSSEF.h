@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/Modes.h"
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN

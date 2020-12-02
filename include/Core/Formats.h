@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Types.h"
 
+ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Format Magic Number, Memory Layout and Properties
 //
@@ -41,57 +42,6 @@
 //
 //          X: Free space for dynamic extra info
 //
-
-/////////////////////////////////////////////////////
-// Format Masks
-#define ULIS_FORMAT_MASK_LO     0x000FFFFF
-#define ULIS_FORMAT_MASK_HI     0xFFF00000
-#define ULIS_FORMAT_MASK_LAYOUT 0b11111111111111111001111111111111
-
-/////////////////////////////////////////////////////
-// Properties Format Macro Operators
-// Format Properties: Write
-#define ULIS_W_TYPE( i )        ( i & 0xF )
-#define ULIS_W_CHANNELS( i )    ( ( i & 0xF ) << 4 )
-#define ULIS_W_MODEL( i )       ( ( i & 0xF ) << 8 )
-#define ULIS_W_FLOATING( i )    ( ( i & 1 ) << 12 )
-#define ULIS_W_REVERSE( i )     ( ( i & 1 ) << 13 )
-#define ULIS_W_SWAP( i )        ( ( i & 1 ) << 14 )
-#define ULIS_W_ALPHA( i )       ( ( i & 1 ) << 15 )
-#define ULIS_W_DEPTH( i )       ( ( i & 0xF ) << 16 )
-#define ULIS_W_PROFILE( i )     ( ( i & 0xF ) << 20 )
-#define ULIS_W_PREMULT( i )     ( ( i & 1 ) << 24 )
-#define ULIS_W_LINEAR( i )      ( ( i & 1 ) << 25 )
-#define ULIS_W_PLANAR( i )      ( ( i & 1 ) << 26 )
-// Format Properties: Erase
-#define ULIS_E_TYPE             ( ~0xF )
-#define ULIS_E_CHANNELS         ( ~( 0xF << 4 ) )
-#define ULIS_E_MODEL            ( ~( 0xF << 8 ) )
-#define ULIS_E_FLOATING         ( ~( 0x1 << 12 ) )
-#define ULIS_E_REVERSE          ( ~( 0x1 << 13 ) )
-#define ULIS_E_SWAP             ( ~( 0x1 << 14 ) )
-#define ULIS_E_ALPHA            ( ~( 0x1 << 15 ) )
-#define ULIS_E_DEPTH            ( ~( 0xF << 16 ) )
-#define ULIS_E_PROFILE          ( ~( 0xF << 20 ) )
-#define ULIS_E_PREMULT          ( ~( 0x1 << 24 ) )
-#define ULIS_E_LINEAR           ( ~( 0x1 << 25 ) )
-#define ULIS_E_PLANAR           ( ~( 0x1 << 26 ) )
-// Format Properties: Read
-#define ULIS_R_TYPE( i )        ( i & 0xF )
-#define ULIS_R_CHANNELS( i )    ( ( i >> 4 ) & 0xF )
-#define ULIS_R_MODEL( i )       ( ( i >> 8 ) & 0xF )
-#define ULIS_R_FLOATING( i )    ( ( i >> 12 ) & 0x1 )
-#define ULIS_R_REVERSE( i )     ( ( i >> 13 ) & 0x1 )
-#define ULIS_R_SWAP( i )        ( ( i >> 14 ) & 0x1 )
-#define ULIS_R_ALPHA( i )       ( ( i >> 15 ) & 0x1 )
-#define ULIS_R_DEPTH( i )       ( ( i >> 16 ) & 0xF )
-#define ULIS_R_RS( i )          ( ( i >> 13 ) & 0x3 )
-#define ULIS_R_PROFILE( i )     ( ( i >> 20 ) & 0xF )
-#define ULIS_R_PREMULT( i )     ( ( i >> 24 ) & 0x1 )
-#define ULIS_R_LINEAR( i )      ( ( i >> 25 ) & 0x1 )
-#define ULIS_R_PLANAR( i )      ( ( i >> 26 ) & 0x1 )
-
-ULIS_NAMESPACE_BEGIN
 enum eFormat : uint32 {
       Format_G8 = ( ULIS_W_TYPE( ULIS_TYPE_UINT8 ) | ULIS_W_CHANNELS( 1 ) | ULIS_W_MODEL( ULIS_CM_GREY ) | ULIS_W_DEPTH( 1 ) | ULIS_W_PROFILE( ULIS_sGrey ) )
     , Format_GA8 = ( ULIS_W_TYPE( ULIS_TYPE_UINT8 ) | ULIS_W_CHANNELS( 1 ) | ULIS_W_MODEL( ULIS_CM_GREY ) | ULIS_W_ALPHA( 1 ) | ULIS_W_DEPTH( 1 ) | ULIS_W_PROFILE( ULIS_sGrey ) )

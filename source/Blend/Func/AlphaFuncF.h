@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/Modes.h"
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN

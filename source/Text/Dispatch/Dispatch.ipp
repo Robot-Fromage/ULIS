@@ -38,10 +38,10 @@ QueryDispatchedTextFunctionForParameters_imp() {
 fpDispatchedTextFunc
 QueryDispatchedTextFunctionForParameters( eType iType ) {
     switch( iType ) {
-        case TYPE_UINT8     : return  QueryDispatchedTextFunctionForParameters_imp< uint8   >();
-        case TYPE_UINT16    : return  QueryDispatchedTextFunctionForParameters_imp< uint16  >();
-        case TYPE_UINT32    : return  QueryDispatchedTextFunctionForParameters_imp< uint32  >();
-        case TYPE_UFLOAT    : return  QueryDispatchedTextFunctionForParameters_imp< ufloat  >();
+        case Type_uint8     : return  QueryDispatchedTextFunctionForParameters_imp< uint8   >();
+        case Type_uint16    : return  QueryDispatchedTextFunctionForParameters_imp< uint16  >();
+        case Type_uint32    : return  QueryDispatchedTextFunctionForParameters_imp< uint32  >();
+        case Type_ufloat    : return  QueryDispatchedTextFunctionForParameters_imp< ufloat  >();
         case TYPE_UDOUBLE   : return  QueryDispatchedTextFunctionForParameters_imp< udouble >();
     }
     return  nullptr;

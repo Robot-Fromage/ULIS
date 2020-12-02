@@ -39,35 +39,35 @@ fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcT
 
 fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
     switch( iSrcType ) {
-        case TYPE_UINT8: switch( iDstType ) {
-                case TYPE_UINT8:    return  InvokeExtractInto< uint8, uint8        >;
-                case TYPE_UINT16:   return  InvokeExtractInto< uint8, uint16       >;
-                case TYPE_UINT32:   return  InvokeExtractInto< uint8, uint32       >;
-                case TYPE_UFLOAT:   return  InvokeExtractInto< uint8, ufloat       >;
+        case Type_uint8: switch( iDstType ) {
+                case Type_uint8:    return  InvokeExtractInto< uint8, uint8        >;
+                case Type_uint16:   return  InvokeExtractInto< uint8, uint16       >;
+                case Type_uint32:   return  InvokeExtractInto< uint8, uint32       >;
+                case Type_ufloat:   return  InvokeExtractInto< uint8, ufloat       >;
                 case TYPE_UDOUBLE:  return  InvokeExtractInto< uint8, udouble      >; }
-        case TYPE_UINT16: switch( iDstType ) {
-                case TYPE_UINT8:    return  InvokeExtractInto< uint16, uint8       >;
-                case TYPE_UINT16:   return  InvokeExtractInto< uint16, uint16      >;
-                case TYPE_UINT32:   return  InvokeExtractInto< uint16, uint32      >;
-                case TYPE_UFLOAT:   return  InvokeExtractInto< uint16, ufloat      >;
+        case Type_uint16: switch( iDstType ) {
+                case Type_uint8:    return  InvokeExtractInto< uint16, uint8       >;
+                case Type_uint16:   return  InvokeExtractInto< uint16, uint16      >;
+                case Type_uint32:   return  InvokeExtractInto< uint16, uint32      >;
+                case Type_ufloat:   return  InvokeExtractInto< uint16, ufloat      >;
                 case TYPE_UDOUBLE:  return  InvokeExtractInto< uint16, udouble     >; }
-        case TYPE_UINT32: switch( iDstType ) {
-                case TYPE_UINT8:    return  InvokeExtractInto< uint32, uint8       >;
-                case TYPE_UINT16:   return  InvokeExtractInto< uint32, uint16      >;
-                case TYPE_UINT32:   return  InvokeExtractInto< uint32, uint32      >;
-                case TYPE_UFLOAT:   return  InvokeExtractInto< uint32, ufloat      >;
+        case Type_uint32: switch( iDstType ) {
+                case Type_uint8:    return  InvokeExtractInto< uint32, uint8       >;
+                case Type_uint16:   return  InvokeExtractInto< uint32, uint16      >;
+                case Type_uint32:   return  InvokeExtractInto< uint32, uint32      >;
+                case Type_ufloat:   return  InvokeExtractInto< uint32, ufloat      >;
                 case TYPE_UDOUBLE:  return  InvokeExtractInto< uint32, udouble     >; }
-        case TYPE_UFLOAT: switch( iDstType ) {
-                case TYPE_UINT8:    return  InvokeExtractInto< ufloat, uint8       >;
-                case TYPE_UINT16:   return  InvokeExtractInto< ufloat, uint16      >;
-                case TYPE_UINT32:   return  InvokeExtractInto< ufloat, uint32      >;
-                case TYPE_UFLOAT:   return  InvokeExtractInto< ufloat, ufloat      >;
+        case Type_ufloat: switch( iDstType ) {
+                case Type_uint8:    return  InvokeExtractInto< ufloat, uint8       >;
+                case Type_uint16:   return  InvokeExtractInto< ufloat, uint16      >;
+                case Type_uint32:   return  InvokeExtractInto< ufloat, uint32      >;
+                case Type_ufloat:   return  InvokeExtractInto< ufloat, ufloat      >;
                 case TYPE_UDOUBLE:  return  InvokeExtractInto< ufloat, udouble     >; }
         case TYPE_UDOUBLE: switch( iDstType ) {
-                case TYPE_UINT8:    return  InvokeExtractInto< udouble, uint8      >;
-                case TYPE_UINT16:   return  InvokeExtractInto< udouble, uint16     >;
-                case TYPE_UINT32:   return  InvokeExtractInto< udouble, uint32     >;
-                case TYPE_UFLOAT:   return  InvokeExtractInto< udouble, ufloat     >;
+                case Type_uint8:    return  InvokeExtractInto< udouble, uint8      >;
+                case Type_uint16:   return  InvokeExtractInto< udouble, uint16     >;
+                case Type_uint32:   return  InvokeExtractInto< udouble, uint32     >;
+                case Type_ufloat:   return  InvokeExtractInto< udouble, ufloat     >;
                 case TYPE_UDOUBLE:  return  InvokeExtractInto< udouble, udouble    >; }
     }
     return  nullptr;

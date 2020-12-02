@@ -37,10 +37,10 @@ void InvokeSanitize( size_t iW, uint8* iDst, const FFormatMetrics& iFmt ) {
 typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt );
 fpDispatchedAlphamulInvoke QueryDispatchedSanitizeForParameters( eType iType ) {
         switch( iType ) {
-        case TYPE_UINT8     : return  InvokeSanitize< uint8 >;
-        case TYPE_UINT16    : return  InvokeSanitize< uint16 >;
-        case TYPE_UINT32    : return  InvokeSanitize< uint32 >;
-        case TYPE_UFLOAT    : return  InvokeSanitize< ufloat >;
+        case Type_uint8     : return  InvokeSanitize< uint8 >;
+        case Type_uint16    : return  InvokeSanitize< uint16 >;
+        case Type_uint32    : return  InvokeSanitize< uint32 >;
+        case Type_ufloat    : return  InvokeSanitize< ufloat >;
         case TYPE_UDOUBLE   : return  InvokeSanitize< udouble >;
     }
     return  nullptr;

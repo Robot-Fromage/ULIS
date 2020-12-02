@@ -272,39 +272,39 @@ QueryDispatchedConversionInvocation_SelectModel( eFormat iSrcFormat, eFormat iDs
 fpConversionInvocation QueryDispatchedConversionInvocation( eFormat iSrcFormat, eFormat iDstFormat )
 {
         switch( static_cast< eType >( ULIS_R_TYPE( iSrcFormat ) ) ) {
-        case TYPE_UINT8: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint8       >( iSrcFormat, iDstFormat );
-                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint16      >( iSrcFormat, iDstFormat );
-                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint32      >( iSrcFormat, iDstFormat );
-                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, ufloat      >( iSrcFormat, iDstFormat );
+        case Type_uint8: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
+                case Type_uint8:    return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint8       >( iSrcFormat, iDstFormat );
+                case Type_uint16:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint16      >( iSrcFormat, iDstFormat );
+                case Type_uint32:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, uint32      >( iSrcFormat, iDstFormat );
+                case Type_ufloat:   return  QueryDispatchedConversionInvocation_SelectModel< uint8, ufloat      >( iSrcFormat, iDstFormat );
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< uint8, udouble     >( iSrcFormat, iDstFormat );
         }
-        case TYPE_UINT16: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint8      >( iSrcFormat, iDstFormat );
-                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint16     >( iSrcFormat, iDstFormat );
-                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint32     >( iSrcFormat, iDstFormat );
-                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, ufloat     >( iSrcFormat, iDstFormat );
+        case Type_uint16: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
+                case Type_uint8:    return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint8      >( iSrcFormat, iDstFormat );
+                case Type_uint16:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint16     >( iSrcFormat, iDstFormat );
+                case Type_uint32:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, uint32     >( iSrcFormat, iDstFormat );
+                case Type_ufloat:   return  QueryDispatchedConversionInvocation_SelectModel< uint16, ufloat     >( iSrcFormat, iDstFormat );
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< uint16, udouble    >( iSrcFormat, iDstFormat );
         }
-        case TYPE_UINT32: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint8      >( iSrcFormat, iDstFormat );
-                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint16     >( iSrcFormat, iDstFormat );
-                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint32     >( iSrcFormat, iDstFormat );
-                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, ufloat     >( iSrcFormat, iDstFormat );
+        case Type_uint32: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
+                case Type_uint8:    return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint8      >( iSrcFormat, iDstFormat );
+                case Type_uint16:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint16     >( iSrcFormat, iDstFormat );
+                case Type_uint32:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, uint32     >( iSrcFormat, iDstFormat );
+                case Type_ufloat:   return  QueryDispatchedConversionInvocation_SelectModel< uint32, ufloat     >( iSrcFormat, iDstFormat );
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< uint32, udouble    >( iSrcFormat, iDstFormat );
         }
-        case TYPE_UFLOAT: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
-                case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint8      >( iSrcFormat, iDstFormat );
-                case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint16     >( iSrcFormat, iDstFormat );
-                case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint32     >( iSrcFormat, iDstFormat );
-                case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, ufloat     >( iSrcFormat, iDstFormat );
+        case Type_ufloat: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
+                case Type_uint8:    return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint8      >( iSrcFormat, iDstFormat );
+                case Type_uint16:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint16     >( iSrcFormat, iDstFormat );
+                case Type_uint32:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, uint32     >( iSrcFormat, iDstFormat );
+                case Type_ufloat:   return  QueryDispatchedConversionInvocation_SelectModel< ufloat, ufloat     >( iSrcFormat, iDstFormat );
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< ufloat, udouble    >( iSrcFormat, iDstFormat );
         }
         //DISABLED:DOUBLEcase TYPE_UDOUBLE: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
-        //DISABLED:DOUBLE        case TYPE_UINT8:    return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint8     >( iSrcFormat, iDstFormat );
-        //DISABLED:DOUBLE        case TYPE_UINT16:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint16    >( iSrcFormat, iDstFormat );
-        //DISABLED:DOUBLE        case TYPE_UINT32:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint32    >( iSrcFormat, iDstFormat );
-        //DISABLED:DOUBLE        case TYPE_UFLOAT:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, ufloat    >( iSrcFormat, iDstFormat );
+        //DISABLED:DOUBLE        case Type_uint8:    return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint8     >( iSrcFormat, iDstFormat );
+        //DISABLED:DOUBLE        case Type_uint16:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint16    >( iSrcFormat, iDstFormat );
+        //DISABLED:DOUBLE        case Type_uint32:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, uint32    >( iSrcFormat, iDstFormat );
+        //DISABLED:DOUBLE        case Type_ufloat:   return  QueryDispatchedConversionInvocation_SelectModel< udouble, ufloat    >( iSrcFormat, iDstFormat );
         //DISABLED:DOUBLE        case TYPE_UDOUBLE:  return  QueryDispatchedConversionInvocation_SelectModel< udouble, udouble   >( iSrcFormat, iDstFormat ); }
     }
 

@@ -22,7 +22,6 @@
 #include "Blend/BlendHelpers.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/SeparableBlendFuncF.h"
-#include "Blend/Modes.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

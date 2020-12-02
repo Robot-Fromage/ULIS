@@ -13,7 +13,6 @@
 */
 #include "Blend/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.h"
 #include "Blend/BlendHelpers.h"
-#include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/AlphaFuncSSEF.h"
 #include "Blend/Func/NonSeparableBlendFuncSSEF.h"

@@ -243,10 +243,10 @@ QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8 >( uint32 iPerfI
 fpDispatchedSATFunc
 QueryDispatchedPremultipliedSATFunctionForParameters( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
     switch( iFormatMetrics.TP ) {
-        case TYPE_UINT8     : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8   >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
-        case TYPE_UINT16    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint16  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
-        case TYPE_UINT32    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint32  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
-        case TYPE_UFLOAT    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< ufloat  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case Type_uint8     : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint8   >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case Type_uint16    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint16  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case Type_uint32    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< uint32  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
+        case Type_ufloat    : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< ufloat  >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
         case TYPE_UDOUBLE   : return  QueryDispatchedPremultipliedSATFunctionForParameters_imp< udouble >( iPerfIntent, iHostDeviceInfo, iFormatMetrics );
     }
     return  nullptr;

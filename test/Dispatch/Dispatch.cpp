@@ -51,8 +51,8 @@ void InvokeXRGBAFMEM2( INVOCATION_X_ARGS ) { std::cout << "InvokeXRGBAFMEM2 call
 
 /////////////////////////////////////////////////////
 // Table
-static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBA8( const FFormatMetrics& iFormatMetrics ) { return  ( iFormatMetrics.TP == TYPE_UINT8 ) && ( iFormatMetrics.HEA ) && ( iFormatMetrics.NCC == 3 ) && ( iFormatMetrics.CM == CM_RGB ); }
-static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBAF( const FFormatMetrics& iFormatMetrics ) { return  ( iFormatMetrics.TP == TYPE_UFLOAT ) && ( iFormatMetrics.HEA ) && ( iFormatMetrics.NCC == 3 ) && ( iFormatMetrics.CM == CM_RGB ); }
+static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBA8( const FFormatMetrics& iFormatMetrics ) { return  ( iFormatMetrics.TP == Type_uint8 ) && ( iFormatMetrics.HEA ) && ( iFormatMetrics.NCC == 3 ) && ( iFormatMetrics.CM == CM_RGB ); }
+static ULIS_FORCEINLINE bool OldDispatchTestIsUnorderedRGBAF( const FFormatMetrics& iFormatMetrics ) { return  ( iFormatMetrics.TP == Type_ufloat ) && ( iFormatMetrics.HEA ) && ( iFormatMetrics.NCC == 3 ) && ( iFormatMetrics.CM == CM_RGB ); }
 typedef bool (*fpOldCond)( const FFormatMetrics& iFormatMetrics );
 
 /*

@@ -13,7 +13,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/Modes.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Math.h"
 

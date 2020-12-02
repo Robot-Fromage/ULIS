@@ -39,10 +39,10 @@ void InvokeDetectTrimAlphaEdge( int32 iLine, size_t iW, const uint8* iSrc, const
 typedef void (*fpDispatchedDetectTrimAlphaEdgeInvoke)( int32 iLine, size_t iW, const uint8* iSrc, const FFormatMetrics& iFmt, std::atomic_int* iLeft, std::atomic_int* iTop, std::atomic_int* iRight, std::atomic_int* iBot );
 fpDispatchedDetectTrimAlphaEdgeInvoke QueryDispatchedDetectTrimAlphaEdgeInvokeForParameters( eType iType ) {
         switch( iType ) {
-        case TYPE_UINT8     : return  InvokeDetectTrimAlphaEdge< uint8 >;
-        case TYPE_UINT16    : return  InvokeDetectTrimAlphaEdge< uint16>;
-        case TYPE_UINT32    : return  InvokeDetectTrimAlphaEdge< uint32 >;
-        case TYPE_UFLOAT    : return  InvokeDetectTrimAlphaEdge< ufloat >;
+        case Type_uint8     : return  InvokeDetectTrimAlphaEdge< uint8 >;
+        case Type_uint16    : return  InvokeDetectTrimAlphaEdge< uint16>;
+        case Type_uint32    : return  InvokeDetectTrimAlphaEdge< uint32 >;
+        case Type_ufloat    : return  InvokeDetectTrimAlphaEdge< ufloat >;
         case TYPE_UDOUBLE   : return  InvokeDetectTrimAlphaEdge< udouble >;
     }
     return  nullptr;

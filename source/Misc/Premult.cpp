@@ -49,10 +49,10 @@ void InvokesUnpremult( size_t iW, uint8* iDst, const FFormatMetrics& iFmt ) {
 typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt );
 fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iType ) {
     switch( iType ) {
-        case TYPE_UINT8     : return  InvokesPremult< uint8 >;
-        case TYPE_UINT16    : return  InvokesPremult< uint16 >;
-        case TYPE_UINT32    : return  InvokesPremult< uint32 >;
-        case TYPE_UFLOAT    : return  InvokesPremult< ufloat >;
+        case Type_uint8     : return  InvokesPremult< uint8 >;
+        case Type_uint16    : return  InvokesPremult< uint16 >;
+        case Type_uint32    : return  InvokesPremult< uint32 >;
+        case Type_ufloat    : return  InvokesPremult< ufloat >;
         case TYPE_UDOUBLE   : return  InvokesPremult< udouble >;
     }
     return  nullptr;
@@ -60,10 +60,10 @@ fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iTyp
 
 fpDispatchedAlphamulInvoke QueryDispatchedUnpremultInvokeForParameters( eType iType ) {
     switch( iType ) {
-        case TYPE_UINT8     : return  InvokesUnpremult< uint8 >;
-        case TYPE_UINT16    : return  InvokesUnpremult< uint16 >;
-        case TYPE_UINT32    : return  InvokesUnpremult< uint32 >;
-        case TYPE_UFLOAT    : return  InvokesUnpremult< ufloat >;
+        case Type_uint8     : return  InvokesUnpremult< uint8 >;
+        case Type_uint16    : return  InvokesUnpremult< uint16 >;
+        case Type_uint32    : return  InvokesUnpremult< uint32 >;
+        case Type_ufloat    : return  InvokesUnpremult< ufloat >;
         case TYPE_UDOUBLE   : return  InvokesUnpremult< udouble >;
     }
     return  nullptr;

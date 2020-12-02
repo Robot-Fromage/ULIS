@@ -20,7 +20,6 @@
 #include "Core/Core.h"
 #include "Blend/BlendArgs.h"
 #include "Blend/BlendHelpers.h"
-#include "Blend/Modes.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/NonSeparableBlendFuncF.h"
 #include "Conv/ConvDispatch.h"

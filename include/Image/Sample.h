@@ -99,7 +99,7 @@ public:
     */
     ULIS_FORCEINLINE uint8 Channel8( uint8 iIndex ) const {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UINT8, "Bad type" );
+        ULIS_ASSERT( Type() == Type_uint8, "Bad type" );
         return  reinterpret_cast< uint8* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
 
@@ -109,7 +109,7 @@ public:
     */
     ULIS_FORCEINLINE uint16 Channel16( uint8 iIndex ) const {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UINT16, "Bad type" );
+        ULIS_ASSERT( Type() == Type_uint16, "Bad type" );
         return  reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
 
@@ -119,7 +119,7 @@ public:
     */
     ULIS_FORCEINLINE uint32 Channel32( uint8 iIndex ) const {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UINT32, "Bad type" );
+        ULIS_ASSERT( Type() == Type_uint32, "Bad type" );
         return  reinterpret_cast< uint32* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
 
@@ -129,7 +129,7 @@ public:
     */
     ULIS_FORCEINLINE ufloat ChannelF( uint8 iIndex ) const {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UFLOAT, "Bad type" );
+        ULIS_ASSERT( Type() == Type_ufloat, "Bad type" );
         return  reinterpret_cast< ufloat* >( mSignal )[ RedirectedIndex( iIndex ) ];
     }
 
@@ -149,7 +149,7 @@ public:
     */
     ULIS_FORCEINLINE void SetChannel8( uint8 iIndex, uint8 iValue ) {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UINT8, "Bad type" );
+        ULIS_ASSERT( Type() == Type_uint8, "Bad type" );
         reinterpret_cast< uint8* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
 
@@ -159,7 +159,7 @@ public:
     */
     ULIS_FORCEINLINE void SetChannel16( uint8 iIndex, uint16 iValue ) {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UINT16, "Bad type" );
+        ULIS_ASSERT( Type() == Type_uint16, "Bad type" );
         reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
 
@@ -169,7 +169,7 @@ public:
     */
     ULIS_FORCEINLINE void SetChannel32( uint8 iIndex, uint32 iValue ) {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UINT32, "Bad type" );
+        ULIS_ASSERT( Type() == Type_uint32, "Bad type" );
         reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
 
@@ -179,7 +179,7 @@ public:
     */
     ULIS_FORCEINLINE void SetChannelF( uint8 iIndex, ufloat iValue ) {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == TYPE_UFLOAT, "Bad type" );
+        ULIS_ASSERT( Type() == Type_ufloat, "Bad type" );
         reinterpret_cast< ufloat* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
 
