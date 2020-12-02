@@ -17,33 +17,6 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Job Building
-template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillPreserveAlphaCommandArgs* ) >
-void
-ScheduleFillPreserveAlphaJobs(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    const FFillPreserveAlphaCommandArgs* cargs  = dynamic_cast< const FFillPreserveAlphaCommandArgs* >( iCommand->Args() );
-    RangeBasedSchedulingBuildJobs<
-          FSimpleBufferJobArgs
-        , FFillCommandArgs
-        , TDelegateInvoke
-        , BuildFillJob_Scanlines
-        , BuildFillJob_Chunks
-    >
-    (
-          iCommand
-        , iPolicy
-        , static_cast< int64 >( cargs->block.BytesTotal() )
-        , cargs->rect.h
-        , iContiguous
-    );
-}
-
-/////////////////////////////////////////////////////
 // Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
@@ -76,10 +49,7 @@ ScheduleFillPreserveAlphaMT_MEM(
     , bool iContiguous
 )
 {
-    const FFillPreserveAlphaCommandArgs* cargs = dynamic_cast< const FFillPreserveAlphaCommandArgs* >( iCommand->Args() );
-    const uint8 bpp = cargs->block.BytesPerPixel();
-    const uint32 bps = cargs->block.BytesPerScanLine();
-    ScheduleFillPreserveAlphaJobs< &InvokeFillPreserveAlphaMT_MEM< T > >( iCommand, iPolicy, iContiguous );
+    ScheduleSimpleBufferJobs< &InvokeFillPreserveAlphaMT_MEM< T > >( iCommand, iPolicy, iContiguous );
 }
 
 /////////////////////////////////////////////////////
