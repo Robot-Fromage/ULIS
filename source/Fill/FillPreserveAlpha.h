@@ -13,13 +13,13 @@
 */
 #pragma once
 #include "Core/Core.h"
-
-#pragma once
-#include "Core/Core.h"
 #include "Dispatch/Dispatcher.h"
 #include "Image/Color.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
+#include "Scheduling/RangeBasedPolicyScheduler.h"
 #include "Scheduling/ScheduleArgs.h"
+#include "Scheduling/SimpleBuffer.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -42,15 +42,34 @@ public:
 };
 
 /////////////////////////////////////////////////////
-// Scheduler
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillPreserveAlphaMT_MEM );
+// Invocations
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
+template< typename T >
+void
+InvokeFillPreserveAlphaMT_MEM(
+      const FSimpleBufferJobArgs* jargs
+    , const FFillPreserveAlphaCommandArgs* cargs
+)
+{
+    const uint8* src = cargs->color.Bits();
+    const FFormatMetrics& fmt = cargs->block.Format();
+    const uint8 stride = cargs->block.BytesPerPixel();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    for( uint32 i = 0; i < jargs->size; ++i ) {
+        const T alpha = dst[ iFmt.AID ];
+        memcpy( dst, src, stride );
+        dst[ fmt.AID ] = alpha;
+        dst += stride;
+    }
+}
 
 /////////////////////////////////////////////////////
 // Dispatch
 ULIS_DECLARE_DISPATCHER( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedFillPreserveAlphaInvocationSchedulerSelector
-    , &ScheduleFillPreserveAlphaMT_MEM< T >
+    , &ScheduleSimpleBufferJobs< &InvokeFillPreserveAlphaMT_MEM< T > >
 )
 
 ULIS_NAMESPACE_END
