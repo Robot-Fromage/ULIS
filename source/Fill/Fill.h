@@ -45,22 +45,6 @@ public:
 };
 
 /////////////////////////////////////////////////////
-// Scheduler
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AX2 );
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_SSE4_2 );
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_MEM );
-
-/////////////////////////////////////////////////////
-// Dispatch
-ULIS_DECLARE_DISPATCHER( FDispatchedFillInvocationSchedulerSelector )
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
-      FDispatchedFillInvocationSchedulerSelector
-    , &ScheduleFillMT_AX2
-    , &ScheduleFillMT_SSE4_2
-    , &ScheduleFillMT_MEM
-)
-
-/////////////////////////////////////////////////////
 // FFillPreserveAlphaCommandArgs
 class FFillPreserveAlphaCommandArgs final
     : public FSimpleBufferCommandArgs
@@ -103,7 +87,7 @@ InvokeFillPreserveAlphaMT_MEM(
 }
 
 /////////////////////////////////////////////////////
-// Schedulers FillPreserveAlpha
+// Dispatch / Schedule
 template< typename T >
 void
 ScheduleFillPreserveAlphaMT_MEM_Generic(
@@ -115,7 +99,16 @@ ScheduleFillPreserveAlphaMT_MEM_Generic(
     ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM< T > >( iCommand, iPolicy, iContiguous );
 }
 
-
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AX2 );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_SSE );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_MEM );
+ULIS_DECLARE_DISPATCHER( FDispatchedFillInvocationSchedulerSelector )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
+      FDispatchedFillInvocationSchedulerSelector
+    , &ScheduleFillMT_AX2
+    , &ScheduleFillMT_SSE
+    , &ScheduleFillMT_MEM
+)
 ULIS_DECLARE_DISPATCHER( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedFillPreserveAlphaInvocationSchedulerSelector

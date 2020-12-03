@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         SimpleBuffer.h
+* @file         SimpleBufferArgs.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the SimpleBuffer arguments and scheduling functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
@@ -124,6 +124,17 @@ ScheduleSimpleBufferJobs(
         , BuildSimpleBufferJob_Scanlines
         , BuildSimpleBufferJob_Chunks
     );
+}
+
+#define ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( iName, iJobArgs, iCommandArgs, iDelegateInvocation )      \
+void                                                                                                            \
+iName(                                                                                                          \
+      FCommand* iCommand                                                                                        \
+    , const FSchedulePolicy& iPolicy                                                                            \
+    , bool iContiguous                                                                                          \
+)                                                                                                               \
+{                                                                                                               \
+    ScheduleSimpleBufferJobs< iJobArgs, iCommandArgs, iDelegateInvocation >( iCommand, iPolicy, iContiguous );  \
 }
 
 ULIS_NAMESPACE_END

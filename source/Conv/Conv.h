@@ -49,9 +49,8 @@ public:
 
 
 /////////////////////////////////////////////////////
-// Scheduler
+// Dispatch / Schedule
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleConvertFormat_MEM_Generic );
-
 ULIS_DECLARE_DISPATCHER( FDispatchedConvertFormatInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedConvertFormatInvocationSchedulerSelector

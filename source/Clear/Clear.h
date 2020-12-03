@@ -19,18 +19,15 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Scheduler
+// Dispatch / Schedule
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleClearMT_AX2 );
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleClearMT_SSE4_2 );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleClearMT_SSE );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleClearMT_MEM );
-
-/////////////////////////////////////////////////////
-// Dispatch
 ULIS_DECLARE_DISPATCHER( FDispatchedClearInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
       FDispatchedClearInvocationSchedulerSelector
     , ScheduleClearMT_AX2
-    , ScheduleClearMT_SSE4_2
+    , ScheduleClearMT_SSE
     , ScheduleClearMT_MEM
 )
 

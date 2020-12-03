@@ -45,7 +45,7 @@ InvokeClearMT_AX2(
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 static
 void
-InvokeClearMT_SSE4_2(
+InvokeClearMT_SSE(
       const FSimpleBufferJobArgs* jargs
     , const FSimpleBufferCommandArgs* cargs
 )
@@ -74,42 +74,11 @@ InvokeClearMT_MEM(
     memset( jargs->dst, 0, jargs->size );
 }
 
-
 /////////////////////////////////////////////////////
-// Schedulers
-void
-ScheduleClearMT_AX2(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_AX2 >( iCommand, iPolicy, iContiguous );
-}
-
-void
-ScheduleClearMT_SSE4_2(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
-}
-
-void
-ScheduleClearMT_MEM(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_MEM >( iCommand, iPolicy, iContiguous );
-
-}
-
-/////////////////////////////////////////////////////
-// Dispatch
+// Dispatch / Schedule
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleClearMT_AVX, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_AX2 )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleClearMT_SSE, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_SSE )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleClearMT_MEM, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END

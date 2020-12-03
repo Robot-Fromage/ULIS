@@ -16,7 +16,7 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Invocations Fill
+// Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
@@ -42,7 +42,7 @@ InvokeFillMT_AX2(
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
 void
-InvokeFillMT_SSE4_2(
+InvokeFillMT_SSE(
       const FSimpleBufferJobArgs* jargs
     , const FFillCommandArgs* cargs
 )
@@ -77,7 +77,7 @@ InvokeFillMT_MEM(
 }
 
 /////////////////////////////////////////////////////
-// Schedulers Fill
+// Schedulers
 void
 ScheduleFillMT_AX2(
       FCommand* iCommand
@@ -92,7 +92,7 @@ ScheduleFillMT_AX2(
     if( bpp <= 32 && bps >= 32 ) {
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_AX2 >( iCommand, iPolicy, iContiguous );
     } else if( bpp <= 16 && bps >= 16 ) {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous );
     } else {
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
     }
@@ -109,7 +109,7 @@ ScheduleFillMT_SSE4_2(
     const uint8 bpp = cargs->block.BytesPerPixel();
     const uint32 bps = cargs->block.BytesPerScanLine();
     if( bpp <= 16 && bps >= 16 ) {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous );
     } else {
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
     }

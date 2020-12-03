@@ -76,13 +76,10 @@ void InvokeCopyMTProcessScanline_MEM(
 }
 
 /////////////////////////////////////////////////////
-// Schedulers
+// Dispatch / Schedule
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_AX2,     FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_AX2 )
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_SSE,  FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_SSE )
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_MEM,     FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_MEM )
-
-/////////////////////////////////////////////////////
-// Dispatch
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedCopyInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END

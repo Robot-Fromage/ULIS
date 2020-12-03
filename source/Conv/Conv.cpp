@@ -16,6 +16,8 @@
 #include "Image/Pixel.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Invocations
 void
 InvokeConvertFormat(
       const FDualBufferJobArgs* jargs
@@ -32,11 +34,8 @@ InvokeConvertFormat(
 }
 
 /////////////////////////////////////////////////////
-// Schedulers
+// Dispatch / Schedule
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleConvertFormat, FDualBufferJobArgs, FConvCommandArgs, &InvokeConvertFormat )
-
-/////////////////////////////////////////////////////
-// Dispatch
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvertFormatInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
