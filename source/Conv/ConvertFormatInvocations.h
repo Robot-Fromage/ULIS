@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         ConvDispatch.h
+* @file         ConvertFormatInvocations.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the ConvBuffer entry point functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

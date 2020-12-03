@@ -11,7 +11,7 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Conv/Generic/ToGrey.h"
 #include "Conv/Generic/ToRGB.h"
 #include "Conv/Generic/ToHSV.h"

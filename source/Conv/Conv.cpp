@@ -20,26 +20,6 @@
 #include "lcms2.h"
 
 ULIS_NAMESPACE_BEGIN
-void Conv( const ISample& iSrc, ISample& iDst ) {
-    if( iSrc.Format() == iDst.Format() ) {
-        memcpy( iDst.Bits(), iSrc.Bits(), iDst.BytesPerPixel() );
-    } else {
-        fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst.Format() );
-        fptr( iSrc.FormatMetrics(), iSrc.Bits(), iDst.FormatMetrics(), iDst.Bits(), 1 );
-    }
-}
-
-FColor Conv( const ISample& iSrc, eFormat iDst ) {
-    FColor dst( iDst );
-    if( iSrc.Format() == iDst ) {
-        memcpy( dst.Bits(), iSrc.Bits(), dst.BytesPerPixel() );
-    } else {
-        fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst );
-        fptr( iSrc.FormatMetrics(), iSrc.Bits(), dst.FormatMetrics(), dst.Bits(), 1 );
-    }
-    return  dst;
-}
-
 void
 InvokeConvertFormat(
       const FConvJobArgs* jargs

@@ -16,7 +16,7 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"

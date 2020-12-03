@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/ScheduleArgs.h"
 

@@ -16,9 +16,6 @@
 #include "Conv/ConvArgs.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_API void Conv( const ISample& iSrc, ISample& iDst );
-ULIS_API FColor Conv( const ISample& iSrc, eFormat iDst );
-
 void
 InvokeConvertFormat(
       const FConvJobArgs* jargs
