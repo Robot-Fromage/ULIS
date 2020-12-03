@@ -54,6 +54,16 @@ public:
     \sa FBlock
     */
     void SetPointer( uint8* iPtr );
+
+    /*!
+    Move the underlying signal data pointer to the next sample.
+    */
+    ULIS_FORCEINLINE void Next() { mSignal += BytesPerPixel(); }
+
+    /*!
+    Move the underlying signal data pointer to the prev sample.
+    */
+    ULIS_FORCEINLINE void Prev() { mSignal -= BytesPerPixel(); }
 };
 
 ULIS_NAMESPACE_END

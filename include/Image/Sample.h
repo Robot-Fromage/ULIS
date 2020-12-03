@@ -507,16 +507,6 @@ public:
     */
     static void ConvertFormat( const ISample& iSrc, ISample& iDst );
 
-    /*!
-    Move the underlying signal data pointer to the next sample. Unsafe for FColor.
-    */
-    ULIS_FORCEINLINE void Next() { mSignal += BytesPerPixel(); }
-
-    /*!
-    Move the underlying signal data pointer to the prev sample. Unsafe for FColor.
-    */
-    ULIS_FORCEINLINE void Prev() { mSignal -= BytesPerPixel(); }
-
 protected:
     uint8* mSignal;
 };
