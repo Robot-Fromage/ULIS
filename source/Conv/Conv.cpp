@@ -12,17 +12,13 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Conv/Conv.h"
-#include "Conv/ConvHelpers.h"
-#include "Copy/Copy.h"
 #include "Image/Block.h"
 #include "Image/Pixel.h"
-#include "Math/Math.h"
-#include "lcms2.h"
 
 ULIS_NAMESPACE_BEGIN
 void
 InvokeConvertFormat(
-      const FConvJobArgs* jargs
+      const FDualBufferJobArgs* jargs
     , const FConvCommandArgs* cargs
 )
 {
@@ -39,9 +35,10 @@ void
 ScheduleConvertFormat(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
+    , bool iContiguous
 )
 {
-    BuildConvJobs< &InvokeConvertFormat >( iCommand, iPolicy );
+    ScheduleDualBufferJobs< FDualBufferJobArgs, FConvCommandArgs, &InvokeConvertFormat >( iCommand, iPolicy, iContiguous );
 }
 
 ULIS_NAMESPACE_END

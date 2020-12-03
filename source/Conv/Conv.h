@@ -14,6 +14,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Conv/ConvertFormatInvocations.h"
+#include "Dispatch/Dispatcher.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/DualBufferArgs.h"
