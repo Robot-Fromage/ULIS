@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
 #include "Image/Format.h"
@@ -31,8 +31,8 @@ ConvBufferGreyToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const
 {
     while( iLen-- )
     {
-        U2_DREF_DST( 0 ) = ConvType< T, U >( U2_DREF_SRC( 0 ) );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< T, U >( DREF_SRC( 0 ) );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -46,12 +46,12 @@ ConvBufferRGBToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 {
     while( iLen-- )
     {
-        ufloat r = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
-        ufloat g = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
-        ufloat b = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
+        ufloat r = ConvType< T, ufloat >( DREF_SRC( 0 ) );
+        ufloat g = ConvType< T, ufloat >( DREF_SRC( 1 ) );
+        ufloat b = ConvType< T, ufloat >( DREF_SRC( 2 ) );
         ufloat grey = 0.3f * r + 0.59f * g + 0.11f * b;
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( grey );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( grey );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }

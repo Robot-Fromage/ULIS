@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
 #include "Image/Format.h"
@@ -47,16 +47,16 @@ ConvBufferRGBToXYZ( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        ufloat r = srgb2linear( ConvType< T, ufloat >( U2_DREF_SRC( 0 ) ) );
-        ufloat g = srgb2linear( ConvType< T, ufloat >( U2_DREF_SRC( 1 ) ) );
-        ufloat b = srgb2linear( ConvType< T, ufloat >( U2_DREF_SRC( 2 ) ) );
+        ufloat r = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 0 ) ) );
+        ufloat g = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 1 ) ) );
+        ufloat b = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 2 ) ) );
         float x = 0.4124f * r + 0.3576f * g + 0.1805f * b;
         float y = 0.2126f * r + 0.7152f * g + 0.0722f * b;
         float z = 0.0193f * r + 0.1192f * g + 0.9505f * b;
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( x );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( y );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( z );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( x );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( y );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( z );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -153,17 +153,17 @@ ConvBufferLabToXYZ( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
         cmsCIELab Lab;
         cmsCIEXYZ XYZ;
         cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-        Lab.L = ConvType< T, udouble >( U2_DREF_SRC( 0 ) ) * 100.0;
-        Lab.a = ( ConvType< T, udouble >( U2_DREF_SRC( 1 ) ) - 0.5 ) * 255.0;
-        Lab.b = ( ConvType< T, udouble >( U2_DREF_SRC( 2 ) ) - 0.5 ) * 255.0;
+        Lab.L = ConvType< T, udouble >( DREF_SRC( 0 ) ) * 100.0;
+        Lab.a = ( ConvType< T, udouble >( DREF_SRC( 1 ) ) - 0.5 ) * 255.0;
+        Lab.b = ( ConvType< T, udouble >( DREF_SRC( 2 ) ) - 0.5 ) * 255.0;
         cmsLab2XYZ( &D65, &XYZ, &Lab );
         ufloat x = static_cast< ufloat >( XYZ.X );
         ufloat y = static_cast< ufloat >( XYZ.Y );
         ufloat z = static_cast< ufloat >( XYZ.Z );
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( x );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( y );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( z );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( x );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( y );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( z );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -177,10 +177,10 @@ ConvBufferXYZToXYZ( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        U2_DREF_DST( 0 ) = ConvType< T, U >( U2_DREF_SRC( 0 ) );
-        U2_DREF_DST( 1 ) = ConvType< T, U >( U2_DREF_SRC( 1 ) );
-        U2_DREF_DST( 2 ) = ConvType< T, U >( U2_DREF_SRC( 2 ) );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< T, U >( DREF_SRC( 0 ) );
+        DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
+        DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -196,17 +196,17 @@ ConvBufferYxyToXYZ( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
     {
         cmsCIExyY xyY;
         cmsCIEXYZ XYZ;
-        xyY.Y = ConvType< T, udouble >( U2_DREF_SRC( 0 ) );
-        xyY.x = ConvType< T, udouble >( U2_DREF_SRC( 1 ) );
-        xyY.y = ConvType< T, udouble >( U2_DREF_SRC( 2 ) );
+        xyY.Y = ConvType< T, udouble >( DREF_SRC( 0 ) );
+        xyY.x = ConvType< T, udouble >( DREF_SRC( 1 ) );
+        xyY.y = ConvType< T, udouble >( DREF_SRC( 2 ) );
         cmsxyY2XYZ( &XYZ, &xyY );
         ufloat x = static_cast< ufloat >( XYZ.X );
         ufloat y = static_cast< ufloat >( XYZ.Y );
         ufloat z = static_cast< ufloat >( XYZ.Z );
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( x );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( y );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( z );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( x );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( y );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( z );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }

@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
 #include "Image/Format.h"
@@ -49,9 +49,9 @@ ConvBufferRGBToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        ufloat r = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
-        ufloat g = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
-        ufloat b = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
+        ufloat r = ConvType< T, ufloat >( DREF_SRC( 0 ) );
+        ufloat g = ConvType< T, ufloat >( DREF_SRC( 1 ) );
+        ufloat b = ConvType< T, ufloat >( DREF_SRC( 2 ) );
         float cmin = FMath::Min3( r, g, b );
         float cmax = FMath::Max3( r, g, b );
         float delta = cmax - cmin;
@@ -75,10 +75,10 @@ ConvBufferRGBToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
             if( h > 1.0 ) h -= 1.0;
         }
 
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( h );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( s );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( l );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( h );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( s );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( l );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -108,10 +108,10 @@ ConvBufferHSLToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        U2_DREF_DST( 0 ) = ConvType< T, U >( U2_DREF_SRC( 0 ) );
-        U2_DREF_DST( 1 ) = ConvType< T, U >( U2_DREF_SRC( 1 ) );
-        U2_DREF_DST( 2 ) = ConvType< T, U >( U2_DREF_SRC( 2 ) );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< T, U >( DREF_SRC( 0 ) );
+        DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
+        DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }

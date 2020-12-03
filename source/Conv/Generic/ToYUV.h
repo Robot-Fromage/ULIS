@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
 #include "Image/Format.h"
@@ -47,16 +47,16 @@ ConvBufferRGBToYUV( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        ufloat r = srgb2linear( ConvType< T, ufloat >( U2_DREF_SRC( 0 ) ) );
-        ufloat g = srgb2linear( ConvType< T, ufloat >( U2_DREF_SRC( 1 ) ) );
-        ufloat b = srgb2linear( ConvType< T, ufloat >( U2_DREF_SRC( 2 ) ) );
+        ufloat r = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 0 ) ) );
+        ufloat g = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 1 ) ) );
+        ufloat b = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 2 ) ) );
         float y = 0.299f * r + 0.587f * g + 0.114f * b;
         float u = 0.492f * ( b - y ); // + 0.435912 * ( 1 / ( 0.886 + 0.435912 ) )
         float v = 0.877f * ( r - y ); // + 0.621787 * ( 1 / ( 0.701 + 0.621787 ) )
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( y );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( u );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( v );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( y );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( u );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( v );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }

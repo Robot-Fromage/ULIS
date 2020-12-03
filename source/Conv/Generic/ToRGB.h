@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
 #include "Image/Format.h"
@@ -34,11 +34,11 @@ ConvBufferGreyToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 {
     while( iLen-- )
     {
-        U grey = ConvType< T, U >( U2_DREF_SRC( 0 ) );
-        U2_DREF_DST( 0 ) = grey;
-        U2_DREF_DST( 1 ) = grey;
-        U2_DREF_DST( 2 ) = grey;
-        U2_FWD_ALPHA;
+        U grey = ConvType< T, U >( DREF_SRC( 0 ) );
+        DREF_DST( 0 ) = grey;
+        DREF_DST( 1 ) = grey;
+        DREF_DST( 2 ) = grey;
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -52,10 +52,10 @@ ConvBufferRGBToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        U2_DREF_DST( 0 ) = ConvType< T, U >( U2_DREF_SRC( 0 ) );
-        U2_DREF_DST( 1 ) = ConvType< T, U >( U2_DREF_SRC( 1 ) );
-        U2_DREF_DST( 2 ) = ConvType< T, U >( U2_DREF_SRC( 2 ) );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< T, U >( DREF_SRC( 0 ) );
+        DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
+        DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -69,9 +69,9 @@ ConvBufferHSVToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        T _H = U2_DREF_SRC( 0 );
-        T _S = U2_DREF_SRC( 1 );
-        T _V = U2_DREF_SRC( 2 );
+        T _H = DREF_SRC( 0 );
+        T _S = DREF_SRC( 1 );
+        T _V = DREF_SRC( 2 );
         ufloat h = ConvType< T, ufloat >( _H );
         ufloat s = ConvType< T, ufloat >( _S );
         ufloat v = ConvType< T, ufloat >( _V );
@@ -97,10 +97,10 @@ ConvBufferHSVToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
             else if ( var_i == 4 ) { r = var_3 ; g = var_1 ; b = v     ; }
             else                   { r = v     ; g = var_1 ; b = var_2 ; }
         }
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -114,9 +114,9 @@ ConvBufferHSLToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        T _H = U2_DREF_SRC( 0 );
-        T _S = U2_DREF_SRC( 1 );
-        T _L = U2_DREF_SRC( 2 );
+        T _H = DREF_SRC( 0 );
+        T _S = DREF_SRC( 1 );
+        T _L = DREF_SRC( 2 );
         ufloat h = ConvType< T, ufloat >( _H );
         ufloat s = ConvType< T, ufloat >( _S );
         ufloat l = ConvType< T, ufloat >( _L );
@@ -134,10 +134,10 @@ ConvBufferHSLToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
         else if ( var_i == 3 ) { r = 0; g = X; b = C; }
         else if ( var_i == 4 ) { r = X; g = 0; b = C; }
         else                   { r = C; g = 0; b = X; }
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( r + m );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( g + m );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( b + m );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( r + m );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( g + m );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( b + m );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -152,10 +152,10 @@ ConvBufferCMYToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
     while( iLen-- )
     {
         U max = MaxType< U >();
-        U2_DREF_DST( 0 ) = max - ConvType< T, U >( U2_DREF_SRC( 0 ) );
-        U2_DREF_DST( 1 ) = max - ConvType< T, U >( U2_DREF_SRC( 1 ) );
-        U2_DREF_DST( 2 ) = max - ConvType< T, U >( U2_DREF_SRC( 2 ) );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = max - ConvType< T, U >( DREF_SRC( 0 ) );
+        DREF_DST( 1 ) = max - ConvType< T, U >( DREF_SRC( 1 ) );
+        DREF_DST( 2 ) = max - ConvType< T, U >( DREF_SRC( 2 ) );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -169,17 +169,17 @@ ConvBufferCMYKToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 {
     while( iLen-- )
     {
-        ufloat c = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
-        ufloat m = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
-        ufloat y = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
-        ufloat k = ConvType< T, ufloat >( U2_DREF_SRC( 3 ) );
+        ufloat c = ConvType< T, ufloat >( DREF_SRC( 0 ) );
+        ufloat m = ConvType< T, ufloat >( DREF_SRC( 1 ) );
+        ufloat y = ConvType< T, ufloat >( DREF_SRC( 2 ) );
+        ufloat k = ConvType< T, ufloat >( DREF_SRC( 3 ) );
         float r = 1.f - ( c * ( 1.f - k ) + k );
         float g = 1.f - ( m * ( 1.f - k ) + k );
         float b = 1.f - ( y * ( 1.f - k ) + k );
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -193,16 +193,16 @@ ConvBufferYUVToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        ufloat y = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
-        ufloat u = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
-        ufloat v = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
+        ufloat y = ConvType< T, ufloat >( DREF_SRC( 0 ) );
+        ufloat u = ConvType< T, ufloat >( DREF_SRC( 1 ) );
+        ufloat v = ConvType< T, ufloat >( DREF_SRC( 2 ) );
         float r = linear2srgb( y + 1.14f * v );
         float g = linear2srgb( y - 0.395f * u - 0.581f * v );
         float b = linear2srgb( y + 2.033f * u );
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -219,9 +219,9 @@ ConvBufferLabToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
         cmsCIELab Lab;
         cmsCIEXYZ XYZ;
         cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-        Lab.L = ConvType< T, udouble >( U2_DREF_SRC( 0 ) ) * 100.0;
-        Lab.a = ( ConvType< T, udouble >( U2_DREF_SRC( 1 ) ) - 0.5 ) * 255.0;
-        Lab.b = ( ConvType< T, udouble >( U2_DREF_SRC( 2 ) ) - 0.5 ) * 255.0;
+        Lab.L = ConvType< T, udouble >( DREF_SRC( 0 ) ) * 100.0;
+        Lab.a = ( ConvType< T, udouble >( DREF_SRC( 1 ) ) - 0.5 ) * 255.0;
+        Lab.b = ( ConvType< T, udouble >( DREF_SRC( 2 ) ) - 0.5 ) * 255.0;
         cmsLab2XYZ( &D65, &XYZ, &Lab );
         ufloat x = static_cast< ufloat >( XYZ.X ) / 100.f;
         ufloat y = static_cast< ufloat >( XYZ.Y ) / 100.f;
@@ -229,10 +229,10 @@ ConvBufferLabToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -246,16 +246,16 @@ ConvBufferXYZToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
 {
     while( iLen-- )
     {
-        ufloat x = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
-        ufloat y = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
-        ufloat z = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
+        ufloat x = ConvType< T, ufloat >( DREF_SRC( 0 ) );
+        ufloat y = ConvType< T, ufloat >( DREF_SRC( 1 ) );
+        ufloat z = ConvType< T, ufloat >( DREF_SRC( 2 ) );
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
-        U2_DREF_DST( 0 ) = ConvType< float, U >( r );
-        U2_DREF_DST( 1 ) = ConvType< float, U >( g );
-        U2_DREF_DST( 2 ) = ConvType< float, U >( b );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< float, U >( r );
+        DREF_DST( 1 ) = ConvType< float, U >( g );
+        DREF_DST( 2 ) = ConvType< float, U >( b );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -271,9 +271,9 @@ ConvBufferYxyToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
     {
         cmsCIExyY xyY;
         cmsCIEXYZ XYZ;
-        xyY.Y = ConvType< T, udouble >( U2_DREF_SRC( 0 ) );
-        xyY.x = ConvType< T, udouble >( U2_DREF_SRC( 1 ) );
-        xyY.y = ConvType< T, udouble >( U2_DREF_SRC( 2 ) );
+        xyY.Y = ConvType< T, udouble >( DREF_SRC( 0 ) );
+        xyY.x = ConvType< T, udouble >( DREF_SRC( 1 ) );
+        xyY.y = ConvType< T, udouble >( DREF_SRC( 2 ) );
         cmsxyY2XYZ( &XYZ, &xyY );
         ufloat x = static_cast< ufloat >( XYZ.X );
         ufloat y = static_cast< ufloat >( XYZ.Y );
@@ -281,10 +281,10 @@ ConvBufferYxyToRGB( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const F
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
-        U2_DREF_DST( 0 ) = ConvType< float, U >( r );
-        U2_DREF_DST( 1 ) = ConvType< float, U >( g );
-        U2_DREF_DST( 2 ) = ConvType< float, U >( b );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< float, U >( r );
+        DREF_DST( 1 ) = ConvType< float, U >( g );
+        DREF_DST( 2 ) = ConvType< float, U >( b );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }

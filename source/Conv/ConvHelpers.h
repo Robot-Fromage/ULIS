@@ -22,13 +22,13 @@
 /////////////////////////////////////////////////////
 // Macro Helpers for Redundant Conversion Operations
 // Macro utils for implementations
-#define U2_DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt.IDT[ iChan ] ) )
-#define U2_DREF_CHAN( T, iPtr, iChan )              ( *( ( T* )( iPtr ) + iChan ) )
-#define U2_FWD_ALPHA                                if( iDstFormat.HEA ) { U2_DREF_CHAN( U, iDst, iDstFormat.AID ) = iSrcFormat.HEA? ConvType< T, U >( U2_DREF_CHAN( T, iSrc, iSrcFormat.AID ) ) : MaxType< U >(); }
+#define DREF_RED_CHAN( T, iPtr, iFmt, iChan )    ( *( ( T* )( iPtr ) + iFmt.IDT[ iChan ] ) )
+#define DREF_CHAN( T, iPtr, iChan )              ( *( ( T* )( iPtr ) + iChan ) )
+#define FWD_ALPHA                                if( iDstFormat.HEA ) { DREF_CHAN( U, iDst, iDstFormat.AID ) = iSrcFormat.HEA? ConvType< T, U >( DREF_CHAN( T, iSrc, iSrcFormat.AID ) ) : MaxType< U >(); }
 
-#define U2_DREF_SRC( iChan )                        U2_DREF_RED_CHAN( T, iSrc, iSrcFormat, iChan )
-#define U2_DREF_DST( iChan )                        U2_DREF_RED_CHAN( U, iDst, iDstFormat, iChan )
-#define U2_DREF_TEMP( iChan )                       U2_DREF_RED_CHAN( ufloat, temp.Bits(), temp.FormatMetrics(), iChan )
+#define DREF_SRC( iChan )                        DREF_RED_CHAN( T, iSrc, iSrcFormat, iChan )
+#define DREF_DST( iChan )                        DREF_RED_CHAN( U, iDst, iDstFormat, iChan )
+#define DREF_TEMP( iChan )                       DREF_RED_CHAN( ufloat, temp.Bits(), temp.FormatMetrics(), iChan )
 
 ULIS_NAMESPACE_BEGIN
 template< void (*TDelegateInvoke)( const FConvJobArgs*, const FConvCommandArgs* ) >

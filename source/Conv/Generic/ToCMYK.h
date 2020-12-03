@@ -13,7 +13,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 #include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
 #include "Image/Format.h"
@@ -47,20 +47,20 @@ ConvBufferRGBToCMYK( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 {
     while( iLen-- )
     {
-        ufloat r = ConvType< T, ufloat >( U2_DREF_SRC( 0 ) );
-        ufloat g = ConvType< T, ufloat >( U2_DREF_SRC( 1 ) );
-        ufloat b = ConvType< T, ufloat >( U2_DREF_SRC( 2 ) );
+        ufloat r = ConvType< T, ufloat >( DREF_SRC( 0 ) );
+        ufloat g = ConvType< T, ufloat >( DREF_SRC( 1 ) );
+        ufloat b = ConvType< T, ufloat >( DREF_SRC( 2 ) );
         float ik = FMath::Max3( r, g, b );
         float k = 1.f - ik;
         if( ik == 0 ) ik = 1;
         float c = ( ( 1.f - r ) - k ) / ( ik );
         float m = ( ( 1.f - g ) - k ) / ( ik );
         float y = ( ( 1.f - b ) - k ) / ( ik );
-        U2_DREF_DST( 0 ) = ConvType< ufloat, U >( c );
-        U2_DREF_DST( 1 ) = ConvType< ufloat, U >( m );
-        U2_DREF_DST( 2 ) = ConvType< ufloat, U >( y );
-        U2_DREF_DST( 3 ) = ConvType< ufloat, U >( k );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< ufloat, U >( c );
+        DREF_DST( 1 ) = ConvType< ufloat, U >( m );
+        DREF_DST( 2 ) = ConvType< ufloat, U >( y );
+        DREF_DST( 3 ) = ConvType< ufloat, U >( k );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -122,11 +122,11 @@ ConvBufferCMYKToCMYK( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const
 {
     while( iLen-- )
     {
-        U2_DREF_DST( 0 ) = ConvType< T, U >( U2_DREF_SRC( 0 ) );
-        U2_DREF_DST( 1 ) = ConvType< T, U >( U2_DREF_SRC( 1 ) );
-        U2_DREF_DST( 2 ) = ConvType< T, U >( U2_DREF_SRC( 2 ) );
-        U2_DREF_DST( 3 ) = ConvType< T, U >( U2_DREF_SRC( 3 ) );
-        U2_FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< T, U >( DREF_SRC( 0 ) );
+        DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
+        DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
+        DREF_DST( 3 ) = ConvType< T, U >( DREF_SRC( 3 ) );
+        FWD_ALPHA;
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }

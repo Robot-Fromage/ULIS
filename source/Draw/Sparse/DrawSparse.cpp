@@ -13,7 +13,7 @@
 */
 #include "Draw/Draw.h"
 #include "Image/Block.h"
-#include "Conv/ConvDispatch.h"
+#include "Conv/ConvertFormatInvocations.h"
 
 ULIS_NAMESPACE_BEGIN
 /*
