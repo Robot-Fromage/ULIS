@@ -81,6 +81,9 @@ private:
     const fpCommandScheduler mScheduleCopy;
 
     // Copy
+    const fpCommandScheduler mScheduleConvertFormat;
+
+    // Copy
     const fpCommandScheduler mScheduleFill;
     const fpCommandScheduler mScheduleFillPreserveAlpha;
 };

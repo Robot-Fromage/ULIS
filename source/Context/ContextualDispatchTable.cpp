@@ -16,6 +16,7 @@
 #include "Blend/BlendDispatch.h"
 #include "Clear/Clear.h"
 #include "Copy/Copy.h"
+#include "Conv/Conv.h"
 #include "Fill/Fill.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -38,6 +39,9 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
 
         // Copy
         , mScheduleCopy(                        TDispatcher< FDispatchedCopyInvocationSchedulerSelector >                       ::Query( iHardwareMetrics, iFormat ) )
+
+        // Conv
+        , mScheduleConvertFormat(               TDispatcher< FDispatchedConvertFormatInvocationSchedulerSelector >              ::Query( iHardwareMetrics, iFormat ) )
 
         // Fill
         , mScheduleFill(                        TDispatcher< FDispatchedFillInvocationSchedulerSelector >                       ::Query( iHardwareMetrics, iFormat ) )
