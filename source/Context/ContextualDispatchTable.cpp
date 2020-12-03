@@ -17,7 +17,6 @@
 #include "Clear/Clear.h"
 #include "Copy/Copy.h"
 #include "Fill/Fill.h"
-#include "Fill/FillPreserveAlpha.h"
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat )

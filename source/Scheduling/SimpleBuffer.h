@@ -109,13 +109,11 @@ ScheduleSimpleBufferJobs(
     , bool iContiguous
 )
 {
-    const FSimpleBufferCommandArgs* cargs  = dynamic_cast< const FSimpleBufferCommandArgs* >( iCommand->Args() );
+    const FSimpleBufferCommandArgs* cargs = dynamic_cast< const FSimpleBufferCommandArgs* >( iCommand->Args() );
     RangeBasedSchedulingBuildJobs<
           TJobArgs
         , TCommandArgs
         , TDelegateInvoke
-        , BuildSimpleBufferJob_Scanlines
-        , BuildSimpleBufferJob_Chunks
     >
     (
           iCommand
@@ -123,6 +121,8 @@ ScheduleSimpleBufferJobs(
         , static_cast< int64 >( cargs->block.BytesTotal() )
         , cargs->rect.h
         , iContiguous
+        , BuildSimpleBufferJob_Scanlines
+        , BuildSimpleBufferJob_Chunks
     );
 }
 

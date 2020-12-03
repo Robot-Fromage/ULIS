@@ -46,7 +46,7 @@ FContext::Clear(
     mCommandQueue.Push(
         new FCommand(
               mContextualDispatchTable->mScheduleClear
-            , new FClearCommandArgs(
+            , new FSimpleBufferCommandArgs(
                   iBlock
                 , src_roi
             )

@@ -12,13 +12,11 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Fill/Fill.h"
-#include "Image/Block.h"
-#include "Scheduling/RangeBasedPolicyScheduler.h"
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Invocations
+// Invocations Fill
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
@@ -79,7 +77,7 @@ InvokeFillMT_MEM(
 }
 
 /////////////////////////////////////////////////////
-// Schedulers
+// Schedulers Fill
 void
 ScheduleFillMT_AX2(
       FCommand* iCommand
@@ -129,8 +127,8 @@ ScheduleFillMT_MEM(
 
 /////////////////////////////////////////////////////
 // Dispatch
-ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedFillInvocationSchedulerSelector )
-ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedFillInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedFillInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

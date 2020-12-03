@@ -16,7 +16,6 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Fill/Fill.h"
-#include "Fill/FillPreserveAlpha.h"
 #include "Conv/Conv.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"

@@ -17,7 +17,6 @@
 #include "Image/Color.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
-#include "Scheduling/RangeBasedPolicyScheduler.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBuffer.h"
 
@@ -59,6 +58,68 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
     , &ScheduleFillMT_AX2
     , &ScheduleFillMT_SSE4_2
     , &ScheduleFillMT_MEM
+)
+
+/////////////////////////////////////////////////////
+// FFillPreserveAlphaCommandArgs
+class FFillPreserveAlphaCommandArgs final
+    : public FSimpleBufferCommandArgs
+{
+public:
+    ~FFillPreserveAlphaCommandArgs() override {}
+    FFillPreserveAlphaCommandArgs(
+          FBlock& iBlock
+        , const FColor& iColor
+        , const FRectI& iRect
+    )
+        : FSimpleBufferCommandArgs( iBlock, iRect )
+        , color( iColor )
+    {}
+
+    const FColor color;
+};
+
+/////////////////////////////////////////////////////
+// Invocations FillPreserveAlpha
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
+template< typename T >
+void
+InvokeFillPreserveAlphaMT_MEM(
+      const FSimpleBufferJobArgs* jargs
+    , const FFillPreserveAlphaCommandArgs* cargs
+)
+{
+    const uint8* src = cargs->color.Bits();
+    const FFormatMetrics& fmt = cargs->block.Format();
+    const uint8 stride = cargs->block.BytesPerPixel();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    for( uint32 i = 0; i < jargs->size; ++i ) {
+        const T alpha = dst[ iFmt.AID ];
+        memcpy( dst, src, stride );
+        dst[ fmt.AID ] = alpha;
+        dst += stride;
+    }
+}
+
+/////////////////////////////////////////////////////
+// Schedulers FillPreserveAlpha
+template< typename T >
+void
+ScheduleFillPreserveAlphaMT_MEM_Generic(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+    , bool iContiguous
+)
+{
+    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM< T > >( iCommand, iPolicy, iContiguous );
+}
+
+
+ULIS_DECLARE_DISPATCHER( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
+      FDispatchedFillPreserveAlphaInvocationSchedulerSelector
+    , &ScheduleFillPreserveAlphaMT_MEM_Generic< T >
 )
 
 ULIS_NAMESPACE_END
