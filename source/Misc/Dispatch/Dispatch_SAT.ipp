@@ -95,7 +95,7 @@ void ComputeSummedAreaTable_MEM_Generic( FOldThreadPool*           iOldThreadPoo
                                    , bdp + pLINE * bdp_bpp );
 }
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 void 
 InvokeComputeSummedAreaTable_XPass_SSE42_RGBA8( const uint32 iLen, const uint8* iSrc, uint8* iDst ) {
     const uint8* src = reinterpret_cast< const uint8* >( iSrc ) + 4;
@@ -165,7 +165,7 @@ void ComputeSummedAreaTable_SSE42_RGBA8( FOldThreadPool*             iOldThreadP
                                    , src + pLINE * src_bpp
                                    , bdp + pLINE * bdp_bpp );
 }
-#endif // ULIS_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 
 typedef void (*fpDispatchedSATFunc)( FOldThreadPool*             iOldThreadPool
@@ -183,7 +183,7 @@ QueryDispatchedSATFunctionForParameters_Generic( uint32 iPerfIntent, const FHard
 
 fpDispatchedSATFunc
 QueryDispatchedSATFunctionForParameters_RGBA8( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics ) {
-    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    #ifdef ULIS_COMPILETIME_SSE_SUPPORT
         if( iHostDeviceInfo.HW_SSE42 )
             return  ComputeSummedAreaTable_SSE42_RGBA8;
         else

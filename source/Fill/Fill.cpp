@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 // Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
 void
 InvokeFillMT_AX2(
       const FSimpleBufferJobArgs* jargs
@@ -36,11 +36,11 @@ InvokeFillMT_AX2(
     // Remaining unaligned scanline end: avoid concurrent write on 256 bit with avx and perform a memset instead
     memcpy( dst, cargs->buffer, jargs->size - index );
 }
-#endif // ULIS_COMPILETIME_AVX2_SUPPORT
+#endif // ULIS_COMPILETIME_AVX_SUPPORT
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- SSE
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 void
 InvokeFillMT_SSE(
       const FSimpleBufferJobArgs* jargs

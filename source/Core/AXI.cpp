@@ -114,7 +114,7 @@ CompiledFor64Bit()
 bool
 CompiledWithAVX2()
 {
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
     return  true;
 #else
     return  false;
@@ -124,7 +124,7 @@ CompiledWithAVX2()
 bool
 CompiledWithSSE42()
 {
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
     return  true;
 #else
     return  false;

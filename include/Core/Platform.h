@@ -239,10 +239,10 @@ namespace ULIS_SHORT_NAMESPACE_NAME = ULIS_NAMESPACE_NAME;
 // Conditional compile time detection macro in order to decide if we should include SIMD versions in the various dispatch
 #ifdef ULIS_COMPILED_WITH_SIMD_SUPPORT
     #ifdef __AVX2__
-        #define ULIS_COMPILETIME_AVX2_SUPPORT
+        #define ULIS_COMPILETIME_AVX_SUPPORT
     #endif
     #ifdef __SSE4_2__
-        #define ULIS_COMPILETIME_SSE42_SUPPORT
+        #define ULIS_COMPILETIME_SSE_SUPPORT
     #endif
 #endif
 

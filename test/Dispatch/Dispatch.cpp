@@ -74,12 +74,12 @@ public:
     static ULIS_FORCEINLINE typename D::fpQuery Query( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename D::tExtra& iExtra ) {
         for( int i = 0; i < D::spec_size; ++i ) {
             if( D::spec_table[i].select_cond( iFormatMetrics ) ) {
-                #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+                #ifdef ULIS_COMPILETIME_AVX_SUPPORT
                     if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                         return  D::spec_table[i].select_AVX( iExtra );
                     else
                 #endif
-                #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+                #ifdef ULIS_COMPILETIME_SSE_SUPPORT
                     if( iPerfIntent & ULIS_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
                         return  D::spec_table[i].select_SSE( iExtra );
                     else
@@ -99,12 +99,12 @@ public:
 private:
     template< typename T >
     static ULIS_FORCEINLINE typename D::fpQuery QueryGeneric( uint32 iPerfIntent, const FHardwareMetrics& iHostDeviceInfo, const FFormatMetrics& iFormatMetrics, const typename D::tExtra& iExtra ) {
-        #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+        #ifdef ULIS_COMPILETIME_AVX_SUPPORT
             if( iPerfIntent & ULIS_PERF_AVX2 && iHostDeviceInfo.HW_AVX2 )
                 return  D:: template TGenericDispatchGroup< T >::select_AVX_Generic( iExtra );
             else
         #endif
-        #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+        #ifdef ULIS_COMPILETIME_SSE_SUPPORT
             if( iPerfIntent & ULIS_PERF_SSE42 && iHostDeviceInfo.HW_SSE42 )
                 return  D:: template TGenericDispatchGroup< T >::select_SSE_Generic( iExtra );
             else
@@ -115,7 +115,7 @@ private:
 
 /////////////////////////////////////////////////////
 // Spec
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
     #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_AVX_Generic = AVX;
 #else
@@ -123,7 +123,7 @@ private:
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_AVX_Generic = nullptr;
 #endif
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
     #define ULIS_OLDDISPATCH_SELECT_GENSSE( TAG, SSE )                                                                    \
     template< typename T > const typename TAG::fpSelect TAG::TGenericDispatchGroup< T >::select_SSE_Generic = SSE;
 #else
@@ -159,14 +159,14 @@ ULIS_OLDDISPATCH_SELECT_GENSSE( TAG, GENSSE );                            \
 ULIS_OLDDISPATCH_SELECT_GENMEM( TAG, GENMEM );                            \
 const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
-    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
+    #ifdef ULIS_COMPILETIME_SSE_SUPPORT
         #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, _AVX, _SSE, _MEM },
     #else
         #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #endif
 #else
-    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    #ifdef ULIS_COMPILETIME_SSE_SUPPORT
         #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, _SSE, _MEM },
     #else
         #define ULIS_DECL_OLDDISPATCH_SPEC( _COND, _AVX, _SSE, _MEM ) { _COND, nullptr, nullptr, _MEM },

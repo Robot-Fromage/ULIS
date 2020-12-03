@@ -36,7 +36,7 @@
 #include "Transform/Generic/TransformBezier_Bicubic_MEM_Generic.ipp"
 
 // Include SSE RGBA8 Implementation
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include "Transform/RGBA8/ResizeMT_NN_SSE_RGBA8.ipp"
 #include "Transform/RGBA8/ResizeMT_Bilinear_SSE_RGBA8.ipp"
 #include "Transform/RGBA8/ResizeMT_Bicubic_SSE_RGBA8.ipp"
@@ -84,13 +84,13 @@ ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformAf
     , &TransformAffineMT_Bicubic_MEM_Generic< T >
     , &TransformAffineMT_Bilinear_MEM_Generic< T > )
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformAffineInvocationSSERGBA8, FTransformArgs
     , &TransformAffineMT_NN_SSE_RGBA8
     , &TransformAffineMT_Bilinear_SSE_RGBA8
     , &TransformAffineMT_Bicubic_SSE_RGBA8
     , &TransformAffineMT_Bilinear_SSE_RGBA8 )
-#endif // ULIS_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformAffineInvocationMEMRGBA8, FTransformArgs
     , &TransformAffineMT_NN_MEM_Generic< uint8 >
@@ -107,13 +107,13 @@ ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformAf
     , &TransformAffineTiledMT_Bicubic_MEM_Generic< T >
     , &TransformAffineTiledMT_Bilinear_MEM_Generic< T > )
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformAffineTiledInvocationSSERGBA8, FTransformArgs
     , &TransformAffineTiledMT_NN_SSE_RGBA8
     , &TransformAffineTiledMT_Bilinear_SSE_RGBA8
     , &TransformAffineTiledMT_Bicubic_SSE_RGBA8
     , &TransformAffineTiledMT_Bilinear_SSE_RGBA8 )
-#endif // ULIS_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformAffineTiledInvocationMEMRGBA8, FTransformArgs
     , &TransformAffineTiledMT_NN_MEM_Generic< uint8 >
@@ -130,13 +130,13 @@ ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformPe
     , &TransformPerspectiveMT_Bicubic_MEM_Generic< T >
     , &TransformPerspectiveMT_Bilinear_MEM_Generic< T > )
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformPerspectiveInvocationSSERGBA8, FTransformArgs
     , &TransformPerspectiveMT_NN_SSE_RGBA8
     , &TransformPerspectiveMT_Bilinear_SSE_RGBA8
     , &TransformPerspectiveMT_Bicubic_SSE_RGBA8
     , &TransformPerspectiveMT_Bilinear_SSE_RGBA8 )
-#endif // ULIS_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpTransformInvocation, SelectTransformPerspectiveInvocationMEMRGBA8, FTransformArgs
     , &TransformPerspectiveMT_NN_MEM_Generic< uint8 >
@@ -153,13 +153,13 @@ ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpBezierTransformInvocation, SelectTrans
     , &TransformBezierMT_Bicubic_MEM_Generic< T >
     , &TransformBezierMT_Bilinear_MEM_Generic< T > )
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpBezierTransformInvocation, SelectTransformBezierInvocationSSERGBA8, FTransformArgs
     , &TransformBezierMT_NN_SSE_RGBA8
     , &TransformBezierMT_Bilinear_SSE_RGBA8
     , &TransformBezierMT_Bicubic_SSE_RGBA8
     , &TransformBezierMT_Bilinear_SSE_RGBA8 )
-#endif // ULIS_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpBezierTransformInvocation, SelectTransformBezierInvocationMEMRGBA8, FTransformArgs
     , &TransformBezierMT_NN_MEM_Generic< uint8 >
@@ -176,13 +176,13 @@ ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpResizeInvocation, SelectResizeInvocati
     , &ResizeMT_Bicubic_MEM_Generic< T >
     , &ResizeMT_Area_MEM_Generic< T > )
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpResizeInvocation, SelectResizeInvocationSSERGBA8, FResizeArgs
     , &ResizeMT_NN_SSE_RGBA8
     , &ResizeMT_Bilinear_SSE_RGBA8
     , &ResizeMT_Bicubic_SSE_RGBA8
     , &ResizeMT_Area_SSE_RGBA8 )
-#endif // ULIS_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 ULIS_IMP_TRANSFORM_INVOCATION_SELECTOR( fpResizeInvocation, SelectResizeInvocationMEMRGBA8, FResizeArgs
     , &ResizeMT_NN_MEM_Generic< uint8 >

@@ -15,7 +15,7 @@
 #include "Core/Core.h"
 #include "Image/Format.h"
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include <vectorclass.h>
 #endif
 
@@ -109,7 +109,7 @@ SampleBicubicV( uint8* iDst, const float* iA, const float* iB, const float* iC, 
 
 /////////////////////////////////////////////////////
 // SSE Helpers functions for specialized Transform Operations
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- InterpCubic
 ULIS_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec4f iT ) {

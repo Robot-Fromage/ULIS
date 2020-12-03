@@ -15,19 +15,19 @@
 #include "Blend/BlendDispatch.h"
 
 // Include SSE RGBA8 Implementation
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include "Blend/RGBA8/BlendMT_Separable_SSE_RGBA8.h"
 #include "Blend/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.h"
 #include "Blend/RGBA8/AlphaBlendMT_SSE_RGBA8.h"
 #include "Blend/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.h"
 #include "Blend/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.h"
-#endif // ULIS_COMPILETIME_SSE42_SUPPORT
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 // Include AVX RGBA8 Implementation
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
 #include "Blend/RGBA8/BlendMT_Separable_AVX_RGBA8.h"
 #include "Blend/RGBA8/AlphaBlendMT_AVX_RGBA8.h"
-#endif // ULIS_COMPILETIME_AVX2_SUPPORT
+#endif // ULIS_COMPILETIME_AVX_SUPPORT
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

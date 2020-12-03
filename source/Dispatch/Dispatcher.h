@@ -27,12 +27,12 @@ public:
     static ULIS_FORCEINLINE typename fpCommandScheduler Query( const FHardwareMetrics& iDevice, eFormat iFormat ) {
         for( int i = 0; i < IMP::spec_size; ++i ) {
             if( IMP::spec_table[i].select_cond( iFormat ) ) {
-                #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+                #ifdef ULIS_COMPILETIME_AVX_SUPPORT
                     if( iDevice.HasHardwareAVX2() )
                         return  IMP::spec_table[i].select_AVX;
                     else
                 #endif
-                #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+                #ifdef ULIS_COMPILETIME_SSE_SUPPORT
                     if( iDevice.HasHardwareSSE42() )
                         return  IMP::spec_table[i].select_SSE;
                     else
@@ -52,12 +52,12 @@ public:
 private:
     template< typename T >
     static ULIS_FORCEINLINE typename fpCommandScheduler QueryGeneric( const FHardwareMetrics& iDevice, eFormat iFormat ) {
-        #ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+        #ifdef ULIS_COMPILETIME_AVX_SUPPORT
             if( iDevice.HasHardwareAVX2() )
                 return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic;
             else
         #endif
-        #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+        #ifdef ULIS_COMPILETIME_SSE_SUPPORT
             if( iDevice.HasHardwareSSE42() )
                 return  IMP:: template TGenericDispatchGroup< T >::select_SSE_Generic;
             else
@@ -68,7 +68,7 @@ private:
 
 /////////////////////////////////////////////////////
 // Macro Helper for Dispatcher definition
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
     #define ULIS_DISPATCH_SELECT_GENAVX( TAG, AVX ) \
     template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_AVX_Generic = AVX;
 #else
@@ -76,7 +76,7 @@ private:
     template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_AVX_Generic = nullptr;
 #endif
 
-#ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
     #define ULIS_DISPATCH_SELECT_GENSSE( TAG, SSE ) \
     template< typename T > const typename fpCommandScheduler TAG::TGenericDispatchGroup< T >::select_SSE_Generic = SSE;
 #else
@@ -115,8 +115,8 @@ ULIS_DISPATCH_SELECT_GENMEM( TAG, GENMEM );
 #define ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( TAG ) \
 const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
 
-#ifdef ULIS_COMPILETIME_AVX2_SUPPORT
-    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
+    #ifdef ULIS_COMPILETIME_SSE_SUPPORT
         #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM )    \
             { _COND                                                                 \
             , _AVX                                                                  \
@@ -130,7 +130,7 @@ const typename TAG::FSpecDispatchGroup  TAG::spec_table[] = {
             , _MEM },
     #endif
 #else
-    #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
+    #ifdef ULIS_COMPILETIME_SSE_SUPPORT
         #define ULIS_DEFINE_DISPATCHER_SPECIALIZATION( _COND, _AVX, _SSE, _MEM )    \
             { _COND                                                                 \
             , nullptr                                                               \
