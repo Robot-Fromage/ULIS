@@ -83,9 +83,9 @@ BuildDualBufferJob_Scanlines(
     const int64 src_bps                     = static_cast< int64 >( iCargs->src.BytesPerScanLine() );
     const int64 dst_bps                     = static_cast< int64 >( iCargs->dst.BytesPerScanLine() );
     const int64 size                        = iCargs->dstRect.w * fmt.BPP;
-    oJargs.src                      = src + ( iCargs->srcRect.y + iIndex ) * src_bps;
-    oJargs.dst                      = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
-    oJargs.size                     = size;
+    oJargs.src                              = src + ( iCargs->srcRect.y + iIndex ) * src_bps;
+    oJargs.dst                              = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
+    oJargs.size                             = size;
 }
 
 void
