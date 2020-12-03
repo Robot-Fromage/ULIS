@@ -20,7 +20,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Scheduler
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleCopyMT_AX2 );
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleCopyMT_SSE4_2 );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleCopyMT_SSE );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleCopyMT_MEM );
 
 /////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ ULIS_DECLARE_DISPATCHER( FDispatchedCopyInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
       FDispatchedCopyInvocationSchedulerSelector
     , &ScheduleCopyMT_AX2
-    , &ScheduleCopyMT_SSE4_2
+    , &ScheduleCopyMT_SSE
     , &ScheduleCopyMT_MEM
 )
 

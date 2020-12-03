@@ -45,7 +45,7 @@ void InvokeCopyMTProcessScanline_AX2(
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS_COMPILETIME_SSE42_SUPPORT
-void InvokeCopyMTProcessScanline_SSE4_2(
+void InvokeCopyMTProcessScanline_SSE(
       const FDualBufferJobArgs* jargs
     , const FDualBufferCommandArgs* cargs
 )
@@ -77,35 +77,9 @@ void InvokeCopyMTProcessScanline_MEM(
 
 /////////////////////////////////////////////////////
 // Schedulers
-void
-ScheduleCopyMT_AX2(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    ScheduleDualBufferJobs< FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_AX2 >( iCommand, iPolicy, iContiguous );
-}
-
-void
-ScheduleCopyMT_SSE4_2(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    ScheduleDualBufferJobs< FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_SSE4_2 >( iCommand, iPolicy, iContiguous );
-}
-
-void
-ScheduleCopyMT_MEM(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    ScheduleDualBufferJobs< FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_MEM >( iCommand, iPolicy, iContiguous );
-}
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_AX2,     FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_AX2 )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_SSE,  FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_SSE )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_MEM,     FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMTProcessScanline_MEM )
 
 /////////////////////////////////////////////////////
 // Dispatch
