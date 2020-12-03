@@ -79,6 +79,10 @@ private:
 
     // Copy
     const fpCommandScheduler mScheduleCopy;
+
+    // Copy
+    const fpCommandScheduler mScheduleFill;
+    const fpCommandScheduler mScheduleFillPreserveAlpha;
 };
 
 ULIS_NAMESPACE_END

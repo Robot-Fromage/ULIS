@@ -16,6 +16,7 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Fill/Fill.h"
+#include "Fill/FillPreserveAlpha.h"
 #include "Conv/Conv.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
@@ -59,10 +60,47 @@ FContext::Fill(
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleClear
+              mContextualDispatchTable->mScheduleFill
             , new FFillCommandArgs(
                   iBlock
                 , buf
+                , roi
+            )
+            , iPolicy
+            , roi == rect
+            , iNumWait
+            , iWaitList
+            , iEvent
+        )
+    );
+}
+
+void
+FContext::FillPreserveAlpha(
+          FBlock& iBlock
+        , const FRectI& iRect
+        , const ISample& iColor
+        , const FSchedulePolicy& iPolicy
+        , uint32 iNumWait
+        , const FEvent* iWaitList
+        , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI rect = iBlock.Rect();
+    const FRectI roi = iRect.Sanitized() & rect;
+
+    // Check no-op
+    if( roi.Area() <= 0 )
+        return  FinishEventNoOP( iEvent );
+
+    // Bake and push command
+    mCommandQueue.Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleFillPreserveAlpha
+            , new FFillPreserveAlphaCommandArgs(
+                  iBlock
+                , Conv( iColor, iBlock.Format() )
                 , roi
             )
             , iPolicy
