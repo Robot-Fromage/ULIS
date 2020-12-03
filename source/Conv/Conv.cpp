@@ -31,15 +31,13 @@ InvokeConvertFormat(
     );
 }
 
-void
-ScheduleConvertFormat(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    ScheduleDualBufferJobs< FDualBufferJobArgs, FConvCommandArgs, &InvokeConvertFormat >( iCommand, iPolicy, iContiguous );
-}
+/////////////////////////////////////////////////////
+// Schedulers
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleConvertFormat, FDualBufferJobArgs, FConvCommandArgs, &InvokeConvertFormat )
+
+/////////////////////////////////////////////////////
+// Dispatch
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvertFormatInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
