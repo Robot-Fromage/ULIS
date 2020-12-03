@@ -14,6 +14,7 @@
 #include "Clear/Clear.h"
 #include "Image/Block.h"
 #include "Scheduling/RangeBasedPolicyScheduler.h"
+#include "Scheduling/SimpleBufferArgs.h"
 #include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN/////////////////////////////////////////////////////

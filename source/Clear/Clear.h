@@ -15,9 +15,7 @@
 #include "Core/Core.h"
 #include "Dispatch/Dispatcher.h"
 #include "Math/Geometry/Rectangle.h"
-#include "Scheduling/RangeBasedPolicyScheduler.h"
 #include "Scheduling/ScheduleArgs.h"
-#include "Scheduling/SimpleBuffer.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

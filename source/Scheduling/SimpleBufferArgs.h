@@ -5,7 +5,7 @@
 *   ULIS
 *__________________
 *
-* @file         SimpleBufferArgs.h
+* @file         SimpleBuffer.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the SimpleBuffer arguments and scheduling functions.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.

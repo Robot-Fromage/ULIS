@@ -22,6 +22,7 @@
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include "Scheduling/DualBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 void
@@ -49,23 +50,18 @@ FContext::Copy(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
-    // Forward arguments baking
-    // Check wether the whole image buffer is to be copied.
-    // If so, chunk based scheduling policy are made available.
-    const bool whole = ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) );
-
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
               mContextualDispatchTable->mScheduleCopy
-            , new FCopyCommandArgs(
+            , new FDualBufferCommandArgs(
                   iSource
                 , iDestination
                 , src_roi
                 , dst_roi
-                , whole
             )
             , iPolicy
+            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
             , iNumWait
             , iWaitList
             , iEvent

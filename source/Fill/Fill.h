@@ -18,7 +18,7 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/ScheduleArgs.h"
-#include "Scheduling/SimpleBuffer.h"
+#include "Scheduling/SimpleBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
