@@ -13,20 +13,49 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/ConvArgs.h"
+#include "Conv/ConvertFormatInvocations.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Scheduling/ScheduleArgs.h"
+#include "Scheduling/DualBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
-void
-InvokeConvertFormat(
-      const FConvJobArgs* jargs
-    , const FConvCommandArgs* cargs
-);
+/////////////////////////////////////////////////////
+// FConvCommandArgs
+class FConvCommandArgs final
+    : public FDualBufferCommandArgs
+{
+public:
+    ~FConvCommandArgs() override {}
 
-void
-ScheduleConvertFormat(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+    FConvCommandArgs(
+          const FBlock& iSrc
+        , FBlock& iDst
+        , const FRectI& iSrcRect
+        , const FRectI& iDstRect
+        , const fpConversionInvocation iInvocation
+    )
+        : FDualBufferCommandArgs(
+              iSrc
+            , iDst
+            , iSrcRect
+            , iDstRect
+            )
+        , invocation( iInvocation )
+        {}
+
+    fpConversionInvocation invocation;
+};
+
+
+/////////////////////////////////////////////////////
+// Scheduler
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleConvertFormat_MEM_Generic );
+
+ULIS_DECLARE_DISPATCHER( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
+      FDispatchedFillPreserveAlphaInvocationSchedulerSelector
+    , &ScheduleConvertFormat_MEM_Generic
+)
 
 ULIS_NAMESPACE_END
 
