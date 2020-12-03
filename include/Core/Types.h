@@ -515,5 +515,37 @@ BlendingModeQualifier( eBlendMode iBlendingMode )
     X( Alpha_Min           , _E0, _E1, _E2, _E3 )   \
     X( Alpha_Max           , _E0, _E1, _E2, _E3 )
 
+/////////////////////////////////////////////////////
+// eResamplingMethod
+enum eResamplingMethod
+{
+      Resampling_NearestNeighbour
+    , Resampling_Bilinear
+    , Resampling_Bicubic
+    , Resampling_Area
+};
+
+static const char* kwResamplingMethod[] =
+{
+      "NearestNeighbour"
+    , "Bilinear"
+    , "Bicubic"
+    , "Area"
+};
+
+/////////////////////////////////////////////////////
+// eMipsLayout
+enum eMipsLayout
+{
+      MipsLayout_Standard
+    , MipsLayout_MipsOnly
+};
+
+static const char* kwMipsLayout[] =
+{
+      "Standard"
+    , "MipsOnly"
+};
+
 ULIS_NAMESPACE_END
 
