@@ -138,5 +138,15 @@ ScheduleDualBufferJobs(
     );
 }
 
+#define ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( iName, iJobArgs, iCommandArgs, iDelegateInvocation )        \
+void                                                                                                            \
+iName(                                                                                                          \
+      FCommand* iCommand                                                                                        \
+    , const FSchedulePolicy& iPolicy                                                                            \
+    , bool iContiguous                                                                                          \
+)                                                                                                               \
+{                                                                                                               \
+    ScheduleDualBufferJobs< iJobArgs, iCommandArgs, iDelegateInvocation >( iCommand, iPolicy, iContiguous );    \
+}
 ULIS_NAMESPACE_END
 
