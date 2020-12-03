@@ -56,24 +56,19 @@ FContext::ConvertFormat(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
-    // Forward arguments baking
-    // Check wether the whole image buffer is to be converted.
-    // If so, chunk based scheduling policy are made available.
-    const bool whole = ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) );
-
     // Bake and push command
     mCommandQueue.Push(
         new FCommand(
-              &ScheduleConvertFormat
+              mContextualDispatchTable->mScheduleConvertFormat
             , new FConvCommandArgs(
                   iSource
                 , iDestination
                 , src_roi
                 , dst_roi
                 , QueryDispatchedConversionInvocation( iSource.Format(), iDestination.Format() )
-                , whole
             )
             , iPolicy
+            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
             , iNumWait
             , iWaitList
             , iEvent
