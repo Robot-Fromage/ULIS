@@ -111,8 +111,8 @@ ScheduleSimpleBufferJobs(
 {
     const FSimpleBufferCommandArgs* cargs  = dynamic_cast< const FSimpleBufferCommandArgs* >( iCommand->Args() );
     RangeBasedSchedulingBuildJobs<
-          FSimpleBufferJobArgs
-        , FSimpleBufferCommandArgs
+          TJobArgs
+        , TCommandArgs
         , TDelegateInvoke
         , BuildSimpleBufferJob_Scanlines
         , BuildSimpleBufferJob_Chunks

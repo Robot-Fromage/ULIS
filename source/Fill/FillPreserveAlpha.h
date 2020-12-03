@@ -69,8 +69,13 @@ InvokeFillPreserveAlphaMT_MEM(
 ULIS_DECLARE_DISPATCHER( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedFillPreserveAlphaInvocationSchedulerSelector
-    , &ScheduleSimpleBufferJobs< &InvokeFillPreserveAlphaMT_MEM< T > >
+    , &ScheduleSimpleBufferJobs<
+          FSimpleBufferJobArgs
+        , FFillPreserveAlphaCommandArgs
+        , &InvokeFillPreserveAlphaMT_MEM< T >
+    >
 )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedFillPreserveAlphaInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

@@ -18,66 +18,6 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Job Building
-void
-BuildFillJob_Scanlines(
-      const FFillCommandArgs* iCargs
-    , const int64 iNumJobs
-    , const int64 iNumTasksPerJob
-    , const int64 iIndex
-    , FSimpleBufferJobArgs& oJargs
-)
-{
-    const FFormatMetrics& fmt       = iCargs->block.FormatMetrics();
-    uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits() + iCargs->rect.x * fmt.BPP;
-    const int64 bps                 = static_cast< int64 >( iCargs->block.BytesPerScanLine() );
-    const int64 size                = iCargs->rect.w * fmt.BPP;
-    oJargs.dst                      = dst + ( iCargs->rect.y + iIndex ) * bps;
-    oJargs.size                     = size;
-}
-
-void
-BuildFillJob_Chunks(
-      const FFillCommandArgs* iCargs
-    , const int64 iSize
-    , const int64 iCount
-    , const int64 iOffset
-    , const int64 iIndex
-    , FSimpleBufferJobArgs& oJargs
-)
-{
-    uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits();
-    const int64 btt                 = static_cast< int64 >( iCargs->block.BytesTotal() );
-    oJargs.dst                      = dst + iIndex;
-    oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
-}
-
-template< void (*TDelegateInvoke)( const FSimpleBufferJobArgs*, const FFillCommandArgs* ) >
-void
-ScheduleFillJobs(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous
-)
-{
-    const FFillCommandArgs* cargs  = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
-    RangeBasedSchedulingBuildJobs<
-          FSimpleBufferJobArgs
-        , FFillCommandArgs
-        , TDelegateInvoke
-        , BuildFillJob_Scanlines
-        , BuildFillJob_Chunks
-    >
-    (
-          iCommand
-        , iPolicy
-        , static_cast< int64 >( cargs->block.BytesTotal() )
-        , cargs->rect.h
-        , iContiguous
-    );
-}
-
-/////////////////////////////////////////////////////
 // Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
@@ -152,11 +92,11 @@ ScheduleFillMT_AX2(
     const uint32 bps = cargs->block.BytesPerScanLine();
 
     if( bpp <= 32 && bps >= 32 ) {
-        ScheduleFillJobs< &InvokeFillMT_AX2 >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_AX2 >( iCommand, iPolicy, iContiguous );
     } else if( bpp <= 16 && bps >= 16 ) {
-        ScheduleFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
     } else {
-        ScheduleFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
     }
 }
 
@@ -171,9 +111,9 @@ ScheduleFillMT_SSE4_2(
     const uint8 bpp = cargs->block.BytesPerPixel();
     const uint32 bps = cargs->block.BytesPerScanLine();
     if( bpp <= 16 && bps >= 16 ) {
-        ScheduleFillJobs< &InvokeFillMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE4_2 >( iCommand, iPolicy, iContiguous );
     } else {
-        ScheduleFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
     }
 }
 
@@ -184,10 +124,7 @@ ScheduleFillMT_MEM(
     , bool iContiguous
 )
 {
-    const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
-    const uint8 bpp = cargs->block.BytesPerPixel();
-    const uint32 bps = cargs->block.BytesPerScanLine();
-    ScheduleFillJobs< &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
+    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
 }
 
 /////////////////////////////////////////////////////

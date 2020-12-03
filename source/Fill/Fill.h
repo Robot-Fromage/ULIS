@@ -15,14 +15,17 @@
 #include "Core/Core.h"
 #include "Dispatch/Dispatcher.h"
 #include "Image/Color.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
+#include "Scheduling/RangeBasedPolicyScheduler.h"
 #include "Scheduling/ScheduleArgs.h"
+#include "Scheduling/SimpleBuffer.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFillCommandArgs
 class FFillCommandArgs final
-    : public ICommandArgs
+    : public FSimpleBufferCommandArgs
 {
 public:
     ~FFillCommandArgs() override
@@ -35,15 +38,11 @@ public:
         , const uint8* iBuffer
         , const FRectI& iRect
     )
-        : ICommandArgs()
-        , block( iBlock )
+        : FSimpleBufferCommandArgs( iBlock, iRect )
         , buffer( iBuffer )
-        , rect( iRect )
-        {}
+    {}
 
-    FBlock& block;
     const uint8* buffer;
-    const FRectI rect;
 };
 
 /////////////////////////////////////////////////////
