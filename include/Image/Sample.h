@@ -495,6 +495,9 @@ public:
     //DISABLED:DOUBLEULIS_FORCEINLINE void SetxD(           udouble iValue ) { SetChannelD( 1, iValue ); }
     //DISABLED:DOUBLEULIS_FORCEINLINE void SetyD(           udouble iValue ) { SetChannelD( 2, iValue ); }
 
+    FColor ToFormat( eFormat iDstFormat ) const;
+    static void ConvertFormat( const ISample& iSrc, ISample& iDst );
+
 protected:
     uint8* mSignal;
 };

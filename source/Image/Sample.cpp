@@ -12,6 +12,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Image/Sample.h"
+#include "Image/Color.h"
+#include "Conv/ConvertFormatInvocations.h"
 
 ULIS_NAMESPACE_BEGIN
 ISample::~ISample()
@@ -56,6 +58,31 @@ const uint8*
 ISample::Bits() const
 {
     return  mSignal;
+}
+
+FColor
+ISample::ToFormat( eFormat iDstFormat ) const
+{
+    FColor dst( iDstFormat );
+    if( Format() == iDstFormat ) {
+        memcpy( dst.Bits(), Bits(), dst.BytesPerPixel() );
+    } else {
+        fpConversionInvocation fptr = QueryDispatchedConversionInvocation( Format(), iDstFormat );
+        fptr( FormatMetrics(), Bits(), dst.FormatMetrics(), dst.Bits(), 1 );
+    }
+    return  dst;
+}
+
+//static
+void
+ISample::ConvertFormat( const ISample& iSrc, ISample& iDst )
+{
+    if( iSrc.Format() == iDst.Format() ) {
+        memcpy( iDst.Bits(), iSrc.Bits(), iDst.BytesPerPixel() );
+    } else {
+        fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iSrc.Format(), iDst.Format() );
+        fptr( iSrc.FormatMetrics(), iSrc.Bits(), iDst.FormatMetrics(), iDst.Bits(), 1 );
+    }
 }
 
 ULIS_NAMESPACE_END
