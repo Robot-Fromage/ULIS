@@ -17,41 +17,31 @@ typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 
+class A;
+class B;
+
 class A
 {
 public:
-    virtual ~A() = 0 {}
+    ~A() {}
+
+    B Ret();
 };
 
 class B : public A
 {
 public:
-    virtual ~B() override {};
+    ~B() {};
 };
 
-class C final : public B
-{
-public:
-    ~C() override {};
-};
-
-void F( B& i )
-{
-    auto dummy = 0;
+B A::Ret() {
+    return  B();
 }
-
-template< typename T, typename U, void (*IMP)( U& ) >
-void
-FF( T& i )
-{
-    IMP( i );
-}
-
 
 int
 main() {
-    C obj;
-    FF< C, B, &F >( obj );
+    A a;
+    B b = a.Ret();
 
     return  0;
 }
