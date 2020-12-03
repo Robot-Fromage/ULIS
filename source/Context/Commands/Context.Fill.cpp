@@ -46,7 +46,7 @@ FContext::Fill(
 
     // Forward arguments baking
     // This one is a bit tricky so here is a breakdown of the steps:
-    FColor color    = Conv( iColor, iBlock.Format() );                          // iColor can be in any format, so first we convert it to the block format.
+    FColor color    = iColor.ToFormat( iBlock.Format() );                          // iColor can be in any format, so first we convert it to the block format.
     uint8* srcb     = color.Bits();
     uint8 bpp       = iBlock.BytesPerPixel();                                   // We gather the Bytes Per Pixel for the format
     uint32 size     = FMath::Max( uint32(32), uint32( bpp ) );                  // We define a size that is max of 32 ( avx2 ) and BPP ( bytes )
@@ -99,7 +99,7 @@ FContext::FillPreserveAlpha(
               mContextualDispatchTable->mScheduleFillPreserveAlpha
             , new FFillPreserveAlphaCommandArgs(
                   iBlock
-                , Conv( iColor, iBlock.Format() )
+                , iColor.ToFormat( iBlock.Format() )
                 , roi
             )
             , iPolicy

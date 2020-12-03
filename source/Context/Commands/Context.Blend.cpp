@@ -332,7 +332,7 @@ FContext::BlendColor(
     // Forward arguments baking
     FBlock* color = new FBlock( 1, 1, iBackdrop.Format() );
     FPixel proxy = color->Pixel( 0, 0 );
-    Conv( iColor, proxy );
+    ISample::ConvertFormat( iColor, proxy );
 
     // Bake and push command
     mCommandQueue.Push(
