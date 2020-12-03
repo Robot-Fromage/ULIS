@@ -495,8 +495,27 @@ public:
     //DISABLED:DOUBLEULIS_FORCEINLINE void SetxD(           udouble iValue ) { SetChannelD( 1, iValue ); }
     //DISABLED:DOUBLEULIS_FORCEINLINE void SetyD(           udouble iValue ) { SetChannelD( 2, iValue ); }
 
+    /*!
+    Obtain a new color object that represents the visual information of this sample,
+    but converted into the specified format and with its own storage.
+    */
     FColor ToFormat( eFormat iDstFormat ) const;
+
+    /*!
+    In-place converter, upon return Dst will represent the visual information of this sample,
+    but converted into the specified format into its own storage.
+    */
     static void ConvertFormat( const ISample& iSrc, ISample& iDst );
+
+    /*!
+    Move the underlying signal data pointer to the next sample. Unsafe for FColor.
+    */
+    ULIS_FORCEINLINE void Next() { mSignal += BytesPerPixel(); }
+
+    /*!
+    Move the underlying signal data pointer to the prev sample. Unsafe for FColor.
+    */
+    ULIS_FORCEINLINE void Prev() { mSignal -= BytesPerPixel(); }
 
 protected:
     uint8* mSignal;
