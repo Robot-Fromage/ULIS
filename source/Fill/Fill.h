@@ -69,7 +69,7 @@ public:
 //---------------------------------------------------------------------------------- MEM
 template< typename T >
 void
-InvokeFillPreserveAlphaMT_MEM(
+InvokeFillPreserveAlphaMT_MEM_Generic(
       const FSimpleBufferJobArgs* jargs
     , const FFillPreserveAlphaCommandArgs* cargs
 )
@@ -96,7 +96,7 @@ ScheduleFillPreserveAlphaMT_MEM_Generic(
     , bool iContiguous
 )
 {
-    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM< T > >( iCommand, iPolicy, iContiguous );
+    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM_Generic< T > >( iCommand, iPolicy, iContiguous );
 }
 
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AX2 );
