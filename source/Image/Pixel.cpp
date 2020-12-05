@@ -12,6 +12,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Image/Pixel.h"
+#include "Image/Color.h"
 
 ULIS_NAMESPACE_BEGIN
 FPixel::~FPixel()
@@ -32,6 +33,11 @@ FPixel::FPixel( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSp
 
 FPixel::FPixel( const FPixel& iValue )
     : ISample( const_cast< uint8* >( iValue.mSignal ), iValue.Format(), iValue.ColorSpace() )
+{
+}
+
+FPixel::FPixel( const ISample& iSample )
+    : ISample( const_cast< uint8* >( iSample.Bits() ), iSample.Format(), iSample.ColorSpace() )
 {
 }
 

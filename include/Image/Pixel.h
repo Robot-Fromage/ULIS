@@ -41,6 +41,9 @@ public:
     /*! Copy Constructor */
     FPixel( const FPixel& iValue );
 
+    /*! Constructor, from any sample, such as color. */
+    FPixel( const ISample& iSample );
+
     /*! Move Constructor */
     FPixel( FPixel&& iValue );
 
