@@ -21,7 +21,6 @@ class   FColor;
 class   FPixel;
 class   FProfileRegistry;
 class   FColorSpace;
-class   FOldThreadPool;
 class   FThreadPool;
 class   FFontRegistry;
 class   FTextEngine;

@@ -18,12 +18,12 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue
 /// @brief      The FCommandQueue class provides a way to enqueue tasks for being
-///             processed asynchronously in coordination with a FOldThreadPool
+///             processed asynchronously in coordination with a FThreadPool
 /// @details    The FCommandQueue stores a TQueue of FCommand and schedules the
-///             commands on the FOldThreadPool.
+///             commands on the FThreadPool.
 ///
 ///             \sa FCommand
-///             \sa FOldThreadPool
+///             \sa FThreadPool
 class ULIS_API FCommandQueue
 {
     class FCommandQueue_Private;

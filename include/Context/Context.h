@@ -46,7 +46,7 @@ ULIS_NAMESPACE_BEGIN
 ///             to the many possible combinations of source and targets ( 1M+ ).
 ///
 ///             \sa FBlock
-///             \sa FOldThreadPool
+///             \sa FThreadPool
 ///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
 class ULIS_API FContext

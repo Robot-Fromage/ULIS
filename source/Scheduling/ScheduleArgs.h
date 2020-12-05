@@ -21,7 +21,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      ICommandArgs
 /// @brief      The ICommandArgs class provides a virtual base class to implement
 ///             the arguments objects for each type of operations, used in
-///             coordination with a FOldThreadPool and a FCommandQueue.
+///             coordination with a FThreadPool and a FCommandQueue.
 /// @details    The ICommandArgs does nothing special by itself, it is meant to
 ///             be used in a polymorphic way.
 class ULIS_API ICommandArgs {
@@ -34,7 +34,7 @@ public:
 /// @class      IJobArgs
 /// @brief      The IJobArgs class provides a virtual base class to implement
 ///             the arguments objects for each type of operations, used in
-///             coordination with a FOldThreadPool and a FCommandQueue.
+///             coordination with a FThreadPool and a FCommandQueue.
 /// @details    The IJobArgs does nothing special by itself, it is meant to
 ///             be used in a polymorphic way.
 class ULIS_API IJobArgs {

@@ -27,15 +27,15 @@ typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 /// @brief      The FInternalEvent class provides a way to get asynchronous status
 ///             information about how a task is being processed, once it has been
 ///             dispatched and scheduled on a multithreaded system, in
-///             coordination with a FOldThreadPool and a FCommandQueue.
+///             coordination with a FThreadPool and a FCommandQueue.
 /// @details    The FInternalEvent allows to get a handle of the chosen policy for
 ///             a given task, and wether it has been completed or not. It is used
-///             in conjunction with FOldThreadPool, FSchedulePolicy, FCommandQueue
+///             in conjunction with FThreadPool, FSchedulePolicy, FCommandQueue
 ///             and FContext.
 ///
 ///             \sa FContext
 ///             \sa FSchedulePolicy
-///             \sa FOldThreadPool
+///             \sa FThreadPool
 ///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
 class FInternalEvent

@@ -21,12 +21,12 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue_Private
 /// @brief      The FCommandQueue_Private class provides a way to enqueue tasks for being
-///             processed asynchronously in coordination with a FOldThreadPool
+///             processed asynchronously in coordination with a FThreadPool
 /// @details    The FCommandQueue_Private stores a TQueue of FCommand and schedules the
-///             commands on the FOldThreadPool.
+///             commands on the FThreadPool.
 ///
 ///             \sa FCommand
-///             \sa FOldThreadPool
+///             \sa FThreadPool
 class FCommandQueue::FCommandQueue_Private
 {
     typedef TQueue< FCommand* > tQueue;
