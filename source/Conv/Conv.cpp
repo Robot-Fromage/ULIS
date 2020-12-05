@@ -35,11 +35,9 @@ InvokeConvertFormat_MEM_Generic(
 )
 {
     cargs->invocation(
-          cargs->src.FormatMetrics()
-        , jargs->src
-        , cargs->dst.FormatMetrics()
-        , jargs->dst
-        , static_cast< uint32 >( jargs->size )
+          FPixel( jargs->src, cargs->src.Format() )
+        , FPixel( jargs->dst, cargs->dst.Format() )
+        , static_cast< uint32 >( jargs->size / cargs->dst.BytesPerPixel() )
     );
 }
 
