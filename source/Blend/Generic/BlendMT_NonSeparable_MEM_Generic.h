@@ -22,7 +22,7 @@
 #include "Blend/BlendHelpers.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/NonSeparableBlendFuncF.h"
-#include "Conv/ConvertFormatInvocations.h"
+#include "Conv/Conv.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

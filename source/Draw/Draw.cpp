@@ -13,7 +13,7 @@
 */
 #include "Draw/Draw.h"
 #include "Image/Block.h"
-#include "Conv/ConvertFormatInvocations.h"
+#include "Conv/Conv.h"
 #include "Conv/Conv.h"
 #include "Math/Math.h"
 

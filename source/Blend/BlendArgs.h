@@ -16,7 +16,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
-#include "Conv/ConvertFormatInvocations.h"
+#include "Conv/Conv.h"
 #include "Image/Block.h"
 #include <vectorclass.h>
 

@@ -15,7 +15,7 @@
 #include "Image/Block.h"
 #include "System/Device.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvertFormatInvocations.h"
+#include "Conv/Conv.h"
 #include "Thread/ThreadPool.h"
 
 #include <array>

@@ -13,7 +13,7 @@
 */
 #include "Image/Sample.h"
 #include "Image/Color.h"
-#include "Conv/ConvertFormatInvocations.h"
+#include "Conv/Conv.h"
 
 ULIS_NAMESPACE_BEGIN
 ISample::~ISample()
