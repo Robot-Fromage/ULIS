@@ -15,13 +15,13 @@
 #include "Core/Core.h"
 #include "Conv/Conv.h"
 #include "Conv/ConvHelpers.h"
+#include "Conv/srgb2linear.h"
 #include "Image/Color.h"
 #include "Image/Format.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
-#include "Conv/srgb2linear.h"
+#include "Math/Math.h"
 #include <lcms2.h>
-#include <cmath>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

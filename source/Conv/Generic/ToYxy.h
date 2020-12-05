@@ -19,6 +19,8 @@
 #include "Image/Format.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
+#include "Math/Math.h"
+#include <lcms2.h>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

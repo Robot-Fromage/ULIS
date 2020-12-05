@@ -20,7 +20,6 @@
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
 #include "Math/Math.h"
-#include <cmath>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
