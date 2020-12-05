@@ -21,6 +21,11 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
+// Typedefs
+typedef void (*fpConvertFormat)( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen );
+ULIS_API fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFormat iDstFormat );
+
+/////////////////////////////////////////////////////
 // FConvCommandArgs
 class FConvCommandArgs final
     : public FDualBufferCommandArgs
@@ -55,10 +60,6 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedConvertFormatInvocationSchedulerSelector
     , &ScheduleConvertFormat_MEM_Generic
 )
-/////////////////////////////////////////////////////
-// Typedefs
-typedef void (*fpConvertFormat)( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen );
-ULIS_API fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFormat iDstFormat );
 
 /////////////////////////////////////////////////////
 // Explicit Conv Entry Points

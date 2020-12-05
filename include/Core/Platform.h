@@ -197,11 +197,11 @@
 /////////////////////////////////////////////////////
 // Define Namespaces
 #define ULIS_NAMESPACE_NAME        ULIS
-#define ULIS_SHORT_NAMESPACE_NAME  ul
+//#define ULIS_SHORT_NAMESPACE_NAME  ul
 #define ULIS_NAMESPACE_BEGIN       namespace ULIS_NAMESPACE_NAME {
 #define ULIS_NAMESPACE_END         }
 namespace ULIS_NAMESPACE_NAME {}
-namespace ULIS_SHORT_NAMESPACE_NAME = ULIS_NAMESPACE_NAME;
+//namespace ULIS_SHORT_NAMESPACE_NAME = ULIS_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Crash Behaviours
