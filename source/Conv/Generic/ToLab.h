@@ -36,8 +36,8 @@ ConvertFormatGreyToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToLab< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -69,8 +69,8 @@ ConvertFormatRGBToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( _a );
         DREF_DST( 2 ) = ConvType< ufloat, U >( _b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -85,8 +85,8 @@ ConvertFormatHSVToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToLab< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -101,8 +101,8 @@ ConvertFormatHSLToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToLab< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -117,8 +117,8 @@ ConvertFormatCMYToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToLab< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -133,8 +133,8 @@ ConvertFormatCMYKToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToLab< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -149,8 +149,8 @@ ConvertFormatYUVToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToLab< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -166,8 +166,8 @@ ConvertFormatLabToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
         DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -193,8 +193,8 @@ ConvertFormatXYZToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( _a );
         DREF_DST( 2 ) = ConvType< ufloat, U >( _b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -226,8 +226,8 @@ ConvertFormatYxyToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( _a );
         DREF_DST( 2 ) = ConvType< ufloat, U >( _b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 

@@ -36,8 +36,8 @@ ConvertFormatGreyToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -59,8 +59,8 @@ ConvertFormatRGBToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( u );
         DREF_DST( 2 ) = ConvType< ufloat, U >( v );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -75,8 +75,8 @@ ConvertFormatHSVToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -91,8 +91,8 @@ ConvertFormatHSLToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -107,8 +107,8 @@ ConvertFormatCMYToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -123,8 +123,8 @@ ConvertFormatCMYKToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -139,8 +139,8 @@ ConvertFormatYUVToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -155,8 +155,8 @@ ConvertFormatLabToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatLabToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -171,8 +171,8 @@ ConvertFormatXYZToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatXYZToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -187,8 +187,8 @@ ConvertFormatYxyToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatYxyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 

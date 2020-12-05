@@ -36,8 +36,8 @@ ConvertFormatGreyToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToXYZ< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -59,8 +59,8 @@ ConvertFormatRGBToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( y );
         DREF_DST( 2 ) = ConvType< ufloat, U >( z );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -75,8 +75,8 @@ ConvertFormatHSVToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToXYZ< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -91,8 +91,8 @@ ConvertFormatHSLToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToXYZ< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -107,8 +107,8 @@ ConvertFormatCMYToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToXYZ< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -123,8 +123,8 @@ ConvertFormatCMYKToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToXYZ< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -139,8 +139,8 @@ ConvertFormatYUVToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
     {
         ConvertFormatYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
         ConvertFormatRGBToXYZ< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -166,8 +166,8 @@ ConvertFormatLabToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( y );
         DREF_DST( 2 ) = ConvType< ufloat, U >( z );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -183,8 +183,8 @@ ConvertFormatXYZToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
         DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -209,8 +209,8 @@ ConvertFormatYxyToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( y );
         DREF_DST( 2 ) = ConvType< ufloat, U >( z );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 

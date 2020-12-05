@@ -39,8 +39,8 @@ ConvertFormatGreyToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = grey;
         DREF_DST( 2 ) = grey;
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -56,8 +56,8 @@ ConvertFormatRGBToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
         DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -101,8 +101,8 @@ ConvertFormatHSVToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -138,8 +138,8 @@ ConvertFormatHSLToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( g + m );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b + m );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -156,8 +156,8 @@ ConvertFormatCMYToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = max - ConvType< T, U >( DREF_SRC( 1 ) );
         DREF_DST( 2 ) = max - ConvType< T, U >( DREF_SRC( 2 ) );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -180,8 +180,8 @@ ConvertFormatCMYKToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -203,8 +203,8 @@ ConvertFormatYUVToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -233,8 +233,8 @@ ConvertFormatLabToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -256,8 +256,8 @@ ConvertFormatXYZToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< float, U >( g );
         DREF_DST( 2 ) = ConvType< float, U >( b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -285,8 +285,8 @@ ConvertFormatYxyToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         DREF_DST( 1 ) = ConvType< float, U >( g );
         DREF_DST( 2 ) = ConvType< float, U >( b );
         FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
