@@ -29,7 +29,7 @@ ULIS_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------- From Grey
 template< typename T, typename U >
 void
-ConvertFormatGreyToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatGreyToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -45,7 +45,7 @@ ConvertFormatGreyToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, con
 //----------------------------------------------------------------------------- From RGB
 template< typename T, typename U >
 void
-ConvertFormatRGBToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatRGBToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     while( iLen-- )
     {
@@ -71,7 +71,7 @@ ConvertFormatRGBToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From HSV
 template< typename T, typename U >
 void
-ConvertFormatHSVToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatHSVToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -87,7 +87,7 @@ ConvertFormatHSVToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From HSL
 template< typename T, typename U >
 void
-ConvertFormatHSLToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatHSLToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -103,7 +103,7 @@ ConvertFormatHSLToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From CMY
 template< typename T, typename U >
 void
-ConvertFormatCMYToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatCMYToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -119,7 +119,7 @@ ConvertFormatCMYToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //---------------------------------------------------------------------------- From CMYK
 template< typename T, typename U >
 void
-ConvertFormatCMYKToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatCMYKToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -135,7 +135,7 @@ ConvertFormatCMYKToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, con
 //----------------------------------------------------------------------------- From YUV
 template< typename T, typename U >
 void
-ConvertFormatYUVToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatYUVToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -151,7 +151,7 @@ ConvertFormatYUVToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From Lab
 template< typename T, typename U >
 void
-ConvertFormatLabToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatLabToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     while( iLen-- )
     {
@@ -177,7 +177,7 @@ ConvertFormatLabToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From XYZ
 template< typename T, typename U >
 void
-ConvertFormatXYZToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatXYZToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     while( iLen-- )
     {
@@ -200,7 +200,7 @@ ConvertFormatXYZToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From Yxy
 template< typename T, typename U >
 void
-ConvertFormatYxyToYxy( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatYxyToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 {
     while( iLen-- )
     {
