@@ -59,7 +59,7 @@ RenderText( FOldThreadPool*            iOldThreadPool
     alias.antialiasing      = iAntialiasing;
 
     { // Conv
-        fpConversionInvocation fptrconv = QueryDispatchedConversionInvocation( iColor.Format(), iDestination->Format() );
+        fpConvertFormat fptrconv = QueryDispatchConvertFormatInvocation( iColor.Format(), iDestination->Format() );
         ULIS_ASSERT( fptrconv, "No Conversion invocation found" );
         fptrconv( iColor.FormatMetrics(), iColor.Bits(), iDestination->FormatMetrics(), alias.color, 1 );
     }

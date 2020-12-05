@@ -65,7 +65,7 @@ FBlock* XLoadFromClipboard( FOldThreadPool*            iOldThreadPool
     FBlock* ret = new FBlock( w, h, dstFormat );
 
     // Assertions
-    fpConversionInvocation fptr = QueryDispatchedConversionInvocation( srcFormat, dstFormat );
+    fpConvertFormat fptr = QueryDispatchConvertFormatInvocation( srcFormat, dstFormat );
     ULIS_ASSERT( fptr, "No Conversion invocation found" );
 
     // Bake Params

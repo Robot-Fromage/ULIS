@@ -33,7 +33,7 @@ public:
         , FBlock& iDst
         , const FRectI& iSrcRect
         , const FRectI& iDstRect
-        , const fpConversionInvocation iInvocation
+        , const fpConvertFormat iInvocation
     )
         : FDualBufferCommandArgs(
               iSrc
@@ -44,7 +44,7 @@ public:
         , invocation( iInvocation )
         {}
 
-    fpConversionInvocation invocation;
+    fpConvertFormat invocation;
 };
 
 /////////////////////////////////////////////////////

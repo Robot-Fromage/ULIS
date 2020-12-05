@@ -65,7 +65,7 @@ FContext::ConvertFormat(
                 , iDestination
                 , src_roi
                 , dst_roi
-                , QueryDispatchedConversionInvocation( iSource.Format(), iDestination.Format() )
+                , QueryDispatchConvertFormatInvocation( iSource.Format(), iDestination.Format() )
             )
             , iPolicy
             , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )

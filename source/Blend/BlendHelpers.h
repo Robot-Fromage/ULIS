@@ -114,8 +114,8 @@ BuildBlendJobs( FCommand* iCommand, const FSchedulePolicy& iPolicy, const bool i
     const uint32 src_decal_x                    = ( cargs->shift.x + cargs->sourceRect.x ) * cargs->source.BytesPerPixel();
     const uint32 bdp_decal_x                    = ( cargs->backdropWorkingRect.x ) * cargs->source.BytesPerPixel();
     const FFormatMetrics& fmt                   = cargs->source.FormatMetrics();
-    fpConversionInvocation conv_forward_fptr    = QueryDispatchedConversionInvocation( fmt.FMT, eFormat::Format_RGBF );
-    fpConversionInvocation conv_backward_fptr   = QueryDispatchedConversionInvocation( eFormat::Format_RGBF, fmt.FMT );
+    fpConvertFormat conv_forward_fptr    = QueryDispatchConvertFormatInvocation( fmt.FMT, eFormat::Format_RGBF );
+    fpConvertFormat conv_backward_fptr   = QueryDispatchConvertFormatInvocation( eFormat::Format_RGBF, fmt.FMT );
     Vec4i idt                                   = BuildRGBA8IndexTable( cargs->source.FormatMetrics().RSC );
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
     {

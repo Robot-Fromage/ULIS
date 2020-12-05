@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 /*
 void DotNoAA( FBlock* iDst, const FColor& iColor, const FVec2I iPos ) {
     uint8* ptr = iDst->PixelBits( iPos.x, iPos.y );
-    fpConversionInvocation fptr = QueryDispatchedConversionInvocation( iColor.Format(), iDst->Format() );
+    fpConvertFormat fptr = QueryDispatchConvertFormatInvocation( iColor.Format(), iDst->Format() );
     fptr( &iColor.FormatMetrics(), iColor.Bits(), &iDst->FormatMetrics(), ptr, 1 );
 }
 */

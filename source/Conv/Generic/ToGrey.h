@@ -27,7 +27,7 @@ ULIS_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------- From Grey
 template< typename T, typename U >
 void
-ConvBufferGreyToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatGreyToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     while( iLen-- )
     {
@@ -42,7 +42,7 @@ ConvBufferGreyToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const
 //----------------------------------------------------------------------------- From RGB
 template< typename T, typename U >
 void
-ConvBufferRGBToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatRGBToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     while( iLen-- )
     {
@@ -61,13 +61,13 @@ ConvBufferRGBToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 //----------------------------------------------------------------------------- From HSV
 template< typename T, typename U >
 void
-ConvBufferHSVToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatHSVToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -77,13 +77,13 @@ ConvBufferHSVToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 //----------------------------------------------------------------------------- From HSL
 template< typename T, typename U >
 void
-ConvBufferHSLToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatHSLToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -93,13 +93,13 @@ ConvBufferHSLToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 //----------------------------------------------------------------------------- From CMY
 template< typename T, typename U >
 void
-ConvBufferCMYToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatCMYToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -109,13 +109,13 @@ ConvBufferCMYToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 //---------------------------------------------------------------------------- From CMYK
 template< typename T, typename U >
 void
-ConvBufferCMYKToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatCMYKToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -125,13 +125,13 @@ ConvBufferCMYKToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const
 //----------------------------------------------------------------------------- From YUV
 template< typename T, typename U >
 void
-ConvBufferYUVToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatYUVToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -141,13 +141,13 @@ ConvBufferYUVToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 //----------------------------------------------------------------------------- From Lab
 template< typename T, typename U >
 void
-ConvBufferLabToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatLabToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferLabToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatLabToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -157,13 +157,13 @@ ConvBufferLabToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 //----------------------------------------------------------------------------- From XYZ
 template< typename T, typename U >
 void
-ConvBufferXYZToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatXYZToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferXYZToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatXYZToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }
@@ -173,13 +173,13 @@ ConvBufferXYZToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const 
 //----------------------------------------------------------------------------- From Yxy
 template< typename T, typename U >
 void
-ConvBufferYxyToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatYxyToGrey( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvBufferYxyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvBufferRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatYxyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
+        ConvertFormatRGBToGrey< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
         iSrc += iSrcFormat.BPP;
         iDst += iDstFormat.BPP;
     }

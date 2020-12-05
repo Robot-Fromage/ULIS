@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Invocations
 void
-InvokeConvertFormat(
+InvokeConvertFormat_MEM_Generic(
       const FDualBufferJobArgs* jargs
     , const FConvCommandArgs* cargs
 )
@@ -35,7 +35,7 @@ InvokeConvertFormat(
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleConvertFormat, FDualBufferJobArgs, FConvCommandArgs, &InvokeConvertFormat )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleConvertFormat, FDualBufferJobArgs, FConvCommandArgs, &InvokeConvertFormat_MEM_Generic )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvertFormatInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END

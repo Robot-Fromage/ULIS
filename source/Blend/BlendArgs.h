@@ -89,8 +89,8 @@ public:
         , const uint32 iSrc_bps
         , const uint8* iSrc
         , uint8* const iBdp
-        , const fpConversionInvocation iFwd
-        , const fpConversionInvocation iBkd
+        , const fpConvertFormat iFwd
+        , const fpConvertFormat iBkd
         , const Vec4i iIDT
     )
         : IJobArgs()
@@ -107,8 +107,8 @@ public:
     const uint32 src_bps;
     const uint8* const ULIS_RESTRICT src;
     uint8* const ULIS_RESTRICT bdp;
-    const fpConversionInvocation fwd;
-    const fpConversionInvocation bkd;
+    const fpConvertFormat fwd;
+    const fpConvertFormat bkd;
     const Vec4i idt;
 };
 

@@ -42,8 +42,8 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic(
 
     // Query dispatched method
     FFormatMetrics rgbfFormatMetrics( eFormat::Format_RGBF );
-    fpConversionInvocation conv_forward_fptr  = jargs->fwd;
-    fpConversionInvocation conv_backward_fptr = jargs->bkd;
+    fpConvertFormat conv_forward_fptr  = jargs->fwd;
+    fpConvertFormat conv_backward_fptr = jargs->bkd;
     ULIS_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
     ULIS_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 
