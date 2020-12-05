@@ -14,11 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
-#include "Image/Format.h"
 #include "Image/Pixel.h"
-#include "Image/Sample.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
