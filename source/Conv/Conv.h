@@ -47,7 +47,6 @@ public:
     fpConversionInvocation invocation;
 };
 
-
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleConvertFormat_MEM_Generic );
