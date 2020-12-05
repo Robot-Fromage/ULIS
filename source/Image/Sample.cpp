@@ -67,7 +67,7 @@ ISample::ToFormat( eFormat iDstFormat ) const
     if( Format() == iDstFormat ) {
         memcpy( dst.Bits(), Bits(), dst.BytesPerPixel() );
     } else {
-        fpConvertFormat fptr = QueryDispatchConvertFormatInvocation( Format(), iDstFormat );
+        fpConvertFormat fptr = QueryDispatchedConvertFormatInvocation( Format(), iDstFormat );
         fptr( FormatMetrics(), Bits(), dst.FormatMetrics(), dst.Bits(), 1 );
     }
     return  dst;
@@ -80,7 +80,7 @@ ISample::ConvertFormat( const ISample& iSrc, ISample& iDst )
     if( iSrc.Format() == iDst.Format() ) {
         memcpy( iDst.Bits(), iSrc.Bits(), iDst.BytesPerPixel() );
     } else {
-        fpConvertFormat fptr = QueryDispatchConvertFormatInvocation( iSrc.Format(), iDst.Format() );
+        fpConvertFormat fptr = QueryDispatchedConvertFormatInvocation( iSrc.Format(), iDst.Format() );
         fptr( iSrc.FormatMetrics(), iSrc.Bits(), iDst.FormatMetrics(), iDst.Bits(), 1 );
     }
 }
