@@ -13,6 +13,7 @@
 */
 #include "Image/Sample.h"
 #include "Image/Color.h"
+#include "Image/Pixel.h"
 #include "Conv/Conv.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -68,7 +69,7 @@ ISample::ToFormat( eFormat iDstFormat ) const
         memcpy( dst.Bits(), Bits(), dst.BytesPerPixel() );
     } else {
         fpConvertFormat fptr = QueryDispatchedConvertFormatInvocation( Format(), iDstFormat );
-        fptr( FormatMetrics(), Bits(), dst.FormatMetrics(), dst.Bits(), 1 );
+        fptr( FPixel( *this ), FPixel( dst ), 1 );
     }
     return  dst;
 }
@@ -81,7 +82,7 @@ ISample::ConvertFormat( const ISample& iSrc, ISample& iDst )
         memcpy( iDst.Bits(), iSrc.Bits(), iDst.BytesPerPixel() );
     } else {
         fpConvertFormat fptr = QueryDispatchedConvertFormatInvocation( iSrc.Format(), iDst.Format() );
-        fptr( iSrc.FormatMetrics(), iSrc.Bits(), iDst.FormatMetrics(), iDst.Bits(), 1 );
+        fptr( FPixel( iSrc ), FPixel( iDst ), 1 );
     }
 }
 

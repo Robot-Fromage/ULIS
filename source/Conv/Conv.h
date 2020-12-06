@@ -22,7 +22,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Typedefs
-typedef void (*fpConvertFormat)( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+typedef void (*fpConvertFormat)( FPixel iSrc, FPixel iDst, uint32 iLen );
 ULIS_API fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFormat iDstFormat );
 
 /////////////////////////////////////////////////////
@@ -65,133 +65,133 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
 // Explicit Conv Entry Points
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ To Grey
-template< typename T1, typename T2 > void ConvertFormatGreyToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToGrey( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToGrey( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToRGB
-template< typename T1, typename T2 > void ConvertFormatGreyToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToRGB( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToRGB( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToHSV
-template< typename T1, typename T2 > void ConvertFormatGreyToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToHSV( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToHSL
-template< typename T1, typename T2 > void ConvertFormatGreyToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToHSL( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToHSL( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToCMY
-template< typename T1, typename T2 > void ConvertFormatGreyToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToCMY( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToCMY( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------- ToCMYK
-template< typename T1, typename T2 > void ConvertFormatGreyToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToYUV
-template< typename T1, typename T2 > void ConvertFormatGreyToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToYUV( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToYUV( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToLab
-template< typename T1, typename T2 > void ConvertFormatGreyToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToLab( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToLab( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToXYZ
-template< typename T1, typename T2 > void ConvertFormatGreyToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToXYZ( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------- ToYxy
-template< typename T1, typename T2 > void ConvertFormatGreyToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatRGBToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSVToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatHSLToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatCMYKToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYUVToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatLabToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatXYZToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
-template< typename T1, typename T2 > void ConvertFormatYxyToYxy( const FPixel& iSrc, FPixel& iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatGreyToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatRGBToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSVToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatHSLToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatCMYKToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYUVToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatLabToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatXYZToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
+template< typename T1, typename T2 > void ConvertFormatYxyToYxy( FPixel iSrc, FPixel iDst, uint32 iLen );
 
 ULIS_NAMESPACE_END
 

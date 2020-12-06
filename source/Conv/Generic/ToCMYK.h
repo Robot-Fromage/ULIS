@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------- From Grey
 template< typename T, typename U >
 void
-ConvertFormatGreyToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatGreyToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -40,13 +40,13 @@ ConvertFormatGreyToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From RGB
 template< typename T, typename U >
 void
-ConvertFormatRGBToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatRGBToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat r = ConvType< T, ufloat >( iSrc.GetChannel< T >( 0 ) );
-        ufloat g = ConvType< T, ufloat >( iSrc.GetChannel< T >( 1 ) );
-        ufloat b = ConvType< T, ufloat >( iSrc.GetChannel< T >( 2 ) );
+        ufloat r = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 0 ) );
+        ufloat g = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 1 ) );
+        ufloat b = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 2 ) );
         float ik = FMath::Max3( r, g, b );
         float k = 1.f - ik;
         if( ik == 0 ) ik = 1;
@@ -57,7 +57,7 @@ ConvertFormatRGBToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
         iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( m ) );
         iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( y ) );
         iDst.SetChannelT< U >( 3, ConvType< ufloat, U >( k ) );
-        iDst.SetAlphaT< U >( iSrc.AlphaT< T >() );
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -67,7 +67,7 @@ ConvertFormatRGBToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From HSV
 template< typename T, typename U >
 void
-ConvertFormatHSVToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatHSVToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -83,7 +83,7 @@ ConvertFormatHSVToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From HSL
 template< typename T, typename U >
 void
-ConvertFormatHSLToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatHSLToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -99,7 +99,7 @@ ConvertFormatHSLToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From CMY
 template< typename T, typename U >
 void
-ConvertFormatCMYToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatCMYToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -115,15 +115,15 @@ ConvertFormatCMYToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //---------------------------------------------------------------------------- From CMYK
 template< typename T, typename U >
 void
-ConvertFormatCMYKToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatCMYKToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        iDst.SetChannelT< U >( 0, max - ConvType< T, U >( iSrc.GetChannel< T >( 0 ) ) );
-        iDst.SetChannelT< U >( 1, max - ConvType< T, U >( iSrc.GetChannel< T >( 1 ) ) );
-        iDst.SetChannelT< U >( 2, max - ConvType< T, U >( iSrc.GetChannel< T >( 2 ) ) );
-        iDst.SetChannelT< U >( 3, max - ConvType< T, U >( iSrc.GetChannel< T >( 3 ) ) );
-        iDst.SetAlphaT< U >( iSrc.AlphaT< T >() );
+        iDst.SetChannelT< U >( 0, max - ConvType< T, U >( iSrc.GetChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, max - ConvType< T, U >( iSrc.GetChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, max - ConvType< T, U >( iSrc.GetChannelT< T >( 2 ) ) );
+        iDst.SetChannelT< U >( 3, max - ConvType< T, U >( iSrc.GetChannelT< T >( 3 ) ) );
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -133,7 +133,7 @@ ConvertFormatCMYKToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From YUV
 template< typename T, typename U >
 void
-ConvertFormatYUVToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatYUVToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -149,7 +149,7 @@ ConvertFormatYUVToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From Lab
 template< typename T, typename U >
 void
-ConvertFormatLabToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatLabToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -165,7 +165,7 @@ ConvertFormatLabToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From XYZ
 template< typename T, typename U >
 void
-ConvertFormatXYZToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatXYZToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -181,7 +181,7 @@ ConvertFormatXYZToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From Yxy
 template< typename T, typename U >
 void
-ConvertFormatYxyToCMYK( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatYxyToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )

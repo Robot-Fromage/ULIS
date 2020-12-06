@@ -28,7 +28,7 @@ ULIS_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------- From Grey
 template< typename T, typename U >
 void
-ConvertFormatGreyToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatGreyToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -44,7 +44,7 @@ ConvertFormatGreyToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From RGB
 template< typename T, typename U >
 void
-ConvertFormatRGBToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatRGBToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
@@ -86,7 +86,7 @@ ConvertFormatRGBToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From HSV
 template< typename T, typename U >
 void
-ConvertFormatHSVToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatHSVToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
@@ -103,7 +103,7 @@ ConvertFormatHSVToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From HSL
 template< typename T, typename U >
 void
-ConvertFormatHSLToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatHSLToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -119,7 +119,7 @@ ConvertFormatHSLToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From CMY
 template< typename T, typename U >
 void
-ConvertFormatCMYToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatCMYToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -135,7 +135,7 @@ ConvertFormatCMYToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //---------------------------------------------------------------------------- From CMYK
 template< typename T, typename U >
 void
-ConvertFormatCMYKToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatCMYKToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -151,7 +151,7 @@ ConvertFormatCMYKToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From YUV
 template< typename T, typename U >
 void
-ConvertFormatYUVToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatYUVToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -167,7 +167,7 @@ ConvertFormatYUVToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From Lab
 template< typename T, typename U >
 void
-ConvertFormatLabToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatLabToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -183,7 +183,7 @@ ConvertFormatLabToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From XYZ
 template< typename T, typename U >
 void
-ConvertFormatXYZToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatXYZToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
@@ -199,7 +199,7 @@ ConvertFormatXYZToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
 //----------------------------------------------------------------------------- From Yxy
 template< typename T, typename U >
 void
-ConvertFormatYxyToHSV( const FPixel& iSrc, FPixel& iDst, uint32 iLen )
+ConvertFormatYxyToHSV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
