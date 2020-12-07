@@ -1,10 +1,8 @@
 // Copyright// IDDN FR.001.250001.004.S.X.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
-*
 *   ULIS
 *__________________
-*
 * @file         MD5.h
 * @author       Clement Berthaud
 * @brief        This file provides declaration for MD5 functions and FMD5 class.

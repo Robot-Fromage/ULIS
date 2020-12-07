@@ -1,9 +1,7 @@
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
-*
 *   ULIS
 *__________________
-*
 * @file         TransformBezier_Bilinear_SSE_RGBA8.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the implementation for a Transform specialization as described in the title.

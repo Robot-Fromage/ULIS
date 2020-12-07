@@ -1,10 +1,8 @@
 // IDDN FR.001.250001.004.S.X.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
-*
 *   ULIS
 *__________________
-*
 * @file         TransformPerspectiveMT_Bilinear_MEM_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the implementation for a Transform specialization as described in the title.
