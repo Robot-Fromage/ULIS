@@ -26,7 +26,7 @@ class   FFont;
 class   FFontFamilyEntry;
 class   FFontRegistry;
 class   FFontStyleEntry;
-class   FFormatMetrics;
+struct  FFormatMetrics;
 class   FHardwareMetrics;
 struct  FMath;
 class   FPixel;

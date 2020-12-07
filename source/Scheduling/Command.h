@@ -19,6 +19,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
+class FJob;
 typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, bool );
 
 /////////////////////////////////////////////////////
