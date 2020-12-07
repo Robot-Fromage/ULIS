@@ -212,14 +212,17 @@ FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, FColor& iConstant )
         case eBorderMode::Border_Wrap : {
             return  Color( FMath::PyModulo( iX, int16( mWidth ) ), FMath::PyModulo( iY, int16( mHeight ) ) );
         }
+        default : {
+            return  FColor::Transparent();
+        }
     }
 }
 
 FColor
 FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, FColor& iColor ) const
 {
-    int16 x0 = FMath::RoundToNegativeInfinity( iX );
-    int16 y0 = FMath::RoundToNegativeInfinity( iY );
+    int16 x0 = static_cast< int16 >( FMath::RoundToNegativeInfinity( iX ) );
+    int16 y0 = static_cast< int16 >( FMath::RoundToNegativeInfinity( iY ) );
     int16 x1 = x0 + 1;
     int16 y1 = y0 + 1;
     ufloat t = iX - x0;

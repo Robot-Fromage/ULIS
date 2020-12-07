@@ -36,10 +36,10 @@ void
 Premultiply_imp( ISample& iSample )
 {
     const FFormatMetrics& fmt = iSample.FormatMetrics();
-    ufloat alpha = iSample.AlphaT< T >();
-    ufloat maxtype = MaxType< T >();
+    ufloat alpha = static_cast< float >( iSample.AlphaT< T >() );
+    ufloat maxtype = static_cast< float >( MaxType< T >() );
     for( uint8 i = 0; i < fmt.NCC; ++i )
-        iSample.SetChannelT< T >( static_cast< T >( ( iSample.ChannelT< T >() * alpha ) / MaxType< T >() ) );
+        iSample.SetChannelT< T >( i, static_cast< T >( ( iSample.ChannelT< T >( i ) * alpha ) / MaxType< T >() ) );
 }
 
 template< typename T >
@@ -47,15 +47,15 @@ void
 Unpremultiply_imp( ISample& iSample )
 {
     const FFormatMetrics& fmt = iSample.FormatMetrics();
-    ufloat alpha = iSample.AlphaT< T >();
-    ufloat maxtype = MaxType< T >();
+    ufloat alpha = static_cast< float >( iSample.AlphaT< T >() );
+    ufloat maxtype = static_cast< float >( MaxType< T >() );
 
     if( alpha == 0.f ){
         for( uint8 i = 0; i < fmt.NCC; ++i )
-            iSample.SetChannelT< T >( static_cast< T >( 0 ) );
+            iSample.SetChannelT< T >( i, static_cast< T >( 0 ) );
     } else {
         for( uint8 i = 0; i < fmt.NCC; ++i )
-            iSample.SetChannelT< T >( static_cast< T >( ( iSample.ChannelT< T >() * MaxType< T >() ) / alpha ) );
+            iSample.SetChannelT< T >( i, static_cast< T >( ( iSample.ChannelT< T >( i ) * MaxType< T >() ) / alpha ) );
     }
 }
 
