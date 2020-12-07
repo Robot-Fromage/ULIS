@@ -55,6 +55,9 @@ public:
     template< typename T >
     FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace = nullptr );
 
+    /*! Static maker, build a transparent color, the color will have format eFormat::Format_RGBA8 */
+    static FColor Transparent();
+
     /*! Static maker, build a color from RGBA8 values, the color will have format eFormat::Format_RGBA8 */
     static FColor RGB( uint8 iR, uint8 iG, uint8 iB, uint8 iA = UINT8_MAX );
 

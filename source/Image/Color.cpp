@@ -169,6 +169,14 @@ FColor::FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColo
 
 //static
 FColor
+FColor::Transparent()
+{
+    return  FColor( eFormat::Format_RGBA8, { 0, 0, 0, 0 } );
+}
+
+
+//static
+FColor
 FColor::RGB( uint8 iR, uint8 iG, uint8 iB, uint8 iA )
 {
     return  FColor( eFormat::Format_RGBA8, { iR, iG, iB, iA } );
