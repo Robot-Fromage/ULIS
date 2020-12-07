@@ -53,6 +53,7 @@ typedef TVector2< uint8 >       FVec2UI8;
 typedef TVector2< uint16 >      FVec2UI16;
 typedef TVector2< uint32 >      FVec2UI32;
 typedef TVector2< uint64 >      FVec2UI64;
+typedef TVector2< int16 >       FVec2I16;
 typedef TVector2< int32 >       FVec2I32;
 typedef TVector2< int64 >       FVec2I64;
 template< typename T > struct   TVector3;
