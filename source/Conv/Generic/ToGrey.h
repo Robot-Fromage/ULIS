@@ -28,7 +28,7 @@ ConvertFormatGreyToGrey( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        iDst.SetChannelT< U >( 0, ConvType< T, U >( iSrc.GetChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 0, ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -43,9 +43,9 @@ ConvertFormatRGBToGrey( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat r = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 0 ) );
-        ufloat g = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 1 ) );
-        ufloat b = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 2 ) );
+        ufloat r = ConvType< T, ufloat >( iSrc.ChannelT< T >( 0 ) );
+        ufloat g = ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) );
+        ufloat b = ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) );
         ufloat grey = 0.3f * r + 0.59f * g + 0.11f * b;
         iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( grey ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );

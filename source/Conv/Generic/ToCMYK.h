@@ -44,9 +44,9 @@ ConvertFormatRGBToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat r = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 0 ) );
-        ufloat g = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 1 ) );
-        ufloat b = ConvType< T, ufloat >( iSrc.GetChannelT< T >( 2 ) );
+        ufloat r = ConvType< T, ufloat >( iSrc.ChannelT< T >( 0 ) );
+        ufloat g = ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) );
+        ufloat b = ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) );
         float ik = FMath::Max3( r, g, b );
         float k = 1.f - ik;
         if( ik == 0 ) ik = 1;
@@ -119,10 +119,10 @@ ConvertFormatCMYKToCMYK( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        iDst.SetChannelT< U >( 0, max - ConvType< T, U >( iSrc.GetChannelT< T >( 0 ) ) );
-        iDst.SetChannelT< U >( 1, max - ConvType< T, U >( iSrc.GetChannelT< T >( 1 ) ) );
-        iDst.SetChannelT< U >( 2, max - ConvType< T, U >( iSrc.GetChannelT< T >( 2 ) ) );
-        iDst.SetChannelT< U >( 3, max - ConvType< T, U >( iSrc.GetChannelT< T >( 3 ) ) );
+        iDst.SetChannelT< U >( 0, max - ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, max - ConvType< T, U >( iSrc.ChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, max - ConvType< T, U >( iSrc.ChannelT< T >( 2 ) ) );
+        iDst.SetChannelT< U >( 3, max - ConvType< T, U >( iSrc.ChannelT< T >( 3 ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();

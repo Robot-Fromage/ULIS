@@ -45,9 +45,9 @@ ConvertFormatRGBToCMY( FPixel iSrc, FPixel iDst, uint32 iLen )
     while( iLen-- )
     {
         U max = MaxType< U >();
-        iDst.SetChannelT< U >( 0, max - ConvType< T, U >( iSrc.GetChannelT< T >( 0 ) ) );
-        iDst.SetChannelT< U >( 1, max - ConvType< T, U >( iSrc.GetChannelT< T >( 1 ) ) );
-        iDst.SetChannelT< U >( 2, max - ConvType< T, U >( iSrc.GetChannelT< T >( 2 ) ) );
+        iDst.SetChannelT< U >( 0, max - ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, max - ConvType< T, U >( iSrc.ChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, max - ConvType< T, U >( iSrc.ChannelT< T >( 2 ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -94,9 +94,9 @@ ConvertFormatCMYToCMY( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        iDst.SetChannelT< U >( 0, ConvType< T, U >( iSrc.GetChannelT< T >( 0 ) ) );
-        iDst.SetChannelT< U >( 1, ConvType< T, U >( iSrc.GetChannelT< T >( 1 ) ) );
-        iDst.SetChannelT< U >( 2, ConvType< T, U >( iSrc.GetChannelT< T >( 2 ) ) );
+        iDst.SetChannelT< U >( 0, ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, ConvType< T, U >( iSrc.ChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, ConvType< T, U >( iSrc.ChannelT< T >( 2 ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
