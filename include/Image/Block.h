@@ -336,6 +336,30 @@ public:
     FColor Color( uint16 iX, uint16 iY ) const;
 
     /*!
+    Return the color sample at the given coordinates.
+
+    The FColor has its own storage that represents a subpixel color, safe to
+    read and write without altering the block contents.
+
+    \sa Pixel()
+    \sa PixelBits()
+    \sa FColor
+    */
+    FColor Sample( int16 iX, int16 iY, eBorderMode iBorderMode = eBorderMode::Border_Transparent, FColor& iConstant = FColor::Transparent() ) const;
+
+    /*!
+    Return the color at the given subpixel coordinates.
+
+    The FColor has its own storage that represents a subpixel color, safe to
+    read and write without altering the block contents.
+
+    \sa Pixel()
+    \sa PixelBits()
+    \sa FColor
+    */
+    FColor SampleSubpixel( float iX, float iY, eBorderMode iBorderMode = eBorderMode::Border_Transparent, FColor& iConstant = FColor::Transparent() ) const;
+
+    /*!
     Return the pixel at the given coordinates.
 
     The FPixel is an implicitely shared representation of the block data at the

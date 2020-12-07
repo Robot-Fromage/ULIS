@@ -190,6 +190,55 @@ FBlock::Color( uint16 iX, uint16 iY ) const
     return  FColor( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
+FColor
+FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, FColor& iConstant ) const
+{
+    switch( iBorderMode ) {
+        case eBorderMode::Border_Transparent : {
+            if( Rect().HitTest( FVec2I( iX, iY ) ) )
+                return  Color( iX, iY );
+            else
+                return  FColor::Transparent();
+        }
+        case eBorderMode::Border_Constant : {
+            if( Rect().HitTest( FVec2I( iX, iY ) ) )
+                return  Color( iX, iY );
+            else
+                return  iConstant;
+        }
+        case eBorderMode::Border_Extend : {
+            return  Color( FMath::Clamp( iX, int16(0), int16( mWidth ) ), FMath::Clamp( iY, int16(0), int16( mHeight ) ) );
+        }
+        case eBorderMode::Border_Wrap : {
+            return  Color( FMath::PyModulo( iX, int16( mWidth ) ), FMath::PyModulo( iY, int16( mHeight ) ) );
+        }
+    }
+}
+
+FColor
+FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, FColor& iColor ) const
+{
+    int16 x0 = FMath::RoundToNegativeInfinity( iX );
+    int16 y0 = FMath::RoundToNegativeInfinity( iY );
+    int16 x1 = x0 + 1;
+    int16 y1 = y0 + 1;
+    ufloat t = iX - x0;
+    ufloat u = iY - y0;
+    FColor m00 = Sample( x0, y0, iBorderMode, iColor );
+    FColor m10 = Sample( x1, y0, iBorderMode, iColor );
+    FColor m01 = Sample( x0, y1, iBorderMode, iColor );
+    FColor m11 = Sample( x1, y1, iBorderMode, iColor );
+    m00.Premultiply();
+    m10.Premultiply();
+    m01.Premultiply();
+    m11.Premultiply();
+    FColor row0 = ISample::MixFormat( m00, m10, Format(), t );
+    FColor row1 = ISample::MixFormat( m01, m11, Format(), t );
+    FColor col0 = ISample::MixFormat( row0, row1, Format(), u );
+    col0.Unpremultiply();
+    return  col0;
+}
+
 FPixel
 FBlock::Pixel( uint16 iX, uint16 iY )
 {
