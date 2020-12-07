@@ -146,23 +146,23 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 
 /////////////////////////////////////////////////////
 // Macro for all types for combination template instanciation
-#define ULIS_FOR_ALL_TYPES_COMBINATIONS_DO( X )     \
-    X( uint8,   uint8    )                          \
-    X( uint8,   uint16   )                          \
-    X( uint8,   uint32   )                          \
-    X( uint8,   ufloat   )                          \
-    X( uint16,  uint8   )                           \
-    X( uint16,  uint16  )                           \
-    X( uint16,  uint32  )                           \
-    X( uint16,  ufloat  )                           \
-    X( uint32,  uint8   )                           \
-    X( uint32,  uint16  )                           \
-    X( uint32,  uint32  )                           \
-    X( uint32,  ufloat  )                           \
-    X( ufloat,  uint8   )                           \
-    X( ufloat,  uint16  )                           \
-    X( ufloat,  uint32  )                           \
-    X( ufloat,  ufloat  )                           //DISABLED:DOUBLE\
+#define ULIS_FOR_ALL_TYPES_COMBINATIONS_DO( X, _E0, _E1 )   \
+    X( uint8,   uint8   , _E0, _E1 )                        \
+    X( uint8,   uint16  , _E0, _E1 )                        \
+    X( uint8,   uint32  , _E0, _E1 )                        \
+    X( uint8,   ufloat  , _E0, _E1 )                        \
+    X( uint16,  uint8   , _E0, _E1 )                        \
+    X( uint16,  uint16  , _E0, _E1 )                        \
+    X( uint16,  uint32  , _E0, _E1 )                        \
+    X( uint16,  ufloat  , _E0, _E1 )                        \
+    X( uint32,  uint8   , _E0, _E1 )                        \
+    X( uint32,  uint16  , _E0, _E1 )                        \
+    X( uint32,  uint32  , _E0, _E1 )                        \
+    X( uint32,  ufloat  , _E0, _E1 )                        \
+    X( ufloat,  uint8   , _E0, _E1 )                        \
+    X( ufloat,  uint16  , _E0, _E1 )                        \
+    X( ufloat,  uint32  , _E0, _E1 )                        \
+    X( ufloat,  ufloat  , _E0, _E1 )                           //DISABLED:DOUBLE\
     X( uint8,   udouble  )                          \
     X( uint16,  udouble )                           \
     X( uint32,  udouble )                           \
@@ -225,6 +225,111 @@ enum eColorModel {
     , CM_XYZ    = ULIS_CM_XYZ
     , CM_Yxy    = ULIS_CM_Yxy
 };
+
+
+/////////////////////////////////////////////////////
+// Models Combinations
+#define ULIS_FOR_ALL_COLOR_MODELS_COMBINATIONS_DO( X )  \
+    X( Grey,    Grey )                                  \
+    X( RGB,     Grey )                                  \
+    X( HSV,     Grey )                                  \
+    X( HSL,     Grey )                                  \
+    X( CMY,     Grey )                                  \
+    X( CMYK,    Grey )                                  \
+    X( YUV,     Grey )                                  \
+    X( Lab,     Grey )                                  \
+    X( XYZ,     Grey )                                  \
+    X( Yxy,     Grey )                                  \
+    X( Grey,    RGB )                                   \
+    X( RGB,     RGB )                                   \
+    X( HSV,     RGB )                                   \
+    X( HSL,     RGB )                                   \
+    X( CMY,     RGB )                                   \
+    X( CMYK,    RGB )                                   \
+    X( YUV,     RGB )                                   \
+    X( Lab,     RGB )                                   \
+    X( XYZ,     RGB )                                   \
+    X( Yxy,     RGB )                                   \
+    X( Grey,    HSV )                                   \
+    X( RGB,     HSV )                                   \
+    X( HSV,     HSV )                                   \
+    X( HSL,     HSV )                                   \
+    X( CMY,     HSV )                                   \
+    X( CMYK,    HSV )                                   \
+    X( YUV,     HSV )                                   \
+    X( Lab,     HSV )                                   \
+    X( XYZ,     HSV )                                   \
+    X( Yxy,     HSV )                                   \
+    X( Grey,    HSL )                                   \
+    X( RGB,     HSL )                                   \
+    X( HSV,     HSL )                                   \
+    X( HSL,     HSL )                                   \
+    X( CMY,     HSL )                                   \
+    X( CMYK,    HSL )                                   \
+    X( YUV,     HSL )                                   \
+    X( Lab,     HSL )                                   \
+    X( XYZ,     HSL )                                   \
+    X( Yxy,     HSL )                                   \
+    X( Grey,    CMY )                                   \
+    X( RGB,     CMY )                                   \
+    X( HSV,     CMY )                                   \
+    X( HSL,     CMY )                                   \
+    X( CMY,     CMY )                                   \
+    X( CMYK,    CMY )                                   \
+    X( YUV,     CMY )                                   \
+    X( Lab,     CMY )                                   \
+    X( XYZ,     CMY )                                   \
+    X( Yxy,     CMY )                                   \
+    X( Grey,    CMYK )                                  \
+    X( RGB,     CMYK )                                  \
+    X( HSV,     CMYK )                                  \
+    X( HSL,     CMYK )                                  \
+    X( CMY,     CMYK )                                  \
+    X( CMYK,    CMYK )                                  \
+    X( YUV,     CMYK )                                  \
+    X( Lab,     CMYK )                                  \
+    X( XYZ,     CMYK )                                  \
+    X( Yxy,     CMYK )                                  \
+    X( Grey,    YUV )                                   \
+    X( RGB,     YUV )                                   \
+    X( HSV,     YUV )                                   \
+    X( HSL,     YUV )                                   \
+    X( CMY,     YUV )                                   \
+    X( CMYK,    YUV )                                   \
+    X( YUV,     YUV )                                   \
+    X( Lab,     YUV )                                   \
+    X( XYZ,     YUV )                                   \
+    X( Yxy,     YUV )                                   \
+    X( Grey,    Lab )                                   \
+    X( RGB,     Lab )                                   \
+    X( HSV,     Lab )                                   \
+    X( HSL,     Lab )                                   \
+    X( CMY,     Lab )                                   \
+    X( CMYK,    Lab )                                   \
+    X( YUV,     Lab )                                   \
+    X( Lab,     Lab )                                   \
+    X( XYZ,     Lab )                                   \
+    X( Yxy,     Lab )                                   \
+    X( Grey,    XYZ )                                   \
+    X( RGB,     XYZ )                                   \
+    X( HSV,     XYZ )                                   \
+    X( HSL,     XYZ )                                   \
+    X( CMY,     XYZ )                                   \
+    X( CMYK,    XYZ )                                   \
+    X( YUV,     XYZ )                                   \
+    X( Lab,     XYZ )                                   \
+    X( XYZ,     XYZ )                                   \
+    X( Yxy,     XYZ )                                   \
+    X( Grey,    Yxy )                                   \
+    X( RGB,     Yxy )                                   \
+    X( HSV,     Yxy )                                   \
+    X( HSL,     Yxy )                                   \
+    X( CMY,     Yxy )                                   \
+    X( CMYK,    Yxy )                                   \
+    X( YUV,     Yxy )                                   \
+    X( Lab,     Yxy )                                   \
+    X( XYZ,     Yxy )                                   \
+    X( Yxy,     Yxy )
 
 /////////////////////////////////////////////////////
 // Named booleans literals

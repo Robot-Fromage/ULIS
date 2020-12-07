@@ -41,7 +41,7 @@ public:
             }
         }
 
-        #define TMP_CALL( _TYPE_ID, _E0, _E2, _E3 ) return  QueryGeneric< _E0 >( iDevice, iFormat );
+        #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  QueryGeneric< _TYPE >( iDevice, iFormat );
         ULIS_SWITCH_FOR_ALL_DO( static_cast< eType >( ULIS_R_TYPE( iFormat ) ), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
         #undef TMP_CALL
 

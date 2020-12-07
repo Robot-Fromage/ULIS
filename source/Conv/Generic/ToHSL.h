@@ -14,11 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
-#include "Image/Format.h"
 #include "Image/Pixel.h"
-#include "Image/Sample.h"
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -28,15 +25,15 @@ ULIS_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------- From Grey
 template< typename T, typename U >
 void
-ConvertFormatGreyToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatGreyToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatGreyToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -44,13 +41,13 @@ ConvertFormatGreyToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, con
 //----------------------------------------------------------------------------- From RGB
 template< typename T, typename U >
 void
-ConvertFormatRGBToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatRGBToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat r = ConvType< T, ufloat >( DREF_SRC( 0 ) );
-        ufloat g = ConvType< T, ufloat >( DREF_SRC( 1 ) );
-        ufloat b = ConvType< T, ufloat >( DREF_SRC( 2 ) );
+        ufloat r = ConvType< T, ufloat >( iSrc.ChannelT< T >( 0 ) );
+        ufloat g = ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) );
+        ufloat b = ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) );
         float cmin = FMath::Min3( r, g, b );
         float cmax = FMath::Max3( r, g, b );
         float delta = cmax - cmin;
@@ -74,12 +71,12 @@ ConvertFormatRGBToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
             if( h > 1.0 ) h -= 1.0;
         }
 
-        DREF_DST( 0 ) = ConvType< ufloat, U >( h );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( s );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( l );
-        FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( h ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( s ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( l ) );
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -87,15 +84,15 @@ ConvertFormatRGBToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From HSV
 template< typename T, typename U >
 void
-ConvertFormatHSVToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatHSVToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatHSVToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -103,16 +100,16 @@ ConvertFormatHSVToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From HSL
 template< typename T, typename U >
 void
-ConvertFormatHSLToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatHSLToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        DREF_DST( 0 ) = ConvType< T, U >( DREF_SRC( 0 ) );
-        DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
-        DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
-        FWD_ALPHA;
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        iDst.SetChannelT< U >( 0, ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, ConvType< T, U >( iSrc.ChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, ConvType< T, U >( iSrc.ChannelT< T >( 2 ) ) );
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -120,15 +117,15 @@ ConvertFormatHSLToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From CMY
 template< typename T, typename U >
 void
-ConvertFormatCMYToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatCMYToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatCMYToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -136,15 +133,15 @@ ConvertFormatCMYToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //---------------------------------------------------------------------------- From CMYK
 template< typename T, typename U >
 void
-ConvertFormatCMYKToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatCMYKToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatCMYKToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -152,15 +149,15 @@ ConvertFormatCMYKToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, con
 //----------------------------------------------------------------------------- From YUV
 template< typename T, typename U >
 void
-ConvertFormatYUVToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatYUVToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatYUVToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -168,15 +165,15 @@ ConvertFormatYUVToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From Lab
 template< typename T, typename U >
 void
-ConvertFormatLabToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatLabToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatLabToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatLabToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -184,15 +181,15 @@ ConvertFormatLabToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From XYZ
 template< typename T, typename U >
 void
-ConvertFormatXYZToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatXYZToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatXYZToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatXYZToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 
@@ -200,15 +197,15 @@ ConvertFormatXYZToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, cons
 //----------------------------------------------------------------------------- From Yxy
 template< typename T, typename U >
 void
-ConvertFormatYxyToHSL( const FFormatMetrics& iSrcFormat, const uint8* iSrc, const FFormatMetrics& iDstFormat, uint8* iDst, uint32 iLen )
+ConvertFormatYxyToHSL( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatYxyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToHSL< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
-        iSrc += iSrcFormat.BPP;
-        iDst += iDstFormat.BPP;
+        ConvertFormatYxyToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToHSL< ufloat, U >( temp, iDst, 1 );
+        iSrc.Next();
+        iDst.Next();
     }
 }
 

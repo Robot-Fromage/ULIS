@@ -165,7 +165,7 @@ FColor::FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColo
     : ISample( nullptr, iFormat, iColorSpace )
 {
     mSignal = new uint8[ BytesPerPixel() ];
-    #define TMP_CALL( iTypeID, iType, iE2, iE3 ) detail::TColorInitializer< iType >::Run< T >( this, iValues ); break;
+    #define TMP_CALL( _TYPE_ID, _TYPE, iE2, iE3 ) detail::TColorInitializer< _TYPE >::Run< T >( this, iValues );
     ULIS_SWITCH_FOR_ALL_DO( Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
     #undef TMP_CALL
 }
