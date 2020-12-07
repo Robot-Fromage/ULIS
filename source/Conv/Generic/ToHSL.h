@@ -16,6 +16,7 @@
 #include "Conv/Conv.h"
 #include "Image/Color.h"
 #include "Image/Pixel.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
