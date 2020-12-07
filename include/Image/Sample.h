@@ -533,6 +533,15 @@ public:
     */
     static void ConvertFormat( const ISample& iSrc, ISample& iDst );
 
+    /*! Color Mix or Lerp, beetween two input ISample, in the input format. */
+    static FColor MixFormat( const ISample& iA, const ISample& iB, eFormat iFormat, ufloat iLerpParameter );
+
+    /*! Color Mix or Lerp, beetween two input ISample, in RGB. */
+    static FColor MixRGB( const ISample& iA, const ISample& iB, ufloat iLerpParameter );
+
+    /*! Color Mix or Lerp, beetween two input ISample, in Lab. */
+    static FColor MixLab( const ISample& iA, const ISample& iB, ufloat iLerpParameter );
+
 protected:
     uint8* mSignal;
 };

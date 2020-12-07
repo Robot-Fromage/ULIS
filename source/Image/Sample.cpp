@@ -86,5 +86,62 @@ ISample::ConvertFormat( const ISample& iSrc, ISample& iDst )
     }
 }
 
+
+template< typename T >
+FColor
+MixFormat_imp( const ISample& iA, const ISample& iB, eFormat iFormat, ufloat iLerpParameter  )
+{
+    ufloat t = FMath::Clamp( iLerpParameter, 0.f, 1.f );
+    ufloat u = 1.f - t;
+    FColor res( iFormat );
+    FFormatMetrics fmt( iFormat );
+    for( uint8 i = 0; i < fmt.SPP; ++i )
+        res.SetChannelT< T >( i, static_cast< T >( u * iA.ChannelT< T >( i ) + t * iB.ChannelT< T >( i ) ) );
+    return  res;
+}
+
+//static
+FColor
+ISample::MixFormat( const ISample& iA, const ISample& iB, eFormat iFormat, ufloat iLerpParameter )
+{
+    FColor tmp0 = iA.ToFormat( iFormat );
+    FColor tmp1 = iB.ToFormat( iFormat );
+    #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  MixFormat_imp< _TYPE >( tmp0, tmp1, iFormat, iLerpParameter );
+    ULIS_SWITCH_FOR_ALL_DO( static_cast< eType >( ULIS_R_TYPE( iFormat ) ), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+    #undef TMP_CALL
+
+    // Shut warning C4715, static analysis cannot figure all paths are handled.
+    ULIS_ASSERT( false, "Bad control path, no spec for typeid." );
+    return  FColor();
+}
+
+FColor
+ISample::MixRGB( const ISample& iA, const ISample& iB, ufloat iLerpParameter )
+{
+    ufloat t = FMath::Clamp( iLerpParameter, 0.f, 1.f );
+    FColor tmp0 = iA.ToFormat( eFormat::Format_RGBAF );
+    FColor tmp1 = iB.ToFormat( eFormat::Format_RGBAF );
+    FColor res( eFormat::Format_RGBAF );
+    res.SetRF( ( 1.f - t ) * tmp0.RF() + t * tmp1.RF() );
+    res.SetGF( ( 1.f - t ) * tmp0.GF() + t * tmp1.GF() );
+    res.SetBF( ( 1.f - t ) * tmp0.BF() + t * tmp1.BF() );
+    res.SetAF( ( 1.f - t ) * tmp0.AF() + t * tmp1.AF() );
+    return  res;
+}
+
+FColor
+ISample::MixLab( const ISample& iA, const ISample& iB, ufloat iLerpParameter )
+{
+    ufloat t = FMath::Clamp( iLerpParameter, 0.f, 1.f );
+    FColor tmp0 = iA.ToFormat( eFormat::Format_LabAF );
+    FColor tmp1 = iB.ToFormat( eFormat::Format_LabAF );
+    FColor res( eFormat::Format_RGBAF );
+    res.SetLF( ( 1.f - t ) * tmp0.LF() + t * tmp1.RF() );
+    res.SetaF( ( 1.f - t ) * tmp0.aF() + t * tmp1.GF() );
+    res.SetbF( ( 1.f - t ) * tmp0.bF() + t * tmp1.BF() );
+    res.SetAF( ( 1.f - t ) * tmp0.AF() + t * tmp1.AF() );
+    return  res;
+}
+
 ULIS_NAMESPACE_END
 
