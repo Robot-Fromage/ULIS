@@ -349,7 +349,6 @@ enum eBorderMode {
     , Border_Constant
     , Border_Extend
     , Border_Wrap
-    , Border_Mirror
 };
 
 /////////////////////////////////////////////////////
