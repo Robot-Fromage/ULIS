@@ -335,7 +335,7 @@ fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFor
 
 /////////////////////////////////////////////////////
 // Template Instanciations
-#define X_EXPLICIT_TEMPLATE_SPEC_IMP( T, U, A, B ) template ULIS_API void ConvertFormat ## A ## To ## B ## < T, U >( FPixel iSrc, FPixel iDst, uint32 iLen );
+#define X_EXPLICIT_TEMPLATE_SPEC_IMP( T, U, A, B ) template ULIS_API void ConvertFormat ## A ## To ## B ## < T, U >( const FPixel iSrc, FPixel iDst, uint32 iLen );
 #define X_EXPLICIT_TEMPLATE_SPEC( A, B ) ULIS_FOR_ALL_TYPES_COMBINATIONS_DO( X_EXPLICIT_TEMPLATE_SPEC_IMP, A, B )
 ULIS_FOR_ALL_COLOR_MODELS_COMBINATIONS_DO( X_EXPLICIT_TEMPLATE_SPEC )
 #undef X_EXPLICIT_TEMPLATE_SPEC_IMP
