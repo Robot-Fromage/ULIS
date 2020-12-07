@@ -14,36 +14,37 @@
 
 ULIS_NAMESPACE_BEGIN
 class   FBlock;
-class   ISample;
+struct  FCatmullRomSpline;
 class   FColor;
-class   FPixel;
-class   FProfileRegistry;
 class   FColorSpace;
-class   FThreadPool;
-class   FFontRegistry;
-class   FTextEngine;
+class   FCommandQueue;
+class   FContext;
+struct  FCubicBezierControlPoint;
+class   FEvent;
+class   FFilePathRegistry;
 class   FFont;
-class   FTransformation2D;
-class   ITiledBlock;
-class   FKernel;
-class   FStructuringElement;
-struct  FPerfInfo;
+class   FFontFamilyEntry;
+class   FFontRegistry;
+class   FFontStyleEntry;
+class   FFormatMetrics;
 class   FHardwareMetrics;
-struct  FFormatMetrics;
+struct  FMath;
+class   FPixel;
+class   FSchedulePolicy;
+struct  FSplineLinearSample;
+struct  FSplineParametricSample;
+class   FString;
+class   FTextEngine;
+class   FThreadPool;
 struct  FTileElement;
+class   FTransformation2D;
+class   FWString;
+class   IHasColorSpace;
+class   IHasFormat;
+class   ISample;
 class   ITiledBlock;
 class   ITilePool;
-class   FString;
-class   FWString;
-class   FSchedulePolicy;
-class   FEvent;
-class   FInternalEvent;
-class   FCommand;
-class   FJob;
-class   FCommandQueue;
-
-template< typename T > class TArray;
-
+template< typename T > class    TArray;
 template< typename T > struct   TVector2;
 typedef TVector2< int >         FVec2I;
 typedef TVector2< float >       FVec2F;
@@ -54,24 +55,18 @@ typedef TVector2< uint32 >      FVec2UI32;
 typedef TVector2< uint64 >      FVec2UI64;
 typedef TVector2< int32 >       FVec2I32;
 typedef TVector2< int64 >       FVec2I64;
-
 template< typename T > struct   TVector3;
 typedef TVector3< int >         FVec3I;
 typedef TVector3< float >       FVec3F;
-
 template< typename T > struct   TVector4;
 typedef TVector4< float >       FVec4F;
-
 template< typename T > struct   TRectangle;
 typedef TRectangle< int >       FRectI;
 typedef TRectangle< float >     FRectF;
-
 template< typename T > class    TMatrix2;
 typedef TMatrix2< float >       FMat2F;
-
 template< typename T > class    TMatrix3;
 typedef TMatrix3< float >       FMat3F;
-
 template< typename T > class    TMatrix4;
 typedef TMatrix4< float >       FMat4F;
 
