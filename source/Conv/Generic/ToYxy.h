@@ -55,9 +55,9 @@ ConvertFormatRGBToYxy( FPixel iSrc, FPixel iDst, uint32 iLen )
         XYZ.Z = 0.0193f * r + 0.1192f * g + 0.9505f * b;
         cmsCIExyY xyY;
         cmsXYZ2xyY( &xyY, &XYZ );
-        DREF_DST( 0 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.Y ) );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.x ) );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.y ) );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( static_cast< ufloat >( xyY.Y ) ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( static_cast< ufloat >( xyY.x ) ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( static_cast< ufloat >( xyY.y ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -161,9 +161,9 @@ ConvertFormatLabToYxy( FPixel iSrc, FPixel iDst, uint32 iLen )
         cmsLab2XYZ( &D65, &XYZ, &Lab );
         cmsCIExyY xyY;
         cmsXYZ2xyY( &xyY, &XYZ );
-        DREF_DST( 0 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.Y ) );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.x ) );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.y ) );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( static_cast< ufloat >( xyY.Y ) ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( static_cast< ufloat >( xyY.x ) ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( static_cast< ufloat >( xyY.y ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -184,9 +184,9 @@ ConvertFormatXYZToYxy( FPixel iSrc, FPixel iDst, uint32 iLen )
         XYZ.Y = ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) );
         XYZ.Z = ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) );
         cmsXYZ2xyY( &xyY, &XYZ );
-        DREF_DST( 0 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.Y ) );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.x ) );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( static_cast< ufloat >( xyY.y ) );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( static_cast< ufloat >( xyY.Y ) ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( static_cast< ufloat >( xyY.x ) ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( static_cast< ufloat >( xyY.y ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -201,9 +201,9 @@ ConvertFormatYxyToYxy( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        DREF_DST( 0 ) = ConvType< T, U >( iSrc.ChannelT< T >( 0 ) );
-        DREF_DST( 1 ) = ConvType< T, U >( iSrc.ChannelT< T >( 1 ) );
-        DREF_DST( 2 ) = ConvType< T, U >( iSrc.ChannelT< T >( 2 ) );
+        iDst.SetChannelT< U >( 0, ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, ConvType< T, U >( iSrc.ChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, ConvType< T, U >( iSrc.ChannelT< T >( 2 ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();

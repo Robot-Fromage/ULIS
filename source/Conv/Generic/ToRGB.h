@@ -32,9 +32,9 @@ ConvertFormatGreyToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
     while( iLen-- )
     {
         U grey = ConvType< T, U >( iSrc.ChannelT< T >( 0 ) );
-        DREF_DST( 0 ) = grey;
-        DREF_DST( 1 ) = grey;
-        DREF_DST( 2 ) = grey;
+        iDst.SetChannelT< U >( 0, grey );
+        iDst.SetChannelT< U >( 1, grey );
+        iDst.SetChannelT< U >( 2, grey );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -49,9 +49,9 @@ ConvertFormatRGBToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        DREF_DST( 0 ) = ConvType< T, U >( iSrc.ChannelT< T >( 0 ) );
-        DREF_DST( 1 ) = ConvType< T, U >( iSrc.ChannelT< T >( 1 ) );
-        DREF_DST( 2 ) = ConvType< T, U >( iSrc.ChannelT< T >( 2 ) );
+        iDst.SetChannelT< U >( 0, ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, ConvType< T, U >( iSrc.ChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, ConvType< T, U >( iSrc.ChannelT< T >( 2 ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -94,9 +94,9 @@ ConvertFormatHSVToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
             else if ( var_i == 4 ) { r = var_3 ; g = var_1 ; b = v     ; }
             else                   { r = v     ; g = var_1 ; b = var_2 ; }
         }
-        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( r ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( g ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( b ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -131,9 +131,9 @@ ConvertFormatHSLToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         else if ( var_i == 3 ) { r = 0; g = X; b = C; }
         else if ( var_i == 4 ) { r = X; g = 0; b = C; }
         else                   { r = C; g = 0; b = X; }
-        DREF_DST( 0 ) = ConvType< ufloat, U >( r + m );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( g + m );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( b + m );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( r + m ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( g + m ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( b + m ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -149,9 +149,9 @@ ConvertFormatCMYToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
     while( iLen-- )
     {
         U max = MaxType< U >();
-        DREF_DST( 0 ) = max - ConvType< T, U >( iSrc.ChannelT< T >( 0 ) );
-        DREF_DST( 1 ) = max - ConvType< T, U >( iSrc.ChannelT< T >( 1 ) );
-        DREF_DST( 2 ) = max - ConvType< T, U >( iSrc.ChannelT< T >( 2 ) );
+        iDst.SetChannelT< U >( 0, max - ConvType< T, U >( iSrc.ChannelT< T >( 0 ) ) );
+        iDst.SetChannelT< U >( 1, max - ConvType< T, U >( iSrc.ChannelT< T >( 1 ) ) );
+        iDst.SetChannelT< U >( 2, max - ConvType< T, U >( iSrc.ChannelT< T >( 2 ) ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -173,9 +173,9 @@ ConvertFormatCMYKToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         float r = 1.f - ( c * ( 1.f - k ) + k );
         float g = 1.f - ( m * ( 1.f - k ) + k );
         float b = 1.f - ( y * ( 1.f - k ) + k );
-        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( r ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( g ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( b ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -196,9 +196,9 @@ ConvertFormatYUVToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         float r = linear2srgb( y + 1.14f * v );
         float g = linear2srgb( y - 0.395f * u - 0.581f * v );
         float b = linear2srgb( y + 2.033f * u );
-        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( r ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( g ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( b ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -226,9 +226,9 @@ ConvertFormatLabToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
-        DREF_DST( 0 ) = ConvType< ufloat, U >( r );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( g );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( b );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( r ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( g ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( b ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -249,9 +249,9 @@ ConvertFormatXYZToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
-        DREF_DST( 0 ) = ConvType< float, U >( r );
-        DREF_DST( 1 ) = ConvType< float, U >( g );
-        DREF_DST( 2 ) = ConvType< float, U >( b );
+        iDst.SetChannelT< U >( 0, ConvType< float, U >( r ) );
+        iDst.SetChannelT< U >( 1, ConvType< float, U >( g ) );
+        iDst.SetChannelT< U >( 2, ConvType< float, U >( b ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
@@ -278,9 +278,9 @@ ConvertFormatYxyToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
-        DREF_DST( 0 ) = ConvType< float, U >( r );
-        DREF_DST( 1 ) = ConvType< float, U >( g );
-        DREF_DST( 2 ) = ConvType< float, U >( b );
+        iDst.SetChannelT< U >( 0, ConvType< float, U >( r ) );
+        iDst.SetChannelT< U >( 1, ConvType< float, U >( g ) );
+        iDst.SetChannelT< U >( 2, ConvType< float, U >( b ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();

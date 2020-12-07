@@ -52,9 +52,9 @@ ConvertFormatRGBToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
         float y = 0.299f * r + 0.587f * g + 0.114f * b;
         float u = 0.492f * ( b - y ); // + 0.435912 * ( 1 / ( 0.886 + 0.435912 ) )
         float v = 0.877f * ( r - y ); // + 0.621787 * ( 1 / ( 0.701 + 0.621787 ) )
-        DREF_DST( 0 ) = ConvType< ufloat, U >( y );
-        DREF_DST( 1 ) = ConvType< ufloat, U >( u );
-        DREF_DST( 2 ) = ConvType< ufloat, U >( v );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( y ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( u ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( v ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
