@@ -204,6 +204,12 @@ FBlock::Pixel( uint16 iX, uint16 iY ) const
 }
 
 void
+FBlock::SetPixel( uint16 iX, uint16 iY, const ISample& iSample )
+{
+    ISample::ConvertFormat( iSample, Pixel( iX, iY ) );
+}
+
+void
 FBlock::OnInvalid( const FOnInvalid& iOnInvalid )
 {
     mOnInvalid = iOnInvalid;

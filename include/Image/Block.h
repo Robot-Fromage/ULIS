@@ -375,6 +375,24 @@ public:
     const FPixel Pixel( uint16 iX, uint16 iY ) const;
 
     /*!
+    Set the pixel at the given coordinates from input ISample.
+    The sample will be converted to the appropriate format.
+    This function is here for convenience but is not recommended to used for
+    intensive raster tasks, as it does not provide any kind of optimizations.
+
+    \warning If you specify X and Y coordinates that are either negative or
+    bigger than the block width and height respectively, the function will
+    trigger an assert and crash in debug builds, but it will fail silently and
+    access the buffer out of bounds in release builds, leading to potential
+    memory corruption or crashes further down the line.
+
+    \sa Color()
+    \sa PixelBits()
+    \sa ISample
+    */
+    void SetPixel( uint16 iX, uint16 iY, const ISample& iSample );
+
+    /*!
     Set a new invalid callback that will be called on dirty.
 
     \sa OnCleanup()
