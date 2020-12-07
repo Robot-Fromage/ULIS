@@ -15,6 +15,44 @@
 #include "Conv/Conv.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Implementation details
+namespace detail {
+template< typename T >
+FColor
+MixFormat_imp( const ISample& iA, const ISample& iB, eFormat iFormat, ufloat iLerpParameter  )
+{
+    ufloat t = FMath::Clamp( iLerpParameter, 0.f, 1.f );
+    ufloat u = 1.f - t;
+    FColor res( iFormat );
+    FFormatMetrics fmt( iFormat );
+    for( uint8 i = 0; i < fmt.SPP; ++i )
+        res.SetChannelT< T >( i, static_cast< T >( u * iA.ChannelT< T >( i ) + t * iB.ChannelT< T >( i ) ) );
+    return  res;
+}
+
+template< typename T >
+void
+Premultiply_imp( ISample& iSample )
+{
+    ufloat alpha = iSample.AlphaT< T >();
+    ufloat maxtype = MaxType< T >();
+    for( uint8 i = 0; i < fmt.NCC; ++i )
+        iSample.SetChannelT< T >( static_cast< T >( ( iSample.ChannelT< T >() * alpha ) / MaxType< T >() ) );
+}
+
+template< typename T >
+void
+Unpremultiply_imp( ISample& iSample )
+{
+    ufloat alpha = iSample.AlphaT< T >();
+    ufloat maxtype = MaxType< T >();
+    for( uint8 i = 0; i < fmt.NCC; ++i )
+        iSample.SetChannelT< T >( static_cast< T >( ( iSample.ChannelT< T >() * MaxType< T >() ) / alpha ) );
+}
+
+} // namespace detail
+
 ISample::~ISample()
 {}
 
@@ -84,27 +122,13 @@ ISample::ConvertFormat( const ISample& iSrc, ISample& iDst )
     }
 }
 
-
-template< typename T >
-FColor
-MixFormat_imp( const ISample& iA, const ISample& iB, eFormat iFormat, ufloat iLerpParameter  )
-{
-    ufloat t = FMath::Clamp( iLerpParameter, 0.f, 1.f );
-    ufloat u = 1.f - t;
-    FColor res( iFormat );
-    FFormatMetrics fmt( iFormat );
-    for( uint8 i = 0; i < fmt.SPP; ++i )
-        res.SetChannelT< T >( i, static_cast< T >( u * iA.ChannelT< T >( i ) + t * iB.ChannelT< T >( i ) ) );
-    return  res;
-}
-
 //static
 FColor
 ISample::MixFormat( const ISample& iA, const ISample& iB, eFormat iFormat, ufloat iLerpParameter )
 {
     FColor tmp0 = iA.ToFormat( iFormat );
     FColor tmp1 = iB.ToFormat( iFormat );
-    #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  MixFormat_imp< _TYPE >( tmp0, tmp1, iFormat, iLerpParameter );
+    #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  detail::MixFormat_imp< _TYPE >( tmp0, tmp1, iFormat, iLerpParameter );
     ULIS_SWITCH_FOR_ALL_DO( static_cast< eType >( ULIS_R_TYPE( iFormat ) ), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
     #undef TMP_CALL
 
@@ -138,6 +162,38 @@ ISample::MixLab( const ISample& iA, const ISample& iB, ufloat iLerpParameter )
     res.SetaF( ( 1.f - t ) * tmp0.aF() + t * tmp1.GF() );
     res.SetbF( ( 1.f - t ) * tmp0.bF() + t * tmp1.BF() );
     res.SetAF( ( 1.f - t ) * tmp0.AF() + t * tmp1.AF() );
+    return  res;
+}
+
+void
+ISample::Premultiply()
+{
+    #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  detail::Premultiply_imp< _TYPE >( *this );
+    ULIS_SWITCH_FOR_ALL_DO( Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+    #undef TMP_CALL
+}
+
+void
+ISample::Unpremultiply()
+{
+    #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  detail::Unpremultiply_imp< _TYPE >( *this );
+    ULIS_SWITCH_FOR_ALL_DO( Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+    #undef TMP_CALL
+}
+
+FColor
+ISample::Premultipled() const
+{
+    FColor res = *this;
+    res.Premultiply();
+    return  res;
+}
+
+FColor
+ISample::Unpremultipled() const
+{
+    FColor res = *this;
+    res.Unpremultiply();
     return  res;
 }
 

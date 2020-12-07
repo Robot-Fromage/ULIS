@@ -540,6 +540,18 @@ public:
     /*! Color Mix or Lerp, beetween two input ISample, in Lab. */
     static FColor MixLab( const ISample& iA, const ISample& iB, ufloat iLerpParameter );
 
+    /*! Premultiply sample in place. */
+    void Premultiply();
+
+    /*! Unpremultiply sample in place. */
+    void Unpremultiply();
+
+    /*! Get Premultiplied color version of this sample. */
+    FColor Premultipled() const;
+
+    /*! Get Unremultiplied color version of this sample. */
+    FColor Unpremultipled() const;
+
 protected:
     mutable uint8* mSignal;
 };
