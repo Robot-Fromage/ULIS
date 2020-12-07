@@ -547,10 +547,10 @@ public:
     void Unpremultiply();
 
     /*! Get Premultiplied color version of this sample. */
-    FColor Premultipled() const;
+    FColor Premultiplied() const;
 
-    /*! Get Unremultiplied color version of this sample. */
-    FColor Unpremultipled() const;
+    /*! Get Unpremultiplied color version of this sample. */
+    FColor Unpremultiplied() const;
 
 protected:
     mutable uint8* mSignal;

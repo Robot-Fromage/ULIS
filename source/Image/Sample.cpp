@@ -35,6 +35,7 @@ template< typename T >
 void
 Premultiply_imp( ISample& iSample )
 {
+    const FFormatMetrics& fmt = iSample.FormatMetrics();
     ufloat alpha = iSample.AlphaT< T >();
     ufloat maxtype = MaxType< T >();
     for( uint8 i = 0; i < fmt.NCC; ++i )
@@ -45,10 +46,17 @@ template< typename T >
 void
 Unpremultiply_imp( ISample& iSample )
 {
+    const FFormatMetrics& fmt = iSample.FormatMetrics();
     ufloat alpha = iSample.AlphaT< T >();
     ufloat maxtype = MaxType< T >();
-    for( uint8 i = 0; i < fmt.NCC; ++i )
-        iSample.SetChannelT< T >( static_cast< T >( ( iSample.ChannelT< T >() * MaxType< T >() ) / alpha ) );
+
+    if( alpha == 0.f ){
+        for( uint8 i = 0; i < fmt.NCC; ++i )
+            iSample.SetChannelT< T >( static_cast< T >( 0 ) );
+    } else {
+        for( uint8 i = 0; i < fmt.NCC; ++i )
+            iSample.SetChannelT< T >( static_cast< T >( ( iSample.ChannelT< T >() * MaxType< T >() ) / alpha ) );
+    }
 }
 
 } // namespace detail
@@ -182,7 +190,7 @@ ISample::Unpremultiply()
 }
 
 FColor
-ISample::Premultipled() const
+ISample::Premultiplied() const
 {
     FColor res = *this;
     res.Premultiply();
@@ -190,7 +198,7 @@ ISample::Premultipled() const
 }
 
 FColor
-ISample::Unpremultipled() const
+ISample::Unpremultiplied() const
 {
     FColor res = *this;
     res.Unpremultiply();
