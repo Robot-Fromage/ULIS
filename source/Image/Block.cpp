@@ -219,7 +219,7 @@ FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, FColor& iConstant )
 }
 
 FColor
-FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, FColor& iColor ) const
+FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, FColor& iColor, bool iCompensateBlackDrifting ) const
 {
     int16 x0 = static_cast< int16 >( FMath::RoundToNegativeInfinity( iX ) );
     int16 y0 = static_cast< int16 >( FMath::RoundToNegativeInfinity( iY ) );
@@ -231,14 +231,17 @@ FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, FColor& iCo
     FColor m10 = Sample( x1, y0, iBorderMode, iColor );
     FColor m01 = Sample( x0, y1, iBorderMode, iColor );
     FColor m11 = Sample( x1, y1, iBorderMode, iColor );
-    m00.Premultiply();
-    m10.Premultiply();
-    m01.Premultiply();
-    m11.Premultiply();
+    if( iCompensateBlackDrifting ) {
+        m00.Premultiply();
+        m10.Premultiply();
+        m01.Premultiply();
+        m11.Premultiply();
+    }
     FColor row0 = ISample::MixFormat( m00, m10, Format(), t );
     FColor row1 = ISample::MixFormat( m01, m11, Format(), t );
     FColor col0 = ISample::MixFormat( row0, row1, Format(), u );
-    col0.Unpremultiply();
+    if( iCompensateBlackDrifting )
+        col0.Unpremultiply();
     return  col0;
 }
 

@@ -345,7 +345,12 @@ public:
     \sa PixelBits()
     \sa FColor
     */
-    FColor Sample( int16 iX, int16 iY, eBorderMode iBorderMode = eBorderMode::Border_Transparent, FColor& iConstant = FColor::Transparent() ) const;
+    FColor Sample(
+          int16 iX
+        , int16 iY
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , FColor& iConstant = FColor::Transparent()
+    ) const;
 
     /*!
     Return the color at the given subpixel coordinates.
@@ -357,7 +362,13 @@ public:
     \sa PixelBits()
     \sa FColor
     */
-    FColor SampleSubpixel( float iX, float iY, eBorderMode iBorderMode = eBorderMode::Border_Transparent, FColor& iConstant = FColor::Transparent() ) const;
+    FColor SampleSubpixel(
+          float iX
+        , float iY
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , FColor& iConstant = FColor::Transparent()
+        , bool iCompensateBlackDrifting = true
+    ) const;
 
     /*!
     Return the pixel at the given coordinates.
