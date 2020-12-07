@@ -15,7 +15,6 @@
 ULIS_NAMESPACE_BEGIN
 FSchedulePolicy::~FSchedulePolicy()
 {
-    // Nothing ATM
 }
 
 FSchedulePolicy::FSchedulePolicy(
