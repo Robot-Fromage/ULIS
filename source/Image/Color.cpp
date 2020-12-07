@@ -142,7 +142,6 @@ FColor::FColor( const FColor& iValue )
 FColor::FColor( FColor&& iValue )
     : ISample( iValue.mSignal, iValue.Format(), iValue.ColorSpace() )
 {
-    mSignal = new uint8[ BytesPerPixel() ];
     iValue.mSignal = nullptr;
 }
 
