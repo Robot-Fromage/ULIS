@@ -541,7 +541,7 @@ public:
     static FColor MixLab( const ISample& iA, const ISample& iB, ufloat iLerpParameter );
 
 protected:
-    uint8* mSignal;
+    mutable uint8* mSignal;
 };
 
 ULIS_NAMESPACE_END

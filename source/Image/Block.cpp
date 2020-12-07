@@ -196,7 +196,6 @@ FBlock::Pixel( uint16 iX, uint16 iY )
     return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace() );
 }
 
-
 const FPixel
 FBlock::Pixel( uint16 iX, uint16 iY ) const
 {
