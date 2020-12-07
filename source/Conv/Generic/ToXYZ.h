@@ -202,9 +202,9 @@ ConvertFormatYxyToXYZ( FPixel iSrc, FPixel iDst, uint32 iLen )
         ufloat x = static_cast< ufloat >( XYZ.X );
         ufloat y = static_cast< ufloat >( XYZ.Y );
         ufloat z = static_cast< ufloat >( XYZ.Z );
-        iDst.SetChannelT< U >( 0, = ConvType< ufloat, U >( x ) );
-        iDst.SetChannelT< U >( 1, = ConvType< ufloat, U >( y ) );
-        iDst.SetChannelT< U >( 2, = ConvType< ufloat, U >( z ) );
+        iDst.SetChannelT< U >( 0, ConvType< ufloat, U >( x ) );
+        iDst.SetChannelT< U >( 1, ConvType< ufloat, U >( y ) );
+        iDst.SetChannelT< U >( 2, ConvType< ufloat, U >( z ) );
         iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
