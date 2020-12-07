@@ -14,11 +14,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvHelpers.h"
 #include "Image/Color.h"
-#include "Image/Format.h"
 #include "Image/Pixel.h"
-#include "Image/Sample.h"
 #include "Math/Math.h"
 #include <lcms2.h>
 
@@ -34,8 +31,8 @@ ConvertFormatGreyToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatGreyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatGreyToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -49,16 +46,16 @@ ConvertFormatRGBToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat r = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 0 ) ) );
-        ufloat g = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 1 ) ) );
-        ufloat b = srgb2linear( ConvType< T, ufloat >( DREF_SRC( 2 ) ) );
+        ufloat r = srgb2linear( ConvType< T, ufloat >( iSrc.ChannelT< T >( 0 ) ) );
+        ufloat g = srgb2linear( ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) ) );
+        ufloat b = srgb2linear( ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) ) );
         float y = 0.299f * r + 0.587f * g + 0.114f * b;
         float u = 0.492f * ( b - y ); // + 0.435912 * ( 1 / ( 0.886 + 0.435912 ) )
         float v = 0.877f * ( r - y ); // + 0.621787 * ( 1 / ( 0.701 + 0.621787 ) )
         DREF_DST( 0 ) = ConvType< ufloat, U >( y );
         DREF_DST( 1 ) = ConvType< ufloat, U >( u );
         DREF_DST( 2 ) = ConvType< ufloat, U >( v );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -73,8 +70,8 @@ ConvertFormatHSVToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatHSVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatHSVToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -89,8 +86,8 @@ ConvertFormatHSLToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatHSLToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatHSLToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -105,8 +102,8 @@ ConvertFormatCMYToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatCMYToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatCMYToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -121,8 +118,8 @@ ConvertFormatCMYKToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatCMYKToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatCMYKToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -137,8 +134,8 @@ ConvertFormatYUVToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatYUVToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatYUVToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -153,8 +150,8 @@ ConvertFormatLabToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatLabToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatLabToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -169,8 +166,8 @@ ConvertFormatXYZToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatXYZToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatXYZToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }
@@ -185,8 +182,8 @@ ConvertFormatYxyToYUV( FPixel iSrc, FPixel iDst, uint32 iLen )
     FColor temp( eFormat::Format_RGBAF );
     while( iLen-- )
     {
-        ConvertFormatYxyToRGB< T, ufloat >( iSrcFormat, iSrc, temp.FormatMetrics(), temp.Bits(), 1 );
-        ConvertFormatRGBToYUV< ufloat, U >( temp.FormatMetrics(), temp.Bits(), iDstFormat, iDst, 1 );
+        ConvertFormatYxyToRGB< T, ufloat >( iSrc, temp, 1 );
+        ConvertFormatRGBToYUV< ufloat, U >( temp, iDst, 1 );
         iSrc.Next();
         iDst.Next();
     }

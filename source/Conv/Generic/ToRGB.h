@@ -14,12 +14,9 @@
 #pragma once
 #include "Core/Core.h"
 #include "Conv/Conv.h"
-#include "Conv/ConvHelpers.h"
 #include "Conv/srgb2linear.h"
 #include "Image/Color.h"
-#include "Image/Format.h"
 #include "Image/Pixel.h"
-#include "Image/Sample.h"
 #include "Math/Math.h"
 #include <lcms2.h>
 
@@ -34,11 +31,11 @@ ConvertFormatGreyToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        U grey = ConvType< T, U >( DREF_SRC( 0 ) );
+        U grey = ConvType< T, U >( iSrc.ChannelT< T >( 0 ) );
         DREF_DST( 0 ) = grey;
         DREF_DST( 1 ) = grey;
         DREF_DST( 2 ) = grey;
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -52,10 +49,10 @@ ConvertFormatRGBToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        DREF_DST( 0 ) = ConvType< T, U >( DREF_SRC( 0 ) );
-        DREF_DST( 1 ) = ConvType< T, U >( DREF_SRC( 1 ) );
-        DREF_DST( 2 ) = ConvType< T, U >( DREF_SRC( 2 ) );
-        FWD_ALPHA;
+        DREF_DST( 0 ) = ConvType< T, U >( iSrc.ChannelT< T >( 0 ) );
+        DREF_DST( 1 ) = ConvType< T, U >( iSrc.ChannelT< T >( 1 ) );
+        DREF_DST( 2 ) = ConvType< T, U >( iSrc.ChannelT< T >( 2 ) );
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -69,9 +66,9 @@ ConvertFormatHSVToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        T _H = DREF_SRC( 0 );
-        T _S = DREF_SRC( 1 );
-        T _V = DREF_SRC( 2 );
+        T _H = iSrc.ChannelT< T >( 0 );
+        T _S = iSrc.ChannelT< T >( 1 );
+        T _V = iSrc.ChannelT< T >( 2 );
         ufloat h = ConvType< T, ufloat >( _H );
         ufloat s = ConvType< T, ufloat >( _S );
         ufloat v = ConvType< T, ufloat >( _V );
@@ -100,7 +97,7 @@ ConvertFormatHSVToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         DREF_DST( 0 ) = ConvType< ufloat, U >( r );
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -114,9 +111,9 @@ ConvertFormatHSLToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        T _H = DREF_SRC( 0 );
-        T _S = DREF_SRC( 1 );
-        T _L = DREF_SRC( 2 );
+        T _H = iSrc.ChannelT< T >( 0 );
+        T _S = iSrc.ChannelT< T >( 1 );
+        T _L = iSrc.ChannelT< T >( 2 );
         ufloat h = ConvType< T, ufloat >( _H );
         ufloat s = ConvType< T, ufloat >( _S );
         ufloat l = ConvType< T, ufloat >( _L );
@@ -137,7 +134,7 @@ ConvertFormatHSLToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         DREF_DST( 0 ) = ConvType< ufloat, U >( r + m );
         DREF_DST( 1 ) = ConvType< ufloat, U >( g + m );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b + m );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -152,10 +149,10 @@ ConvertFormatCMYToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
     while( iLen-- )
     {
         U max = MaxType< U >();
-        DREF_DST( 0 ) = max - ConvType< T, U >( DREF_SRC( 0 ) );
-        DREF_DST( 1 ) = max - ConvType< T, U >( DREF_SRC( 1 ) );
-        DREF_DST( 2 ) = max - ConvType< T, U >( DREF_SRC( 2 ) );
-        FWD_ALPHA;
+        DREF_DST( 0 ) = max - ConvType< T, U >( iSrc.ChannelT< T >( 0 ) );
+        DREF_DST( 1 ) = max - ConvType< T, U >( iSrc.ChannelT< T >( 1 ) );
+        DREF_DST( 2 ) = max - ConvType< T, U >( iSrc.ChannelT< T >( 2 ) );
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -169,17 +166,17 @@ ConvertFormatCMYKToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat c = ConvType< T, ufloat >( DREF_SRC( 0 ) );
-        ufloat m = ConvType< T, ufloat >( DREF_SRC( 1 ) );
-        ufloat y = ConvType< T, ufloat >( DREF_SRC( 2 ) );
-        ufloat k = ConvType< T, ufloat >( DREF_SRC( 3 ) );
+        ufloat c = ConvType< T, ufloat >( iSrc.ChannelT< T >( 0 ) );
+        ufloat m = ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) );
+        ufloat y = ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) );
+        ufloat k = ConvType< T, ufloat >( iSrc.ChannelT< T >( 3 ) );
         float r = 1.f - ( c * ( 1.f - k ) + k );
         float g = 1.f - ( m * ( 1.f - k ) + k );
         float b = 1.f - ( y * ( 1.f - k ) + k );
         DREF_DST( 0 ) = ConvType< ufloat, U >( r );
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -193,16 +190,16 @@ ConvertFormatYUVToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat y = ConvType< T, ufloat >( DREF_SRC( 0 ) );
-        ufloat u = ConvType< T, ufloat >( DREF_SRC( 1 ) );
-        ufloat v = ConvType< T, ufloat >( DREF_SRC( 2 ) );
+        ufloat y = ConvType< T, ufloat >( iSrc.ChannelT< T >( 0 ) );
+        ufloat u = ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) );
+        ufloat v = ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) );
         float r = linear2srgb( y + 1.14f * v );
         float g = linear2srgb( y - 0.395f * u - 0.581f * v );
         float b = linear2srgb( y + 2.033f * u );
         DREF_DST( 0 ) = ConvType< ufloat, U >( r );
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -219,9 +216,9 @@ ConvertFormatLabToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         cmsCIELab Lab;
         cmsCIEXYZ XYZ;
         cmsCIEXYZ D65 = { 95.047f, 100.00f, 108.883f };
-        Lab.L = ConvType< T, udouble >( DREF_SRC( 0 ) ) * 100.0;
-        Lab.a = ( ConvType< T, udouble >( DREF_SRC( 1 ) ) - 0.5 ) * 255.0;
-        Lab.b = ( ConvType< T, udouble >( DREF_SRC( 2 ) ) - 0.5 ) * 255.0;
+        Lab.L = ConvType< T, udouble >( iSrc.ChannelT< T >( 0 ) ) * 100.0;
+        Lab.a = ( ConvType< T, udouble >( iSrc.ChannelT< T >( 1 ) ) - 0.5 ) * 255.0;
+        Lab.b = ( ConvType< T, udouble >( iSrc.ChannelT< T >( 2 ) ) - 0.5 ) * 255.0;
         cmsLab2XYZ( &D65, &XYZ, &Lab );
         ufloat x = static_cast< ufloat >( XYZ.X ) / 100.f;
         ufloat y = static_cast< ufloat >( XYZ.Y ) / 100.f;
@@ -232,7 +229,7 @@ ConvertFormatLabToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         DREF_DST( 0 ) = ConvType< ufloat, U >( r );
         DREF_DST( 1 ) = ConvType< ufloat, U >( g );
         DREF_DST( 2 ) = ConvType< ufloat, U >( b );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -246,16 +243,16 @@ ConvertFormatXYZToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
 {
     while( iLen-- )
     {
-        ufloat x = ConvType< T, ufloat >( DREF_SRC( 0 ) );
-        ufloat y = ConvType< T, ufloat >( DREF_SRC( 1 ) );
-        ufloat z = ConvType< T, ufloat >( DREF_SRC( 2 ) );
+        ufloat x = ConvType< T, ufloat >( iSrc.ChannelT< T >( 0 ) );
+        ufloat y = ConvType< T, ufloat >( iSrc.ChannelT< T >( 1 ) );
+        ufloat z = ConvType< T, ufloat >( iSrc.ChannelT< T >( 2 ) );
         float r = linear2srgb( +3.2404542f * x - 1.5371385f * y - 0.4985314f * z );
         float g = linear2srgb( -0.9692660f * x + 1.8760108f * y + 0.0415560f * z );
         float b = linear2srgb( +0.0556434f * x - 0.2040259f * y + 1.0572252f * z );
         DREF_DST( 0 ) = ConvType< float, U >( r );
         DREF_DST( 1 ) = ConvType< float, U >( g );
         DREF_DST( 2 ) = ConvType< float, U >( b );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
@@ -271,9 +268,9 @@ ConvertFormatYxyToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
     {
         cmsCIExyY xyY;
         cmsCIEXYZ XYZ;
-        xyY.Y = ConvType< T, udouble >( DREF_SRC( 0 ) );
-        xyY.x = ConvType< T, udouble >( DREF_SRC( 1 ) );
-        xyY.y = ConvType< T, udouble >( DREF_SRC( 2 ) );
+        xyY.Y = ConvType< T, udouble >( iSrc.ChannelT< T >( 0 ) );
+        xyY.x = ConvType< T, udouble >( iSrc.ChannelT< T >( 1 ) );
+        xyY.y = ConvType< T, udouble >( iSrc.ChannelT< T >( 2 ) );
         cmsxyY2XYZ( &XYZ, &xyY );
         ufloat x = static_cast< ufloat >( XYZ.X );
         ufloat y = static_cast< ufloat >( XYZ.Y );
@@ -284,7 +281,7 @@ ConvertFormatYxyToRGB( FPixel iSrc, FPixel iDst, uint32 iLen )
         DREF_DST( 0 ) = ConvType< float, U >( r );
         DREF_DST( 1 ) = ConvType< float, U >( g );
         DREF_DST( 2 ) = ConvType< float, U >( b );
-        FWD_ALPHA;
+        iDst.SetAlphaT< U >( ConvType< T, U >( iSrc.AlphaT< T >() ) );
         iSrc.Next();
         iDst.Next();
     }
