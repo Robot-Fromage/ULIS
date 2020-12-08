@@ -21,7 +21,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel(
+InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
@@ -99,11 +99,11 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildBlendJobs< &InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8_Subpixel >( iCommand, iPolicy );
+    BuildBlendJobs< &InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel >( iCommand, iPolicy );
 }
 
 void
-InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
+InvokeBlendMT_NonSeparable_SSE_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
@@ -146,7 +146,7 @@ ScheduleBlendMT_NonSeparable_SSE_RGBA8(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildBlendJobs< &InvokeBlendMTProcessScanline_NonSeparable_SSE_RGBA8 >( iCommand, iPolicy );
+    BuildBlendJobs< &InvokeBlendMT_NonSeparable_SSE_RGBA8 >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

@@ -21,7 +21,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
+InvokeTiledBlendMT_NonSeparable_SSE_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
@@ -67,7 +67,7 @@ ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8(
     , const FSchedulePolicy& iPolicy
 )
 {
-    BuildBlendJobs< &InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8 >( iCommand, iPolicy, true );
+    BuildBlendJobs< &InvokeTiledBlendMT_NonSeparable_SSE_RGBA8 >( iCommand, iPolicy, true );
 }
 
 ULIS_NAMESPACE_END
