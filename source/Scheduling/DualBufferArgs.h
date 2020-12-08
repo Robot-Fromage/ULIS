@@ -140,7 +140,7 @@ ScheduleDualBufferJobs(
     );
 }
 
-#define ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, TDelegateBuildJobChunks )    \
+#define ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, iDelegateBuildJobChunks )    \
 void                                                                                                                                                                    \
 iName(                                                                                                                                                                  \
       FCommand* iCommand                                                                                                                                                \
@@ -158,7 +158,7 @@ iName(                                                                          
         , iPolicy                                                                                                                                                       \
         , iContiguous                                                                                                                                                   \
         , iDelegateBuildJobScanlines                                                                                                                                    \
-        , TDelegateBuildJobChunks                                                                                                                                       \
+        , iDelegateBuildJobChunks                                                                                                                                       \
     );                                                                                                                                                                  \
 }
 
@@ -172,8 +172,8 @@ iName(                                                                          
         , BuildDualBufferJob_Chunks                                                                         \
     )
 
-#define ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, TDelegateBuildJobChunks )            \
-    template< typename T > ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, TDelegateBuildJobChunks )
+#define ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, iDelegateBuildJobChunks )            \
+    template< typename T > ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, iDelegateBuildJobChunks )
 
 #define ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL( iName, iJobArgs, iCommandArgs, iDelegateInvocation )            \
     template< typename T > ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( iName, iJobArgs, iCommandArgs, iDelegateInvocation )
