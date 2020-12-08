@@ -12,7 +12,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Core/Constants.h"
-#include "Blend/BlendArgs.h"
+#include "Blend/Blend.h"
 #include "Blend/BlendHelpers.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/PRNG.h"

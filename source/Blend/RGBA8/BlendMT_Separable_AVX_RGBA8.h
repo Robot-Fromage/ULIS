@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/BlendArgs.h"
+#include "Blend/Blend.h"
 
 ULIS_NAMESPACE_BEGIN
 void

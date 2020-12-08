@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/BlendArgs.h"
+#include "Blend/Blend.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/Job.h"

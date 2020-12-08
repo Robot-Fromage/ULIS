@@ -14,7 +14,7 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Image/Block.h"
-#include "Blend/BlendArgs.h"
+#include "Blend/Blend.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/Event.h"
