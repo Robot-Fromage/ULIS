@@ -16,9 +16,6 @@
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/NonSeparableBlendFuncF.h"
 #include "Image/Block.h"
-#include "Conv/Conv.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >
