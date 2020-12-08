@@ -19,7 +19,6 @@
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat )
-        // Blend
         : mScheduleBlendSeparable(              TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector >             ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleBlendNonSeparable(           TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleBlendMisc(                   TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector >                  ::Query( iHardwareMetrics, iFormat ) )
@@ -31,19 +30,13 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleTiledBlendSeparable(         TDispatcher< FDispatchedTiledBlendSeparableInvocationSchedulerSelector >        ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleTiledBlendNonSeparable(      TDispatcher< FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector >     ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleTiledBlendMisc(              TDispatcher< FDispatchedTiledBlendMiscInvocationSchedulerSelector >             ::Query( iHardwareMetrics, iFormat ) )
-
-        // Clear
         , mScheduleClear(                       TDispatcher< FDispatchedClearInvocationSchedulerSelector >                      ::Query( iHardwareMetrics, iFormat ) )
-
-        // Copy
         , mScheduleCopy(                        TDispatcher< FDispatchedCopyInvocationSchedulerSelector >                       ::Query( iHardwareMetrics, iFormat ) )
-
-        // Conv
         , mScheduleConvertFormat(               TDispatcher< FDispatchedConvertFormatInvocationSchedulerSelector >              ::Query( iHardwareMetrics, iFormat ) )
-
-        // Fill
         , mScheduleFill(                        TDispatcher< FDispatchedFillInvocationSchedulerSelector >                       ::Query( iHardwareMetrics, iFormat ) )
         , mScheduleFillPreserveAlpha(           TDispatcher< FDispatchedFillPreserveAlphaInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat ) )
+        , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )
+        , mArgConvBackwardBlendNonSeparable(    QueryDispatchedConvertFormatInvocation( eFormat::Format_RGBF, iFormat ) )
 {}
 
 FContext::FContextualDispatchTable::~FContextualDispatchTable()

@@ -59,7 +59,6 @@ public:
     }
 
 private:
-    // Blend
     const fpCommandScheduler mScheduleBlendSeparable;
     const fpCommandScheduler mScheduleBlendNonSeparable;
     const fpCommandScheduler mScheduleBlendMisc;
@@ -71,19 +70,13 @@ private:
     const fpCommandScheduler mScheduleTiledBlendSeparable;
     const fpCommandScheduler mScheduleTiledBlendNonSeparable;
     const fpCommandScheduler mScheduleTiledBlendMisc;
-
-    // Clear
     const fpCommandScheduler mScheduleClear;
-
-    // Copy
     const fpCommandScheduler mScheduleCopy;
-
-    // Copy
     const fpCommandScheduler mScheduleConvertFormat;
-
-    // Copy
     const fpCommandScheduler mScheduleFill;
     const fpCommandScheduler mScheduleFillPreserveAlpha;
+    const fpConvertFormat mArgConvForwardBlendNonSeparable;
+    const fpConvertFormat mArgConvBackwardBlendNonSeparable;
 };
 
 ULIS_NAMESPACE_END
