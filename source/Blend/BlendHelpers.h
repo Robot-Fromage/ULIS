@@ -50,26 +50,6 @@
 ULIS_NAMESPACE_BEGIN
 
 ULIS_FORCEINLINE
-static
-const uint8*
-ComputeBufferPosition(
-      const uint8* iBase
-    , const int iSourceRectY
-    , const int iShiftY
-    , const int iSourceRectH
-    , const uint32 iSrcBps
-    , const uint32 iSrcDecalX
-    , const uint32 iSrcDecalY
-    , const int iLine
-    , const bool iTiled
-)
-{
-    if( iTiled ) {
-        return  iBase + ( ( iSourceRectY + ( ( iShiftY + iLine ) % iSourceRectH ) ) * iSrcBps ) + iSrcDecalX;
-    } else {
-        return  iBase + ( ( iSrcDecalY + iLine ) * iSrcBps ) + iSrcDecalX;
-    }
-}
 
 template< void (*IMP)( const FBlendJobArgs*, const FBlendCommandArgs* ) >
 ULIS_FORCEINLINE
