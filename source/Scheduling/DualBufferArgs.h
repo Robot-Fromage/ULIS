@@ -111,12 +111,16 @@ template<
           const TJobArgs*
         , const TCommandArgs*
         )
+    , typename TDelegateBuildJobScanlines
+    , typename TDelegateBuildJobChunks
 >
 void
 ScheduleDualBufferJobs(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , bool iContiguous
+    , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
+    , TDelegateBuildJobChunks iDelegateBuildJobChunks
 )
 {
     const FDualBufferCommandArgs* cargs = dynamic_cast< const FDualBufferCommandArgs* >( iCommand->Args() );
@@ -131,8 +135,8 @@ ScheduleDualBufferJobs(
         , static_cast< int64 >( cargs->dst.BytesTotal() )
         , cargs->dstRect.h
         , iContiguous
-        , BuildDualBufferJob_Scanlines
-        , BuildDualBufferJob_Chunks
+        , iDelegateBuildJobScanlines
+        , iDelegateBuildJobChunks
     );
 }
 
@@ -144,7 +148,19 @@ iName(                                                                          
     , bool iContiguous                                                                                          \
 )                                                                                                               \
 {                                                                                                               \
-    ScheduleDualBufferJobs< iJobArgs, iCommandArgs, iDelegateInvocation >( iCommand, iPolicy, iContiguous );    \
+    ScheduleDualBufferJobs<                                                                                     \
+          iJobArgs                                                                                              \
+        , iCommandArgs                                                                                          \
+        , iDelegateInvocation                                                                                   \
+    >                                                                                                           \
+    (                                                                                                           \
+          iCommand                                                                                              \
+        , iPolicy                                                                                               \
+        , iContiguous                                                                                           \
+        , BuildDualBufferJob_Scanlines                                                                          \
+        , BuildDualBufferJob_Chunks                                                                             \
+    );                                                                                                          \
 }
+
 ULIS_NAMESPACE_END
 
