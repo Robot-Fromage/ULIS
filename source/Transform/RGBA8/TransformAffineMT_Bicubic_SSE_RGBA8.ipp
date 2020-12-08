@@ -23,7 +23,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, const Vec4i iIDT ) {
+InvokeTransformAffineMT_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
@@ -96,7 +96,7 @@ TransformAffineMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iIn
     idt.insert( info.source->FormatMetrics().AID, 4 );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformAffineMTProcessScanline_Bicubic_SSE_RGBA8
+                                   , InvokeTransformAffineMT_Bicubic_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, idt );
 }
 

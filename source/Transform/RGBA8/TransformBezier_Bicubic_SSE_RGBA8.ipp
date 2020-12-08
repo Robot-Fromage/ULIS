@@ -21,7 +21,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask, const Vec4i iIDT ) {
+InvokeTransformBezierMT_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask, const Vec4i iIDT ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
@@ -99,7 +99,7 @@ TransformBezierMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iIn
     idt.insert( info.source->FormatMetrics().AID, 4 );
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformBezierMTProcessScanline_Bicubic_SSE_RGBA8
+                                   , InvokeTransformBezierMT_Bicubic_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, iField, iMask, idt );
 }
 

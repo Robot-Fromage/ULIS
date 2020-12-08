@@ -23,7 +23,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformAffineMTProcessScanline_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
+InvokeTransformAffineMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
@@ -56,7 +56,7 @@ TransformAffineMT_NN_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo ) 
     const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformAffineMTProcessScanline_NN_SSE_RGBA8
+                                   , InvokeTransformAffineMT_NN_SSE_RGBA8
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 

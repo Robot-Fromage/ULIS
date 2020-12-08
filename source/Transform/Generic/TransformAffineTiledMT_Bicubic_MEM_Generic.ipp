@@ -22,7 +22,7 @@
 
 ULIS_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformAffineTiledMTProcessScanline_Bicubic_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
+InvokeTransformAffineTiledMT_Bicubic_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
     const FTransformArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
@@ -97,7 +97,7 @@ TransformAffineTiledMT_Bicubic_MEM_Generic( std::shared_ptr< const FTransformArg
     const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
     ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
                                    , info.dst_roi.h
-                                   , InvokeTransformAffineTiledMTProcessScanline_Bicubic_MEM_Generic< T >
+                                   , InvokeTransformAffineTiledMT_Bicubic_MEM_Generic< T >
                                    , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
 }
 
