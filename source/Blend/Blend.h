@@ -159,7 +159,7 @@ public:
     }
 
     void
-    Build_Chunks(
+    BuildJob_Chunks(
           const FBlendCommandArgs* iCargs
         , const int64 iSize
         , const int64 iCount
@@ -228,7 +228,7 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     , FBlendCommandArgs                                     \
     , &Invoke ## iName ## < T >                             \
     , FBlendJobArgs::BuildJob_Scanlines                     \
-    , FBlendJobArgs::Build_Chunks                           \
+    , FBlendJobArgs::BuildJob_Chunks                        \
 )
 ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic_Subpixel  )
 ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic           )
