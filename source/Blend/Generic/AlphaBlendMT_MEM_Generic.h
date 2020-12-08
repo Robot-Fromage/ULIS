@@ -71,16 +71,6 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
-}
-
-template< typename T >
-void
 InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
@@ -107,6 +97,16 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic(
         src += fmt.BPP;
         bdp += fmt.BPP;
     }
+}
+
+template< typename T >
+void
+ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel(
+      FCommand* iCommand
+    , const FSchedulePolicy& iPolicy
+)
+{
+    BuildBlendJobs< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
 }
 
 template< typename T >
