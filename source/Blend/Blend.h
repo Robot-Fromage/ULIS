@@ -117,7 +117,58 @@ public:
     const uint8* ULIS_RESTRICT src;
     uint8* ULIS_RESTRICT bdp;
     uint32 line;
+
+    static
+    void
+    BuildJob_Scanlines(
+          const FBlendCommandArgs* iCargs
+        , const int64 iNumJobs
+        , const int64 iNumTasksPerJob
+        , const int64 iIndex
+        , FBlendJobArgs& oJargs
+    )
+    {
+        const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
+        const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits() + iCargs->srcRect.x * fmt.BPP;
+        uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits() + iCargs->dstRect.x * fmt.BPP;
+        const int64 src_bps                     = static_cast< int64 >( iCargs->src.BytesPerScanLine() );
+        const int64 dst_bps                     = static_cast< int64 >( iCargs->dst.BytesPerScanLine() );
+        const int64 size                        = iCargs->dstRect.w * fmt.BPP;
+        oJargs.src                              = src + ( iCargs->srcRect.y + iIndex ) * src_bps;
+        oJargs.dst                              = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
+        oJargs.size                             = size;
+    }
+
+    void
+    Build_Chunks(
+          const FBlendCommandArgs* iCargs
+        , const int64 iSize
+        , const int64 iCount
+        , const int64 iOffset
+        , const int64 iIndex
+        , FBlendJobArgs& oJargs
+    )
+    {
+        const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+        uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
+        const int64 btt                         = static_cast< int64 >( iCargs->src.BytesTotal() );
+        oJargs.src                              = src + iIndex;
+        oJargs.dst                              = dst + iIndex;
+        oJargs.size                             = FMath::Min( iOffset + iSize, btt ) - iOffset;
+    }
+
 };
+
+/////////////////////////////////////////////////////
+// Schedulers
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(
+    ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel
+    , FBlendJobArgs
+    , FBlendCommandArgs
+    , &InvokeAlphaBlendMT_Separable_MEM_Generic_Subpixel< T >
+    , FBlendJobArgs::BuildJob_Scanlines
+    , FBlendJobArgs::Build_Chunks
+)
 
 /////////////////////////////////////////////////////
 // Dispatchers
