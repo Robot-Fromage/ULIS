@@ -18,7 +18,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeSwapMTProcessScanline_MEM( uint8* iDst, uint32 iCount, uint8 iC1, uint8 iC2, uint32 iBPC, uint32 iBPP ) {
+InvokeSwapMT_MEM( uint8* iDst, uint32 iCount, uint8 iC1, uint8 iC2, uint32 iBPC, uint32 iBPP ) {
     uint8* dst = iDst;
     uint8* tmp = new uint8[iBPC];
     for( uint32 i = 0; i < iCount; ++i ) {
@@ -60,7 +60,7 @@ Swap( FOldThreadPool*              iOldThreadPool
     const int max = dst->Height();
     ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
                                    , max
-                                   , InvokeSwapMTProcessScanline_MEM, DST, w, iChannel1, iChannel2, bpc, bpp )
+                                   , InvokeSwapMT_MEM, DST, w, iChannel1, iChannel2, bpc, bpp )
 
     dst->Dirty( iCallCB );
 }
