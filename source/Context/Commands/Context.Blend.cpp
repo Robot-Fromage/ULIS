@@ -23,6 +23,22 @@
 #include "Conv/Conv.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Helper for Redundant operations
+Vec4i
+BuildRGBA8IndexTable( uint8 iRS )
+{
+    Vec4i result;
+    switch( iRS ) {
+        case 1:  for( int i = 0; i < 4; ++i ) result.insert( i, ( 3 - i )                             ); return  result;
+        case 2:  for( int i = 0; i < 4; ++i ) result.insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); return  result;
+        case 3:  for( int i = 0; i < 4; ++i ) result.insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); return  result;
+        default: for( int i = 0; i < 4; ++i ) result.insert( i, i                                     ); return  result;
+    }
+}
+
+/////////////////////////////////////////////////////
+// Entry points
 void
 FContext::Blend(
       const FBlock& iSource
@@ -42,12 +58,14 @@ FContext::Blend(
     ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
-    const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iBackdrop.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
     const FRectI dst_aim = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
-    const FRectI dst_fit = dst_aim & iBackdrop.Rect();
+    const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_fit.Area() <= 0 )
+    if( dst_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
     // Bake and push command
@@ -58,16 +76,21 @@ FContext::Blend(
                   iSource
                 , iBackdrop
                 , src_roi
+                , dst_roi
                 , FVec2F( 0.f )
                 , FVec2F( 1.f )
                 , iBlendingMode
                 , iAlphaMode
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
-                , dst_fit.Position() - dst_aim.Position()
-                , dst_fit.Size()
-                , dst_fit
+                , dst_roi.Position() - dst_aim.Position()
+                , dst_roi.Size()
+                , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
+                , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
+                , BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
+                , iSource.BytesPerScanLine()
             )
             , iPolicy
+            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
             , iNumWait
             , iWaitList
             , iEvent
