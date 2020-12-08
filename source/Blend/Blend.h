@@ -14,9 +14,19 @@
 #include "Conv/Conv.h"
 #include "Dispatch/Dispatcher.h"
 #include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/DualBufferArgs.h"
 #include <vectorclass.h>
+
+// Include MEM Generic Implementation
+#include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_Misc_MEM_Generic.h"
+#include "Blend/Generic/AlphaBlendMT_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
