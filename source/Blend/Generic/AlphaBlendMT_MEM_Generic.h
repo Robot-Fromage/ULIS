@@ -98,26 +98,5 @@ InvokeAlphaBlendMT_Separable_MEM_Generic(
         bdp += fmt.BPP;
     }
 }
-
-template< typename T >
-void
-ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeAlphaBlendMT_Separable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
-}
-
-template< typename T >
-void
-ScheduleAlphaBlendMT_Separable_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeAlphaBlendMT_Separable_MEM_Generic< T > >( iCommand, iPolicy );
-}
-
 ULIS_NAMESPACE_END
 

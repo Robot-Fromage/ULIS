@@ -161,14 +161,17 @@ public:
 
 /////////////////////////////////////////////////////
 // Schedulers
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(
-    ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel
-    , FBlendJobArgs
-    , FBlendCommandArgs
-    , &InvokeAlphaBlendMT_Separable_MEM_Generic_Subpixel< T >
-    , FBlendJobArgs::BuildJob_Scanlines
-    , FBlendJobArgs::Build_Chunks
+#define ULIS_DEFINE_BLEND_COMMAND_GENERIC( iName )          \
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
+    Schedule ## iName                                       \
+    , FBlendJobArgs                                         \
+    , FBlendCommandArgs                                     \
+    , &Invoke ## iName ## < T >                             \
+    , FBlendJobArgs::BuildJob_Scanlines                     \
+    , FBlendJobArgs::Build_Chunks                           \
 )
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic_Subpixel )
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic )
 
 /////////////////////////////////////////////////////
 // Dispatchers
