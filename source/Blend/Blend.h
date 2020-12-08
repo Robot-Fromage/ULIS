@@ -157,8 +157,8 @@ public:
         const int64 dst_bps                     = static_cast< int64 >( iCargs->dst.BytesPerScanLine() );
         const int64 size                        = iCargs->dstRect.w * fmt.BPP;
         oJargs.src                              = src + ( iCargs->srcRect.y + iIndex ) * src_bps;
-        oJargs.dst                              = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
-        oJargs.size                             = size;
+        oJargs.bdp                              = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
+        oJargs.line                             = iIndex;
     }
 
     void
@@ -175,8 +175,8 @@ public:
         uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
         const int64 btt                         = static_cast< int64 >( iCargs->src.BytesTotal() );
         oJargs.src                              = src + iIndex;
-        oJargs.dst                              = dst + iIndex;
-        oJargs.size                             = FMath::Min( iOffset + iSize, btt ) - iOffset;
+        oJargs.bdp                              = dst + iIndex;
+        oJargs.line                             = FMath::Min( iOffset + iSize, btt ) - iOffset;
     }
 
 };
