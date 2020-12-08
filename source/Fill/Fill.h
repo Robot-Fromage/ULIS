@@ -91,7 +91,7 @@ void
 ScheduleFillPreserveAlphaMT_MEM_Generic(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
-    , bool iContiguous
+    , bool iContiguous = false
 )
 {
     ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM_Generic< T > >( iCommand, iPolicy, iContiguous );
