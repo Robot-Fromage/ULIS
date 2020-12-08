@@ -54,15 +54,5 @@ InvokeTiledBlendMT_Separable_MEM_Generic(
     }
 }
 
-template< typename T >
-void
-ScheduleTiledBlendMT_Separable_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeTiledBlendMT_Separable_MEM_Generic< T > >( iCommand, iPolicy, true );
-}
-
 ULIS_NAMESPACE_END
 

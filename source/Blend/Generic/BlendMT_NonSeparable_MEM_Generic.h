@@ -101,16 +101,6 @@ InvokeBlendMT_NonSeparable_MEM_Generic_Subpixel(
 
 template< typename T >
 void
-ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeBlendMT_NonSeparable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
-}
-
-template< typename T >
-void
 InvokeBlendMT_NonSeparable_MEM_Generic(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
@@ -158,16 +148,6 @@ InvokeBlendMT_NonSeparable_MEM_Generic(
     }
 
     delete [] result;
-}
-
-template< typename T >
-void
-ScheduleBlendMT_NonSeparable_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeBlendMT_NonSeparable_MEM_Generic< T > >( iCommand, iPolicy );
 }
 
 ULIS_NAMESPACE_END

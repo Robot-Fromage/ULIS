@@ -73,15 +73,5 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
     delete [] result;
 }
 
-template< typename T >
-void
-ScheduleTiledBlendMT_NonSeparable_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeTiledBlendMT_NonSeparable_MEM_Generic< T > >( iCommand, iPolicy, true );
-}
-
 ULIS_NAMESPACE_END
 

@@ -76,15 +76,5 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
     }
 }
 
-template< typename T >
-void
-ScheduleTiledBlendMT_Misc_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeTiledBlendMT_Misc_MEM_Generic< T > >( iCommand, iPolicy, true );
-}
-
 ULIS_NAMESPACE_END
 

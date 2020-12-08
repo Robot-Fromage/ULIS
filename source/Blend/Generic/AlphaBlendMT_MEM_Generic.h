@@ -98,5 +98,6 @@ InvokeAlphaBlendMT_Separable_MEM_Generic(
         bdp += fmt.BPP;
     }
 }
+
 ULIS_NAMESPACE_END
 
