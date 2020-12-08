@@ -17,7 +17,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Blend/Blend.h"
-#include "Blend/BlendHelpers.h"
+#include "Blend/Blend.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/NonSeparableBlendFuncF.h"
 #include "Image/Block.h"

@@ -13,7 +13,7 @@
 #include "Core/Core.h"
 #include "Core/Constants.h"
 #include "Blend/Blend.h"
-#include "Blend/BlendHelpers.h"
+#include "Blend/Blend.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/PRNG.h"
 #include "Image/Block.h"

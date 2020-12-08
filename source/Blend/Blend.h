@@ -19,15 +19,6 @@
 #include "Scheduling/DualBufferArgs.h"
 #include <vectorclass.h>
 
-// Include MEM Generic Implementation
-#include "Blend/Generic/AlphaBlendMT_MEM_Generic.h"
-#include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
-#include "Blend/Generic/BlendMT_NonSeparable_MEM_Generic.h"
-#include "Blend/Generic/BlendMT_Misc_MEM_Generic.h"
-#include "Blend/Generic/TiledBlendMT_Separable_MEM_Generic.h"
-#include "Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.h"
-#include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
-
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FBlendCommandArgs
@@ -57,6 +48,7 @@ public:
         , const fpConvertFormat iBkd
         , const Vec4i iIDT
         , const uint32 iSrcBps
+        , bool iTiled = false
         , const FBlock* iColor = nullptr
     )
         : FDualBufferCommandArgs(
@@ -75,8 +67,9 @@ public:
         , fwd( iFwd )
         , bkd( iBkd )
         , idt( iIDT )
-        , color( iColor )
         , src_bps( iSrcBps )
+        , tiled( iTiled )
+        , color( iColor )
         {}
 
     const FVec2F subpixelComponent;
@@ -90,6 +83,7 @@ public:
     const fpConvertFormat bkd;
     const Vec4i idt;
     const uint32 src_bps;
+    bool tiled;
     const FBlock* const color;
 };
 
@@ -151,13 +145,16 @@ public:
     )
     {
         const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
-        const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits() + iCargs->srcRect.x * fmt.BPP;
-        uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits() + iCargs->dstRect.x * fmt.BPP;
+        const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+        uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
         const int64 src_bps                     = static_cast< int64 >( iCargs->src.BytesPerScanLine() );
         const int64 dst_bps                     = static_cast< int64 >( iCargs->dst.BytesPerScanLine() );
         const int64 size                        = iCargs->dstRect.w * fmt.BPP;
-        oJargs.src                              = src + ( iCargs->srcRect.y + iIndex ) * src_bps;
-        oJargs.bdp                              = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
+        const uint32 src_decal_y                = iCargs->shift.y + iCargs->srcRect.y;
+        const uint32 src_decal_x                = ( iCargs->shift.x + iCargs->srcRect.x ) * iCargs->src.BytesPerPixel();
+        const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
+        oJargs.src                              = ComputeBufferPosition( src, iCargs->srcRect.y, iCargs->shift.y, iCargs->srcRect.h, src_bps, src_decal_x, src_decal_y, iIndex, iCargs->tiled );
+        oJargs.bdp                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;
         oJargs.line                             = iIndex;
     }
 
@@ -171,15 +168,56 @@ public:
         , FBlendJobArgs& oJargs
     )
     {
+        ULIS_ASSERT( false, "Chunk Scheduling not available for Blend" );
+        /*
         const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
         uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
         const int64 btt                         = static_cast< int64 >( iCargs->src.BytesTotal() );
         oJargs.src                              = src + iIndex;
         oJargs.bdp                              = dst + iIndex;
         oJargs.line                             = FMath::Min( iOffset + iSize, btt ) - iOffset;
+        */
     }
-
 };
+
+/////////////////////////////////////////////////////
+// Macro Helpers for Redundant Compositing Operations
+// macros for ASSIGN and small helper functions, possibly inline.
+#define SampleSubpixelAlpha( _DST )                                                                                     \
+    if( fmt.HEA ) {                                                                                                     \
+        m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,                  fmt.AID ) : 0.f;    \
+        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - jargs->src_bps, fmt.AID ) : 0.f;    \
+    } else {                                                                                                            \
+        m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                            \
+        m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                            \
+    }                                                                                                                   \
+    vv1     = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;                                      \
+    _DST    = vv0 * cargs->subpixelComponent.x + vv1 * cargs->buspixelComponent.x;
+
+#define SampleSubpixelChannel( _DST, _CHAN )                                                                                                \
+    s11 = ( notLastCol  && notLastLine )                                    ?   TYPE2FLOAT( src,                            _CHAN ) : 0.f;  \
+    s01 = ( notLastLine && ( x > 0 || hasLeftData ) )                       ?   TYPE2FLOAT( src - fmt.BPP,                  _CHAN ) : 0.f;  \
+    s10 = ( notLastCol && ( notFirstLine || hasTopData ) )                  ?   TYPE2FLOAT( src - jargs->src_bps,           _CHAN ) : 0.f;  \
+    s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )    ?   TYPE2FLOAT( src - jargs->src_bps - fmt.BPP, _CHAN ) : 0.f;  \
+    v1 = ( s00 * m00 ) * cargs->subpixelComponent.y + ( s01 * m01 ) * cargs->buspixelComponent.y;                                           \
+    v2 = ( s10 * m10 ) * cargs->subpixelComponent.y + ( s11 * m11 ) * cargs->buspixelComponent.y;                                           \
+    _DST = res == 0.f ? 0.f : ( ( v1 ) * cargs->subpixelComponent.x + ( v2 ) * cargs->buspixelComponent.x ) / res;
+
+#define ULIS_ACTION_ASSIGN_ALPHAF( _AM, iTarget, iSrc, iBdp )      iTarget = AlphaF< _AM >( iSrc, iBdp );
+#define ULIS_ACTION_ASSIGN_ALPHASSEF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaSSEF< _AM >( iSrc, iBdp );
+#define ULIS_ACTION_ASSIGN_ALPHAAVXF( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaAVXF< _AM >( iSrc, iBdp );
+#define ULIS_ASSIGN_ALPHAF( iAlphaMode, iTarget, iSrc, iBdp )      ULIS_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS_FOR_ALL_AM_DO, ULIS_ACTION_ASSIGN_ALPHAF, iTarget, iSrc, iBdp )
+#define ULIS_ASSIGN_ALPHASSEF( iAlphaMode, iTarget, iSrc, iBdp )   ULIS_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS_FOR_ALL_AM_DO, ULIS_ACTION_ASSIGN_ALPHASSEF, iTarget, iSrc, iBdp )
+#define ULIS_ASSIGN_ALPHAAVXF( iAlphaMode, iTarget, iSrc, iBdp )   ULIS_SWITCH_FOR_ALL_DO( iAlphaMode, ULIS_FOR_ALL_AM_DO, ULIS_ACTION_ASSIGN_ALPHAAVXF, iTarget, iSrc, iBdp )
+
+// Include MEM Generic Implementation
+#include "Blend/Generic/AlphaBlendMT_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_Misc_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
 
 /////////////////////////////////////////////////////
 // Schedulers

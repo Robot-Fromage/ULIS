@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Blend/RGBA8/BlendMT_Separable_AVX_RGBA8.h"
-#include "Blend/BlendHelpers.h"
+#include "Blend/Blend.h"
 #include "Blend/Func/AlphaFuncAVX.h"
 #include "Blend/Func/SeparableBlendFuncAVXF.h"
 #include "Image/Block.h"
