@@ -86,17 +86,7 @@ InvokeFillPreserveAlphaMT_MEM_Generic(
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
-template< typename T >
-void
-ScheduleFillPreserveAlphaMT_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous = false
-)
-{
-    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM_Generic< T > >( iCommand, iPolicy, iContiguous );
-}
-
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleFillPreserveAlphaMT_MEM_Generic, FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM_Generic< T > )
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AX2 );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_SSE );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_MEM );

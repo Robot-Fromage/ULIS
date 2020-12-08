@@ -88,11 +88,11 @@ ScheduleFillMT_AX2(
     const uint32 bps = cargs->block.BytesPerScanLine();
 
     if( bpp <= 32 && bps >= 32 ) {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_AX2 >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_AX2 >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     } else if( bpp <= 16 && bps >= 16 ) {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     } else {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     }
 }
 
@@ -107,9 +107,9 @@ ScheduleFillMT_SSE4_2(
     const uint8 bpp = cargs->block.BytesPerPixel();
     const uint32 bps = cargs->block.BytesPerScanLine();
     if( bpp <= 16 && bps >= 16 ) {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     } else {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     }
 }
 
@@ -120,7 +120,7 @@ ScheduleFillMT_MEM(
     , bool iContiguous
 )
 {
-    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous );
+    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
 }
 
 /////////////////////////////////////////////////////
