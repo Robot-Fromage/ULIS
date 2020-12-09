@@ -87,13 +87,13 @@ InvokeFillPreserveAlphaMT_MEM_Generic(
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleFillPreserveAlphaMT_MEM_Generic, FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM_Generic< T > )
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AX2 );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AVX );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_SSE );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_MEM );
 ULIS_DECLARE_DISPATCHER( FDispatchedFillInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
       FDispatchedFillInvocationSchedulerSelector
-    , &ScheduleFillMT_AX2
+    , &ScheduleFillMT_AVX
     , &ScheduleFillMT_SSE
     , &ScheduleFillMT_MEM
 )

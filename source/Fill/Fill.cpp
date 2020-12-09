@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX_SUPPORT
 void
-InvokeFillMT_AX2(
+InvokeFillMT_AVX(
       const FSimpleBufferJobArgs* jargs
     , const FFillCommandArgs* cargs
 )
@@ -77,7 +77,7 @@ InvokeFillMT_MEM(
 /////////////////////////////////////////////////////
 // Schedulers
 void
-ScheduleFillMT_AX2(
+ScheduleFillMT_AVX(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , bool iContiguous
@@ -88,7 +88,7 @@ ScheduleFillMT_AX2(
     const uint32 bps = cargs->block.BytesPerScanLine();
 
     if( bpp <= 32 && bps >= 32 ) {
-        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_AX2 >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
+        ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_AVX >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     } else if( bpp <= 16 && bps >= 16 ) {
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     } else {
