@@ -230,6 +230,16 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     , FBlendJobArgs::BuildJob_Scanlines                     \
     , FBlendJobArgs::BuildJob_Chunks                        \
 )
+#define ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( iName )   \
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(          \
+    Schedule ## iName                                       \
+    , FBlendJobArgs                                         \
+    , FBlendCommandArgs                                     \
+    , &Invoke ## iName ## < T >                             \
+    , FBlendJobArgs::BuildJob_Scanlines                     \
+    , FBlendJobArgs::BuildJob_Chunks                        \
+)
+
 ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic_Subpixel  )
 ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic           )
 ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_NonSeparable_MEM_Generic_Subpixel    )
