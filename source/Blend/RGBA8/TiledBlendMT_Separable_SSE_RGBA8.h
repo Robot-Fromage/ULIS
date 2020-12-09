@@ -20,11 +20,7 @@ InvokeTiledBlendMT_Separable_SSE_RGBA8(
     , const FBlendCommandArgs* cargs
 );
 
-void
-ScheduleTiledBlendMT_Separable_SSE_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleTiledBlendMT_Separable_SSE_RGBA8 );
 
 ULIS_NAMESPACE_END
 

@@ -21,22 +21,13 @@ InvokeAlphaBlendMT_Separable_AVX_RGBA8_Subpixel(
 );
 
 void
-ScheduleAlphaBlendMT_Separable_AVX_RGBA8_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
-
-void
 InvokeAlphaBlendMT_Separable_AVX_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 
-void
-ScheduleAlphaBlendMT_Separable_AVX_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleAlphaBlendMT_Separable_AVX_RGBA8_Subpixel );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleAlphaBlendMT_Separable_AVX_RGBA8 );
 
 ULIS_NAMESPACE_END
 

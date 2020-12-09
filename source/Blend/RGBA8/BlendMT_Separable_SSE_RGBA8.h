@@ -21,22 +21,13 @@ InvokeBlendMT_Separable_SSE_RGBA8_Subpixel(
 );
 
 void
-ScheduleBlendMT_Separable_SSE_RGBA8_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
-
-void
 InvokeBlendMT_Separable_SSE_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 
-void
-ScheduleBlendMT_Separable_SSE_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleBlendMT_Separable_SSE_RGBA8_Subpixel );
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleBlendMT_Separable_SSE_RGBA8 );
 
 ULIS_NAMESPACE_END
 
