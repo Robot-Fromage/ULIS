@@ -90,7 +90,7 @@ FContext::Blend(
                 , iSource.BytesPerScanLine()
             )
             , iPolicy
-            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false // ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
             , iNumWait
             , iWaitList
             , iEvent
@@ -117,23 +117,25 @@ FContext::BlendAA(
     ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
-    const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iBackdrop.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
     const int xmin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.x ) );
     const int ymin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.y ) );
     const int xmax = static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.x + src_roi.w ) );
     const int ymax = static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.y + src_roi.h ) );
     const FRectI dst_aim = FRectI::FromMinMax( xmin, ymin, xmax, ymax );
-    const FRectI dst_fit = dst_aim & iBackdrop.Rect();
+    const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_fit.Area() <= 0 )
+    if( dst_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
     // Forward arguments baking
     const FVec2F subpixelComponent = iPosition.DecimalPart();
-    const FVec2I shift = dst_fit.Position() - dst_aim.Position();
-    const int coverageX = src_roi.w - ( src_roi.x + shift.x ) >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
-    const int coverageY = src_roi.h - ( src_roi.y + shift.y ) >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
+    const FVec2I shift = dst_roi.Position() - dst_aim.Position();
+    const int coverageX = src_roi.w - ( src_roi.x + shift.x ) >= dst_roi.w ? dst_roi.w : static_cast< int >( dst_roi.w - ceil( subpixelComponent.x ) );
+    const int coverageY = src_roi.h - ( src_roi.y + shift.y ) >= dst_roi.h ? dst_roi.h : static_cast< int >( dst_roi.h - ceil( subpixelComponent.y ) );
 
     // Bake and push command
     mCommandQueue.Push(
@@ -143,6 +145,7 @@ FContext::BlendAA(
                   iSource
                 , iBackdrop
                 , src_roi
+                , dst_roi
                 , subpixelComponent
                 , 1.f - subpixelComponent
                 , iBlendingMode
@@ -150,9 +153,13 @@ FContext::BlendAA(
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
                 , shift
                 , FVec2I( coverageX, coverageY )
-                , dst_fit
+                , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
+                , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
+                , BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
+                , iSource.BytesPerScanLine()
             )
             , iPolicy
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -177,12 +184,14 @@ FContext::AlphaBlend(
     ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
-    const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iBackdrop.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
     const FRectI dst_aim = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
-    const FRectI dst_fit = dst_aim & iBackdrop.Rect();
+    const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_fit.Area() <= 0 )
+    if( dst_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
     // Bake and push command
@@ -193,16 +202,21 @@ FContext::AlphaBlend(
                   iSource
                 , iBackdrop
                 , src_roi
+                , dst_roi
                 , FVec2F( 0.f )
                 , FVec2F( 1.f )
                 , eBlendMode::Blend_Normal
                 , eAlphaMode::Alpha_Normal
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
-                , dst_fit.Position() - dst_aim.Position()
-                , dst_fit.Size()
-                , dst_fit
+                , dst_roi.Position() - dst_aim.Position()
+                , dst_roi.Size()
+                , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
+                , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
+                , BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
+                , iSource.BytesPerScanLine()
             )
             , iPolicy
+            , false // ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
             , iNumWait
             , iWaitList
             , iEvent
@@ -227,23 +241,25 @@ FContext::AlphaBlendAA(
     ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
-    const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iBackdrop.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
     const int xmin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.x ) );
     const int ymin = static_cast< int >( FMath::RoundToNegativeInfinity( iPosition.y ) );
     const int xmax = static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.x + src_roi.w ) );
     const int ymax = static_cast< int >( FMath::RoundToPositiveInfinity( iPosition.y + src_roi.h ) );
     const FRectI dst_aim = FRectI::FromMinMax( xmin, ymin, xmax, ymax );
-    const FRectI dst_fit = dst_aim & iBackdrop.Rect();
+    const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_fit.Area() <= 0 )
+    if( dst_roi.Area() <= 0 )
         return  FinishEventNoOP( iEvent );
 
     // Forward arguments baking
     const FVec2F subpixelComponent = iPosition.DecimalPart();
-    const FVec2I shift = dst_fit.Position() - dst_aim.Position();
-    const int coverageX = src_roi.w - ( src_roi.x + shift.x ) >= dst_fit.w ? dst_fit.w : static_cast< int >( dst_fit.w - ceil( subpixelComponent.x ) );
-    const int coverageY = src_roi.h - ( src_roi.y + shift.y ) >= dst_fit.h ? dst_fit.h : static_cast< int >( dst_fit.h - ceil( subpixelComponent.y ) );
+    const FVec2I shift = dst_roi.Position() - dst_aim.Position();
+    const int coverageX = src_roi.w - ( src_roi.x + shift.x ) >= dst_roi.w ? dst_roi.w : static_cast< int >( dst_roi.w - ceil( subpixelComponent.x ) );
+    const int coverageY = src_roi.h - ( src_roi.y + shift.y ) >= dst_roi.h ? dst_roi.h : static_cast< int >( dst_roi.h - ceil( subpixelComponent.y ) );
 
     // Bake and push command
     mCommandQueue.Push(
@@ -253,6 +269,7 @@ FContext::AlphaBlendAA(
                   iSource
                 , iBackdrop
                 , src_roi
+                , dst_roi
                 , subpixelComponent
                 , 1.f - subpixelComponent
                 , eBlendMode::Blend_Normal
@@ -260,9 +277,13 @@ FContext::AlphaBlendAA(
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
                 , shift
                 , FVec2I( coverageX, coverageY )
-                , dst_fit
+                , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
+                , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
+                , BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
+                , iSource.BytesPerScanLine()
             )
             , iPolicy
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -290,8 +311,10 @@ FContext::BlendTiled(
     ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
 
     // Sanitize geometry
-    const FRectI src_roi = iSourceRect.Sanitized() & iSource.Rect();
-    const FRectI dst_roi = iBackdropRect.Sanitized() & iBackdrop.Rect();
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iBackdrop.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_roi = iBackdropRect.Sanitized() & dst_rect;
 
      // Check no-op
     if( src_roi.Area() <= 0 || dst_roi.Area() <= 0 )
@@ -311,6 +334,7 @@ FContext::BlendTiled(
                   iSource
                 , iBackdrop
                 , src_roi
+                , dst_roi
                 , FVec2F( 0.f )
                 , FVec2F( 1.f )
                 , iBlendingMode
@@ -318,9 +342,14 @@ FContext::BlendTiled(
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
                 , mod_shift
                 , dst_roi.Size()
-                , dst_roi
+                , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
+                , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
+                , BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
+                , iSource.BytesPerScanLine()
+                , true
             )
             , iPolicy
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -363,6 +392,7 @@ FContext::BlendColor(
                   *color
                 , iBackdrop
                 , src_roi
+                , dst_roi
                 , FVec2F( 0.f )
                 , FVec2F( 1.f )
                 , iBlendingMode
@@ -370,10 +400,15 @@ FContext::BlendColor(
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
                 , FVec2I( 0, 0 )
                 , dst_roi.Size()
-                , dst_roi
+                , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
+                , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
+                , BuildRGBA8IndexTable( color->FormatMetrics().RSC )
+                , color->BytesPerScanLine()
+                , true
                 , color
             )
             , iPolicy
+            , false
             , iNumWait
             , iWaitList
             , iEvent
