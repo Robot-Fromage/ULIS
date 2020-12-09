@@ -282,7 +282,7 @@ int main() {
 
     // Operation
     FEvent evt_clear;
-    ctx.Clear( block, block.Rect(), 0, nullptr, &evt_clear );
+    ctx.Clear( block, block.Rect(), cacheEfficientPolicy, 0, nullptr, &evt_clear );
     ctx.Finish();
 
     return  0;
