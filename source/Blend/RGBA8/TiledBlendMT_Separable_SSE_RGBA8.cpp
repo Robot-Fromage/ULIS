@@ -59,14 +59,7 @@ InvokeTiledBlendMT_Separable_SSE_RGBA8(
     }
 }
 
-void
-ScheduleTiledBlendMT_Separable_SSE_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeTiledBlendMT_Separable_SSE_RGBA8 >( iCommand, iPolicy, true );
-}
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( TiledBlendMT_Separable_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
 

@@ -94,15 +94,6 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
 }
 
 void
-ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel >( iCommand, iPolicy );
-}
-
-void
 InvokeBlendMT_NonSeparable_SSE_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
@@ -140,14 +131,8 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8(
     }
 }
 
-void
-ScheduleBlendMT_NonSeparable_SSE_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeBlendMT_NonSeparable_SSE_RGBA8 >( iCommand, iPolicy );
-}
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( BlendMT_NonSeparable_SSE_RGBA8_Subpixel )
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( BlendMT_NonSeparable_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
 

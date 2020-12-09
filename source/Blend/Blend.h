@@ -235,7 +235,7 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(          \
     Schedule ## iName                                       \
     , FBlendJobArgs                                         \
     , FBlendCommandArgs                                     \
-    , &Invoke ## iName ## < T >                             \
+    , &Invoke ## iName                                      \
     , FBlendJobArgs::BuildJob_Scanlines                     \
     , FBlendJobArgs::BuildJob_Chunks                        \
 )

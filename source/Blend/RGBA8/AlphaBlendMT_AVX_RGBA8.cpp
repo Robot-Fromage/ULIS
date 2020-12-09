@@ -134,15 +134,6 @@ InvokeAlphaBlendMT_Separable_AVX_RGBA8_Subpixel(
 }
 
 void
-ScheduleAlphaBlendMT_Separable_AVX_RGBA8_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeAlphaBlendMT_Separable_AVX_RGBA8_Subpixel >( iCommand, iPolicy );
-}
-
-void
 InvokeAlphaBlendMT_Separable_AVX_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
@@ -197,14 +188,8 @@ InvokeAlphaBlendMT_Separable_AVX_RGBA8(
     }
 }
 
-void
-ScheduleAlphaBlendMT_Separable_AVX_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeAlphaBlendMT_Separable_AVX_RGBA8 >( iCommand, iPolicy );
-}
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( AlphaBlendMT_Separable_AVX_RGBA8_Subpixel )
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( AlphaBlendMT_Separable_AVX_RGBA8 )
 
 ULIS_NAMESPACE_END
 
