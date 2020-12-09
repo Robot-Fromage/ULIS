@@ -75,9 +75,9 @@ void InvokeCopyMT_MEM(
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_AVX,     FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_AVX )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_SSE,  FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_SSE )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_MEM,     FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_MEM )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_AVX, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_AVX )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_SSE, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_SSE )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_MEM, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedCopyInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
