@@ -262,3 +262,29 @@ InvokeClearMT_MEM(
 
 Only then can we do actual work on the image buffer, which we retrieve from the jargs and cargs inputs. jargs are Job Arguments, which have arguments specific to a job, such as which chunk of the buffer to process. cargs are Command Arguments that contain information common to all jobs, it is unused here due to the simplicity of the command but can be usefull at times if Jobs share a common source to read from.
 
+## Conclusion
+Finally, the implementation consists of approximately 80 lines of actual code and that's all you need for a Clear feature that will work on every block, for all formats, all colors models, all type depths, any number of channels, working asynchronously and in a multithreaded environment, with a simple API. Here is an exemple of use:
+```cpp
+// Clear Example
+#include <ULIS>
+
+int main() {
+    // Common
+    FThreadPool pool;
+    FCommandQueue queue( pool );
+    tFormat fmt = Format_RGBA8;
+    FContext ctx( queue, fmt );
+    FHardwareMetrics hw;
+    FSchedulePolicy cacheEfficientPolicy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.CacheLineSize_L1 );
+
+    // Data
+    FBlock block( 1024, 1024, fmt );
+
+    // Operation
+    FEvent evt_clear;
+    ctx.Clear( block, block.Rect(), 0, nullptr, &evt_clear );
+    ctx.Finish();
+
+    return  0;
+}
+```
