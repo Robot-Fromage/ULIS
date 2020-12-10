@@ -26,17 +26,17 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  base = jargs->src;
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     switch( cargs->blendingMode ) {
         case Blend_Dissolve: {
-            int32 seedy = cargs->backdropWorkingRect.y + jargs->line + 1;
+            int32 seedy = cargs->dstRect.y + jargs->line + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
-            for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+            for( int x = 0; x < cargs->dstRect.w; ++x ) {
                 const ufloat alpha_bdp = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
                 const ufloat alpha_src = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
@@ -49,17 +49,17 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 }
                 src += fmt.BPP;
                 bdp += fmt.BPP;
-                if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
+                if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
                     src = base;
             }
             break;
         }
 
         case Blend_BayerDither8x8: {
-            for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+            for( int x = 0; x < cargs->dstRect.w; ++x ) {
                 const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
                 const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
-                const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->backdropWorkingRect.y + jargs->line ) % 8 ][ ( cargs->backdropWorkingRect.x + x ) % 8 ];
+                const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->dstRect.y + jargs->line ) % 8 ][ ( cargs->dstRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
                     ufloat alpha_result;
                     ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
@@ -68,7 +68,7 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 }
                 src += fmt.BPP;
                 bdp += fmt.BPP;
-                if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
+                if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
                     src = base;
             }
             break;

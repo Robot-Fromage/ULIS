@@ -65,9 +65,9 @@ main( int argc, char *argv[] ) {
     // We will reuse its value many times.
     // We don't need to seek a subrect in Base / Over as we want to blend the full tile.
     // We also assume Base and Over share the same size here for nicer results.
-    FRectI sourceRect = blockBase->Rect();
-    int w = sourceRect.w * 8;
-    int h = sourceRect.h * 5;
+    FRectI srcRect = blockBase->Rect();
+    int w = srcRect.w * 8;
+    int h = srcRect.h * 5;
 
     // Allocate a new block
     // The caller is responsible for destructing the blockCanvas object here too.
@@ -80,18 +80,18 @@ main( int argc, char *argv[] ) {
     // Then we blend the over block over the canvas, where the base has been copied first.
     for( int i = 0; i < NumBlendingModes; ++i ) {
         // Compute x & y in regular grid, remember we tile it in a 8 * 5 grid and NUM_BLENDING_MODES = 40.
-        int x = ( i % 8 ) * sourceRect.w;
-        int y = ( i / 8 ) * sourceRect.h;
+        int x = ( i % 8 ) * srcRect.w;
+        int y = ( i / 8 ) * srcRect.h;
 
         // First perform the Copy, specifying threadPool, blocking flag, performance intent, host, callback, and parameters as usual.
         // The first 5 parameters are common to most ULIS3 functions and are used to know how to perform a task.
         // The user provides intent and control over the CPU optimization dispatch method ( MEM, SSE, AVX ) and over the CPU multithreading dispatch too.
         // Notice the BLOCKING here: we don't want Copy and Blend to be concurrent as they work on the same region in a given loop iteration.
-        Copy(   threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
+        Copy(   threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockBase, blockCanvas, srcRect, FVec2I( x, y ) );
 
         // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendMode enum value ).
         // By default we'll use a normal alphaMode for nicer results in this context, and an opacity of 0.5, which is a normalized value that corresponds to 50%, half-fade.
-        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f );
+        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, srcRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f );
     }
     // Fence the pool here to make sure the very last blend is completed.
     // You may have noticed that we did not fence after Blend inside the loop.

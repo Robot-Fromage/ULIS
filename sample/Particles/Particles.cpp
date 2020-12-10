@@ -108,11 +108,11 @@ SWindow::tickEvent() {
 
     Clear( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mCanvas, mCanvas->Rect() );
 
-    FRectI sourceRect = mParticle->Rect();
+    FRectI srcRect = mParticle->Rect();
     for( size_t i = 0; i < mParticles.size(); ++i ) {
         mParticles[i].p.x += mParticles[i].v.x = mParticles[i].v.x * 0.9f;
         mParticles[i].p.y += mParticles[i].v.y = mParticles[i].v.y * 0.9f;
-        Blend( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42, mHost, ULIS_NOCB, mParticle, mCanvas, sourceRect, mParticles[i].p, ULIS_AA, BM_MULTIPLY, AM_NORMAL, 0.3f );
+        Blend( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42, mHost, ULIS_NOCB, mParticle, mCanvas, srcRect, mParticles[i].p, ULIS_AA, BM_MULTIPLY, AM_NORMAL, 0.3f );
     }
 
     mPixmap->convertFromImage( *mImage );

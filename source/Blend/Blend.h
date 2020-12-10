@@ -186,7 +186,7 @@ public:
 #define SampleSubpixelAlpha( _DST )                                                                                     \
     if( fmt.HEA ) {                                                                                                     \
         m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,                  fmt.AID ) : 0.f;    \
-        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - jargs->src_bps, fmt.AID ) : 0.f;    \
+        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - cargs->src_bps, fmt.AID ) : 0.f;    \
     } else {                                                                                                            \
         m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                            \
         m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                            \
@@ -197,8 +197,8 @@ public:
 #define SampleSubpixelChannel( _DST, _CHAN )                                                                                                \
     s11 = ( notLastCol  && notLastLine )                                    ?   TYPE2FLOAT( src,                            _CHAN ) : 0.f;  \
     s01 = ( notLastLine && ( x > 0 || hasLeftData ) )                       ?   TYPE2FLOAT( src - fmt.BPP,                  _CHAN ) : 0.f;  \
-    s10 = ( notLastCol && ( notFirstLine || hasTopData ) )                  ?   TYPE2FLOAT( src - jargs->src_bps,           _CHAN ) : 0.f;  \
-    s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )    ?   TYPE2FLOAT( src - jargs->src_bps - fmt.BPP, _CHAN ) : 0.f;  \
+    s10 = ( notLastCol && ( notFirstLine || hasTopData ) )                  ?   TYPE2FLOAT( src - cargs->src_bps,           _CHAN ) : 0.f;  \
+    s00 = ( ( x > 0 || hasLeftData ) && ( notFirstLine || hasTopData ) )    ?   TYPE2FLOAT( src - cargs->src_bps - fmt.BPP, _CHAN ) : 0.f;  \
     v1 = ( s00 * m00 ) * cargs->subpixelComponent.y + ( s01 * m01 ) * cargs->buspixelComponent.y;                                           \
     v2 = ( s10 * m10 ) * cargs->subpixelComponent.y + ( s11 * m11 ) * cargs->buspixelComponent.y;                                           \
     _DST = res == 0.f ? 0.f : ( ( v1 ) * cargs->subpixelComponent.x + ( v2 ) * cargs->buspixelComponent.x ) / res;

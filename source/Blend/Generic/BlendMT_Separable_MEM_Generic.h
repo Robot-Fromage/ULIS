@@ -29,22 +29,22 @@ InvokeBlendMT_Separable_MEM_Generic_Subpixel(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     const bool notLastLine  = jargs->line < uint32( cargs->backdropCoverage.y );
     const bool notFirstLine = jargs->line > 0;
-    const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
-    const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
-    const bool hasTopData   = cargs->sourceRect.y + cargs->shift.y > 0;
+    const bool onLeftBorder = cargs->dstRect.x == 0;
+    const bool hasLeftData  = cargs->srcRect.x + cargs->shift.x > 0;
+    const bool hasTopData   = cargs->srcRect.y + cargs->shift.y > 0;
 
     ufloat m11, m01, m10, m00, vv0, vv1, res;
     m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;
-    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - jargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
+    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
     vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
-    for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const bool notLastCol = x < cargs->backdropCoverage.x;
         m00 = m10;
         m01 = m11;
@@ -80,11 +80,11 @@ InvokeBlendMT_Separable_MEM_Generic(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
         const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );

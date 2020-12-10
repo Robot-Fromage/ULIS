@@ -25,7 +25,7 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  base = jargs->src;
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
@@ -42,7 +42,7 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
     ULIS_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
     ULIS_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 
-    for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
         const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
@@ -66,7 +66,7 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
         src += fmt.BPP;
         bdp += fmt.BPP;
 
-        if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
+        if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
             src = base;
     }
 
