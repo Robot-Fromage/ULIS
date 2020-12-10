@@ -97,7 +97,7 @@ ScheduleFillMT_AVX(
 }
 
 void
-ScheduleFillMT_SSE4_2(
+ScheduleFillMT_SSE(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , bool iContiguous

@@ -66,6 +66,7 @@ public:
 
 /////////////////////////////////////////////////////
 // Job Building
+static
 void
 BuildDualBufferJob_Scanlines(
       const FDualBufferCommandArgs* iCargs
@@ -86,6 +87,7 @@ BuildDualBufferJob_Scanlines(
     oJargs.size                             = size;
 }
 
+static
 void
 BuildDualBufferJob_Chunks(
       const FDualBufferCommandArgs* iCargs

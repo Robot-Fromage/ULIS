@@ -59,6 +59,7 @@ public:
 
 /////////////////////////////////////////////////////
 // Job Building
+static
 void
 BuildSimpleBufferJob_Scanlines(
       const FSimpleBufferCommandArgs* iCargs
@@ -76,6 +77,7 @@ BuildSimpleBufferJob_Scanlines(
     oJargs.size                     = size;
 }
 
+static
 void
 BuildSimpleBufferJob_Chunks(
       const FSimpleBufferCommandArgs* iCargs
