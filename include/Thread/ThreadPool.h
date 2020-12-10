@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
+class FJob;
 /////////////////////////////////////////////////////
 /// @class      FThreadPool
 /// @brief      The FThreadPool class provides a way to hold a thread pool with

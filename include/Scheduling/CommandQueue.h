@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
+class FCommand;
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue
 /// @brief      The FCommandQueue class provides a way to enqueue tasks for being
