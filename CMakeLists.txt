@@ -69,6 +69,12 @@ add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BI
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      )
+
+
+set_target_properties( cppfs PROPERTIES COMPILE_FLAGS "/wd4146 /wd4267" )
+set_target_properties( clip PROPERTIES COMPILE_FLAGS "/wd4267" )
+set_target_properties( freetype PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312" )
+
 set_target_properties( clip                 PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( lcms2                PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( freetype             PROPERTIES FOLDER ULIS/3rdparty )
