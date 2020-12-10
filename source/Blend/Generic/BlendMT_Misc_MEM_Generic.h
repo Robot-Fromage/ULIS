@@ -162,5 +162,8 @@ InvokeBlendMT_Misc_MEM_Generic(
     }
 }
 
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_Misc_MEM_Generic_Subpixel            )
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_Misc_MEM_Generic                     )
+
 ULIS_NAMESPACE_END
 

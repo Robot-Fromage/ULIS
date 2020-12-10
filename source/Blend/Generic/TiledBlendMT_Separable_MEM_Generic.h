@@ -55,5 +55,7 @@ InvokeTiledBlendMT_Separable_MEM_Generic(
     }
 }
 
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( TiledBlendMT_Separable_MEM_Generic           )
+
 ULIS_NAMESPACE_END
 

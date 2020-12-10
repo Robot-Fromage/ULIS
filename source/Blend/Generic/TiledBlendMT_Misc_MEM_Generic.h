@@ -79,5 +79,7 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
     }
 }
 
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( TiledBlendMT_Misc_MEM_Generic                )
+
 ULIS_NAMESPACE_END
 

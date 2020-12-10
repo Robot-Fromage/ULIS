@@ -36,8 +36,8 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
 
     // Query dispatched method
     FFormatMetrics rgbfFormatMetrics( eFormat::Format_RGBF );
-    fpConvertFormat conv_forward_fptr  = jargs->fwd;
-    fpConvertFormat conv_backward_fptr = jargs->bkd;
+    fpConvertFormat conv_forward_fptr  = cargs->fwd;
+    fpConvertFormat conv_backward_fptr = cargs->bkd;
     ULIS_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
     ULIS_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 
@@ -51,12 +51,12 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
         ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
         #undef ACTION
 
-        conv_forward_fptr( fmt, src, rgbfFormatMetrics, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( fmt, bdp, rgbfFormatMetrics, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( FPixel( src, fmt.FMT ), FPixel( reinterpret_cast< uint8* >( &src_conv.m[0] ), Format_RGBF ), 1 );
+        conv_forward_fptr( FPixel( bdp, fmt.FMT ), FPixel( reinterpret_cast< uint8* >( &bdp_conv.m[0] ), Format_RGBF ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS_SWITCH_FOR_ALL_DO( cargs->blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( rgbfFormatMetrics, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
+        conv_backward_fptr( FPixel( reinterpret_cast< uint8* >( &bdp_conv.m[0] ), Format_RGBF ), FPixel( result, fmt.FMT ), 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             const uint8 r = fmt.IDT[j];
@@ -73,6 +73,8 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
 
     delete [] result;
 }
+
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( TiledBlendMT_NonSeparable_MEM_Generic        )
 
 ULIS_NAMESPACE_END
 

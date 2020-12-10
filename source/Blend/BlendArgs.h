@@ -193,15 +193,6 @@ BuildBlendJob_Chunks(
     v2 = ( s10 * m10 ) * cargs->subpixelComponent.y + ( s11 * m11 ) * cargs->buspixelComponent.y;                                           \
     _DST = res == 0.f ? 0.f : ( ( v1 ) * cargs->subpixelComponent.x + ( v2 ) * cargs->buspixelComponent.x ) / res;
 
-// Include MEM Generic Implementation
-#include "Blend/Generic/AlphaBlendMT_MEM_Generic.h"
-#include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
-#include "Blend/Generic/BlendMT_NonSeparable_MEM_Generic.h"
-#include "Blend/Generic/BlendMT_Misc_MEM_Generic.h"
-#include "Blend/Generic/TiledBlendMT_Separable_MEM_Generic.h"
-#include "Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.h"
-#include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
-
 /////////////////////////////////////////////////////
 // Schedulers
 #define ULIS_DEFINE_BLEND_COMMAND_GENERIC( iName )          \

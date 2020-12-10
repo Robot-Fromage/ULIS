@@ -24,19 +24,6 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Schedulers
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic_Subpixel  )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic           )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_NonSeparable_MEM_Generic_Subpixel    )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_NonSeparable_MEM_Generic             )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_Separable_MEM_Generic_Subpixel       )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_Separable_MEM_Generic                )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_Misc_MEM_Generic_Subpixel            )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( BlendMT_Misc_MEM_Generic                     )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( TiledBlendMT_NonSeparable_MEM_Generic        )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( TiledBlendMT_Separable_MEM_Generic           )
-ULIS_DEFINE_BLEND_COMMAND_GENERIC( TiledBlendMT_Misc_MEM_Generic                )
-/////////////////////////////////////////////////////
 // Dispatchers
 ULIS_DECLARE_DISPATCHER( FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector  )
 ULIS_DECLARE_DISPATCHER( FDispatchedAlphaBlendSeparableInvocationSchedulerSelector          )
