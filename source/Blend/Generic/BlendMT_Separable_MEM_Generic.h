@@ -55,7 +55,9 @@ InvokeBlendMT_Separable_MEM_Generic_Subpixel(
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
         const ufloat var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
-        ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             const uint8 r = fmt.IDT[j];
@@ -90,7 +92,9 @@ InvokeBlendMT_Separable_MEM_Generic(
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
         const ufloat var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
-        ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             const uint8 r = fmt.IDT[j];
             const ufloat srcvf = TYPE2FLOAT( src, r );

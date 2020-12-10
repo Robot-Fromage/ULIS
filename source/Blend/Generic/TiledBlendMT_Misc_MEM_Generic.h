@@ -43,7 +43,9 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 const ufloat toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
                     ufloat alpha_result;
-                    ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
+                    #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
+                    ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, 1.f, alpha_bdp )
+                    #undef ACTION
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }
@@ -62,7 +64,9 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->dstRect.y + jargs->line ) % 8 ][ ( cargs->dstRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
                     ufloat alpha_result;
-                    ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, 1.f, alpha_bdp );
+                    #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
+                    ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, 1.f, alpha_bdp )
+                    #undef ACTION
                     memcpy( bdp, src, fmt.BPP );
                     if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
                 }

@@ -37,7 +37,9 @@ InvokeTiledBlendMT_NonSeparable_SSE_RGBA8(
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
         ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
-        ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
 
         Vec4f src_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
         Vec4f bdp_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
