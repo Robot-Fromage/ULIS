@@ -10,7 +10,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Blend/RGBA8/BlendMT_Separable_AVX_RGBA8.h"
-#include "Blend/BlendHelpers.h"
 #include "Blend/Func/AlphaFuncAVX.h"
 #include "Blend/Func/SeparableBlendFuncAVXF.h"
 #include "Image/Block.h"
@@ -20,20 +19,20 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
+InvokeBlendMT_Separable_AVX_RGBA8_Subpixel(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     const bool notLastLine  = jargs->line < uint32( cargs->backdropCoverage.y );
     const bool notFirstLine = jargs->line > 0;
-    const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
-    const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
-    const bool hasTopData   = cargs->sourceRect.y + cargs->shift.y > 0;
+    const bool onLeftBorder = cargs->dstRect.x == 0;
+    const bool hasLeftData  = cargs->srcRect.x + cargs->shift.x > 0;
+    const bool hasTopData   = cargs->srcRect.y + cargs->shift.y > 0;
 
     Vec8f TX( cargs->subpixelComponent.x );
     Vec8f TY( cargs->subpixelComponent.y );
@@ -54,22 +53,22 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
     //            \ /   \ /
     //             |     |
     //          vv0vv1 vv1vv2 -> res
-    const uint8* p00 = src - jargs->src_bps;
-    const uint8* p10 = src - jargs->src_bps + 4;
+    const uint8* p00 = src - cargs->src_bps;
+    const uint8* p10 = src - cargs->src_bps + 4;
     const uint8* p01 = src;
     const uint8* p11 = src + 4;
     Vec8f alpha_m00m10, alpha_m10m20, alpha_m01m11, alpha_m11m21, alpha_vv0, alpha_vv1, alpha_smp;
     Vec8f smpch_m00m10, smpch_m10m20, smpch_m01m11, smpch_m11m21, smpch_vv0, smpch_vv1, smpch_smp;
-    Vec4f alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( src - 4 + fmt.AID - jargs->src_bps   ) / 255.f : 0.f;
+    Vec4f alpha_m10 = ( hasLeftData && ( notFirstLine || hasTopData ) )   ? *( src - 4 + fmt.AID - cargs->src_bps   ) / 255.f : 0.f;
     Vec4f alpha_m11 = ( notLastLine && onLeftBorder && hasLeftData )      ? *( src - 4 + fmt.AID                    ) / 255.f : 0.f;
     alpha_m10m20 = Vec8f( 0.f, alpha_m10 );
     alpha_m11m21 = Vec8f( 0.f, alpha_m11 );
-    Vec4f fc10 = ( hasLeftData && ( notFirstLine || hasTopData ) )      ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( src - 4 - jargs->src_bps   ) ) ) ) / 255.f : 0.f;
+    Vec4f fc10 = ( hasLeftData && ( notFirstLine || hasTopData ) )      ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( src - 4 - cargs->src_bps   ) ) ) ) / 255.f : 0.f;
     Vec4f fc11 = ( notLastLine && onLeftBorder && hasLeftData )         ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si32( src - 4                    ) ) ) ) / 255.f : 0.f;
     smpch_m10m20 = Vec8f( 0.f, fc10 );
     smpch_m11m21 = Vec8f( 0.f, fc11 );
 
-    for( int32 x = 0; x < cargs->backdropWorkingRect.w; x+=2 ) {
+    for( int32 x = 0; x < cargs->dstRect.w; x+=2 ) {
         const bool notLastCol           = x     < cargs->backdropCoverage.x;
         const bool notPenultimateCol    = x + 1 < cargs->backdropCoverage.x;
         const bool cond00 = notLastCol          && ( notFirstLine || hasTopData );
@@ -110,7 +109,9 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
         Vec8f alpha_comp    = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
         Vec8f alpha_result;
-        ULIS_ASSIGN_ALPHAAVXF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaAVXF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
         alpha_result *= 255.f;
 
         // Comp Channels
@@ -138,32 +139,25 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel(
 }
 
 void
-ScheduleBlendMT_Separable_AVX_RGBA8_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeBlendMTProcessScanline_Separable_AVX_RGBA8_Subpixel >( iCommand, iPolicy );
-}
-
-void
-InvokeBlendMTProcessScanline_Separable_AVX_RGBA8(
+InvokeBlendMT_Separable_AVX_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    const uint32 len = cargs->backdropWorkingRect.w / 2;
+    const uint32 len = cargs->dstRect.w / 2;
     for( uint32 i = 0; i < len; ++i ) {
         Vec8f   alpha_bdp   = Vec8f( bdp[fmt.AID], bdp[fmt.AID + 4] ) / 255.f;
         Vec8f   alpha_src   = Vec8f( src[fmt.AID], src[fmt.AID + 4] ) / 255.f * cargs->opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result;
-        ULIS_ASSIGN_ALPHAAVXF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaAVXF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
         alpha_result *= 255.f;
 
         Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si64( src ) ) ) ) / 255.f;
@@ -185,13 +179,15 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8(
     }
 
     // In case W is odd, process one last pixel.
-    if( cargs->backdropWorkingRect.w % 2 ) {
+    if( cargs->dstRect.w % 2 ) {
         Vec8f   alpha_bdp   = Vec8f( bdp[fmt.AID], 0 ) / 255.f;
         Vec8f   alpha_src   = Vec8f( src[fmt.AID], 0 ) / 255.f * cargs->opacity;
         Vec8f   alpha_comp  = AlphaNormalAVXF( alpha_src, alpha_bdp );
         Vec8f   var         = select( alpha_comp == 0.f, 0.f, ( alpha_src / alpha_comp ) );
         Vec8f   alpha_result;
-        ULIS_ASSIGN_ALPHAAVXF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaAVXF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
         alpha_result *= 255.f;
 
         Vec8f   src_chan = Vec8f( _mm256_cvtepi32_ps( _mm256_cvtepu8_epi32( _mm_loadu_si32( src ) ) ) ) / 255.f;
@@ -209,14 +205,8 @@ InvokeBlendMTProcessScanline_Separable_AVX_RGBA8(
     }
 }
 
-void
-ScheduleBlendMT_Separable_AVX_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeBlendMTProcessScanline_Separable_AVX_RGBA8 >( iCommand, iPolicy );
-}
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( BlendMT_Separable_AVX_RGBA8_Subpixel )
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( BlendMT_Separable_AVX_RGBA8 )
 
 ULIS_NAMESPACE_END
 

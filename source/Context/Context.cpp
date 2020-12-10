@@ -12,7 +12,6 @@
 #pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
-#include "Blend/BlendDispatch.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"

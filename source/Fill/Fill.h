@@ -74,36 +74,25 @@ InvokeFillPreserveAlphaMT_MEM_Generic(
 {
     const uint8* src = cargs->color.Bits();
     const FFormatMetrics& fmt = cargs->block.Format();
-    const uint8 stride = cargs->block.BytesPerPixel();
-    uint8* ULIS_RESTRICT dst = jargs->dst;
+    T* ULIS_RESTRICT dst = reinterpret_cast< T* >( jargs->dst );
     for( uint32 i = 0; i < jargs->size; ++i ) {
-        const T alpha = dst[ iFmt.AID ];
-        memcpy( dst, src, stride );
+        const T alpha = dst[ fmt.AID ];
+        memcpy( dst, src, fmt.BPP );
         dst[ fmt.AID ] = alpha;
-        dst += stride;
+        dst += fmt.SPP;
     }
 }
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
-template< typename T >
-void
-ScheduleFillPreserveAlphaMT_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-    , bool iContiguous = false
-)
-{
-    ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM_Generic< T > >( iCommand, iPolicy, iContiguous );
-}
-
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AX2 );
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleFillPreserveAlphaMT_MEM_Generic, FSimpleBufferJobArgs, FFillPreserveAlphaCommandArgs, &InvokeFillPreserveAlphaMT_MEM_Generic< T > )
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_AVX );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_SSE );
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleFillMT_MEM );
 ULIS_DECLARE_DISPATCHER( FDispatchedFillInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
       FDispatchedFillInvocationSchedulerSelector
-    , &ScheduleFillMT_AX2
+    , &ScheduleFillMT_AVX
     , &ScheduleFillMT_SSE
     , &ScheduleFillMT_MEM
 )

@@ -11,21 +11,16 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/Blend.h"
-#include <vectorclass.h>
+#include "Blend/BlendArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
+InvokeTiledBlendMT_NonSeparable_SSE_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 );
 
-void
-ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-);
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8 );
 
 ULIS_NAMESPACE_END
 

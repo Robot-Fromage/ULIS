@@ -9,11 +9,10 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Blend/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.h"
-#include "Blend/BlendHelpers.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/AlphaFuncSSEF.h"
 #include "Blend/Func/NonSeparableBlendFuncSSEF.h"
+#include "Blend/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
@@ -21,26 +20,28 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
+InvokeTiledBlendMT_NonSeparable_SSE_RGBA8(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  base = jargs->src;
     const uint8* ULIS_RESTRICT  src  = jargs->src;
     uint8*       ULIS_RESTRICT  bdp  = jargs->bdp;
 
-    for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
         ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * cargs->opacity;
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
         ufloat var          = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
-        ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
 
-        Vec4f src_chan = lookup4( jargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
-        Vec4f bdp_chan = lookup4( jargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
+        Vec4f src_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
+        Vec4f bdp_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
         src_chan.insert( 3, 0.f );
         bdp_chan.insert( 3, 0.f );
         Vec4f res_chan;
@@ -48,7 +49,7 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
         ULIS_SWITCH_FOR_ALL_DO( cargs->blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
-        res_chan = lookup4( jargs->idt, res_chan );
+        res_chan = lookup4( cargs->idt, res_chan );
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
@@ -56,19 +57,12 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8(
         *( bdp + fmt.AID ) = uint8( alpha_result * 0xFF );
         src += 4;
         bdp += 4;
-        if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
+        if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
             src = base;
     }
 }
 
-void
-ScheduleTiledBlendMT_NonSeparable_SSE_RGBA8(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeTiledBlendMTProcessScanline_NonSeparable_SSE_RGBA8 >( iCommand, iPolicy, true );
-}
+ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( TiledBlendMT_NonSeparable_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
 

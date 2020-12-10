@@ -11,24 +11,20 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/Blend.h"
-#include "Blend/BlendHelpers.h"
+#include "Blend/BlendArgs.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/NonSeparableBlendFuncF.h"
 #include "Image/Block.h"
-#include "Conv/Conv.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic(
+InvokeTiledBlendMT_NonSeparable_MEM_Generic(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  base = jargs->src;
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
@@ -40,25 +36,27 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic(
 
     // Query dispatched method
     FFormatMetrics rgbfFormatMetrics( eFormat::Format_RGBF );
-    fpConvertFormat conv_forward_fptr  = jargs->fwd;
-    fpConvertFormat conv_backward_fptr = jargs->bkd;
+    fpConvertFormat conv_forward_fptr  = cargs->fwd;
+    fpConvertFormat conv_backward_fptr = cargs->bkd;
     ULIS_ASSERT( conv_forward_fptr,    "No Conversion invocation found" );
     ULIS_ASSERT( conv_backward_fptr,   "No Conversion invocation found" );
 
-    for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
         const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
         const ufloat var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
         ufloat alpha_result;
-        ULIS_ASSIGN_ALPHAF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+        #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
 
-        conv_forward_fptr( fmt, src, rgbfFormatMetrics, reinterpret_cast< uint8* >( &src_conv.m[0] ), 1 );
-        conv_forward_fptr( fmt, bdp, rgbfFormatMetrics, reinterpret_cast< uint8* >( &bdp_conv.m[0] ), 1 );
+        conv_forward_fptr( FPixel( src, fmt.FMT ), FPixel( reinterpret_cast< uint8* >( &src_conv.m[0] ), Format_RGBF ), 1 );
+        conv_forward_fptr( FPixel( bdp, fmt.FMT ), FPixel( reinterpret_cast< uint8* >( &bdp_conv.m[0] ), Format_RGBF ), 1 );
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS_SWITCH_FOR_ALL_DO( cargs->blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( rgbfFormatMetrics, reinterpret_cast< const uint8* >( &res_conv.m[0] ), fmt, result, 1 );
+        conv_backward_fptr( FPixel( reinterpret_cast< uint8* >( &bdp_conv.m[0] ), Format_RGBF ), FPixel( result, fmt.FMT ), 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             const uint8 r = fmt.IDT[j];
@@ -69,22 +67,14 @@ InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic(
         src += fmt.BPP;
         bdp += fmt.BPP;
 
-        if( ( x + cargs->shift.x ) % cargs->sourceRect.w == 0 )
+        if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
             src = base;
     }
 
     delete [] result;
 }
 
-template< typename T >
-void
-ScheduleTiledBlendMT_NonSeparable_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeTiledBlendMTProcessScanline_NonSeparable_MEM_Generic< T > >( iCommand, iPolicy, true );
-}
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( TiledBlendMT_NonSeparable_MEM_Generic        )
 
 ULIS_NAMESPACE_END
 

@@ -11,102 +11,42 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Conv/Conv.h"
-#include "Dispatch/Dispatcher.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Scheduling/ScheduleArgs.h"
-#include "Scheduling/DualBufferArgs.h"
-#include <vectorclass.h>
+#include "Blend/BlendArgs.h"
+
+// Include MEM Generic Implementation
+#include "Blend/Generic/AlphaBlendMT_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/BlendMT_Misc_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Separable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.h"
+#include "Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FBlendCommandArgs
-class FBlendCommandArgs final
-    : public FDualBufferCommandArgs
-{
-public:
-    ~FBlendCommandArgs() override
-    {
-        if( color )
-            delete color;
-    };
+// Dispatchers
+ULIS_DECLARE_DISPATCHER( FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector  )
+ULIS_DECLARE_DISPATCHER( FDispatchedAlphaBlendSeparableInvocationSchedulerSelector          )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector    )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableInvocationSchedulerSelector            )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector       )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector               )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector            )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscInvocationSchedulerSelector                    )
+ULIS_DECLARE_DISPATCHER( FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector       )
+ULIS_DECLARE_DISPATCHER( FDispatchedTiledBlendSeparableInvocationSchedulerSelector          )
+ULIS_DECLARE_DISPATCHER( FDispatchedTiledBlendMiscInvocationSchedulerSelector               )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector,   &ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel< T >   )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedAlphaBlendSeparableInvocationSchedulerSelector,           &ScheduleAlphaBlendMT_Separable_MEM_Generic< T >            )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector,     &ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel< T >     )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendNonSeparableInvocationSchedulerSelector,             &ScheduleBlendMT_NonSeparable_MEM_Generic< T >              )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector,        &ScheduleBlendMT_Separable_MEM_Generic_Subpixel< T >        )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableInvocationSchedulerSelector,                &ScheduleBlendMT_Separable_MEM_Generic< T >                 )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector,             &ScheduleBlendMT_Misc_MEM_Generic_Subpixel< T >             )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendMiscInvocationSchedulerSelector,                     &ScheduleBlendMT_Misc_MEM_Generic< T >                      )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector,        &ScheduleTiledBlendMT_NonSeparable_MEM_Generic< T >         )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTiledBlendSeparableInvocationSchedulerSelector,           &ScheduleTiledBlendMT_Separable_MEM_Generic< T >            )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTiledBlendMiscInvocationSchedulerSelector,                &ScheduleTiledBlendMT_Misc_MEM_Generic< T >                 )
 
-    FBlendCommandArgs(
-          const FBlock& iSrc
-        , FBlock& iDst
-        , const FRectI& iSrcRect
-        , const FRectI& iDstRect
-        , const FVec2F& iSubpixelComponent
-        , const FVec2F& iBuspixelComponent
-        , const eBlendMode iBlendingMode
-        , const eAlphaMode iAlphaMode
-        , const ufloat iOpacity
-        , const FVec2I& iShift
-        , const FVec2I& iBackdropCoverage
-        , const fpConvertFormat iFwd
-        , const fpConvertFormat iBkd
-        , const Vec4i iIDT
-        , const uint32 iSrcBps
-        , const FBlock* iColor = nullptr
-    )
-        : FDualBufferCommandArgs(
-              iSrc
-            , iDst
-            , iSrcRect
-            , iDstRect
-            )
-        , subpixelComponent( iSubpixelComponent )
-        , buspixelComponent( iBuspixelComponent )
-        , blendingMode( iBlendingMode )
-        , alphaMode( iAlphaMode )
-        , opacity( iOpacity )
-        , shift( iShift )
-        , backdropCoverage( iBackdropCoverage )
-        , fwd( iFwd )
-        , bkd( iBkd )
-        , idt( iIDT )
-        , color( iColor )
-        , src_bps( iSrcBps )
-        {}
-
-    const FVec2F subpixelComponent;
-    const FVec2F buspixelComponent;
-    const eBlendMode blendingMode;
-    const eAlphaMode alphaMode;
-    const ufloat opacity;
-    const FVec2I shift;
-    const FVec2I backdropCoverage;
-    const fpConvertFormat fwd;
-    const fpConvertFormat bkd;
-    const Vec4i idt;
-    const uint32 src_bps;
-    const FBlock* const color;
-};
-
-
-/////////////////////////////////////////////////////
-// FBlendJobArgs
-class FBlendJobArgs final
-    : public IJobArgs
-{
-public:
-
-    ~FBlendJobArgs() override {};
-    FBlendJobArgs(
-          const uint8* iSrc
-        , uint8* const iBdp
-        , const uint32 iLine
-        
-    )
-        : IJobArgs()
-        , src( iSrc )
-        , bdp( iBdp )
-        , line( iLine )
-    {}
-
-    const uint8* ULIS_RESTRICT src;
-    uint8* ULIS_RESTRICT bdp;
-    uint32 line;
-};
 ULIS_NAMESPACE_END
 

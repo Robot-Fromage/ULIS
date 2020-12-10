@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Conv/Conv.h"
 #include "Context/Context.h"
 #include "Scheduling/Command.h"
 

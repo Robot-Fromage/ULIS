@@ -29,5 +29,16 @@ ULIS is a rendering library written in C++. It is aimed at software rasterizatio
 </p>
 The dev branch contains work in progress and may be unstable most of the time. We advise checking out the release branch to try and build the latest stable ULIS version.
 
+## Metrics
+| Measure                           | Value     |
+|-----------------------------------|-----------|
+| Size of include                   | ~500ko    |
+| Size of source                    | ~1mo      |
+| Size of output binaries           | ~5mo      |
+| Lines of code in include          | ~10000    |
+| Lines of code in source           | ~20000    |
+| Size of Runtime Dispatch Table    | ~0.2ko    |
+| Number of Formats                 | +700      |
+
 ## Build and Documentation
 Check the [documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/) for the API reference and details on the build process.  

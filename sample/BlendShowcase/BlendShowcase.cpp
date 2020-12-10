@@ -38,11 +38,11 @@ main( int argc, char *argv[] ) {
     FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntentLoad, host, ULIS_NOCB, pathOver, ULIS_FORMAT_RGBA8 );
     Fence( *threadPool );
 
-    FRectI sourceRect = blockBase->Rect();
-    int w = sourceRect.w * 8;
-    int h = sourceRect.h * 5;
+    FRectI srcRect = blockBase->Rect();
+    int w = srcRect.w * 8;
+    int h = srcRect.h * 5;
 
-    int shadeW = sourceRect.w;
+    int shadeW = srcRect.w;
     int shadeH = 20;
     FBlock* blockCanvas = new  FBlock( w, h, ULIS_FORMAT_RGBA8 );
     FBlock* blockShade = new  FBlock( shadeW, shadeH, ULIS_FORMAT_RGBA8 );
@@ -56,17 +56,17 @@ main( int argc, char *argv[] ) {
     FFont font( fontRegistry, "Segoe UI", "Light" );
 
     for( int i = 0; i < NUM_BLENDING_MODES; ++i ) {
-        int x = ( i % 8 ) * sourceRect.w;
-        int y = ( i / 8 ) * sourceRect.h;
-        Copy(   threadPool, ULIS_BLOCKING, perfIntentCopy, host, ULIS_NOCB, blockBase, blockCanvas, sourceRect, FVec2I( x, y ) );
-        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockOver, blockCanvas, sourceRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), AM_NORMAL, 0.5f );
-        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
-        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + sourceRect.h - shadeH ), ULIS_NOAA, BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
+        int x = ( i % 8 ) * srcRect.w;
+        int y = ( i / 8 ) * srcRect.h;
+        Copy(   threadPool, ULIS_BLOCKING, perfIntentCopy, host, ULIS_NOCB, blockBase, blockCanvas, srcRect, FVec2I( x, y ) );
+        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockOver, blockCanvas, srcRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + srcRect.h - shadeH ), ULIS_NOAA, BM_NORMAL, AM_NORMAL, 0.5f );
+        Blend(  threadPool, ULIS_BLOCKING, perfIntentBlend, host, ULIS_NOCB, blockShade, blockCanvas, shadeRect, FVec2F( x, y + srcRect.h - shadeH ), ULIS_NOAA, BM_BAYERDITHER8x8, AM_NORMAL, 0.5f );
         std::string bm = kwBlendingMode[i];
         typedef std::codecvt_utf8<wchar_t> convert_type;
         std::wstring_convert<convert_type, wchar_t> converter;
         std::wstring wbm = converter.from_bytes(bm);
-        RenderText( threadPool, ULIS_BLOCKING, perfIntentText, host, ULIS_NOCB, blockCanvas, wbm, font, 16, white, FTransformation2D::MakeTranslationTransform( x + 4, 4 + y + sourceRect.h - shadeH ), ULIS_NOAA );
+        RenderText( threadPool, ULIS_BLOCKING, perfIntentText, host, ULIS_NOCB, blockCanvas, wbm, font, 16, white, FTransformation2D::MakeTranslationTransform( x + 4, 4 + y + srcRect.h - shadeH ), ULIS_NOAA );
     }
 
     Fence( *threadPool );

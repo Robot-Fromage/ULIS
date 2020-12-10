@@ -99,12 +99,16 @@ template<
           const TJobArgs*
         , const TCommandArgs*
         )
+    , typename TDelegateBuildJobScanlines
+    , typename TDelegateBuildJobChunks
 >
 void
 ScheduleSimpleBufferJobs(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , bool iContiguous
+    , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
+    , TDelegateBuildJobChunks iDelegateBuildJobChunks
 )
 {
     const FSimpleBufferCommandArgs* cargs = dynamic_cast< const FSimpleBufferCommandArgs* >( iCommand->Args() );
@@ -119,21 +123,48 @@ ScheduleSimpleBufferJobs(
         , static_cast< int64 >( cargs->block.BytesTotal() )
         , cargs->rect.h
         , iContiguous
-        , BuildSimpleBufferJob_Scanlines
-        , BuildSimpleBufferJob_Chunks
+        , iDelegateBuildJobScanlines
+        , iDelegateBuildJobChunks
     );
 }
 
-#define ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( iName, iJobArgs, iCommandArgs, iDelegateInvocation )      \
-void                                                                                                            \
-iName(                                                                                                          \
-      FCommand* iCommand                                                                                        \
-    , const FSchedulePolicy& iPolicy                                                                            \
-    , bool iContiguous                                                                                          \
-)                                                                                                               \
-{                                                                                                               \
-    ScheduleSimpleBufferJobs< iJobArgs, iCommandArgs, iDelegateInvocation >( iCommand, iPolicy, iContiguous );  \
+#define ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, iDelegateBuildJobChunks )  \
+void                                                                                                                                                                    \
+iName(                                                                                                                                                                  \
+      FCommand* iCommand                                                                                                                                                \
+    , const FSchedulePolicy& iPolicy                                                                                                                                    \
+    , bool iContiguous                                                                                                                                                  \
+)                                                                                                                                                                       \
+{                                                                                                                                                                       \
+    ScheduleSimpleBufferJobs<                                                                                                                                           \
+          iJobArgs                                                                                                                                                      \
+        , iCommandArgs                                                                                                                                                  \
+        , iDelegateInvocation                                                                                                                                           \
+    >                                                                                                                                                                   \
+    (                                                                                                                                                                   \
+          iCommand                                                                                                                                                      \
+        , iPolicy                                                                                                                                                       \
+        , iContiguous                                                                                                                                                   \
+        , iDelegateBuildJobScanlines                                                                                                                                    \
+        , iDelegateBuildJobChunks                                                                                                                                       \
+    );                                                                                                                                                                  \
 }
+
+#define ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( iName, iJobArgs, iCommandArgs, iDelegateInvocation )  \
+    ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE_CUSTOM(                                                    \
+          iName                                                                                             \
+        , iJobArgs                                                                                          \
+        , iCommandArgs                                                                                      \
+        , iDelegateInvocation                                                                               \
+        , BuildSimpleBufferJob_Scanlines                                                                    \
+        , BuildSimpleBufferJob_Chunks                                                                       \
+    )
+
+#define ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, iDelegateBuildJobChunks )              \
+    template< typename T > ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE_CUSTOM( iName, iJobArgs, iCommandArgs, iDelegateInvocation, iDelegateBuildJobScanlines, iDelegateBuildJobChunks )
+
+#define ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( iName, iJobArgs, iCommandArgs, iDelegateInvocation )              \
+    template< typename T > ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( iName, iJobArgs, iCommandArgs, iDelegateInvocation )
 
 ULIS_NAMESPACE_END
 

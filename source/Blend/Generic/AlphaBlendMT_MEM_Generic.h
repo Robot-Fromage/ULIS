@@ -16,37 +16,35 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Blend/BlendHelpers.h"
+#include "Blend/BlendArgs.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/SeparableBlendFuncF.h"
 #include "Image/Block.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T >
 void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
+InvokeAlphaBlendMT_Separable_MEM_Generic_Subpixel(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
     const bool notLastLine  = jargs->line < uint32( cargs->backdropCoverage.y );
     const bool notFirstLine = jargs->line > 0;
-    const bool onLeftBorder = cargs->backdropWorkingRect.x == 0;
-    const bool hasLeftData  = cargs->sourceRect.x + cargs->shift.x > 0;
-    const bool hasTopData   = cargs->sourceRect.y + cargs->shift.y > 0;
+    const bool onLeftBorder = cargs->dstRect.x == 0;
+    const bool hasLeftData  = cargs->srcRect.x + cargs->shift.x > 0;
+    const bool hasTopData   = cargs->srcRect.y + cargs->shift.y > 0;
 
     ufloat m11, m01, m10, m00, vv0, vv1, res;
     m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;
-    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - jargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
+    m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
     vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
-    for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const bool notLastCol = x < cargs->backdropCoverage.x;
         m00 = m10;
         m01 = m11;
@@ -73,26 +71,16 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel(
 
 template< typename T >
 void
-ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic_Subpixel< T > >( iCommand, iPolicy );
-}
-
-template< typename T >
-void
-InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic(
+InvokeAlphaBlendMT_Separable_MEM_Generic(
       const FBlendJobArgs* jargs
     , const FBlendCommandArgs* cargs
 )
 {
-    const FFormatMetrics&       fmt = cargs->source.FormatMetrics();
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    for( int x = 0; x < cargs->backdropWorkingRect.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const ufloat alpha_src  = TYPE2FLOAT( src, fmt.AID ) * cargs->opacity;
         const ufloat alpha_bdp  = TYPE2FLOAT( bdp, fmt.AID );
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
@@ -111,15 +99,8 @@ InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic(
     }
 }
 
-template< typename T >
-void
-ScheduleAlphaBlendMT_Separable_MEM_Generic(
-      FCommand* iCommand
-    , const FSchedulePolicy& iPolicy
-)
-{
-    BuildBlendJobs< &InvokeAlphaBlendMTProcessScanline_Separable_MEM_Generic< T > >( iCommand, iPolicy );
-}
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic_Subpixel  )
+ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic           )
 
 ULIS_NAMESPACE_END
 

@@ -15,12 +15,12 @@
 #include "Scheduling/SimpleBufferArgs.h"
 #include <vectorclass.h>
 
-ULIS_NAMESPACE_BEGIN/////////////////////////////////////////////////////
+ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
 // Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- AVX
 #ifdef ULIS_COMPILETIME_AVX_SUPPORT
-static
 void
 InvokeClearMT_AVX(
       const FSimpleBufferJobArgs* jargs
@@ -41,7 +41,6 @@ InvokeClearMT_AVX(
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- SSE
 #ifdef ULIS_COMPILETIME_SSE_SUPPORT
-static
 void
 InvokeClearMT_SSE(
       const FSimpleBufferJobArgs* jargs
@@ -61,7 +60,6 @@ InvokeClearMT_SSE(
 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
-static
 void
 InvokeClearMT_MEM(
       const FSimpleBufferJobArgs* jargs
