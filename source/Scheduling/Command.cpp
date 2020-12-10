@@ -14,6 +14,7 @@
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include "Scheduling/Job.h"
 #include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
