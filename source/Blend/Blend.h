@@ -96,17 +96,6 @@ class FBlendJobArgs final
 public:
 
     ~FBlendJobArgs() override {};
-    FBlendJobArgs(
-          const uint8* iSrc
-        , uint8* const iBdp
-        , const uint32 iLine
-        
-    )
-        : IJobArgs()
-        , src( iSrc )
-        , bdp( iBdp )
-        , line( iLine )
-    {}
 
     const uint8* ULIS_RESTRICT src;
     uint8* ULIS_RESTRICT bdp;
