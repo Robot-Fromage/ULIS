@@ -39,15 +39,8 @@
 // System
 #include "System/FilePathRegistry.h"
 #include "System/Device.h"
-// Text
-#include "Text/Font.h"
-#include "Text/FontRegistry.h"
-#include "Text/Text.h"
-#include "Text/TextEngine.h"
 // Thread
 #include "Thread/ThreadPool.h"
-// Transform
-#include "Transform/Methods.h"
 // Scheduling
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/Event.h"
