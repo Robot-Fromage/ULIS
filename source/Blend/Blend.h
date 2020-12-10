@@ -147,15 +147,15 @@ public:
         const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
         const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
         uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
-        const int64 src_bps                     = static_cast< int64 >( iCargs->src.BytesPerScanLine() );
-        const int64 dst_bps                     = static_cast< int64 >( iCargs->dst.BytesPerScanLine() );
+        const uint32 src_bps                     = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
+        const uint32 dst_bps                     = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
         const int64 size                        = iCargs->dstRect.w * fmt.BPP;
         const uint32 src_decal_y                = iCargs->shift.y + iCargs->srcRect.y;
         const uint32 src_decal_x                = ( iCargs->shift.x + iCargs->srcRect.x ) * iCargs->src.BytesPerPixel();
         const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
-        oJargs.src                              = ComputeBufferPosition( src, iCargs->srcRect.y, iCargs->shift.y, iCargs->srcRect.h, src_bps, src_decal_x, src_decal_y, iIndex, iCargs->tiled );
+        oJargs.src                              = ComputeBufferPosition( src, iCargs->srcRect.y, iCargs->shift.y, iCargs->srcRect.h, src_bps, src_decal_x, src_decal_y, int(iIndex), iCargs->tiled );
         oJargs.bdp                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;
-        oJargs.line                             = iIndex;
+        oJargs.line                             = static_cast< uint32 >( iIndex );
     }
 
     void
@@ -227,8 +227,8 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     , FBlendJobArgs                                         \
     , FBlendCommandArgs                                     \
     , &Invoke ## iName ## < T >                             \
-    , FBlendJobArgs::BuildJob_Scanlines                     \
-    , FBlendJobArgs::BuildJob_Chunks                        \
+    , &FBlendJobArgs::BuildJob_Scanlines                    \
+    , &FBlendJobArgs::BuildJob_Chunks                       \
 )
 #define ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( iName )   \
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(          \
@@ -236,8 +236,8 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(          \
     , FBlendJobArgs                                         \
     , FBlendCommandArgs                                     \
     , &Invoke ## iName                                      \
-    , FBlendJobArgs::BuildJob_Scanlines                     \
-    , FBlendJobArgs::BuildJob_Chunks                        \
+    , &FBlendJobArgs::BuildJob_Scanlines                    \
+    , &FBlendJobArgs::BuildJob_Chunks                       \
 )
 
 ULIS_DEFINE_BLEND_COMMAND_GENERIC( AlphaBlendMT_Separable_MEM_Generic_Subpixel  )

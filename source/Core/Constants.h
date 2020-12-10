@@ -15,7 +15,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Static Values Helpers for greyscale to ASCII
-const char* gASCII_Greyscale_StandardRamp = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+const char* gASCII_Greyscale_StandardRamp = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 const char* gASCII_Greyscale_10LevelsRamp = "@%#*+=-:. ";
 /////////////////////////////////////////////////////
 // Static Values Helpers for Misc Compositing Operations
