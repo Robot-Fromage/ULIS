@@ -9,10 +9,10 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Blend/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/AlphaFuncSSEF.h"
 #include "Blend/Func/SeparableBlendFuncSSEF.h"
+#include "Blend/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"

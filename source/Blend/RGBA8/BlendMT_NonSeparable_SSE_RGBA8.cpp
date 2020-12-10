@@ -9,10 +9,10 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Blend/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.h"
 #include "Blend/Func/AlphaFuncF.h"
 #include "Blend/Func/AlphaFuncSSEF.h"
 #include "Blend/Func/NonSeparableBlendFuncSSEF.h"
+#include "Blend/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
@@ -71,7 +71,10 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
         Vec4f alpha_comp    = AlphaNormalSSEF( alpha_src, alpha_bdp );
         Vec4f var           = select( alpha_comp == 0.f, 0.f, alpha_src / alpha_comp );
         Vec4f alpha_result;
-        ULIS_ASSIGN_ALPHASSEF( cargs->alphaMode, alpha_result, alpha_src, alpha_bdp );
+
+        #define ACTION( _AM, iTarget, iSrc, iBdp )   iTarget = AlphaSSEF< _AM >( iSrc, iBdp );
+        ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
+        #undef ACTION
 
         Vec4f bdp_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
         smpch_smp.insert( 3, 0.f );
