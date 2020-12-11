@@ -17,6 +17,7 @@
 #include "Image/Texture.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include <CL/cl.hpp>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -159,7 +160,6 @@ public:
     void OnCleanup( const FOnCleanupData& iOnCleanup );
 
 private:
-    uint8* mHostPtr; ///< Contiguous memory storage buffer for the block.
     uint16 mWidth; ///< The width of the block.
     uint16 mHeight; ///< Height of the block.
     uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.
@@ -167,6 +167,7 @@ private:
     FOnInvalidTexture mOnInvalid; ///< The callback for when the block is destroyed.
     FOnCleanupData mOnCleanup; ///< The callback for when the block is dirty.
     FTexture& mParent; ///< The parent interface, that displays the Format and Colorspace APIs.
+    cl::Buffer mBitmap; ///< Assuming OpenCL 1.2 buffer mapped in device memory.
 };
 
 ULIS_NAMESPACE_END

@@ -9,14 +9,13 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS3>
-//#include <CL/cl.hpp>
+#include <ULIS>
+#include <CL/cl.hpp>
 #include <vector>
-using namespace ::ul3;
+#include <iostream>
 
 int
 main() {
-    /*
     // OpenCL
     //get all platforms (drivers)
     std::vector<cl::Platform> all_platforms;
@@ -40,6 +39,11 @@ main() {
     std::cout<< "Using device: "<<default_device.getInfo<CL_DEVICE_NAME>()<<"\n";
 
     cl::Context context({default_device});
+
+    std::string ver = default_device.getInfo< CL_DEVICE_VERSION >();
+    std::cout << ver << "\n";
+
+    /*
     cl::Program::Sources sources;
 
     // kernel calculates for each element C=A+B

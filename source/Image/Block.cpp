@@ -41,8 +41,7 @@ FBlock::FBlock(
     mBytesPerScanline = mWidth * FormatMetrics().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 
-    uint32 num = mWidth * mHeight * FormatMetrics().SPP;
-    ULIS_ASSERT( num != 0, "Cannot allocate a buffer of size 0" );
+    ULIS_ASSERT( mBytesTotal != 0, "Cannot allocate a buffer of size 0" );
 
     mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
     ULIS_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );

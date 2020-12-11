@@ -10,12 +10,11 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Image/Texture_Private.h"
-#include <CL/cl.h>
 
 ULIS_NAMESPACE_BEGIN
 FTexture_Private::~FTexture_Private()
 {
-    mOnCleanup.ExecuteIfBound( mHostPtr );
+    mOnCleanup.ExecuteIfBound( nullptr );
 }
 
 FTexture_Private::FTexture_Private(
@@ -25,8 +24,7 @@ FTexture_Private::FTexture_Private(
     , const FOnCleanupData& iOnCleanup
     , FTexture& iParent
     )
-    : mHostPtr( nullptr )
-    , mWidth( iWidth )
+    : mWidth( iWidth )
     , mHeight( iHeight )
     , mBytesPerScanline( 0 )
     , mBytesTotal( 0 )
@@ -40,8 +38,13 @@ FTexture_Private::FTexture_Private(
     mBytesPerScanline = mWidth * fmt.BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 
-    uint32 num = mWidth * mHeight * fmt.SPP;
-    ULIS_ASSERT( num != 0, "Cannot allocate a buffer of size 0" );
+    ULIS_ASSERT( mBytesTotal != 0, "Cannot allocate a buffer of size 0" );
+    ULIS_ASSERT( mBytesTotal < CL_DEVICE_MAX_MEM_ALLOC_SIZE , "Cannot allocate a buffer that big on device." );
+    ULIS_ASSERT( mBytesTotal < CL_DEVICE_GLOBAL_MEM_SIZE, "Cannot allocate a buffer that big on device" );
+
+    cl_int err = 0;
+    mBitmap = cl::Buffer( CL_MEM_READ_WRITE, mBytesTotal, nullptr, &err );
+    ULIS_ASSERT( err == 0, "Error during buffer creation in device memory." );
 }
 
 uint16
