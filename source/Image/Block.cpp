@@ -23,8 +23,8 @@ FBlock::FBlock(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
-    , const FOnInvalid& iOnInvalid
-    , const FOnCleanup& iOnCleanup
+    , const FOnInvalidBlock& iOnInvalid
+    , const FOnCleanupData& iOnCleanup
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
@@ -54,8 +54,8 @@ FBlock::FBlock(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
-    , const FOnInvalid& iOnInvalid
-    , const FOnCleanup& iOnCleanup
+    , const FOnInvalidBlock& iOnInvalid
+    , const FOnCleanupData& iOnCleanup
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
@@ -264,13 +264,13 @@ FBlock::SetPixel( uint16 iX, uint16 iY, const ISample& iSample )
 }
 
 void
-FBlock::OnInvalid( const FOnInvalid& iOnInvalid )
+FBlock::OnInvalid( const FOnInvalidBlock& iOnInvalid )
 {
     mOnInvalid = iOnInvalid;
 }
 
 void
-FBlock::OnCleanup( const FOnCleanup& iOnCleanup )
+FBlock::OnCleanup( const FOnCleanupData& iOnCleanup )
 {
     mOnCleanup = iOnCleanup;
 }
@@ -282,8 +282,8 @@ FBlock::LoadFromData(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
-    , const FOnInvalid& iOnInvalid
-    , const FOnCleanup& iOnCleanup
+    , const FOnInvalidBlock& iOnInvalid
+    , const FOnCleanupData& iOnCleanup
     )
 {
     ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );

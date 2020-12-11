@@ -23,15 +23,20 @@ FTexture::FTexture(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
-    , const FOnInvalid& iOnInvalid
-    , const FOnCleanup& iOnCleanup
+    , const FOnInvalidTexture& iOnInvalid
+    , const FOnCleanupData& iOnCleanup
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
     , d( nullptr )
 {
-    ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    d = new FTexture_Private(
+          iWidth
+        , iHeight
+        , iOnInvalid
+        , iOnCleanup
+        , *this
+    );
 }
 
 uint16
@@ -62,7 +67,7 @@ FTexture::Rect() const
 uint32
 FTexture::BytesPerScanLine() const
 {
-    return  d->BytesPerScanLine;
+    return  d->BytesPerScanLine();
 }
 
 
@@ -86,13 +91,13 @@ FTexture::Dirty( const FRectI& iRect, bool iCall ) const
 }
 
 void
-FTexture::OnInvalid( const FOnInvalid& iOnInvalid )
+FTexture::OnInvalid( const FOnInvalidTexture& iOnInvalid )
 {
     d->OnInvalid( iOnInvalid );
 }
 
 void
-FTexture::OnCleanup( const FOnCleanup& iOnCleanup )
+FTexture::OnCleanup( const FOnCleanupData& iOnCleanup )
 {
     d->OnCleanup( iOnCleanup );
 }

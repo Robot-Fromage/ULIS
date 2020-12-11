@@ -80,8 +80,8 @@ public:
         , uint16 iHeight
         , eFormat iFormat
         , const FColorSpace* iColorSpace = nullptr
-        , const FOnInvalid& iOnInvalid = FOnInvalid()
-        , const FOnCleanup& iOnCleanup = FOnCleanup( &OnCleanup_FreeMemory )
+        , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
+        , const FOnCleanupData& iOnCleanup = FOnCleanupData( &OnCleanup_FreeMemory )
     );
 
     /*!
@@ -108,8 +108,8 @@ public:
         , uint16 iHeight
         , eFormat iFormat
         , const FColorSpace* iColorSpace = nullptr
-        , const FOnInvalid& iOnInvalid = FOnInvalid()
-        , const FOnCleanup& iOnCleanup = FOnCleanup()
+        , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
+        , const FOnCleanupData& iOnCleanup = FOnCleanupData()
     );
 
     /*!
@@ -429,14 +429,14 @@ public:
 
     \sa OnCleanup()
     */
-    void OnInvalid( const FOnInvalid& iOnInvalid );
+    void OnInvalid( const FOnInvalidBlock& iOnInvalid );
 
     /*!
     Set a new cleanup callback that will be called on destruction.
 
     \sa OnInvalid()
     */
-    void OnCleanup( const FOnCleanup& iOnCleanup );
+    void OnCleanup( const FOnCleanupData& iOnCleanup );
 
     /*!
     Reconstruct the internal representation from an existing external buffer
@@ -454,8 +454,8 @@ public:
         , uint16 iHeight
         , eFormat iFormat
         , const FColorSpace* iColorSpace = nullptr
-        , const FOnInvalid& iOnInvalid = FOnInvalid()
-        , const FOnCleanup& iOnCleanup = FOnCleanup()
+        , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
+        , const FOnCleanupData& iOnCleanup = FOnCleanupData()
     );
 
 private:
@@ -464,8 +464,8 @@ private:
     uint16 mHeight; ///< Height of the block.
     uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.
     uint64 mBytesTotal; ///< Cached number of bytes for the whole buffer.
-    FOnInvalid mOnInvalid; ///< The callback for when the block is destroyed.
-    FOnCleanup mOnCleanup; ///< The callback for when the block is dirty.
+    FOnInvalidBlock mOnInvalid; ///< The callback for when the block is destroyed.
+    FOnCleanupData mOnCleanup; ///< The callback for when the block is dirty.
 };
 
 ULIS_NAMESPACE_END

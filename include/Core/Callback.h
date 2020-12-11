@@ -59,10 +59,12 @@ private:
     void* mInfo;
 };
 
-typedef TCallback< void, uint8* > FOnCleanup;
-typedef TCallback< void, const FBlock*, const FRectI& > FOnInvalid;
+typedef TCallback< void, uint8* > FOnCleanupData;
+typedef TCallback< void, const FBlock*, const FRectI& > FOnInvalidBlock;
+typedef TCallback< void, const FTexture*, const FRectI& > FOnInvalidTexture;
 template class ULIS_API TCallback< void, uint8* >;
 template class ULIS_API TCallback< void, const FBlock*, const FRectI& >;
+template class ULIS_API TCallback< void, const FTexture*, const FRectI& >;
 
 ULIS_NAMESPACE_END
 
