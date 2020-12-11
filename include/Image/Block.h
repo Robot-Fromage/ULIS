@@ -58,9 +58,6 @@ ULIS_NAMESPACE_BEGIN
 ///             \snippet data/block_snippet.h FBlock on stack
 ///             But you can also allocate blocks dynamically:
 ///             \snippet data/block_snippet.h FBlock on heap
-///             It is also sometimes handy to use the CRT safe version if
-///             using the \a X functions in your application with dynamic link:
-///             \snippet data/block_snippet.h FBlock X Version
 class ULIS_API FBlock final
     : public IHasFormat
     , public IHasColorSpace
