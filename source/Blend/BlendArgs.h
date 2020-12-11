@@ -102,6 +102,8 @@ public:
     uint32 line;
 };
 
+/////////////////////////////////////////////////////
+// Builders
 static
 const uint8*
 ComputeBufferPosition(
@@ -172,18 +174,6 @@ BuildBlendJob_Chunks(
 
 /////////////////////////////////////////////////////
 // Macro Helpers for Redundant Compositing Operations
-// macros for ASSIGN and small helper functions, possibly inline.
-#define SampleSubpixelAlpha( _DST )                                                                                     \
-    if( fmt.HEA ) {                                                                                                     \
-        m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,                  fmt.AID ) : 0.f;    \
-        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - cargs->src_bps, fmt.AID ) : 0.f;    \
-    } else {                                                                                                            \
-        m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;                                                            \
-        m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;                                                            \
-    }                                                                                                                   \
-    vv1     = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;                                      \
-    _DST    = vv0 * cargs->subpixelComponent.x + vv1 * cargs->buspixelComponent.x;
-
 #define SampleSubpixelChannel( _DST, _CHAN )                                                                                                \
     s11 = ( notLastCol  && notLastLine )                                    ?   TYPE2FLOAT( src,                            _CHAN ) : 0.f;  \
     s01 = ( notLastLine && ( x > 0 || hasLeftData ) )                       ?   TYPE2FLOAT( src - fmt.BPP,                  _CHAN ) : 0.f;  \

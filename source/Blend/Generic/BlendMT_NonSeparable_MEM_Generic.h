@@ -64,7 +64,19 @@ InvokeBlendMT_NonSeparable_MEM_Generic_Subpixel(
         m00 = m10;
         m01 = m11;
         vv0 = vv1;
-        SampleSubpixelAlpha( res );
+
+        { //SampleSubpixelAlpha( res );
+            if( fmt.HEA ) {
+                m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,                  fmt.AID ) : 0.f;
+                m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - cargs->src_bps, fmt.AID ) : 0.f;
+            } else {
+                m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;
+                m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;
+            }
+            vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
+            res = vv0 * cargs->subpixelComponent.x + vv1 * cargs->buspixelComponent.x;
+        }
+
         const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
         const ufloat alpha_src  = res * cargs->opacity;
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
