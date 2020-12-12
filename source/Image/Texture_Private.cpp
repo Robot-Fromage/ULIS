@@ -11,6 +11,10 @@
 */
 #include "Image/Texture_Private.h"
 
+std::string gKernel_Clear =
+#include "Kernels/Clear.cl"
+;
+
 ULIS_NAMESPACE_BEGIN
 FTexture_Private::~FTexture_Private()
 {
