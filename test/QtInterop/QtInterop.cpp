@@ -29,7 +29,7 @@ main( int argc, char *argv[] ) {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt );
     FHardwareMetrics hw;
-    FSchedulePolicy cacheEfficientPolicy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheLineSize() );
+    FSchedulePolicy cacheEfficientPolicy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
  
     // Data
     FBlock block( 1024, 1024, fmt );
