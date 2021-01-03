@@ -77,6 +77,10 @@ public:
     /*! Get the args */
     const ICommandArgs* Args() const;
 
+    /*! Reserve some space for jobs */
+    void ReserveJobs( uint64 iNum );
+
+    /*! Add a job */
     void AddJob( FJob* iJob );
 
     bool IsReady() const;

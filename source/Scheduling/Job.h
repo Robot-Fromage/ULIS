@@ -76,6 +76,9 @@ public:
     /*! Return the parent command */
     const FCommand* Parent() const;
 
+    /*! Set the parent command */
+    void BindCommand( const FCommand* iParent );
+
 private:
     uint32 mNumTasks;
     fpTask mTask;

@@ -66,8 +66,15 @@ FCommand::Args() const
 }
 
 void
+FCommand::ReserveJobs( uint64 iNum )
+{
+    mJobs.Reserve( iNum );
+}
+
+void
 FCommand::AddJob( FJob* iJob )
 {
+    iJob->BindCommand( this );
     mJobs.EmplaceBack( iJob );
 }
 

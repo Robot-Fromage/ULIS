@@ -34,6 +34,7 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
 )
 {
+    iCommand->ReserveJobs( iNumJobs );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
     for( int64 i = 0; i < iNumJobs; ++i )
     {
@@ -72,6 +73,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
     , TDelegateBuildJobChunks iDelegateBuildJobChunks
 )
 {
+    iCommand->ReserveJobs( iNumChunks );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
     int64 offset = 0;
     for( int i = 0; i < iNumChunks; ++i )
