@@ -11,10 +11,10 @@
 */
 #pragma once
 #include "Context/ContextualDispatchTable.h"
-#include "Blend/Blend.h"
-#include "Clear/Clear.h"
-#include "Copy/Copy.h"
-#include "Fill/Fill.h"
+#include "Process/Blend/Blend.h"
+#include "Process/Clear/Clear.h"
+#include "Process/Copy/Copy.h"
+#include "Process/Fill/Fill.h"
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat )

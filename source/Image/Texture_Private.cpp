@@ -12,7 +12,7 @@
 #include "Image/Texture_Private.h"
 
 std::string gKernel_Clear =
-#include "Kernel/Clear.cl"
+#include "Kernel/OpenCL/Clear.cl"
 ;
 
 ULIS_NAMESPACE_BEGIN

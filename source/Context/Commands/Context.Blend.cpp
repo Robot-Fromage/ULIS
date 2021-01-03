@@ -14,13 +14,13 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Image/Block.h"
-#include "Blend/Blend.h"
+#include "Process/Blend/Blend.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
-#include "Conv/Conv.h"
+#include "Process/Conv/Conv.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

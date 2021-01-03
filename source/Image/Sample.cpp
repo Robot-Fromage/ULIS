@@ -12,7 +12,7 @@
 #include "Image/Sample.h"
 #include "Image/Color.h"
 #include "Image/Pixel.h"
-#include "Conv/Conv.h"
+#include "Process/Conv/Conv.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

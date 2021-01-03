@@ -13,7 +13,7 @@
 #pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
-#include "Clear/Clear.h"
+#include "Process/Clear/Clear.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"

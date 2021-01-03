@@ -13,8 +13,8 @@
 #pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
-#include "Fill/Fill.h"
-#include "Conv/Conv.h"
+#include "Process/Fill/Fill.h"
+#include "Process/Conv/Conv.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
