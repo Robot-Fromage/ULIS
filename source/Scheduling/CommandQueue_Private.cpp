@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Scheduling/CommandQueue_Private.h"
-#include "Thread/ThreadPool.h"
+#include "System/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 FCommandQueue::FCommandQueue_Private::~FCommandQueue_Private()

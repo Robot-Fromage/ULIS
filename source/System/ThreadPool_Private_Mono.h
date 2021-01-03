@@ -11,7 +11,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Thread/ThreadPool.h"
+#include "System/ThreadPool.h"
 #include "Scheduling/Job.h"
 
 ULIS_NAMESPACE_BEGIN

@@ -10,13 +10,13 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Thread/ThreadPool.h"
+#include "System/ThreadPool.h"
 #include <thread>
 
 #ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
-#include "Thread/ThreadPool_Private_Generic.h"
+#include "System/ThreadPool_Private_Generic.h"
 #else
-#include "Thread/ThreadPool_Private_Mono.h"
+#include "System/ThreadPool_Private_Mono.h"
 #endif
 
 ULIS_NAMESPACE_BEGIN

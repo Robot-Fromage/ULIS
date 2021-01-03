@@ -40,7 +40,7 @@
 #include "System/FilePathRegistry.h"
 #include "System/Device.h"
 // Thread
-#include "Thread/ThreadPool.h"
+#include "System/ThreadPool.h"
 // Scheduling
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/Event.h"
