@@ -6,7 +6,7 @@
 * @file         AXI.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definitions for API and ABI infos.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Core/Core.h"

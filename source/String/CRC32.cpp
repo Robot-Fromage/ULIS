@@ -6,7 +6,7 @@
 * @file         CRC32.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definition for CRC32 function.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "String/CRC32.h"

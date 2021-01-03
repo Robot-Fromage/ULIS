@@ -11,7 +11,7 @@
 *               or layout, as long as the block has alpha.
 *               Alpha Blend should be faster than the regular Blend
 *               counterpart.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once

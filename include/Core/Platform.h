@@ -6,7 +6,7 @@
 * @file         Platform.h
 * @author       Clement Berthaud
 * @brief        This file provides platform definitions for the ULIS library.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once

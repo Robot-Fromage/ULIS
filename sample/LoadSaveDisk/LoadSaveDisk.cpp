@@ -6,7 +6,7 @@
 * @file         LoadSaveDisk.cpp
 * @author       Clement Berthaud
 * @brief        LoadSaveDisk application for ULIS3.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS3>

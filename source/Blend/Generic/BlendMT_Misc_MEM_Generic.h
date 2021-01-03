@@ -11,7 +11,7 @@
 *               for generic formats, without optimisations.
 *               This versions should work with any color model and any depth
 *               or layout.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
