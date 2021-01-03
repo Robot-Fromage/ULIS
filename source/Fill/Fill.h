@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Dispatch/Dispatcher.h"
+#include "Scheduling/Dispatcher.h"
 #include "Image/Color.h"
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"

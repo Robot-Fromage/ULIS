@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Dispatch/Dispatcher.h"
+#include "Scheduling/Dispatcher.h"
 #include "Math/Geometry/Rectangle.h"
 
 ULIS_NAMESPACE_BEGIN

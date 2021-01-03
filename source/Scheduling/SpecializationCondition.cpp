@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Dispatch/SpecializationCondition.h"
+#include "Scheduling/SpecializationCondition.h"
 #include "Image/Format.h"
 
 ULIS_NAMESPACE_BEGIN

@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Dispatch/SpecializationCondition.h"
+#include "Scheduling/SpecializationCondition.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/Job.h"
 #include "System/Device.h"
