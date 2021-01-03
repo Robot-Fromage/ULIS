@@ -22,6 +22,8 @@ using namespace ::ULIS;
 
 static void OnEventCompleteDo( const FEvent& iEvent, void* iUserData )
 {
+    FBlock* block = reinterpret_cast< FBlock* >( iUserData );
+    block->Dirty();
 }
 
 int
