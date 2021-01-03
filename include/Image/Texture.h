@@ -175,6 +175,15 @@ public:
     void Dirty( const FRectI& iRect, bool iCallOnInvalid = true ) const;
 
     /*!
+    Dirty parts of the block from the input array of rects and trigger the
+    invalid callback if set.
+
+    The optional \a iCallOnInvalid parameter can be set to false in order to
+    conditionaly disable the callback trigger depending on your needs.
+    */
+    void Dirty( const FRectI* iRectList, const uint32 iNumRects = 1, bool iCallOnInvalid = true ) const;
+
+    /*!
     Set a new invalid callback that will be called on dirty.
 
     \sa OnCleanup()

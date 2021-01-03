@@ -13,8 +13,6 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
-typedef void (*fpInvalidateFunction)( const FBlock* /* block */, void* /* info */, const FRectI& /* rect */ );
-typedef void (*fpCleanupFunction)( uint8* /* data */, void* /* info */ );
 
 ULIS_API void OnCleanup_FreeMemory( uint8* iData, void* iInfo );
 
@@ -59,12 +57,12 @@ private:
     void* mInfo;
 };
 
-typedef TCallback< void, uint8* > FOnCleanupData;
-typedef TCallback< void, const FBlock*, const FRectI& > FOnInvalidBlock;
-typedef TCallback< void, const FTexture*, const FRectI& > FOnInvalidTexture;
+typedef TCallback< void, uint8* /* iData */ > FOnCleanupData;
+typedef TCallback< void, const FBlock* /* iBlock */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidBlock;
+typedef TCallback< void, const FTexture* /* iTexture */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidTexture;
 template class ULIS_API TCallback< void, uint8* >;
-template class ULIS_API TCallback< void, const FBlock*, const FRectI& >;
-template class ULIS_API TCallback< void, const FTexture*, const FRectI& >;
+template class ULIS_API TCallback< void, const FBlock*, const FRectI*, const uint32 >;
+template class ULIS_API TCallback< void, const FTexture*, const FRectI*, const uint32 >;
 
 ULIS_NAMESPACE_END
 

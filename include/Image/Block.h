@@ -310,9 +310,19 @@ public:
 
     In the case of many successive calls to dirty with different small
     geometries, it can be more efficient to just disable them first and call it
-    only once later with the union of all invalid rects.
+    only once later with the union of all invalid rects, or use the array
+    version of the Dirty function.
     */
     void Dirty( const FRectI& iRect, bool iCallOnInvalid = true ) const;
+
+    /*!
+    Dirty parts of the block from the input array of rects and trigger the
+    invalid callback if set.
+
+    The optional \a iCallOnInvalid parameter can be set to false in order to
+    conditionaly disable the callback trigger depending on your needs.
+    */
+    void Dirty( const FRectI* iRectList, const uint32 iNumRects = 1, bool iCallOnInvalid = true ) const;
 
     /*!
     Return the color of the pixel at the given coordinates.

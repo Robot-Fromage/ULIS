@@ -92,32 +92,41 @@ FTexture_Private::BytesTotal() const
 void
 FTexture_Private::Dirty( bool iCall ) const
 {
-    Dirty( Rect(), iCall );
+    Dirty( &Rect(), 1, iCall );
 }
-
 
 void
 FTexture_Private::Dirty( const FRectI& iRect, bool iCall ) const
+{
+    Dirty( &iRect, 1, iCall );
+}
+
+void
+FTexture_Private::Dirty( const FRectI* iRectList, const uint32 iNumRects, bool iCall ) const
 {
     if( !iCall )
         return;
 
 #ifdef ULIS_ASSERT_ENABLED
-    int w = static_cast< int >( mWidth );
-    int h = static_cast< int >( mHeight );
-    int x1 = iRect.x;
-    int y1 = iRect.y;
-    int x2 = iRect.x + iRect.w;
-    int y2 = iRect.y + iRect.h;
-    ULIS_ASSERT( iRect.w >= 0, "Bad dirty geometry out of range" );
-    ULIS_ASSERT( iRect.h >= 0, "Bad dirty geometry out of range" );
-    ULIS_ASSERT( x1 >= 0 && x1 < w, "Bad dirty geometry out of range" );
-    ULIS_ASSERT( y1 >= 0 && y1 < h, "Bad dirty geometry out of range" );
-    ULIS_ASSERT( x2 >= 0 && x2 < w, "Bad dirty geometry out of range" );
-    ULIS_ASSERT( y2 >= 0 && y2 < h, "Bad dirty geometry out of range" );
+    {
+        int w = static_cast< int >( mWidth );
+        int h = static_cast< int >( mHeight );
+        for( uint32 i = 0; i < iNumRects; ++i ) {
+            int x1 = iRectList[i].x;
+            int y1 = iRectList[i].y;
+            int x2 = iRectList[i].x + iRectList[i].w;
+            int y2 = iRectList[i].y + iRectList[i].h;
+            ULIS_ASSERT( iRectList[i].w >= 0, "Bad dirty geometry out of range" );
+            ULIS_ASSERT( iRectList[i].h >= 0, "Bad dirty geometry out of range" );
+            ULIS_ASSERT( x1 >= 0 && x1 < w, "Bad dirty geometry out of range" );
+            ULIS_ASSERT( y1 >= 0 && y1 < h, "Bad dirty geometry out of range" );
+            ULIS_ASSERT( x2 >= 0 && x2 < w, "Bad dirty geometry out of range" );
+            ULIS_ASSERT( y2 >= 0 && y2 < h, "Bad dirty geometry out of range" );
+        }
+    }
 #endif
 
-    mOnInvalid.ExecuteIfBound( &mParent, iRect );
+    mOnInvalid.ExecuteIfBound( &mParent, iRectList, iNumRects );
 }
 
 void

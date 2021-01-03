@@ -91,6 +91,12 @@ FTexture::Dirty( const FRectI& iRect, bool iCall ) const
 }
 
 void
+FTexture::Dirty( const FRectI* iRectList, const uint32 iNumRects, bool iCall ) const
+{
+    d->Dirty( iRectList, iNumRects, iCall );
+}
+
+void
 FTexture::OnInvalid( const FOnInvalidTexture& iOnInvalid )
 {
     d->OnInvalid( iOnInvalid );
