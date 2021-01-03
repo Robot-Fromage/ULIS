@@ -79,7 +79,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
         uint8* buf = new uint8[ sizeof( TJobArgs ) ];
         TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
         new ( jargs ) TJobArgs();
-        iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, jargs[i] );
+        iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, *jargs );
 
         FJob* job = new FJob(
               1
