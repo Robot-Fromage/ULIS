@@ -90,7 +90,7 @@ BuildSimpleBufferJob_Chunks(
 {
     uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits();
     const int64 btt                 = static_cast< int64 >( iCargs->block.BytesTotal() );
-    oJargs.dst                      = dst + iIndex;
+    oJargs.dst                      = dst + iOffset;
     oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
 }
 
