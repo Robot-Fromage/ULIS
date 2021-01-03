@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Core/Callback.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -52,13 +53,14 @@ public:
     ~FEvent();
 
     /*! Constructor */
-    FEvent();
+    FEvent( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
 
     FEvent( const FEvent& ) = delete;
     FEvent& operator=( const FEvent& ) = delete;
 
 private:
     FEvent_Private* d;
+    FOnEventComplete mOnEventComplete;
 };
 
 ULIS_NAMESPACE_END

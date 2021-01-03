@@ -21,8 +21,11 @@ FEvent::~FEvent()
     delete  d;
 }
 
-FEvent::FEvent()
+FEvent::FEvent(
+    const FOnEventComplete& iOnEventComplete
+)
     : d( new FEvent_Private() )
+    , mOnEventComplete( iOnEventComplete )
 {
 }
 

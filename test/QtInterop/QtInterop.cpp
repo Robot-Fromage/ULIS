@@ -22,7 +22,6 @@ using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
-
     // Common
     FThreadPool pool;
     FCommandQueue queue( pool );
@@ -30,10 +29,10 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, fmt );
     FHardwareMetrics hw;
     FSchedulePolicy cacheEfficientPolicy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
- 
+
     // Data
     FBlock block( 1024, 1024, fmt );
- 
+
     // Operation
     FEvent evt_clear;
     ctx.Clear( block, block.Rect(), cacheEfficientPolicy, 0, nullptr, &evt_clear );
