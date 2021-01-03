@@ -64,6 +64,7 @@ typedef TCallback< void, const FEvent& /* iEvent */ > FOnEventComplete;
 template class ULIS_API TCallback< void, uint8* >;
 template class ULIS_API TCallback< void, const FBlock*, const FRectI*, const uint32 >;
 template class ULIS_API TCallback< void, const FTexture*, const FRectI*, const uint32 >;
+template class ULIS_API TCallback< void, const FEvent& >;
 
 ULIS_NAMESPACE_END
 

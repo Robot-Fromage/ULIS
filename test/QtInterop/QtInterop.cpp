@@ -20,6 +20,10 @@
 
 using namespace ::ULIS;
 
+static void OnEventCompleteDo( const FEvent& iEvent, void* iUserData )
+{
+}
+
 int
 main( int argc, char *argv[] ) {
     // Common
@@ -34,7 +38,7 @@ main( int argc, char *argv[] ) {
     FBlock block( 1024, 1024, fmt );
 
     // Operation
-    FEvent evt_clear;
+    FEvent evt_clear( FOnEventComplete( &OnEventCompleteDo, &block ) );
     ctx.Clear( block, block.Rect(), cacheEfficientPolicy, 0, nullptr, &evt_clear );
     ctx.Finish();
 
