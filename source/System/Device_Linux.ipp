@@ -137,46 +137,46 @@ FHardwareMetrics::FHardwareMetrics()
 
     if( nIds >= 0x00000001 ) {
         detail::cpuid( info, 0x00000001 );
-        bField |= ULIS_W_HW_MMX(    uint64( info[3] & ( 1 << 23 ) ) );
-        bField |= ULIS_W_HW_SSE(    uint64( info[3] & ( 1 << 25 ) ) );
-        bField |= ULIS_W_HW_SSE2(   uint64( info[3] & ( 1 << 26 ) ) );
-        bField |= ULIS_W_HW_SSE3(   uint64( info[2] & ( 1 << 0  ) ) );
-        bField |= ULIS_W_HW_SSSE3(  uint64( info[2] & ( 1 << 9  ) ) );
-        bField |= ULIS_W_HW_SSE41(  uint64( info[2] & ( 1 << 19 ) ) );
-        bField |= ULIS_W_HW_SSE42(  uint64( info[2] & ( 1 << 20 ) ) );
-        bField |= ULIS_W_HW_AES(    uint64( info[2] & ( 1 << 25 ) ) );
-        bField |= ULIS_W_HW_AVX(    uint64( info[2] & ( 1 << 28 ) ) );
-        bField |= ULIS_W_HW_FMA3(   uint64( info[2] & ( 1 << 12 ) ) );
-        bField |= ULIS_W_HW_RDRAND( uint64( info[2] & ( 1 << 30 ) ) );
+        bField |= ULIS_W_HW_MMX(    uint64( ( info[3] & ( uint64( 1 ) << 23 ) ) != 0 ) );
+        bField |= ULIS_W_HW_SSE(    uint64( ( info[3] & ( uint64( 1 ) << 25 ) ) != 0 ) );
+        bField |= ULIS_W_HW_SSE2(   uint64( ( info[3] & ( uint64( 1 ) << 26 ) ) != 0 ) );
+        bField |= ULIS_W_HW_SSE3(   uint64( ( info[2] & ( uint64( 1 ) << 0  ) ) != 0 ) );
+        bField |= ULIS_W_HW_SSSE3(  uint64( ( info[2] & ( uint64( 1 ) << 9  ) ) != 0 ) );
+        bField |= ULIS_W_HW_SSE41(  uint64( ( info[2] & ( uint64( 1 ) << 19 ) ) != 0 ) );
+        bField |= ULIS_W_HW_SSE42(  uint64( ( info[2] & ( uint64( 1 ) << 20 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AES(    uint64( ( info[2] & ( uint64( 1 ) << 25 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX(    uint64( ( info[2] & ( uint64( 1 ) << 28 ) ) != 0 ) );
+        bField |= ULIS_W_HW_FMA3(   uint64( ( info[2] & ( uint64( 1 ) << 12 ) ) != 0 ) );
+        bField |= ULIS_W_HW_RDRAND( uint64( ( info[2] & ( uint64( 1 ) << 30 ) ) != 0 ) );
     }
 
     if( nIds >= 0x00000007 ) {
         detail::cpuid( info, 0x00000007 );
-        bField |= ULIS_W_HW_AVX2(           uint64( info[1] & ( 1 << 5  ) ) );
-        bField |= ULIS_W_HW_BMI1(           uint64( info[1] & ( 1 << 3  ) ) );
-        bField |= ULIS_W_HW_BMI2(           uint64( info[1] & ( 1 << 8  ) ) );
-        bField |= ULIS_W_HW_ADX(            uint64( info[1] & ( 1 << 19 ) ) );
-        bField |= ULIS_W_HW_MPX(            uint64( info[1] & ( 1 << 14 ) ) );
-        bField |= ULIS_W_HW_SHA(            uint64( info[1] & ( 1 << 29 ) ) );
-        bField |= ULIS_W_HW_PREFETCHWT1(    uint64( info[2] & ( 1 << 0  ) ) );
-        bField |= ULIS_W_HW_AVX512_F(       uint64( info[1] & ( 1 << 16 ) ) );
-        bField |= ULIS_W_HW_AVX512_CD(      uint64( info[1] & ( 1 << 28 ) ) );
-        bField |= ULIS_W_HW_AVX512_PF(      uint64( info[1] & ( 1 << 26 ) ) );
-        bField |= ULIS_W_HW_AVX512_ER(      uint64( info[1] & ( 1 << 27 ) ) );
-        bField |= ULIS_W_HW_AVX512_VL(      uint64( info[1] & ( 1 << 31 ) ) );
-        bField |= ULIS_W_HW_AVX512_BW(      uint64( info[1] & ( 1 << 30 ) ) );
-        bField |= ULIS_W_HW_AVX512_DQ(      uint64( info[1] & ( 1 << 17 ) ) );
-        bField |= ULIS_W_HW_AVX512_IFMA(    uint64( info[1] & ( 1 << 21 ) ) );
-        bField |= ULIS_W_HW_AVX512_VBMI(    uint64( info[2] & ( 1 << 1  ) ) );
+        bField |= ULIS_W_HW_AVX2(           uint64( ( info[1] & ( uint64( 1 ) << 5  ) ) != 0 ) );
+        bField |= ULIS_W_HW_BMI1(           uint64( ( info[1] & ( uint64( 1 ) << 3  ) ) != 0 ) );
+        bField |= ULIS_W_HW_BMI2(           uint64( ( info[1] & ( uint64( 1 ) << 8  ) ) != 0 ) );
+        bField |= ULIS_W_HW_ADX(            uint64( ( info[1] & ( uint64( 1 ) << 19 ) ) != 0 ) );
+        bField |= ULIS_W_HW_MPX(            uint64( ( info[1] & ( uint64( 1 ) << 14 ) ) != 0 ) );
+        bField |= ULIS_W_HW_SHA(            uint64( ( info[1] & ( uint64( 1 ) << 29 ) ) != 0 ) );
+        bField |= ULIS_W_HW_PREFETCHWT1(    uint64( ( info[2] & ( uint64( 1 ) << 0  ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_F(       uint64( ( info[1] & ( uint64( 1 ) << 16 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_CD(      uint64( ( info[1] & ( uint64( 1 ) << 28 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_PF(      uint64( ( info[1] & ( uint64( 1 ) << 26 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_ER(      uint64( ( info[1] & ( uint64( 1 ) << 27 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_VL(      uint64( ( info[1] & ( uint64( 1 ) << 31 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_BW(      uint64( ( info[1] & ( uint64( 1 ) << 30 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_DQ(      uint64( ( info[1] & ( uint64( 1 ) << 17 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_IFMA(    uint64( ( info[1] & ( uint64( 1 ) << 21 ) ) != 0 ) );
+        bField |= ULIS_W_HW_AVX512_VBMI(    uint64( ( info[2] & ( uint64( 1 ) << 1  ) ) != 0 ) );
     }
 
     if( nExIds >= 0x80000001 ) {
         detail::cpuid( info, 0x80000001 );
-        bField |= ULIS_W_HW_X64(    uint64( info[3] & ( 1 << 29 ) ) );
-        bField |= ULIS_W_HW_ABM(    uint64( info[2] & ( 1 << 5  ) ) );
-        bField |= ULIS_W_HW_SSE4A(  uint64( info[2] & ( 1 << 6  ) ) );
-        bField |= ULIS_W_HW_FMA4(   uint64( info[2] & ( 1 << 16 ) ) );
-        bField |= ULIS_W_HW_XOP(    uint64( info[2] & ( 1 << 11 ) ) );
+        bField |= ULIS_W_HW_X64(    uint64( ( info[3] & ( uint64( 1 ) << 29 ) ) != 0 ) );
+        bField |= ULIS_W_HW_ABM(    uint64( ( info[2] & ( uint64( 1 ) << 5  ) ) != 0 ) );
+        bField |= ULIS_W_HW_SSE4A(  uint64( ( info[2] & ( uint64( 1 ) << 6  ) ) != 0 ) );
+        bField |= ULIS_W_HW_FMA4(   uint64( ( info[2] & ( uint64( 1 ) << 16 ) ) != 0 ) );
+        bField |= ULIS_W_HW_XOP(    uint64( ( info[2] & ( uint64( 1 ) << 11 ) ) != 0 ) );
     }
 }
 

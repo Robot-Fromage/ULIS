@@ -34,14 +34,15 @@ main( int argc, char *argv[] ) {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt );
     FHardwareMetrics hw;
-    FSchedulePolicy cacheEfficientPolicy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    //FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
     // Data
-    FBlock block( 1024, 1024, fmt );
+    FBlock block( 64, 64, fmt );
 
     // Operation
     FEvent evt_clear( FOnEventComplete( &OnEventCompleteDo, &block ) );
-    ctx.Clear( block, block.Rect(), cacheEfficientPolicy, 0, nullptr, &evt_clear );
+    ctx.Clear( block, block.Rect(), policy, 0, nullptr, &evt_clear );
     ctx.Finish();
 
     // Bake Qt App / Window
