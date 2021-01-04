@@ -146,7 +146,6 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             FJob* job = mJobs.front();
             mJobs.pop_front();
 
-
             // release lock. run async
             latch.unlock();
 
@@ -157,10 +156,8 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             latch.lock();
 
             // Gather event and set status if needed
-            //FEvent* evt = job->Parent()->Event();
-            //if( evt )
-            //    evt->SetFinished();
-            delete job;
+            FSharedInternalEvent evt = job->Parent()->Event();
+            evt->NotifyOneJobFinished();
 
             // Managing internals
             --mNumBusy;

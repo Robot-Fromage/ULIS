@@ -13,6 +13,7 @@
 #include "Scheduling/InternalEvent.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
+#include "Scheduling/Command.h"
 
 ULIS_NAMESPACE_BEGIN
 FInternalEvent::~FInternalEvent()
@@ -23,12 +24,9 @@ FInternalEvent::FInternalEvent()
     : mWaitList( TArray< FSharedInternalEvent >() )
     , mCommand( nullptr )
     , mStatus( eEventStatus::EventStatus_Idle )
-    , mNumJobsRemaining( UINT32_MAX )
+    , mNumJobsRemaining( UINT64_MAX )
     , mGeometry( FRectI() )
-#ifdef ULIS_STATISTICS_ENABLED
-    , mStartTime( -1 )
-    , mEndTime( -1 )
-#endif ULIS_STATISTICS_ENABLED
+    , mOnEventComplete( FOnEventComplete() )
 {
 }
 
@@ -57,15 +55,19 @@ FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
 }
 
 bool
-FInternalEvent::IsCommandBound() const
+FInternalEvent::IsBound() const
 {
     return  mCommand != nullptr;
 }
 
-void
-FInternalEvent::BindCommand( FCommand* iCommand )
+bool
+FInternalEvent::IsReady() const
 {
-    mCommand = iCommand;
+    for( uint32 i = 0; i < mWaitList.Size(); ++i )
+        if( mWaitList[i]->Status() != eEventStatus::EventStatus_Finished )
+            return  false;
+
+    return  true;
 }
 
 void
@@ -97,42 +99,26 @@ FInternalEvent::Status() const
     return  mStatus;
 }
 
-bool
-FInternalEvent::IsReady() const
+void
+FInternalEvent::Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry )
 {
-    for( uint32 i = 0; i < mWaitList.Size(); ++i )
-        if( mWaitList[i]->Status() != eEventStatus::EventStatus_Finished )
-            return  false;
-
-    return  true;
+    ULIS_ASSERT( !IsBound(), "Event already bound !" )
+    mCommand = iCommand;
+    BuildWaitList( iNumWait, iWaitList );
+    mNumJobsRemaining = mCommand->NumJobs();
+    mGeometry = iGeometry;
 }
 
 void
-FInternalEvent::SetGeometry( const FRectI& iRect )
+FInternalEvent::NotifyOneJobFinished()
 {
-    mGeometry = iRect;
+    --mNumJobsRemaining;
+    if( mNumJobsRemaining == 0 ) {
+        delete  mCommand;
+        SetStatus( eEventStatus::EventStatus_Finished );
+        mOnEventComplete.ExecuteIfBound( mGeometry );
+    }
 }
-
-#ifdef ULIS_STATISTICS_ENABLED
-FInternalEvent::tTime
-FInternalEvent::StartTime() const
-{
-    return  mStartTime;
-}
-
-FInternalEvent::tTime
-FInternalEvent::EndTime() const
-{
-    return  mEndTime;
-}
-
-FInternalEvent::tTime
-FInternalEvent::DeltaTime() const
-{
-    return  mEndTime - mStartTime;
-}
-#endif // ULIS_STATISTICS_ENABLED
-
 
 ULIS_NAMESPACE_END
 

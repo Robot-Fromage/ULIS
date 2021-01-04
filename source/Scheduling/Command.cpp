@@ -43,23 +43,17 @@ FCommand::FCommand(
     , mJobs( TArray< FJob* >() )
 {
     // Bind Event
-    if( iEvent )
-    {
+    if( iEvent ) {
         mEvent = iEvent->d->m;
-        ULIS_ASSERT( !( mEvent->IsCommandBound() ), "Cannot reuse an event that is already bound to a command" );
-        mEvent->BuildWaitList( iNumWait, iWaitList );
-        mEvent->BindCommand( this );
-        mEvent->SetGeometry( iEventGeometry );
-    }
-    else
-    {
+        ULIS_ASSERT( !( mEvent->IsBound() ), "Cannot reuse an event that is already bound to a command" );
+    } else {
         mEvent = FInternalEvent::Make();
-        mEvent->BindCommand( this );
-        mEvent->SetGeometry( iEventGeometry );
     }
 
     // Start Enqueuing Jobs
     iSched( this, iPolicy, iContiguous );
+
+    mEvent->Bind( this, iNumWait, iWaitList, iEventGeometry );
 }
 
 const ICommandArgs*
@@ -79,6 +73,12 @@ FCommand::AddJob( FJob* iJob )
 {
     iJob->BindCommand( this );
     mJobs.EmplaceBack( iJob );
+}
+
+uint64
+FCommand::NumJobs() const
+{
+    return  mJobs.Size();
 }
 
 bool

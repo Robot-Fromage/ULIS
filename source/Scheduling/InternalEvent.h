@@ -15,8 +15,6 @@
 #include "Memory/Array.h"
 #include "Scheduling/Event.h"
 #include "Math/Geometry/Rectangle.h"
-#include <memory>
-#include <chrono>
 
 ULIS_NAMESPACE_BEGIN
 class FInternalEvent;
@@ -43,8 +41,6 @@ class FInternalEvent
     friend class std::_Ref_count_obj< FInternalEvent >;
 
 public:
-    typedef  uint32  tTime;
-
     /*! Destructor */
     ~FInternalEvent();
 
@@ -55,36 +51,25 @@ private:
 public:
     static FSharedInternalEvent Make();
     const TArray< FSharedInternalEvent >& WaitList() const;
-    void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
-    bool IsCommandBound() const;
-    void BindCommand( FCommand* iCommand );
+    bool IsBound() const;
+    bool IsReady() const;
     void CheckCyclicSelfReference() const;
     void SetStatus( eEventStatus iStatus );
     eEventStatus Status() const;
-    bool IsReady() const;
-    void SetGeometry( const FRectI& iRect );
-
-#ifdef ULIS_STATISTICS_ENABLED
-    tTime StartTime() const;
-    tTime EndTime() const;
-    tTime DeltaTime() const;
-#endif // ULIS_STATISTICS_ENABLED
+    void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
+    void NotifyOneJobFinished();
 
 private:
+    void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
     void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
 
 private:
     TArray< FSharedInternalEvent > mWaitList;
     FCommand* mCommand;
     eEventStatus mStatus;
-    uint32 mNumJobsRemaining;
+    uint64 mNumJobsRemaining;
     FRectI mGeometry;
     FOnEventComplete mOnEventComplete;
-
-#ifdef ULIS_STATISTICS_ENABLED
-    tTime mStartTime;
-    tTime mEndTime;
-#endif // ULIS_STATISTICS_ENABLED
 };
 
 ULIS_NAMESPACE_END

@@ -84,6 +84,9 @@ public:
     /*! Add a job */
     void AddJob( FJob* iJob );
 
+    /*! Query num jobs */
+    uint64 NumJobs() const;
+
     bool IsReady() const;
 
     FSharedInternalEvent Event() const;

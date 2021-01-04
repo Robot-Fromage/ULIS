@@ -59,12 +59,12 @@ private:
 
 typedef TCallback< void, uint8* /* iData */ > FOnCleanupData;
 typedef TCallback< void, const FBlock* /* iBlock */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidBlock;
-typedef TCallback< void, const FTexture* /* iTexture */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidTexture;
-typedef TCallback< void, const FEvent& /* iEvent */ > FOnEventComplete;
+//typedef TCallback< void, const FTexture* /* iTexture */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidTexture;
+typedef TCallback< void, const FRectI& /* iEvent */ > FOnEventComplete;
 template class ULIS_API TCallback< void, uint8* >;
 template class ULIS_API TCallback< void, const FBlock*, const FRectI*, const uint32 >;
-template class ULIS_API TCallback< void, const FTexture*, const FRectI*, const uint32 >;
-template class ULIS_API TCallback< void, const FEvent& >;
+//template class ULIS_API TCallback< void, const FTexture*, const FRectI*, const uint32 >;
+template class ULIS_API TCallback< void, const FRectI& >;
 
 ULIS_NAMESPACE_END
 
