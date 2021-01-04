@@ -23,6 +23,11 @@ FInternalEvent::FInternalEvent()
     : mWaitList( TArray< FSharedInternalEvent >() )
     , mCommand( nullptr )
     , mStatus( eEventStatus::EventStatus_Idle )
+    , mNumJobsRemaining( UINT32_MAX )
+#ifdef ULIS_STATISTICS_ENABLED
+    , mStartTime( -1 )
+    , mEndTime( -1 )
+#endif ULIS_STATISTICS_ENABLED
 {
 }
 
@@ -45,9 +50,9 @@ FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
     for( uint32 i = 0; i < iNumWait; ++i )
         mWaitList.PushBack( iWaitList[i].d->m );
 
-#if defined( ULIS_DEBUG )
+#ifdef ULIS_ASSERT_ENABLED
     CheckCyclicSelfReference();
-#endif
+#endif // ULIS_ASSERT_ENABLED
 }
 
 bool
@@ -100,6 +105,26 @@ FInternalEvent::IsReady() const
 
     return  true;
 }
+
+#ifdef ULIS_STATISTICS_ENABLED
+FInternalEvent::tTime
+FInternalEvent::StartTime() const
+{
+    return  mStartTime;
+}
+
+FInternalEvent::tTime
+FInternalEvent::EndTime() const
+{
+    return  mEndTime;
+}
+
+FInternalEvent::tTime
+FInternalEvent::DeltaTime() const
+{
+    return  mEndTime - mStartTime;
+}
+#endif // ULIS_STATISTICS_ENABLED
 
 
 ULIS_NAMESPACE_END

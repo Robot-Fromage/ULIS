@@ -41,6 +41,8 @@ class FInternalEvent
     friend class std::_Ref_count_obj< FInternalEvent >;
 
 public:
+    typedef  uint32  tTime;
+
     /*! Destructor */
     ~FInternalEvent();
 
@@ -59,16 +61,24 @@ public:
     eEventStatus Status() const;
     bool IsReady() const;
 
+#ifdef ULIS_STATISTICS_ENABLED
+    tTime StartTime() const;
+    tTime EndTime() const;
+    tTime DeltaTime() const;
+#endif // ULIS_STATISTICS_ENABLED
+
 private:
     void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
 
 private:
     TArray< FSharedInternalEvent > mWaitList;
     FCommand* mCommand;
-    uint32 mNumJobsRemaining;
-    uint32 mStartTime;
-    uint32 mEndTime;
     eEventStatus mStatus;
+    uint32 mNumJobsRemaining;
+#ifdef ULIS_STATISTICS_ENABLED
+    tTime mStartTime;
+    tTime mEndTime;
+#endif // ULIS_STATISTICS_ENABLED
 };
 
 ULIS_NAMESPACE_END
