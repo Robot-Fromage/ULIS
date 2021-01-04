@@ -40,11 +40,13 @@
 
 /////////////////////////////////////////////////////
 // Detect Build Configuration
-#ifdef NDEBUG
-    #define ULIS_RELEASE
-#else // !NDEBUG
-    #define ULIS_DEBUG
-#endif // !NDEBUG
+#ifndef ULIS_RELWITHDEBINFO
+    #ifdef NDEBUG
+        #define ULIS_RELEASE
+    #else // !NDEBUG
+        #define ULIS_DEBUG
+    #endif // !NDEBUG
+#endif
 
 /////////////////////////////////////////////////////
 // Detect Compiler
@@ -208,7 +210,7 @@ namespace ULIS_NAMESPACE_NAME {}
 /////////////////////////////////////////////////////
 // Assert Behaviours
 
-#if defined( ULIS_DEBUG ) || defined( ULIS_FORCE_ASSERT )
+#if defined( ULIS_DEBUG ) || defined( ULIS_RELWITHDEBINFO ) || defined( ULIS_FORCE_ASSERT )
     #define ULIS_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS_CRASH; }
     #define ULIS_ASSERT_ENABLED
 #else
@@ -242,5 +244,11 @@ namespace ULIS_NAMESPACE_NAME {}
     #ifdef __SSE4_2__
         #define ULIS_COMPILETIME_SSE_SUPPORT
     #endif
+#endif
+
+/////////////////////////////////////////////////////
+// Conditional Debug Statistics
+#if defined( ULIS_DEBUG ) || defined( ULIS_RELWITHDEBINFO ) || defined( ULIS_FORCE_STATISTICS )
+    #define ULIS_STATISTICS_ENABLED
 #endif
 
