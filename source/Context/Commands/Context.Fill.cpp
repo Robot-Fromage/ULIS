@@ -44,13 +44,13 @@ FContext::Fill(
 
     // Forward arguments baking
     // This one is a bit tricky so here is a breakdown of the steps:
-    FColor color    = iColor.ToFormat( iBlock.Format() );                          // iColor can be in any format, so first we convert it to the block format.
+    FColor color    = iColor.ToFormat( iBlock.Format() );       // iColor can be in any format, so first we convert it to the block format.
     uint8* srcb     = color.Bits();
-    uint8 bpp       = iBlock.BytesPerPixel();                                   // We gather the Bytes Per Pixel for the format
-    uint32 size     = FMath::Max( uint32(32), uint32( bpp ) );                  // We define a size that is max of 32 ( avx2 ) and BPP ( bytes )
+    uint8 bpp       = iBlock.BytesPerPixel();                   // We gather the Bytes Per Pixel for the format
+    uint32 size     = FMath::Max( uint32(32), uint32( bpp ) );  // We define a size that is max of 32 ( avx2 ) and BPP ( bytes )
     uint32 stride   = size - ( size % bpp );
-    uint8* buf      = new uint8[ size ];                                        // We allocate a buffer that is length size, it will be deleted in ~FFillCommandArgs()
-    for( uint32 i = 0; i < stride; i+= bpp )                                    // We repeat the color N times in the buffer ( as many can fit )
+    uint8* buf      = new uint8[ size ];                        // We allocate a buffer that is length size, it will be deleted in ~FFillCommandArgs()
+    for( uint32 i = 0; i < stride; i+= bpp )                    // We repeat the color N times in the buffer ( as many can fit )
         memcpy( (void*)( ( buf ) + i ), srcb, bpp );
 
 
