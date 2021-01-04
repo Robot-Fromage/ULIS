@@ -41,7 +41,6 @@ FCommandQueue::FCommandQueue_Private::Flush()
         mQueue.Pop();
 
         if( cmd->IsReady() ) {
-            cmd->Event()->SetStatus( eEventStatus::EventStatus_Processing );
             cmd->Execute( mPool );
         } else {
             mQueue.Push( cmd );
