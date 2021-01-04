@@ -24,6 +24,7 @@ FInternalEvent::FInternalEvent()
     , mCommand( nullptr )
     , mStatus( eEventStatus::EventStatus_Idle )
     , mNumJobsRemaining( UINT32_MAX )
+    , mGeometry( FRectI() )
 #ifdef ULIS_STATISTICS_ENABLED
     , mStartTime( -1 )
     , mEndTime( -1 )
@@ -104,6 +105,12 @@ FInternalEvent::IsReady() const
             return  false;
 
     return  true;
+}
+
+void
+FInternalEvent::SetGeometry( const FRectI& iRect )
+{
+    mGeometry = iRect;
 }
 
 #ifdef ULIS_STATISTICS_ENABLED

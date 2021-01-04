@@ -68,6 +68,7 @@ FContext::Fill(
             , iNumWait
             , iWaitList
             , iEvent
+            , roi
         )
     );
 }
@@ -105,6 +106,7 @@ FContext::FillPreserveAlpha(
             , iNumWait
             , iWaitList
             , iEvent
+            , roi
         )
     );
 }

@@ -11,8 +11,10 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Core/Callback.h"
 #include "Memory/Array.h"
 #include "Scheduling/Event.h"
+#include "Math/Geometry/Rectangle.h"
 #include <memory>
 #include <chrono>
 
@@ -60,6 +62,7 @@ public:
     void SetStatus( eEventStatus iStatus );
     eEventStatus Status() const;
     bool IsReady() const;
+    void SetGeometry( const FRectI& iRect );
 
 #ifdef ULIS_STATISTICS_ENABLED
     tTime StartTime() const;
@@ -75,6 +78,9 @@ private:
     FCommand* mCommand;
     eEventStatus mStatus;
     uint32 mNumJobsRemaining;
+    FRectI mGeometry;
+    FOnEventComplete mOnEventComplete;
+
 #ifdef ULIS_STATISTICS_ENABLED
     tTime mStartTime;
     tTime mEndTime;

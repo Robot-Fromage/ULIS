@@ -58,7 +58,6 @@ public:
 
 private:
     FEvent_Private* d;
-    FOnEventComplete mOnEventComplete;
 };
 
 ULIS_NAMESPACE_END

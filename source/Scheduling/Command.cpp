@@ -36,6 +36,7 @@ FCommand::FCommand(
     , uint32 iNumWait
     , const FEvent* iWaitList
     , FEvent* iEvent
+    , const FRectI& iEventGeometry
 )
     : mArgs( iArgs )
     , mEvent( nullptr )
@@ -48,11 +49,13 @@ FCommand::FCommand(
         ULIS_ASSERT( !( mEvent->IsCommandBound() ), "Cannot reuse an event that is already bound to a command" );
         mEvent->BuildWaitList( iNumWait, iWaitList );
         mEvent->BindCommand( this );
+        mEvent->SetGeometry( iEventGeometry );
     }
     else
     {
         mEvent = FInternalEvent::Make();
         mEvent->BindCommand( this );
+        mEvent->SetGeometry( iEventGeometry );
     }
 
     // Start Enqueuing Jobs

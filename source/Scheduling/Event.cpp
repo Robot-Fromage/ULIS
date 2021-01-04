@@ -25,7 +25,6 @@ FEvent::FEvent(
     const FOnEventComplete& iOnEventComplete
 )
     : d( new FEvent_Private() )
-    , mOnEventComplete( iOnEventComplete )
 {
 }
 

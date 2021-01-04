@@ -57,6 +57,7 @@ public:
         , uint32 iNumWait
         , const FEvent* iWaitList
         , FEvent* iEvent
+        , const FRectI& iEventGeometry
     );
 
     /*! Explicitely deleted default constructor. */
