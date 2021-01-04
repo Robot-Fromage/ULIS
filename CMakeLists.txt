@@ -13,17 +13,18 @@
 #
 cmake_minimum_required(VERSION 3.11.0)
 
-option( ULIS_BUILD_SHARED           "Build the library shared or statically"            ON )
+option( ULIS_BUILD_SHARED           "Build the library shared or statically"            ON  )
 option( ULIS_BUILD_PYTHON_MODULE    "Build the library python module"                   OFF )
 option( ULIS_BUILD_TESTS            "Build the library test modules"                    OFF )
 option( ULIS_BUILD_SAMPLES          "Build the library sample modules"                  OFF )
-option( ULIS_FORCE_ASSERTS          "Build the library with forced assert in release"   OFF )
-SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries" )
-SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package" )
-SET( ULIS_PYTHON_REL_LIB            "" CACHE STRING "Indicates the path to python release static library" )
-SET( ULIS_PYTHON_DEB_LIB            "" CACHE STRING "Indicates the path to python debug static library" )
-SET( ULIS_PYTHON_INCLUDE_PATH1      "" CACHE STRING "Indicates the path to python include path" )
-SET( ULIS_PYTHON_INCLUDE_PATH2      "" CACHE STRING "Indicates extra path to python include path" )
+option( ULIS_FORCE_ASSERT           "Build the library with forced assert in release"   OFF )
+option( ULIS_FORCE_STATISTICS       "Build the library with forced stats in release"    OFF )
+SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries"            )
+SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package"                )
+SET( ULIS_PYTHON_REL_LIB            "" CACHE STRING "Indicates the path to python release static library"   )
+SET( ULIS_PYTHON_DEB_LIB            "" CACHE STRING "Indicates the path to python debug static library"     )
+SET( ULIS_PYTHON_INCLUDE_PATH1      "" CACHE STRING "Indicates the path to python include path"             )
+SET( ULIS_PYTHON_INCLUDE_PATH2      "" CACHE STRING "Indicates extra path to python include path"           )
 
 # Setup generation options
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
@@ -75,7 +76,7 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
 
 endif()
 
-set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_FORCE_ASSERTS" )
+set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_FORCE_ASSERT -D ULIS_FORCE_STATISTICS -D ULIS_RELWITHDEBINFO" )
 
 # Add Dependencies
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BINARY_DIR}/3rdparty/build_clip       )
@@ -124,8 +125,12 @@ else()
    target_compile_definitions( ULIS PRIVATE ULIS_STATIC_LIBRARY )
 endif()
 
-if( ${ULIS_FORCE_ASSERTS} )
+if( ${ULIS_FORCE_ASSERT} )
     target_compile_definitions( ULIS PUBLIC ULIS_FORCE_ASSERT )
+endif()
+
+if( ${ULIS_FORCE_STATISTICS} )
+    target_compile_definitions( ULIS PUBLIC ULIS_FORCE_STATISTICS )
 endif()
 
 target_compile_definitions( ULIS PUBLIC UNICODE )
