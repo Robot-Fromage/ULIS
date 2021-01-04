@@ -42,7 +42,7 @@ main( int argc, char *argv[] ) {
 
     // Operation
     FEvent evt_clear( FOnEventComplete( &OnEventCompleteDo, &block ) );
-    ctx.Clear( block, block.Rect(), policy, 0, nullptr, &evt_clear );
+    ctx.Fill( block, block.Rect(), FColor::RGBA8( 255, 0, 0 ), policy, 0, nullptr, &evt_clear );
     ctx.Finish();
 
     // Bake Qt App / Window
