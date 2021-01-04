@@ -35,7 +35,7 @@ public:
         , const FRectI& iSrcRect
         , const FRectI& iDstRect
     )
-        : FSimpleBufferCommandArgs( dst, dstRect)
+        : FSimpleBufferCommandArgs( dst, dstRect )
         , src( iSrc )
         , srcRect( iSrcRect )
     {}
