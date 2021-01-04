@@ -73,7 +73,7 @@ InvokeFillPreserveAlphaMT_MEM_Generic(
 )
 {
     const uint8* src = cargs->color.Bits();
-    const FFormatMetrics& fmt = cargs->block.Format();
+    const FFormatMetrics& fmt = cargs->dst.Format();
     T* ULIS_RESTRICT dst = reinterpret_cast< T* >( jargs->dst );
     for( uint32 i = 0; i < jargs->size; ++i ) {
         const T alpha = dst[ fmt.AID ];

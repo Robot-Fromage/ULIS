@@ -29,16 +29,16 @@ class FSimpleBufferCommandArgs
 public:
     virtual ~FSimpleBufferCommandArgs() override {}
     FSimpleBufferCommandArgs(
-          FBlock& iBlock
-        , const FRectI& iRect
+          FBlock& iDst
+        , const FRectI& iDstRect
     )
         : ICommandArgs()
-        , block( iBlock )
-        , rect( iRect )
+        , dst( iDst )
+        , dstRect( iDstRect )
     {}
 
-    FBlock& block;
-    const FRectI rect;
+    FBlock& dst;
+    const FRectI dstRect;
 };
 
 /////////////////////////////////////////////////////
@@ -69,11 +69,11 @@ BuildSimpleBufferJob_Scanlines(
     , FSimpleBufferJobArgs& oJargs
 )
 {
-    const FFormatMetrics& fmt       = iCargs->block.FormatMetrics();
-    uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits() + iCargs->rect.x * fmt.BPP;
-    const int64 bps                 = static_cast< int64 >( iCargs->block.BytesPerScanLine() );
-    const int64 size                = iCargs->rect.w * fmt.BPP;
-    oJargs.dst                      = dst + ( iCargs->rect.y + iIndex ) * bps;
+    const FFormatMetrics& fmt       = iCargs->dst.FormatMetrics();
+    uint8* const ULIS_RESTRICT dst  = iCargs->dst.Bits() + iCargs->dstRect.x * fmt.BPP;
+    const int64 bps                 = static_cast< int64 >( iCargs->dst.BytesPerScanLine() );
+    const int64 size                = iCargs->dstRect.w * fmt.BPP;
+    oJargs.dst                      = dst + ( iCargs->dstRect.y + iIndex ) * bps;
     oJargs.size                     = size;
 }
 
@@ -88,8 +88,8 @@ BuildSimpleBufferJob_Chunks(
     , FSimpleBufferJobArgs& oJargs
 )
 {
-    uint8* const ULIS_RESTRICT dst  = iCargs->block.Bits();
-    const int64 btt                 = static_cast< int64 >( iCargs->block.BytesTotal() );
+    uint8* const ULIS_RESTRICT dst  = iCargs->dst.Bits();
+    const int64 btt                 = static_cast< int64 >( iCargs->dst.BytesTotal() );
     oJargs.dst                      = dst + iOffset;
     oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
 }
@@ -122,8 +122,8 @@ ScheduleSimpleBufferJobs(
     (
           iCommand
         , iPolicy
-        , static_cast< int64 >( cargs->block.BytesTotal() )
-        , cargs->rect.h
+        , static_cast< int64 >( cargs->dst.BytesTotal() )
+        , cargs->dstRect.h
         , iContiguous
         , iDelegateBuildJobScanlines
         , iDelegateBuildJobChunks

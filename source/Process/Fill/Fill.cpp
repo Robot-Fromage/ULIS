@@ -66,7 +66,7 @@ InvokeFillMT_MEM(
 )
 {
     const uint8* src = cargs->buffer;
-    const uint8 stride = cargs->block.BytesPerPixel();
+    const uint8 stride = cargs->dst.BytesPerPixel();
     uint8* ULIS_RESTRICT dst = jargs->dst;
     for( uint32 i = 0; i < jargs->size; ++i ) {
         memcpy( dst, src, stride );
@@ -84,8 +84,8 @@ ScheduleFillMT_AVX(
 )
 {
     const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
-    const uint8 bpp = cargs->block.BytesPerPixel();
-    const uint32 bps = cargs->block.BytesPerScanLine();
+    const uint8 bpp = cargs->dst.BytesPerPixel();
+    const uint32 bps = cargs->dst.BytesPerScanLine();
 
     if( bpp <= 32 && bps >= 32 ) {
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_AVX >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
@@ -104,8 +104,8 @@ ScheduleFillMT_SSE(
 )
 {
     const FFillCommandArgs* cargs = dynamic_cast< const FFillCommandArgs* >( iCommand->Args() );
-    const uint8 bpp = cargs->block.BytesPerPixel();
-    const uint32 bps = cargs->block.BytesPerScanLine();
+    const uint8 bpp = cargs->dst.BytesPerPixel();
+    const uint32 bps = cargs->dst.BytesPerScanLine();
     if( bpp <= 16 && bps >= 16 ) {
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_SSE >( iCommand, iPolicy, iContiguous, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     } else {

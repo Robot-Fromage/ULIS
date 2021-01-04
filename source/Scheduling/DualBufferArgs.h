@@ -15,6 +15,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/RangeBasedPolicyScheduler.h"
 #include "Scheduling/ScheduleArgs.h"
+#include "Scheduling/SimpleBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -24,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 /// @details    FDualBufferCommandArgs is usually used for simple operations on a
 ///             single buffer, such as Clear or Fill, for instance.
 class FDualBufferCommandArgs
-    : public ICommandArgs
+    : public FSimpleBufferCommandArgs
 {
 public:
     virtual ~FDualBufferCommandArgs() override {}
@@ -34,17 +35,13 @@ public:
         , const FRectI& iSrcRect
         , const FRectI& iDstRect
     )
-        : ICommandArgs()
+        : FSimpleBufferCommandArgs( dst, dstRect)
         , src( iSrc )
-        , dst( iDst )
         , srcRect( iSrcRect )
-        , dstRect( iDstRect )
     {}
 
     const FBlock& src;
-    FBlock& dst;
     const FRectI srcRect;
-    const FRectI dstRect;
 };
 
 /////////////////////////////////////////////////////
