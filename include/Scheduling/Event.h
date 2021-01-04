@@ -20,8 +20,6 @@ enum eEventStatus : uint8
 {
       EventStatus_Idle
     , EventStatus_Queued
-    , EventStatus_Scheduled
-    , EventStatus_Processing
     , EventStatus_Finished
 };
 
