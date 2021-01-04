@@ -22,10 +22,18 @@ ULIS_NAMESPACE_BEGIN
 ///             coordination with a FThreadPool and a FCommandQueue.
 /// @details    The ICommandArgs does nothing special by itself, it is meant to
 ///             be used in a polymorphic way.
-class ULIS_API ICommandArgs {
+class ICommandArgs {
 public:
     /*! Destructor */
     virtual ~ICommandArgs() = 0;
+
+    ICommandArgs(
+        const FRectI& iDstRect
+    )
+        : dstRect( iDstRect )
+    {}
+
+    const FRectI dstRect;
 };
 
 /////////////////////////////////////////////////////
@@ -35,7 +43,7 @@ public:
 ///             coordination with a FThreadPool and a FCommandQueue.
 /// @details    The IJobArgs does nothing special by itself, it is meant to
 ///             be used in a polymorphic way.
-class ULIS_API IJobArgs {
+class IJobArgs {
 public:
     /*! Destructor */
     virtual ~IJobArgs() = 0;

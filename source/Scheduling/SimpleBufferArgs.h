@@ -32,13 +32,11 @@ public:
           FBlock& iDst
         , const FRectI& iDstRect
     )
-        : ICommandArgs()
+        : ICommandArgs( iDstRect )
         , dst( iDst )
-        , dstRect( iDstRect )
     {}
 
     FBlock& dst;
-    const FRectI dstRect;
 };
 
 /////////////////////////////////////////////////////
