@@ -94,6 +94,7 @@ FContext::Blend(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }
@@ -163,6 +164,7 @@ FContext::BlendAA(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }
@@ -220,6 +222,7 @@ FContext::AlphaBlend(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }
@@ -287,6 +290,7 @@ FContext::AlphaBlendAA(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }
@@ -353,6 +357,7 @@ FContext::BlendTiled(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }
@@ -412,6 +417,7 @@ FContext::BlendColor(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }

@@ -63,6 +63,7 @@ FContext::Copy(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }

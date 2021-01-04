@@ -54,6 +54,7 @@ FContext::Clear(
             , iNumWait
             , iWaitList
             , iEvent
+            , src_roi
         )
     );
 }

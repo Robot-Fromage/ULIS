@@ -70,6 +70,7 @@ FContext::ConvertFormat(
             , iNumWait
             , iWaitList
             , iEvent
+            , dst_roi
         )
     );
 }
