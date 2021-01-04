@@ -35,7 +35,7 @@ struct  FSplineLinearSample;
 struct  FSplineParametricSample;
 class   FString;
 class   FTextEngine;
-class   FTexture;
+//class   FTexture;
 class   FThreadPool;
 struct  FTileElement;
 class   FTransformation2D;
