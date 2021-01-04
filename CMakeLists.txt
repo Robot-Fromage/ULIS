@@ -100,11 +100,11 @@ set_target_properties( check-template       PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( pack                 PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( pack-cppfs           PROPERTIES FOLDER ULIS/3rdparty )
 
-if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
-    set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/include/"                 )
-    set( OpenCL_LIBRARY     "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/lib/x86_64/OpenCL.lib"    )
-endif()
-find_package(OpenCL)
+#if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
+#    set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/include/"                 )
+#    set( OpenCL_LIBRARY     "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/lib/x86_64/OpenCL.lib"    )
+#endif()
+#find_package(OpenCL)
 
 ####################################
 # Add Main Project
@@ -142,14 +142,14 @@ target_link_libraries( ULIS PRIVATE clip )
 target_link_libraries( ULIS PRIVATE lcms2 )
 target_link_libraries( ULIS PRIVATE freetype )
 target_link_libraries( ULIS PRIVATE cppfs )
-target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
+#target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
 
 target_include_directories(
     ULIS
     PUBLIC
     "include/"
     PRIVATE
-    ${OpenCL_INCLUDE_DIR}
+    #${OpenCL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
