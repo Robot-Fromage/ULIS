@@ -129,7 +129,7 @@ Finally we build the command, and this is a more serious part of the implementat
         + And there's another expression leaning against iPolicy ( "src_roi == src_rect" ) which evaluates to a bool, and that states wether the scheduling actually allows Chunks Jobs if requested. The logic behind that being that only if the whole block is to be cleared, we can expect its data to be totally contiguous and slice it into chunks to feed the threads. Otherwise, Scanlines Jobs will be preferred.
     - We push the newly created FCommand object into the Command Queue at the same time.
 
-What happens inside an FCommand or what happends inside the FCommandQueue is not relevant for the purpose of implementing a new feature, so let's focus on that part. What is interesting to notice here is that we used the mScheduleClear member from the contextual dispatch table, and that we mention a FSimpleBufferCommandArgs object, so let us have a look at that.
+What happens inside an FCommand or what happends inside the FCommandQueue is not relevant for the purpose of implementing a new feature, so let's focus on the feature. What is interesting to notice here is that we used the mScheduleClear member from the contextual dispatch table, and that we mention a FSimpleBufferCommandArgs object, so let us have a look at that.
 
 ---
 
@@ -182,9 +182,9 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
 ```
 
 Lower-level implementations rely on recurring macros to avoid redundant work, and while macros are often frowned upon for messing with the reading flow, they work here in a language extension paradigm, allowing to automatically generate complex structures automatically during preprocessing, you just need to be familiar with their interface. 
-First, whe have three "ULIS_DECLARE_COMMAND_SCHEDULER", declaring three low-level entries for ScheduleClear. The "mScheduleClear" member in FContextualDispatchTable will point to one of these versions ( AVX, SSE or MEM ). Their purpose is to be called immediately when building an FCommand object, passed as an fpCommandScheduler function pointer, and their role is to build a bunch of jobs according to the policy and the chucks constraints of the invocations. 
+First, whe have three "ULIS_DECLARE_COMMAND_SCHEDULER", declaring three low-level entries for ScheduleClear. The "mScheduleClear" member in FContextualDispatchTable will point to one of these versions ( AVX, SSE or MEM ). Their purpose is to be called immediately when building an FCommand object, passed as an fpCommandScheduler function pointer, and their role is to build a bunch of jobs according to the policy and the chuncks constraints of the invocations. 
 
-Now we can finally have a look a the Dispatcher mechanism, and at "FDispatchedClearInvocationSchedulerSelector". With a single macro "ULIS_DEFINE_DISPATCHER_GENERIC_GROUP", we define a SchedulerSelector structure, that TDispatcher will be able to read and query informations from. After defining its name, we pass in the command schedulers we defined earlier in order, the AVX, SSE, and MEM version. This allows us to implement various levels of optimization for a given feature, and the dispatcher will query the most appropriate one based on the hardware metrics at runtime. Alternatively, when building on a platform that doesn't suppor SIMD, these optimizations branches will be thrown away and default to the MEM version. MEM indicates no SIMD optimisations are used. 
+Now we can finally have a look a the Dispatcher mechanism, and at "FDispatchedClearInvocationSchedulerSelector". With a single macro "ULIS_DEFINE_DISPATCHER_GENERIC_GROUP", we define a SchedulerSelector structure, that TDispatcher will be able to read and query informations from. After defining its name, we pass in the command schedulers we defined earlier in order, the AVX, SSE, and MEM version. This allows us to implement various levels of optimization for a given feature, and the dispatcher will query the most appropriate one based on the hardware metrics at runtime. Alternatively, when building on a platform that doesn't support SIMD, these optimizations branches will be thrown away and default to the MEM version. MEM indicates no SIMD optimisations are used. 
 
 
 
@@ -199,7 +199,7 @@ ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedule
 ```
 
 This is symmetrical from the header file, we just provide automatic implementation for the various ScheduleClear methods, indicate which kind of Arguments are expected, here FSimpleBufferCommandArgs as we've seen earlier, as well as FSimpleBufferJobArgs which will be expected in the invocations. Finally, we indicate which invocations these will actually schedule within jobs. 
-Then we have the option to specify specializations of the the dispatcher or Scheduler Selector for a given format ( for an example with specializations for RGBA8, see Blend ), but here we don't need any. 
+Then we have the option to specify format specializations for the dispatcher and selector ( for an example with specializations for RGBA8, see Blend ), but here we don't need any. 
 
 Now for the most interesting piece where the work actually occurs, let's have a look at the Invocations:
 > "source/Clear/Clear.cpp"
@@ -260,7 +260,7 @@ InvokeClearMT_MEM(
 }
 ```
 
-Only then can we do actual work on the image buffer, which we retrieve from the jargs and cargs inputs. jargs are Job Arguments, which have arguments specific to a job, such as which chunk of the buffer to process. cargs are Command Arguments that contain information common to all jobs, it is unused here due to the simplicity of the command but can be usefull at times if Jobs share a common source to read from.
+Here we can do actual work on the image buffer, which we retrieve from the jargs and cargs inputs. jargs are Job Arguments, which have arguments specific to a job, such as which chunk of the buffer to process. cargs are Command Arguments that contain information common to all jobs, it is unused here due to the simplicity of the command but can be usefull at times if Jobs share common arguments to read from.
 
 ## Conclusion
 Finally, the implementation consists of approximately 80 lines of actual code and that's all you need for a Clear feature that will work on every block, for all formats, all colors models, all type depths, any number of channels, working asynchronously and in a multithreaded environment, with a simple API. Here is an exemple of use:
