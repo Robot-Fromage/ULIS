@@ -183,8 +183,8 @@ FBlock::Dirty( const FRectI* iRectList, const uint32 iNumRects, bool iCall ) con
             ULIS_ASSERT( iRectList[i].h >= 0, "Bad dirty geometry out of range" );
             ULIS_ASSERT( x1 >= 0 && x1 < w, "Bad dirty geometry out of range" );
             ULIS_ASSERT( y1 >= 0 && y1 < h, "Bad dirty geometry out of range" );
-            ULIS_ASSERT( x2 >= 0 && x2 < w, "Bad dirty geometry out of range" );
-            ULIS_ASSERT( y2 >= 0 && y2 < h, "Bad dirty geometry out of range" );
+            ULIS_ASSERT( x2 >= 0 && x2 <= w, "Bad dirty geometry out of range" );
+            ULIS_ASSERT( y2 >= 0 && y2 <= h, "Bad dirty geometry out of range" );
         }
     }
 #endif
