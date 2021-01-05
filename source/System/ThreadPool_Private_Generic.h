@@ -149,14 +149,16 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             // release lock. run async
             latch.unlock();
 
+            // Gather event
+            FSharedInternalEvent evt = job->Parent()->Event();
+
             // run function outside context
             job->Execute();
 
             // lock again, run sync.
             latch.lock();
 
-            // Gather event and set status if needed
-            FSharedInternalEvent evt = job->Parent()->Event();
+            // Notify event
             evt->NotifyOneJobFinished();
 
             // Managing internals
