@@ -14,6 +14,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FJob;
+class FCommand;
 /////////////////////////////////////////////////////
 /// @class      FThreadPool
 /// @brief      The FThreadPool class provides a way to hold a thread pool with
@@ -37,7 +38,8 @@ public:
     FThreadPool( uint32 iNumWorkers = MaxWorkers() );
     FThreadPool( const FThreadPool& ) = delete;
     FThreadPool& operator=( const FThreadPool& ) = delete;
-    void ScheduleJob( FJob* iJob );
+    void ScheduleCommand( const FCommand* iCommand );
+    void ScheduleJob( const FJob* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;

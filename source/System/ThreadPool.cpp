@@ -31,7 +31,13 @@ FThreadPool::FThreadPool( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::ScheduleJob( FJob* iJob )
+FThreadPool::ScheduleCommand( const FCommand* iCommand )
+{
+    d->ScheduleCommand( iCommand );
+}
+
+void
+FThreadPool::ScheduleJob( const FJob* iJob )
 {
     d->ScheduleJob( iJob );
 }

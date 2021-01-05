@@ -13,6 +13,7 @@
 #pragma once
 #include "System/ThreadPool.h"
 #include "Scheduling/Job.h"
+#include "Scheduling/Command.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

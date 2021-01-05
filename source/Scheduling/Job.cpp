@@ -39,7 +39,7 @@ FJob::FJob(
 }
 
 void
-FJob::Execute()
+FJob::Execute() const
 {
     for( uint32 i = 0; i < mNumTasks; ++i )
         mTask( &mArgs[i], mParent->Args() );

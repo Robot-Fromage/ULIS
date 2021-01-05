@@ -15,6 +15,7 @@
 #include "Memory/Array.h"
 #include "Memory/Queue.h"
 #include "Scheduling/Job.h"
+#include "Scheduling/Command.h"
 #include <atomic>
 #include <condition_variable>
 #include <deque>
@@ -37,7 +38,8 @@ class FThreadPool::FThreadPool_Private
 public:
     ~FThreadPool_Private();
     FThreadPool_Private( uint32 iNumWorkers = MaxWorkers() );
-    void ScheduleJob( FJob* iJob );
+    void ScheduleCommand( const FCommand* iJob );
+    void ScheduleJob( const FJob* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
@@ -51,7 +53,7 @@ private:
     uint32                              mNumBusy;
     bool                                bStop;
     std::vector< std::thread >          mWorkers;
-    std::deque< FJob* >                 mJobs;
+    std::deque< const FJob* >           mJobs;
     std::mutex                          mQueueMutex;
     std::condition_variable             cvJob;
     std::condition_variable             cvFinished;
@@ -80,7 +82,13 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
+FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
+{
+
+}
+
+void
+FThreadPool::FThreadPool_Private::ScheduleJob( const FJob* iJob )
 {
     std::unique_lock< std::mutex > lock( mQueueMutex );
     mJobs.push_back( iJob );
@@ -143,7 +151,7 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
             ++mNumBusy;
 
             // pull from queue
-            FJob* job = mJobs.front();
+            const FJob* job = mJobs.front();
             mJobs.pop_front();
 
             // release lock. run async

@@ -39,12 +39,15 @@ FCommandQueue::FCommandQueue_Private::Flush()
     {
         FCommand* cmd = mQueue.Front();
         mQueue.Pop();
+        mPool.ScheduleCommand( cmd );
 
+        /*
         if( cmd->IsReady() ) {
             cmd->Execute( mPool );
         } else {
             mQueue.Push( cmd );
         }
+        */
     }
 }
 

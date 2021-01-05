@@ -71,7 +71,7 @@ public:
     FJob& operator=( FJob&& ) = delete;
 
     /*! Start exec job tasks. */
-    void Execute();
+    void Execute() const;
 
     /*! Return the parent command */
     const FCommand* Parent() const;
