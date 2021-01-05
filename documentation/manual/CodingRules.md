@@ -135,13 +135,13 @@ Not respecting this guideline might lead to bugs that are hard to spot, so keep 
 When implementing such optimizations, enclose it in preprocessor directives to ensure the host that compiles the program has compile time support for the intrinsic you wish to use.
 It may be the case on one computer, but they might be missing on another compiler or version.
 Before calling an optimized version of a function, granted it was compiled on a computer that supported the instrinsics, make sure the computer that runs the code also supports the intrinsic with runtime checks.
-Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+Not respecting this guideline might lead to bugs that are hard to spot, so keep that in mind.
 
 ### Intermediate Results In Non-Blocking Operations
 - If the API you expose performs a non-blocking operation and uses intermediate results, the function might return and the intermediate result that lives on the stack will get deleted before the workers finished processing the task.
 In that case, you should use a shared pointer to ensure all workers keep a reference to the intermediate result, until all of them are finished.
 In that respect, copying intermediate results by value might be valid most of the time for basic types, but is not guaranteed to work for intrinsics data structures as they might be stored in registers and not passed the same way as other variables.
-Not respecting this guideling might lead to bugs that are hard to spot, so keep that in mind.
+Not respecting this guideline might lead to bugs that are hard to spot, so keep that in mind.
 
 ### Type Consistency And Possible Loss Of Data.
 - Solve all warnings of the form "about C4244: conversion from 'X' to 'Y', possible loss of data".
