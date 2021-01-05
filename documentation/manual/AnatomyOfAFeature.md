@@ -15,7 +15,7 @@ Before implementing an entry-point we should ask ourselves a few questions:
     - Am-i allowed to process only a subset of the geometry or should i only process whole blocks ?
     - What other arguments do i need to complete the task ?
 
-For a Clear operation, we need only one block, that will be processed in-place, and we can process only a sub-rectangle of the block geometry, so we should also pass a rectangle as an argument. We don't need any other arguments in order to complete the task ( Clear is one of the simplest functions available ). 
+For a Clear operation, we need only one block, that will be processed in-place, and we are allowed to process a sub-rectangle of the geometry if we want to, so we should also pass a rectangle as an argument. We don't need any other arguments in order to complete the task ( Clear is one of the simplest functions available ). 
 The method definition would look like this:
 
 > "include/Context/Context.h"
@@ -119,8 +119,8 @@ First we retrieve the same familiar function signature, now let us break down th
     - An event safety phase.
     - A command building phase.
 
-The first "geometry sanitize" phase is pretty much straight forward, we fetch the block geometry and intersect it with the input geometry, that way if the input geometry is bigger than the block, it will be clamped, and if there is no intersection at all, the resulting intersection will be an invalid rectangle that we can check.
-The event safety phase checks if the obtained rectangle is valid, and if it is not, it will return because no work is needed ( a no-op ), while notifying the input iEvent that it doesn't need to wait for anything, basically completing the task immediately.
+The first "geometry sanitize" phase is pretty much straight forward, we fetch the block geometry and intersect it with the input geometry, that way if the input geometry is bigger than the block, it will be clamped, and if there is no intersection at all, the resulting intersection will be an invalid rectangle that we can check.  
+The event safety phase checks if the obtained rectangle is valid, and if it is not, it will return because no work is needed ( a no-op ), while notifying the input iEvent that it doesn't need to wait for anything, basically completing the task immediately.  
 Finally we build the command, and this is a more serious part of the implementation, because many things happen at the same time:
     - We build an FCommand object, that is expecting:
         + A fpCommandScheduler function pointer, which we retrieve from the contextual dispatch table from the member "mScheduleClear"
