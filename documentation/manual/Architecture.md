@@ -33,10 +33,10 @@ In ["An Image Processing Library in Modern C++"](https://hal.archives-ouvertes.f
 First, a global view of the range of topics covered by ULIS, its goals and philosophy.
 
 ### 0.0) Goals {#r0-0}
-ULIS is a rendering library. It is aimed at software rasterization and digital image processing. More precisely, ULIS is specifically aimed at application with heavy image processing in mind, particularly ones that offer interactive image edition capabilities for a wide variety of targets and formats. Wether it is for the animation industry, cinema, VFX, illustration, printing, or any field connected with images, ULIS provides tools for computers to be used and allow easy ways to get to the point.
+ULIS is a rendering library. It is aimed at software rasterization and digital image processing. More precisely, ULIS is specifically aimed at application with heavy image processing in mind, particularly ones that offer interactive image edition capabilities for a wide variety of targets and formats. Wether it is for the animation industry, cinema, VFX, illustration, printing, or any field dealing with images, ULIS provides efficient tools that allow easy ways to get the job done.
 
 ### 0.1) Means {#r0-1}
-ULIS is written in "modern" C++, as of 2020, ULIS uses the C++14 version of the language specification. At first, ULIS was using C++17 and was planned to use C++20 as soon as possible, but fall back to using C++14, this choice was primarily dictated by the context in which ULIS was first used and to allow a wider support at the time of writing, notably in context within its use in UnrealEngine4, as its first real world usage was in the core tools employed by Praxinos softwares such as the ILIAD drawing plugin for UE4. C was also considered for ULIS, and ULIS may be rewritten for C some day, but i'm reluctant to drop some of the nice features C++ provides, such as templates or some amount of OOP.
+ULIS is written in "modern" C++, as of 2020, ULIS uses the C++14 version of the language specification. At first, ULIS was using C++17 and was planned to use C++20 as soon as possible, but fall back to using C++14. This choice was primarily dictated by the context in which ULIS was first used and to allow a wider support at the time of writing. C was also considered for ULIS, and ULIS may be rewritten for C someday.
 
 ULIS relies on some dependencies, which are themselves C or C++ libraries that focus on related fields of image processing, or subsets of the domain ULIS strives to cover. In that sense ULIS, while also providing its own implementations to cover other subsets of the image processing field, is an aggregator that unifies interfaces using modern language features to make the experience of programming image processing tools easy and smooth ( examples of such dependencies are Little-CMS2, which takes care of the color managed pipelines and color space support, and freetype2 which takes care of the text and font rendering side. ). ULIS drives these components altogether to offer ergonomic tools from the programmer's point of view.
 
@@ -48,39 +48,13 @@ While this may seem obvious, it's worth mentioning that ULIS itself is arranged 
 - Authors of ULIS use tools such as compilers, IDEs, version control systems or build systems to develop, maintain and deliver the product.
 - ULIS is delivered as a library for programmers to learn the API and use it as a tool to help them achieve their goals, without worrying too much about the implementation details of image processing algorithms.
 
-In that respect, ULIS is a client of third party tools such as git or cmake, and a client of compilers vendors such as Clang/LLVM, which are themselves in turn arranged in this scheme, all the way down to the hardware vendors, or ultimately to the legacy knowledge that led to the current state of technology. They are generally reffered to as the upstream, vendors, or tool providers.
-
 Once ULIS is released as a library, programmers not related to the ULIS project, involved in any kind of software project, wether they are hobbyist, students, professionals, and wether their goal is an open source, free software or commercial software, might decide to use the ULIS library to achieve their goals. These people are software developers with some amount of experience using programming languages such as C++, or other languages covered by the bindings of ULIS, such as Python. They are directly impacted by the design choices of the library, its API, its ABI, and its overall stability. They are the ones who use the tools ULIS provides, and they are reffered to as the downstream, the developers, the programmers, or the clients of the library. They might also use third party tools such as version control systems, and compilers, amongst the ones ULIS officially supports and tests on a regular basis.
 
 Clients of the ULIS library use functions, tools, classes and other components delivered with the library to ease the development process of their own software, until they release the software to their own clients, redistributing parts of ULIS along the way. The software developped this way might be a painting application, or a scientific application manipulating images, or any kind of tool related to image processing, which targets its own audience. From the point of view of ULIS, this is very relevant and an important concern, as the range of platforms that ULIS supports directly impacts which platforms may or may not use ULIS as a library for a software project. This "final" target audience is called the users, the end-users, or the consumers of the library. They run applications on their device, which rely on compiled ULIS binaries to handle the heavy weightlifting when it comes to image processing.
 
-In turn, these consumers might be professional animators, or professional of the VFX industry, a freelance illustrator or a printing company. They may use tools to achieve other goals such as providing graphic design or images for the entertainment industry. These products ( e.g: a film ) would be aimed at a wider audience which we'll call the general public. The general public is generally consuming exported images or sequences of images and are not related to ULIS directly, but ULIS remains an actor who interveened to deliver the final product.
-
-The general public might be inspired by such productions and, some individuals might decide to pursue new goals. Some of them may in turn want to be involved in this chain of actors to pursue further achievements in the imaging industry, but this where we'll stop our exploration of the chain.
-
-To sum things up here is a table of the lexicon:
-| Actor                     | Role
-|---------------------------|--------------------|
-|Upstream                   |Vendor of tools used by ULIS
-|Vendor                     |Alias of Upstream
-|Tool Provider              |Alias of Upstream
-|Dependency                 |Tool aggregated by ULIS
-|Author                     |Authority who write, drive, and maintain ULIS
-|Maintainer                 |Team doing active or sporadic maintenance work on ULIS
-|Contributor                |Alias of Maintainer
-|Client                     |Developers striving to deliver software using ULIS
-|Downstream                 |Alias of Client
-|Developer                  |Alias of Client
-|Programmer                 |Alias of Client
-|Consumer                   |People running software using ULIS on their device
-|End-User                   |Alias of Consumer
-|General Public             |Spectators of product made in part using software built with ULIS
-
 ### 0.3) Purpose {#r0-3}
-Now that we layed the foundations for ULIS to be identified, it's time to discuss the purpose of the library. We saw what was the place of ULIS in the chain of actors from a technical point of view, with a tiny bit of open room at the lose ends, and we went over the goals. If the previous sections were merely a straightforward summary of the scope of the project, the purpose would be the reason of existence of the library, and explaining that reason.
-
-We will define the purpose of ULIS in the context of existing solutions, as ULIS was born to fill a gap in the available technologies. Its identity and purpose are very much tied to this context, so we may overlap on the thematic of comparative advantage review, but this is a topic covered in depth later.
-For now, amongst other libraries and solutions that exist, some of them can achieve in parts the same goals as ULIS. This is a non-exhaustive list:
+ULIS was born to fill a gap in the available technologies.
+Amongst other libraries and solutions that exist, some of them can achieve in parts the same goals as ULIS. This is a non-exhaustive list:
 - [Blend2D](https://github.com/blend2d/blend2d)
 - [AGG](https://antigrain.com/)
 - [OpenCV](https://opencv.org/)
@@ -98,31 +72,31 @@ For now, amongst other libraries and solutions that exist, some of them can achi
 - [Little-CMS](http://www.littlecms.com/)
 - [Freetype](https://www.freetype.org/)
 
-All of these libraries are suitable for subsets of what ULIS strives to cover. Some of them are focused at rasterizing vector graphics on the CPU, some of them are more general purpose. Some of them are targeted at being used at software rasterizers, while some of them only focus on specific topics such as text or color. Some of them provide semantic for manipulating generic images, while some of them strive for the widest possible range of abstractions. Some of them target the workload on CPU, some of them do on GPU. None of them cover the appropriate scope ULIS tries to encapsulate in an unified fashion, in and by themselves. Some of them also cover unrelated topics with an additional unnecessary weight in context. Overall, one would have to pick several of these libraries, learn their often very different APIs, deal with their own limitations, and ensure inter-operability beetween these components to achieve a solution that would cover the same goals ULIS does.
+All of these libraries are suitable for subsets of what ULIS strives to cover. Some of them are focused at rasterizing vector graphics on the CPU, some of them are more general purpose. Some of them are targeted at being used as software rasterizers, while some of them only focus on specific topics such as text or color. Some of them target the workload on CPU, some of them do that on GPU. None of them cover the appropriate scope ULIS tries to encapsulate in an unified fashion just by themselves. Some of them also cover unrelated topics with additional overhead. Overall, one would have to pick several of these libraries, learn their often very different APIs, deal with their own limitations, and ensure inter-operability beetween these components to achieve a solution that would cover the same goals ULIS does.
 
 Amongst these limitations, we find:
 - Incomplete support for a wide variety of image formats
+- Not enough features available
 - Poor or no support for image IO
 - Poor or no support for video
-- Topic subset coverage is too narrow to do anything by itself
-- Topic subset coverage is too specific for a general purpose imaging application
-- Poor or no support for CPU drastically limits the scope of the possible applications, or leads to convoluted pipelines
-- Too many abstractions lead developers to be unable to control the scope of the application
+- Not generic enough
+- Not optimized or efficient enough
+- Too much abstraction is left for the user to handle
 
 For instance, none of these libraries provide a very wide variety of image formats, Blend2D, Qt, Cairo or Skia are limited in the choice of image formats to common formats in a software rasterization context, but that may be unsuitable in the image edition world. OpenCV or CImg provide no such limitations, but their level of abstraction is so great that the friction with the application becomes unmanageable, since there are no way to actually identify a format without relying on custom additions over the tools. Actually, there is some level of assumption too, which can be a deal breaker, since CImg doesn't provide tools for interleaved images, while OpenCV doesn't provide tools for planar images right out of the box. OpenCV, Blend2D, AGG and Qt for instance have no built-in concept of a colorspace, which lead to additional work by the client. Little-CMS and Freetype do their job perfectly, but they need to be driven in order to achieve their goal, and their APIs, while great, are both different and the inter-operability is a source of bugs and friction which slows down the developement of an application, not to mention the overhead of maintaining multiple dependencies.
 
 In that sense, the purpose of ULIS is to fill-in the gaps, provide a semantic way to talk about colors, pixels, images, drawing operations, compositing operations, transformations. While not making assumptions about what is common or uncommon in a given context, ULIS can cover an unlimited range of image formats, wether planar or interleaved. It has meaningful ways to associate an image with a color space, or to speak about the order of the elements in the memory layout, while providing minimal friction for the client, and of course minimal overhead to preserve performances at runtime; but most of all the client shouldn't feel the need to go and seek another library solution because in terms of features, ULIS covers everything you want to do in the image processing field, by aggregating all these features in an extensible manner.
 
-Of course we are making a number of bold claims here, and the implementation has to keep up with that ambition, so i'd like to make it clear that while ULIS is trying to solve these problems, it is probably not perfect as a universal library for imaging and i'm sure you can find the same kind of issues the other libraries display on some parts it tries to cover. So it is good to keep in mind that ULIS is still an evolving product, and to remain modest about it. Also, i am myself an avid user of several of these libraries, and was really inspired by some of the authors of these libraries, such as Petr Kobalicek who wrote the Blend2D library, or Maxim Shemanarev who wrote the AGG library.
+Of course we are making a number of bold claims here, and the implementation has to keep up with that ambition, so i'd like to make it clear that while ULIS is trying to solve these problems, it is probably not perfect as a universal library for imaging and i'm sure you can find the same kind of issues the other libraries display on some parts it tries to cover. So it is good to keep in mind that ULIS is still an evolving product. Also, i am myself an avid user of several of these libraries, and was really inspired by some of the authors of these libraries, such as Petr Kobalicek who wrote the Blend2D library, or Maxim Shemanarev who wrote the AGG library.
 
-To account for the imperfect nature of ULIS, some low level elements, the pipes, gears and porcelain that are usually hidden behind the curtain, are made available through dedicated functions, such as retrieving the raw pointer to a memory buffer containing an image, in order to allow inter-operability with any other framework you choose to use in combination to overcome these issues. Of course that defeats the purpose of ULIS in the first place if you have to use a combination of imaging libraries, but sometimes it's also handy to operate with the GPU or pass data to a GUI library for example.
+To account for the imperfect nature of ULIS, some low level elements are made available through dedicated functions, such as retrieving the raw pointer to a memory buffer containing an image, in order to allow inter-operability with any other framework you choose to use in combination to overcome these issues. Of course that defeats the purpose of ULIS in the first place if you have to use a combination of imaging libraries, but sometimes it's also handy to operate with the GPU or pass data to a GUI library for example.
 
 ### 0.4) Summary {#r0-4}
 > ULIS is a rendering library written in modern C++ with available bindings for other languages such as Python,  
 > It is aimed at applications offering interactive image or video edition capabilities, for the industries of Animation, Films, VFX, Illustration, Printing, etc.  
 > ULIS aggregates other libraries to handle text or color managed pipelines.  
-> It appeals to software developpers willing to smooth the process the development of an image processing application, and tries to deliver professional quality components.  
-> ULIS was born to fill what feels like a gap in the other available imaging libraries, but is able to inter operate and work hand to hand with them too.
+> It appeals to software developpers willing to smooth the process of developing of an image processing application, and tries to deliver professional quality components.  
+> ULIS was born to fill what feels like a gap in the other available imaging libraries, but is also able to inter-operate and work hand to hand with them.
 
 ---
 
@@ -130,7 +104,7 @@ To account for the imperfect nature of ULIS, some low level elements, the pipes,
 A review over the implementation principles, guidelines and tools involved in ULIS.
 
 ### 1.0) Problems {#r1-0}
-After making these claims about the nature of ULIS, let's see in details what it is trying to solve, why these problems are hard to solve and required designing such an architecture in the first place. The essence of the problems is manyfold: ULIS aims to be usable as an image library, that:
+Let's see in details what ULIS is trying to solve, why these problems are hard to solve, and examinate the chosen design. The essence of the problems is manyfold: ULIS aims to be usable as an image library, that:
 - covers a wide range of features
 - is highly efficient and competitive
 - offers generic tools and little constraint
@@ -146,7 +120,7 @@ A way to alleviate these issues is to consider the following ideas at the core o
 - Segmentation of the functional properties of these objects should be clear and unambiguous.
 - More features require more code, there is no way around that and it will take effort. However standardizing the segmentation of the underlying implementations should allow better code reuse, browsing, and overall maintenance.
 
-The core idea here is that ULIS should provide well thought concepts to make context the core and emphasis of every situation where ULIS is used. Various concepts propositions are presented, and it should be noted that over the course of its evolution, different solutions were adopted by ULIS. The concepts were not invented first, then proceeding to the implementation. It is the requirements of the implementation, and the worry of its efficiency, that led to the invention of these concepts.
+The core idea here is that ULIS should provide well thought concepts to make context the core and emphasis of every situation where ULIS is used. Various concepts propositions are presented, and it should be noted that over the course of its evolution, different solutions were adopted by ULIS.
 
 ### 1.1) Propositions {#r1-1}
 
