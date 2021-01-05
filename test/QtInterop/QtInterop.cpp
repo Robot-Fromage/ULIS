@@ -58,16 +58,16 @@ main( int argc, char *argv[] ) {
         ctx.Clear( blockA, blockA.Rect(), policy, 0, nullptr, &events[0] );
         ctx.Clear( blockB, blockB.Rect(), policy, 0, nullptr, &events[1] );
         ctx.Clear( blockC, blockC.Rect(), policy, 0, nullptr, &events[2] );
-        //ctx.Fill( blockA, blockA.Rect(), colors[0], policy, 1, &events[0], &events[3] );
-        //ctx.Fill( blockB, blockB.Rect(), colors[1], policy, 1, &events[1], &events[4] );
-        //ctx.Fill( blockC, blockC.Rect(), colors[2], policy, 1, &events[2], &events[5] );
+        ctx.Fill( blockA, blockA.Rect(), colors[0], policy, 1, &events[0], &events[3] );
+        ctx.Fill( blockB, blockB.Rect(), colors[1], policy, 1, &events[1], &events[4] );
+        ctx.Fill( blockC, blockC.Rect(), colors[2], policy, 1, &events[2], &events[5] );
         ctx.Finish();
     }
 
     // Bake Qt App / Window
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( canvas.Bits(), canvas.Width(), canvas.Height(), canvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    QImage*         image   = new QImage( blockC.Bits(), blockC.Width(), blockC.Height(), blockC.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );
     label->setPixmap( pixmap );
