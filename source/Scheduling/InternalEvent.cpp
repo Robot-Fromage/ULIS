@@ -20,21 +20,25 @@ FInternalEvent::~FInternalEvent()
 {
 }
 
-FInternalEvent::FInternalEvent()
+FInternalEvent::FInternalEvent(
+    const FOnEventComplete& iOnEventComplete
+)
     : mWaitList( TArray< FSharedInternalEvent >() )
     , mCommand( nullptr )
     , mStatus( eEventStatus::EventStatus_Idle )
     , mNumJobsRemaining( UINT64_MAX )
     , mGeometry( FRectI() )
-    , mOnEventComplete( FOnEventComplete() )
+    , mOnEventComplete( iOnEventComplete )
 {
 }
 
 //static
 FSharedInternalEvent
-FInternalEvent::Make()
+FInternalEvent::Make(
+    const FOnEventComplete& iOnEventComplete
+)
 {
-    return  std::make_shared< FInternalEvent >();
+    return  std::make_shared< FInternalEvent >( iOnEventComplete );
 }
 
 const TArray< FSharedInternalEvent >&

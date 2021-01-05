@@ -46,10 +46,10 @@ public:
 
 private:
     /*! Constructor */
-    FInternalEvent();
+    FInternalEvent( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
 
 public:
-    static FSharedInternalEvent Make();
+    static FSharedInternalEvent Make( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
     const TArray< FSharedInternalEvent >& WaitList() const;
     bool IsBound() const;
     bool IsReady() const;

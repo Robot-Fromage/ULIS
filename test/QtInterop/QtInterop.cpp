@@ -20,10 +20,9 @@
 
 using namespace ::ULIS;
 
-static void OnEventCompleteDo( const FEvent& iEvent, void* iUserData )
+void OnEventCompleteDo( const FRectI& iGeometry, void* iUserData )
 {
-    FBlock* block = reinterpret_cast< FBlock* >( iUserData );
-    block->Dirty();
+    reinterpret_cast< FBlock* >( iUserData )->Dirty( iGeometry );
 }
 
 int
@@ -38,7 +37,7 @@ main( int argc, char *argv[] ) {
     //FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
     // Data
-    FBlock block( 64, 64, fmt );
+    FBlock block( 256, 256, fmt );
 
     // Operation
     FEvent evt_clear( FOnEventComplete( &OnEventCompleteDo, &block ) );

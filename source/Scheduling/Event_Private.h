@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Core/Callback.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/InternalEvent.h"
 
@@ -38,7 +39,7 @@ class FEvent::FEvent_Private
     friend class FCommand;
 
 public:
-    FEvent_Private();
+    FEvent_Private( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
 
 private:
     FSharedInternalEvent m;
