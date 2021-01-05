@@ -74,7 +74,7 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
     : mNumBusy( 0 )
     , bStop( false )
 {
-    uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
+    uint32 max = FMath::Clamp( iNumWorkers, uint32( 1 ), MaxWorkers() );
     for( uint32 i = 0; i < max; ++i )
         mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::ThreadProcess, this ) );
 }

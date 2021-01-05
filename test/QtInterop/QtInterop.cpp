@@ -28,7 +28,7 @@ void OnEventCompleteDo( const FRectI& iGeometry, void* iUserData )
 int
 main( int argc, char *argv[] ) {
     // Common
-    FThreadPool pool;
+    FThreadPool pool( 1 );
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt );
