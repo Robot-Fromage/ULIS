@@ -34,20 +34,40 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, fmt );
     FHardwareMetrics hw;
     FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    //FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
     // Data
-    FBlock block( 256, 256, fmt );
+    FBlock blockA( 256, 256, fmt );
+    FBlock blockB( 256, 256, fmt );
+    FBlock blockC( 256, 256, fmt );
+    FBlock canvas( 256, 256, fmt );
 
     // Operation
-    FEvent evt_clear( FOnEventComplete( &OnEventCompleteDo, &block ) );
-    ctx.Fill( block, block.Rect(), FColor::RGBA8( 255, 0, 0 ), policy, 0, nullptr, &evt_clear );
-    ctx.Finish();
+    {
+        TArray< FEvent > events( 6 );
+        // events[0] : Clear A
+        // events[1] : Clear B
+        // events[2] : Clear C
+        // events[4] : Fill A
+        // events[5] : Fill B
+        // events[6] : Fill C
+        TArray< FColor > colors( 3 );
+        colors[0] = FColor::RGBA8( 255, 0, 0 );
+        colors[1] = FColor::RGBA8( 0, 255, 0 );
+        colors[2] = FColor::RGBA8( 0, 0, 255 );
+
+        ctx.Clear( blockA, blockA.Rect(), policy, 0, nullptr, &events[0] );
+        ctx.Clear( blockB, blockB.Rect(), policy, 0, nullptr, &events[1] );
+        ctx.Clear( blockC, blockC.Rect(), policy, 0, nullptr, &events[2] );
+        //ctx.Fill( blockA, blockA.Rect(), colors[0], policy, 1, &events[0], &events[3] );
+        //ctx.Fill( blockB, blockB.Rect(), colors[1], policy, 1, &events[1], &events[4] );
+        //ctx.Fill( blockC, blockC.Rect(), colors[2], policy, 1, &events[2], &events[5] );
+        ctx.Finish();
+    }
 
     // Bake Qt App / Window
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( block.Bits(), block.Width(), block.Height(), block.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    QImage*         image   = new QImage( canvas.Bits(), canvas.Width(), canvas.Height(), canvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );
     label->setPixmap( pixmap );

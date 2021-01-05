@@ -222,6 +222,7 @@ public:
 
         if( mBack ) {
             mBack->mNext = node;
+            mBack = node;
         } else {
             mFront = node;
             mBack = node;
@@ -237,6 +238,7 @@ public:
 
         if( mBack ) {
             mBack->mNext = node;
+            mBack = node;
         } else {
             mFront = node;
             mBack = node;
@@ -253,6 +255,7 @@ public:
 
         if( mBack ) {
             mBack->mNext = node;
+            mBack = node;
         } else {
             mFront = node;
             mBack = node;
