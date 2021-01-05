@@ -50,6 +50,7 @@ FInternalEvent::WaitList() const
 void
 FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
 {
+    mWaitList.Reserve( iNumWait );
     for( uint32 i = 0; i < iNumWait; ++i )
         mWaitList.PushBack( iWaitList[i].d->m );
 
