@@ -30,11 +30,12 @@ FJob::FJob(
       uint32 iNumTasks
     , fpTask iTask
     , const IJobArgs* iArgs
+    , const FCommand* iParent
 )
     : mNumTasks( iNumTasks )
     , mTask( iTask )
     , mArgs( iArgs )
-    , mParent( nullptr )
+    , mParent( iParent )
 {
 }
 
@@ -49,12 +50,6 @@ const FCommand*
 FJob::Parent() const
 {
     return  mParent;
-}
-
-void
-FJob::BindCommand( const FCommand* iParent )
-{
-    mParent = iParent;
 }
 
 ULIS_NAMESPACE_END

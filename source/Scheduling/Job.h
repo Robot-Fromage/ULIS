@@ -53,6 +53,7 @@ public:
           uint32 iNumTasks
         , fpTask iTask
         , const IJobArgs* iArgs
+        , const FCommand* iParent
     );
 
     /*! Explicitely deleted default constructor. */
@@ -75,9 +76,6 @@ public:
 
     /*! Return the parent command */
     const FCommand* Parent() const;
-
-    /*! Set the parent command */
-    void BindCommand( const FCommand* iParent );
 
 private:
     uint32 mNumTasks;
