@@ -39,7 +39,6 @@ public:
     FThreadPool( const FThreadPool& ) = delete;
     FThreadPool& operator=( const FThreadPool& ) = delete;
     void ScheduleCommand( const FCommand* iCommand );
-    void ScheduleJob( const FJob* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;

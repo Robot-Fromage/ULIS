@@ -39,7 +39,6 @@ FCommandQueue::FCommandQueue_Private::Flush()
     {
         FCommand* cmd = mQueue.Front();
         mQueue.Pop();
-        ULIS_ASSERT( cmd->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
         mPool.ScheduleCommand( cmd );
     }
 }

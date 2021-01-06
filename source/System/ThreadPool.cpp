@@ -37,12 +37,6 @@ FThreadPool::ScheduleCommand( const FCommand* iCommand )
 }
 
 void
-FThreadPool::ScheduleJob( const FJob* iJob )
-{
-    d->ScheduleJob( iJob );
-}
-
-void
 FThreadPool::WaitForCompletion()
 {
     d->WaitForCompletion();

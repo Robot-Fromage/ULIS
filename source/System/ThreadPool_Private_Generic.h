@@ -41,13 +41,13 @@ public:
     FThreadPool_Private( const FThreadPool_Private& ) = delete;
     FThreadPool_Private& operator=( const FThreadPool_Private& ) = delete;
     void ScheduleCommand( const FCommand* iJob );
-    void ScheduleJob( const FJob* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
     static uint32 MaxWorkers();
 
 private:
+    void ScheduleJob( const FJob* iJob );
     void WorkProcess();
     void ScheduleProcess();
 
@@ -93,9 +93,9 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
+FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iCommand )
 {
-
+    ULIS_ASSERT( iCommand->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
 }
 
 void
