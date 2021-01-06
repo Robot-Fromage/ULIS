@@ -98,11 +98,10 @@ FCommand::Event() const
     return  mEvent;
 }
 
-void
-FCommand::Execute( FThreadPool& iPool ) const
+const TArray< const FJob* >&
+FCommand::Jobs() const
 {
-    for( uint64 i = 0; i < mJobs.Size(); ++i )
-        iPool.ScheduleJob( mJobs[i] );
+    return  mJobs;
 }
 
 ULIS_NAMESPACE_END

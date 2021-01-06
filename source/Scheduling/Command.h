@@ -92,7 +92,7 @@ public:
 
     FSharedInternalEvent Event() const;
 
-    void Execute( FThreadPool& iPool ) const;
+    const TArray< const FJob* >& Jobs() const;
 
 private:
     const ICommandArgs* mArgs;
