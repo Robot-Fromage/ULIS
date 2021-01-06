@@ -19,7 +19,7 @@
 
 using namespace ::ULIS;
 
-void OnEventCompleteDo( const FRectI& iGeometry, void* iUserData )
+void OnEventCompleteCallDirty( const FRectI& iGeometry, void* iUserData )
 {
     reinterpret_cast< FBlock* >( iUserData )->Dirty( iGeometry );
 }

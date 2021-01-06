@@ -124,7 +124,7 @@ FInternalEvent::Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitLi
     mGeometry = iGeometry;
 }
 
-void
+bool
 FInternalEvent::NotifyOneJobFinished()
 {
     --mNumJobsRemaining;
@@ -132,7 +132,9 @@ FInternalEvent::NotifyOneJobFinished()
         delete  mCommand;
         SetStatus( eEventStatus::EventStatus_Finished );
         mOnEventComplete.ExecuteIfBound( mGeometry );
+        return  true;
     }
+    return  false;
 }
 
 ULIS_NAMESPACE_END

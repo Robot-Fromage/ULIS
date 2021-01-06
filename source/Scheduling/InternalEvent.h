@@ -58,7 +58,7 @@ public:
     void SetStatus( eEventStatus iStatus );
     eEventStatus Status() const;
     void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
-    void NotifyOneJobFinished();
+    bool NotifyOneJobFinished();
 
 private:
     void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );

@@ -54,6 +54,7 @@ private:
 private:
     // Private Data
     uint32                              mNumBusy;
+    uint32                              mNumQueued;
     bool                                bStop;
     std::vector< std::thread >          mWorkers;
     std::deque< const FJob* >           mJobs;
@@ -83,6 +84,7 @@ FThreadPool::FThreadPool_Private::~FThreadPool_Private()
 
 FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
     : mNumBusy( 0 )
+    , mNumQueued( 0 )
     , bStop( false )
     , mScheduler( std::bind( &FThreadPool::FThreadPool_Private::ScheduleProcess, this ) )
 {
@@ -96,6 +98,9 @@ void
 FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iCommand )
 {
     ULIS_ASSERT( iCommand->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
+    std::unique_lock< std::mutex > lock( mCommandsQueueMutex );
+    mCommands.push_back( iCommand );
+    cvCommand.notify_one();
 }
 
 void
@@ -196,6 +201,45 @@ FThreadPool::FThreadPool_Private::ScheduleProcess()
 {
     while( true )
     {
+        std::unique_lock< std::mutex > latch( mCommandsQueueMutex );
+        cvCommand.wait( latch, [ this ](){ return bStop || !mCommands.empty(); } );
+        if( !mCommands.empty() )
+        {
+            // got work. set busy.
+            ++mNumQueued;
+
+            // pull from queue
+            const FCommand* cmd = mCommands.front();
+            mCommands.pop_front();
+
+            // release lock. run async
+            latch.unlock();
+
+            // Push jobs
+            bool ready = cmd->ReadyForProcessing();
+            if( ready )
+            {
+                const TArray< const FJob* >& jobs = cmd->Jobs();
+                for( uint64 i = 0; i < jobs.Size(); ++i )
+                    ScheduleJob( mJobs[i] );
+            }
+
+            // lock again, run sync.
+            latch.lock();
+
+            if( !ready )
+            {
+                mCommands.push_back( cmd );
+            }
+
+            // Managing internals
+            --mNumQueued;
+            //cvFinished.notify_one();
+        }
+        else if( bStop )
+        {
+            break;
+        }
     }
 }
 
