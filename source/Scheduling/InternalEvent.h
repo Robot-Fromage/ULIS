@@ -52,7 +52,8 @@ public:
     static FSharedInternalEvent Make( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
     const TArray< FSharedInternalEvent >& WaitList() const;
     bool IsBound() const;
-    bool IsReady() const;
+    bool ReadyForProcessing() const;
+    bool ReadyForScheduling() const;
     void CheckCyclicSelfReference() const;
     void SetStatus( eEventStatus iStatus );
     eEventStatus Status() const;

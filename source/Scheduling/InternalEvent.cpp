@@ -66,10 +66,20 @@ FInternalEvent::IsBound() const
 }
 
 bool
-FInternalEvent::IsReady() const
+FInternalEvent::ReadyForProcessing() const
 {
     for( uint32 i = 0; i < mWaitList.Size(); ++i )
         if( mWaitList[i]->Status() != eEventStatus::EventStatus_Finished )
+            return  false;
+
+    return  true;
+}
+
+bool
+FInternalEvent::ReadyForScheduling() const
+{
+    for( uint32 i = 0; i < mWaitList.Size(); ++i )
+        if( mWaitList[i]->Status() != eEventStatus::EventStatus_Queued )
             return  false;
 
     return  true;
