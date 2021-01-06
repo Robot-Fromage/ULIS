@@ -82,12 +82,23 @@ public:
     void ReserveJobs( uint64 iNum );
 
     /*! Add a job */
-    void AddJob( FJob* iJob );
+    void AddJob( const FJob* iJob );
 
     /*! Query num jobs */
     uint64 NumJobs() const;
 
-    bool IsReady() const;
+    /*!
+    Check if the command is ready for processing.
+    That is, all events in wait list are finished.
+    */
+    bool ReadyForProcessing() const;
+
+    /*!
+    Check if the command is ready for scheduling.
+    That is, all events in wait list are scheduled too.
+    If an event in wait list is still idle, the command will block forever.
+    */
+    bool ReadyForScheduling() const;
 
     FSharedInternalEvent Event() const;
 
@@ -96,7 +107,7 @@ public:
 private:
     const ICommandArgs* mArgs;
     FSharedInternalEvent mEvent;
-    TArray< FJob* > mJobs;
+    TArray< const FJob* > mJobs;
 };
 
 ULIS_NAMESPACE_END

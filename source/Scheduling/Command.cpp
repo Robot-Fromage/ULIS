@@ -40,7 +40,7 @@ FCommand::FCommand(
 )
     : mArgs( iArgs )
     , mEvent( nullptr )
-    , mJobs( TArray< FJob* >() )
+    , mJobs( TArray< const FJob* >() )
 {
     // Bind Event
     if( iEvent ) {
@@ -69,9 +69,8 @@ FCommand::ReserveJobs( uint64 iNum )
 }
 
 void
-FCommand::AddJob( FJob* iJob )
+FCommand::AddJob( const FJob* iJob )
 {
-    iJob->BindCommand( this );
     mJobs.EmplaceBack( iJob );
 }
 
@@ -82,9 +81,15 @@ FCommand::NumJobs() const
 }
 
 bool
-FCommand::IsReady() const
+FCommand::ReadyForProcessing() const
 {
-    return  mEvent->IsReady();
+    return  mEvent->ReadyForProcessing();
+}
+
+bool
+FCommand::ReadyForScheduling() const
+{
+    return  mEvent->ReadyForScheduling();
 }
 
 FSharedInternalEvent
