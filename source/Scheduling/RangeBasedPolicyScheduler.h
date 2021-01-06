@@ -46,7 +46,7 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
         }
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< TJobArgs, TCommandArgs, TDelegateInvoke >
+            , &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >
             , jargs
             , iCommand
         );
@@ -87,7 +87,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
 
         FJob* job = new FJob(
               1
-            , &ResolveScheduledJobCall< TJobArgs, TCommandArgs, TDelegateInvoke >
+            , &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >
             , jargs
             , iCommand
         );

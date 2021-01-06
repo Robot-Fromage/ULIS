@@ -23,16 +23,6 @@ class FJob;
 typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, bool );
 
 /////////////////////////////////////////////////////
-// ResolveScheduleCommandCall
-template< typename ARGS, void (*IMP)( const ARGS*, const FSchedulePolicy&, bool ) >
-static ULIS_FORCEINLINE void ResolveScheduleCommandCall( const ICommandArgs* iArgs, const FSchedulePolicy& iPolicy, bool iContiguous )
-{
-    const ARGS* args = dynamic_cast< const ARGS* >( iArgs );
-    ULIS_ASSERT( args, "Bad cast" );
-    IMP( args, iPolicy, iContiguous );
-}
-
-/////////////////////////////////////////////////////
 /// @class      FCommand
 /// @brief      The FCommand class provides a way to store awaiting commands in
 ///             a command queue, with all informations needed for scheduling and
