@@ -52,7 +52,7 @@ main( int argc, char *argv[] ) {
         TArray< FColor > colors( 3 );
         colors[0] = FColor::RGB( 255, 0, 0 );
         colors[1] = FColor::RGB( 0, 255, 0 );
-        colors[2] = FColor::GreyAF( 0.f );
+        colors[2] = FColor::GreyAF( 0.5f );
 
         ctx.Clear( blockA, blockA.Rect(), policy, 0, nullptr, &events[0] );
         ctx.Clear( blockB, blockB.Rect(), policy, 0, nullptr, &events[1] );

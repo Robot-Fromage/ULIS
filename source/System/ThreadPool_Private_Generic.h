@@ -214,7 +214,7 @@ FThreadPool::FThreadPool_Private::ScheduleProcess()
             {
                 const TArray< const FJob* >& jobs = cmd->Jobs();
                 for( uint64 i = 0; i < jobs.Size(); ++i )
-                    ScheduleJob( mJobs[i] );
+                    ScheduleJob( jobs[i] );
             }
 
             // lock again, run sync.
