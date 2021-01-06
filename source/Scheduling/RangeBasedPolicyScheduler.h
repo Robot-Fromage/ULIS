@@ -47,7 +47,9 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
         FJob* job = new FJob(
               1
             , &ResolveScheduledJobCall< TJobArgs, TCommandArgs, TDelegateInvoke >
-            , jargs );
+            , jargs
+            , iCommand
+        );
         iCommand->AddJob( job );
     }
 }
@@ -86,7 +88,9 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
         FJob* job = new FJob(
               1
             , &ResolveScheduledJobCall< TJobArgs, TCommandArgs, TDelegateInvoke >
-            , jargs );
+            , jargs
+            , iCommand
+        );
         iCommand->AddJob( job );
         offset += iSize;
     }
