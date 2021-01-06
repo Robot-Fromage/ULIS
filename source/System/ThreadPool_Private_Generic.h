@@ -38,6 +38,8 @@ class FThreadPool::FThreadPool_Private
 public:
     ~FThreadPool_Private();
     FThreadPool_Private( uint32 iNumWorkers = MaxWorkers() );
+    FThreadPool_Private( const FThreadPool_Private& ) = delete;
+    FThreadPool_Private& operator=( const FThreadPool_Private& ) = delete;
     void ScheduleCommand( const FCommand* iJob );
     void ScheduleJob( const FJob* iJob );
     void WaitForCompletion();
@@ -46,7 +48,8 @@ public:
     static uint32 MaxWorkers();
 
 private:
-    void ThreadProcess();
+    void WorkProcess();
+    void ScheduleProcess();
 
 private:
     // Private Data
@@ -57,6 +60,7 @@ private:
     std::mutex                          mQueueMutex;
     std::condition_variable             cvJob;
     std::condition_variable             cvFinished;
+    std::thread                         mScheduler;
 };
 
 FThreadPool::FThreadPool_Private::~FThreadPool_Private()
@@ -75,10 +79,12 @@ FThreadPool::FThreadPool_Private::~FThreadPool_Private()
 FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
     : mNumBusy( 0 )
     , bStop( false )
+    , mScheduler( std::bind( &FThreadPool::FThreadPool_Private::ScheduleProcess, this ) )
 {
     uint32 max = FMath::Clamp( iNumWorkers, uint32( 1 ), MaxWorkers() );
+    mWorkers.reserve( max );
     for( uint32 i = 0; i < max; ++i )
-        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::ThreadProcess, this ) );
+        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::WorkProcess, this ) );
 }
 
 void
@@ -122,7 +128,7 @@ FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
     uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
     mWorkers.clear();
     for( uint32 i = 0; i < max; ++i )
-        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::ThreadProcess, this ) );
+        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::WorkProcess, this ) );
 }
 
 uint32
@@ -139,7 +145,7 @@ FThreadPool::FThreadPool_Private::MaxWorkers()
 }
 
 void
-FThreadPool::FThreadPool_Private::ThreadProcess()
+FThreadPool::FThreadPool_Private::WorkProcess()
 {
     while( true )
     {
@@ -177,6 +183,14 @@ FThreadPool::FThreadPool_Private::ThreadProcess()
         {
             break;
         }
+    }
+}
+
+void
+FThreadPool::FThreadPool_Private::ScheduleProcess()
+{
+    while( true )
+    {
     }
 }
 
