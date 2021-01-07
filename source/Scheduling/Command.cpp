@@ -47,7 +47,7 @@ FCommand::FCommand(
         mEvent = iEvent->d->m;
         ULIS_ASSERT( !( mEvent->IsBound() ), "Cannot reuse an event that is already bound to a command" );
     } else {
-        mEvent = FInternalEvent::Make();
+        mEvent = FInternalEvent::MakeShared();
     }
 
     // Start Enqueuing Jobs

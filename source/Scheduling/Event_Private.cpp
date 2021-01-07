@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 FEvent_Private::FEvent_Private(
     const FOnEventComplete& iOnEventComplete
 )
-    : m( FInternalEvent::Make( iOnEventComplete ) )
+    : m( FInternalEvent::MakeShared( iOnEventComplete ) )
 {
 }
 

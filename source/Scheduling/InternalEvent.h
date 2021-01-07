@@ -38,18 +38,16 @@ typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 ///             \sa FCommandQueue
 class FInternalEvent
 {
-    friend class std::_Ref_count_obj< FInternalEvent >;
 
 public:
     /*! Destructor */
     ~FInternalEvent();
 
-private:
     /*! Constructor */
     FInternalEvent( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
 
 public:
-    static FSharedInternalEvent Make( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
+    static FSharedInternalEvent MakeShared( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
     const TArray< FSharedInternalEvent >& WaitList() const;
     bool IsBound() const;
     bool ReadyForProcessing() const;

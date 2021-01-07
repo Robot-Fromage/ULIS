@@ -30,6 +30,8 @@ class FThreadPool_Private;
 ///             \sa FCommandQueue
 class ULIS_API FThreadPool
 {
+    friend class FCommandQueue_Private;
+
 public:
     ~FThreadPool();
     FThreadPool( uint32 iNumWorkers = MaxWorkers() );
@@ -39,8 +41,6 @@ public:
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
     static uint32 MaxWorkers();
-
-    //FThreadPool_Private* Lib();
 
 private:
     FThreadPool_Private* d;

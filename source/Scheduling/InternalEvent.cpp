@@ -34,7 +34,7 @@ FInternalEvent::FInternalEvent(
 
 //static
 FSharedInternalEvent
-FInternalEvent::Make(
+FInternalEvent::MakeShared(
     const FOnEventComplete& iOnEventComplete
 )
 {
