@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         Device_macOS.ipp
+* @file         Device_Windows.inl
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FHardwareMetrics tools.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
@@ -13,35 +13,56 @@
 #include "System/Device.h"
 #include "System/DeviceHelpers.h"
 
-#include <cpuid.h>
+#include <Windows.h>
 #include <intrin.h>
 #include <stdint.h>
 #include <string>
 #include <stdlib.h>
 #include <thread>
-#include <sys/sysctl.h>
 
 ULIS_NAMESPACE_BEGIN
 
 namespace detail {
 
-#define _XCR_XFEATURE_ENABLED_MASK  0
 void
-cpuid( int32_t out[4], int32_t x ) {
-    __cpuid_count( x, 0, out[0], out[1], out[2], out[3] );
+cpuid(int32_t out[4], int32_t x)
+{
+    __cpuidex(out, x, 0);
 }
 
-uint64_t
-xgetbv( unsigned int index ) {
-    uint32_t eax, edx;
-    __asm__ __volatile__("xgetbv" : "=a"(eax), "=d"(edx) : "c"(index));
-    return ( ( uint64_t )edx << 32 ) | eax;
+__int64
+xgetbv( unsigned int x )
+{
+    return  _xgetbv(x);
+}
+
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+BOOL IsWow64()
+{
+    BOOL bIsWow64 = FALSE;
+
+    LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
+        GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
+
+    if( NULL != fnIsWow64Process )
+    {
+        if( !fnIsWow64Process( GetCurrentProcess(), &bIsWow64 ) )
+        {
+            printf( "Error Detecting Operating System.\n" );
+            printf( "Defaulting to 32-bit OS.\n\n" );
+            bIsWow64 = FALSE;
+        }
+    }
+    return  bIsWow64;
 }
 
 bool
-detect_OS_x64(){
-    //  We only support x64
-    return true;
+detect_OS_x64() {
+#ifdef _M_X64
+    return  true;
+#else
+    return  IsWow64() != 0;
+#endif
 }
 
 bool
@@ -87,31 +108,36 @@ get_vendor_string() {
     return  name;
 }
 
-size_t
-cache_line_size() {
-    size_t line_size = 0;
-    size_t sizeof_line_size = sizeof(line_size);
-    sysctlbyname("hw.cachelinesize", &line_size, &sizeof_line_size, 0, 0);
-    return line_size;
-}
+void cache_info( uint8 iLevel, uint64 *oCacheSize, uint64* oLineSize ) {
+    DWORD buffer_size = 0;
+    DWORD i = 0;
+    SYSTEM_LOGICAL_PROCESSOR_INFORMATION * buffer = 0;
 
-size_t
-cache_size() {
-    size_t line_size = 0;
-    size_t sizeof_line_size = sizeof(line_size);
-    sysctlbyname("hw.l1dcachesize", &line_size, &sizeof_line_size, 0, 0);
-    return line_size;
-}
+    GetLogicalProcessorInformation(0, &buffer_size);
+    buffer = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION *)malloc(buffer_size);
+    GetLogicalProcessorInformation(&buffer[0], &buffer_size);
 
+    for (i = 0; i != buffer_size / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION); ++i) {
+        if( buffer[i].Relationship == RelationCache && buffer[i].Cache.Level == iLevel ) {
+            *oLineSize = buffer[i].Cache.LineSize;
+            *oCacheSize = buffer[i].Cache.Size;
+            break;
+        }
+    }
+
+    free( buffer );
+}
 
 } // namespace detail
 
 FHardwareMetrics::FHardwareMetrics()
     : bField( 0 )
     , mMaxWorkers( std::thread::hardware_concurrency() )
-    , mL1CacheSize( detail::cache_size() )
-    , mL1CacheLineSize( detail::cache_line_size() )
+    , mL1CacheSize( 65536 )
+    , mL1CacheLineSize( 64 )
 {
+    detail::cache_info( 1, &mL1CacheSize, &mL1CacheLineSize );
+
     bField |= ULIS_W_OS_X64( detail::detect_OS_x64() );
     bField |= ULIS_W_OS_AVX( detail::detect_OS_AVX() );
     bField |= ULIS_W_OS_AVX512( detail::detect_OS_AVX512() );

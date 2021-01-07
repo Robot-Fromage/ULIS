@@ -13,13 +13,13 @@
 #include "System/DeviceHelpers.h"
 
 #if defined( ULIS_WIN )
-#include "System/Device_Windows.ipp"
+#include "System/Device_Windows.inl"
 #elif defined( ULIS_MACOS )
-#include "System/Device_macOS.ipp"
+#include "System/Device_macOS.inl"
 #elif defined( ULIS_LINUX )
-#include "System/Device_Linux.ipp"
+#include "System/Device_Linux.inl"
 #else
-#include "System/Device_Generic.ipp"
+#include "System/Device_Generic.inl"
 #endif
 
 ULIS_NAMESPACE_BEGIN
