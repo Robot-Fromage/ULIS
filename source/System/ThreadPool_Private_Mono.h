@@ -29,7 +29,9 @@ class FThreadPool::FThreadPool_Private
 public:
     ~FThreadPool_Private();
     FThreadPool_Private( uint32 iNumWorkers );
-    void ScheduleJob( FJob* iJob );
+    FThreadPool_Private( const FThreadPool_Private& ) = delete;
+    FThreadPool_Private& operator=( const FThreadPool_Private& ) = delete;
+    void ScheduleCommand( const FCommand* iJob );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
@@ -45,8 +47,9 @@ FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleJob( FJob* iJob )
+FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
 {
+    // Immediate exe.
     iJob->Execute();
 
     FEvent* evt = iJob->Parent()->Event();

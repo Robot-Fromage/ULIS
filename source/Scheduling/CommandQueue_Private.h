@@ -27,7 +27,7 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FThreadPool
 class FCommandQueue::FCommandQueue_Private
 {
-    typedef TQueue< FCommand* > tQueue;
+    typedef TQueue< const FCommand* > tQueue;
 
 public:
     /*! Destructor */
@@ -54,7 +54,7 @@ public:
     /*!
         Push, insert a new command at the end of the queue.
     */
-    void Push( FCommand* iCommand );
+    void Push( const FCommand* iCommand );
 
 private:
     FThreadPool& mPool;

@@ -16,14 +16,13 @@
 ULIS_NAMESPACE_BEGIN
 FCommandQueue::FCommandQueue_Private::~FCommandQueue_Private()
 {
+    // Cleanse unprocessed commands
     while( !mQueue.IsEmpty() )
     {
-        FCommand* cmd = mQueue.Front();
+        const FCommand* cmd = mQueue.Front();
         delete  cmd;
         mQueue.Pop();
     }
-
-    Finish();
 }
 
 FCommandQueue::FCommandQueue_Private::FCommandQueue_Private( FThreadPool& iPool )
@@ -37,7 +36,7 @@ FCommandQueue::FCommandQueue_Private::Flush()
 {
     while( !mQueue.IsEmpty() )
     {
-        FCommand* cmd = mQueue.Front();
+        const FCommand* cmd = mQueue.Front();
         mQueue.Pop();
         mPool.ScheduleCommand( cmd );
     }
@@ -57,7 +56,7 @@ FCommandQueue::FCommandQueue_Private::Fence()
 }
 
 void
-FCommandQueue::FCommandQueue_Private::Push( FCommand* iCommand )
+FCommandQueue::FCommandQueue_Private::Push( const FCommand* iCommand )
 {
     ULIS_ASSERT( iCommand, "Error: no input command" );
     iCommand->Event()->SetStatus( eEventStatus::EventStatus_Queued );
