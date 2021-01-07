@@ -27,19 +27,18 @@ SET( ULIS_PYTHON_INCLUDE_PATH1      "" CACHE STRING "Indicates the path to pytho
 SET( ULIS_PYTHON_INCLUDE_PATH2      "" CACHE STRING "Indicates extra path to python include path"           )
 
 # Setup generation options
-message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 set( CMAKE_OSX_DEPLOYMENT_TARGET "10.13" )
 set( CMAKE_CONFIGURATION_TYPES RelWithDebInfo Debug Release CACHE STRING INTERNAL FORCE )
 set( CMAKE_SUPPRESS_REGENERATION true )
 set( CMAKE_DEBUG_POSTFIX d )
+set( CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true )
+# For freetype skip install
+set( SKIP_INSTALL_ALL true )
 
 # Set C++ standard options
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS OFF )
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG" )
-    set( CMAKE_CXX_FLAGS "-std=c++14" )
-endif()
 
 # Create solution
 project( ULIS )
@@ -47,6 +46,11 @@ set( ULIS_VERSION_MAJOR 4 )
 set( ULIS_VERSION_MINOR 0 )
 set( ULIS_VERSION_PATCH 0 )
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
+
+message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
+if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG" )
+    set( CMAKE_CXX_FLAGS "-std=c++14" )
+endif()
 
 # Flags for Compiler / Platforms
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
@@ -82,7 +86,7 @@ set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_F
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BINARY_DIR}/3rdparty/build_clip       )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      EXCLUDE_FROM_ALL )
 
 
 set_target_properties( cppfs PROPERTIES COMPILE_FLAGS "/wd4146 /wd4267" )
@@ -203,10 +207,19 @@ endif()
 
 ####################################
 # Install
-#set( CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/../Install" CACHE PATH "Install Path" FORCE )
-#
-#install( TARGETS ULIS
-#    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#)
+string( TIMESTAMP ULIS_TODAY_DATE "%d%m%Y" )
+SET( ULIS_INSTALL_DIR "${ULIS_TODAY_DATE}_ULIS${ULIS_VERSION_MAJOR}.${ULIS_VERSION_MINOR}.${ULIS_VERSION_PATCH}_${CMAKE_HOST_SYSTEM_NAME}_${CMAKE_CXX_COMPILER_ID}_x64" )
+set( CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/../${ULIS_INSTALL_DIR}" CACHE PATH "Install Path" FORCE )
+
+install( TARGETS ULIS
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(
+    DIRECTORY ${PROJECT_SOURCE_DIR}/include
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/include
+    COMPONENT headers
+)
+
