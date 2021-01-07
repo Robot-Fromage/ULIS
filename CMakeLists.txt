@@ -201,3 +201,12 @@ if( ${ULIS_BUILD_SAMPLES} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/sample/CMakeLists.txt)
 endif()
 
+####################################
+# Install
+#set( CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/../Install" CACHE PATH "Install Path" FORCE )
+#
+#install( TARGETS ULIS
+#    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#)
