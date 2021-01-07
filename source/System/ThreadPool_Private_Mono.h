@@ -51,16 +51,27 @@ FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 void
 FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
-    /*
-    // Immediate exe.
-    iJob->Execute();
+    while( !ioCommands.IsEmpty() )
+    {
+        const FCommand* cmd = ioCommands.Front();
+        ioCommands.Pop();
 
-    FEvent* evt = iJob->Parent()->Event();
-    if( evt )
-        evt->SetFinished();
+        ULIS_ASSERT( cmd->ReadyForScheduling, "Bad queue state, waiting on events that are not scheduled will hang forever." );
 
-    delete  iJob;
-    */
+        if( cmd->ReadyForProcessing() )
+        {
+            FSharedInternalEvent evt = cmd->Event();
+            const TArray< const FJob* >& jobs = cmd->Jobs();
+            for( uint64 i = 0; i < jobs.Size(); ++i ) {
+                jobs[i]->Execute();
+                evt->NotifyOneJobFinished();
+            }
+        }
+        else
+        {
+            ioCommands.Push( cmd );
+        }
+    }
 }
 
 void

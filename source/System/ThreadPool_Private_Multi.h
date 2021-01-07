@@ -96,11 +96,14 @@ FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 void
 FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
-    /*
-    ULIS_ASSERT( iCommand->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
     std::lock_guard< std::mutex > lock( mCommandsQueueMutex );
-    mCommands.push_back( iCommand );
-    */
+    while( !ioCommands.IsEmpty() )
+    {
+        const FCommand* cmd = ioCommands.Front();
+        ioCommands.Pop();
+        ULIS_ASSERT( cmd->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
+        mCommands.push_back( cmd );
+    }
 }
 
 void

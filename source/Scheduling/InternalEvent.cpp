@@ -79,7 +79,7 @@ bool
 FInternalEvent::ReadyForScheduling() const
 {
     for( uint32 i = 0; i < mWaitList.Size(); ++i )
-        if( mWaitList[i]->Status() != eEventStatus::EventStatus_Queued )
+        if( mWaitList[i]->Status() == eEventStatus::EventStatus_Idle )
             return  false;
 
     return  true;
