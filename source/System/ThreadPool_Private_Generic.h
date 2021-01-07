@@ -54,6 +54,7 @@ private:
 private:
     // Private Data
     uint32                              mNumBusy;
+    uint32                              mNumQueued;
     bool                                bStop;
     std::vector< std::thread >          mWorkers;
     std::deque< const FJob* >           mJobs;
@@ -61,7 +62,6 @@ private:
     std::mutex                          mJobsQueueMutex;
     std::mutex                          mCommandsQueueMutex;
     std::condition_variable             cvJob;
-    std::condition_variable             cvCommand;
     std::condition_variable             cvFinished;
     std::thread                         mScheduler;
 };
@@ -111,8 +111,15 @@ FThreadPool::FThreadPool_Private::ScheduleJob( const FJob* iJob )
 void
 FThreadPool::FThreadPool_Private::WaitForCompletion()
 {
-    std::unique_lock< std::mutex > lock( mJobsQueueMutex );
-    cvFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ); } );
+    while( true )
+    {
+        std::unique_lock< std::mutex > lock( mJobsQueueMutex );
+        cvFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ); } );
+
+        std::lock_guard< std::mutex > latch( mCommandsQueueMutex );
+        if( mCommands.empty() )
+            break;
+    }
 }
 
 void
