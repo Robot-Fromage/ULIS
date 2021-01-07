@@ -25,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 ///
 ///             \sa FCommand
 ///             \sa FThreadPool
-class FCommandQueue::FCommandQueue_Private
+class FCommandQueue_Private
 {
     typedef TQueue< const FCommand* > tQueue;
 

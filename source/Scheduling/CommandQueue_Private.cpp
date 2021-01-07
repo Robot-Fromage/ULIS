@@ -14,7 +14,7 @@
 #include "System/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
-FCommandQueue::FCommandQueue_Private::~FCommandQueue_Private()
+FCommandQueue_Private::~FCommandQueue_Private()
 {
     // Cleanse unprocessed commands
     while( !mQueue.IsEmpty() )
@@ -25,38 +25,38 @@ FCommandQueue::FCommandQueue_Private::~FCommandQueue_Private()
     }
 }
 
-FCommandQueue::FCommandQueue_Private::FCommandQueue_Private( FThreadPool& iPool )
+FCommandQueue_Private::FCommandQueue_Private( FThreadPool& iPool )
     : mQueue( tQueue() )
     , mPool( iPool )
 {
 }
 
 void
-FCommandQueue::FCommandQueue_Private::Flush()
+FCommandQueue_Private::Flush()
 {
     while( !mQueue.IsEmpty() )
     {
         const FCommand* cmd = mQueue.Front();
         mQueue.Pop();
-        mPool.ScheduleCommand( cmd );
+        //mPool.ScheduleCommand( cmd );
     }
 }
 
 void
-FCommandQueue::FCommandQueue_Private::Finish()
+FCommandQueue_Private::Finish()
 {
     Flush();
     Fence();
 }
 
 void
-FCommandQueue::FCommandQueue_Private::Fence()
+FCommandQueue_Private::Fence()
 {
     mPool.WaitForCompletion();
 }
 
 void
-FCommandQueue::FCommandQueue_Private::Push( const FCommand* iCommand )
+FCommandQueue_Private::Push( const FCommand* iCommand )
 {
     ULIS_ASSERT( iCommand, "Error: no input command" );
     iCommand->Event()->SetStatus( eEventStatus::EventStatus_Queued );

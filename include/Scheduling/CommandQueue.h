@@ -14,6 +14,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
+class FCommandQueue_Private;
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue
 /// @brief      The FCommandQueue class provides a way to enqueue tasks for being
@@ -25,7 +26,6 @@ class FCommand;
 ///             \sa FThreadPool
 class ULIS_API FCommandQueue
 {
-    class FCommandQueue_Private;
     friend class FContext;
 
 public:
@@ -53,12 +53,6 @@ public:
         Wait for completion of all already issued commands
     */
     void Fence();
-
-private:
-    /*!
-        Push, insert a new command at the end of the queue.
-    */
-    void Push( FCommand* iCommand );
 
 private:
     FCommandQueue_Private* d;

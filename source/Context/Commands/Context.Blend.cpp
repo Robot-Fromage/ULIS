@@ -17,6 +17,7 @@
 #include "Process/Blend/Blend.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
+#include "Scheduling/CommandQueue_Private.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
@@ -69,7 +70,7 @@ FContext::Blend(
         return  FinishEventNoOP( iEvent );
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->QueryScheduleBlend( iBlendingMode )
             , new FBlendCommandArgs(
@@ -139,7 +140,7 @@ FContext::BlendAA(
     const int coverageY = src_roi.h - ( src_roi.y + shift.y ) >= dst_roi.h ? dst_roi.h : static_cast< int >( dst_roi.h - ceil( subpixelComponent.y ) );
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->QueryScheduleBlendSubpixel( iBlendingMode )
             , new FBlendCommandArgs(
@@ -197,7 +198,7 @@ FContext::AlphaBlend(
         return  FinishEventNoOP( iEvent );
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleAlphaBlend
             , new FBlendCommandArgs(
@@ -265,7 +266,7 @@ FContext::AlphaBlendAA(
     const int coverageY = src_roi.h - ( src_roi.y + shift.y ) >= dst_roi.h ? dst_roi.h : static_cast< int >( dst_roi.h - ceil( subpixelComponent.y ) );
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleAlphaBlendSubpixel
             , new FBlendCommandArgs(
@@ -331,7 +332,7 @@ FContext::BlendTiled(
     );
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->QueryScheduleTiledBlendSubpixel( iBlendingMode )
             , new FBlendCommandArgs(
@@ -390,7 +391,7 @@ FContext::BlendColor(
     ISample::ConvertFormat( iColor, proxy );
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->QueryScheduleTiledBlendSubpixel( iBlendingMode )
             , new FBlendCommandArgs(

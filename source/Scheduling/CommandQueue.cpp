@@ -42,11 +42,5 @@ FCommandQueue::Fence()
     d->Fence();
 }
 
-void
-FCommandQueue::Push( FCommand* iCommand )
-{
-    d->Push( iCommand );
-}
-
 ULIS_NAMESPACE_END
 

@@ -14,6 +14,8 @@
 #include "Core/Callback.h"
 
 ULIS_NAMESPACE_BEGIN
+class FEvent_Private;
+
 /////////////////////////////////////////////////////
 // eEventStatus
 enum eEventStatus : uint8
@@ -41,7 +43,6 @@ enum eEventStatus : uint8
 ///             \sa FCommandQueue
 class ULIS_API FEvent
 {
-    class FEvent_Private;
     friend class FInternalEvent;
     friend class FContext;
     friend class FCommand;

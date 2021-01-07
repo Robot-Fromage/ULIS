@@ -31,12 +31,6 @@ FThreadPool::FThreadPool( uint32 iNumWorkers )
 }
 
 void
-FThreadPool::ScheduleCommand( const FCommand* iCommand )
-{
-    d->ScheduleCommand( iCommand );
-}
-
-void
 FThreadPool::WaitForCompletion()
 {
     d->WaitForCompletion();

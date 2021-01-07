@@ -33,7 +33,7 @@ ULIS_NAMESPACE_BEGIN
 ///             systems with multithreading support.
 ///
 ///             \sa FThreadPool
-class FThreadPool::FThreadPool_Private
+class FThreadPool_Private
 {
 public:
     ~FThreadPool_Private();
@@ -66,7 +66,7 @@ private:
     std::thread                         mScheduler;
 };
 
-FThreadPool::FThreadPool_Private::~FThreadPool_Private()
+FThreadPool_Private::~FThreadPool_Private()
 {
     // Notify stop condition
     std::unique_lock< std::mutex > latch( mJobsQueueMutex );
@@ -81,19 +81,19 @@ FThreadPool::FThreadPool_Private::~FThreadPool_Private()
     mScheduler.join();
 }
 
-FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
+FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
     : mNumBusy( 0 )
     , bStop( false )
-    , mScheduler( std::bind( &FThreadPool::FThreadPool_Private::ScheduleProcess, this ) )
+    , mScheduler( std::bind( &FThreadPool_Private::ScheduleProcess, this ) )
 {
     uint32 max = FMath::Clamp( iNumWorkers, uint32( 1 ), MaxWorkers() );
     mWorkers.reserve( max );
     for( uint32 i = 0; i < max; ++i )
-        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::WorkProcess, this ) );
+        mWorkers.emplace_back( std::bind( &FThreadPool_Private::WorkProcess, this ) );
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iCommand )
+FThreadPool_Private::ScheduleCommand( const FCommand* iCommand )
 {
     ULIS_ASSERT( iCommand->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
     std::lock_guard< std::mutex > lock( mCommandsQueueMutex );
@@ -101,7 +101,7 @@ FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iCommand )
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleJob( const FJob* iJob )
+FThreadPool_Private::ScheduleJob( const FJob* iJob )
 {
     std::unique_lock< std::mutex > lock( mJobsQueueMutex );
     mJobs.push_back( iJob );
@@ -109,7 +109,7 @@ FThreadPool::FThreadPool_Private::ScheduleJob( const FJob* iJob )
 }
 
 void
-FThreadPool::FThreadPool_Private::WaitForCompletion()
+FThreadPool_Private::WaitForCompletion()
 {
     while( true )
     {
@@ -123,7 +123,7 @@ FThreadPool::FThreadPool_Private::WaitForCompletion()
 }
 
 void
-FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
+FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
 {
     WaitForCompletion();
 
@@ -142,24 +142,24 @@ FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
     uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
     mWorkers.clear();
     for( uint32 i = 0; i < max; ++i )
-        mWorkers.emplace_back( std::bind( &FThreadPool::FThreadPool_Private::WorkProcess, this ) );
+        mWorkers.emplace_back( std::bind( &FThreadPool_Private::WorkProcess, this ) );
 }
 
 uint32
-FThreadPool::FThreadPool_Private::GetNumWorkers() const
+FThreadPool_Private::GetNumWorkers() const
 {
     return  static_cast< uint32 >( mWorkers.size() );
 }
 
 //static
 uint32
-FThreadPool::FThreadPool_Private::MaxWorkers()
+FThreadPool_Private::MaxWorkers()
 {
     return  std::thread::hardware_concurrency();
 }
 
 void
-FThreadPool::FThreadPool_Private::WorkProcess()
+FThreadPool_Private::WorkProcess()
 {
     while( true )
     {
@@ -201,7 +201,7 @@ FThreadPool::FThreadPool_Private::WorkProcess()
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleProcess()
+FThreadPool_Private::ScheduleProcess()
 {
     while( true )
     {

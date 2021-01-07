@@ -32,7 +32,7 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FThreadPool
 ///             \sa FHardwareMetrics
 ///             \sa FCommandQueue
-class FEvent::FEvent_Private
+class FEvent_Private
 {
     friend class FInternalEvent;
     friend class FContext;

@@ -16,7 +16,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FEvent::FEvent_Private
-FEvent::FEvent_Private::FEvent_Private(
+FEvent_Private::FEvent_Private(
     const FOnEventComplete& iOnEventComplete
 )
     : m( FInternalEvent::Make( iOnEventComplete ) )

@@ -18,6 +18,7 @@
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
+#include "Scheduling/CommandQueue_Private.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
@@ -55,7 +56,7 @@ FContext::Fill(
 
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleFill
             , new FFillCommandArgs(
@@ -93,7 +94,7 @@ FContext::FillPreserveAlpha(
         return  FinishEventNoOP( iEvent );
 
     // Bake and push command
-    mCommandQueue.Push(
+    mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleFillPreserveAlpha
             , new FFillPreserveAlphaCommandArgs(

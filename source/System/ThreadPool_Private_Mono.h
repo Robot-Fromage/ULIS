@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 ///             without actual multi threading support.
 ///
 ///             \sa FThreadPool
-class FThreadPool::FThreadPool_Private
+class FThreadPool_Private
 {
 public:
     ~FThreadPool_Private();
@@ -38,16 +38,16 @@ public:
     static uint32 MaxWorkers();
 };
 
-FThreadPool::FThreadPool_Private::~FThreadPool_Private()
+FThreadPool_Private::~FThreadPool_Private()
 {
 }
 
-FThreadPool::FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
+FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 {
 }
 
 void
-FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
+FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
 {
     // Immediate exe.
     iJob->Execute();
@@ -60,24 +60,24 @@ FThreadPool::FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
 }
 
 void
-FThreadPool::FThreadPool_Private::WaitForCompletion()
+FThreadPool_Private::WaitForCompletion()
 {
 }
 
 void
-FThreadPool::FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
+FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
 {
 }
 
 uint32
-FThreadPool::FThreadPool_Private::GetNumWorkers() const
+FThreadPool_Private::GetNumWorkers() const
 {
     return  1;
 }
 
 //static
 uint32
-FThreadPool::FThreadPool_Private::MaxWorkers()
+FThreadPool_Private::MaxWorkers()
 {
     return  1;
 }

@@ -13,8 +13,7 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
-class FJob;
-class FCommand;
+class FThreadPool_Private;
 /////////////////////////////////////////////////////
 /// @class      FThreadPool
 /// @brief      The FThreadPool class provides a way to hold a thread pool with
@@ -31,14 +30,12 @@ class FCommand;
 ///             \sa FCommandQueue
 class ULIS_API FThreadPool
 {
-    class FThreadPool_Private;
 
 public:
     ~FThreadPool();
     FThreadPool( uint32 iNumWorkers = MaxWorkers() );
     FThreadPool( const FThreadPool& ) = delete;
     FThreadPool& operator=( const FThreadPool& ) = delete;
-    void ScheduleCommand( const FCommand* iCommand );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
