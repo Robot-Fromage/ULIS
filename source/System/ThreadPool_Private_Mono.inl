@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         ThreadPool_Private_Mono.h
+* @file         ThreadPool_Private_Mono.inl
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FThreadPool_Private
 *               class for systems without actual thread support.
@@ -11,35 +11,9 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Core/Core.h"
-#include "Memory/Array.h"
-#include "Memory/Queue.h"
-#include "Scheduling/Job.h"
-#include "Scheduling/Command.h"
+#include "System/ThreadPool_Private_Mono.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-/// @class      FThreadPool_Private
-/// @brief      The FThreadPool_Private class provides the private implementation
-///             for FThreadPool using the pimpl idiom.
-/// @details    This version of the private implementation is for systems
-///             without actual multi threading support.
-///
-///             \sa FThreadPool
-class FThreadPool_Private
-{
-public:
-    ~FThreadPool_Private();
-    FThreadPool_Private( uint32 iNumWorkers );
-    FThreadPool_Private( const FThreadPool_Private& ) = delete;
-    FThreadPool_Private& operator=( const FThreadPool_Private& ) = delete;
-    void ScheduleCommands( TQueue< const FCommand* >& ioCommands );
-    void WaitForCompletion();
-    void SetNumWorkers( uint32 iNumWorkers );
-    uint32 GetNumWorkers() const;
-    static uint32 MaxWorkers();
-};
-
 FThreadPool_Private::~FThreadPool_Private()
 {
 }

@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         ThreadPool_Private.cpp
+* @file         ThreadPool_Private.h
 * @author       Clement Berthaud
-* @brief        This file forwards includes for the ThreadPool_Private class.
+* @brief        This provides definition for the ThreadPool_Private class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
