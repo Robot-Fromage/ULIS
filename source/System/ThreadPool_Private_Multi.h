@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         ThreadPool_Private_Generic.h
+* @file         ThreadPool_Private_Multi.h
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FThreadPool_Private
 *               class for generic systems.
@@ -11,11 +11,12 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "System/ThreadPool.h"
+#include "Core/Core.h"
 #include "Memory/Array.h"
 #include "Memory/Queue.h"
 #include "Scheduling/Job.h"
 #include "Scheduling/Command.h"
+
 #include <atomic>
 #include <condition_variable>
 #include <deque>

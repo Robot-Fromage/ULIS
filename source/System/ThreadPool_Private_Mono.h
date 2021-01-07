@@ -11,7 +11,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "System/ThreadPool.h"
+#include "Core/Core.h"
 #include "Scheduling/Job.h"
 #include "Scheduling/Command.h"
 

@@ -11,13 +11,7 @@
 */
 #pragma once
 #include "System/ThreadPool.h"
-#include <thread>
-
-#ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
-#include "System/ThreadPool_Private_Generic.h"
-#else
-#include "System/ThreadPool_Private_Mono.h"
-#endif
+#include "System/ThreadPool_Private.h"
 
 ULIS_NAMESPACE_BEGIN
 FThreadPool::~FThreadPool()
