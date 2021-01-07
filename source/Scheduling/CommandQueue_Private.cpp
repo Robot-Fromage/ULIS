@@ -12,6 +12,7 @@
 #pragma once
 #include "Scheduling/CommandQueue_Private.h"
 #include "System/ThreadPool.h"
+#include "System/ThreadPool_Private.h"
 
 ULIS_NAMESPACE_BEGIN
 FCommandQueue_Private::~FCommandQueue_Private()
@@ -34,12 +35,8 @@ FCommandQueue_Private::FCommandQueue_Private( FThreadPool& iPool )
 void
 FCommandQueue_Private::Flush()
 {
-    while( !mQueue.IsEmpty() )
-    {
-        const FCommand* cmd = mQueue.Front();
-        mQueue.Pop();
-        //mPool.ScheduleCommand( cmd );
-    }
+    mPool.d->ScheduleCommands( mQueue );
+    mQueue.Clear();
 }
 
 void

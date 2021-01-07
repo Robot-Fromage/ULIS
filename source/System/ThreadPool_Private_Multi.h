@@ -41,7 +41,7 @@ public:
     FThreadPool_Private( uint32 iNumWorkers = MaxWorkers() );
     FThreadPool_Private( const FThreadPool_Private& ) = delete;
     FThreadPool_Private& operator=( const FThreadPool_Private& ) = delete;
-    void ScheduleCommand( const FCommand* iJob );
+    void ScheduleCommands( TQueue< const FCommand* >& ioCommands );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
@@ -94,11 +94,13 @@ FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 }
 
 void
-FThreadPool_Private::ScheduleCommand( const FCommand* iCommand )
+FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
+    /*
     ULIS_ASSERT( iCommand->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
     std::lock_guard< std::mutex > lock( mCommandsQueueMutex );
     mCommands.push_back( iCommand );
+    */
 }
 
 void

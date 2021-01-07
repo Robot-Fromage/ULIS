@@ -12,6 +12,8 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Memory/Array.h"
+#include "Memory/Queue.h"
 #include "Scheduling/Job.h"
 #include "Scheduling/Command.h"
 
@@ -31,7 +33,7 @@ public:
     FThreadPool_Private( uint32 iNumWorkers );
     FThreadPool_Private( const FThreadPool_Private& ) = delete;
     FThreadPool_Private& operator=( const FThreadPool_Private& ) = delete;
-    void ScheduleCommand( const FCommand* iJob );
+    void ScheduleCommands( TQueue< const FCommand* >& ioCommands );
     void WaitForCompletion();
     void SetNumWorkers( uint32 iNumWorkers );
     uint32 GetNumWorkers() const;
@@ -47,8 +49,9 @@ FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 }
 
 void
-FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
+FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
+    /*
     // Immediate exe.
     iJob->Execute();
 
@@ -57,6 +60,7 @@ FThreadPool_Private::ScheduleCommand( const FCommand* iJob )
         evt->SetFinished();
 
     delete  iJob;
+    */
 }
 
 void
