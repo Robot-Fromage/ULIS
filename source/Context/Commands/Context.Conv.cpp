@@ -53,7 +53,7 @@ FContext::ConvertFormat(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Bake and push command
     mCommandQueue.d->Push(

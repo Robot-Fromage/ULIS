@@ -67,7 +67,7 @@ FContext::Blend(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -131,7 +131,7 @@ FContext::BlendAA(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Forward arguments baking
     const FVec2F subpixelComponent = iPosition.DecimalPart();
@@ -195,7 +195,7 @@ FContext::AlphaBlend(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -257,7 +257,7 @@ FContext::AlphaBlendAA(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Forward arguments baking
     const FVec2F subpixelComponent = iPosition.DecimalPart();
@@ -323,7 +323,7 @@ FContext::BlendTiled(
 
      // Check no-op
     if( src_roi.Area() <= 0 || dst_roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Forward arguments baking
     FVec2I mod_shift(
@@ -383,7 +383,7 @@ FContext::BlendColor(
 
      // Check no-op
     if( src_roi.Area() <= 0 || dst_roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Forward arguments baking
     FBlock* color = new FBlock( 1, 1, iBackdrop.Format() );

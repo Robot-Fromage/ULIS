@@ -41,7 +41,7 @@ FContext::Fill(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Forward arguments baking
     // This one is a bit tricky so here is a breakdown of the steps:
@@ -91,7 +91,7 @@ FContext::FillPreserveAlpha(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNoOP( iEvent );
+        return  FinishEventNo_OP( iEvent );
 
     // Bake and push command
     mCommandQueue.d->Push(
