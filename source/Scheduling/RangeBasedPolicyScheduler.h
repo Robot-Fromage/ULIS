@@ -34,18 +34,19 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
 )
 {
+    ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
     iCommand->ReserveJobs( iNumJobs );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
     for( int64 i = 0; i < iNumJobs; ++i )
     {
         uint8* buf = new uint8[ iNumTasksPerJob * sizeof( TJobArgs ) ];
         TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
-        for( int i = 0; i < iNumTasksPerJob; ++i ) {
-            new ( jargs + i ) TJobArgs();
-            iDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i, jargs[i] );
+        for( int j = 0; j < iNumTasksPerJob; ++j ) {
+            new ( jargs + j ) TJobArgs();
+            iDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i + j, jargs[j] );
         }
         FJob* job = new FJob(
-              1
+              iNumTasksPerJob
             , &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >
             , jargs
             , iCommand
