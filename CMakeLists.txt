@@ -223,3 +223,10 @@ install(
     COMPONENT headers
 )
 
+install( FILES AUTHORS          DESTINATION "." COMPONENT runtime )
+install( FILES LICENSE.md       DESTINATION "." COMPONENT runtime )
+install( FILES ULIS_CLUF.txt    DESTINATION "." COMPONENT runtime )
+install( FILES ULIS_EULA.txt    DESTINATION "." COMPONENT runtime )
+install( FILES binding/UnrealEngine4/README.md      DESTINATION "." COMPONENT runtime )
+install( FILES binding/UnrealEngine4/ULIS.Build.cs  DESTINATION "." COMPONENT runtime )
+
