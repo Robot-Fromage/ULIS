@@ -226,12 +226,12 @@ install(
     COMPONENT headers
 )
 
-include( CMakePackageConfigHelpers )
-write_basic_package_version_file(
-  "${PROJECT_BINARY_DIR}/ULISConfigVersion.cmake"
-  VERSION ${ULIS_VERSION}
-  COMPATIBILITY SameMajorVersion 
-)
+#include( CMakePackageConfigHelpers )
+#write_basic_package_version_file(
+#  "${PROJECT_BINARY_DIR}/ULISConfigVersion.cmake"
+#  VERSION ${ULIS_VERSION}
+#  COMPATIBILITY SameMajorVersion 
+#)
 
 install( FILES AUTHORS          DESTINATION "." COMPONENT runtime )
 install( FILES LICENSE.md       DESTINATION "." COMPONENT runtime )
@@ -241,5 +241,5 @@ install( FILES binding/UnrealEngine4/README.md      DESTINATION "." COMPONENT ru
 install( FILES binding/UnrealEngine4/ULIS.Build.cs  DESTINATION "." COMPONENT runtime )
 install( FILES "${PROJECT_BINARY_DIR}/.VERSION"                  DESTINATION "." COMPONENT runtime )
 install( FILES "${PROJECT_BINARY_DIR}/.TIMESTAMP"                DESTINATION "." COMPONENT runtime )
-install( FILES "${PROJECT_BINARY_DIR}/ULISConfigVersion.cmake"  DESTINATION "." COMPONENT runtime )
+#install( FILES "${PROJECT_BINARY_DIR}/ULISConfigVersion.cmake"  DESTINATION "." COMPONENT runtime )
 
