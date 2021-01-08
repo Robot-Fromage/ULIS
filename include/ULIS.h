@@ -37,9 +37,8 @@
 #include "String/String.h"
 #include "String/WString.h"
 // System
-#include "System/FilePathRegistry.h"
 #include "System/Device.h"
-// Thread
+#include "System/FilePathRegistry.h"
 #include "System/ThreadPool.h"
 // Scheduling
 #include "Scheduling/CommandQueue.h"
