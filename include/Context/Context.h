@@ -24,24 +24,17 @@ ULIS_NAMESPACE_BEGIN
 /// @class      FContext
 /// @brief      The FContext class provides a monolithic context for
 ///             calling image raster and composition functions for a given format.
-/// @details    The FContext works on FBlock and is bound to a
-///             specific format. It prefetches the dispatched implementation to
-///             select the fastest method according to the format, and its
-///             specializations if available, and according to the current runtime
-///             device and its support for SIMD features or thread support.
+/// @details    FContext works on FBlock and is bound to a specific format.
+///             It prefetches dispatched implementation to select the fastest
+///             method according to the format, its optional  specializations,
+///             and the runtime device support for multi-threading or SIMD.
 ///
-///             There can be multiple FContext object instances for
-///             different formats, each sharing the same FHardwareMetrics. Keep in mind
-///             this object is rather heavy as it caches the pre-dispatched
-///             paths to the specific implementations of each feature it exposes.
+///             There can be multiple FContext instances for different formats.
+///             Keep in mind this object is rather heavy as it caches paths to
+///             the implementations of each feature it exposes.
 ///
-///             FContext can be expected to reach a size in the Ko
-///             magnitude, and there is a significant overhead during
-///             instanciation at runtime. But once created, the gain is
-///             significant as the path to the implementation has been cached
-///             once and for all. The only exception is for the Conversion
-///             functions, which are not cached as it would bloat the memory due
-///             to the many possible combinations of source and targets ( 1M+ ).
+///             FContext can be expected to reach a size in the Ko magnitude,
+///             there is a small overhead during instanciation at runtime.
 ///
 ///             \sa FBlock
 ///             \sa FThreadPool
@@ -95,7 +88,10 @@ public:
     eFormat Format() const;
 
 private:
-    void FinishEventNoOP( FEvent* iEvent );
+    /*!
+        Internal tool for notifying an user event the task is a no-op
+    */
+    void FinishEventNo_OP( FEvent* iEvent );
 
 public:
 /////////////////////////////////////////////////////

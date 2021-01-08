@@ -63,7 +63,7 @@ FContext::Format() const
 }
 
 void
-FContext::FinishEventNoOP( FEvent* iEvent )
+FContext::FinishEventNo_OP( FEvent* iEvent )
 {
     if( iEvent )
         iEvent->d->m->SetStatus( eEventStatus::EventStatus_Finished );
