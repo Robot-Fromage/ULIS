@@ -35,10 +35,10 @@ main( int argc, char *argv[] ) {
     FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
 
     // Data
-    FBlock blockA( 256, 256, fmt );
-    FBlock blockB( 256, 256, fmt );
-    FBlock blockC( 256, 256, fmt );
-    FBlock canvas( 256, 256, fmt );
+    FBlock blockA( 1024, 1024, fmt );
+    FBlock blockB( 1024, 1024, fmt );
+    FBlock blockC( 1024, 1024, fmt );
+    FBlock canvas( 1024, 1024, fmt );
 
     // Operation
     {
