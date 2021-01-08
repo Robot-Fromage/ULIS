@@ -32,7 +32,7 @@ main( int argc, char *argv[] ) {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt );
     FHardwareMetrics hw;
-    FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy( ScheduleRun_Mono, ScheduleMode_Scanlines, ScheduleParameter_Length, hw.L1CacheSize() );
 
     // Data
     FBlock blockA( 1024, 1024, fmt );
@@ -58,22 +58,22 @@ main( int argc, char *argv[] ) {
         colors[1] = FColor::RGB( 0, 255, 0 );
         colors[2] = FColor::GreyAF( 0.5f );
 
-        ctx.Clear( blockA, blockA.Rect(), policy, 0, nullptr, &events[0] );
-        ctx.Clear( blockB, blockB.Rect(), policy, 0, nullptr, &events[1] );
-        ctx.Clear( blockC, blockC.Rect(), policy, 0, nullptr, &events[2] );
-        ctx.Fill( blockA, blockA.Rect(), colors[0], policy, 1, &events[0], &events[3] );
-        ctx.Fill( blockB, blockB.Rect(), colors[1], policy, 1, &events[1], &events[4] );
-        ctx.Fill( blockC, blockC.Rect(), colors[2], policy, 1, &events[2], &events[5] );
-        ctx.Blend( blockC, canvas, blockC.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 1.f, policy, 6, &events[0], &events[6] );
-        ctx.Blend( blockB, canvas, blockB.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.5f, policy, 7, &events[0], &events[7] );
-        ctx.Blend( blockA, canvas, blockA.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.1f, policy, 8, &events[0], &events[8] );
+        //ctx.Clear( blockA, blockA.Rect(), policy, 0, nullptr, &events[0] );
+        //ctx.Clear( blockB, blockB.Rect(), policy, 0, nullptr, &events[1] );
+        //ctx.Clear( blockC, blockC.Rect(), policy, 0, nullptr, &events[2] );
+        ctx.Fill( blockA, blockA.Rect(), colors[0], policy, 0, &events[0], &events[3] );
+        //ctx.Fill( blockB, blockB.Rect(), colors[1], policy, 1, &events[1], &events[4] );
+        //ctx.Fill( blockC, blockC.Rect(), colors[2], policy, 1, &events[2], &events[5] );
+        //ctx.Blend( blockC, canvas, blockC.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 1.f, policy, 6, &events[0], &events[6] );
+        //ctx.Blend( blockB, canvas, blockB.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.1f, policy, 7, &events[0], &events[7] );
+        //ctx.Blend( blockA, canvas, blockA.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.5f, policy, 8, &events[0], &events[8] );
         ctx.Finish();
     }
 
     // Bake Qt App / Window
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( canvas.Bits(), canvas.Width(), canvas.Height(), canvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    QImage*         image   = new QImage( blockA.Bits(), canvas.Width(), canvas.Height(), canvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );
     label->setPixmap( pixmap );

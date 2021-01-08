@@ -34,6 +34,20 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
 )
 {
+    // Todo: doing that:
+    // uint8* buf = new uint8[ iNumTasksPerJob * sizeof( TJobArgs ) ];
+    // TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
+    // Means we have a contiguous buffer storage of TJobArgs
+    // On top of potential aliasing issue, and messing around with placement new,
+    // there is an issue with the fact that it is ultimately going to be interpreted
+    // as a contiguous buffer storage of IJobArgs which has a smaller size than
+    // TJobArgs and will shift over the buffer yielding misinterpreted data upon
+    // iteration in FJob ( in Exec and Destructor ).
+    // Two solutions:
+    //      1) Iterate on a uint8* buffer and pass a stride value
+    //      2) Pass template function pointers that know how to interpret the TJobArgs
+    //      inside the FJob class. e.g: fpExec, fpDestroy.
+    // I would rather lean towards 2).
     ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
     iCommand->ReserveJobs( iNumJobs );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
