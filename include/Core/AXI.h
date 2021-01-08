@@ -35,8 +35,11 @@ ULIS_API uint64 VersionMinor();
 /*! Retrieve the patch version number. */
 ULIS_API uint64 VersionPatch();
 
-/*! Retrieve the compilation date and time e.g: "Aug 15 2020 15:12:04". */
-ULIS_API FString CompilationTimeStamp();
+/*! Retrieve the built configuration ( Debug, Release, RelWithDebInfo ). */
+ULIS_API FString ConfigurationString();
+
+/*! Retrieve the compilation date and time e.g: "Aug 15 2020, 15:12:04". */
+ULIS_API FString CompilationTimeStampString();
 
 /*! Retrieve the compiler name string */
 ULIS_API FString CompilerNameString();

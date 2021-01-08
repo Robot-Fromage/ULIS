@@ -58,9 +58,21 @@ VersionPatch()
 }
 
 FString
-CompilationTimeStamp()
+ConfigurationString()
 {
-    return  FString( ULIS_STRINGIFY( __DATE__ ) ) + " " + ULIS_STRINGIFY( __TIME__ );
+#if defined( ULIS_DEBUG )
+    return  FString( "Debug" );
+#elif defined( ULIS_RELEASE )
+    return  FString( "Release" );
+#elif defined( ULIS_RELWITHDEBINFO )
+    return  FString( "RelWithDebInfo" );
+#endif
+}
+
+FString
+CompilationTimeStampString()
+{
+    return  FString( ULIS_STRINGIFY( __DATE__ ) ) + ", " + ULIS_STRINGIFY( __TIME__ );
 }
 
 FString
@@ -74,6 +86,8 @@ CompilerNameString()
     return  FString( "MSVC" );
 #elif defined( ULIS_MINGW64 )
     return  FString( "MINGW64" );
+#elif defined( ULIS_EMSCRIPTEN )
+    return  FString( "EMSCRIPTEN" );
 #else
     return  FString( "UNKNOWN" );
 #endif
@@ -91,7 +105,7 @@ CompilerVersionString()
 #elif defined( ULIS_MINGW64 )
     return  FString( ULIS_STRINGIFY( __MINGW64_VERSION_MAJOR ) ) + "." + ULIS_STRINGIFY( __MINGW64_VERSION_MINOR );
 #else
-    return  FString( "v0000" );
+    return  FString( "" );
 #endif
 }
 
@@ -132,7 +146,17 @@ CompiledWithSSE42()
 FString
 FullLibraryInformationString()
 {
-    return  FString( "ULIS" ) + " " + VersionString() + " (" + CompilationTimeStamp() + ") [" + CompilerInformationString() + "]";
+    FString on( "ON" );
+    FString off( "OFF" );
+    FString sse = CompiledWithSSE42() ? on : off;
+    FString avx = CompiledWithAVX2() ?  on : off;
+    // 4.0.0 (Aug 15 2020, 15:12:04) [MSVC v.1916 x64] {Release}
+    return  VersionString()
+            + "(" + CompilationTimeStampString() + ") "
+            + "[" + CompilerInformationString() + " x64] ";
+            + "[ SSE:" + sse + "] "
+            + "[ AVX:" + avx + "] "
+            + "[" + ConfigurationString() + "]";
 }
 
 ULIS_NAMESPACE_END
