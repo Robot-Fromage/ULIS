@@ -1,5 +1,14 @@
-// Copyright © 2018-2019 Praxinos, Inc. All Rights Reserved.
+// Copyright © 2018-2021 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
+/*
+*   ULIS
+*__________________
+* @file         ULIS.Build.cs
+* @author       Clement Berthaud
+* @brief        Module description file for UnrealEngine4
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
 using System;
 using System.IO;
 using UnrealBuildTool;
