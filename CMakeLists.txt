@@ -45,6 +45,7 @@ project( ULIS )
 set( ULIS_VERSION_MAJOR 4 )
 set( ULIS_VERSION_MINOR 0 )
 set( ULIS_VERSION_PATCH 0 )
+set( ULIS_VERSION ${ULIS_VERSION_MAJOR}.${ULIS_VERSION_MINOR}.${ULIS_VERSION_PATCH} )
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
@@ -207,10 +208,11 @@ endif()
 
 ####################################
 # Install
-string( TIMESTAMP ULIS_TODAY_DATE "%d%m%Y" )
-set( ULIS_INSTALL_NAME "install_${ULIS_TODAY_DATE}_ULIS${ULIS_VERSION_MAJOR}.${ULIS_VERSION_MINOR}.${ULIS_VERSION_PATCH}_${CMAKE_HOST_SYSTEM_NAME}_${CMAKE_CXX_COMPILER_ID}_x64" )
+string( TIMESTAMP ULIS_TODAY_DATE "%d/%m/%Y" )
+set( ULIS_INSTALL_NAME "install_ULIS${ULIS_VERSION}_${CMAKE_HOST_SYSTEM_NAME}_${CMAKE_CXX_COMPILER_ID}_x64" )
 set( CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/../${ULIS_INSTALL_NAME}" CACHE PATH "Install Path" FORCE )
-write_file( VERSION "ULIS${ULIS_VERSION_MAJOR}.${ULIS_VERSION_MINOR}.${ULIS_VERSION_PATCH}" )
+write_file( ".VERSION"      ${ULIS_VERSION}     )
+write_file( ".TIMESTAMP"    ${ULIS_TODAY_DATE}  )
 
 install( TARGETS ULIS
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -224,11 +226,20 @@ install(
     COMPONENT headers
 )
 
+include( CMakePackageConfigHelpers )
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/ULISConfigVersion.cmake"
+  VERSION ${ULIS_VERSION}
+  COMPATIBILITY SameMajorVersion 
+)
+
 install( FILES AUTHORS          DESTINATION "." COMPONENT runtime )
 install( FILES LICENSE.md       DESTINATION "." COMPONENT runtime )
 install( FILES ULIS_CLUF.txt    DESTINATION "." COMPONENT runtime )
 install( FILES ULIS_EULA.txt    DESTINATION "." COMPONENT runtime )
 install( FILES binding/UnrealEngine4/README.md      DESTINATION "." COMPONENT runtime )
 install( FILES binding/UnrealEngine4/ULIS.Build.cs  DESTINATION "." COMPONENT runtime )
-install( FILES "${PROJECT_BINARY_DIR}/VERSION"  DESTINATION "." COMPONENT runtime )
+install( FILES "${PROJECT_BINARY_DIR}/.VERSION"                  DESTINATION "." COMPONENT runtime )
+install( FILES "${PROJECT_BINARY_DIR}/.TIMESTAMP"                DESTINATION "." COMPONENT runtime )
+install( FILES "${PROJECT_BINARY_DIR}/ULISConfigVersion.cmake"  DESTINATION "." COMPONENT runtime )
 
