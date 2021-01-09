@@ -46,6 +46,7 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
     // Two solutions:
     //      1) Iterate on a uint8* buffer and pass a stride value
     //      2) Pass template function pointers that know how to interpret the TJobArgs
+    //      3) Use a contiguous array of IJobArgs** pointing to TJobArgs* instead.
     //      inside the FJob class. e.g: fpExec, fpDestroy.
     // I would rather lean towards 2).
     ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
@@ -97,6 +98,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
     {
         uint8* buf = new uint8[ sizeof( TJobArgs ) ];
         TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
+
         new ( jargs ) TJobArgs();
         iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, *jargs );
 
