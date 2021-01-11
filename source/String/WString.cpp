@@ -43,7 +43,7 @@ FWString::FWString( const char_type* iStr )
     memcpy( mBulk, iStr, sizeof( char_type ) * cap );
     mCapacity = cap;
     mSize = cap - 1;
-    mBulk[ mSize ] = '\0';
+    mBulk[ mSize ] = L'\0';
 }
 
 FWString::FWString( const FWString& iStr )
@@ -78,6 +78,7 @@ FWString::FWString( const FString& iWStr )
 
 FWString&
 FWString::operator=( const FWString& iStr ) {
+    ULIS_ASSERT( iStr.mBulk != mBulk, "Cannot assign itself" );
     CleanupBulk();
     uint64 cap = iStr.Size() + 1;
     mBulk = new char_type[ cap ];
@@ -89,6 +90,7 @@ FWString::operator=( const FWString& iStr ) {
 
 FWString&
 FWString::operator=( FWString&& iStr ) {
+    ULIS_ASSERT( iStr.mBulk != mBulk, "Cannot assign itself" );
     mBulk = iStr.mBulk;
     mCapacity = iStr.mCapacity;
     mSize = iStr.mSize;
@@ -223,6 +225,7 @@ FWString::Append( char_type iChar ) {
     uint64 len = mSize + 1;
     GrowBulk( len );
     mBulk[ mSize ] = iChar;
+    mBulk[ len ] = L'\0';
     mSize = len;
     return  (*this);
 }
@@ -241,7 +244,7 @@ FWString::Prepend( const char_type* iStr ) {
     uint64 olen = wcslen( iStr );
     uint64 len = mSize + olen;
     GrowBulk( len, olen );
-    memcpy( mBulk, iStr, olen + 1 );
+    memcpy( mBulk, iStr, olen );
     mSize = len;
     return  (*this);
 }

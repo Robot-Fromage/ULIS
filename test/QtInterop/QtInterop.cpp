@@ -45,6 +45,10 @@ main( int argc, char *argv[] ) {
     FString stringC( stringB );
     stringB.Append( stringC );
     stringB.Append( " No" );
+    stringB.Append( 'A' );
+    stringB.Prepend( "Yes" );
+    stringB.Prepend( stringC );
+    stringB.Prepend( 'A' );
 
     auto dummy = 0;
 

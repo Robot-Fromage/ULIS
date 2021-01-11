@@ -78,6 +78,7 @@ FString::FString( const FWString& iWStr )
 
 FString&
 FString::operator=( const FString& iStr ) {
+    ULIS_ASSERT( iStr.mBulk != mBulk, "Cannot assign itself" );
     CleanupBulk();
     uint64 cap = iStr.Size() + 1;
     mBulk = new char_type[ cap ];
@@ -89,6 +90,7 @@ FString::operator=( const FString& iStr ) {
 
 FString&
 FString::operator=( FString&& iStr ) {
+    ULIS_ASSERT( iStr.mBulk != mBulk, "Cannot assign itself" );
     mBulk = iStr.mBulk;
     mCapacity = iStr.mCapacity;
     mSize = iStr.mSize;
@@ -223,6 +225,7 @@ FString::Append( char_type iChar ) {
     uint64 len = mSize + 1;
     GrowBulk( len );
     mBulk[ mSize ] = iChar;
+    mBulk[ len ] = '\0';
     mSize = len;
     return  (*this);
 }
@@ -241,7 +244,7 @@ FString::Prepend( const char_type* iStr ) {
     uint64 olen = strlen( iStr );
     uint64 len = mSize + olen;
     GrowBulk( len, olen );
-    memcpy( mBulk, iStr, olen + 1 );
+    memcpy( mBulk, iStr, olen );
     mSize = len;
     return  (*this);
 }
