@@ -28,11 +28,13 @@ FContext::~FContext()
 FContext::FContext(
       FCommandQueue& iQueue
     , eFormat iFormat
+    , ePerformanceIntent iPerfIntent
 )
     : mCommandQueue( iQueue )
-    , mFormat( iFormat )
     , mHardwareMetrics( FHardwareMetrics() )
-    , mContextualDispatchTable( new  FContextualDispatchTable( mHardwareMetrics, mFormat ) )
+    , mFormat( iFormat )
+    , mPerfIntent( iPerfIntent )
+    , mContextualDispatchTable( new  FContextualDispatchTable( mHardwareMetrics, mFormat, mPerfIntent ) )
 {
 }
 

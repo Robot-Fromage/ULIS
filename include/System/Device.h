@@ -86,5 +86,12 @@ private:
     uint64 mL1CacheLineSize;
 };
 
+enum ePerformanceIntent : uint32 {
+      PerformanceIntent_MEM   = 0b0000
+    , PerformanceIntent_SSE   = 0b0001
+    , PerformanceIntent_AVX   = 0b0010
+    , PerformanceIntent_Max   = 0b1111
+};
+
 ULIS_NAMESPACE_END
 

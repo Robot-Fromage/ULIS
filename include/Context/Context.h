@@ -59,6 +59,7 @@ public:
     FContext(
           FCommandQueue& iQueue
         , eFormat iFormat
+        , ePerformanceIntent iPerfIntent = ePerformanceIntent::PerformanceIntent_Max
     );
 
     FContext( const FContext& ) = delete;
@@ -435,6 +436,7 @@ private:
     FCommandQueue& mCommandQueue;
     const FHardwareMetrics mHardwareMetrics;
     const eFormat mFormat;
+    const ePerformanceIntent mPerfIntent;
     const FContextualDispatchTable* mContextualDispatchTable;
 };
 

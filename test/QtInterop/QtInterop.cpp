@@ -72,7 +72,7 @@ main( int argc, char *argv[] ) {
         ctx.Blend( blockA, canvas, blockA.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.5f, policy, 1, &events[6], &events[7] );
         ctx.Blend( blockB, canvas, blockB.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.1f, policy, 1, &events[7], &events[8] );
         ctx.BlendColor( colors[3], canvas, canvas.Rect(), Blend_BayerDither8x8, Alpha_Normal, 0.5f, policy, 1, &events[8], &events[9] );
-        ctx.BlendAA( blockB, canvas, FRectI( 0, 0, 512, 512 ), FVec2F( 64.5f, 64.5f ), Blend_Normal, Alpha_Normal, 0.5f, policy, 1, &events[9], &events[10] );
+        ctx.BlendAA( blockB, canvas, FRectI( 64, 64, 512, 512 ), FVec2F( 64.5f, 64.5f ), Blend_Normal, Alpha_Normal, 0.5f, policy, 1, &events[9], &events[10] );
         ctx.BlendTiled( blockA, canvas, FRectI( 16, 16, 32, 32 ), FRectI( 512, 512, 128, 128 ), FVec2I(), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &events[10 ], &events[11] );
         ctx.Finish();
     }
