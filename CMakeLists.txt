@@ -36,7 +36,7 @@ set( CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true )
 set( SKIP_INSTALL_ALL true )
 
 # Set C++ standard options
-set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS OFF )
 
@@ -50,7 +50,7 @@ set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 
 message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG" )
-    set( CMAKE_CXX_FLAGS "-std=c++14" )
+    set( CMAKE_CXX_FLAGS "-std=c++17" )
 endif()
 
 # Flags for Compiler / Platforms
