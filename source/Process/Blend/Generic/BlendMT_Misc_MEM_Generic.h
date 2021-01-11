@@ -46,7 +46,7 @@ InvokeBlendMT_Misc_MEM_Generic_Subpixel(
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
             ufloat m11, m01, m10, m00, vv0, vv1, res;
             m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;
-            m10 = ( hasLeftData && ( notFirstLine && hasTopData ) ) ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
+            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
             vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
             for( int x = 0; x < cargs->dstRect.w; ++x ) {
@@ -58,7 +58,7 @@ InvokeBlendMT_Misc_MEM_Generic_Subpixel(
                 { //SampleSubpixelAlpha( res );
                     if( fmt.HEA ) {
                         m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,                  fmt.AID ) : 0.f;
-                        m10 = ( notLastCol && ( notFirstLine && hasTopData ) )  ? TYPE2FLOAT( src - cargs->src_bps, fmt.AID ) : 0.f;
+                        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - cargs->src_bps, fmt.AID ) : 0.f;
                     } else {
                         m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;
                         m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;
@@ -88,7 +88,7 @@ InvokeBlendMT_Misc_MEM_Generic_Subpixel(
         case Blend_BayerDither8x8: {
             ufloat m11, m01, m10, m00, vv0, vv1, res;
             m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;
-            m10 = ( hasLeftData && ( notFirstLine && hasTopData ) ) ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
+            m10 = ( hasLeftData && ( notFirstLine || hasTopData ) ) ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
             vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
             for( int x = 0; x < cargs->dstRect.w; ++x ) {
@@ -100,7 +100,7 @@ InvokeBlendMT_Misc_MEM_Generic_Subpixel(
                 { //SampleSubpixelAlpha( res );
                     if( fmt.HEA ) {
                         m11 = ( notLastCol && notLastLine )                     ? TYPE2FLOAT( src,                  fmt.AID ) : 0.f;
-                        m10 = ( notLastCol && ( notFirstLine && hasTopData ) )  ? TYPE2FLOAT( src - cargs->src_bps, fmt.AID ) : 0.f;
+                        m10 = ( notLastCol && ( notFirstLine || hasTopData ) )  ? TYPE2FLOAT( src - cargs->src_bps, fmt.AID ) : 0.f;
                     } else {
                         m11 = ( notLastCol && notLastLine )     ? 1.f : 0.f;
                         m10 = ( notLastCol && notFirstLine )    ? 1.f : 0.f;
