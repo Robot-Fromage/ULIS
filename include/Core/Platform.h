@@ -252,3 +252,7 @@ namespace ULIS_NAMESPACE_NAME {}
     #define ULIS_STATISTICS_ENABLED
 #endif
 
+/////////////////////////////////////////////////////
+// Disable REGISTER Keyword for LCMS2
+#define CMS_NO_REGISTER_KEYWORD
+
