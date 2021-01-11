@@ -83,7 +83,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
     {
         IJobArgs** jargs = new IJobArgs*[ 1 ];
         TJobArgs* largs = new TJobArgs();
-        jargs[ 1 ] = largs;
+        jargs[ 0 ] = largs;
         iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, *largs );
 
         FJob* job = new FJob(
