@@ -46,9 +46,9 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
     // Two solutions:
     //      1) Iterate on a uint8* buffer and pass a stride value
     //      2) Pass template function pointers that know how to interpret the TJobArgs
-    //      3) Use a contiguous array of IJobArgs** pointing to TJobArgs* instead.
     //      inside the FJob class. e.g: fpExec, fpDestroy.
-    // I would rather lean towards 2).
+    //      3) Use a contiguous array of IJobArgs** pointing to TJobArgs* instead.
+    // I would rather lean towards 3).
     ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
     iCommand->ReserveJobs( iNumJobs );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
