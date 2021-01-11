@@ -49,12 +49,12 @@ public:
         }
     }
 
-    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleTiledBlendSubpixel( eBlendMode iBlendingMode ) const
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleTiledBlend( eBlendMode iBlendingMode ) const
     {
         switch( BlendingModeQualifier( iBlendingMode ) ) {
-            case BlendQualifier_Misc            : return  mScheduleTiledBlendSeparable;
-            case BlendQualifier_Separable       : return  mScheduleTiledBlendNonSeparable;
-            case BlendQualifier_NonSeparable    : return  mScheduleTiledBlendMisc;
+            case BlendQualifier_Misc            : return  mScheduleTiledBlendMisc;
+            case BlendQualifier_Separable       : return  mScheduleTiledBlendSeparable;
+            case BlendQualifier_NonSeparable    : return  mScheduleTiledBlendNonSeparable;
             default: return  nullptr;
         }
     }

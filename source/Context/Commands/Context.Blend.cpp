@@ -334,7 +334,7 @@ FContext::BlendTiled(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->QueryScheduleTiledBlendSubpixel( iBlendingMode )
+              mContextualDispatchTable->QueryScheduleTiledBlend( iBlendingMode )
             , new FBlendCommandArgs(
                   iSource
                 , iBackdrop
@@ -393,7 +393,7 @@ FContext::BlendColor(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->QueryScheduleTiledBlendSubpixel( iBlendingMode )
+              mContextualDispatchTable->QueryScheduleTiledBlend( iBlendingMode )
             , new FBlendCommandArgs(
                   *color
                 , iBackdrop

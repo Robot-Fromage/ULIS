@@ -42,21 +42,25 @@ main( int argc, char *argv[] ) {
 
     // Operation
     {
-        TArray< FEvent > events( 9 );
+        TArray< FEvent > events( 12 );
         FEvent blend_event;
-        // events[0] : Clear A
-        // events[1] : Clear B
-        // events[2] : Clear C
-        // events[3] : Fill A
-        // events[4] : Fill B
-        // events[5] : Fill C
-        // events[6] : Blend C
-        // events[7] : Blend B
-        // events[8] : Blend A
-        TArray< FColor > colors( 3 );
+        // events[0]    : Clear A
+        // events[1]    : Clear B
+        // events[2]    : Clear C
+        // events[3]    : Fill A
+        // events[4]    : Fill B
+        // events[5]    : Fill C
+        // events[6]    : Blend C
+        // events[7]    : Blend B
+        // events[8]    : Blend A
+        // events[9]    : Blend Color
+        // events[10]   : Blend AA
+        // events[11]   : Blend Tiled
+        TArray< FColor > colors( 4 );
         colors[0] = FColor::RGB( 255, 0, 0 );
         colors[1] = FColor::RGB( 0, 255, 0 );
         colors[2] = FColor::GreyAF( 0.5f );
+        colors[3] = FColor::GreyAF( 0.f );
 
         ctx.Clear( blockA, blockA.Rect(), policy, 0, nullptr, &events[0] );
         ctx.Clear( blockB, blockB.Rect(), policy, 0, nullptr, &events[1] );
@@ -67,6 +71,9 @@ main( int argc, char *argv[] ) {
         ctx.Blend( blockC, canvas, blockC.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 1.f, policy, 3, &events[3], &events[6] );
         ctx.Blend( blockA, canvas, blockA.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.5f, policy, 1, &events[6], &events[7] );
         ctx.Blend( blockB, canvas, blockB.Rect(), FVec2I( 0, 0 ), Blend_Normal, Alpha_Normal, 0.1f, policy, 1, &events[7], &events[8] );
+        ctx.BlendColor( colors[3], canvas, canvas.Rect(), Blend_BayerDither8x8, Alpha_Normal, 0.5f, policy, 1, &events[8], &events[9] );
+        ctx.BlendAA( blockB, canvas, FRectI( 0, 0, 512, 512 ), FVec2F( 64.5f, 64.5f ), Blend_Normal, Alpha_Normal, 0.5f, policy, 1, &events[9], &events[10] );
+        ctx.BlendTiled( blockA, canvas, FRectI( 16, 16, 32, 32 ), FRectI( 512, 512, 128, 128 ), FVec2I(), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &events[10 ], &events[11] );
         ctx.Finish();
     }
 
