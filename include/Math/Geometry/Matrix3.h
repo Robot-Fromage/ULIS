@@ -94,7 +94,7 @@ public:
     ULIS_MATRIX_FUNC void Decompose( T* oTx, T* oTy, T* oRotation, T* oScaleX, T* oScaleY, T* oSkewX, T* oSkewY ) const;
 
     /*! Apply the projective perspective transform or homography to the point */
-    ULIS_MATRIX_FUNC TVector2< T > Project( const TVector2< T >& iPoint ) const;
+    ULIS_MATRIX_FUNC TVector2< T > ApplyHomography( const TVector2< T >& iPoint ) const;
 
     // Transform Functions
     /*! Static maker for 2D 3x3 rotation matrix. */
@@ -357,7 +357,7 @@ TMatrix3< T >::Decompose(
 template< typename T >
 ULIS_MATRIX_FUNC
 TVector2< T >
-TMatrix3< T >::Project( const TVector2< T >& iPoint ) const
+TMatrix3< T >::ApplyHomography( const TVector2< T >& iPoint ) const
 {
     T inv_div = 1 / ( iPoint.x * mCols[2][0] + iPoint.y * mCols[2][1] + mCols[2][2] );
     return  TVector2< T >(

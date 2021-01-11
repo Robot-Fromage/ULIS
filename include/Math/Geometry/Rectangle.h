@@ -205,10 +205,10 @@ struct TRectangle
         float x2 = static_cast< float >( x + w );
         float y2 = static_cast< float >( y + h );
         const FMat3F& mat = iTransform.Matrix();
-        FVec2F A = mat.Project( FVec2F( x1, y1 ) );
-        FVec2F B = mat.Project( FVec2F( x2, y1 ) );
-        FVec2F C = mat.Project( FVec2F( x2, y2 ) );
-        FVec2F D = mat.Project( FVec2F( x1, y2 ) );
+        FVec2F A = mat.ApplyHomography( FVec2F( x1, y1 ) );
+        FVec2F B = mat.ApplyHomography( FVec2F( x2, y1 ) );
+        FVec2F C = mat.ApplyHomography( FVec2F( x2, y2 ) );
+        FVec2F D = mat.ApplyHomography( FVec2F( x1, y2 ) );
         x = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( A.x, B.x, C.x, D.x ) ) );
         y = static_cast< T >( FMath::RoundToNegativeInfinity( FMath::Min4( A.y, B.y, C.y, D.y ) ) );
         w = static_cast< T >( FMath::RoundToPositiveInfinity( FMath::Max4( A.x, B.x, C.x, D.x ) ) ) - x;
