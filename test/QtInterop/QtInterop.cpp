@@ -27,12 +27,12 @@ void OnEventCompleteCallDirty( const FRectI& iGeometry, void* iUserData )
 int
 main( int argc, char *argv[] ) {
     // Common
-    FThreadPool pool;
+    FThreadPool pool(1);
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_MEM );
     FHardwareMetrics hw;
-    FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
 
     // Data
     FBlock blockA( 1024, 1024, fmt );
@@ -40,20 +40,7 @@ main( int argc, char *argv[] ) {
     FBlock blockC( 1024, 1024, fmt );
     FBlock canvas( 1024, 1024, fmt );
 
-    FString stringA;
-    FString stringB( "Yes" );
-    FString stringC( stringB );
-    stringB.Append( stringC );
-    stringB.Append( " No" );
-    stringB.Append( 'A' );
-    stringB.Prepend( "Yes" );
-    stringB.Prepend( stringC );
-    stringB.Prepend( 'A' );
-
-    auto dummy = 0;
-
     // Operation
-    /*
     {
         TArray< FEvent > events( 12 );
         // events[0]    : Clear A
@@ -88,7 +75,6 @@ main( int argc, char *argv[] ) {
         ctx.Finish();
         //ctx.Wait( events[11] );
     }
-    */
 
     // Bake Qt App / Window
     QApplication    app( argc, argv );
