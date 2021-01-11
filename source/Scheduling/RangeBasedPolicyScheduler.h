@@ -46,7 +46,7 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
             iDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i + j, *largs );
         }
         FJob* job = new FJob(
-              iNumTasksPerJob
+              static_cast< uint32 >( iNumTasksPerJob )
             , &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >
             , jargs
             , iCommand
