@@ -53,8 +53,8 @@ public:
         Defaults to mono scanline run.
     */
     FSchedulePolicy(
-          eScheduleRunPolicy iRun = ScheduleRun_Mono
-        , eScheduleModePolicy iMode = ScheduleMode_Scanlines
+          eScheduleRunPolicy iRun = ScheduleRun_Multi
+        , eScheduleModePolicy iMode = ScheduleMode_Chunks
         , eScheduleParameterPolicy iParam = ScheduleParameter_Count
         , int64 iValue = -1
     );
