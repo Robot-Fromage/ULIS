@@ -1,31 +1,6 @@
 ## Usage
 ULIS can be used in a variety of ways, ranging from very easy to quite difficult to grasp when performance matters and asynchronous operations and multithreading are introduced.  
-Here is a sample of an easy use of ULIS if performance is not critical:
-
-```cpp
-//////////////////////////////////////////////////////
-// Easy In Order MonoThread Scheduling
-#include <ULIS3>
-
-int main() {
-    using namespace ::ul3;
-    FContext ctx;
-
-    FVec2I size( 1024, 1024 );
-    FBlock drawing( size );
-    FBlock overlay( size );
-    FGPUTexture2D texture( size );
-
-    ctx.Fill( drawing, FColor::RGB( 255, 0, 0 ) );
-    ctx.Fill( overlay, FColor::RGB( 0, 0, 255 ) );
-    ctx.AlphaBlendAA( overlay, drawing, overlay.Rect(), FVec2f( 0, 0 ), Blend_Normal, 1.f );
-    ctx.UploadToGPU( drawing, texture );
-
-    return  0;
-}
-```
-
-Now here is a sample of asynchronous multithreaded operations when performance matters:
+Here is a sample of asynchronous multithreaded operations when performance matters:
 ```cpp
 //////////////////////////////////////////////////////
 // Advanced Out Of Order Multithreaded Scheduling
@@ -62,3 +37,10 @@ int main() {
     return  0;
 }
 ```
+
+Be careful of a few things when using async systems:  
+Policies
+![](documentation/manual/resource/image/async/policy.png)
+
+Stalling
+![](documentation/manual/resource/image/async/stalling.png)
