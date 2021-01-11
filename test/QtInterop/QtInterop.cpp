@@ -27,12 +27,12 @@ void OnEventCompleteCallDirty( const FRectI& iGeometry, void* iUserData )
 int
 main( int argc, char *argv[] ) {
     // Common
-    FThreadPool pool;
+    FThreadPool pool( 1 );
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_SSE );
+    FContext ctx( queue, fmt, PerformanceIntent_MEM );
     FHardwareMetrics hw;
-    FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
 
     // Data
     FBlock blockA( 1024, 1024, fmt );
