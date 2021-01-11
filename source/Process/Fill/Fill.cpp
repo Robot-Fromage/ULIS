@@ -49,7 +49,7 @@ InvokeFillMT_SSE(
     __m128i* ULIS_RESTRICT dst = reinterpret_cast< __m128i* >( jargs->dst );
     int64 index = 0;
     for( index = 0; index < jargs->size - 16; index += 16 ) {
-        _mm_storeu_si128( dst, _mm_setzero_si128() );
+        _mm_storeu_si128( dst, src );
         ++dst;
     }
     // Remaining unaligned scanline end: avoid concurrent write on 128 bit with SSE and perform a memset instead
