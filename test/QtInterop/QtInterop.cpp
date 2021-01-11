@@ -30,7 +30,7 @@ main( int argc, char *argv[] ) {
     FThreadPool pool(1);
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_MEM );
+    FContext ctx( queue, fmt, PerformanceIntent_AVX );
     FHardwareMetrics hw;
     FSchedulePolicy policy( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
 

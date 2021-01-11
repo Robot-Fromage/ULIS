@@ -40,7 +40,7 @@ InvokeBlendMT_Separable_MEM_Generic_Subpixel(
 
     ufloat m11, m01, m10, m00, vv0, vv1, res;
     m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;
-    m10 = ( notFirstLine&& onLeftBorder && hasLeftData )   ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
+    m10 = ( notFirstLine && onLeftBorder && hasLeftData )   ? TYPE2FLOAT( src - cargs->src_bps - fmt.BPP,   fmt.AID ) : 0.f;
     vv1 = m10 * cargs->subpixelComponent.y + m11 * cargs->buspixelComponent.y;
 
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
