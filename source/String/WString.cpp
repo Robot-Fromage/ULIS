@@ -43,6 +43,7 @@ FWString::FWString( const char_type* iStr )
     memcpy( mBulk, iStr, sizeof( char_type ) * cap );
     mCapacity = cap;
     mSize = cap - 1;
+    mBulk[ mSize ] = '\0';
 }
 
 FWString::FWString( const FWString& iStr )
@@ -202,8 +203,8 @@ FWString&
 FWString::Append( const FWString& iStr ) {
     uint64 len = mSize + iStr.mSize;
     GrowBulk( len );
+    memcpy( mBulk + mSize, iStr.mBulk, iStr.mSize + 1 );
     mSize = len;
-    memcpy( mBulk + mSize, iStr.mBulk + 1, iStr.mSize );
     return  (*this);
 }
 
