@@ -34,31 +34,16 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
 )
 {
-    // Todo: doing that:
-    // uint8* buf = new uint8[ iNumTasksPerJob * sizeof( TJobArgs ) ];
-    // TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
-    // Means we have a contiguous buffer storage of TJobArgs
-    // On top of potential aliasing issue, and messing around with placement new,
-    // there is an issue with the fact that it is ultimately going to be interpreted
-    // as a contiguous buffer storage of IJobArgs which has a smaller size than
-    // TJobArgs and will shift over the buffer yielding misinterpreted data upon
-    // iteration in FJob ( in Exec and Destructor ).
-    // Two solutions:
-    //      1) Iterate on a uint8* buffer and pass a stride value
-    //      2) Pass template function pointers that know how to interpret the TJobArgs
-    //      inside the FJob class. e.g: fpExec, fpDestroy.
-    //      3) Use a contiguous array of IJobArgs** pointing to TJobArgs* instead.
-    // I would rather lean towards 3).
     ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
     iCommand->ReserveJobs( iNumJobs );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
     for( int64 i = 0; i < iNumJobs; ++i )
     {
-        uint8* buf = new uint8[ iNumTasksPerJob * sizeof( TJobArgs ) ];
-        TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
+        IJobArgs** jargs = new IJobArgs*[ iNumTasksPerJob ];
         for( int j = 0; j < iNumTasksPerJob; ++j ) {
-            new ( jargs + j ) TJobArgs();
-            iDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i + j, jargs[j] );
+            TJobArgs* largs = new TJobArgs();
+            jargs[ j ] = largs;
+            iDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i + j, *largs );
         }
         FJob* job = new FJob(
               iNumTasksPerJob
@@ -96,11 +81,10 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
     int64 offset = 0;
     for( int i = 0; i < iNumChunks; ++i )
     {
-        uint8* buf = new uint8[ sizeof( TJobArgs ) ];
-        TJobArgs* jargs = reinterpret_cast< TJobArgs* >( buf );
-
-        new ( jargs ) TJobArgs();
-        iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, *jargs );
+        IJobArgs** jargs = new IJobArgs*[ 1 ];
+        TJobArgs* largs = new TJobArgs();
+        jargs[ 1 ] = largs;
+        iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, *largs );
 
         FJob* job = new FJob(
               1

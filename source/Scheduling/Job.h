@@ -52,7 +52,7 @@ public:
     FJob(
           uint32 iNumTasks
         , fpTask iTask
-        , const IJobArgs* iArgs
+        , IJobArgs** iArgs
         , const FCommand* iParent
     );
 
@@ -80,7 +80,7 @@ public:
 private:
     uint32 mNumTasks;
     fpTask mTask;
-    const IJobArgs* mArgs;
+    IJobArgs** mArgs;
     const FCommand* mParent;
 };
 

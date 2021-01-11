@@ -21,15 +21,15 @@ FJob::~FJob()
     // This requires to call the destructors manually,
     // and delete the buffer through its original type.
     for( uint32 i = 0; i < mNumTasks; ++i )
-        mArgs[i].~IJobArgs();
+        delete  mArgs[i];
 
-    delete [] reinterpret_cast< const uint8* >( mArgs );
+    delete [] mArgs;
 }
 
 FJob::FJob(
       uint32 iNumTasks
     , fpTask iTask
-    , const IJobArgs* iArgs
+    , IJobArgs** iArgs
     , const FCommand* iParent
 )
     : mNumTasks( iNumTasks )
@@ -43,7 +43,7 @@ void
 FJob::Execute() const
 {
     for( uint32 i = 0; i < mNumTasks; ++i )
-        mTask( &mArgs[i], mParent->Args() );
+        mTask( mArgs[i], mParent->Args() );
 }
 
 const FCommand*
