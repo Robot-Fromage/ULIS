@@ -27,12 +27,12 @@ void OnEventCompleteCallDirty( const FRectI& iGeometry, void* iUserData )
 int
 main( int argc, char *argv[] ) {
     // Common
-    FThreadPool pool( 1 );
+    FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_MEM );
     FHardwareMetrics hw;
-    FSchedulePolicy policy( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
 
     // Data
     FBlock blockA( 1024, 1024, fmt );
@@ -43,7 +43,6 @@ main( int argc, char *argv[] ) {
     // Operation
     {
         TArray< FEvent > events( 12 );
-        FEvent blend_event;
         // events[0]    : Clear A
         // events[1]    : Clear B
         // events[2]    : Clear C
@@ -61,7 +60,6 @@ main( int argc, char *argv[] ) {
         colors[1] = FColor::RGB( 0, 255, 0 );
         colors[2] = FColor::GreyAF( 0.5f );
         colors[3] = FColor::GreyAF( 0.f );
-
         ctx.Clear( blockA, blockA.Rect(), policy, 0, nullptr, &events[0] );
         ctx.Clear( blockB, blockB.Rect(), policy, 0, nullptr, &events[1] );
         ctx.Clear( blockC, blockC.Rect(), policy, 0, nullptr, &events[2] );
@@ -74,7 +72,8 @@ main( int argc, char *argv[] ) {
         ctx.BlendColor( colors[3], canvas, canvas.Rect(), Blend_BayerDither8x8, Alpha_Normal, 0.5f, policy, 1, &events[8], &events[9] );
         ctx.BlendAA( blockB, canvas, FRectI( 0, 0, 512, 512 ), FVec2F( 64.5f, 64.5f ), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &events[9], &events[10] );
         ctx.BlendTiled( blockA, canvas, FRectI( 16, 16, 32, 32 ), FRectI( 512, 512, 128, 128 ), FVec2I(), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &events[10 ], &events[11] );
-        ctx.Finish();
+        ctx.Flush();
+        events[11].Wait();
     }
 
     // Bake Qt App / Window

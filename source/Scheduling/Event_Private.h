@@ -40,6 +40,8 @@ class FEvent_Private
 
 public:
     FEvent_Private( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
+    eEventStatus Status() const;
+    void Wait() const;
 
 private:
     FSharedInternalEvent m;

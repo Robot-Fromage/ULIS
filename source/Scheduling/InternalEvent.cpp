@@ -137,5 +137,13 @@ FInternalEvent::NotifyOneJobFinished()
     return  false;
 }
 
+void
+FInternalEvent::Wait() const
+{
+    while( mStatus != eEventStatus::EventStatus_Finished )
+    {
+    }
+}
+
 ULIS_NAMESPACE_END
 

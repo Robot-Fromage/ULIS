@@ -28,5 +28,17 @@ FEvent::FEvent(
 {
 }
 
+eEventStatus
+FEvent::Status() const
+{
+    return  d->Status();
+}
+
+void
+FEvent::Wait() const
+{
+    d->Wait();
+}
+
 ULIS_NAMESPACE_END
 

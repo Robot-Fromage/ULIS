@@ -23,5 +23,17 @@ FEvent_Private::FEvent_Private(
 {
 }
 
+eEventStatus
+FEvent_Private::Status() const
+{
+    return  m->Status();
+}
+
+void
+FEvent_Private::Wait() const
+{
+    m->Wait();
+}
+
 ULIS_NAMESPACE_END
 

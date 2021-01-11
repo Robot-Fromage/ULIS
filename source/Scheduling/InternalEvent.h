@@ -15,6 +15,7 @@
 #include "Memory/Array.h"
 #include "Scheduling/Event.h"
 #include "Math/Geometry/Rectangle.h"
+#include <atomic>
 
 ULIS_NAMESPACE_BEGIN
 class FInternalEvent;
@@ -57,6 +58,7 @@ public:
     eEventStatus Status() const;
     void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
     bool NotifyOneJobFinished();
+    void Wait() const;
 
 private:
     void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
@@ -65,7 +67,7 @@ private:
 private:
     TArray< FSharedInternalEvent > mWaitList;
     FCommand* mCommand;
-    eEventStatus mStatus;
+    std::atomic< eEventStatus > mStatus;
     uint64 mNumJobsRemaining;
     FRectI mGeometry;
     FOnEventComplete mOnEventComplete;
