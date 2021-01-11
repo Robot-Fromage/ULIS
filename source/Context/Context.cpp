@@ -58,6 +58,12 @@ FContext::Fence()
     mCommandQueue.Fence();
 }
 
+void
+FContext::Wait( const FEvent& iEvent )
+{
+    iEvent.Wait();
+}
+
 eFormat
 FContext::Format() const
 {

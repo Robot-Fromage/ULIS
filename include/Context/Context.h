@@ -84,6 +84,14 @@ public:
     void Fence();
 
     /*!
+        Wait for completion of a given event.
+
+        \warning The event must be associated to a flushed command, otherwise
+        the program will block forever in a loop.
+    */
+    void Wait( const FEvent& iEvent );
+
+    /*!
         Getter for the context format
     */
     eFormat Format() const;
