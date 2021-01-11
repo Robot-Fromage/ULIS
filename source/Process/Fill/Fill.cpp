@@ -68,7 +68,7 @@ InvokeFillMT_MEM(
     const uint8* src = cargs->buffer;
     const uint8 stride = cargs->dst.BytesPerPixel();
     uint8* ULIS_RESTRICT dst = jargs->dst;
-    for( uint32 i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < jargs->size; i += stride ) {
         memcpy( dst, src, stride );
         dst += stride;
     }
