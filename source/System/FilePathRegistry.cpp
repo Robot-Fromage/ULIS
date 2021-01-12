@@ -12,35 +12,29 @@
 #include "System/FilePathRegistry.h"
 #include "String/Utils.h"
 
-#include <cppfs/fs.h>
-#include <cppfs/FileHandle.h>
-#include <cppfs/FilePath.h>
-
 #include <iostream>
 #include <cstring>
 #include <cassert>
 #include <algorithm>
+#include <filesystem>
 
-using namespace cppfs;
+namespace fs = std::filesystem;
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // GatherEntriesRecursive
-void GatherEntriesRecursive( const cppfs::FileHandle& iDir, const std::list< std::string >& iFilters, std::list< std::string >* oList )
+void GatherEntriesRecursive( const fs::path& iDir, const std::list< std::string >& iFilters, std::list< std::string >* oList )
 {
-    std::vector< std::string > entries = iDir.listFiles();
-    std::string dir_path = iDir.path();
+    //std::vector< std::string > entries = iDir.listFiles();
+    //std::string dir_path = iDir.path();
 
-    for( auto it : entries ) {
-        std::string full_entry_path = dir_path + it;
-        FileHandle entry = fs::open( full_entry_path );
-
-        if( entry.isDirectory() )
+    for( auto entry : fs::directory_iterator( iDir ) ) {
+        if( entry.is_directory() )
             GatherEntriesRecursive( entry, iFilters, oList );
 
-        if( entry.isFile() ) {
-            FilePath path( entry.path() );
-            std::string ext = path.extension();
+        if( entry.is_regular_file() ) {
+            fs::path filePath = entry;
+            std::string ext = filePath.extension().string();
             bool match = false;
 
             for( auto filter : iFilters ) {
@@ -49,7 +43,7 @@ void GatherEntriesRecursive( const cppfs::FileHandle& iDir, const std::list< std
             }
 
             if( match )
-                oList->push_back( full_entry_path );
+                oList->push_back( filePath.string() );
         }
     }
 }
@@ -118,9 +112,9 @@ FFilePathRegistry::Parse()
     mRecords.clear();
     tStringList list;
     for( auto it : mLookupPaths ) {
-        FileHandle dir = fs::open( it );
+        fs::path dir( it );
 
-        if( ( !dir.exists() ) || ( !dir.isDirectory() ) )
+        if( ( !fs::exists( dir ) ) || ( !fs::is_directory( dir ) ) )
             continue;
 
         GatherEntriesRecursive( dir, mFilters, &list );
@@ -164,8 +158,8 @@ FFilePathRegistry::FilePathForClosestMatchingName( const std::string& iName ) co
 std::string
 FFilePathRegistry::MakeName( const std::string& iFile ) const
 {
-    FilePath path( iFile );
-    return  path.baseName();
+    fs::path path( iFile );
+    return  path.filename().string();
 }
 
 ULIS_NAMESPACE_END
