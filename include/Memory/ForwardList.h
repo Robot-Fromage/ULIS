@@ -13,7 +13,6 @@
 #include "Core/Core.h"
 #include "Memory/Memory.h"
 #include "Math/Math.h"
-#include <utility>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -26,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 class TForwardList
 {
-private:
+public:
     /// @class      TForwardListNode
     /// @brief      The TForwardListNode class provides a simple node class
     ///             fot TForwardList
@@ -322,7 +321,117 @@ public:
         return  node->mValue;
     }
 
-private:
+    /*!
+        Access node at front.
+        The behaviour is undefined if the list is empty.
+    */
+    tNode& NodeFront() {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mFront, "Bad state" );
+        return  mFront;
+    }
+
+    /*!
+        Access const node at front.
+        The behaviour is undefined if the list is empty.
+    */
+    const tNode& NodeFront() const {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mFront, "Bad state" );
+        return  mFront;
+    }
+
+    /*!
+        Access node at back.
+        The behaviour is undefined if the list is empty.
+    */
+    tNode& NodeBack() {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mBack, "Bad state" );
+        return  mBack;
+    }
+
+    /*!
+        Access const node at back.
+        The behaviour is undefined if the list is empty.
+    */
+    const tNode& NodeBack() const {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( mBack, "Bad state" );
+        return  mBack;
+    }
+
+    /*!
+        Access node  at index.
+    */
+    T& NodeAt( uint64 iIndex ) {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
+        tNode* node = mFront;
+        for( uint64 i = 0; i < mSize; ++i )
+            node = node->mNext;
+        return  node;
+    }
+
+    /*!
+        Access node at index.
+    */
+    const T& NodeAt( uint64 iIndex ) const {
+        ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
+        ULIS_ASSERT( iIndex < mSize, "Bad Index" );
+        tNode* node = mFront;
+        for( uint64 i = 0; i < mSize; ++i )
+            node = node->mNext;
+        return  node;
+    }
+
+    /*!
+        Find node with associated value starting from index.
+    */
+    tNode* NodeFindFrom( const T& iValue, uint64 iFrom = 0 ) {
+        tNode* result = nullptr;
+        tNode* node = NodeAt( iFrom );
+        for( uint64 i = iFrom; i < mSize; ++i ) {
+            if( node->mValue == iValue ) {
+                result = node;
+                break;
+            }
+            node = node->mNext;
+        }
+        return  node;
+    }
+
+    /*!
+        Find const node with associated value starting from index.
+    */
+    const tNode* NodeFindFrom( const T& iValue, uint64 iFrom = 0 ) const {
+        const tNode* result = nullptr;
+        const tNode* node = NodeAt( iFrom );
+        for( uint64 i = iFrom; i < mSize; ++i ) {
+            if( node->mValue == iValue ) {
+                result = node;
+                break;
+            }
+            node = node->mNext;
+        }
+        return  node;
+    }
+
+    /*!
+        Find node with associated value starting from index.
+    */
+    tNode* NodeFindFirst( const T& iValue ) {
+        return  NodeFindFrom( iValue, 0 );
+    }
+
+    /*!
+        Find const node with associated value starting from index.
+    */
+    const tNode* NodeFindFirst( const T& iValue ) const {
+        return  NodeFindFrom( iValue, 0 );
+    }
+
+protected:
     tNode* mFront; ///< The head of the list, start iterating from there.
     tNode* mBack; ///< The back of the list. Although traversal is one way, this is here to allow easy push back on the list.
     uint64 mSize; ///< The list size.
