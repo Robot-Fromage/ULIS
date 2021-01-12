@@ -64,9 +64,9 @@
 
 /////////////////////////////////////////////////////
 // Disable CRT Secure non standard msvc versions of functions such as strcpy_s
-#ifdef ULIS_MSVC
-    #define _CRT_SECURE_NO_WARNINGS 1
-#endif // ULIS_MSVC
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 /////////////////////////////////////////////////////
 // Detect Platform
@@ -193,7 +193,7 @@
 //#pragma warning(disable : 4251)     // Shut down dll interface warnings.
 //#pragma warning(disable : 26812)    // Shut non-class enum warnings.
 #pragma warning(disable : 4010)     // Shut single-line comment contains line-continuation character
-
+#pragma warning(disable : 4996)     // Shut CRT SECURE
 /////////////////////////////////////////////////////
 // Define Namespaces
 #define ULIS_NAMESPACE_NAME        ULIS
