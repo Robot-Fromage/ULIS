@@ -8,9 +8,7 @@ Dependencies are redistributed directly within the repository under the 3rdparty
 |clip               |https://github.com/dacap/clip                                  |MIT                |Keep for now                                       |
 |stb_image          |https://github.com/nothings/stb                                |MIT                |Keep for now                                       |
 |stb_image_write    |https://github.com/nothings/stb                                |MIT                |Keep for now                                       |
-|cppfs              |https://github.com/cginternals/cppfs                           |MIT                |Remove and use std::filesystem instead             |
-|static_math        |https://github.com/Morwenn/static_math                         |MIT                |Remove and use basic static operations             |
-|VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |Remove and use raw SIMD calls                      |
+|VCL                |https://github.com/vectorclass/version1                        |Apache 2.0         |Keep                                               |
 
 Additionaly, these libraries can be used with ULIS to test samples programs or build the python binding:
 
@@ -24,3 +22,5 @@ Older dependencies were used before but removed after ULIS3:
 |FeatureDetector    |https://github.com/Mysticial/FeatureDetector                   |CC0 1.0 Universal  |Removed                                            |
 |glm                |https://github.com/g-truc/glm                                  |MIT                |Removed                                            |
 |OCL-SDK            |https://github.com/GPUOpen-LibrariesAndSDKs/OCL-SDK/releases   |-                  |Removed                                            |
+|cppfs              |https://github.com/cginternals/cppfs                           |MIT                |Removed                                            |
+|static_math        |https://github.com/Morwenn/static_math                         |MIT                |Removed                                            |
