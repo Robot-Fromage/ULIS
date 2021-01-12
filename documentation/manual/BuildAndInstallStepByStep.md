@@ -81,7 +81,7 @@ In the "Release" directory, you can see the output binaries.
 
 ---
 
-?pw we can proceed to the installation, making a release package of the lib.
+Now we can proceed to the installation, making a release package of the lib.
 ```sh
 cmake --build . --config Release --target install
 ```
