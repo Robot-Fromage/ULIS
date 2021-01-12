@@ -35,6 +35,9 @@ public:
     template< typename U >
     struct TForwardListNode
     {
+    public:
+        template< typename > friend class TForwardList;
+
         TForwardListNode( TForwardListNode< U >* iNext, const T& iValue )
             : mNext( iNext )
             , mValue( iValue )
@@ -51,6 +54,15 @@ public:
             , mValue( std::forward< Args >(args)... )
         {}
 
+        U& Value() {
+            return  mValue;
+        }
+
+        const U& Value() const {
+            return  mValue;
+        }
+
+    private:
         TForwardListNode< U >* mNext;
         U mValue;
     };
@@ -429,6 +441,32 @@ public:
     */
     const tNode* NodeFindFirst( const T& iValue ) const {
         return  NodeFindFrom( iValue, 0 );
+    }
+
+    /*!
+        Erase element.
+    */
+    bool Erase( const tNode* iNode ) {
+        tNode* node = mFront;
+        tNode* prev = nullptr;
+        while( node ) {
+            tNode* next = node->mNext;
+
+            if( node == iNode ) {
+                delete  node;
+                --mSize;
+                if( prev )
+                    prev->mNext = next;
+                else
+                    mFront = mNext;
+                return  true;
+            }
+
+            prev = node;
+            node = next;
+        }
+
+        return  false;
     }
 
 protected:
