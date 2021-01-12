@@ -87,23 +87,13 @@ set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_F
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BINARY_DIR}/3rdparty/build_clip       )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs        ${PROJECT_BINARY_DIR}/3rdparty/build_cppfs      EXCLUDE_FROM_ALL )
 
-
-set_target_properties( cppfs PROPERTIES COMPILE_FLAGS "/wd4146 /wd4267" )
 set_target_properties( clip PROPERTIES COMPILE_FLAGS "/wd4267" )
 set_target_properties( freetype PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312" )
 
 set_target_properties( clip                 PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( lcms2                PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( freetype             PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( cppfs                PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( component_install    PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( check-all            PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( check-cppfs          PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( check-template       PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( pack                 PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( pack-cppfs           PROPERTIES FOLDER ULIS/3rdparty )
 
 #if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
 #    set( OpenCL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/OCL-SDK/include/"                 )
@@ -146,7 +136,6 @@ set_target_properties( ULIS PROPERTIES FOLDER ULIS )
 target_link_libraries( ULIS PRIVATE clip )
 target_link_libraries( ULIS PRIVATE lcms2 )
 target_link_libraries( ULIS PRIVATE freetype )
-target_link_libraries( ULIS PRIVATE cppfs )
 #target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
 
 target_include_directories(
@@ -156,12 +145,10 @@ target_include_directories(
     PRIVATE
     #${OpenCL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cppfs/source/cppfs/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/include
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/eigen/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glm/
