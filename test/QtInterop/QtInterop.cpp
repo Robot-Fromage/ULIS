@@ -41,6 +41,26 @@ main( int argc, char *argv[] ) {
     FBlock blockC( 1024, 1024, fmt );
     FBlock canvas( 1024, 1024, fmt );
 
+    TArray< FVec2F > src( 4 );
+    src[0] = FVec2F( 0, 0 );
+    src[1] = FVec2F( 100, 0 );
+    src[2] = FVec2F( 100, 100 );
+    src[3] = FVec2F( 0, 100 );
+    TArray< FVec2F > dst( 4 );
+    dst[0] = FVec2F( 0, 0 );
+    dst[1] = FVec2F( 80, 20 );
+    dst[2] = FVec2F( 80, 80 );
+    dst[3] = FVec2F( 0, 100 );
+    FMat3F persp( FMat3F::MakeHomography( src.Data(), dst.Data() ) );
+    FMat3F inpersp = persp.Inverse();
+    TArray< FVec2F > res( 4 );
+    res[0] = inpersp.ApplyHomography( dst[0] );
+    res[1] = inpersp.ApplyHomography( dst[1] );
+    res[2] = inpersp.ApplyHomography( dst[2] );
+    res[3] = inpersp.ApplyHomography( dst[3] );
+    auto dummy = 0;
+
+
     // Operations
     {
         TArray< FEvent > events( 12 );
