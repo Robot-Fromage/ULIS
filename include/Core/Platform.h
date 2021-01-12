@@ -64,9 +64,9 @@
 
 /////////////////////////////////////////////////////
 // Disable CRT Secure non standard msvc versions of functions such as strcpy_s
-//#ifdef ULIS_MSVC
-//    #define _CRT_SECURE_NO_WARNINGS 1
-//#endif // ULIS_MSVC
+#ifdef ULIS_MSVC
+    #define _CRT_SECURE_NO_WARNINGS 1
+#endif // ULIS_MSVC
 
 /////////////////////////////////////////////////////
 // Detect Platform
