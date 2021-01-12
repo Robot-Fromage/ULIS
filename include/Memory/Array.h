@@ -13,7 +13,6 @@
 #include "Core/Core.h"
 #include "Memory/Memory.h"
 #include "Math/Math.h"
-#include <utility>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

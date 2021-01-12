@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TQueue
 /// @brief      The TQueue class provides a simple dynamic queue based on a
-///             forward queue.
+///             forward list.
 /// @details    The need of a custom TQueue class rose from the fact
 ///             that std:: classes cannot be exported easily accross dll
 ///             boundaries when ULIS is compiled as a shared library.
