@@ -60,6 +60,8 @@ main( int argc, char *argv[] ) {
     res[3] = inpersp.ApplyHomography( dst[3] );
     auto dummy = 0;
 
+    std::cout << FullLibraryInformationString().Data();
+
 
     // Operations
     {
