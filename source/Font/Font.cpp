@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Font/Font.h"
+#include "Font/FontEngine.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -25,16 +26,23 @@ FFont::~FFont()
     FT_Done_Face( reinterpret_cast< FT_Face >( mFontHandle ) );
 }
 
-
-FFont::FFont( void* iFontHandle, const FFontEngine& iFontEngine )
-    : mFontHandle( iFontHandle )
+FFont::FFont(
+          const FFontEngine& iFontEngine
+        , const std::string& iRequestedFamily
+        , const std::string& iRequestedStyle
+    )
+    : mFontHandle( nullptr )
     , mFontEngine( iFontEngine )
+    , mFamily()
+    , mStyle()
 {
-    /*
-    std::string fpath = mFontRegistry.FuzzyFindFontPath( iFamily, iStyle );
-    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.Handle() ), fpath.c_str(), 0, reinterpret_cast< FT_Face* >( &mHandle ) );
+    const FFontStyleEntry* entry = mFontEngine.FuzzyFindFontStyle( iRequestedFamily, iRequestedStyle );
+    ULIS_ASSERT( entry, "Error loading font" );
+    mFamily = entry->Family();
+    mStyle = entry->Style();
+    std::string path = entry->Path();
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.LibraryHandle() ), path.c_str(), 0, reinterpret_cast< FT_Face* >( &mFontHandle ) );
     ULIS_ASSERT( !error, "Error initializing font handle" );
-    */
 }
 
 //--------------------------------------------------------------------------------------
@@ -50,6 +58,18 @@ const FFontEngine&
 FFont::FontEngine() const
 {
     return  mFontEngine;
+}
+
+const std::string&
+FFont::Family() const
+{
+    return  mFamily;
+}
+
+const std::string&
+FFont::Style() const
+{
+    return  mStyle;
 }
 
 ULIS_NAMESPACE_END

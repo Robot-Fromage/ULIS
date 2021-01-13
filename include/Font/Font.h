@@ -13,6 +13,8 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
+#pragma warning(push)
+#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 /////////////////////////////////////////////////////
 /// @class      FFont
 /// @brief      The FFont class provides a thin wrapper around the freetype face type.
@@ -25,20 +27,27 @@ public:
     FFont( FFont&& ) = delete;
     FFont& operator=( const FFont& ) = delete;
     FFont& operator=( FFont&& iOther ) = delete;
-
-private:
-    FFont( void* iFontHandle, const FFontEngine& iFontEngine );
+    FFont(
+          const FFontEngine& iFontEngine
+        , const std::string& iRequestedFamily
+        , const std::string& iRequestedStyle
+    );
 
 public:
     // Public API
     void* FontHandle() const;
     const FFontEngine& FontEngine() const;
+    const std::string& Family() const;
+    const std::string& Style() const;
 
 private:
     // Private Data Members
     void* mFontHandle;
     const FFontEngine& mFontEngine;
+    std::string mFamily;
+    std::string mStyle;
 };
+#pragma warning(pop)
 
 ULIS_NAMESPACE_END
 
