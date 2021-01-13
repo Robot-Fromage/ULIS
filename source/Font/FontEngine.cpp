@@ -125,58 +125,69 @@ FFontFamilyEntry::FuzzyFindFontStyleKey( const std::string& iName ) const
 }
 
 /////////////////////////////////////////////////////
-// FFontRegistry
+// FFontEngine
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-FFontRegistry::~FFontRegistry()
+FFontEngine::~FFontEngine()
 {
+    ULIS_ASSERT( mLibraryHandle, "Bad state" );
+    FT_Done_FreeType( reinterpret_cast< FT_Library >( mLibraryHandle ) );
 }
 
-FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
-    : mFontEngine( iFontEngine )
+FFontEngine::FFontEngine()
+    : mLibraryHandle( nullptr )
 {
-    #ifdef ULIS_WIN
-        std::string sysfpath;
-        CHAR windir[MAX_PATH];
-        auto err = GetWindowsDirectoryA( windir, MAX_PATH );
-        ULIS_ASSERT( err, "Error loading Windows directory path during font retrieval." );
-        sysfpath = std::string( windir );
-        ReplaceAllOccurences( sysfpath, "\\", "/" );
-        sysfpath += "/Fonts/";
-        mLookupPaths.push_back( sysfpath );
-    #elif defined ULIS_MACOS
-        mLookupPaths.push_back( "/System/Library/Fonts/" );
-        mLookupPaths.push_back( "/Library/Fonts/" );
-        mLookupPaths.push_back( "~/Library/Fonts/" );
-        mLookupPaths.push_back( "/Network/Library/Fonts/" );
-    #elif defined ULIS_LINUX
-        mLookupPaths.push_back( "/usr/share/fonts/" );
-        mLookupPaths.push_back( "/usr/local/share/fonts/" );
-        mLookupPaths.push_back( "~/.fonts/" );
-        mLookupPaths.push_back( "/etc/fonts/fonts.conf/" );
-        mLookupPaths.push_back( "/etc/fonts/local.conf./" );
-    #endif
+    FT_Error error = FT_Init_FreeType( reinterpret_cast< FT_Library* >( &mLibraryHandle ) );
+    ULIS_ASSERT( !error, "Error initializing freetype2" );
 
-    Refresh();
+#ifdef ULIS_WIN
+    std::string sysfpath;
+    CHAR windir[MAX_PATH];
+    auto err = GetWindowsDirectoryA( windir, MAX_PATH );
+    ULIS_ASSERT( err, "Error loading Windows directory path during font retrieval." );
+    sysfpath = std::string( windir );
+    ReplaceAllOccurences( sysfpath, "\\", "/" );
+    sysfpath += "/Fonts/";
+    mLookupPaths.push_back( sysfpath );
+#elif defined ULIS_MACOS
+    mLookupPaths.push_back( "/System/Library/Fonts/" );
+    mLookupPaths.push_back( "/Library/Fonts/" );
+    mLookupPaths.push_back( "~/Library/Fonts/" );
+    mLookupPaths.push_back( "/Network/Library/Fonts/" );
+#elif defined ULIS_LINUX
+    mLookupPaths.push_back( "/usr/share/fonts/" );
+    mLookupPaths.push_back( "/usr/local/share/fonts/" );
+    mLookupPaths.push_back( "~/.fonts/" );
+    mLookupPaths.push_back( "/etc/fonts/fonts.conf/" );
+    mLookupPaths.push_back( "/etc/fonts/local.conf./" );
+#endif
+
+Refresh();
 }
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
+void*
+FFontEngine::LibraryHandle() const
+{
+    return  mLibraryHandle;
+}
+
 void
-FFontRegistry::AddLookupPath( const std::string& iPath )
+FFontEngine::AddLookupPath( const std::string& iPath )
 {
     mLookupPaths.push_back( iPath );
 }
 
 void
-FFontRegistry::AddLookupPaths( const std::list< std::string >& iPaths )
+FFontEngine::AddLookupPaths( const std::list< std::string >& iPaths )
 {
     for( auto it : iPaths )
         mLookupPaths.push_back( it );
 }
 
 void
-FFontRegistry::Refresh() {
+FFontEngine::Refresh() {
     mRecords.clear();
     FFilePathRegistry reg;
     reg.AddLookupPaths( mLookupPaths );
@@ -187,7 +198,7 @@ FFontRegistry::Refresh() {
 
     for( auto it : reg.Records() ) {
         FT_Face face;
-        FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.Handle() ), it.second.c_str(), 0, &face );
+        FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mLibraryHandle ), it.second.c_str(), 0, &face );
         ULIS_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
@@ -199,25 +210,25 @@ FFontRegistry::Refresh() {
 }
 
 int
-FFontRegistry::FamilyCount() const
+FFontEngine::FamilyCount() const
 {
     return  static_cast< int >( mRecords.size() );
 }
 
 const std::map< std::string, FFontFamilyEntry >&
-FFontRegistry::Records() const
+FFontEngine::Records() const
 {
     return  mRecords;
 }
 
 const std::list< std::string >&
-FFontRegistry::LookupPaths() const
+FFontEngine::LookupPaths() const
 {
     return  mLookupPaths;
 }
 
 const FFontFamilyEntry*
-FFontRegistry::FuzzyFindFontFamily( const std::string& iName ) const
+FFontEngine::FuzzyFindFontFamily( const std::string& iName ) const
 {
     std::string lowercase_name = iName;
     std::transform( lowercase_name.begin(), lowercase_name.end(), lowercase_name.begin(), ::tolower);
@@ -237,7 +248,7 @@ FFontRegistry::FuzzyFindFontFamily( const std::string& iName ) const
 
 
 const FFontStyleEntry*
-FFontRegistry::FuzzyFindFontStyle( const std::string& iFamily, const std::string& iStyle ) const
+FFontEngine::FuzzyFindFontStyle( const std::string& iFamily, const std::string& iStyle ) const
 {
     const FFontFamilyEntry* fam = FuzzyFindFontFamily( iFamily );
 
@@ -248,7 +259,7 @@ FFontRegistry::FuzzyFindFontStyle( const std::string& iFamily, const std::string
 }
 
 std::string
-FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const
+FFontEngine::FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const
 {
     const FFontStyleEntry* stk = FuzzyFindFontStyle( iFamily, iStyle );
 
@@ -257,38 +268,6 @@ FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string&
 
     return  stk->Path();
 }
-
-const FFontEngine&
-FFontRegistry::FontEngine() const
-{
-    return  mFontEngine;
-}
-
-/////////////////////////////////////////////////////
-// FFontEngine
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Construction / Destruction
-FFontEngine::~FFontEngine()
-{
-    ULIS_ASSERT( mLibraryHandle, "Bad state" );
-    FT_Done_FreeType( reinterpret_cast< FT_Library >( mLibraryHandle ) );
-}
-
-FFontEngine::FFontEngine()
-    : mLibraryHandle( nullptr )
-{
-    FT_Error error = FT_Init_FreeType( reinterpret_cast< FT_Library* >( &mLibraryHandle ) );
-    ULIS_ASSERT( !error, "Error initializing freetype2" );
-}
-
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------- Public API
-void*
-FFontEngine::LibraryHandle() const
-{
-    return  mLibraryHandle;
-}
-
 
 ULIS_NAMESPACE_END
 
