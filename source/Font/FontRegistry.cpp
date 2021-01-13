@@ -6,7 +6,7 @@
 * @file         FontRegistry.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the registry classes for the Font Registry tools.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Font/FontRegistry.h"

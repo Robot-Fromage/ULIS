@@ -23,14 +23,17 @@ public:
     ~FFontEngine();
     FFontEngine();
     FFontEngine( const FFontEngine& ) = delete;
+    FFontEngine( FFontEngine&& ) = delete;
+    FFontEngine& operator=( const FFontEngine& ) = delete;
+    FFontEngine& operator=( FFontEngine&& iOther ) = delete;
 
 public:
     // Public API
-    void* Handle() const;
+    void* LibraryHandle() const;
 
 private:
     // Private Data Members
-    void* mHandle;
+    void* mLibraryHandle;
 };
 
 ULIS_NAMESPACE_END

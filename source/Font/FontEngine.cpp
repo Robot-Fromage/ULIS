@@ -21,24 +21,23 @@ ULIS_NAMESPACE_BEGIN
 //----------------------------------------------------------- Construction / Destruction
 FFontEngine::~FFontEngine()
 {
-    FT_Done_FreeType( reinterpret_cast< FT_Library >( mHandle ) );
+    ULIS_ASSERT( mLibraryHandle, "Bad state" );
+    FT_Done_FreeType( reinterpret_cast< FT_Library >( mLibraryHandle ) );
 }
-
 
 FFontEngine::FFontEngine()
-    : mHandle( nullptr )
+    : mLibraryHandle( nullptr )
 {
-    FT_Error error = FT_Init_FreeType( reinterpret_cast< FT_Library* >( &mHandle ) );
+    FT_Error error = FT_Init_FreeType( reinterpret_cast< FT_Library* >( &mLibraryHandle ) );
     ULIS_ASSERT( !error, "Error initializing freetype2" );
 }
-
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 void*
-FFontEngine::Handle() const
+FFontEngine::LibraryHandle() const
 {
-    return  mHandle;
+    return  mLibraryHandle;
 }
 
 

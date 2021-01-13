@@ -21,19 +21,23 @@ class ULIS_API FFont
 public:
     // Construction / Destruction
     ~FFont();
-    FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily = "Arial", const std::string& iStyle = "Regular" );
-    FFont( FFont& iOther );
+    FFont( const FFont& ) = delete;
+    FFont( FFont&& ) = delete;
+    FFont& operator=( const FFont& ) = delete;
+    FFont& operator=( FFont&& iOther ) = delete;
+
+private:
+    FFont( void* iFontHandle, const FFontEngine& iFontEngine );
 
 public:
     // Public API
-    void* Handle() const;
+    void* FontHandle() const;
     const FFontEngine& FontEngine() const;
-    const FFontRegistry& FontRegistry() const;
+
 private:
     // Private Data Members
-    void* mHandle;
+    void* mFontHandle;
     const FFontEngine& mFontEngine;
-    const FFontRegistry& mFontRegistry;
 };
 
 ULIS_NAMESPACE_END
