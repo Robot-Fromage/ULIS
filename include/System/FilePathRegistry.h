@@ -15,12 +15,11 @@
 #include <unordered_map>
 
 ULIS_NAMESPACE_BEGIN
+#pragma warning(push)
+#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 /////////////////////////////////////////////////////
 /// @class      FFilePathRegistry
 /// @brief      The FFilePathRegistry class provides a mean of storing and manipulating file paths registries with custom filters.
-
-#pragma warning(push)
-#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 class ULIS_API FFilePathRegistry
 {
     typedef std::string  tName;
