@@ -72,7 +72,7 @@ class ULIS_API FFontRegistry
 public:
     // Construction / Destruction
     ~FFontRegistry();
-    FFontRegistry( const FTextEngine& iTextEngine );
+    FFontRegistry( const FFontEngine& iFontEngine );
 
 public:
     // Public API
@@ -85,13 +85,13 @@ public:
     const FFontFamilyEntry* FuzzyFindFontFamily( const std::string& iName ) const;
     const FFontStyleEntry* FuzzyFindFontStyle( const std::string& iFamily, const std::string& iStyle ) const;
     std::string FuzzyFindFontPath( const std::string& iFamily, const std::string& iStyle ) const;
-    const FTextEngine& TextEngine() const;
+    const FFontEngine& FontEngine() const;
 
 private:
     // Private Data Members
     std::list< std::string > mLookupPaths;
     std::map< std::string, FFontFamilyEntry > mRecords;
-    const FTextEngine& mTextEngine;
+    const FFontEngine& mFontEngine;
 };
 
 ULIS_NAMESPACE_END

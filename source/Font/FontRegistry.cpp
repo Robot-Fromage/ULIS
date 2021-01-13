@@ -9,11 +9,11 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Text/FontRegistry.h"
+#include "Font/FontRegistry.h"
 #include "System/FilePathRegistry.h"
 #include "String/Utils.h"
-#include "Text/TextEngine.h"
-#include "Text/Font.h"
+#include "Font/FontEngine.h"
+#include "Font/Font.h"
 
 #include <iostream>
 #include <cstring>
@@ -133,8 +133,8 @@ FFontRegistry::~FFontRegistry()
 {
 }
 
-FFontRegistry::FFontRegistry( const FTextEngine& iTextEngine )
-    : mTextEngine( iTextEngine )
+FFontRegistry::FFontRegistry( const FFontEngine& iFontEngine )
+    : mFontEngine( iFontEngine )
 {
     #ifdef ULIS_WIN
         std::string sysfpath;
@@ -188,7 +188,7 @@ FFontRegistry::Refresh() {
 
     for( auto it : reg.Records() ) {
         FT_Face face;
-        FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mTextEngine.Handle() ), it.second.c_str(), 0, &face );
+        FT_Error load_error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.Handle() ), it.second.c_str(), 0, &face );
         ULIS_ASSERT( !load_error, "An error occured during freetype loading of font information: " << it.second.c_str() );
         if( load_error ) continue;
         std::string familyName( face->family_name );
@@ -259,10 +259,10 @@ FFontRegistry::FuzzyFindFontPath( const std::string& iFamily, const std::string&
     return  stk->Path();
 }
 
-const FTextEngine&
-FFontRegistry::TextEngine() const
+const FFontEngine&
+FFontRegistry::FontEngine() const
 {
-    return  mTextEngine;
+    return  mFontEngine;
 }
 
 ULIS_NAMESPACE_END

@@ -41,7 +41,7 @@ private:
     FBlock*                             mRAMUSAGEBLOCK1;
     FBlock*                             mRAMUSAGEBLOCK2;
     FBlock*                             mRAMUSAGESWAPBUFFER;
-    FTextEngine                         mTextEngine;
+    FFontEngine                         mFontEngine;
     FFontRegistry                       mFontReg;
     FFont                               mFont;
 

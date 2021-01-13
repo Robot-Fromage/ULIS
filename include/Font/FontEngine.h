@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         TextEngine.h
+* @file         FontEngine.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FTextEngine class.
+* @brief        This file provides the declaration for the FFontEngine class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,15 +14,15 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FTextEngine
-/// @brief      The FTextEngine class provides a thin wrapper around the freetype library.
-class ULIS_API FTextEngine
+/// @class      FFontEngine
+/// @brief      The FFontEngine class provides a thin wrapper around the freetype library.
+class ULIS_API FFontEngine
 {
 public:
     // Construction / Destruction
-    ~FTextEngine();
-    FTextEngine();
-    FTextEngine( const FTextEngine& ) = delete;
+    ~FFontEngine();
+    FFontEngine();
+    FFontEngine( const FFontEngine& ) = delete;
 
 public:
     // Public API
@@ -32,5 +32,6 @@ private:
     // Private Data Members
     void* mHandle;
 };
+
 ULIS_NAMESPACE_END
 

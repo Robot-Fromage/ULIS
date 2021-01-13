@@ -34,7 +34,7 @@ class   FSchedulePolicy;
 struct  FSplineLinearSample;
 struct  FSplineParametricSample;
 class   FString;
-class   FTextEngine;
+class   FFontEngine;
 //class   FTexture;
 class   FThreadPool;
 struct  FTileElement;

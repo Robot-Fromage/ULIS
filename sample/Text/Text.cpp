@@ -48,8 +48,8 @@ main( int argc, char *argv[] ) {
     std::wstring str1 = L"ULIS";
     std::wstring str2 = L"ユリッス";
     std::wstring str3 = L"ゆりっす";
-    FTextEngine TextEngine;
-    FFontRegistry fontRegistry( TextEngine );
+    FFontEngine FontEngine;
+    FFontRegistry fontRegistry( FontEngine );
     FFont fontEU( fontRegistry, "Arial", "Black" );
     FFont fontJA( fontRegistry, "Yu Gothic", "Bold" );
     FTransformation2D identityTransform = FTransformation2D();

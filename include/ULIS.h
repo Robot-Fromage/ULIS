@@ -19,6 +19,10 @@
 #include "Image/Format.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
+// Font
+#include "Font/Font.h"
+#include "Font/FontEngine.h"
+#include "Font/FontRegistry.h"
 // Maths
 #include "Math/Geometry/Matrix.h"
 #include "Math/Geometry/Rectangle.h"

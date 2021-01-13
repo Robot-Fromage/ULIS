@@ -27,13 +27,14 @@ public:
 public:
     // Public API
     void* Handle() const;
-    const FTextEngine& TextEngine() const;
+    const FFontEngine& FontEngine() const;
     const FFontRegistry& FontRegistry() const;
 private:
     // Private Data Members
     void* mHandle;
-    const FTextEngine& mTextEngine;
+    const FFontEngine& mFontEngine;
     const FFontRegistry& mFontRegistry;
 };
+
 ULIS_NAMESPACE_END
 

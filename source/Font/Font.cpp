@@ -9,9 +9,9 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Text/Font.h"
-#include "Text/TextEngine.h"
-#include "Text/FontRegistry.h"
+#include "Font/Font.h"
+#include "Font/FontEngine.h"
+#include "Font/FontRegistry.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -30,18 +30,18 @@ FFont::~FFont()
 
 FFont::FFont( const FFontRegistry& iFontRegistry, const std::string& iFamily, const std::string& iStyle )
     : mHandle( nullptr )
-    , mTextEngine( iFontRegistry.TextEngine() )
+    , mFontEngine( iFontRegistry.FontEngine() )
     , mFontRegistry( iFontRegistry )
 {
     std::string fpath = mFontRegistry.FuzzyFindFontPath( iFamily, iStyle );
-    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mTextEngine.Handle() ), fpath.c_str(), 0, reinterpret_cast< FT_Face* >( &mHandle ) );
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.Handle() ), fpath.c_str(), 0, reinterpret_cast< FT_Face* >( &mHandle ) );
     ULIS_ASSERT( !error, "Error initializing font handle" );
 }
 
 
 FFont::FFont( FFont& iOther )
     : mHandle( iOther.Handle() )
-    , mTextEngine( iOther.TextEngine() )
+    , mFontEngine( iOther.FontEngine() )
     , mFontRegistry( iOther.FontRegistry() )
 {
     iOther.mHandle = nullptr;
@@ -56,10 +56,10 @@ FFont::Handle() const
 }
 
 
-const FTextEngine&
-FFont::TextEngine() const
+const FFontEngine&
+FFont::FontEngine() const
 {
-    return  mTextEngine;
+    return  mFontEngine;
 }
 
 

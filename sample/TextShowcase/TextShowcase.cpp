@@ -26,8 +26,8 @@ main( int argc, char *argv[] ) {
     FThreadPool* threadPool = XCreateThreadPool();
     FHardwareMetrics host = FHardwareMetrics::Detect();
 
-    FTextEngine TextEngine;
-    FFontRegistry fontRegistry( TextEngine );
+    FFontEngine FontEngine;
+    FFontRegistry fontRegistry( FontEngine );
     int fontSize = 12;
     int entryHeight = 16;
     int entryWidth = 256;
