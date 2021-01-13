@@ -440,6 +440,80 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+/////////////////////////////////////////////////////
+// Text
+    /*!
+        Perform a text raster operation in iBlock.
+        iBlock is modified to receive the result of the operation.
+
+        If the text leads to a destination geometry that does not intersect the
+        rectangular geometry of iBlock, the call will not perform any
+        computation and will return safely. It is also safe to specify
+        out-of-bounds positions, but the text can be cropped.
+
+        You can use TextMetrics() in order to retrieve the geometry before drawing.
+
+        \sa RasterTextAA()
+        \sa TextMetrics()
+    */
+    void
+    RasterText(
+          FBlock& iBlock
+        , const std::wstring& iText
+        , const FFont& iFont
+        , uint32 iFontSize = 12
+        , const FMat3F& iTransform = FMat3F()
+        , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a text raster operation in iBlock with text antialiasing.
+        iBlock is modified to receive the result of the operation.
+
+        If the text leads to a destination geometry that does not intersect the
+        rectangular geometry of iBlock, the call will not perform any
+        computation and will return safely. It is also safe to specify
+        out-of-bounds positions, but the text can be cropped.
+
+        You can use TextMetrics() in order to retrieve the geometry before drawing.
+
+        \sa RasterText()
+        \sa TextMetrics()
+    */
+    void
+    RasterTextAA(
+          FBlock& iBlock
+        , const std::wstring& iText
+        , const FFont& iFont
+        , uint32 iFontSize = 12
+        , const FMat3F& iTransform = FMat3F()
+        , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Collect text metrics before a text raster operation.
+        This can help you position your text geometry beforehand.
+
+        \sa RasterText()
+        \sa TextMetrics()
+    */
+    static
+    FRectI
+    TextMetrics(
+          const std::wstring& iText
+        , const FFont& iFont
+        , uint32 iFontSize = 12
+        , const FMat3F& iTransform = FMat3F()
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FHardwareMetrics mHardwareMetrics;
