@@ -10,8 +10,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Font/Font.h"
-#include "Font/FontEngine.h"
-#include "Font/FontRegistry.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
