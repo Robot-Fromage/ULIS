@@ -33,6 +33,16 @@ public:
         , const std::string& iRequestedStyle
     );
 
+    FFont(
+          const FFontEngine& iFontEngine
+        , const FFontStyleEntry* iRequestedEntry
+    );
+
+    FFont(
+          const FFontEngine& iFontEngine
+        , const std::string& iRequestedPath
+    );
+
 public:
     // Public API
     void* FontHandle() const;

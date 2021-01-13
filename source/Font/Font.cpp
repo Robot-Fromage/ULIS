@@ -27,9 +27,9 @@ FFont::~FFont()
 }
 
 FFont::FFont(
-          const FFontEngine& iFontEngine
-        , const std::string& iRequestedFamily
-        , const std::string& iRequestedStyle
+      const FFontEngine& iFontEngine
+    , const std::string& iRequestedFamily
+    , const std::string& iRequestedStyle
     )
     : mFontHandle( nullptr )
     , mFontEngine( iFontEngine )
@@ -43,6 +43,39 @@ FFont::FFont(
     std::string path = entry->Path();
     FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.LibraryHandle() ), path.c_str(), 0, reinterpret_cast< FT_Face* >( &mFontHandle ) );
     ULIS_ASSERT( !error, "Error initializing font handle" );
+}
+
+FFont::FFont(
+      const FFontEngine& iFontEngine
+    , const FFontStyleEntry* iRequestedEntry
+    )
+    : mFontHandle( nullptr )
+    , mFontEngine( iFontEngine )
+    , mFamily()
+    , mStyle()
+{
+    ULIS_ASSERT( iRequestedEntry, "Error loading font" );
+    mFamily = iRequestedEntry->Family();
+    mStyle = iRequestedEntry->Style();
+    std::string path = iRequestedEntry->Path();
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.LibraryHandle() ), path.c_str(), 0, reinterpret_cast< FT_Face* >( &mFontHandle ) );
+    ULIS_ASSERT( !error, "Error initializing font handle" );
+}
+
+FFont::FFont(
+      const FFontEngine& iFontEngine
+    , const std::string& iRequestedPath
+    )
+    : mFontHandle( nullptr )
+    , mFontEngine( iFontEngine )
+    , mFamily()
+    , mStyle()
+{
+    FT_Face face = reinterpret_cast< FT_Face >( &mFontHandle );
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.LibraryHandle() ), iRequestedPath.c_str(), 0, &face );
+    ULIS_ASSERT( !error, "Error initializing font handle" );
+    mFamily = std::string( face->family_name );
+    mStyle = std::string( face->style_name );
 }
 
 //--------------------------------------------------------------------------------------
