@@ -151,7 +151,7 @@ FullLibraryInformationString()
     FString sse = CompiledWithSSE42() ? on : off;
     FString avx = CompiledWithAVX2() ?  on : off;
     // 4.0.0 (Aug 15 2020, 15:12:04) [MSVC v.1916 x64] {Release}
-    return  VersionString()
+    return  VersionString() + " "
             + "(" + CompilationTimeStampString() + ") "
             + "[" + CompilerInformationString() + " x64] ";
             + "[ SSE:" + sse + "] "
