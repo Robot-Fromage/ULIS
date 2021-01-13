@@ -76,6 +76,8 @@ private:
     const fpCommandScheduler mScheduleConvertFormat;
     const fpCommandScheduler mScheduleFill;
     const fpCommandScheduler mScheduleFillPreserveAlpha;
+    const fpCommandScheduler mScheduleRasterText;
+    const fpCommandScheduler mScheduleRasterTextAA;
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;
 };
