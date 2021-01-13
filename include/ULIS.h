@@ -10,6 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+// Core
+#include "Core/AXI.h"
 // Context
 #include "Context/Context.h"
 // Image
