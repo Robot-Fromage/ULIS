@@ -453,6 +453,9 @@ public:
 
         You can use TextMetrics() in order to retrieve the geometry before drawing.
 
+        \warning the FFont input object must remain valid until the async command
+        is complete. The other input objects don't have such constraints.
+
         \sa RasterTextAA()
         \sa TextMetrics()
     */
@@ -481,6 +484,9 @@ public:
 
         You can use TextMetrics() in order to retrieve the geometry before drawing.
 
+        \warning the FFont input object must remain valid until the async command
+        is complete. The other input objects don't have such constraints.
+
         \sa RasterText()
         \sa TextMetrics()
     */
@@ -501,6 +507,8 @@ public:
     /*!
         Collect text metrics before a text raster operation.
         This can help you position your text geometry beforehand.
+        Unlike the other methods of FContext, this doesn't work on images and
+        returns immediately, it is not scheduled in the Queue.
 
         \sa RasterText()
         \sa TextMetrics()
