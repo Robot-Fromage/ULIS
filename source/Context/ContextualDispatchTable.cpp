@@ -15,6 +15,7 @@
 #include "Process/Clear/Clear.h"
 #include "Process/Copy/Copy.h"
 #include "Process/Fill/Fill.h"
+#include "Process/Text/Text.h"
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat, ePerformanceIntent iPerfIntent )
@@ -34,8 +35,8 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleConvertFormat(               TDispatcher< FDispatchedConvertFormatInvocationSchedulerSelector >              ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleFill(                        TDispatcher< FDispatchedFillInvocationSchedulerSelector >                       ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleFillPreserveAlpha(           TDispatcher< FDispatchedFillPreserveAlphaInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
-        , mScheduleRasterText(                  nullptr )
-        , mScheduleRasterTextAA(                nullptr )
+        , mScheduleRasterText(                  TDispatcher< FDispatchedRasterTextInvocationSchedulerSelector >                 ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleRasterTextAA(                TDispatcher< FDispatchedRasterTextAAInvocationSchedulerSelector >               ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )
         , mArgConvBackwardBlendNonSeparable(    QueryDispatchedConvertFormatInvocation( eFormat::Format_RGBF, iFormat ) )
 {}
