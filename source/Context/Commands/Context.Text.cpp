@@ -42,6 +42,45 @@ FContext::RasterText(
     , FEvent* iEvent
 )
 {
+    // Sanitize geometry
+    const FRectI rect = iBlock.Rect();
+    const FRectI roi = TextMetrics( iText, iFont, iFontSize, iTransform );
+
+    // Check no-op
+    if( roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent );
+
+    // Forward Arguments Baking
+    FT_Matrix matrix;
+    matrix.xx = (FT_Fixed)( iTransform[0].x * 0x10000L );
+    matrix.xy = (FT_Fixed)( iTransform[0].y * 0x10000L );
+    matrix.yx = (FT_Fixed)( iTransform[1].x * 0x10000L );
+    matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
+    int dx = static_cast< int >( iTransform[2].x );
+    int dy = static_cast< int >( iTransform[2].y );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleRasterText
+            , new FTextCommandArgs(
+                  iBlock
+                , roi
+                , iText
+                , iFont
+                , iFontSize
+                , iColor.ToFormat( iBlock.Format() )
+                , matrix
+                , FVec2I( dx, dy )
+            )
+            , iPolicy
+            , roi == rect
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , roi
+        )
+    );
 }
 
 void
@@ -58,6 +97,45 @@ FContext::RasterTextAA(
     , FEvent* iEvent
 )
 {
+    // Sanitize geometry
+    const FRectI rect = iBlock.Rect();
+    const FRectI roi = TextMetrics( iText, iFont, iFontSize, iTransform );
+
+    // Check no-op
+    if( roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent );
+
+    // Forward Arguments Baking
+    FT_Matrix matrix;
+    matrix.xx = (FT_Fixed)( iTransform[0].x * 0x10000L );
+    matrix.xy = (FT_Fixed)( iTransform[0].y * 0x10000L );
+    matrix.yx = (FT_Fixed)( iTransform[1].x * 0x10000L );
+    matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
+    int dx = static_cast< int >( iTransform[2].x );
+    int dy = static_cast< int >( iTransform[2].y );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleRasterText
+            , new FTextCommandArgs(
+                  iBlock
+                , roi
+                , iText
+                , iFont
+                , iFontSize
+                , iColor.ToFormat( iBlock.Format() )
+                , matrix
+                , FVec2I( dx, dy )
+            )
+            , iPolicy
+            , roi == rect
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , roi
+        )
+    );
 }
 
 //static
