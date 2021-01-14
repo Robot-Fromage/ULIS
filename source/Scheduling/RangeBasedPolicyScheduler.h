@@ -119,6 +119,7 @@ RangeBasedSchedulingBuildJobs(
     , const int64 iBytesTotal
     , const int64 iNumScanlines
     , const bool iChunkAllowed
+    , const bool iForceMonoChunk
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
     , TDelegateBuildJobChunks iDelegateBuildJobChunks
 )
