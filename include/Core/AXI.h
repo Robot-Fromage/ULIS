@@ -50,6 +50,15 @@ ULIS_API FString CompilerVersionString();
 /*! Retrieve the full information string */
 ULIS_API FString CompilerInformationString();
 
+/*! Retrieve the git branch from where it was compiled if available */
+ULIS_API FString BranchName();
+
+/*! Retrieve the git commit hash from where it was compiled if available */
+ULIS_API FString CommitHash();
+
+/*! Retrieve the git commit hash from where it was compiled if available */
+ULIS_API FString CommitAbbreviatedHash();
+
 /*! Retrieve wether the library was compiled for x64 target */
 ULIS_API bool CompiledFor64Bit();
 

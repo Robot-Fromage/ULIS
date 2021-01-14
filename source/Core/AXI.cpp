@@ -72,7 +72,7 @@ ConfigurationString()
 FString
 CompilationTimeStampString()
 {
-    return  FString( ULIS_STRINGIFY( __DATE__ ) ) + ", " + ULIS_STRINGIFY( __TIME__ );
+    return  FString( __DATE__ ) + ", " + FString( __TIME__ );
 }
 
 FString
@@ -144,19 +144,34 @@ CompiledWithSSE42()
 }
 
 FString
+BranchName()
+{
+    return  FString( ULIS_GIT_BRANCH_NAME_STR );
+}
+
+FString
+CommitHash()
+{
+    return  FString( ULIS_GIT_COMMIT_HASH_STR );
+}
+
+FString CommitAbbreviatedHash()
+{
+    return  FString( ULIS_GIT_COMMIT_ABBREVIATED_HASH_STR );
+}
+
+FString
 FullLibraryInformationString()
 {
-    FString on( "ON" );
-    FString off( "OFF" );
+    FString on( "on" );
+    FString off( "off" );
     FString sse = CompiledWithSSE42() ? on : off;
     FString avx = CompiledWithAVX2() ?  on : off;
     // 4.0.0 (Aug 15 2020, 15:12:04) [MSVC v.1916 x64] {Release}
-    return  VersionString() + " "
-            + "(" + CompilationTimeStampString() + ") "
-            + "[" + CompilerInformationString() + " x64] ";
-            + "[ SSE:" + sse + "] "
-            + "[ AVX:" + avx + "] "
-            + "[" + ConfigurationString() + "]";
+    return  ConfigurationString() + " " + VersionString() + " "
+            + "(" + BranchName() + ":" + CommitAbbreviatedHash() + ", " + CompilationTimeStampString() + ") "
+            + "[" + CompilerInformationString() + " x64] "
+            + "{SSE4.2:" + sse + ", AVX2:" + avx + "};";
 }
 
 ULIS_NAMESPACE_END
