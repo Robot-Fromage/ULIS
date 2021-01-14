@@ -33,7 +33,6 @@ public:
 
     FTextCommandArgs(
           FBlock& iBlock
-        , const uint8* iBuffer
         , const FRectI& iRect
         , const std::wstring& iText
         , const FFont& iFont
