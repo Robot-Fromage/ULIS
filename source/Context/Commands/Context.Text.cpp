@@ -20,6 +20,11 @@
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include "Font/Font.h"
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
 
 ULIS_NAMESPACE_BEGIN
 void
@@ -63,7 +68,49 @@ FContext::TextMetrics(
     , const FMat3F& iTransform
 )
 {
-    return  FRectI();
+    FT_Matrix matrix;
+    matrix.xx = (FT_Fixed)( iTransform[0].x * 0x10000L );
+    matrix.xy = (FT_Fixed)( iTransform[0].y * 0x10000L );
+    matrix.yx = (FT_Fixed)( iTransform[1].x * 0x10000L );
+    matrix.yy = (FT_Fixed)( iTransform[1].y * 0x10000L );
+    int dx = static_cast< int >( iTransform[2].x );
+    int dy = static_cast< int >( iTransform[2].y );
+
+    FRectI result;
+    result.x = static_cast< int >( dx );
+    result.y = static_cast< int >( dy );
+    result.w = 1;
+    result.h = 1;
+
+    const wchar_t* str = iText.c_str();
+    int len = (int)iText.size();
+
+    FT_GlyphSlot  slot;
+    FT_Vector     pen;
+
+    FT_Error error = 0;
+    FT_Face face = reinterpret_cast< FT_Face >( iFont.FontHandle() );
+    error = FT_Set_Pixel_Sizes( face, 0, iFontSize );
+    ULIS_ASSERT( !error, "Error setting face size" );
+    slot = face->glyph;
+    pen.x = 0;
+    pen.y = 0;
+    int autobaseline = (int)( iFontSize * 0.7 );
+
+    for( int n = 0; n < len; ++n ) {
+        FT_Set_Transform( face, &matrix, &pen );
+        FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
+        error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
+        ULIS_ASSERT( !error, "Error loading glyph" );
+
+        FRectI box = FRectI::FromXYWH( dx + slot->bitmap_left, dy + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
+        result = result | box;
+
+        pen.x += slot->advance.x;
+        pen.y += slot->advance.y;
+    }
+
+    return  result;
 }
 
 ULIS_NAMESPACE_END
