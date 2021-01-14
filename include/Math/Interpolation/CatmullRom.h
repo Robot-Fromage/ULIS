@@ -104,7 +104,6 @@ public:
 
 public:
     FVec2F Eval( float iT ) {
-        std::cout << "ev\n";
         float t = t1 + t2mt1 * iT;
         FVec2F A1 = P0 * ( t1 - t ) / t1mt0 + P1 * ( t - t0 ) / t1mt0;
         FVec2F A2 = P1 * ( t2 - t ) / t2mt1 + P2 * ( t - t1 ) / t2mt1;
