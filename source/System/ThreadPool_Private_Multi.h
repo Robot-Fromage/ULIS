@@ -55,7 +55,6 @@ private:
 private:
     // Private Data
     uint32                              mNumBusy;
-    uint32                              mNumQueued;
     bool                                bStop;
     std::vector< std::thread >          mWorkers;
     std::deque< const FJob* >           mJobs;
