@@ -112,7 +112,7 @@ RasterBitmap(
                 continue;
             }
 
-            ufloat srcAlpha = iBitmap->buffer[ ( v >> 0 ) * ( iBitmap->width >> 3 ) + ( u >> 3 ) ] & ( 0x80 >> ( u % 8 ) ) ? 1.f : 0.f;
+            ufloat srcAlpha = iBitmap->buffer[ ( v * iBitmap->pitch ) + ( u >> 3 ) ] & ( 0x80 >> ( u % 8 ) ) ? 1.f : 0.f;
             ufloat dstAlpha = 1.f;
             if( fmt.HEA ) {
                 srcAlpha = srcAlpha * ConvType< T, ufloat >( cargs->color.AlphaT< T >() );

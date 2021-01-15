@@ -33,7 +33,7 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, fmt, PerformanceIntent_AVX );
     FHardwareMetrics hw;
     FFontEngine fontEngine;
-    FFont font( fontEngine, "Segoe UI", "Bold" );
+    FFont font( fontEngine, "Segoe UI", "Regular" );
     FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
@@ -92,7 +92,7 @@ main( int argc, char *argv[] ) {
         std::wstring test;
         for( int i = 32; i < 127; ++i )
             test += wchar_t( i );
-        ctx.RasterText( canvas, test, font, 24, FMat3F::MakeTranslationMatrix( 50, 200 ), FColor::RGB( 127, 127, 255 ) );
+        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 200 ), FColor::RGB( 127, 127, 255 ) );
         ctx.Finish();
     }
 
