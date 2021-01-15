@@ -31,48 +31,66 @@ static ULIS_FORCEINLINE float AlphaBlendChannel( float iCs, float iCb, float iAs
     return  iAr == 0.f ? 0.f : ( iCs * iAs + iCb * iAb * ( 1.f - iAs ) ) / iAr;
 }
 
-/*
 template< typename T >
 void
-RasterBitmap( std::shared_ptr< _FPrivateTextInfo > iTextParams, FT_Bitmap* iBitmap, FT_Int iX, FT_Int iY ) {
-    const FFormatMetrics& fmtInfo = iTextParams->destination->FormatMetrics();
-    int width = iTextParams->destination->Width();
-    int height = iTextParams->destination->Height();
-    int bps = iTextParams->destination->BytesPerScanLine();
-
+RasterPixmap(
+      const FTextCommandArgs* cargs
+    , FT_Bitmap* iBitmap
+    , FT_Int iX
+    , FT_Int iY
+)
+{
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    int width   = cargs->dst.Width();
+    int height  = cargs->dst.Height();
     int xmax = iX + iBitmap->width;
     int ymax = iY + iBitmap->rows;
 
-    uint8* dst = iTextParams->destination->Bits() + ( iY * (int64)bps ) + ( iX * (int64)fmtInfo.BPP );
-    uint32 jmp = ( width - iBitmap->width ) * fmtInfo.BPP; 
 
-    int x, y, p, q;
-    for( y = iY, q = 0; y < ymax; ++y, ++q ) {
-        for( x = iX, p = 0; x < xmax; ++x, ++p ) {
-            if( x < 0 || y < 0 || x >= width || y >= height ) {
-                dst += fmtInfo.BPP;
+    uint8* ULIS_RESTRICT dst = cargs->dst.Bits() + iY * cargs->dst.BytesPerScanLine() + iX * fmt.BPP;
+
+    // Stride:
+    //  ...............
+    //  .....*****o--->
+    //  ---->*...*.....
+    //  .....*****.....
+    //  ...............
+    uint32 stride = ( width - iBitmap->width ) * fmt.BPP;
+
+    for( int y = iY, v = 0; y < ymax; ++y, ++v ) {
+        if( y < 0 || y >= height ) {
+                dst += stride;
                 continue;
             }
 
-            float srcAlpha = ConvType< uint8, float >( iBitmap->buffer[ q * iBitmap->width + p ] );
-            if( fmtInfo.HEA ) srcAlpha = srcAlpha * TYPE2FLOAT( iTextParams->color, fmtInfo.AID );
-            float dstAlpha = fmtInfo.HEA ? TYPE2FLOAT( dst, fmtInfo.AID ) : 1.f;
-            float resAlpha = AlphaBlendAlpha( srcAlpha, dstAlpha );
-            for( uint8 j = 0; j < fmtInfo.NCC; ++j )
+        for( int x = iX, u = 0; x < xmax; ++x, ++u ) {
+            if( x < 0 || x >= width ) {
+                dst += fmt.BPP;
+                continue;
+            }
+
+            ufloat srcAlpha = ConvType< uint8, ufloat >( iBitmap->buffer[ v * iBitmap->width + u ] );
+            ufloat dstAlpha = 1.f;
+            if( fmt.HEA ) {
+                srcAlpha = srcAlpha * ConvType< T, ufloat >( cargs->color.AlphaT< T >() );
+                dstAlpha = TYPE2FLOAT( dst, fmt.AID );
+            }
+            ufloat resAlpha = AlphaBlendAlpha( srcAlpha, dstAlpha );
+            for( uint8 j = 0; j < fmt.NCC; ++j )
             {
-                uint8 r = fmtInfo.IDT[j];
-                float srcvf = TYPE2FLOAT( iTextParams->color, r );
-                float dstvf = TYPE2FLOAT( dst, r );
+                uint8 r = fmt.IDT[j];
+                ufloat srcvf = ConvType< T, ufloat >( cargs->color.ChannelT< T >( r ) );
+                ufloat dstvf = TYPE2FLOAT( dst, r );
                 FLOAT2TYPE( dst, r, AlphaBlendChannel( srcvf, dstvf, srcAlpha, dstAlpha, resAlpha ) );
             }
-            if( fmtInfo.HEA ) FLOAT2TYPE( dst, fmtInfo.AID, resAlpha );
-            dst += fmtInfo.BPP;
+            if( fmt.HEA ) FLOAT2TYPE( dst, fmt.AID, resAlpha );
+            dst += fmt.BPP;
         }
 
-        dst += jmp;
+        dst += stride;
     }
 }
-*/
+
 } // namespace detail
 
 /////////////////////////////////////////////////////
@@ -93,6 +111,9 @@ InvokeRasterTextAAMono_MEM_Generic(
     , const FTextCommandArgs* cargs
 )
 {
+    int width   = cargs->dst.Width();
+    int height  = cargs->dst.Height();
+
     const wchar_t* str = cargs->text.c_str();
     size_t len = static_cast< size_t >( cargs->text.size() );
 
@@ -114,13 +135,19 @@ InvokeRasterTextAAMono_MEM_Generic(
         FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
 
+        // Once you have a bitmapped glyph image, you can access it directly
+        // through glyph->bitmap (a simple descriptor for bitmaps or pixmaps),
+        // and position it through glyph->bitmap_left and glyph->bitmap_top.
+        // For optimal rendering on a screen the bitmap should be used as an
+        // alpha channel in linear blending with gamma correction.
+
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
         ULIS_ASSERT( !error, "Error loading glyph" );
 
         error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
         ULIS_ASSERT( !error, "Error rendering glyph" );
 
-        //RasterBitmap< T >( iTextParams, &slot->bitmap, iTextParams->position.x + slot->bitmap_left, iTextParams->position.y + ( autobaseline - slot->bitmap_top ) );
+        detail::RasterPixmap< T >( cargs, &slot->bitmap, cargs->position.x + slot->bitmap_left, -slot->bitmap_top + cargs->position.y );
         pen.x += slot->advance.x;
         pen.y += slot->advance.y;
     }
