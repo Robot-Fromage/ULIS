@@ -66,10 +66,11 @@ FThreadPool_Private::WaitForCompletion()
 {
     while( true )
     {
+        std::lock_guard< std::mutex > latch( mCommandsQueueMutex );
+
         std::unique_lock< std::mutex > lock( mJobsQueueMutex );
         cvFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ); } );
 
-        std::lock_guard< std::mutex > latch( mCommandsQueueMutex );
         if( mCommands.empty() )
             break;
     }
