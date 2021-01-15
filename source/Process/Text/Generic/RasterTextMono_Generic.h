@@ -112,7 +112,7 @@ RasterBitmap(
                 continue;
             }
 
-            ufloat srcAlpha = ConvType< uint8, ufloat >( iBitmap->buffer[ v * iBitmap->width + u ] );
+            ufloat srcAlpha = iBitmap->buffer[ ( v >> 0 ) * ( iBitmap->width >> 3 ) + ( u >> 3 ) ] & ( 0x80 >> ( u % 8 ) ) ? 1.f : 0.f;
             ufloat dstAlpha = 1.f;
             if( fmt.HEA ) {
                 srcAlpha = srcAlpha * ConvType< T, ufloat >( cargs->color.AlphaT< T >() );
@@ -159,7 +159,7 @@ InvokeRasterTextMono_MEM_Generic(
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
         ULIS_ASSERT( !error, "Error loading glyph" );
-        error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
+        error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_MONO );
         ULIS_ASSERT( !error, "Error rendering glyph" );
         detail::RasterBitmap< T >( cargs, &slot->bitmap, cargs->position.x + slot->bitmap_left, -slot->bitmap_top + cargs->position.y );
         pen.x += slot->advance.x;
