@@ -162,7 +162,7 @@ FFontEngine::FFontEngine()
     mLookupPaths.push_back( "/etc/fonts/local.conf./" );
 #endif
 
-Refresh();
+    Refresh();
 }
 
 //--------------------------------------------------------------------------------------
