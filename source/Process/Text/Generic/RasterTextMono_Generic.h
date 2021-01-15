@@ -12,18 +12,26 @@
 #pragma once
 #include "Core/Core.h"
 #include "Image/Block.h"
+#include "Font/Font.h"
 #include "Process/Text/TextArgs.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
+
 ULIS_NAMESPACE_BEGIN
-/*
-float AlphaBlendAlpha( float iAs, float iAb ) {
+// detail
+namespace detail {
+
+static ULIS_FORCEINLINE float AlphaBlendAlpha( float iAs, float iAb ) {
     return  iAs + iAb * ( 1.f - iAs );
 }
 
-float AlphaBlendChannel( float iCs, float iCb, float iAs, float iAb, float iAr ) {
+static ULIS_FORCEINLINE float AlphaBlendChannel( float iCs, float iCb, float iAs, float iAb, float iAr ) {
     return  iAr == 0.f ? 0.f : ( iCs * iAs + iCb * iAb * ( 1.f - iAs ) ) / iAr;
 }
 
+/*
 template< typename T >
 void
 RasterBitmap( std::shared_ptr< _FPrivateTextInfo > iTextParams, FT_Bitmap* iBitmap, FT_Int iX, FT_Int iY ) {
@@ -64,39 +72,8 @@ RasterBitmap( std::shared_ptr< _FPrivateTextInfo > iTextParams, FT_Bitmap* iBitm
         dst += jmp;
     }
 }
-
-template< typename T >
-void
-TraceTextMono_Generic( std::shared_ptr< _FPrivateTextInfo > iTextParams ) {
-    const wchar_t* str = iTextParams->text->c_str();
-    size_t len = static_cast< size_t >( iTextParams->text->size() );
-
-    FT_GlyphSlot  slot;
-    FT_Vector     pen;
-
-    FT_Error error = 0;
-    FT_Face face = reinterpret_cast< FT_Face >( iTextParams->font->Handle() );
-    error = FT_Set_Pixel_Sizes( face, 0, iTextParams->size );
-    ULIS_ASSERT( !error, "Error setting face size" );
-
-    slot = face->glyph;
-    pen.x = 0;
-    pen.y = 0;
-    int autobaseline = (int)( iTextParams->size * 0.7 );
-
-    for( int n = 0; n < len; ++n ) {
-        FT_Set_Transform( face, &(iTextParams->matrix), &pen );
-        FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
-        error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-        ULIS_ASSERT( !error, "Error loading glyph" );
-        error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-        ULIS_ASSERT( !error, "Error rendering glyph" );
-        RasterBitmap< T >( iTextParams, &slot->bitmap, iTextParams->position.x + slot->bitmap_left, iTextParams->position.y + ( autobaseline - slot->bitmap_top ) );
-        pen.x += slot->advance.x;
-        pen.y += slot->advance.y;
-    }
-}
 */
+} // namespace detail
 
 /////////////////////////////////////////////////////
 // Invocations RasterText
@@ -116,6 +93,37 @@ InvokeRasterTextAAMono_MEM_Generic(
     , const FTextCommandArgs* cargs
 )
 {
+    const wchar_t* str = cargs->text.c_str();
+    size_t len = static_cast< size_t >( cargs->text.size() );
+
+    FT_GlyphSlot  slot;
+    FT_Vector     pen;
+
+    FT_Error error = 0;
+    FT_Face face = reinterpret_cast< FT_Face >( cargs->font.FontHandle() );
+    error = FT_Set_Pixel_Sizes( face, 0, cargs->fontSize );
+    ULIS_ASSERT( !error, "Error setting face size" );
+
+    slot = face->glyph;
+    pen.x = 0;
+    pen.y = 0;
+    //int autobaseline = (int)( iTextParams->size * 0.7 );
+    int autobaseline = int( 0 );
+
+    for( int n = 0; n < len; ++n ) {
+        FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
+        FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
+
+        error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
+        ULIS_ASSERT( !error, "Error loading glyph" );
+
+        error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
+        ULIS_ASSERT( !error, "Error rendering glyph" );
+
+        //RasterBitmap< T >( iTextParams, &slot->bitmap, iTextParams->position.x + slot->bitmap_left, iTextParams->position.y + ( autobaseline - slot->bitmap_top ) );
+        pen.x += slot->advance.x;
+        pen.y += slot->advance.y;
+    }
 }
 
 
