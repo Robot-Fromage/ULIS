@@ -456,6 +456,10 @@ public:
         \warning the FFont input object must remain valid until the async command
         is complete. The other input objects don't have such constraints.
 
+        \warning The same FFont input object cannot be used by multiple threads,
+        so you cannot issue two concurrent RasterText commands with the same
+        Font at the same time, you have to ensure a Fence or a wait event.
+
         \sa RasterTextAA()
         \sa TextMetrics()
     */
@@ -486,6 +490,10 @@ public:
 
         \warning the FFont input object must remain valid until the async command
         is complete. The other input objects don't have such constraints.
+
+        \warning The same FFont input object cannot be used by multiple threads,
+        so you cannot issue two concurrent RasterText commands with the same
+        Font at the same time, you have to ensure a Fence or a wait event.
 
         \sa RasterText()
         \sa TextMetrics()
