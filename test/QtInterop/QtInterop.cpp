@@ -33,7 +33,7 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, fmt, PerformanceIntent_AVX );
     FHardwareMetrics hw;
     FFontEngine fontEngine;
-    FFont font( fontEngine, "Arial", "Regular" );
+    FFont font( fontEngine, "Segoe UI", "Bold" );
     FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
@@ -87,7 +87,12 @@ main( int argc, char *argv[] ) {
         ctx.BlendTiled( blockA, canvas, FRectI( 16, 16, 32, 32 ), FRectI( 512, 512, 128, 128 ), FVec2I(), Blend_Normal, Alpha_Normal, 1.f, policy_cache_efficient, 1, &events[10 ], &events[11] );
         ctx.BlendColor( FColor::RGB( 255, 255, 255, 255 ), canvas, canvas.Rect(), Blend_Normal, Alpha_Normal, 0.75f, policy_cache_efficient, 1, &events[ 11 ], nullptr );
         ctx.Finish();
-        ctx.RasterTextAA( canvas, L"Test", font, 32, FMat3F::MakeTranslationMatrix( 50, 200 ), FColor::RGB( 127, 127, 255 ) );
+
+
+        std::wstring test;
+        for( int i = 31; i < 127; ++i )
+            test += wchar_t( i );
+        ctx.RasterTextAA( canvas, test, font, 64, FMat3F::MakeTranslationMatrix( 50, 200 ), FColor::RGB( 127, 127, 255 ) );
         ctx.Finish();
     }
 

@@ -45,23 +45,66 @@ RasterPixmap(
     int height  = cargs->dst.Height();
     int xmax = iX + iBitmap->width;
     int ymax = iY + iBitmap->rows;
-
-
     uint8* ULIS_RESTRICT dst = cargs->dst.Bits() + iY * cargs->dst.BytesPerScanLine() + iX * fmt.BPP;
-
-    // Stride:
-    //  ...............
-    //  .....*****o--->
-    //  ---->*...*.....
-    //  .....*****.....
-    //  ...............
     uint32 stride = ( width - iBitmap->width ) * fmt.BPP;
 
     for( int y = iY, v = 0; y < ymax; ++y, ++v ) {
         if( y < 0 || y >= height ) {
-                dst += stride;
+            dst += stride;
+            continue;
+        }
+
+        for( int x = iX, u = 0; x < xmax; ++x, ++u ) {
+            if( x < 0 || x >= width ) {
+                dst += fmt.BPP;
                 continue;
             }
+
+            ufloat srcAlpha = ConvType< uint8, ufloat >( iBitmap->buffer[ v * iBitmap->width + u ] );
+            ufloat dstAlpha = 1.f;
+            if( fmt.HEA ) {
+                srcAlpha = srcAlpha * ConvType< T, ufloat >( cargs->color.AlphaT< T >() );
+                dstAlpha = TYPE2FLOAT( dst, fmt.AID );
+            }
+            ufloat resAlpha = AlphaBlendAlpha( srcAlpha, dstAlpha );
+            for( uint8 j = 0; j < fmt.NCC; ++j )
+            {
+                uint8 r = fmt.IDT[j];
+                ufloat srcvf = ConvType< T, ufloat >( cargs->color.ChannelT< T >( r ) );
+                ufloat dstvf = TYPE2FLOAT( dst, r );
+                FLOAT2TYPE( dst, r, AlphaBlendChannel( srcvf, dstvf, srcAlpha, dstAlpha, resAlpha ) );
+            }
+            if( fmt.HEA ) FLOAT2TYPE( dst, fmt.AID, resAlpha );
+            dst += fmt.BPP;
+        }
+
+        dst += stride;
+    }
+}
+
+
+template< typename T >
+void
+RasterBitmap(
+      const FTextCommandArgs* cargs
+    , FT_Bitmap* iBitmap
+    , FT_Int iX
+    , FT_Int iY
+)
+{
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    int width   = cargs->dst.Width();
+    int height  = cargs->dst.Height();
+    int xmax = iX + iBitmap->width;
+    int ymax = iY + iBitmap->rows;
+    uint8* ULIS_RESTRICT dst = cargs->dst.Bits() + iY * cargs->dst.BytesPerScanLine() + iX * fmt.BPP;
+    uint32 stride = ( width - iBitmap->width ) * fmt.BPP;
+
+    for( int y = iY, v = 0; y < ymax; ++y, ++v ) {
+        if( y < 0 || y >= height ) {
+            dst += stride;
+            continue;
+        }
 
         for( int x = iX, u = 0; x < xmax; ++x, ++u ) {
             if( x < 0 || x >= width ) {
@@ -102,6 +145,26 @@ InvokeRasterTextMono_MEM_Generic(
     , const FTextCommandArgs* cargs
 )
 {
+    FT_Error error = 0;
+    FT_Face face = reinterpret_cast< FT_Face >( cargs->font.FontHandle() );
+    error = FT_Set_Pixel_Sizes( face, 0, cargs->fontSize );
+    ULIS_ASSERT( !error, "Error setting face size" );
+    FT_GlyphSlot slot = face->glyph;
+    FT_Vector pen { 0, 0 };
+    int height = cargs->dst.Height();
+    const wchar_t* str = cargs->text.c_str();
+    const size_t len = static_cast< size_t >( cargs->text.size() );
+    for( int n = 0; n < len; ++n ) {
+        FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
+        FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
+        error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
+        ULIS_ASSERT( !error, "Error loading glyph" );
+        error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
+        ULIS_ASSERT( !error, "Error rendering glyph" );
+        detail::RasterBitmap< T >( cargs, &slot->bitmap, cargs->position.x + slot->bitmap_left, -slot->bitmap_top + cargs->position.y );
+        pen.x += slot->advance.x;
+        pen.y += slot->advance.y;
+    }
 }
 
 template< typename T >
@@ -111,42 +174,22 @@ InvokeRasterTextAAMono_MEM_Generic(
     , const FTextCommandArgs* cargs
 )
 {
-    int width   = cargs->dst.Width();
-    int height  = cargs->dst.Height();
-
-    const wchar_t* str = cargs->text.c_str();
-    size_t len = static_cast< size_t >( cargs->text.size() );
-
-    FT_GlyphSlot  slot;
-    FT_Vector     pen;
-
     FT_Error error = 0;
     FT_Face face = reinterpret_cast< FT_Face >( cargs->font.FontHandle() );
     error = FT_Set_Pixel_Sizes( face, 0, cargs->fontSize );
     ULIS_ASSERT( !error, "Error setting face size" );
-
-    slot = face->glyph;
-    pen.x = 0;
-    pen.y = 0;
-    //int autobaseline = (int)( iTextParams->size * 0.7 );
-    int autobaseline = int( 0 );
-
+    FT_GlyphSlot slot = face->glyph;
+    FT_Vector pen { 0, 0 };
+    int height = cargs->dst.Height();
+    const wchar_t* str = cargs->text.c_str();
+    const size_t len = static_cast< size_t >( cargs->text.size() );
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
-
-        // Once you have a bitmapped glyph image, you can access it directly
-        // through glyph->bitmap (a simple descriptor for bitmaps or pixmaps),
-        // and position it through glyph->bitmap_left and glyph->bitmap_top.
-        // For optimal rendering on a screen the bitmap should be used as an
-        // alpha channel in linear blending with gamma correction.
-
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
         ULIS_ASSERT( !error, "Error loading glyph" );
-
         error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
         ULIS_ASSERT( !error, "Error rendering glyph" );
-
         detail::RasterPixmap< T >( cargs, &slot->bitmap, cargs->position.x + slot->bitmap_left, -slot->bitmap_top + cargs->position.y );
         pen.x += slot->advance.x;
         pen.y += slot->advance.y;
