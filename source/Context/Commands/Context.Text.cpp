@@ -118,7 +118,7 @@ FContext::RasterTextAA(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleRasterText
+              mContextualDispatchTable->mScheduleRasterTextAA
             , new FTextCommandArgs(
                   iBlock
                 , roi
