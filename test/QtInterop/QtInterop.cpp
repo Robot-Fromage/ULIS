@@ -32,6 +32,8 @@ main( int argc, char *argv[] ) {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_AVX );
     FHardwareMetrics hw;
+    FFontEngine fontEngine;
+    FFont font( fontEngine, "Arial", "Regular" );
     FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
@@ -83,6 +85,8 @@ main( int argc, char *argv[] ) {
         ctx.BlendColor( colors[3], canvas, canvas.Rect(), Blend_BayerDither8x8, Alpha_Normal, 0.5f, policy_cache_efficient, 1, &events[8], &events[9] );
         ctx.BlendAA( blockB, canvas, FRectI( 0, 0, 512, 512 ), FVec2F( 64.5f, 64.5f ), Blend_Normal, Alpha_Normal, 1.f, policy_cache_efficient, 1, &events[9], &events[10] );
         ctx.BlendTiled( blockA, canvas, FRectI( 16, 16, 32, 32 ), FRectI( 512, 512, 128, 128 ), FVec2I(), Blend_Normal, Alpha_Normal, 1.f, policy_cache_efficient, 1, &events[10 ], &events[11] );
+        ctx.Finish();
+        ctx.RasterTextAA( canvas, L"Test", font, 16, FMat3F::MakeTranslationMatrix( 50, 200 ) );
         ctx.Finish();
     }
 
