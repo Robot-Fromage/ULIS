@@ -118,6 +118,7 @@ ScheduleDualBufferJobs(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
     , bool iContiguous
+    , bool iForceMonoChunk
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
     , TDelegateBuildJobChunks iDelegateBuildJobChunks
 )
@@ -134,6 +135,7 @@ ScheduleDualBufferJobs(
         , static_cast< int64 >( cargs->dst.BytesTotal() )
         , cargs->dstRect.h
         , iContiguous
+        , iForceMonoChunk
         , iDelegateBuildJobScanlines
         , iDelegateBuildJobChunks
     );
@@ -145,6 +147,7 @@ iName(                                                                          
       FCommand* iCommand                                                                                                                                                \
     , const FSchedulePolicy& iPolicy                                                                                                                                    \
     , bool iContiguous                                                                                                                                                  \
+    , bool iForceMonoChunk                                                                                                                                              \
 )                                                                                                                                                                       \
 {                                                                                                                                                                       \
     ScheduleDualBufferJobs<                                                                                                                                             \
@@ -156,6 +159,7 @@ iName(                                                                          
           iCommand                                                                                                                                                      \
         , iPolicy                                                                                                                                                       \
         , iContiguous                                                                                                                                                   \
+        , iForceMonoChunk                                                                                                                                               \
         , iDelegateBuildJobScanlines                                                                                                                                    \
         , iDelegateBuildJobChunks                                                                                                                                       \
     );                                                                                                                                                                  \

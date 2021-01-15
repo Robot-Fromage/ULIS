@@ -52,6 +52,7 @@ FContext::Clear(
             )
             , iPolicy
             , src_roi == src_rect
+            , false
             , iNumWait
             , iWaitList
             , iEvent

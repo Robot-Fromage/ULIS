@@ -66,6 +66,7 @@ FContext::Fill(
             )
             , iPolicy
             , roi == rect
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -104,6 +105,7 @@ FContext::FillPreserveAlpha(
             )
             , iPolicy
             , roi == rect
+            , false
             , iNumWait
             , iWaitList
             , iEvent

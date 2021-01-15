@@ -20,7 +20,7 @@
 ULIS_NAMESPACE_BEGIN
 class FCommand;
 class FJob;
-typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, bool );
+typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, bool, bool );
 
 /////////////////////////////////////////////////////
 /// @class      FCommand
@@ -44,6 +44,7 @@ public:
         , const ICommandArgs* iArgs
         , const FSchedulePolicy& iPolicy
         , bool iContiguous
+        , bool iForceMonoChunk
         , uint32 iNumWait
         , const FEvent* iWaitList
         , FEvent* iEvent

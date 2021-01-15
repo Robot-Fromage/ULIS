@@ -92,6 +92,7 @@ FContext::Blend(
             )
             , iPolicy
             , false // ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -162,6 +163,7 @@ FContext::BlendAA(
             )
             , iPolicy
             , false
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -220,6 +222,7 @@ FContext::AlphaBlend(
             )
             , iPolicy
             , false // ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -288,6 +291,7 @@ FContext::AlphaBlendAA(
             )
             , iPolicy
             , false
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -355,6 +359,7 @@ FContext::BlendTiled(
             )
             , iPolicy
             , false
+            , false
             , iNumWait
             , iWaitList
             , iEvent
@@ -414,6 +419,7 @@ FContext::BlendColor(
                 , color
             )
             , iPolicy
+            , false
             , false
             , iNumWait
             , iWaitList

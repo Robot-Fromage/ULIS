@@ -74,7 +74,8 @@ FContext::RasterText(
                 , FVec2I( dx, dy )
             )
             , iPolicy
-            , roi == rect
+            , false
+            , true
             , iNumWait
             , iWaitList
             , iEvent
@@ -129,7 +130,8 @@ FContext::RasterTextAA(
                 , FVec2I( dx, dy )
             )
             , iPolicy
-            , roi == rect
+            , false
+            , true
             , iNumWait
             , iWaitList
             , iEvent

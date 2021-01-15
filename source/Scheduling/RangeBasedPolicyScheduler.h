@@ -124,6 +124,9 @@ RangeBasedSchedulingBuildJobs(
     , TDelegateBuildJobChunks iDelegateBuildJobChunks
 )
 {
+    if( iForceMonoChunk )
+        goto mono_chunks;
+
     if( iPolicy.RunPolicy() == eScheduleRunPolicy::ScheduleRun_Mono )
         if( iPolicy.ModePolicy() == eScheduleModePolicy::ScheduleMode_Scanlines )
             goto mono_scanlines;

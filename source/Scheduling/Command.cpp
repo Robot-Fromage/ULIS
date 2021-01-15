@@ -33,6 +33,7 @@ FCommand::FCommand(
     , const ICommandArgs* iArgs
     , const FSchedulePolicy& iPolicy
     , bool iContiguous
+    , bool iForceMonoChunk
     , uint32 iNumWait
     , const FEvent* iWaitList
     , FEvent* iEvent
@@ -51,7 +52,7 @@ FCommand::FCommand(
     }
 
     // Start Enqueuing Jobs
-    iSched( this, iPolicy, iContiguous );
+    iSched( this, iPolicy, iContiguous, iForceMonoChunk );
 
     mEvent->Bind( this, iNumWait, iWaitList, iEventGeometry );
 }

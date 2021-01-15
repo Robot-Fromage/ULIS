@@ -61,6 +61,7 @@ FContext::Copy(
             )
             , iPolicy
             , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false
             , iNumWait
             , iWaitList
             , iEvent
