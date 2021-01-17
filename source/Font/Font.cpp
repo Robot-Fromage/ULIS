@@ -41,7 +41,7 @@ FFont::FFont(
     mFamily = entry->Family();
     mStyle = entry->Style();
     std::string path = entry->Path();
-    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library>( mFontEngine.LibraryHandle() ), path.c_str(), 0, reinterpret_cast< FT_Face* >( &mFontHandle ) );
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.LibraryHandle() ), path.c_str(), 0, reinterpret_cast< FT_Face* >( &mFontHandle ) );
     ULIS_ASSERT( !error, "Error initializing font handle" );
 }
 

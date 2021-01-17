@@ -34,6 +34,7 @@ main( int argc, char *argv[] ) {
     FHardwareMetrics hw;
     FFontEngine fontEngine;
     FFont font( fontEngine, "Segoe UI", "Regular" );
+    FFont font2( fontEngine, "Segoe UI", "Regular" );
     FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
@@ -88,13 +89,13 @@ main( int argc, char *argv[] ) {
         ctx.BlendColor( FColor::RGB( 255, 255, 255, 255 ), canvas, canvas.Rect(), Blend_Normal, Alpha_Normal, 0.75f, policy_cache_efficient, 1, &events[ 11 ], nullptr );
         ctx.Finish();
 
-
         std::wstring test;
         for( int i = 32; i < 127; ++i )
             test += wchar_t( i );
-        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 240 ), FColor::RGB( 127, 127, 255 ) );
+        FEvent testev;
+        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 240 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy(), 0, 0, &testev );
+        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 280 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy(), 1, &testev );
         ctx.Finish();
-        ctx.Clear( canvas );
         ctx.Finish();
     }
 

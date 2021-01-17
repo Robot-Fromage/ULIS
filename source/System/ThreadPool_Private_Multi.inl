@@ -16,11 +16,16 @@
 ULIS_NAMESPACE_BEGIN
 FThreadPool_Private::~FThreadPool_Private()
 {
+    // Temp safe
+    WaitForCompletion();
+
     // Notify stop condition
     std::unique_lock< std::mutex > latch( mJobsQueueMutex );
+    std::unique_lock< std::mutex > lock( mCommandsQueueMutex );
     bStop = true;
     cvJob.notify_all();
     latch.unlock();
+    lock.unlock();
 
     // Join all threads
     for( auto& t : mWorkers )
