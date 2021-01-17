@@ -49,7 +49,6 @@ public:
 
 public:
     static FSharedInternalEvent MakeShared( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
-    const TArray< FSharedInternalEvent >& WaitList() const;
     bool IsBound() const;
     bool ReadyForProcessing() const;
     bool ReadyForScheduling() const;

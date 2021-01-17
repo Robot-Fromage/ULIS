@@ -56,14 +56,15 @@ private:
     // Private Data
     uint32                              mNumBusy;
     bool                                bStop;
+    std::atomic_uint32_t                mNumQueued;
     std::vector< std::thread >          mWorkers;
+    std::thread                         mScheduler;
     std::deque< const FJob* >           mJobs;
     std::deque< const FCommand* >       mCommands;
     std::mutex                          mJobsQueueMutex;
     std::mutex                          mCommandsQueueMutex;
     std::condition_variable             cvJob;
-    std::condition_variable             cvFinished;
-    std::thread                         mScheduler;
+    std::condition_variable             cvJobsFinished;
 };
 
 ULIS_NAMESPACE_END

@@ -32,18 +32,21 @@ FThreadPool_Private::~FThreadPool_Private()
 FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
     : mNumBusy( 0 )
     , bStop( false )
-    , mScheduler( std::bind( &FThreadPool_Private::ScheduleProcess, this ) )
+    , mNumQueued( 0 )
 {
     uint32 max = FMath::Clamp( iNumWorkers, uint32( 1 ), MaxWorkers() );
     mWorkers.reserve( max );
     for( uint32 i = 0; i < max; ++i )
         mWorkers.emplace_back( std::bind( &FThreadPool_Private::WorkProcess, this ) );
+
+    mScheduler = std::thread( std::bind( &FThreadPool_Private::ScheduleProcess, this ) );
 }
 
 void
 FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
     std::lock_guard< std::mutex > lock( mCommandsQueueMutex );
+    uint32 size = ioCommands.Size();
     while( !ioCommands.IsEmpty() )
     {
         const FCommand* cmd = ioCommands.Front();
@@ -51,6 +54,7 @@ FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
         ULIS_ASSERT( cmd->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
         mCommands.push_back( cmd );
     }
+    mNumQueued.fetch_add( size );
 }
 
 void
@@ -64,16 +68,20 @@ FThreadPool_Private::ScheduleJob( const FJob* iJob )
 void
 FThreadPool_Private::WaitForCompletion()
 {
+    /*
     while( true )
     {
         std::lock_guard< std::mutex > latch( mCommandsQueueMutex );
 
         std::unique_lock< std::mutex > lock( mJobsQueueMutex );
-        cvFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ); } );
+        cvJobsFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ); } );
 
         if( mCommands.empty() )
             break;
     }
+    */
+    std::unique_lock< std::mutex > lock( mJobsQueueMutex );
+    cvJobsFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ) && ( mNumQueued == 0 ); } );
 }
 
 void
@@ -145,7 +153,7 @@ FThreadPool_Private::WorkProcess()
 
             // Managing internals
             --mNumBusy;
-            cvFinished.notify_one();
+            cvJobsFinished.notify_one();
         }
         else if( bStop )
         {
@@ -176,6 +184,7 @@ FThreadPool_Private::ScheduleProcess()
                 const TArray< const FJob* >& jobs = cmd->Jobs();
                 for( uint64 i = 0; i < jobs.Size(); ++i )
                     ScheduleJob( jobs[i] );
+                mNumQueued.fetch_sub( 1 );
             }
 
             // lock again, run sync.
@@ -185,7 +194,6 @@ FThreadPool_Private::ScheduleProcess()
             {
                 mCommands.push_back( cmd );
             }
-
         }
         else if( bStop )
         {

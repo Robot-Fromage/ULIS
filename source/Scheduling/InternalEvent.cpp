@@ -41,12 +41,6 @@ FInternalEvent::MakeShared(
     return  std::make_shared< FInternalEvent >( iOnEventComplete );
 }
 
-const TArray< FSharedInternalEvent >&
-FInternalEvent::WaitList() const
-{
-    return  mWaitList;
-}
-
 void
 FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
 {

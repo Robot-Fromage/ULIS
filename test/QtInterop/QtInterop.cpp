@@ -92,7 +92,9 @@ main( int argc, char *argv[] ) {
         std::wstring test;
         for( int i = 32; i < 127; ++i )
             test += wchar_t( i );
-        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 200 ), FColor::RGB( 127, 127, 255 ) );
+        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 240 ), FColor::RGB( 127, 127, 255 ) );
+        ctx.Finish();
+        ctx.Clear( canvas );
         ctx.Finish();
     }
 
