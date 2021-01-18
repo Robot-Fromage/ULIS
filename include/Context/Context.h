@@ -772,7 +772,7 @@ public:
     FRectI
     TransformBezierMetrics(
           const FRectI& iSourceRect
-        , const TArray< FCubicBezierControlPoint >&  iControlPoints
+        , const TArray< FCubicBezierControlPoint >& iControlPoints
     );
 
 private:
