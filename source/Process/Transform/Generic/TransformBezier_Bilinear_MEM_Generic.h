@@ -16,7 +16,11 @@
 
 ULIS_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformBezierMT_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
+InvokeTransformBezierMT_Bilinear_MEM_Generic(
+      const FTransformJobArgs* jargs
+    , const FTransformCommandArgs* cargs
+)
+{
     const FTransformCommandArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
@@ -68,18 +72,7 @@ InvokeTransformBezierMT_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::sha
     delete [] hh0;
 }
 
-template< typename T > void
-TransformBezierMT_Bilinear_MEM_Generic( std::shared_ptr< const FTransformCommandArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
-    const FTransformCommandArgs&   info        = *iInfo;
-    uint8*                  dst         = info.destination->Bits();
-    const uint32             dst_bps     = info.destination->BytesPerScanLine();
-    const uint32             dst_decal_y = info.dst_roi.y;
-    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.dst_roi.h
-                                   , InvokeTransformBezierMT_Bilinear_MEM_Generic< T >
-                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, iField, iMask );
-}
+ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( TransformBezierMT_Bilinear_MEM_Generic )
 
 ULIS_NAMESPACE_END
 

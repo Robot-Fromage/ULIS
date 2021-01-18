@@ -17,7 +17,11 @@
 
 ULIS_NAMESPACE_BEGIN
 template< typename T > void
-InvokeResizeMT_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeCommandArgs > iInfo ) {
+InvokeResizeMT_Bilinear_MEM_Generic(
+      const FTransformJobArgs* jargs
+    , const FResizeCommandArgs* cargs
+)
+{
     const FResizeCommandArgs&  info    = *iInfo;
     const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
     uint8*              dst     = iDst;
@@ -64,18 +68,7 @@ InvokeResizeMT_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< 
     delete [] hh0;
 }
 
-template< typename T > void
-ResizeMT_Bilinear_MEM_Generic( std::shared_ptr< const FResizeCommandArgs > iInfo ) {
-    const FResizeCommandArgs&  info        = *iInfo;
-    uint8*              dst         = info.destination->Bits();
-    const uint32         dst_bps     = info.destination->BytesPerScanLine();
-    const uint32         dst_decal_y = info.dst_roi.y;
-    const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.dst_roi.h
-                                   , InvokeResizeMT_Bilinear_MEM_Generic< T >
-                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo );
-}
+ULIS_DEFINE_RESIZE_COMMAND_GENERIC( ResizeMT_Bilinear_MEM_Generic )
 
 ULIS_NAMESPACE_END
 
