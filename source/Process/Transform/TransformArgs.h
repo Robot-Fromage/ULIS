@@ -118,7 +118,7 @@ public:
     ~FTransformJobArgs() override {};
 
     const uint8* ULIS_RESTRICT src;
-    uint8* ULIS_RESTRICT bdp;
+    uint8* ULIS_RESTRICT dst;
     uint32 line;
 };
 
