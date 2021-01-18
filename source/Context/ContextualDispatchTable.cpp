@@ -20,7 +20,11 @@
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat, ePerformanceIntent iPerfIntent )
-        : mScheduleBlendSeparable(                  TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector                   >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        : mHardwareMetrics( FHardwareMetrics() )
+        , mFormat( iFormat )
+        , mPerfIntent( iPerfIntent )
+#ifdef ULIS_FEATURE_BLEND_ENABLED
+        , mScheduleBlendSeparable(                  TDispatcher< FDispatchedBlendSeparableInvocationSchedulerSelector                   >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleBlendNonSeparable(               TDispatcher< FDispatchedBlendNonSeparableInvocationSchedulerSelector                >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleBlendMisc(                       TDispatcher< FDispatchedBlendMiscInvocationSchedulerSelector                        >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleBlendSeparableSubpixel(          TDispatcher< FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
@@ -31,13 +35,31 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleTiledBlendSeparable(             TDispatcher< FDispatchedTiledBlendSeparableInvocationSchedulerSelector              >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleTiledBlendNonSeparable(          TDispatcher< FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleTiledBlendMisc(                  TDispatcher< FDispatchedTiledBlendMiscInvocationSchedulerSelector                   >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+#endif // ULIS_FEATURE_BLEND_ENABLED
+
+#ifdef ULIS_FEATURE_CLEAR_ENABLED
         , mScheduleClear(                           TDispatcher< FDispatchedClearInvocationSchedulerSelector                            >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+#endif // ULIS_FEATURE_CLEAR_ENABLED
+
+#ifdef ULIS_FEATURE_COPY_ENABLED
         , mScheduleCopy(                            TDispatcher< FDispatchedCopyInvocationSchedulerSelector                             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+#endif // ULIS_FEATURE_COPY_ENABLED
+
+#ifdef ULIS_FEATURE_CONV_ENABLED
         , mScheduleConvertFormat(                   TDispatcher< FDispatchedConvertFormatInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+#endif // ULIS_FEATURE_CONV_ENABLED
+
+#ifdef ULIS_FEATURE_FILL_ENABLED
         , mScheduleFill(                            TDispatcher< FDispatchedFillInvocationSchedulerSelector                             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleFillPreserveAlpha(               TDispatcher< FDispatchedFillPreserveAlphaInvocationSchedulerSelector                >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+#endif // ULIS_FEATURE_FILL_ENABLED
+
+#ifdef ULIS_FEATURE_TEXT_ENABLED
         , mScheduleRasterText(                      TDispatcher< FDispatchedRasterTextInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleRasterTextAA(                    TDispatcher< FDispatchedRasterTextAAInvocationSchedulerSelector                     >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+#endif // ULIS_FEATURE_TEXT_ENABLED
+
+#ifdef ULIS_FEATURE_TRANSFORM_ENABLED
         , mScheduleResizeArea(                      TDispatcher< FDispatchedResizeAreaInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleResizeBicubic(                   TDispatcher< FDispatchedResizeBicubicInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleResizeBilinear(                  TDispatcher< FDispatchedResizeBilinearInvocationSchedulerSelector                   >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
@@ -54,9 +76,12 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleTransformPerspectiveBicubic(     TDispatcher< FDispatchedTransformPerspectiveBicubicInvocationSchedulerSelector      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleTransformPerspectiveBilinear(    TDispatcher< FDispatchedTransformPerspectiveBilinearInvocationSchedulerSelector     >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleTransformPerspectiveNN(          TDispatcher< FDispatchedTransformPerspectiveNNInvocationSchedulerSelector           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+#endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
+#if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )
         , mArgConvBackwardBlendNonSeparable(    QueryDispatchedConvertFormatInvocation( eFormat::Format_RGBF, iFormat ) )
+#endif // defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
 {}
 
 FContext::FContextualDispatchTable::~FContextualDispatchTable()

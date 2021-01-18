@@ -31,10 +31,7 @@ FContext::FContext(
     , ePerformanceIntent iPerfIntent
 )
     : mCommandQueue( iQueue )
-    , mHardwareMetrics( FHardwareMetrics() )
-    , mFormat( iFormat )
-    , mPerfIntent( iPerfIntent )
-    , mContextualDispatchTable( new  FContextualDispatchTable( mHardwareMetrics, mFormat, mPerfIntent ) )
+    , mContextualDispatchTable( new  FContextualDispatchTable( FHardwareMetrics(), iFormat, iPerfIntent ) )
 {
 }
 
@@ -67,7 +64,7 @@ FContext::Wait( const FEvent& iEvent )
 eFormat
 FContext::Format() const
 {
-    return  mFormat;
+    return  mContextualDispatchTable->mFormat;
 }
 
 void

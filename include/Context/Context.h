@@ -778,9 +778,6 @@ public:
 
 private:
     FCommandQueue& mCommandQueue;
-    const FHardwareMetrics mHardwareMetrics;
-    const eFormat mFormat;
-    const ePerformanceIntent mPerfIntent;
     const FContextualDispatchTable* mContextualDispatchTable;
 };
 

@@ -29,6 +29,7 @@ public:
     /*! Destructor */
     ~FContextualDispatchTable();
 
+#ifdef ULIS_FEATURE_BLEND_ENABLED
     ULIS_FORCEINLINE fpCommandScheduler QueryScheduleBlend( eBlendMode iBlendingMode ) const
     {
         switch( BlendingModeQualifier( iBlendingMode ) ) {
@@ -58,7 +59,9 @@ public:
             default: return  nullptr;
         }
     }
+#endif // ULIS_FEATURE_BLEND_ENABLED
 
+#ifdef ULIS_FEATURE_TRANSFORM_ENABLED
     ULIS_FORCEINLINE fpCommandScheduler QueryScheduleResize( eResamplingMethod iResamplingMethod ) const
     {
         switch( iResamplingMethod ) {
@@ -113,8 +116,15 @@ public:
             default: return  nullptr;
         }
     }
+#endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
 private:
+    const FHardwareMetrics mHardwareMetrics;
+    const eFormat mFormat;
+    const ePerformanceIntent mPerfIntent;
+
+
+#ifdef ULIS_FEATURE_BLEND_ENABLED
     const fpCommandScheduler mScheduleBlendSeparable;
     const fpCommandScheduler mScheduleBlendNonSeparable;
     const fpCommandScheduler mScheduleBlendMisc;
@@ -126,13 +136,31 @@ private:
     const fpCommandScheduler mScheduleTiledBlendSeparable;
     const fpCommandScheduler mScheduleTiledBlendNonSeparable;
     const fpCommandScheduler mScheduleTiledBlendMisc;
+#endif // ULIS_FEATURE_BLEND_ENABLED
+
+#ifdef ULIS_FEATURE_CLEAR_ENABLED
     const fpCommandScheduler mScheduleClear;
+#endif // ULIS_FEATURE_CLEAR_ENABLED
+
+#ifdef ULIS_FEATURE_COPY_ENABLED
     const fpCommandScheduler mScheduleCopy;
+#endif // ULIS_FEATURE_COPY_ENABLED
+
+#ifdef ULIS_FEATURE_CONV_ENABLED
     const fpCommandScheduler mScheduleConvertFormat;
+#endif // ULIS_FEATURE_CONV_ENABLED
+
+#ifdef ULIS_FEATURE_FILL_ENABLED
     const fpCommandScheduler mScheduleFill;
     const fpCommandScheduler mScheduleFillPreserveAlpha;
+#endif // ULIS_FEATURE_FILL_ENABLED
+
+#ifdef ULIS_FEATURE_TEXT_ENABLED
     const fpCommandScheduler mScheduleRasterText;
     const fpCommandScheduler mScheduleRasterTextAA;
+#endif // ULIS_FEATURE_TEXT_ENABLED
+
+#ifdef ULIS_FEATURE_TRANSFORM_ENABLED
     const fpCommandScheduler mScheduleResizeArea;
     const fpCommandScheduler mScheduleResizeBicubic;
     const fpCommandScheduler mScheduleResizeBilinear;
@@ -149,9 +177,13 @@ private:
     const fpCommandScheduler mScheduleTransformPerspectiveBicubic;
     const fpCommandScheduler mScheduleTransformPerspectiveBilinear;
     const fpCommandScheduler mScheduleTransformPerspectiveNN;
+#endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
+#if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;
+#endif // defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
+
 };
 
 ULIS_NAMESPACE_END

@@ -209,9 +209,6 @@
 #define ULIS_COMPILED_WITH_FILESYSTEM_SUPPORT
 #endif // !ULIS_NO_SIMD_SUPPORT
 
-
-
-
 /////////////////////////////////////////////////////
 // Macros for features support
 #ifndef ULIS_FEATURE_NO_BLEND
