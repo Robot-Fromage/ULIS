@@ -15,6 +15,7 @@
 #include "Context/ContextualDispatchTable.h"
 #include "Process/Transform/Transform.h"
 #include "Image/Block.h"
+#include "Math/Interpolation/Bezier.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/CommandQueue_Private.h"
@@ -41,9 +42,6 @@ FContext::TransformAffine(
     ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
     ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
 
-    // Fix Area not available here
-    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
-
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
     const FRectI dst_rect = iDestination.Rect();
@@ -54,6 +52,30 @@ FContext::TransformAffine(
     // Check no-op
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->QueryScheduleTransformAffine( iResamplingMethod )
+            , new FTransformCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , iResamplingMethod
+                , iBorderMode
+                , iBorderValue.ToFormat( iDestination.Format() )
+                , iTransformMatrix.Inverse()
+            )
+            , iPolicy
+            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // No need to force mono.
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , dst_roi
+        )
+    );
 }
 
 void
@@ -75,9 +97,6 @@ FContext::TransformAffineTiled(
     ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
     ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
 
-    // Fix Area not available here
-    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
-
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
     const FRectI dst_rect = iDestination.Rect();
@@ -87,6 +106,31 @@ FContext::TransformAffineTiled(
     // Check no-op
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->QueryScheduleTransformAffineTiled( iResamplingMethod )
+            , new FTransformCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , iResamplingMethod
+                , iBorderMode
+                , iBorderValue.ToFormat( iDestination.Format() )
+                , iTransformMatrix.Inverse()
+                , true // Tiled
+            )
+            , iPolicy
+            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // No need to force mono.
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , dst_roi
+        )
+    );
 }
 
 void
@@ -107,9 +151,6 @@ FContext::TransformPerspective(
     ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
     ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
 
-    // Fix Area not available here
-    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
-
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
     const FRectI dst_rect = iDestination.Rect();
@@ -120,6 +161,30 @@ FContext::TransformPerspective(
     // Check no-op
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->QueryScheduleTransformPerspective( iResamplingMethod )
+            , new FTransformCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , iResamplingMethod
+                , iBorderMode
+                , iBorderValue.ToFormat( iDestination.Format() )
+                , iTransformMatrix.Inverse()
+            )
+            , iPolicy
+            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // No need to force mono.
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , dst_roi
+        )
+    );
 }
 
 void
@@ -142,9 +207,6 @@ FContext::TransformBezier(
     ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
     ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
     ULIS_ASSERT( iControlPoints.Size() == 4, "Bad control points size" );
-
-    // Fix Area not available here
-    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -190,23 +252,6 @@ FContext::TransformAffineMetrics(
 )
 {
     return  iSourceRect.TransformedAffine( iTransform );
-
-    // Old imp:
-    /*
-    FRectI trans = iSourceRect.TransformedAffine( iTransform );
-    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA ) {
-        float tx, ty, r, sx, sy, skx, sky;
-        iTransform.Matrix().Decompose( &tx, &ty, &r, &sx, &sy, &skx, &sky );
-        float angle = FMath::Max( abs( cos( r ) ), abs( sin( r ) ) );
-        float scale = FMath::Max( sx, sy );
-        int overflow = static_cast< int >( ceil( angle * scale ) );
-        trans.x -= overflow;
-        trans.y -= overflow;
-        trans.w += overflow * 2;
-        trans.h += overflow * 2;
-    }
-    return  trans;
-    */
 }
 
 //static
@@ -217,19 +262,6 @@ FContext::TransformPerspectiveMetrics(
 )
 {
     return  iSourceRect.TransformedPerspective( iTransform );
-    // Old imp:
-    /*
-    FRectI trans = iSourceRect.TransformedPerspective( iTransform );
-    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA  ) {
-        float tx, ty, r, sx, sy, skx, sky;
-        iTransform.Matrix().Decompose( &tx, &ty, &r, &sx, &sy, &skx, &sky );
-        trans.x -= static_cast< int >( ceil( sx ) );
-        trans.y -= static_cast< int >( ceil( sy ) );
-        trans.w += static_cast< int >( ceil( sx ) );
-        trans.h += static_cast< int >( ceil( sy ) );
-    }
-    return  trans;
-    */
 }
 
 //static
