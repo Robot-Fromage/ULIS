@@ -109,5 +109,26 @@ public:
 
 };
 
+/////////////////////////////////////////////////////
+// Schedulers
+#define ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( iName )      \
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
+    Schedule ## iName                                       \
+    , FDualBufferJobArgs                                    \
+    , FTransformArgs                                        \
+    , &Invoke ## iName ## < T >                             \
+    , nullptr                                               \
+    , nullptr                                               \
+)
+#define ULIS_DEFINE_TRANSFORM_COMMAND_SPECIALIZATION( iName )   \
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
+    Schedule ## iName                                           \
+    , FDualBufferJobArgs                                        \
+    , FTransformArgs                                            \
+    , &Invoke ## iName                                          \
+    , nullptr                                                   \
+    , nullptr                                                   \
+)
+
 ULIS_NAMESPACE_END
 

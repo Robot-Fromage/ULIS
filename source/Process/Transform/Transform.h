@@ -5,164 +5,57 @@
 *__________________
 * @file         Transform.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the transform entry point functions.
+* @brief        This file provides the declaration for the Transform API.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
-#include "Transform/Methods.h"
-#include "Math/Interpolation/Bezier.h"
-#include <vector>
+#include "Process/Transform/TransformArgs.h"
+
+// Include MEM Generic Implementation
+#include "Process/Transform/Generic/ResizeMT_Area_MEM_Generic.h"
+#include "Process/Transform/Generic/ResizeMT_Bicubic_MEM_Generic.h"
+#include "Process/Transform/Generic/ResizeMT_Bilinear_MEM_Generic.h"
+#include "Process/Transform/Generic/ResizeMT_NN_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformAffineMT_Bicubic_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformAffineMT_Bilinear_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformAffineMT_NN_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformAffineTiledMT_Bicubic_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformAffineTiledMT_Bilinear_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformAffineTiledMT_NN_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformBezier_Bicubic_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformBezier_Bilinear_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformBezier_NN_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformPerspectiveMT_Bicubic_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformPerspectiveMT_Bilinear_MEM_Generic.h"
+#include "Process/Transform/Generic/TransformPerspectiveMT_NN_MEM_Generic.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// TransformAffine
-ULIS_API void TransformAffine( FOldThreadPool*              iOldThreadPool
-                              , bool                      iBlocking
-                              , uint32                    iPerfIntent
-                              , const FHardwareMetrics&    iHostDeviceInfo
-                              , bool                      iCallCB
-                              , const FBlock*             iSource
-                              , FBlock*                   iDestination
-                              , const FRectI&              iSourceRect
-                              , const FTransformation2D&       iTransform
-                              , eResamplingMethod         iMethod );
 
 /////////////////////////////////////////////////////
-// TransformAffineTiled
-ULIS_API void TransformAffineTiled( FOldThreadPool*              iOldThreadPool
-                                   , bool                      iBlocking
-                                   , uint32                    iPerfIntent
-                                   , const FHardwareMetrics&    iHostDeviceInfo
-                                   , bool                      iCallCB
-                                   , const FBlock*             iSource
-                                   , FBlock*                   iDestination
-                                   , const FRectI&              iSourceRect
-                                   , const FRectI&              iDestRect
-                                   , const FTransformation2D&       iTransform
-                                   , eResamplingMethod         iMethod );
-
-/////////////////////////////////////////////////////
-// TransformPerspective
-ULIS_API void TransformPerspective( FOldThreadPool*              iOldThreadPool
-                                   , bool                      iBlocking
-                                   , uint32                    iPerfIntent
-                                   , const FHardwareMetrics&    iHostDeviceInfo
-                                   , bool                      iCallCB
-                                   , const FBlock*             iSource
-                                   , FBlock*                   iDestination
-                                   , const FRectI&              iSourceRect
-                                   , const FTransformation2D&       iTransform
-                                   , eResamplingMethod         iMethod );
-
-/////////////////////////////////////////////////////
-// TransformBezier
-ULIS_API void TransformBezier( FOldThreadPool*                                    iOldThreadPool
-                              , bool                                            iBlocking
-                              , uint32                                          iPerfIntent
-                              , const FHardwareMetrics&                          iHostDeviceInfo
-                              , bool                                            iCallCB
-                              , const FBlock*                                   iSource
-                              , FBlock*                                         iDestination
-                              , const FRectI&                                    iSourceRect
-                              , const std::vector< FCubicBezierControlPoint >&  iControlPoints
-                              , float                                           iThreshold
-                              , int                                             iPlotSize
-                              , eResamplingMethod                               iMethod );
-
-/////////////////////////////////////////////////////
-// Resize
-ULIS_API void Resize( FOldThreadPool*             iOldThreadPool
-                     , bool                     iBlocking
-                     , uint32                   iPerfIntent
-                     , const FHardwareMetrics&   iHostDeviceInfo
-                     , bool                     iCallCB
-                     , const FBlock*            iSource
-                     , FBlock*                  iDestination
-                     , const FRectI&             iSourceRect
-                     , const FVec2F&            iSize
-                     , const FVec2F&            iPos
-                     , eResamplingMethod        iMethod );
-
-/////////////////////////////////////////////////////
-// XResize
-ULIS_API FBlock* XResize( FOldThreadPool*             iOldThreadPool
-                         , bool                     iBlocking
-                         , uint32                   iPerfIntent
-                         , const FHardwareMetrics&   iHostDeviceInfo
-                         , bool                     iCallCB
-                         , const FBlock*            iSource
-                         , const FRectI&             iSourceRect
-                         , const FVec2F&            iSize
-                         , eResamplingMethod        iMethod );
-
-/////////////////////////////////////////////////////
-// XTransformAffine
-ULIS_API FBlock* XTransformAffine( FOldThreadPool*            iOldThreadPool
-                                  , bool                    iBlocking
-                                  , uint32                  iPerfIntent
-                                  , const FHardwareMetrics&  iHostDeviceInfo
-                                  , bool                    iCallCB
-                                  , const FBlock*           iSource
-                                  , const FRectI&            iSourceRect
-                                  , const FTransformation2D&     iTransform
-                                  , eResamplingMethod       iMethod );
-
-/////////////////////////////////////////////////////
-// XTransformAffineTiled
-ULIS_API FBlock* XTransformAffineTiled( FOldThreadPool*              iOldThreadPool
-                                       , bool                      iBlocking
-                                       , uint32                    iPerfIntent
-                                       , const FHardwareMetrics&    iHostDeviceInfo
-                                       , bool                      iCallCB
-                                       , const FBlock*             iSource
-                                       , const FRectI&              iSourceRect
-                                       , const FRectI&              iDestRect
-                                       , const FTransformation2D&       iTransform
-                                       , eResamplingMethod         iMethod );
-
-/////////////////////////////////////////////////////
-// XMakeTileableTransformedPattern
-ULIS_API FBlock* XMakeTileableTransformedPattern( FOldThreadPool*              iOldThreadPool
-                                                 , bool                      iBlocking
-                                                 , uint32                    iPerfIntent
-                                                 , const FHardwareMetrics&    iHostDeviceInfo
-                                                 , bool                      iCallCB
-                                                 , const FBlock*             iSource
-                                                 , const FRectI&              iSourceRect
-                                                 , const FTransformation2D&       iTransform
-                                                 , eResamplingMethod         iMethod );
-
-/////////////////////////////////////////////////////
-// XTransformPerspective
-ULIS_API FBlock* XTransformPerspective( FOldThreadPool*                   iOldThreadPool
-                                       , bool                           iBlocking
-                                       , uint32                         iPerfIntent
-                                       , const FHardwareMetrics&         iHostDeviceInfo
-                                       , bool                           iCallCB
-                                       , const FBlock*                  iSource
-                                       , const FRectI&                   iSourceRect
-                                       , const std::vector< FVec2F >&   iDestinationPoints
-                                       , eResamplingMethod              iMethod );
-
-/////////////////////////////////////////////////////
-// TransformAffineMetrics
-ULIS_API FRectI TransformAffineMetrics( const FRectI&          iSourceRect
-                                      , const FTransformation2D&   iTransform
-                                      , eResamplingMethod     iMethod );
-
-/////////////////////////////////////////////////////
-// TransformPerspectiveMetrics
-ULIS_API FRectI TransformPerspectiveMetrics( const FRectI&          iSourceRect
-                                           , const FTransformation2D&   iTransform
-                                           , eResamplingMethod     iMethod );
-
-/////////////////////////////////////////////////////
-// TransformBezierMetrics
-ULIS_API FRectI TransformBezierMetrics( const FRectI&                                    iSourceRect
-                                      , const std::vector< FCubicBezierControlPoint >&  iControlPoints
-                                      , eResamplingMethod                               iMethod );
-
+// Dispatchers
+ULIS_DECLARE_DISPATCHER( FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector  )
+ULIS_DECLARE_DISPATCHER( FDispatchedAlphaBlendSeparableInvocationSchedulerSelector          )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector    )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendNonSeparableInvocationSchedulerSelector            )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector       )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendSeparableInvocationSchedulerSelector               )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector            )
+ULIS_DECLARE_DISPATCHER( FDispatchedBlendMiscInvocationSchedulerSelector                    )
+ULIS_DECLARE_DISPATCHER( FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector       )
+ULIS_DECLARE_DISPATCHER( FDispatchedTiledBlendSeparableInvocationSchedulerSelector          )
+ULIS_DECLARE_DISPATCHER( FDispatchedTiledBlendMiscInvocationSchedulerSelector               )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedAlphaBlendSeparableSubpixelInvocationSchedulerSelector,   &ScheduleAlphaBlendMT_Separable_MEM_Generic_Subpixel< T >   )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedAlphaBlendSeparableInvocationSchedulerSelector,           &ScheduleAlphaBlendMT_Separable_MEM_Generic< T >            )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendNonSeparableSubpixelInvocationSchedulerSelector,     &ScheduleBlendMT_NonSeparable_MEM_Generic_Subpixel< T >     )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendNonSeparableInvocationSchedulerSelector,             &ScheduleBlendMT_NonSeparable_MEM_Generic< T >              )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableSubpixelInvocationSchedulerSelector,        &ScheduleBlendMT_Separable_MEM_Generic_Subpixel< T >        )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendSeparableInvocationSchedulerSelector,                &ScheduleBlendMT_Separable_MEM_Generic< T >                 )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendMiscSubpixelInvocationSchedulerSelector,             &ScheduleBlendMT_Misc_MEM_Generic_Subpixel< T >             )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBlendMiscInvocationSchedulerSelector,                     &ScheduleBlendMT_Misc_MEM_Generic< T >                      )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTiledBlendNonSeparableInvocationSchedulerSelector,        &ScheduleTiledBlendMT_NonSeparable_MEM_Generic< T >         )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTiledBlendSeparableInvocationSchedulerSelector,           &ScheduleTiledBlendMT_Separable_MEM_Generic< T >            )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTiledBlendMiscInvocationSchedulerSelector,                &ScheduleTiledBlendMT_Misc_MEM_Generic< T >                 )
 ULIS_NAMESPACE_END
 
