@@ -24,7 +24,7 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-TransformAffine(
+FContext::TransformAffine(
       const FBlock& iSource
     , FBlock& iDestination
     , const FRectI& iSourceRect
@@ -38,10 +38,26 @@ TransformAffine(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+
+    // Fix Area not available here
+    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
+
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_aim = TransformAffineMetrics( src_roi, iTransformMatrix );
+    const FRectI dst_roi = dst_aim & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent );
 }
 
 void
-TransformAffineTiled(
+FContext::TransformAffineTiled(
       const FBlock& iSource
     , FBlock& iDestination
     , const FRectI& iSourceRect
@@ -56,10 +72,25 @@ TransformAffineTiled(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+
+    // Fix Area not available here
+    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
+
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_roi = iDestinationRect.Sanitized() & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent );
 }
 
 void
-TransformPerspective(
+FContext::TransformPerspective(
       const FBlock& iSource
     , FBlock& iDestination
     , const FRectI& iSourceRect
@@ -73,10 +104,26 @@ TransformPerspective(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+
+    // Fix Area not available here
+    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
+
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_aim = TransformPerspectiveMetrics( src_roi, iTransformMatrix );
+    const FRectI dst_roi = dst_aim & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent );
 }
 
 void
-TransformBezier(
+FContext::TransformBezier(
       const FBlock& iSource
     , FBlock& iDestination
     , const TArray< FCubicBezierControlPoint >& iControlPoints
@@ -92,10 +139,30 @@ TransformBezier(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+    ULIS_ASSERT( iControlPoints.Size() == 4, "Bad control points size" );
+
+    // Fix Area not available here
+    iResamplingMethod = iResamplingMethod == eResamplingMethod::Resampling_Area ? eResamplingMethod::Resampling_Bilinear : iResamplingMethod;
+
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    FRectI dst_aim = TransformBezierMetrics( src_roi, iControlPoints );
+    int plotSize = FMath::Clamp( iPlotSize, 1ui32, 8ui32 );
+    dst_aim.w += plotSize;
+    dst_aim.h += plotSize;
+    const FRectI dst_roi = dst_aim & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent );
 }
 
 void
-Resize(
+FContext::Resize(
       const FBlock& iSource
     , FBlock& iDestination
     , const FRectI& iSourceRect
@@ -104,17 +171,20 @@ Resize(
     , eResamplingMethod iResamplingMethod
     , eBorderMode iBorderMode
     , const ISample& iBorderValue
+    , const FBlock* iOptionalSummedAreaTable
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
     , const FEvent* iWaitList
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
+    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
 }
 
 //static
 FRectI
-TransformAffineMetrics(
+FContext::TransformAffineMetrics(
       const FRectI& iSourceRect
     , const FMat3F& iTransform
 )
@@ -141,7 +211,7 @@ TransformAffineMetrics(
 
 //static
 FRectI
-TransformPerspectiveMetrics(
+FContext::TransformPerspectiveMetrics(
       const FRectI& iSourceRect
     , const FMat3F& iTransform
 )
@@ -164,7 +234,7 @@ TransformPerspectiveMetrics(
 
 //static
 FRectI
-TransformBezierMetrics(
+FContext::TransformBezierMetrics(
       const FRectI& iSourceRect
     , const TArray< FCubicBezierControlPoint >& iControlPoints
 )

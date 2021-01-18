@@ -718,6 +718,7 @@ public:
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FBlock* iOptionalSummedAreaTable = nullptr
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
