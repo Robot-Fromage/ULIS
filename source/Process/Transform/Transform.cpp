@@ -68,6 +68,122 @@ ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedResizeNNInvocationSc
         , &ScheduleResizeMT_NN_SSE_RGBA8
         , &ScheduleResizeMT_NN_MEM_Generic< uint8 > )
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedResizeNNInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TransformAffine Bicubic
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineBicubicInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformAffineMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformAffineMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformAffineMT_Bicubic_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineBicubicInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformAffine Bilinear
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineBilinearInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformAffineMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformAffineMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformAffineMT_Bilinear_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineBilinearInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformAffine NN
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineNNInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformAffineMT_NN_SSE_RGBA8
+        , &ScheduleTransformAffineMT_NN_SSE_RGBA8
+        , &ScheduleTransformAffineMT_NN_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineNNInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TransformAffineTiled Bicubic
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineTiledBicubicInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformAffineTiledMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformAffineTiledMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformAffineTiledMT_Bicubic_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineTiledBicubicInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformAffineTiled Bilinear
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineTiledBilinearInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformAffineTiledMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformAffineTiledMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformAffineTiledMT_Bilinear_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineTiledBilinearInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformAffineTiled NN
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineTiledNNInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformAffineTiledMT_NN_SSE_RGBA8
+        , &ScheduleTransformAffineTiledMT_NN_SSE_RGBA8
+        , &ScheduleTransformAffineTiledMT_NN_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformAffineTiledNNInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TransformBezier Bicubic
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformBezierBicubicInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformBezierMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformBezierMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformBezierMT_Bicubic_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformBezierBicubicInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformBezier Bilinear
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformBezierBilinearInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformBezierMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformBezierMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformBezierMT_Bilinear_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformBezierBilinearInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformBezier NN
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformBezierNNInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformBezierMT_NN_SSE_RGBA8
+        , &ScheduleTransformBezierMT_NN_SSE_RGBA8
+        , &ScheduleTransformBezierMT_NN_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformBezierNNInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// TransformPerspective Bicubic
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspectiveBicubicInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformPerspectiveMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformPerspectiveMT_Bicubic_SSE_RGBA8
+        , &ScheduleTransformPerspectiveMT_Bicubic_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspectiveBicubicInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformPerspective Bilinear
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspectiveBilinearInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformPerspectiveMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformPerspectiveMT_Bilinear_SSE_RGBA8
+        , &ScheduleTransformPerspectiveMT_Bilinear_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspectiveBilinearInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// TransformPerspective NN
+ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspectiveNNInvocationSchedulerSelector )
+    ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
+          &DispatchTestIsUnorderedRGBA8
+        , &ScheduleTransformPerspectiveMT_NN_SSE_RGBA8
+        , &ScheduleTransformPerspectiveMT_NN_SSE_RGBA8
+        , &ScheduleTransformPerspectiveMT_NN_MEM_Generic< uint8 > )
+ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspectiveNNInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
