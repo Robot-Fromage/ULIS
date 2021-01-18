@@ -93,20 +93,7 @@ InvokeResizeMT_Area_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const 
     }
 }
 
-void
-ResizeMT_Area_SSE_RGBA8( std::shared_ptr< const FResizeCommandArgs > iInfo ) {
-    const FResizeCommandArgs&  info        = *iInfo;
-    uint8*              dst         = info.destination->Bits();
-    const uint32         dst_bps     = info.destination->BytesPerScanLine();
-    const uint32         dst_decal_y = info.dst_roi.y;
-    const uint32         dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    Vec4i idt( 0, 1, 2, 3 );
-    idt.insert( info.source->FormatMetrics().AID, 4 );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.dst_roi.h
-                                   , InvokeResizeMT_Area_SSE_RGBA8
-                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, idt );
-}
+ULIS_DEFINE_RESIZE_COMMAND_SPECIALIZATION( ResizeMT_Area_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
 

@@ -129,7 +129,7 @@ public:
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     Schedule ## iName                                       \
     , FTransformJobArgs                                     \
-    , FTransformCommandArgs                                        \
+    , FTransformCommandArgs                                 \
     , &Invoke ## iName ## < T >                             \
     , nullptr                                               \
     , nullptr                                               \
@@ -138,7 +138,7 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
     Schedule ## iName                                           \
     , FTransformJobArgs                                         \
-    , FTransformCommandArgs                                            \
+    , FTransformCommandArgs                                     \
     , &Invoke ## iName                                          \
     , nullptr                                                   \
     , nullptr                                                   \
@@ -148,7 +148,7 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     Schedule ## iName                                       \
     , FTransformJobArgs                                     \
-    , FResizeCommandArgs                                           \
+    , FResizeCommandArgs                                    \
     , &Invoke ## iName ## < T >                             \
     , nullptr                                               \
     , nullptr                                               \
@@ -157,7 +157,7 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
     Schedule ## iName                                           \
     , FTransformJobArgs                                         \
-    , FResizeCommandArgs                                               \
+    , FResizeCommandArgs                                        \
     , &Invoke ## iName                                          \
     , nullptr                                                   \
     , nullptr                                                   \
