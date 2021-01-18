@@ -228,8 +228,7 @@ FContext::Resize(
       const FBlock& iSource
     , FBlock& iDestination
     , const FRectI& iSourceRect
-    , const FVec2F& iSize
-    , const FVec2F& iPos
+    , const FRectF& iDestinationRect
     , eResamplingMethod iResamplingMethod
     , eBorderMode iBorderMode
     , const ISample& iBorderValue
@@ -242,6 +241,45 @@ FContext::Resize(
 {
     ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
     ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+
+    // Sanitize geometry
+    const FRectF src_rect = iSource.Rect();
+    const FRectF dst_rect = iDestination.Rect();
+    const FRectF src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectF dst_roi = iDestinationRect.Sanitized() & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0.f )
+        return  FinishEventNo_OP( iEvent );
+
+    // Forward Arguments Baking
+    FVec2F inverseScale = src_roi.Size() / dst_roi.Size();
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->QueryScheduleResize( iResamplingMethod )
+            , new FResizeCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , iResamplingMethod
+                , iBorderMode
+                , iBorderValue.ToFormat( iDestination.Format() )
+                , inverseScale
+                , dst_roi.Position()
+                , nullptr // SAT
+            )
+            , iPolicy
+            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // No need to force mono.
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , dst_roi
+        )
+    );
 }
 
 //static
