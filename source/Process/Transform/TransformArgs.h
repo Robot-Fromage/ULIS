@@ -5,7 +5,7 @@
 *__________________
 * @file         TransformArgs.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the Transform and Resize Args structures.
+* @brief        This file provides the declaration for Transform and Resize Args.
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
