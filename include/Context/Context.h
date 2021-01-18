@@ -713,8 +713,7 @@ public:
           const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-        , const FVec2F& iSize = FVec2F( INT_MAX, INT_MAX )
-        , const FVec2F& iPos = FVec2F( 0.f, 0.f )
+        , const FRectF& iDestinationRect = FRectF( 0.f, 0.f, float( INT_MAX ), float( INT_MAX ) )
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
