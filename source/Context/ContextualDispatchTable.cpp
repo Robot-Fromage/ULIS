@@ -37,6 +37,11 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleFillPreserveAlpha(           TDispatcher< FDispatchedFillPreserveAlphaInvocationSchedulerSelector >          ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleRasterText(                  TDispatcher< FDispatchedRasterTextInvocationSchedulerSelector >                 ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleRasterTextAA(                TDispatcher< FDispatchedRasterTextAAInvocationSchedulerSelector >               ::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleTransformAffine(             nullptr )
+        , mScheduleTransformAffineTiled(        nullptr )
+        , mScheduleTransformPerspective(        nullptr )
+        , mScheduleTransformBezier(             nullptr )
+        , mScheduleResize(                      nullptr )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )
         , mArgConvBackwardBlendNonSeparable(    QueryDispatchedConvertFormatInvocation( eFormat::Format_RGBF, iFormat ) )
 {}

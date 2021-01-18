@@ -78,6 +78,11 @@ private:
     const fpCommandScheduler mScheduleFillPreserveAlpha;
     const fpCommandScheduler mScheduleRasterText;
     const fpCommandScheduler mScheduleRasterTextAA;
+    const fpCommandScheduler mScheduleTransformAffine;
+    const fpCommandScheduler mScheduleTransformAffineTiled;
+    const fpCommandScheduler mScheduleTransformPerspective;
+    const fpCommandScheduler mScheduleTransformBezier;
+    const fpCommandScheduler mScheduleResize;
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;
 };
