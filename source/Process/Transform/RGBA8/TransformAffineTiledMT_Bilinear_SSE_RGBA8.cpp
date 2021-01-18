@@ -18,7 +18,11 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo, const Vec4i iIDT ) {
+InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8(
+      const FTransformJobArgs* jargs
+    , const FTransformCommandArgs* cargs
+)
+{
     const FTransformCommandArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;

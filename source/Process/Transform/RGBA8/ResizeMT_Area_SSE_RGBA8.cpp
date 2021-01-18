@@ -18,7 +18,11 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeResizeMT_Area_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeCommandArgs > iInfo, const Vec4i iIDT ) {
+InvokeResizeMT_Area_SSE_RGBA8(
+      const FTransformJobArgs* jargs
+    , const FResizeCommandArgs* cargs
+)
+{
     const FResizeCommandArgs&  info    = *iInfo;
     const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
     const FFormatMetrics&  sat_fmt = info.optionalSAT->FormatMetrics();

@@ -18,7 +18,11 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformPerspectiveMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo ) {
+InvokeTransformPerspectiveMT_NN_SSE_RGBA8(
+      const FTransformJobArgs* jargs
+    , const FTransformCommandArgs* cargs
+)
+{
     const FTransformCommandArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
