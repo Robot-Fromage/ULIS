@@ -415,7 +415,7 @@ public:
         , FEvent* iEvent = nullptr
     );
 
-/*!
+    /*!
         Perform a fill operation in iBlock while preserving alpha.
         The color will change but the alpha will remain intact.
         iBlock is modified to receive the result of the operation.

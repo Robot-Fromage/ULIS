@@ -221,6 +221,9 @@ FContext::TransformBezier(
     // Check no-op
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent );
+
+    //TODO:
+    ULIS_ASSERT( false, "Todo" );
 }
 
 void
