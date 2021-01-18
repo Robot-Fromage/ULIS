@@ -209,6 +209,39 @@
 #define ULIS_COMPILED_WITH_FILESYSTEM_SUPPORT
 #endif // !ULIS_NO_SIMD_SUPPORT
 
+
+
+
+/////////////////////////////////////////////////////
+// Macros for features support
+#ifndef ULIS_FEATURE_NO_BLEND
+#define ULIS_FEATURE_BLEND_ENABLED
+#endif // !ULIS_FEATURE_NO_BLEND
+
+#ifndef ULIS_FEATURE_NO_CLEAR
+#define ULIS_FEATURE_CLEAR_ENABLED
+#endif // !ULIS_FEATURE_NO_CLEAR
+
+#ifndef ULIS_FEATURE_NO_CONV
+#define ULIS_FEATURE_CONV_ENABLED
+#endif // !ULIS_FEATURE_NO_CONV
+
+#ifndef ULIS_FEATURE_NO_COPY
+#define ULIS_FEATURE_COPY_ENABLED
+#endif // !ULIS_FEATURE_NO_COPY
+
+#ifndef ULIS_FEATURE_NO_FILL
+#define ULIS_FEATURE_FILL_ENABLED
+#endif // !ULIS_FEATURE_NO_FILL
+
+#ifndef ULIS_FEATURE_NO_TEXT
+#define ULIS_FEATURE_TEXT_ENABLED
+#endif // !ULIS_FEATURE_NO_TEXT
+
+#ifndef ULIS_FEATURE_NO_TRANSFORM
+#define ULIS_FEATURE_TRANSFORM_ENABLED
+#endif // !ULIS_FEATURE_NO_TRANSFORM
+
 /////////////////////////////////////////////////////
 // Erors
 //#pragma warning(disable : 4251)     // Shut down dll interface warnings.
