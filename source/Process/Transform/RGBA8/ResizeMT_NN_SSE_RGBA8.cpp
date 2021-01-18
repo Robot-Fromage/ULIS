@@ -18,8 +18,8 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeResizeMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
-    const FResizeArgs&  info    = *iInfo;
+InvokeResizeMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeCommandArgs > iInfo ) {
+    const FResizeCommandArgs&  info    = *iInfo;
     const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
     uint8*              dst     = iDst;
 
@@ -43,8 +43,8 @@ InvokeResizeMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FR
 }
 
 void
-ResizeMT_NN_SSE_RGBA8( std::shared_ptr< const FResizeArgs > iInfo ) {
-    const FResizeArgs&  info        = *iInfo;
+ResizeMT_NN_SSE_RGBA8( std::shared_ptr< const FResizeCommandArgs > iInfo ) {
+    const FResizeCommandArgs&  info        = *iInfo;
     uint8*              dst         = info.destination->Bits();
     const uint32         dst_bps     = info.destination->BytesPerScanLine();
     const uint32         dst_decal_y = info.dst_roi.y;

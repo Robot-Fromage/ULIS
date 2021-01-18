@@ -18,8 +18,8 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformAffineMT_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, const Vec4i iIDT ) {
-    const FTransformArgs&   info    = *iInfo;
+InvokeTransformAffineMT_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo, const Vec4i iIDT ) {
+    const FTransformCommandArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
 
@@ -81,8 +81,8 @@ InvokeTransformAffineMT_Bicubic_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared
 }
 
 void
-TransformAffineMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo ) {
-    const FTransformArgs&   info        = *iInfo;
+TransformAffineMT_Bicubic_SSE_RGBA8( std::shared_ptr< const FTransformCommandArgs > iInfo ) {
+    const FTransformCommandArgs&   info        = *iInfo;
     uint8*                  dst         = info.destination->Bits();
     const uint32             dst_bps     = info.destination->BytesPerScanLine();
     const uint32             dst_decal_y = info.dst_roi.y;

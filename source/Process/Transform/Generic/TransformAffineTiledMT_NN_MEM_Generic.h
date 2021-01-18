@@ -17,8 +17,8 @@
 
 ULIS_NAMESPACE_BEGIN
 template< typename T > void
-InvokeTransformAffineTiledMT_NN_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo ) {
-    const FTransformArgs&   info    = *iInfo;
+InvokeTransformAffineTiledMT_NN_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo ) {
+    const FTransformCommandArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
 
@@ -41,8 +41,8 @@ InvokeTransformAffineTiledMT_NN_MEM_Generic( uint8* iDst, int32 iLine, std::shar
 }
 
 template< typename T > void
-TransformAffineTiledMT_NN_MEM_Generic( std::shared_ptr< const FTransformArgs > iInfo ) {
-    const FTransformArgs&   info        = *iInfo;
+TransformAffineTiledMT_NN_MEM_Generic( std::shared_ptr< const FTransformCommandArgs > iInfo ) {
+    const FTransformCommandArgs&   info        = *iInfo;
     uint8*                  dst         = info.destination->Bits();
     const uint32             dst_bps     = info.destination->BytesPerScanLine();
     const uint32             dst_decal_y = info.dst_roi.y;

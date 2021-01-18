@@ -17,8 +17,8 @@
 
 ULIS_NAMESPACE_BEGIN
 template< typename T > void
-InvokeResizeMT_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeArgs > iInfo ) {
-    const FResizeArgs&  info    = *iInfo;
+InvokeResizeMT_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< const FResizeCommandArgs > iInfo ) {
+    const FResizeCommandArgs&  info    = *iInfo;
     const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
     uint8*              dst     = iDst;
 
@@ -65,8 +65,8 @@ InvokeResizeMT_Bilinear_MEM_Generic( uint8* iDst, int32 iLine, std::shared_ptr< 
 }
 
 template< typename T > void
-ResizeMT_Bilinear_MEM_Generic( std::shared_ptr< const FResizeArgs > iInfo ) {
-    const FResizeArgs&  info        = *iInfo;
+ResizeMT_Bilinear_MEM_Generic( std::shared_ptr< const FResizeCommandArgs > iInfo ) {
+    const FResizeCommandArgs&  info        = *iInfo;
     uint8*              dst         = info.destination->Bits();
     const uint32         dst_bps     = info.destination->BytesPerScanLine();
     const uint32         dst_decal_y = info.dst_roi.y;

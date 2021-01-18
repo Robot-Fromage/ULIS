@@ -18,8 +18,8 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformBezierMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
-    const FTransformArgs&   info    = *iInfo;
+InvokeTransformBezierMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
+    const FTransformCommandArgs&   info    = *iInfo;
     const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
     uint8*                  dst     = iDst;
     const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
@@ -40,8 +40,8 @@ InvokeTransformBezierMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr<
 }
 
 void
-TransformBezierMT_NN_SSE_RGBA8( std::shared_ptr< const FTransformArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
-    const FTransformArgs&   info        = *iInfo;
+TransformBezierMT_NN_SSE_RGBA8( std::shared_ptr< const FTransformCommandArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
+    const FTransformCommandArgs&   info        = *iInfo;
     uint8*                  dst         = info.destination->Bits();
     const uint32             dst_bps     = info.destination->BytesPerScanLine();
     const uint32             dst_decal_y = info.dst_roi.y;

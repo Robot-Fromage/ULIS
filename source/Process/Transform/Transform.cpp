@@ -54,8 +54,8 @@ void TransformAffine( FOldThreadPool*              iOldThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
-    FTransformArgs& commandArgsRef = *commandArgs;
+    std::shared_ptr< FTransformCommandArgs > commandArgs = std::make_shared< FTransformCommandArgs >();
+    FTransformCommandArgs& commandArgsRef = *commandArgs;
     commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
@@ -105,8 +105,8 @@ void TransformAffineTiled( FOldThreadPool*              iOldThreadPool
     if( dst_fit.Area() == 0 || src_fit.Area() == 0 )
         return;
 
-    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
-    FTransformArgs& commandArgsRef = *commandArgs;
+    std::shared_ptr< FTransformCommandArgs > commandArgs = std::make_shared< FTransformCommandArgs >();
+    FTransformCommandArgs& commandArgsRef = *commandArgs;
     commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
@@ -160,8 +160,8 @@ void TransformPerspective( FOldThreadPool*         iOldThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
-    FTransformArgs& commandArgsRef = *commandArgs;
+    std::shared_ptr< FTransformCommandArgs > commandArgs = std::make_shared< FTransformCommandArgs >();
+    FTransformCommandArgs& commandArgsRef = *commandArgs;
     commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
@@ -260,8 +260,8 @@ void TransformBezier( FOldThreadPool*                                      iOldT
         }
     }
 
-    std::shared_ptr< FTransformArgs > commandArgs = std::make_shared< FTransformArgs >();
-    FTransformArgs& commandArgsRef = *commandArgs;
+    std::shared_ptr< FTransformCommandArgs > commandArgs = std::make_shared< FTransformCommandArgs >();
+    FTransformCommandArgs& commandArgsRef = *commandArgs;
     commandArgsRef.pool             = iOldThreadPool;
     commandArgsRef.blocking         = iBlocking;
     commandArgsRef.hostDeviceInfo   = &iHostDeviceInfo;
@@ -327,8 +327,8 @@ void Resize( FOldThreadPool*             iOldThreadPool
     if( !dst_fit.Area() )
         return;
 
-    std::shared_ptr< FResizeArgs > commandArgs = std::make_shared< FResizeArgs >();
-    FResizeArgs& commandArgsRef = *commandArgs;
+    std::shared_ptr< FResizeCommandArgs > commandArgs = std::make_shared< FResizeCommandArgs >();
+    FResizeCommandArgs& commandArgsRef = *commandArgs;
     commandArgsRef.pool              = iOldThreadPool;
     commandArgsRef.blocking          = iBlocking;
     commandArgsRef.hostDeviceInfo    = &iHostDeviceInfo;

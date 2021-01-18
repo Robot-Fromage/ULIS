@@ -21,16 +21,16 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FTransformArgs
-class FTransformArgs final
+// FTransformCommandArgs
+class FTransformCommandArgs final
     : public FDualBufferCommandArgs
 {
 public:
-    ~FTransformArgs() override
+    ~FTransformCommandArgs() override
     {
     };
 
-    FTransformArgs(
+    FTransformCommandArgs(
           const FBlock& iSrc
         , FBlock& iDst
         , const FRectI& iSrcRect
@@ -62,16 +62,16 @@ public:
 };
 
 /////////////////////////////////////////////////////
-// FResizeArgs
-class FResizeArgs final
+// FResizeCommandArgs
+class FResizeCommandArgs final
     : public FDualBufferCommandArgs
 {
 public:
-    ~FResizeArgs() override
+    ~FResizeCommandArgs() override
     {
     };
 
-    FResizeArgs(
+    FResizeCommandArgs(
           const FBlock& iSrc
         , FBlock& iDst
         , const FRectI& iSrcRect
@@ -106,16 +106,30 @@ public:
     FVec2F shift;
     const FBlock* optionalSAT;
     bool tiled;
-
 };
+
+/////////////////////////////////////////////////////
+// FTransformJobArgs
+class FTransformJobArgs final
+    : public IJobArgs
+{
+public:
+
+    ~FTransformJobArgs() override {};
+
+    const uint8* ULIS_RESTRICT src;
+    uint8* ULIS_RESTRICT bdp;
+    uint32 line;
+};
+
 
 /////////////////////////////////////////////////////
 // Schedulers
 #define ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( iName )      \
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     Schedule ## iName                                       \
-    , FDualBufferJobArgs                                    \
-    , FTransformArgs                                        \
+    , FTransformJobArgs                                     \
+    , FTransformCommandArgs                                        \
     , &Invoke ## iName ## < T >                             \
     , nullptr                                               \
     , nullptr                                               \
@@ -123,8 +137,8 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
 #define ULIS_DEFINE_TRANSFORM_COMMAND_SPECIALIZATION( iName )   \
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
     Schedule ## iName                                           \
-    , FDualBufferJobArgs                                        \
-    , FTransformArgs                                            \
+    , FTransformJobArgs                                         \
+    , FTransformCommandArgs                                            \
     , &Invoke ## iName                                          \
     , nullptr                                                   \
     , nullptr                                                   \
@@ -133,8 +147,8 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
 #define ULIS_DEFINE_RESIZE_COMMAND_GENERIC( iName )         \
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     Schedule ## iName                                       \
-    , FDualBufferJobArgs                                    \
-    , FResizeArgs                                           \
+    , FTransformJobArgs                                     \
+    , FResizeCommandArgs                                           \
     , &Invoke ## iName ## < T >                             \
     , nullptr                                               \
     , nullptr                                               \
@@ -142,8 +156,8 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
 #define ULIS_DEFINE_RESIZE_COMMAND_SPECIALIZATION( iName )      \
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
     Schedule ## iName                                           \
-    , FDualBufferJobArgs                                        \
-    , FResizeArgs                                               \
+    , FTransformJobArgs                                         \
+    , FResizeCommandArgs                                               \
     , &Invoke ## iName                                          \
     , nullptr                                                   \
     , nullptr                                                   \
