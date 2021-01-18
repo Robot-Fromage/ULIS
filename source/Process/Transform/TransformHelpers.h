@@ -50,7 +50,7 @@ SampleBilinearSAT( uint8* iDst, const uint8* iCA, const uint8* iCB, const FForma
 
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- InterpCubic
-float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
+static float InterpCubic( float iA, float iB, float iC, float iD, float iT ) {
     float a = -iA / 2.0f + (3.0f*iB) / 2.0f - (3.0f*iC) / 2.0f + iD / 2.0f;
     float b = iA - (5.0f*iB) / 2.0f + 2.0f*iC - iD / 2.0f;
     float c = -iA / 2.0f + iC / 2.0f;
@@ -110,7 +110,7 @@ SampleBicubicV( uint8* iDst, const float* iA, const float* iB, const float* iC, 
 #ifdef ULIS_COMPILETIME_SSE_SUPPORT
 //--------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------- InterpCubic
-ULIS_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec4f iT ) {
+static ULIS_FORCEINLINE Vec4f InterpCubic( Vec4f iA, Vec4f iB, Vec4f iC, Vec4f iD, Vec4f iT ) {
     Vec4f a = -iA / 2.0f + (3.0f*iB) / 2.0f - (3.0f*iC) / 2.0f + iD / 2.0f;
     Vec4f b = iA - (5.0f*iB) / 2.0f + 2.0f*iC - iD / 2.0f;
     Vec4f c = -iA / 2.0f + iC / 2.0f;
