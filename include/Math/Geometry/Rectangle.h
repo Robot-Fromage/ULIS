@@ -54,6 +54,16 @@ struct TRectangle
         , h( iH )
     {}
 
+    /*! Construct the Rect from input Rect of any convertible type. */
+    template< typename U >
+    TRectangle< T >( const TRectangle< U >& iOther )
+        : x( static_cast< T >( iOther.x ) )
+        , y( static_cast< T >( iOther.y ) )
+        , w( static_cast< T >( iOther.w ) )
+        , h( static_cast< T >( iOther.h ) )
+    {}
+
+
     /*! Static named maker from input values. */
     static TRectangle< T > FromXYWH( T iX, T iY, T iW, T iH ) {
         return  TRectangle< T >( iX, iY, iW, iH );
