@@ -78,11 +78,23 @@ private:
     const fpCommandScheduler mScheduleFillPreserveAlpha;
     const fpCommandScheduler mScheduleRasterText;
     const fpCommandScheduler mScheduleRasterTextAA;
-    const fpCommandScheduler mScheduleTransformAffine;
-    const fpCommandScheduler mScheduleTransformAffineTiled;
-    const fpCommandScheduler mScheduleTransformPerspective;
-    const fpCommandScheduler mScheduleTransformBezier;
-    const fpCommandScheduler mScheduleResize;
+    const fpCommandScheduler mScheduleResizeArea;
+    const fpCommandScheduler mScheduleResizeBicubic;
+    const fpCommandScheduler mScheduleResizeBilinear;
+    const fpCommandScheduler mScheduleResizeNN;
+    const fpCommandScheduler mScheduleTransformAffineBicubic;
+    const fpCommandScheduler mScheduleTransformAffineBilinear;
+    const fpCommandScheduler mScheduleTransformAffineNN;
+    const fpCommandScheduler mScheduleTransformAffineTiledBicubic;
+    const fpCommandScheduler mScheduleTransformAffineTiledBilinear;
+    const fpCommandScheduler mScheduleTransformAffineTiledNN;
+    const fpCommandScheduler mScheduleTransformBezierBicubic;
+    const fpCommandScheduler mScheduleTransformBezierBilinear;
+    const fpCommandScheduler mScheduleTransformBezierNN;
+    const fpCommandScheduler mScheduleTransformPerspectiveBicubic;
+    const fpCommandScheduler mScheduleTransformPerspectiveBilinear;
+    const fpCommandScheduler mScheduleTransformPerspectiveNN;
+
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;
 };
