@@ -119,6 +119,24 @@ TransformAffineMetrics(
     , const FMat3F& iTransform
 )
 {
+    return  iSourceRect.TransformedAffine( iTransform );
+
+    // Old imp:
+    /*
+    FRectI trans = iSourceRect.TransformedAffine( iTransform );
+    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA ) {
+        float tx, ty, r, sx, sy, skx, sky;
+        iTransform.Matrix().Decompose( &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        float angle = FMath::Max( abs( cos( r ) ), abs( sin( r ) ) );
+        float scale = FMath::Max( sx, sy );
+        int overflow = static_cast< int >( ceil( angle * scale ) );
+        trans.x -= overflow;
+        trans.y -= overflow;
+        trans.w += overflow * 2;
+        trans.h += overflow * 2;
+    }
+    return  trans;
+    */
 }
 
 //static
@@ -128,6 +146,20 @@ TransformPerspectiveMetrics(
     , const FMat3F& iTransform
 )
 {
+    return  iSourceRect.TransformedPerspective( iTransform );
+    // Old imp:
+    /*
+    FRectI trans = iSourceRect.TransformedPerspective( iTransform );
+    if( iMethod == INTERP_BILINEAR || iMethod == INTERP_BICUBIC || iMethod == INTERP_AREA  ) {
+        float tx, ty, r, sx, sy, skx, sky;
+        iTransform.Matrix().Decompose( &tx, &ty, &r, &sx, &sy, &skx, &sky );
+        trans.x -= static_cast< int >( ceil( sx ) );
+        trans.y -= static_cast< int >( ceil( sy ) );
+        trans.w += static_cast< int >( ceil( sx ) );
+        trans.h += static_cast< int >( ceil( sy ) );
+    }
+    return  trans;
+    */
 }
 
 //static
@@ -137,6 +169,24 @@ TransformBezierMetrics(
     , const TArray< FCubicBezierControlPoint >& iControlPoints
 )
 {
+    ULIS_ASSERT( iControlPoints.Size() == 4, "Bad control points size" );
+    return  FRectI::FromMinMax(
+          static_cast< int >( FMath::VMin( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
+                                         , iControlPoints[1].point.x, iControlPoints[1].ctrlCW.x, iControlPoints[1].ctrlCCW.x
+                                         , iControlPoints[2].point.x, iControlPoints[2].ctrlCW.x, iControlPoints[2].ctrlCCW.x
+                                         , iControlPoints[3].point.x, iControlPoints[3].ctrlCW.x, iControlPoints[3].ctrlCCW.x ) )
+        , static_cast< int >( FMath::VMin( iControlPoints[0].point.y, iControlPoints[0].ctrlCW.y, iControlPoints[0].ctrlCCW.y
+                                         , iControlPoints[1].point.y, iControlPoints[1].ctrlCW.y, iControlPoints[1].ctrlCCW.y
+                                         , iControlPoints[2].point.y, iControlPoints[2].ctrlCW.y, iControlPoints[2].ctrlCCW.y
+                                         , iControlPoints[3].point.y, iControlPoints[3].ctrlCW.y, iControlPoints[3].ctrlCCW.y ) )
+        , static_cast< int >( FMath::VMax( iControlPoints[0].point.x, iControlPoints[0].ctrlCW.x, iControlPoints[0].ctrlCCW.x
+                                         , iControlPoints[1].point.x, iControlPoints[1].ctrlCW.x, iControlPoints[1].ctrlCCW.x
+                                         , iControlPoints[2].point.x, iControlPoints[2].ctrlCW.x, iControlPoints[2].ctrlCCW.x
+                                         , iControlPoints[3].point.x, iControlPoints[3].ctrlCW.x, iControlPoints[3].ctrlCCW.x ) )
+        , static_cast< int >( FMath::VMax( iControlPoints[0].point.y, iControlPoints[0].ctrlCW.y, iControlPoints[0].ctrlCCW.y
+                                         , iControlPoints[1].point.y, iControlPoints[1].ctrlCW.y, iControlPoints[1].ctrlCCW.y
+                                         , iControlPoints[2].point.y, iControlPoints[2].ctrlCW.y, iControlPoints[2].ctrlCCW.y
+                                         , iControlPoints[3].point.y, iControlPoints[3].ctrlCW.y, iControlPoints[3].ctrlCCW.y ) ) );
 }
 
 ULIS_NAMESPACE_END
