@@ -77,13 +77,6 @@ ULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4
 
 template struct ULIS_API TVector2< float >;
 template struct ULIS_API TVector2< int >;
-template struct ULIS_API TVector2< double >;
-template struct ULIS_API TVector2< uint8 >;
-template struct ULIS_API TVector2< uint16 >;
-template struct ULIS_API TVector2< uint32 >;
-template struct ULIS_API TVector2< uint64 >;
-template struct ULIS_API TVector2< int32 >;
-template struct ULIS_API TVector2< int64 >;
 template struct ULIS_API TVector3< float >;
 template struct ULIS_API TVector3< int >;
 template struct ULIS_API TVector4< float >;

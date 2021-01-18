@@ -16,16 +16,16 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Blend PRNG for pseudo random modes like Dissolve
 /*! Reset the PRNG Seed for pseudo random Blend modes like Dissolve. */
-ULIS_API void ResetBlendPRNGSeed();
+void ResetBlendPRNGSeed();
 
 /*! Set the PRNG Seed for pseudo random Blend modes like Dissolve. */
-ULIS_API void SetBlendPRNGSeed( uint32 iVal );
+void SetBlendPRNGSeed( uint32 iVal );
 
 /*! Get the PRNG Seed for pseudo random Blend modes like Dissolve. */
-ULIS_API uint32 GetBlendPRNGSeed();
+uint32 GetBlendPRNGSeed();
 
 /*! Generate a pseudo random number for Blend modes like Dissolve. */
-ULIS_API uint32 GenerateBlendPRNG();
+uint32 GenerateBlendPRNG();
 
 ULIS_NAMESPACE_END
 
