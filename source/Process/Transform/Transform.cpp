@@ -6,7 +6,7 @@
 * @file         Transform.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the transform entry point functions.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Transform/Transform.h"
