@@ -530,6 +530,251 @@ public:
         , const FMat3F& iTransform = FMat3F()
     );
 
+/////////////////////////////////////////////////////
+// Transform
+    /*!
+        Perform an affine transform operation using iSource as input. The result
+        is written in the iDestination block.
+
+        An affine transform is a linear transformation such as a translation,
+        scale, rotation, skew, or any combination of these.
+
+        You can use TransformAffineMetrics() in order to compute the geometry of
+        the transformed output before actually scheduling the operation.
+
+        You can specify a sub-rectangular area in the source input with the
+        iSourceRect input parameter.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    void
+    TransformAffine(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FMat3F& iTransformMatrix = FMat3F()
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform an affine transform operation using iSource as input. The result
+        is written in the iDestination block.
+
+        An affine transform is a linear transformation such as a translation,
+        scale, rotation, skew, or any combination of these.
+
+        You can use TransformAffineMetrics() in order to compute the geometry of
+        the transformed output before actually scheduling the operation.
+
+        You can specify a sub-rectangular area in the source input with the
+        iSourceRect input parameter.
+
+        This tiled version allows to cover the area specified by iDestinationRect
+        by repeating the transformed source in a pattern inside the destination.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    void
+    TransformAffineTiled(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FMat3F& iTransformMatrix = FMat3F()
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform an homography or perspective transform operation using iSource
+        as input. The result is written in the iDestination block.
+
+        An homography is a distortion transform that doesn't necessarilly preserve
+        features such as parallel lines.
+
+        You can use TransformPerspectiveMetrics() in order to compute the geometry of
+        the transformed output before actually scheduling the operation.
+
+        You can specify a sub-rectangular area in the source input with the
+        iSourceRect input parameter.
+
+        \warning The input iTransformMatrix should be built from the
+        FMat3F::MakeHomography() method, an homography matrix differs from an
+        affine transform matrix, despite both being stored in a 3x3 matrix.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    void
+    TransformPerspective(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FMat3F& iTransformMatrix = FMat3F()
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a bezier transform operation using iSource as input. The result
+        is written in the iDestination block.
+
+        A bezier transform is a distortion of an input source covering a 2D bezier
+        surface shape. Think about a flag.
+
+        You can use TransformBezierMetrics() in order to compute the geometry of
+        the transformed output before actually scheduling the operation.
+
+        You can specify a sub-rectangular area in the source input with the
+        iSourceRect input parameter.
+
+        \warning The input iControlPoints array should have size 4 and control
+        points define the corners of a bezier path with four control points,
+        each one of them using two tangents control points. Two adjacent
+        control points define a cubic bezier curve.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    void
+    TransformBezier(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const TArray< FCubicBezierControlPoint >& iControlPoints
+        , float iThreshold = 1.f
+        , uint32 iPlotSize = 1
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a resize operation using iSource as input. The result
+        is written in the iDestination block.
+
+        A resize is simply a scale of an input source.
+
+        You can specify a sub-rectangular area in the source input with the
+        iSourceRect input parameter.
+
+        It is advised to use Resize() instead of TransformAffine() when you only
+        need a rescale, because the implementation can be made faster by relying
+        on this assumption. This is also the only method that can handle the
+        more advanced resampling methods, such as eResamplingMethod::Resampling_Area.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    void
+    Resize(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2F& iSize = FVec2F( INT_MAX, INT_MAX )
+        , const FVec2F& iPos = FVec2F( 0.f, 0.f )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Collect metrics before a TransformAffine() operation.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    static
+    FRectI
+    TransformAffineMetrics(
+          const FRectI& iSourceRect
+        , const FMat3F& iTransform
+    );
+
+    /*!
+        Collect metrics before a TransformPerspective() operation.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    static
+    FRectI
+    TransformPerspectiveMetrics(
+          const FRectI& iSourceRect
+        , const FMat3F& iTransform
+    );
+
+    /*!
+        Collect metrics before a TransformBezier() operation.
+
+        \sa TransformAffine()
+        \sa TransformPerspective()
+        \sa TransformBezier()
+        \sa TransformAffineMetrics()
+        \sa TransformPerspectiveMetrics()
+        \sa TransformBezierMetrics()
+    */
+    static
+    FRectI
+    TransformBezierMetrics(
+          const FRectI& iSourceRect
+        , const TArray< FCubicBezierControlPoint >&  iControlPoints
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FHardwareMetrics mHardwareMetrics;
