@@ -11,7 +11,7 @@
 */
 #include "Transform/Transform.h"
 #include "Transform/TransformArgs.h"
-#include "Transform/TransformDispatch.ipp"
+#include "Transform/TransformDispatch.h"
 #include "Clear/Clear.h"
 #include "Image/Block.h"
 #include "Math/Interpolation/Bezier.h"

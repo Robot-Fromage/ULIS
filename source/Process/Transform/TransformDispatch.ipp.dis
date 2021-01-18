@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         TransformDispatch.ipp
+* @file         TransformDispatch.h
 * @author       Clement Berthaud
 * @brief        This file provides the dispatch mechanism for Transform invocations.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
@@ -16,41 +16,41 @@
 #include "Dispatch/OldDispatch.h"
 
 // Include MEM Generic Implementation
-#include "Transform/Generic/ResizeMT_NN_MEM_Generic.ipp"
-#include "Transform/Generic/ResizeMT_Bilinear_MEM_Generic.ipp"
-#include "Transform/Generic/ResizeMT_Bicubic_MEM_Generic.ipp"
-#include "Transform/Generic/ResizeMT_Area_MEM_Generic.ipp"
-#include "Transform/Generic/TransformAffineMT_NN_MEM_Generic.ipp"
-#include "Transform/Generic/TransformAffineMT_Bilinear_MEM_Generic.ipp"
-#include "Transform/Generic/TransformAffineMT_Bicubic_MEM_Generic.ipp"
-#include "Transform/Generic/TransformAffineTiledMT_NN_MEM_Generic.ipp"
-#include "Transform/Generic/TransformAffineTiledMT_Bilinear_MEM_Generic.ipp"
-#include "Transform/Generic/TransformAffineTiledMT_Bicubic_MEM_Generic.ipp"
-#include "Transform/Generic/TransformPerspectiveMT_NN_MEM_Generic.ipp"
-#include "Transform/Generic/TransformPerspectiveMT_Bilinear_MEM_Generic.ipp"
-#include "Transform/Generic/TransformPerspectiveMT_Bicubic_MEM_Generic.ipp"
-#include "Transform/Generic/TransformBezier_NN_MEM_Generic.ipp"
-#include "Transform/Generic/TransformBezier_Bilinear_MEM_Generic.ipp"
-#include "Transform/Generic/TransformBezier_Bicubic_MEM_Generic.ipp"
+#include "Transform/Generic/ResizeMT_NN_MEM_Generic.h"
+#include "Transform/Generic/ResizeMT_Bilinear_MEM_Generic.h"
+#include "Transform/Generic/ResizeMT_Bicubic_MEM_Generic.h"
+#include "Transform/Generic/ResizeMT_Area_MEM_Generic.h"
+#include "Transform/Generic/TransformAffineMT_NN_MEM_Generic.h"
+#include "Transform/Generic/TransformAffineMT_Bilinear_MEM_Generic.h"
+#include "Transform/Generic/TransformAffineMT_Bicubic_MEM_Generic.h"
+#include "Transform/Generic/TransformAffineTiledMT_NN_MEM_Generic.h"
+#include "Transform/Generic/TransformAffineTiledMT_Bilinear_MEM_Generic.h"
+#include "Transform/Generic/TransformAffineTiledMT_Bicubic_MEM_Generic.h"
+#include "Transform/Generic/TransformPerspectiveMT_NN_MEM_Generic.h"
+#include "Transform/Generic/TransformPerspectiveMT_Bilinear_MEM_Generic.h"
+#include "Transform/Generic/TransformPerspectiveMT_Bicubic_MEM_Generic.h"
+#include "Transform/Generic/TransformBezier_NN_MEM_Generic.h"
+#include "Transform/Generic/TransformBezier_Bilinear_MEM_Generic.h"
+#include "Transform/Generic/TransformBezier_Bicubic_MEM_Generic.h"
 
 // Include SSE RGBA8 Implementation
 #ifdef ULIS_COMPILETIME_SSE_SUPPORT
-#include "Transform/RGBA8/ResizeMT_NN_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/ResizeMT_Bilinear_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/ResizeMT_Bicubic_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/ResizeMT_Area_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformAffineMT_NN_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformAffineMT_Bicubic_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformAffineTiledMT_NN_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformAffineTiledMT_Bilinear_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformAffineTiledMT_Bicubic_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformPerspectiveMT_NN_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformPerspectiveMT_Bilinear_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformPerspectiveMT_Bicubic_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformBezier_NN_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformBezier_Bilinear_SSE_RGBA8.ipp"
-#include "Transform/RGBA8/TransformBezier_Bicubic_SSE_RGBA8.ipp"
+#include "Transform/RGBA8/ResizeMT_NN_SSE_RGBA8.h"
+#include "Transform/RGBA8/ResizeMT_Bilinear_SSE_RGBA8.h"
+#include "Transform/RGBA8/ResizeMT_Bicubic_SSE_RGBA8.h"
+#include "Transform/RGBA8/ResizeMT_Area_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformAffineMT_NN_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformAffineMT_Bicubic_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformAffineTiledMT_NN_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformAffineTiledMT_Bilinear_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformAffineTiledMT_Bicubic_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformPerspectiveMT_NN_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformPerspectiveMT_Bilinear_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformPerspectiveMT_Bicubic_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformBezier_NN_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformBezier_Bilinear_SSE_RGBA8.h"
+#include "Transform/RGBA8/TransformBezier_Bicubic_SSE_RGBA8.h"
 #endif
 
 ULIS_NAMESPACE_BEGIN

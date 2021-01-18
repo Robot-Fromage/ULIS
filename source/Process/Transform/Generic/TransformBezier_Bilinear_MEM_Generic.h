@@ -2,7 +2,7 @@
 /*
 *   ULIS
 *__________________
-* @file         TransformBezier_Bilinear_MEM_Generic.ipp
+* @file         TransformBezier_Bilinear_MEM_Generic.h
 * @author       Clement Berthaud
 * @brief        This file provides the implementation for a Transform specialization as described in the title.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
@@ -10,12 +10,9 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Process/Transform/TransformArgs.h"
+#include "Process/Transform/TransformHelpers.h"
 #include "Image/Block.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
-#include "Transform/TransformArgs.h"
-#include "Transform/TransformHelpers.h"
-#include "Thread/ThreadPool.h"
 
 ULIS_NAMESPACE_BEGIN
 template< typename T > void

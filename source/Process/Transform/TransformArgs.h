@@ -130,5 +130,24 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
     , nullptr                                                   \
 )
 
+#define ULIS_DEFINE_RESIZE_COMMAND_GENERIC( iName )         \
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
+    Schedule ## iName                                       \
+    , FDualBufferJobArgs                                    \
+    , FResizeArgs                                           \
+    , &Invoke ## iName ## < T >                             \
+    , nullptr                                               \
+    , nullptr                                               \
+)
+#define ULIS_DEFINE_RESIZE_COMMAND_SPECIALIZATION( iName )      \
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
+    Schedule ## iName                                           \
+    , FDualBufferJobArgs                                        \
+    , FResizeArgs                                               \
+    , &Invoke ## iName                                          \
+    , nullptr                                                   \
+    , nullptr                                                   \
+)
+
 ULIS_NAMESPACE_END
 
