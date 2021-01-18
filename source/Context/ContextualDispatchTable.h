@@ -59,6 +59,61 @@ public:
         }
     }
 
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleResize( eResamplingMethod iResamplingMethod ) const
+    {
+        switch( iResamplingMethod ) {
+            case Resampling_Area            : return  mScheduleResizeArea;
+            case Resampling_Bicubic         : return  mScheduleResizeBicubic;
+            case Resampling_Bilinear        : return  mScheduleResizeBilinear;
+            case Resampling_NearestNeighbour: return  mScheduleResizeNN;
+            default: return  nullptr;
+        }
+    }
+
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleTransformAffine( eResamplingMethod iResamplingMethod ) const
+    {
+        switch( iResamplingMethod ) {
+            case Resampling_Area            : return  mScheduleTransformAffineBilinear;
+            case Resampling_Bicubic         : return  mScheduleTransformAffineBicubic;
+            case Resampling_Bilinear        : return  mScheduleTransformAffineBilinear;
+            case Resampling_NearestNeighbour: return  mScheduleTransformAffineNN;
+            default: return  nullptr;
+        }
+    }
+
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleTransformAffineTiled( eResamplingMethod iResamplingMethod ) const
+    {
+        switch( iResamplingMethod ) {
+            case Resampling_Area            : return  mScheduleTransformAffineTiledBilinear;
+            case Resampling_Bicubic         : return  mScheduleTransformAffineTiledBicubic;
+            case Resampling_Bilinear        : return  mScheduleTransformAffineTiledBilinear;
+            case Resampling_NearestNeighbour: return  mScheduleTransformAffineTiledNN;
+            default: return  nullptr;
+        }
+    }
+
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleTransformBezier( eResamplingMethod iResamplingMethod ) const
+    {
+        switch( iResamplingMethod ) {
+            case Resampling_Area            : return  mScheduleTransformBezierBilinear;
+            case Resampling_Bicubic         : return  mScheduleTransformBezierBicubic;
+            case Resampling_Bilinear        : return  mScheduleTransformBezierBilinear;
+            case Resampling_NearestNeighbour: return  mScheduleTransformBezierNN;
+            default: return  nullptr;
+        }
+    }
+
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleTransformPerspective( eResamplingMethod iResamplingMethod ) const
+    {
+        switch( iResamplingMethod ) {
+            case Resampling_Area            : return  mScheduleTransformPerspectiveBilinear;
+            case Resampling_Bicubic         : return  mScheduleTransformPerspectiveBicubic;
+            case Resampling_Bilinear        : return  mScheduleTransformPerspectiveBilinear;
+            case Resampling_NearestNeighbour: return  mScheduleTransformPerspectiveNN;
+            default: return  nullptr;
+        }
+    }
+
 private:
     const fpCommandScheduler mScheduleBlendSeparable;
     const fpCommandScheduler mScheduleBlendNonSeparable;
