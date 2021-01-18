@@ -15,22 +15,12 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo, const Vec4i iIDT );
+InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8(
+      const FTransformJobArgs* jargs
+    , const FTransformCommandArgs* cargs
+);
 
-void
-TransformAffineTiledMT_Bilinear_SSE_RGBA8( std::shared_ptr< const FTransformCommandArgs > iInfo ) {
-    const FTransformCommandArgs&   info        = *iInfo;
-    uint8*                  dst         = info.destination->Bits();
-    const uint32             dst_bps     = info.destination->BytesPerScanLine();
-    const uint32             dst_decal_y = info.dst_roi.y;
-    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    Vec4i idt( 0, 1, 2, 3 );
-    idt.insert( info.source->FormatMetrics().AID, 4 );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.dst_roi.h
-                                   , InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8
-                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, idt );
-}
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleTransformAffineTiledMT_Bilinear_SSE_RGBA8 );
 
 ULIS_NAMESPACE_END
 

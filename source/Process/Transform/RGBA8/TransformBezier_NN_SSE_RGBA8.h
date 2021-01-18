@@ -15,20 +15,12 @@
 
 ULIS_NAMESPACE_BEGIN
 void
-InvokeTransformBezierMT_NN_SSE_RGBA8( uint8* iDst, int32 iLine, std::shared_ptr< const FTransformCommandArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask );
+InvokeTransformBezierMT_NN_SSE_RGBA8(
+      const FTransformJobArgs* jargs
+    , const FTransformCommandArgs* cargs
+);
 
-void
-TransformBezierMT_NN_SSE_RGBA8( std::shared_ptr< const FTransformCommandArgs > iInfo, std::shared_ptr< const FBlock > iField, std::shared_ptr< const FBlock > iMask ) {
-    const FTransformCommandArgs&   info        = *iInfo;
-    uint8*                  dst         = info.destination->Bits();
-    const uint32             dst_bps     = info.destination->BytesPerScanLine();
-    const uint32             dst_decal_y = info.dst_roi.y;
-    const uint32             dst_decal_x = info.dst_roi.x * info.destination->BytesPerPixel();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( info.perfIntent, info.pool, info.blocking
-                                   , info.dst_roi.h
-                                   , InvokeTransformBezierMT_NN_SSE_RGBA8
-                                   , dst + ( ( dst_decal_y + pLINE ) * dst_bps ) + dst_decal_x, pLINE, iInfo, iField, iMask );
-}
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleTransformBezierMT_NN_SSE_RGBA8 );
 
 ULIS_NAMESPACE_END
 
