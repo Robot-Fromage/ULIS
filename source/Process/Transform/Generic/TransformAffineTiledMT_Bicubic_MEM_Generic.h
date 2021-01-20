@@ -22,13 +22,12 @@ InvokeTransformAffineTiledMT_Bicubic_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec3F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
-    FVec2F point_in_src( info.inverseTransform * point_in_dst );
-    FVec2F src_dx( info.inverseTransform * FVec3F( 1.f, 0.f, 0.f ) );
+    FVec3F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line, 1.f );
+    FVec2F point_in_src( cargs->inverseMatrix * point_in_dst );
+    FVec2F src_dx( cargs->inverseMatrix * FVec3F( 1.f, 0.f, 0.f ) );
 
     uint8* p00 = new uint8[ fmt.BPP * 4 ];      uint8* p01 = new uint8[ fmt.BPP * 4 ];
     uint8* p10 = p00 + fmt.BPP;                 uint8* p11 = p01 + fmt.BPP;
@@ -43,25 +42,25 @@ InvokeTransformAffineTiledMT_Bicubic_MEM_Generic(
     float* hh2 = new float[ fmt.SPP * 4 ];
     float* hh3 = new float[ fmt.SPP * 4 ];
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const int   src_x   = static_cast< int >( floor( point_in_src.x ) );
         const int   src_y   = static_cast< int >( floor( point_in_src.y ) );
         const float tx      = point_in_src.x - src_x;
         const float ty      = point_in_src.y - src_y;
 
-        const int xm1 = FMath::PyModulo( src_x - 1, info.src_roi.w );
-        const int xp0 = FMath::PyModulo( src_x    , info.src_roi.w );
-        const int xp1 = FMath::PyModulo( src_x + 1, info.src_roi.w );
-        const int xp2 = FMath::PyModulo( src_x + 2, info.src_roi.w );
-        const int ym1 = FMath::PyModulo( src_y - 1, info.src_roi.h );
-        const int yp0 = FMath::PyModulo( src_y    , info.src_roi.h );
-        const int yp1 = FMath::PyModulo( src_y + 1, info.src_roi.h );
-        const int yp2 = FMath::PyModulo( src_y + 2, info.src_roi.h );
-        #define GETPIXEL( _C, _X, _Y ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); }
+        const int xm1 = FMath::PyModulo( src_x - 1, cargs->srcRect.w );
+        const int xp0 = FMath::PyModulo( src_x    , cargs->srcRect.w );
+        const int xp1 = FMath::PyModulo( src_x + 1, cargs->srcRect.w );
+        const int xp2 = FMath::PyModulo( src_x + 2, cargs->srcRect.w );
+        const int ym1 = FMath::PyModulo( src_y - 1, cargs->srcRect.h );
+        const int yp0 = FMath::PyModulo( src_y    , cargs->srcRect.h );
+        const int yp1 = FMath::PyModulo( src_y + 1, cargs->srcRect.h );
+        const int yp2 = FMath::PyModulo( src_y + 2, cargs->srcRect.h );
+        #define GETPIXEL( _C, _X, _Y ) { memcpy( _C, cargs->src.PixelBits( _X, _Y ), fmt.BPP ); }
         GETPIXEL( p00, xm1,     ym1 );  GETPIXEL( p01, xm1,     yp0 );  GETPIXEL( p02, xm1,     yp1 );  GETPIXEL( p03, xm1,     yp2 );
         GETPIXEL( p10, xp0,     ym1 );  GETPIXEL( p11, xp0,     yp0 );  GETPIXEL( p12, xp0,     yp1 );  GETPIXEL( p13, xp0,     yp2 );
         GETPIXEL( p20, xp1,     ym1 );  GETPIXEL( p21, xp1,     yp0 );  GETPIXEL( p22, xp1,     yp1 );  GETPIXEL( p23, xp1,     yp2 );
