@@ -9,6 +9,8 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#ifdef ULIS_FEATURE_GPU_ENABLED
+
 #include "Image/Texture.h"
 #include "Image/Texture_Private.h"
 
@@ -109,4 +111,6 @@ FTexture::OnCleanup( const FOnCleanupData& iOnCleanup )
 }
 
 ULIS_NAMESPACE_END
+
+#endif //ULIS_FEATURE_GPU_ENABLED
 

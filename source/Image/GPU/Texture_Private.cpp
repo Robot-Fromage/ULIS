@@ -9,7 +9,9 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Image/Texture_Private.h"
+#ifdef ULIS_FEATURE_GPU_ENABLED
+
+#include "Image/GPU/Texture_Private.h"
 
 std::string gKernel_Clear =
 #include "Kernel/OpenCL/Clear.cl"
@@ -142,4 +144,6 @@ FTexture_Private::OnCleanup( const FOnCleanupData& iOnCleanup )
 }
 
 ULIS_NAMESPACE_END
+
+#endif // ULIS_FEATURE_GPU_ENABLED
 

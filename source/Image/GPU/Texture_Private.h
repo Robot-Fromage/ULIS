@@ -3,60 +3,34 @@
 /*
 *   ULIS
 *__________________
-* @file         Texture.h
+* @file         Texture_Private.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FTexture class.
+* @brief        This file provides the declaration for the FTexture_Private class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#ifdef ULIS_FEATURE_GPU_ENABLED
+
 #pragma once
 #include "Core/Core.h"
 #include "Core/Callback.h"
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"
+#include "Image/Texture.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include <CL/cl.hpp>
 
 ULIS_NAMESPACE_BEGIN
-class FTexture;
-class FTexture_Private;
 /////////////////////////////////////////////////////
-/// @class      FTexture
-/// @brief      The FTexture class provides a mean of storing and manipulating
-///             digital images on the GPU in various formats.
-/// @details    FTexture is the way to manipulate images on GPU with ULIS.
-///
-///             The texture has a format which specifies the type, memory layout,
-///             color model, and other informations about the image.
-///             The underlying data is dependant on the GPU backend, but is most
-///             likely stored in GPU VRAM.
-///
-///             The FTexture class is very lightweight, the memory load is in the
-///             data it points to in the VRAM, and the class never performs any
-///             kind of heavy operations. It differs from FBlock because of that.
-///
-///             Copy, wether deep or shallow, is explicitely forbidden, If you
-///             need to copy image data, you can use the explicit Copy functions
-///             that ULIS provides.
-///
-///             FTexture objects can be edited using an FContext instance, it
-///             also supports uploading a of an FBlock into its bulk.
-///             FTexture API does not allow implicit or explicit sharing of the
-///             underlying data accross multiples instances.
-///
-///             You can also provide custom callbacks to signal when the texture
-///             is dirty, for example use it to download a small rect of the
-///             image to a CPU texture when triggered.
-///
-///             It is perfectly fine to create FTexture objects on the stack,
-///             But you can also allocate textures dynamically.
-class ULIS_API FTexture final
-    : public IHasFormat
-    , public IHasColorSpace
+/// @class      FTexture_Private
+/// @brief      The FTexture_Private class provides the actual implementation of
+///             FTexture using the pimpl idiom.
+class FTexture_Private final
 {
 public:
     /*! Destroy the texture and invoke the cleanup callback. */
-    ~FTexture();
+    ~FTexture_Private();
 
     /*!
     Construct a texture with input size and format.
@@ -67,13 +41,12 @@ public:
     \warning The \a iWidth and \a iHeight parameters should be greater than
     zero. A block doesn't own nor manage lifetime of its color-space.
     */
-    FTexture(
+    FTexture_Private(
           uint16 iWidth
         , uint16 iHeight
-        , eFormat iFormat
-        , const FColorSpace* iColorSpace = nullptr
-        , const FOnInvalidTexture& iOnInvalid = FOnInvalidTexture()
-        , const FOnCleanupData& iOnCleanup = FOnCleanupData()
+        , const FOnInvalidTexture& iOnInvalid
+        , const FOnCleanupData& iOnCleanup
+        , FTexture& iParent
     );
 
     /*!
@@ -85,7 +58,7 @@ public:
     If you need to make a deep copy of the image data, use the explicit Copy or
     XCopy functions that ULIS provides.
     */
-    FTexture( const FTexture& ) = delete;
+    FTexture_Private( const FTexture_Private& ) = delete;
 
     /*!
     Explicitely disabled copy assignment operator.
@@ -96,7 +69,7 @@ public:
     If you need to make a deep copy of the image data, use the explicit Copy or
     XCopy functions that ULIS provides.
     */
-    FTexture& operator=( const FTexture& ) = delete;
+    FTexture_Private& operator=( const FTexture_Private& ) = delete;
 
     /*!
     Return the width of the block.
@@ -170,7 +143,8 @@ public:
 
     In the case of many successive calls to dirty with different small
     geometries, it can be more efficient to just disable them first and call it
-    only once later with the union of all invalid rects.
+    only once later with the union of all invalid rects, or use the array
+    version of the Dirty function.
     */
     void Dirty( const FRectI& iRect, bool iCallOnInvalid = true ) const;
 
@@ -198,8 +172,17 @@ public:
     void OnCleanup( const FOnCleanupData& iOnCleanup );
 
 private:
-    FTexture_Private* d;
+    uint16 mWidth; ///< The width of the block.
+    uint16 mHeight; ///< Height of the block.
+    uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.
+    uint64 mBytesTotal; ///< Cached number of bytes for the whole buffer.
+    FOnInvalidTexture mOnInvalid; ///< The callback for when the block is destroyed.
+    FOnCleanupData mOnCleanup; ///< The callback for when the block is dirty.
+    FTexture& mParent; ///< The parent interface, that displays the Format and Colorspace APIs.
+    cl::Buffer mBitmap; ///< Assuming OpenCL 1.2 buffer mapped in device memory.
 };
 
 ULIS_NAMESPACE_END
+
+#endif // ULIS_FEATURE_GPU_ENABLED
 
