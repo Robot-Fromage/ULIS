@@ -22,23 +22,22 @@ InvokeResizeMT_NN_MEM_Generic(
     , const FResizeCommandArgs* cargs
 )
 {
-    const FResizeCommandArgs&  info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
-    uint8*              dst     = iDst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
-    FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
-    FVec2F src_dx( info.inverseScale * FVec2F( 1.f, 0.f ) );
+    FVec2F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line );
+    FVec2F point_in_src( cargs->inverseScale * ( point_in_dst - cargs->shift ) + FVec2F( cargs->srcRect.x, cargs->srcRect.y ) );
+    FVec2F src_dx( cargs->inverseScale * FVec2F( 1.f, 0.f ) );
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         int src_x = static_cast< int >( point_in_src.x );
         int src_y = static_cast< int >( point_in_src.y );
         if( src_x >= minx && src_y >= miny && src_x < maxx && src_y < maxy )
-            memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
+            memcpy( dst, cargs->src.PixelBits( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;
         point_in_src += src_dx;
