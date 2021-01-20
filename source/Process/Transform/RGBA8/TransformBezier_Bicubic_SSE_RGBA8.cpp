@@ -23,13 +23,13 @@ InvokeTransformBezierMT_Bicubic_SSE_RGBA8(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );
-    const int rangex = info.src_roi.w - 1;
-    const int rangey = info.src_roi.h - 1;
+    /*
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( jargs->line ) );
+    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( jargs->line ) );
+    const int rangex = cargs->srcRect.w - 1;
+    const int rangey = cargs->srcRect.h - 1;
 
     Vec4f p00, p10, p20, p30;
     Vec4f p01, p11, p21, p31;
@@ -38,11 +38,11 @@ InvokeTransformBezierMT_Bicubic_SSE_RGBA8(
     Vec4f hh0, hh1, hh2, hh3;
     Vec4f res, alp;
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         if( *mask & 0xFF ) {
             float srcxf = field[0] * rangex;
             float srcyf = field[1] * rangey;
@@ -54,7 +54,7 @@ InvokeTransformBezierMT_Bicubic_SSE_RGBA8(
             #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
             #define GETPIXEL( _C, _X, _Y )                                                                                                                      \
                 if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                    const uint8* pptr = info.source->PixelBits( _X, _Y );                                                                                        \
+                    const uint8* pptr = cargs->src.PixelBits( _X, _Y );                                                                                        \
                     Vec4f _ch = LOAD( pptr );                                                                                                                   \
                     Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
                     _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
@@ -87,6 +87,7 @@ InvokeTransformBezierMT_Bicubic_SSE_RGBA8(
         field += 2;
         ++mask;
     }
+    */
 }
 
 ULIS_DEFINE_TRANSFORM_COMMAND_SPECIALIZATION( TransformBezierMT_Bicubic_SSE_RGBA8 )
