@@ -23,27 +23,26 @@ InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec3F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
-    FVec2F point_in_src( info.inverseTransform * point_in_dst );
-    FVec2F src_dx( info.inverseTransform * FVec3F( 1.f, 0.f, 0.f ) );
+    FVec3F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line, 1.f );
+    FVec2F point_in_src( cargs->inverseMatrix * point_in_dst );
+    FVec2F src_dx( cargs->inverseMatrix * FVec3F( 1.f, 0.f, 0.f ) );
 
     Vec4f c00, c10, c11, c01, hh0, hh1, res, alp;
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
-        const float modx = FMath::PyModulo( point_in_src.x, static_cast< float >( info.src_roi.w ) );
-        const float mody = FMath::PyModulo( point_in_src.y, static_cast< float >( info.src_roi.h ) );
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
+        const float modx = FMath::PyModulo( point_in_src.x, static_cast< float >( cargs->srcRect.w ) );
+        const float mody = FMath::PyModulo( point_in_src.y, static_cast< float >( cargs->srcRect.h ) );
         const int   left    = static_cast< int >( modx );
         const int   top     = static_cast< int >( mody );
-        const int   right   = ( left + 1 ) % info.src_roi.w;
-        const int   bot     = ( top  + 1 ) % info.src_roi.h;
+        const int   right   = ( left + 1 ) % cargs->srcRect.w;
+        const int   bot     = ( top  + 1 ) % cargs->srcRect.h;
         const Vec4f tx      = modx - left;
         const Vec4f ux      = 1.f - tx;
         const Vec4f ty      = mody - top;
@@ -52,7 +51,7 @@ InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8(
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define TEMP( _C, _X, _Y )                                                                                                                          \
             {                                                                                                                                               \
-                const uint8* pptr = info.source->PixelBits( _X, _Y );                                                                                        \
+                const uint8* pptr = cargs->src.PixelBits( _X, _Y );                                                                                        \
                 Vec4f _ch = LOAD( pptr );                                                                                                                   \
                 Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
                 _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
