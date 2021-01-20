@@ -863,7 +863,7 @@ public:
     */
     static
     bool
-    ClipboardHasImageMetrics();
+    ClipboardHasImage();
 
 private:
     FCommandQueue& mCommandQueue;

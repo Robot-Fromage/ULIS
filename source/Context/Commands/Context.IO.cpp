@@ -74,7 +74,7 @@ FContext::SaveToClipboard(
 
 //static
 bool
-FContext::ClipboardHasImageMetrics()
+FContext::ClipboardHasImage()
 {
     return  false;
 }
