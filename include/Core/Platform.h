@@ -211,6 +211,11 @@
 
 /////////////////////////////////////////////////////
 // Macros for features support
+#define ULIS_FEATURE_NO_GPU
+#ifndef ULIS_FEATURE_NO_GPU
+#define ULIS_FEATURE_GPU_ENABLED
+#endif // !ULIS_FEATURE_NO_GPU
+
 #ifndef ULIS_FEATURE_NO_BLEND
 #define ULIS_FEATURE_BLEND_ENABLED
 #endif // !ULIS_FEATURE_NO_BLEND
@@ -238,6 +243,10 @@
 #ifndef ULIS_FEATURE_NO_TRANSFORM
 #define ULIS_FEATURE_TRANSFORM_ENABLED
 #endif // !ULIS_FEATURE_NO_TRANSFORM
+
+#ifndef ULIS_FEATURE_NO_IO
+#define ULIS_FEATURE_IO_ENABLED
+#endif // !ULIS_FEATURE_NO_IO
 
 /////////////////////////////////////////////////////
 // Erors
