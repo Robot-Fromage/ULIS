@@ -22,22 +22,21 @@ InvokeTransformPerspectiveMT_NN_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );
+    FVec2F pointInDst( static_cast< float >( cargs->dstRect.x ), static_cast< float >( cargs->dstRect.y + jargs->line ) );
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
-        FVec2F pointInSrc = info.inverseTransform.Project( pointInDst );
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
+        FVec2F pointInSrc = cargs->inverseMatrix.ApplyHomography( pointInDst );
         int src_x = static_cast< int >( pointInSrc.x );
         int src_y = static_cast< int >( pointInSrc.y );
         if( src_x >= minx && src_y >= miny && src_x < maxx && src_y < maxy )
-            memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
+            memcpy( dst, cargs->src.PixelBits( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;
         pointInDst.x += 1;
