@@ -23,21 +23,20 @@ InvokeResizeMT_Bilinear_SSE_RGBA8(
     , const FResizeCommandArgs* cargs
 )
 {
-    const FResizeCommandArgs&  info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
-    uint8*              dst     = iDst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
-    FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
-    FVec2F src_dx( info.inverseScale * FVec2F( 1.f, 0.f ) );
+    FVec2F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line );
+    FVec2F point_in_src( cargs->inverseScale * ( point_in_dst - cargs->shift ) + FVec2F( cargs->srcRect.x, cargs->srcRect.y ) );
+    FVec2F src_dx( cargs->inverseScale * FVec2F( 1.f, 0.f ) );
 
     Vec4f c00, c10, c11, c01, hh0, hh1, res, alp;
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const int   left    = static_cast< int >( floor( point_in_src.x ) );
         const int   top     = static_cast< int >( floor( point_in_src.y ) );
         const int   right   = left + 1;
@@ -50,7 +49,7 @@ InvokeResizeMT_Bilinear_SSE_RGBA8(
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define TEMP( _C, _X, _Y )                                                                                                                          \
             if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                const uint8* pptr = info.source->PixelBits( _X, _Y );                                                                                        \
+                const uint8* pptr = cargs->src.PixelBits( _X, _Y );                                                                                        \
                 Vec4f _ch = LOAD( pptr );                                                                                                                   \
                 Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
                 _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
