@@ -122,17 +122,90 @@ public:
     uint32 line;
 };
 
+/////////////////////////////////////////////////////
+// Builders
+static
+void
+BuildTransformJob_Scanlines(
+      const FTransformCommandArgs* iCargs
+    , const int64 iNumJobs
+    , const int64 iNumTasksPerJob
+    , const int64 iIndex
+    , FTransformJobArgs& oJargs
+)
+{
+    const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
+    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+    uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
+    const uint32 src_bps                     = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
+    const uint32 dst_bps                     = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
+    const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
+    const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
+    oJargs.src                              = nullptr;
+    oJargs.dst                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;
+    oJargs.line                             = static_cast< uint32 >( iIndex );
+}
+
+static
+void
+BuildTransformJob_Chunks(
+      const FTransformCommandArgs* iCargs
+    , const int64 iSize
+    , const int64 iCount
+    , const int64 iOffset
+    , const int64 iIndex
+    , FTransformJobArgs& oJargs
+)
+{
+    ULIS_ASSERT( false, "Chunk Scheduling not available for Transform" );
+}
+
+static
+void
+BuildResizeJob_Scanlines(
+      const FResizeCommandArgs* iCargs
+    , const int64 iNumJobs
+    , const int64 iNumTasksPerJob
+    , const int64 iIndex
+    , FTransformJobArgs& oJargs
+)
+{
+    const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
+    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+    uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
+    const uint32 src_bps                     = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
+    const uint32 dst_bps                     = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
+    const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
+    const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
+    oJargs.src                              = nullptr;
+    oJargs.dst                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;
+    oJargs.line                             = static_cast< uint32 >( iIndex );
+}
+
+static
+void
+BuildResizeJob_Chunks(
+      const FResizeCommandArgs* iCargs
+    , const int64 iSize
+    , const int64 iCount
+    , const int64 iOffset
+    , const int64 iIndex
+    , FTransformJobArgs& oJargs
+)
+{
+    ULIS_ASSERT( false, "Chunk Scheduling not available for Resize" );
+}
 
 /////////////////////////////////////////////////////
 // Schedulers
-#define ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( iName )      \
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
-    Schedule ## iName                                       \
-    , FTransformJobArgs                                     \
-    , FTransformCommandArgs                                 \
-    , &Invoke ## iName ## < T >                             \
-    , nullptr                                               \
-    , nullptr                                               \
+#define ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( iName )          \
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(      \
+    Schedule ## iName                                           \
+    , FTransformJobArgs                                         \
+    , FTransformCommandArgs                                     \
+    , &Invoke ## iName ## < T >                                 \
+    , &BuildTransformJob_Scanlines                              \
+    , &BuildTransformJob_Chunks                                 \
 )
 #define ULIS_DEFINE_TRANSFORM_COMMAND_SPECIALIZATION( iName )   \
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
@@ -140,8 +213,8 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
     , FTransformJobArgs                                         \
     , FTransformCommandArgs                                     \
     , &Invoke ## iName                                          \
-    , nullptr                                                   \
-    , nullptr                                                   \
+    , &BuildTransformJob_Scanlines                              \
+    , &BuildTransformJob_Chunks                                 \
 )
 
 #define ULIS_DEFINE_RESIZE_COMMAND_GENERIC( iName )         \
@@ -150,17 +223,17 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     , FTransformJobArgs                                     \
     , FResizeCommandArgs                                    \
     , &Invoke ## iName ## < T >                             \
-    , nullptr                                               \
-    , nullptr                                               \
+    , &BuildResizeJob_Scanlines                             \
+    , &BuildResizeJob_Chunks                                \
 )
-#define ULIS_DEFINE_RESIZE_COMMAND_SPECIALIZATION( iName )      \
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(              \
-    Schedule ## iName                                           \
-    , FTransformJobArgs                                         \
-    , FResizeCommandArgs                                        \
-    , &Invoke ## iName                                          \
-    , nullptr                                                   \
-    , nullptr                                                   \
+#define ULIS_DEFINE_RESIZE_COMMAND_SPECIALIZATION( iName )  \
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(          \
+    Schedule ## iName                                       \
+    , FTransformJobArgs                                     \
+    , FResizeCommandArgs                                    \
+    , &Invoke ## iName                                      \
+    , &BuildResizeJob_Scanlines                             \
+    , &BuildResizeJob_Chunks                                \
 )
 
 ULIS_NAMESPACE_END
