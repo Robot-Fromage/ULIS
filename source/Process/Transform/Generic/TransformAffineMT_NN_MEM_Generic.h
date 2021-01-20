@@ -23,7 +23,7 @@ InvokeTransformAffineMT_NN_MEM_Generic(
 )
 {
     uint8 bytesPerPixel = cargs->dst.BytesPerPixel();
-    uint8* ULIS_RESTRICT dst = jargs->bdp;
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
     FVec3F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line, 1.f );
     FVec2F point_in_src( cargs->inverseMatrix * point_in_dst );
