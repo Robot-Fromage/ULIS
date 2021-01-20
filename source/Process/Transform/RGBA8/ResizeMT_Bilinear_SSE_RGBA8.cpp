@@ -25,6 +25,7 @@ InvokeResizeMT_Bilinear_SSE_RGBA8(
 {
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     uint8* ULIS_RESTRICT dst = jargs->dst;
+    Vec4i _idt( fmt.IDT[0], fmt.IDT[1], fmt.IDT[2], fmt.IDT[3] );
 
     FVec2F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line );
     FVec2F point_in_src( cargs->inverseScale * ( point_in_dst - cargs->shift ) + FVec2F( cargs->srcRect.x, cargs->srcRect.y ) );
@@ -52,7 +53,7 @@ InvokeResizeMT_Bilinear_SSE_RGBA8(
                 const uint8* pptr = cargs->src.PixelBits( _X, _Y );                                                                                        \
                 Vec4f _ch = LOAD( pptr );                                                                                                                   \
                 Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
-                _C = lookup8( iIDT, ( _ch * _al ) / 255.f, _al );                                                                                           \
+                _C = lookup8( _idt, ( _ch * _al ) / 255.f, _al );                                                                                           \
             } else {                                                                                                                                        \
                 _C = _mm_setzero_ps();                                                                                                                      \
             }
