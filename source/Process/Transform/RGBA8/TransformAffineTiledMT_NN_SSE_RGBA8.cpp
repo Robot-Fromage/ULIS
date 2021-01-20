@@ -23,22 +23,21 @@ InvokeTransformAffineTiledMT_NN_SSE_RGBA8(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec3F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine, 1.f );
-    FVec2F point_in_src( info.inverseTransform * point_in_dst );
-    FVec2F src_dx( info.inverseTransform * FVec3F( 1.f, 0.f, 0.f ) );
+    FVec3F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line, 1.f );
+    FVec2F point_in_src( cargs->inverseMatrix * point_in_dst );
+    FVec2F src_dx( cargs->inverseMatrix * FVec3F( 1.f, 0.f, 0.f ) );
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
-        int src_x = FMath::PyModulo( static_cast< int >( point_in_src.x ), info.src_roi.w );
-        int src_y = FMath::PyModulo( static_cast< int >( point_in_src.y ), info.src_roi.h );
-        memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
+        int src_x = FMath::PyModulo( static_cast< int >( point_in_src.x ), cargs->srcRect.w );
+        int src_y = FMath::PyModulo( static_cast< int >( point_in_src.y ), cargs->srcRect.h );
+        memcpy( dst, cargs->src.PixelBits( src_x, src_y ), fmt.BPP );
 
         dst += fmt.BPP;
         point_in_src += src_dx;
