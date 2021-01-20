@@ -22,13 +22,12 @@ InvokeTransformBezierMT_Bicubic_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );
-    const int rangex = info.src_roi.w - 1;
-    const int rangey = info.src_roi.h - 1;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    const float* field = reinterpret_cast< const float* >( iField->ScanlineBits( jargs->line ) );
+    const uint8* mask  = reinterpret_cast< const uint8* >( iMask->ScanlineBits( jargs->line ) );
+    const int rangex = cargs->srcRect.w - 1;
+    const int rangey = cargs->srcRect.h - 1;
 
     uint8* p00 = new uint8[ fmt.BPP * 4 ];      uint8* p01 = new uint8[ fmt.BPP * 4 ];
     uint8* p10 = p00 + fmt.BPP;                 uint8* p11 = p01 + fmt.BPP;
@@ -42,11 +41,11 @@ InvokeTransformBezierMT_Bicubic_MEM_Generic(
     float* hh1 = new float[ fmt.SPP * 4 ];
     float* hh2 = new float[ fmt.SPP * 4 ];
     float* hh3 = new float[ fmt.SPP * 4 ];
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         if( *mask & 0xFF ) {
             float srcxf = field[0] * rangex;
             float srcyf = field[1] * rangey;
@@ -55,7 +54,7 @@ InvokeTransformBezierMT_Bicubic_MEM_Generic(
             const float tx      = srcxf - src_x;
             const float ty      = srcyf - src_y;
 
-            #define GETPIXEL( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
+            #define GETPIXEL( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, cargs->src.PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
             GETPIXEL( p00, src_x - 1, src_y - 1 );  GETPIXEL( p01, src_x - 1, src_y + 0 );  GETPIXEL( p02, src_x - 1, src_y + 1 );  GETPIXEL( p03, src_x - 1, src_y + 2 );
             GETPIXEL( p10, src_x + 0, src_y - 1 );  GETPIXEL( p11, src_x + 0, src_y + 0 );  GETPIXEL( p12, src_x + 0, src_y + 1 );  GETPIXEL( p13, src_x + 0, src_y + 2 );
             GETPIXEL( p20, src_x + 1, src_y - 1 );  GETPIXEL( p21, src_x + 1, src_y + 0 );  GETPIXEL( p22, src_x + 1, src_y + 1 );  GETPIXEL( p23, src_x + 1, src_y + 2 );
