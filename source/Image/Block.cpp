@@ -66,8 +66,8 @@ FBlock::FBlock(
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
 {
-    ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
-    ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
+    //ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    //ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mBytesPerScanline = mWidth * FormatMetrics().BPP;
     mBytesTotal = mHeight * mBytesPerScanline;
 }

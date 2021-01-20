@@ -78,7 +78,7 @@ public:
     FBlock(
           uint16 iWidth
         , uint16 iHeight
-        , eFormat iFormat
+        , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
         , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
         , const FOnCleanupData& iOnCleanup = FOnCleanupData( &OnCleanup_FreeMemory )
@@ -103,10 +103,10 @@ public:
     zero. A block doesn't own nor manage lifetime of its color-space.
     */
     FBlock(
-          uint8* iData
-        , uint16 iWidth
-        , uint16 iHeight
-        , eFormat iFormat
+          uint8* iData = nullptr
+        , uint16 iWidth = 0
+        , uint16 iHeight = 0
+        , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
         , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
         , const FOnCleanupData& iOnCleanup = FOnCleanupData()

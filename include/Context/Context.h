@@ -775,6 +775,96 @@ public:
         , const TArray< FCubicBezierControlPoint >& iControlPoints
     );
 
+/////////////////////////////////////////////////////
+// IO
+    /*!
+        Perform a load operation into the input ioBlock. The result of the load
+        is written in the ioBlock.
+
+        The internal size and formats of ioBlock will be changed to match that
+        of the file. The method might reallocate the internal data of the
+        ioBlock asynchronously, but the ioBlock reference itself is not
+        invalidated. It is only safe to access the ioBlock fields after the
+        command has actually completed, you can ensure that with a Fence, a
+        Finish, a Wait on the associated FEvent, or with an FEvent callback.
+
+        If the internals are invalidated, the cleanup function of the internal
+        data will be called and could destroy the already present memory so make
+        sure it is not referenced elsewhere.
+    */
+    void
+    LoadFromFile(
+          FBlock& ioBlock
+        , const std::string& iPath
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a save operation of the input iBlock at the specified path.
+        iQuality is only used for jpeg files and is beetween 0 and 100
+    */
+    void
+    SaveToFile(
+          const FBlock& iBlock
+        , const std::string& iPath
+        , eFileFormat iFileFormat = eFileFormat::FileFormat_png
+        , int iQuality = 100
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a load operation into the input ioBlock. The result of the load
+        is written in the ioBlock.
+
+        The internal size and formats of ioBlock will be changed to match that
+        of the clipboard. The method might reallocate the internal data of the
+        ioBlock asynchronously, but the ioBlock reference itself is not
+        invalidated. It is only safe to access the ioBlock fields after the
+        command has actually completed, you can ensure that with a Fence, a
+        Finish, a Wait on the associated FEvent, or with an FEvent callback.
+
+        If the internals are invalidated, the cleanup function of the internal
+        data will be called and could destroy the already present memory so make
+        sure it is not referenced elsewhere.
+
+        \warning This feature is only available on windows at the moment.
+    */
+    void
+    LoadFromClipboard(
+          FBlock& ioBlock
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a store operation of the input iBlock into the clipboard.
+
+        \warning This feature is only available on windows at the moment.
+    */
+    void
+    SaveToFile(
+          const FBlock& iBlock
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Collect metrics before a LoadFromClipboard call
+    */
+    static
+    bool
+    ClipboardHasImageMetrics();
+
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;

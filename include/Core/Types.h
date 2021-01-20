@@ -649,5 +649,23 @@ static const char* kwMipsLayout[] =
     , "MipsOnly"
 };
 
+/////////////////////////////////////////////////////
+// eImageFormat
+enum eFileFormat {
+      FileFormat_png
+    , FileFormat_bmp
+    , FileFormat_tga
+    , FileFormat_jpg
+    , FileFormat_hdr
+};
+
+static const char* kwImageFormat[] = {
+      "png"
+    , "bmp"
+    , "tga"
+    , "jpg"
+    , "hdr"
+};
+
 ULIS_NAMESPACE_END
 
