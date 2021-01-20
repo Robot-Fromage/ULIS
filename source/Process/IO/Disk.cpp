@@ -9,81 +9,56 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "IO/Disk.h"
-#include "System/Device.h"
-#include "String/Utils.h"
+#include "Process/IO/Disk.h"
 #include "Image/Block.h"
-#include "Conv/Conv.h"
 
-// STD
 #include <fstream>
 
-// STB
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image.h>
 #include <stb_image_write.h>
 
-// LCMS
-#include "lcms2.h"
-
-// CPPFS
-#include <cppfs/fs.h>
-#include <cppfs/FileHandle.h>
-#include <cppfs/FilePath.h>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 ULIS_NAMESPACE_BEGIN
-FBlock*
-XLoadFromFile( FOldThreadPool*             iOldThreadPool
-             , bool                     iBlocking
-             , uint32                   iPerfIntent
-             , const FHardwareMetrics&   iHostDeviceInfo
-             , bool                     iCallCB
-             , const std::string&       iPath
-             , eFormat                  iDesiredFormat )
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
+void
+InvokeLoadFromFile_MEM_Generic(
+      const FSimpleBufferJobArgs* jargs
+    , const FDiskIOCommandArgs* cargs
+)
 {
-    // Assertions
-    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
-    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    fs::path path( cargs->path );
+    if( ( !( fs::exists( path ) ) ) || ( !( fs::is_regular_file( path ) ) ) )
+       return;
 
-    cppfs::FileHandle   fh = cppfs::fs::open( iPath );
-
-    if( ( !fh.exists() ) || ( !fh.isFile() ) )
-        return  nullptr;
-
-    std::ifstream file( iPath.c_str(), std::ios::binary | std::ios::ate );
+    std::ifstream file( cargs->path.c_str(), std::ios::binary | std::ios::ate );
     std::streamsize size = file.tellg();
     file.seekg( 0, std::ios::beg );
-    std::vector<char> buffer(size);
+    std::vector<char> buffer( size );
     if( !file.read( buffer.data(), size ) )
-        return  nullptr;
+        return;
 
     eType type = Type_uint8;
-    type = stbi_is_16_bit_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )  ? Type_uint16 : type;
-    type = stbi_is_hdr_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) )     ? Type_ufloat : type;
-
-    int desiredChannels = STBI_default;
-    eColorModel desiredModel = static_cast< eColorModel >( ULIS_R_MODEL( iDesiredFormat ) );
-    bool needgrey   = desiredModel == CM_GREY;
-    bool needrgb    = desiredModel == CM_RGB;
-    bool needalpha  = ULIS_R_ALPHA( iDesiredFormat );
-    if( needgrey )  desiredChannels = needalpha ? 2 : 1;
-    if( needrgb )   desiredChannels = needalpha ? 4 : 3;
+    if( stbi_is_16_bit_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) ) )
+        type = Type_uint16;
+    else if( stbi_is_hdr_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) ) )
+        type = Type_ufloat;
 
     uint8* data = nullptr;
     int width, height, channels, depth;
     width = height = channels = depth = 1;
     bool floating;
     switch( type ) {
-        case Type_uint8:    data = (uint8*)stbi_load(       iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 1;    floating = false;   break;
-        case Type_uint16:   data = (uint8*)stbi_load_16(    iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 2;    floating = false;   break;
-        case Type_ufloat:   data = (uint8*)stbi_loadf(      iPath.c_str(), &width, &height, &channels, desiredChannels ); depth = 4;    floating = true;    break;
+        case Type_uint8:    data = (uint8*)stbi_load(       cargs->path.c_str(), &width, &height, &channels, 0 ); depth = 1; floating = false;  break;
+        case Type_uint16:   data = (uint8*)stbi_load_16(    cargs->path.c_str(), &width, &height, &channels, 0 ); depth = 2; floating = false;  break;
+        case Type_ufloat:   data = (uint8*)stbi_loadf(      cargs->path.c_str(), &width, &height, &channels, 0 ); depth = 4; floating = true;   break;
     }
 
-    ULIS_ASSERT( data, "Error bad input file" )
-
-    if( desiredChannels != STBI_default )
-        channels = desiredChannels;
+    ULIS_ASSERT( data, "Error bad input file" );
 
     eColorModel model;
     bool hea;
@@ -93,19 +68,37 @@ XLoadFromFile( FOldThreadPool*             iOldThreadPool
         case 3: model = CM_RGB;     hea = false;    break;
         case 4: model = CM_RGB;     hea = true;     break;
     }
-    channels = channels - hea;
+    int color_channels = channels - hea;
 
-    eFormat fmt = static_cast< eFormat >( ULIS_W_TYPE( type ) | ULIS_W_CHANNELS( channels ) | ULIS_W_MODEL( model ) | ULIS_W_ALPHA( hea ) | ULIS_W_DEPTH( depth ) | ULIS_W_FLOATING( floating ) );
-    FBlock* ret = new FBlock( data, width, height, fmt, nullptr, FOnInvalid(), FOnCleanup( &OnCleanup_FreeMemory ) );
+    eFormat fmt =
+        static_cast< eFormat >(
+              ULIS_W_TYPE( type )
+            | ULIS_W_CHANNELS( color_channels )
+            | ULIS_W_MODEL( model )
+            | ULIS_W_ALPHA( hea )
+            | ULIS_W_DEPTH( depth )
+            | ULIS_W_FLOATING( floating )
+        );
 
-    if( iDesiredFormat != 0 && iDesiredFormat != fmt ) {
-        FBlock* conv = XConv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, ret, iDesiredFormat );
-        delete ret;
-        ret = conv;
-    }
-
-    return  ret;
+    cargs->dst.LoadFromData( data, width, height, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
 }
+
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
+void
+InvokeSaveToFile_MEM_Generic(
+      const FSimpleBufferJobArgs* jargs
+    , const FDiskIOCommandArgs* cargs
+)
+{
+}
+
+/////////////////////////////////////////////////////
+// Dispatch
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleLoadFromFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeLoadFromFile_MEM_Generic )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleSaveToFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeSaveToFile_MEM_Generic )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedLoadFromFileInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedSaveToFileInvocationSchedulerSelector )
 
 void SaveToFile( FOldThreadPool*           iOldThreadPool
                , bool                   iBlocking
@@ -156,6 +149,7 @@ void SaveToFile( FOldThreadPool*           iOldThreadPool
     if( conv )
         delete  conv;
 }
+*/
 
 ULIS_NAMESPACE_END
 

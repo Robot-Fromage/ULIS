@@ -11,42 +11,51 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Scheduling/Dispatcher.h"
+#include "Scheduling/ScheduleArgs.h"
+#include "Scheduling/SimpleBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// FDiskIOCommandArgs
+class FDiskIOCommandArgs final
+    : public FSimpleBufferCommandArgs
+{
+public:
+    ~FDiskIOCommandArgs() override
+    {
+    }
 
-enum eImageFormat {
-      IM_PNG
-    , IM_BMP
-    , IM_TGA
-    , IM_JPG
-    , IM_HDR
+    FDiskIOCommandArgs(
+          FBlock& iBlock
+        , const FRectI& iRect
+        , const std::string& iPath
+    )
+        : FSimpleBufferCommandArgs( iBlock, iRect )
+        , path( iPath )
+    {}
+
+    const std::string path;
 };
 
-static const char* kwImageFormat[] = {
-      "png"
-    , "bmp"
-    , "tga"
-    , "jpg"
-    , "hdr"
-};
+/////////////////////////////////////////////////////
+// Dispatch / Schedule
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleLoadFromFile_MEM_Generic )
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleSaveToFile_MEM_Generic )
 
-ULIS_API FBlock* XLoadFromFile( FOldThreadPool*           iOldThreadPool
-                               , bool                   iBlocking
-                               , uint32                 iPerfIntent
-                               , const FHardwareMetrics& iHostDeviceInfo
-                               , bool                   iCallCB
-                               , const std::string&     iPath
-                               , eFormat                iDesiredFormat );
+ULIS_DECLARE_DISPATCHER( FDispatchedLoadFromFileInvocationSchedulerSelector )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
+      FDispatchedLoadFromFileInvocationSchedulerSelector
+    , &ScheduleLoadFromFile_MEM_Generic< T >
+)
 
-ULIS_API void SaveToFile( FOldThreadPool*             iOldThreadPool
-                         , bool                     iBlocking
-                         , uint32                   iPerfIntent
-                         , const FHardwareMetrics&   iHostDeviceInfo
-                         , bool                     iCallCB
-                         , const FBlock*            iSource
-                         , const std::string&       iPath
-                         , eImageFormat             iImageFormat
-                         , int                      iQuality );
+ULIS_DECLARE_DISPATCHER( FDispatchedSaveToFileInvocationSchedulerSelector )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
+      FDispatchedSaveToFileInvocationSchedulerSelector
+    , &ScheduleSaveToFile_MEM_Generic< T >
+)
 
 ULIS_NAMESPACE_END
 

@@ -23,6 +23,9 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 ULIS_NAMESPACE_BEGIN
 void
 FContext::LoadFromFile(
