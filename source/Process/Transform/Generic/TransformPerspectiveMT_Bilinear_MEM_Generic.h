@@ -22,11 +22,10 @@ InvokeTransformPerspectiveMT_Bilinear_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec2F pointInDst( static_cast< float >( info.dst_roi.x ), static_cast< float >( info.dst_roi.y + iLine ) );
+    FVec2F pointInDst( static_cast< float >( cargs->dstRect.x ), static_cast< float >( cargs->dstRect.y + jargs->line ) );
     uint8* c00 = new uint8[ fmt.BPP * 4 ];
     uint8* c10 = c00 + fmt.BPP;
     uint8* c11 = c10 + fmt.BPP;
@@ -34,12 +33,12 @@ InvokeTransformPerspectiveMT_Bilinear_MEM_Generic(
     uint8* hh0 = new uint8[ fmt.BPP * 2 ];
     uint8* hh1 = hh0 + fmt.BPP;
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
-        FVec2F pointInSrc = info.inverseTransform.Project( pointInDst );
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
+        FVec2F pointInSrc = cargs->inverseMatrix.ApplyHomography( pointInDst );
         const int   left    = static_cast< int >( floor( pointInSrc.x ) );
         const int   top     = static_cast< int >( floor( pointInSrc.y ) );
         const int   right   = left + 1;
@@ -49,7 +48,7 @@ InvokeTransformPerspectiveMT_Bilinear_MEM_Generic(
         const float ty      = pointInSrc.y - top;
         const float uy      = 1.f - ty;
 
-        #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
+        #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, cargs->src.PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
         TEMP( c00, left, top );
         TEMP( c10, right, top );
         TEMP( c11, right, bot );
