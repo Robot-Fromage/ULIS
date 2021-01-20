@@ -22,21 +22,20 @@ InvokeResizeMT_Area_MEM_Generic(
     , const FResizeCommandArgs* cargs
 )
 {
-    const FResizeCommandArgs&  info    = *iInfo;
-    const FFormatMetrics&  fmt     = info.destination->FormatMetrics();
-    const FFormatMetrics&  sat_fmt = info.optionalSAT->FormatMetrics();
-    uint8*              dst     = iDst;
+    const FFormatMetrics& fmt     = cargs->dst.FormatMetrics();
+    const FFormatMetrics& sat_fmt = cargs->optionalSAT->FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
 
-    FVec2F point_in_dst( info.dst_roi.x, info.dst_roi.y + iLine );
-    FVec2F point_in_src( info.inverseScale * ( point_in_dst - info.shift ) + FVec2F( info.src_roi.x, info.src_roi.y ) );
-    FVec2F src_dx( info.inverseScale * FVec2F( 1.f, 0.f ) );
-    FVec2F coverage( FVec2F( 1.f, 1.f ) * info.inverseScale );
-    float  coverage_area = coverage.x * coverage.y;
+    FVec2F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line );
+    FVec2F point_in_src( cargs->inverseScale * ( point_in_dst - cargs->shift ) + FVec2F( cargs->srcRect.x, cargs->srcRect.y ) );
+    FVec2F src_dx( cargs->inverseScale * FVec2F( 1.f, 0.f ) );
+    FVec2F coverage( FVec2F( 1.f, 1.f ) * cargs->inverseScale );
+    float coverage_area = coverage.x * coverage.y;
 
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
 
     uint8* c00 = new uint8[ sat_fmt.BPP * 4 ];
     uint8* c10 = c00 + sat_fmt.BPP;
@@ -55,7 +54,7 @@ InvokeResizeMT_Area_MEM_Generic(
     float t[4];
     float u[4];
 
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         // order: left top right bot
         fpos[0] = point_in_src.x - 1.f;
         fpos[1] = point_in_src.y - 1.f;
@@ -67,14 +66,14 @@ InvokeResizeMT_Area_MEM_Generic(
             u[i]    = 1.f - t[i];
         }
 
-        #define SUBSAMPLE_CORNER_IMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.optionalSAT->PixelBits( _X, _Y ), sat_fmt.BPP ); } else { memset( _C, 0, sat_fmt.BPP ); }
-        #define SUBSAMPLE_CORNER( _P0, _P1, _M )                                                            \
-            SUBSAMPLE_CORNER_IMP( c00, ipos[ _P0 ],     ipos[ _P1 ]     );                                  \
-            SUBSAMPLE_CORNER_IMP( c10, ipos[ _P0 ] + 1, ipos[ _P1 ]     );                                  \
-            SUBSAMPLE_CORNER_IMP( c11, ipos[ _P0 ] + 1, ipos[ _P1 ] + 1 );                                  \
-            SUBSAMPLE_CORNER_IMP( c01, ipos[ _P0 ],     ipos[ _P1 ] + 1 );                                  \
-            SampleBilinearSAT< float >( (uint8*)hh0, (uint8*)c00, (uint8*)c10, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
-            SampleBilinearSAT< float >( (uint8*)hh1, (uint8*)c01, (uint8*)c11, sat_fmt, t[ _P0 ], u[ _P0 ] );  \
+        #define SUBSAMPLE_CORNER_IMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, cargs->optionalSAT->PixelBits( _X, _Y ), sat_fmt.BPP ); } else { memset( _C, 0, sat_fmt.BPP ); }
+        #define SUBSAMPLE_CORNER( _P0, _P1, _M )                                                                \
+            SUBSAMPLE_CORNER_IMP( c00, ipos[ _P0 ],     ipos[ _P1 ]     );                                      \
+            SUBSAMPLE_CORNER_IMP( c10, ipos[ _P0 ] + 1, ipos[ _P1 ]     );                                      \
+            SUBSAMPLE_CORNER_IMP( c11, ipos[ _P0 ] + 1, ipos[ _P1 ] + 1 );                                      \
+            SUBSAMPLE_CORNER_IMP( c01, ipos[ _P0 ],     ipos[ _P1 ] + 1 );                                      \
+            SampleBilinearSAT< float >( (uint8*)hh0, (uint8*)c00, (uint8*)c10, sat_fmt, t[ _P0 ], u[ _P0 ] );   \
+            SampleBilinearSAT< float >( (uint8*)hh1, (uint8*)c01, (uint8*)c11, sat_fmt, t[ _P0 ], u[ _P0 ] );   \
             SampleBilinearSAT< float >( (uint8*)_M, (uint8*)hh0, (uint8*)hh1, sat_fmt, t[ _P1 ], u[ _P1 ] );
         SUBSAMPLE_CORNER( 0, 1, m00 )
         SUBSAMPLE_CORNER( 2, 1, m10 )
