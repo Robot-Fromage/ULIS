@@ -22,6 +22,7 @@ InvokeTransformBezierMT_Bicubic_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
+    /*
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     uint8* ULIS_RESTRICT dst = jargs->dst;
     const float* field = reinterpret_cast< const float* >( iField->ScanlineBits( jargs->line ) );
@@ -80,6 +81,7 @@ InvokeTransformBezierMT_Bicubic_MEM_Generic(
     delete [] hh1;
     delete [] hh2;
     delete [] hh3;
+    */
 }
 
 ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( TransformBezierMT_Bicubic_MEM_Generic )

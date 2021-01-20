@@ -22,6 +22,7 @@ InvokeTransformBezierMT_NN_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
+    /*
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     uint8* ULIS_RESTRICT dst = jargs->dst;
     const float* field = reinterpret_cast< const float* >( iField->ScanlineBits( jargs->line ) );
@@ -39,6 +40,7 @@ InvokeTransformBezierMT_NN_MEM_Generic(
         field += 2;
         ++mask;
     }
+    */
 }
 
 ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( TransformBezierMT_NN_MEM_Generic )
