@@ -78,6 +78,13 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleTransformPerspectiveNN(          TDispatcher< FDispatchedTransformPerspectiveNNInvocationSchedulerSelector           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 #endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
+#ifdef ULIS_FEATURE_IO_ENABLED
+        , mScheduleLoadFromFile(                    nullptr )
+        , mScheduleSaveToFile(                      nullptr )
+        , mScheduleLoadFromClipboard(               nullptr )
+        , mScheduleSaveToClipboard(                 nullptr )
+#endif // ULIS_FEATURE_IO_ENABLED
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )
         , mArgConvBackwardBlendNonSeparable(    QueryDispatchedConvertFormatInvocation( eFormat::Format_RGBF, iFormat ) )

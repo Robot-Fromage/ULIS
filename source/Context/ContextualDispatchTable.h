@@ -179,6 +179,13 @@ private:
     const fpCommandScheduler mScheduleTransformPerspectiveNN;
 #endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
+#ifdef ULIS_FEATURE_IO_ENABLED
+    const fpCommandScheduler mScheduleLoadFromFile;
+    const fpCommandScheduler mScheduleSaveToFile;
+    const fpCommandScheduler mScheduleLoadFromClipboard;
+    const fpCommandScheduler mScheduleSaveToClipboard;
+#endif // ULIS_FEATURE_IO_ENABLED
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;

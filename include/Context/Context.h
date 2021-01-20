@@ -850,7 +850,7 @@ public:
         \warning This feature is only available on windows at the moment.
     */
     void
-    SaveToFile(
+    SaveToClipboard(
           const FBlock& iBlock
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
