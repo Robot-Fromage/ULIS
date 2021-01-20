@@ -21,13 +21,12 @@ InvokeTransformBezierMT_Bilinear_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );
-    const int rangex = info.src_roi.w - 1;
-    const int rangey = info.src_roi.h - 1;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    const float* field = reinterpret_cast< const float* >( iField->ScanlineBits( jargs->line ) );
+    const uint8* mask  = reinterpret_cast< const uint8* >( iMask->ScanlineBits( jargs->line ) );
+    const int rangex = cargs->srcRect.w - 1;
+    const int rangey = cargs->srcRect.h - 1;
 
     uint8* c00 = new uint8[ fmt.BPP * 4 ];
     uint8* c10 = c00 + fmt.BPP;
@@ -35,11 +34,11 @@ InvokeTransformBezierMT_Bilinear_MEM_Generic(
     uint8* c01 = c11 + fmt.BPP;
     uint8* hh0 = new uint8[ fmt.BPP * 2 ];
     uint8* hh1 = hh0 + fmt.BPP;
-    const int minx = info.src_roi.x;
-    const int miny = info.src_roi.y;
-    const int maxx = minx + info.src_roi.w;
-    const int maxy = miny + info.src_roi.h;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    const int minx = cargs->srcRect.x;
+    const int miny = cargs->srcRect.y;
+    const int maxx = minx + cargs->srcRect.w;
+    const int maxy = miny + cargs->srcRect.h;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         if( *mask & 0xFF ) {
             float srcxf = field[0] * rangex;
             float srcyf = field[1] * rangey;
@@ -52,7 +51,7 @@ InvokeTransformBezierMT_Bilinear_MEM_Generic(
             const float ty      = srcyf - top;
             const float uy      = 1.f - ty;
 
-            #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, info.source->PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 255, fmt.BPP ); }
+            #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, cargs->src.PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 255, fmt.BPP ); }
             TEMP( c00, left, top );
             TEMP( c10, right, top );
             TEMP( c11, right, bot );
