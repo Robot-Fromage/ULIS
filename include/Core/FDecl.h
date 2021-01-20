@@ -35,7 +35,9 @@ class   FSchedulePolicy;
 struct  FSplineLinearSample;
 struct  FSplineParametricSample;
 class   FString;
-//class   FTexture;
+#ifdef ULIS_FEATURE_GPU_ENABLED
+class   FTexture;
+#endif // ULIS_FEATURE_GPU_ENABLED
 class   FThreadPool;
 struct  FTileElement;
 class   FTransformation2D;
