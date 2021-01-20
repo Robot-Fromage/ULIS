@@ -22,18 +22,17 @@ InvokeTransformBezierMT_NN_MEM_Generic(
     , const FTransformCommandArgs* cargs
 )
 {
-    const FTransformCommandArgs&   info    = *iInfo;
-    const FFormatMetrics&      fmt     = info.destination->FormatMetrics();
-    uint8*                  dst     = iDst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( iLine ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( iLine ) );
-    const int rangex = info.src_roi.w - 1;
-    const int rangey = info.src_roi.h - 1;
-    for( int x = 0; x < info.dst_roi.w; ++x ) {
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* ULIS_RESTRICT dst = jargs->dst;
+    const float* field = reinterpret_cast< const float* >( iField->ScanlineBits( jargs->line ) );
+    const uint8* mask  = reinterpret_cast< const uint8* >( iMask->ScanlineBits( jargs->line ) );
+    const int rangex = cargs->srcRect.w - 1;
+    const int rangey = cargs->srcRect.h - 1;
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
         if( *mask & 0xFF ) {
             int src_x = static_cast< int >( field[0] * rangex );
             int src_y = static_cast< int >( field[1] * rangey );
-            memcpy( dst, info.source->PixelBits( src_x, src_y ), fmt.BPP );
+            memcpy( dst, cargs->src.PixelBits( src_x, src_y ), fmt.BPP );
         }
 
         dst += fmt.BPP;
