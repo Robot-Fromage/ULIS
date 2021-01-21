@@ -84,11 +84,6 @@ FContext::FileSave(
     bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
                       ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
 
-    int w = iBlock.Width();
-    int h = iBlock.Height();
-    int c = iBlock.SamplesPerPixel();
-    const uint8* dat = iBlock.Bits();
-
     if( !( layout_valid && model_valid && type_valid ) )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_FILE_FORMAT );
 
@@ -128,47 +123,36 @@ FContext::FileSaveConvSafe(
     , FEvent* iEvent
 )
 {
-    /*
     eType type = iBlock.Type();
     eFormat format = iBlock.Format();
     eColorModel model = iBlock.Model();
+    bool hasAlpha = iBlock.HasAlpha();
 
     bool layout_valid = ULIS_R_RS( format ) == 0;
     bool model_valid = model == CM_GREY || model == CM_RGB;
     bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
                       ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
 
-    int w = iBlock.Width();
-    int h = iBlock.Height();
-    int c = iBlock.SamplesPerPixel();
-    const uint8* dat = iBlock.Bits();
+    FEvent preprocess_conv_event;
+    const FBlock* target = &iBlock;
+    if( !( layout_valid && model_valid && type_valid ) ) {
+        eFormat conv_format = static_cast< eFormat >( 0 );
+        if( iFileFormat == FileFormat_hdr ) conv_format = eFormat::Format_RGBF;
+        else if( model == CM_GREY )         conv_format = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( hasAlpha ) );
+        else                                conv_format = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( hasAlpha ) );
+        FBlock* conv = new FBlock( iBlock.Width(), iBlock.Height() );
+        target = conv;
+        ulError err = ConvertFormat( iBlock, *conv, iBlock.Rect(), FVec2I( 0, 0 ), iPolicy, iNumWait, iWaitList, &preprocess_conv_event );
+        if( err )
+            ULIS_ASSERT( false, "Error occured within subcommand" );
 
-    if( !( layout_valid && model_valid && type_valid ) )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_FILE_FORMAT );
+    } else {
+        FinishEventNo_OP( &preprocess_conv_event, ULIS_NO_ERROR );
+    }
 
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleFileSave
-            , new FDiskIOCommandArgs(
-                  const_cast< FBlock& >( iBlock )
-                , iBlock.Rect()
-                , iPath
-                , iFileFormat
-                , iQuality
-            )
-            , iPolicy
-            , true
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , iBlock.Rect()
-        )
-    );
-    */
-
-    return  ULIS_NO_ERROR;
+    // TODO: extra wait event preprocess_conv_event
+    // TODO: extra cleanup conv after FileSave is finished
+    return  FileSave( *target, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
 }
 
 ulError
