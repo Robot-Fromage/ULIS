@@ -91,44 +91,21 @@ InvokeSaveToFile_MEM_Generic(
     , const FDiskIOCommandArgs* cargs
 )
 {
-}
+    eType type = cargs->dst.Type();
+    eFormat format = cargs->dst.Format();
+    eColorModel model = cargs->dst.Model();
 
-/////////////////////////////////////////////////////
-// Dispatch
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleLoadFromFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeLoadFromFile_MEM_Generic )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleSaveToFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeSaveToFile_MEM_Generic )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedLoadFromFileInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedSaveToFileInvocationSchedulerSelector )
+    bool layout_valid = ULIS_R_RS( format ) == 0;
+    bool model_valid = model == CM_GREY || model == CM_RGB;
+    bool type_valid = ( cargs->fileFormat != FileFormat_hdr && type == Type_uint8 ) ||
+                      ( cargs->fileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
 
-/*
-void SaveToFile( FOldThreadPool*           iOldThreadPool
-               , bool                   iBlocking
-               , uint32                 iPerfIntent
-               , const FHardwareMetrics& iHostDeviceInfo
-               , bool                   iCallCB
-               , const FBlock*          iSource
-               , const std::string&     iPath
-               , eImageFormat           iImageFormat
-               , int                    iQuality )
-{
-    ULIS_ASSERT( iSource,             "Bad source."                                           );
-    ULIS_ASSERT( iOldThreadPool,              "Bad pool."                                             );
-    ULIS_ASSERT( !iCallCB || iBlocking,    "Callback flag is specified on non-blocking operation." );
+    int w = cargs->dst.Width();
+    int h = cargs->dst.Height();
+    int c = cargs->dst.SamplesPerPixel();
+    const uint8* dat = cargs->dst.Bits();
 
-    //cppfs::FilePath     path( iPath );
-    //std::string         ext = path.extension();
-    eFormat     format  = iSource->Format();
-    eColorModel model   = iSource->Model();
-    eType       type    = iSource->Type();
-
-    bool layout_valid   = ULIS_R_RS( format ) == 0;
-    bool model_valid    = model == CM_GREY || model == CM_RGB;
-    bool type_valid     = ( iImageFormat != IM_HDR && type == Type_uint8 ) || ( iImageFormat == IM_HDR && type == Type_ufloat && model == CM_RGB );
-
-    int w = iSource->Width();
-    int h = iSource->Height();
-    int c = iSource->SamplesPerPixel();
-    const uint8* dat = iSource->Bits();
+    /*
     FBlock* conv = nullptr;
     if( !( layout_valid && model_valid && type_valid ) ) {
         eFormat dstformat = static_cast< eFormat >( 0 );
@@ -149,8 +126,15 @@ void SaveToFile( FOldThreadPool*           iOldThreadPool
 
     if( conv )
         delete  conv;
+        */
 }
-*/
+
+/////////////////////////////////////////////////////
+// Dispatch
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleLoadFromFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeLoadFromFile_MEM_Generic )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleSaveToFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeSaveToFile_MEM_Generic )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedLoadFromFileInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedSaveToFileInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

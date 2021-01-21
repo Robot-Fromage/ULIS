@@ -32,12 +32,15 @@ public:
           FBlock& iBlock
         , const FRectI& iRect
         , const std::string& iPath
+        , const eFileFormat iFileFormat = eFileFormat::FileFormat_png
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
         , path( iPath )
+        , fileFormat( iFileFormat )
     {}
 
     const std::string path;
+    const eFileFormat fileFormat;
 };
 
 /////////////////////////////////////////////////////
