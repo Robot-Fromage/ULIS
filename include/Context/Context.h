@@ -100,7 +100,7 @@ private:
     /*!
         Internal tool for notifying an user event the task is a no-op
     */
-    void FinishEventNo_OP( FEvent* iEvent );
+    ulError FinishEventNo_OP( FEvent* iEvent, ulError iError );
 
 public:
 /////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ public:
 
         \sa BlendAA()
     */
-    void
+    ulError
     Blend(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -160,7 +160,7 @@ public:
 
         \sa Blend()
     */
-    void
+    ulError
     BlendAA(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -194,7 +194,7 @@ public:
         \sa AlphaBlendAA()
         \sa Blend()
     */
-    void
+    ulError
     AlphaBlend(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -230,7 +230,7 @@ public:
         \sa AlphaBlend()
         \sa BlendAA()
     */
-    void
+    ulError
     AlphaBlendAA(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -262,7 +262,7 @@ public:
 
         \sa Blend()
     */
-    void
+    ulError
     BlendTiled(
           const FBlock& iSource
         , FBlock& iBackdrop
@@ -290,7 +290,7 @@ public:
 
         \sa BlendTiled()
     */
-    void
+    ulError
     BlendColor(
           const ISample& iColor
         , FBlock& iBackdrop
@@ -319,7 +319,7 @@ public:
         computation and will return safely, so it is safe to specify
         out-of-bounds positions.
     */
-    void
+    ulError
     Clear(
           FBlock& iBlock
         , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
@@ -347,7 +347,7 @@ public:
         not perform any computation and will return safely, so it is safe to
         specify out-of-bounds positions.
     */
-    void
+    ulError
     ConvertFormat(
           const FBlock& iSource
         , FBlock& iDestination
@@ -377,7 +377,7 @@ public:
         not perform any computation and will return safely, so it is safe to
         specify out-of-bounds positions.
     */
-    void
+    ulError
     Copy(
           const FBlock& iSource
         , FBlock& iDestination
@@ -404,7 +404,7 @@ public:
         computation and will return safely, so it is safe to specify
         out-of-bounds positions.
     */
-    void
+    ulError
     Fill(
           FBlock& iBlock
         , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
@@ -429,7 +429,7 @@ public:
         computation and will return safely, so it is safe to specify
         out-of-bounds positions.
     */
-    void
+    ulError
     FillPreserveAlpha(
           FBlock& iBlock
         , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
@@ -463,7 +463,7 @@ public:
         \sa RasterTextAA()
         \sa TextMetrics()
     */
-    void
+    ulError
     RasterText(
           FBlock& iBlock
         , const std::wstring& iText
@@ -498,7 +498,7 @@ public:
         \sa RasterText()
         \sa TextMetrics()
     */
-    void
+    ulError
     RasterTextAA(
           FBlock& iBlock
         , const std::wstring& iText
@@ -552,7 +552,7 @@ public:
         \sa TransformPerspectiveMetrics()
         \sa TransformBezierMetrics()
     */
-    void
+    ulError
     TransformAffine(
           const FBlock& iSource
         , FBlock& iDestination
@@ -590,7 +590,7 @@ public:
         \sa TransformPerspectiveMetrics()
         \sa TransformBezierMetrics()
     */
-    void
+    ulError
     TransformAffineTiled(
           const FBlock& iSource
         , FBlock& iDestination
@@ -630,7 +630,7 @@ public:
         \sa TransformPerspectiveMetrics()
         \sa TransformBezierMetrics()
     */
-    void
+    ulError
     TransformPerspective(
           const FBlock& iSource
         , FBlock& iDestination
@@ -670,7 +670,7 @@ public:
         \sa TransformPerspectiveMetrics()
         \sa TransformBezierMetrics()
     */
-    void
+    ulError
     TransformBezier(
           const FBlock& iSource
         , FBlock& iDestination
@@ -708,7 +708,7 @@ public:
         \sa TransformPerspectiveMetrics()
         \sa TransformBezierMetrics()
     */
-    void
+    ulError
     Resize(
           const FBlock& iSource
         , FBlock& iDestination
@@ -792,7 +792,7 @@ public:
         data will be called and could destroy the already present memory so make
         sure it is not referenced elsewhere.
     */
-    void
+    ulError
     LoadFromFile(
           FBlock& ioBlock
         , const std::string& iPath
@@ -806,7 +806,7 @@ public:
         Perform a save operation of the input iBlock at the specified path.
         iQuality is only used for jpeg files and is beetween 0 and 100
     */
-    void
+    ulError
     SaveToFile(
           const FBlock& iBlock
         , const std::string& iPath
@@ -835,7 +835,7 @@ public:
 
         \warning This feature is only available on windows at the moment.
     */
-    void
+    ulError
     LoadFromClipboard(
           FBlock& ioBlock
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -849,7 +849,7 @@ public:
 
         \warning This feature is only available on windows at the moment.
     */
-    void
+    ulError
     SaveToClipboard(
           const FBlock& iBlock
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
