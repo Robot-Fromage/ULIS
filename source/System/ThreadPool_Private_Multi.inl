@@ -51,7 +51,7 @@ void
 FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
     std::lock_guard< std::mutex > lock( mCommandsQueueMutex );
-    uint32 size = ioCommands.Size();
+    uint32 size = static_cast< uint32 >( ioCommands.Size() );
     while( !ioCommands.IsEmpty() )
     {
         const FCommand* cmd = ioCommands.Front();
