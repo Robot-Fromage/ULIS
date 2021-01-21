@@ -24,7 +24,7 @@
 #include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
-void
+ulError
 FContext::ConvertFormat(
           const FBlock& iSource
         , FBlock& iDestination
@@ -36,7 +36,11 @@ FContext::ConvertFormat(
         , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
 
     // In case of same format, we can optimize by using the faster Copy version,
     // since no conversion is actually involved.
@@ -53,7 +57,7 @@ FContext::ConvertFormat(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -75,6 +79,8 @@ FContext::ConvertFormat(
             , dst_roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
 ULIS_NAMESPACE_END

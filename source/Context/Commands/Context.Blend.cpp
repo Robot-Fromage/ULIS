@@ -110,7 +110,7 @@ FContext::Blend(
         )
     );
 
-    return  ULIS_SUCCESS;
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -191,7 +191,7 @@ FContext::BlendAA(
         )
     );
 
-    return  ULIS_SUCCESS;
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -260,7 +260,7 @@ FContext::AlphaBlend(
         )
     );
 
-    return  ULIS_SUCCESS;
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -339,7 +339,7 @@ FContext::AlphaBlendAA(
         )
     );
 
-    return  ULIS_SUCCESS;
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -417,7 +417,7 @@ FContext::BlendTiled(
         )
     );
 
-    return  ULIS_SUCCESS;
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -480,7 +480,7 @@ FContext::BlendColor(
         )
     );
 
-    return  ULIS_SUCCESS;
+    return  ULIS_NO_ERROR;
 }
 
 ULIS_NAMESPACE_END

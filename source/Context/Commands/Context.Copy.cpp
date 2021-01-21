@@ -24,7 +24,7 @@
 #include "Scheduling/DualBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
-void
+ulError
 FContext::Copy(
           const FBlock& iSource
         , FBlock& iDestination
@@ -36,8 +36,16 @@ FContext::Copy(
         , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iDestination.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -47,7 +55,7 @@ FContext::Copy(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -68,6 +76,8 @@ FContext::Copy(
             , dst_roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
 ULIS_NAMESPACE_END

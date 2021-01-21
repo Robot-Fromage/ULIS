@@ -24,7 +24,7 @@
 #include "Scheduling/SimpleBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
-void
+ulError
 FContext::Clear(
           FBlock& iBlock
         , const FRectI& iRect
@@ -40,7 +40,7 @@ FContext::Clear(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -59,6 +59,8 @@ FContext::Clear(
             , src_roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
 ULIS_NAMESPACE_END
