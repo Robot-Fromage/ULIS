@@ -16,6 +16,7 @@
 #include "Scheduling/Dispatcher.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
+#include <string>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -33,14 +34,17 @@ public:
         , const FRectI& iRect
         , const std::string& iPath
         , const eFileFormat iFileFormat = eFileFormat::FileFormat_png
+        , int iQuality = 100
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
         , path( iPath )
         , fileFormat( iFileFormat )
+        , quality( iQuality )
     {}
 
     const std::string path;
     const eFileFormat fileFormat;
+    const int quality;
 };
 
 /////////////////////////////////////////////////////
