@@ -91,6 +91,8 @@ InvokeSaveToFile_MEM_Generic(
     , const FDiskIOCommandArgs* cargs
 )
 {
+    // Old test fallback to conv, not used here.
+    /*
     eType type = cargs->dst.Type();
     eFormat format = cargs->dst.Format();
     eColorModel model = cargs->dst.Model();
@@ -100,33 +102,30 @@ InvokeSaveToFile_MEM_Generic(
     bool type_valid = ( cargs->fileFormat != FileFormat_hdr && type == Type_uint8 ) ||
                       ( cargs->fileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
 
+
+    FBlock* conv = nullptr;
+    if( !( layout_valid && model_valid && type_valid ) ) {
+        eFormat dstformat = static_cast< eFormat >( 0 );
+        if( cargs->fileFormat == FileFormat_hdr )    dstformat = eFormat::Format_RGBF;
+        else if( model == CM_GREY )     dstformat = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( cargs->dst.HasAlpha() ) );
+        else                            dstformat = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( cargs->dst.HasAlpha() ) );
+        //conv = XConv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
+        dat = conv->Bits();
+    }
+    */
+
     int w = cargs->dst.Width();
     int h = cargs->dst.Height();
     int c = cargs->dst.SamplesPerPixel();
     const uint8* dat = cargs->dst.Bits();
 
-    /*
-    FBlock* conv = nullptr;
-    if( !( layout_valid && model_valid && type_valid ) ) {
-        eFormat dstformat = static_cast< eFormat >( 0 );
-        if( iImageFormat == IM_HDR )    dstformat = eFormat::Format_RGBF;
-        else if( model == CM_GREY )     dstformat = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( iSource->HasAlpha() ) );
-        else                            dstformat = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( iSource->HasAlpha() ) );
-        conv = XConv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
-        dat = conv->Bits();
+    switch( cargs->fileFormat ) {
+        case FileFormat_png: stbi_write_png( cargs->path.c_str(), w, h, c, dat, 0               );  break; // stride: 0
+        case FileFormat_bmp: stbi_write_bmp( cargs->path.c_str(), w, h, c, dat                  );  break;
+        case FileFormat_tga: stbi_write_tga( cargs->path.c_str(), w, h, c, dat                  );  break;
+        case FileFormat_jpg: stbi_write_jpg( cargs->path.c_str(), w, h, c, dat, cargs->quality  );  break; // Quality: 0 - 100;
+        case FileFormat_hdr: stbi_write_hdr( cargs->path.c_str(), w, h, c, (float*)dat          );  break;
     }
-
-    switch( iImageFormat ) {
-        case IM_PNG: stbi_write_png( iPath.c_str(), w, h, c, dat, 0         );  break; // stride: 0
-        case IM_BMP: stbi_write_bmp( iPath.c_str(), w, h, c, dat            );  break;
-        case IM_TGA: stbi_write_tga( iPath.c_str(), w, h, c, dat            );  break;
-        case IM_JPG: stbi_write_jpg( iPath.c_str(), w, h, c, dat, iQuality  );  break; // Quality: 0 - 100;
-        case IM_HDR: stbi_write_hdr( iPath.c_str(), w, h, c, (float*)dat    );  break;
-    }
-
-    if( conv )
-        delete  conv;
-        */
 }
 
 /////////////////////////////////////////////////////
