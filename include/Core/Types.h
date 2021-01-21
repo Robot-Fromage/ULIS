@@ -660,7 +660,8 @@ static const char* kwImageFormat[] = {
 #define ULIS_NO_ERROR                       0i64
 #define ULIS_WARNING_NO_OP                  -1000i64
 #define ULIS_WARNING_NO_OP_GEOMETRY         -1001i64
-#define ULIS_WARNING_NO_OP_FILE_FORMAT      -1002i64
+#define ULIS_WARNING_NO_OP_BAD_FILE_FORMAT  -1002i64
+#define ULIS_WARNING_NO_OP_BAD_INPUT_DATA   -1003i64
 #define ULIS_ERROR_FORMATS_MISMATCH         1000i64
 #define ULIS_ERROR_CONCURRENT_DATA          1001i64
 #define ULIS_ERROR_BAD_INPUT_DATA           1002i64
