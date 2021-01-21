@@ -37,6 +37,29 @@ FContext::FileLoad(
     , FEvent* iEvent
 )
 {
+    fs::path path( iPath );
+    if( ( !( fs::exists( path ) ) ) || ( !( fs::is_regular_file( path ) ) ) )
+       return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_INPUT_DATA );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleFileLoad
+            , new FDiskIOCommandArgs(
+                  ioBlock
+                , FRectI( 0, 0, INT_MAX, INT_MAX )
+                , iPath
+            )
+            , iPolicy
+            , true
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , FRectI( 0, 0, INT_MAX, INT_MAX )
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 
@@ -52,6 +75,44 @@ FContext::FileSave(
     , FEvent* iEvent
 )
 {
+    eType type = iBlock.Type();
+    eFormat format = iBlock.Format();
+    eColorModel model = iBlock.Model();
+
+    bool layout_valid = ULIS_R_RS( format ) == 0;
+    bool model_valid = model == CM_GREY || model == CM_RGB;
+    bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
+                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
+
+    int w = iBlock.Width();
+    int h = iBlock.Height();
+    int c = iBlock.SamplesPerPixel();
+    const uint8* dat = iBlock.Bits();
+
+    if( !( layout_valid && model_valid && type_valid ) )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_FILE_FORMAT );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleFileSave
+            , new FDiskIOCommandArgs(
+                  const_cast< FBlock& >( iBlock )
+                , iBlock.Rect()
+                , iPath
+                , iFileFormat
+                , iQuality
+            )
+            , iPolicy
+            , true
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , iBlock.Rect()
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 
