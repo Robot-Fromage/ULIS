@@ -42,7 +42,7 @@ BuildRGBA8IndexTable( uint8 iRS )
 
 /////////////////////////////////////////////////////
 // Entry points
-void
+ulError
 FContext::Blend(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -57,8 +57,16 @@ FContext::Blend(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iBackdrop
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iBackdrop.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -69,7 +77,7 @@ FContext::Blend(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -101,9 +109,11 @@ FContext::Blend(
             , dst_roi
         )
     );
+
+    return  ULIS_SUCCESS;
 }
 
-void
+ulError
 FContext::BlendAA(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -118,8 +128,16 @@ FContext::BlendAA(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iBackdrop
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iBackdrop.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -134,7 +152,7 @@ FContext::BlendAA(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     const FVec2F subpixelComponent = iPosition.DecimalPart();
@@ -172,9 +190,11 @@ FContext::BlendAA(
             , dst_roi
         )
     );
+
+    return  ULIS_SUCCESS;
 }
 
-void
+ulError
 FContext::AlphaBlend(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -187,8 +207,16 @@ FContext::AlphaBlend(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iBackdrop
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iBackdrop.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -199,7 +227,7 @@ FContext::AlphaBlend(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -231,9 +259,11 @@ FContext::AlphaBlend(
             , dst_roi
         )
     );
+
+    return  ULIS_SUCCESS;
 }
 
-void
+ulError
 FContext::AlphaBlendAA(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -246,8 +276,16 @@ FContext::AlphaBlendAA(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iBackdrop
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iBackdrop.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -262,7 +300,7 @@ FContext::AlphaBlendAA(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     const FVec2F subpixelComponent = iPosition.DecimalPart();
@@ -300,9 +338,11 @@ FContext::AlphaBlendAA(
             , dst_roi
         )
     );
+
+    return  ULIS_SUCCESS;
 }
 
-void
+ulError
 FContext::BlendTiled(
       const FBlock& iSource
     , FBlock& iBackdrop
@@ -318,8 +358,16 @@ FContext::BlendTiled(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iBackdrop, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iBackdrop.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iBackdrop
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iBackdrop.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -329,7 +377,7 @@ FContext::BlendTiled(
 
      // Check no-op
     if( src_roi.Area() <= 0 || dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     FVec2I mod_shift(
@@ -368,9 +416,11 @@ FContext::BlendTiled(
             , dst_roi
         )
     );
+
+    return  ULIS_SUCCESS;
 }
 
-void
+ulError
 FContext::BlendColor(
       const ISample& iColor
     , FBlock& iBackdrop
@@ -389,8 +439,8 @@ FContext::BlendColor(
     const FRectI dst_roi = iBackdropRect.Sanitized() & iBackdrop.Rect();
 
      // Check no-op
-    if( src_roi.Area() <= 0 || dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     FBlock* color = new FBlock( 1, 1, iBackdrop.Format() );
@@ -429,6 +479,8 @@ FContext::BlendColor(
             , dst_roi
         )
     );
+
+    return  ULIS_SUCCESS;
 }
 
 ULIS_NAMESPACE_END
