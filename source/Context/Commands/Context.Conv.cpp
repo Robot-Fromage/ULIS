@@ -44,9 +44,8 @@ FContext::ConvertFormat(
 
     // In case of same format, we can optimize by using the faster Copy version,
     // since no conversion is actually involved.
-    if( iSource.Format() == iDestination.Format(), "Formats mismatch." ) {
-        FContext::Copy( iSource, iDestination, iSourceRect, iPosition, iPolicy, iNumWait, iWaitList, iEvent );
-        return;
+    if( iSource.Format() == iDestination.Format() ) {
+        return  FContext::Copy( iSource, iDestination, iSourceRect, iPosition, iPolicy, iNumWait, iWaitList, iEvent );
     }
 
     // Sanitize geometry

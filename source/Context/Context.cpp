@@ -67,7 +67,7 @@ FContext::Format() const
     return  mContextualDispatchTable->mFormat;
 }
 
-void
+ulError
 FContext::FinishEventNo_OP( FEvent* iEvent, ulError iError )
 {
     if( iEvent )

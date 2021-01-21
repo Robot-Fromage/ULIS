@@ -37,6 +37,7 @@ FContext::FileLoad(
     , FEvent* iEvent
 )
 {
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -51,6 +52,7 @@ FContext::FileSave(
     , FEvent* iEvent
 )
 {
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -62,6 +64,7 @@ FContext::ClipboardLoad(
     , FEvent* iEvent
 )
 {
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -73,6 +76,7 @@ FContext::ClipboardSave(
     , FEvent* iEvent
 )
 {
+    return  ULIS_NO_ERROR;
 }
 
 //static
