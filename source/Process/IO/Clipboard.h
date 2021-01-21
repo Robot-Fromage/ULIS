@@ -14,6 +14,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
+/*
 ULIS_API FBlock* XLoadFromClipboard( FOldThreadPool*              iOldThreadPool
                                     , bool                      iBlocking
                                     , uint32                    iPerfIntent
@@ -29,6 +30,7 @@ ULIS_API void SaveToClipboard( FOldThreadPool*            iOldThreadPool
                               , const FBlock*           iSource );
 
 ULIS_API bool ClipboardHasImageData();
+*/
 
 ULIS_NAMESPACE_END
 

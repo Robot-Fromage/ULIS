@@ -100,6 +100,7 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleSaveToFile_MEM_Generic, FS
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedLoadFromFileInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedSaveToFileInvocationSchedulerSelector )
 
+/*
 void SaveToFile( FOldThreadPool*           iOldThreadPool
                , bool                   iBlocking
                , uint32                 iPerfIntent

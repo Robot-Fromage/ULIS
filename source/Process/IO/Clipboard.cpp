@@ -9,6 +9,8 @@
 * @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+
+/*
 #include "IO/Clipboard.h"
 
 #if defined(ULIS_WIN)
@@ -20,3 +22,5 @@
 #else
 #include "IO/Clipboard_imp/Clipboard_GenericPlatform.ipp"
 #endif
+
+*/
