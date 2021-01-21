@@ -24,7 +24,7 @@
 #include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
-void
+ulError
 FContext::TransformAffine(
       const FBlock& iSource
     , FBlock& iDestination
@@ -39,8 +39,16 @@ FContext::TransformAffine(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iDestination.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -51,7 +59,7 @@ FContext::TransformAffine(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -76,9 +84,11 @@ FContext::TransformAffine(
             , dst_roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
-void
+ulError
 FContext::TransformAffineTiled(
       const FBlock& iSource
     , FBlock& iDestination
@@ -94,8 +104,16 @@ FContext::TransformAffineTiled(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iDestination.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -105,7 +123,7 @@ FContext::TransformAffineTiled(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -131,9 +149,11 @@ FContext::TransformAffineTiled(
             , dst_roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
-void
+ulError
 FContext::TransformPerspective(
       const FBlock& iSource
     , FBlock& iDestination
@@ -148,8 +168,16 @@ FContext::TransformPerspective(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iDestination.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -160,7 +188,7 @@ FContext::TransformPerspective(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -185,9 +213,11 @@ FContext::TransformPerspective(
             , dst_roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
-void
+ulError
 FContext::TransformBezier(
       const FBlock& iSource
     , FBlock& iDestination
@@ -204,9 +234,21 @@ FContext::TransformBezier(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
-    ULIS_ASSERT( iControlPoints.Size() == 4, "Bad control points size" );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iDestination.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iControlPoints.Size() == 4
+        , "Bad control points size"
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+    );
 
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -220,13 +262,15 @@ FContext::TransformBezier(
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     //TODO:
     ULIS_ASSERT( false, "Todo" );
+
+    return  ULIS_NO_ERROR;
 }
 
-void
+ulError
 FContext::Resize(
       const FBlock& iSource
     , FBlock& iDestination
@@ -242,8 +286,16 @@ FContext::Resize(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( &iSource != &iDestination, "Source and Backdrop are the same block." );
-    ULIS_ASSERT( iSource.Format() == iDestination.Format(), "Formats mismatch." );
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == iDestination.Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
 
     // Sanitize geometry
     const FRectF src_rect = iSource.Rect();
@@ -253,7 +305,7 @@ FContext::Resize(
 
     // Check no-op
     if( dst_roi.Area() <= 0.f )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward Arguments Baking
     FVec2F inverseScale = src_roi.Size() / dst_roi.Size();
@@ -283,6 +335,8 @@ FContext::Resize(
             , dst_roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
 //static
