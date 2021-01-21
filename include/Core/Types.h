@@ -28,6 +28,7 @@ typedef  int32_t    int32;      ///< Used for signed 32bit images domain range v
 typedef  int64_t    int64;      ///< Used for signed 64bit images domain range values.
 typedef  float      ufloat;     ///< Used for float images domain range values, indicates normalized range [0;1]
 typedef  double     udouble;    ///< Used for double images domain range values, indicates normalized range [0;1]
+typedef  int64      ulError;    ///< Used for errors reports defined below in this file
 
 /////////////////////////////////////////////////////
 // Type codes
@@ -666,6 +667,15 @@ static const char* kwImageFormat[] = {
     , "jpg"
     , "hdr"
 };
+
+/////////////////////////////////////////////////////
+// ulError reports
+#define ULIS_SUCCESS                        0i64
+#define ULIS_WARNING_NO_OP                  -1i64
+#define ULIS_WARNING_NO_OP_GEOMETRY         -2i64
+#define ULIS_WARNING_NO_OP_FILE_FORMAT      -3i64
+#define ULIS_ERROR_FORMATS_MISMATCH         1i64
+#define ULIS_ERROR_CONCURRENT_DATA          2i64
 
 ULIS_NAMESPACE_END
 
