@@ -27,8 +27,8 @@
 namespace fs = std::filesystem;
 
 ULIS_NAMESPACE_BEGIN
-void
-FContext::LoadFromFile(
+ulError
+FContext::FileLoad(
       FBlock& ioBlock
     , const std::string& iPath
     , const FSchedulePolicy& iPolicy
@@ -39,8 +39,8 @@ FContext::LoadFromFile(
 {
 }
 
-void
-FContext::SaveToFile(
+ulError
+FContext::FileSave(
       const FBlock& iBlock
     , const std::string& iPath
     , eFileFormat iFileFormat
@@ -53,8 +53,8 @@ FContext::SaveToFile(
 {
 }
 
-void
-FContext::LoadFromClipboard(
+ulError
+FContext::ClipboardLoad(
       FBlock& ioBlock
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
@@ -64,8 +64,8 @@ FContext::LoadFromClipboard(
 {
 }
 
-void
-FContext::SaveToClipboard(
+ulError
+FContext::ClipboardSave(
       const FBlock& iBlock
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
@@ -77,7 +77,28 @@ FContext::SaveToClipboard(
 
 //static
 bool
-FContext::ClipboardHasImage()
+ClipboardCanBeLoadedFrom()
+{
+    return  false;
+}
+
+//static
+bool
+ClipboardCanBeSavedTo()
+{
+    return  false;
+}
+
+//static
+bool
+FileCanBeLoadedFrom()
+{
+    return  false;
+}
+
+//static
+bool
+FileCanBeSavedTo()
 {
     return  false;
 }

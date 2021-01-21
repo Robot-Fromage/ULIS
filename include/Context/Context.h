@@ -793,7 +793,7 @@ public:
         sure it is not referenced elsewhere.
     */
     ulError
-    LoadFromFile(
+    FileLoad(
           FBlock& ioBlock
         , const std::string& iPath
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -807,7 +807,7 @@ public:
         iQuality is only used for jpeg files and is beetween 0 and 100
     */
     ulError
-    SaveToFile(
+    FileSave(
           const FBlock& iBlock
         , const std::string& iPath
         , eFileFormat iFileFormat = eFileFormat::FileFormat_png
@@ -836,7 +836,7 @@ public:
         \warning This feature is only available on windows at the moment.
     */
     ulError
-    LoadFromClipboard(
+    ClipboardLoad(
           FBlock& ioBlock
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -850,7 +850,7 @@ public:
         \warning This feature is only available on windows at the moment.
     */
     ulError
-    SaveToClipboard(
+    ClipboardSave(
           const FBlock& iBlock
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -863,7 +863,28 @@ public:
     */
     static
     bool
-    ClipboardHasImage();
+    ClipboardCanBeLoadedFrom();
+
+    /*!
+        Collect metrics before a SaveToClipboard call
+    */
+    static
+    bool
+    ClipboardCanBeSavedTo();
+
+    /*!
+        Collect metrics before a SaveToClipboard call
+    */
+    static
+    bool
+    FileCanBeLoadedFrom();
+
+    /*!
+        Collect metrics before a SaveToClipboard call
+    */
+    static
+    bool
+    FileCanBeSavedTo();
 
 private:
     FCommandQueue& mCommandQueue;
