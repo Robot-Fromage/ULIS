@@ -117,6 +117,61 @@ FContext::FileSave(
 }
 
 ulError
+FContext::FileSaveConvSafe(
+      const FBlock& iBlock
+    , const std::string& iPath
+    , eFileFormat iFileFormat
+    , int iQuality
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    /*
+    eType type = iBlock.Type();
+    eFormat format = iBlock.Format();
+    eColorModel model = iBlock.Model();
+
+    bool layout_valid = ULIS_R_RS( format ) == 0;
+    bool model_valid = model == CM_GREY || model == CM_RGB;
+    bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
+                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
+
+    int w = iBlock.Width();
+    int h = iBlock.Height();
+    int c = iBlock.SamplesPerPixel();
+    const uint8* dat = iBlock.Bits();
+
+    if( !( layout_valid && model_valid && type_valid ) )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_FILE_FORMAT );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleFileSave
+            , new FDiskIOCommandArgs(
+                  const_cast< FBlock& >( iBlock )
+                , iBlock.Rect()
+                , iPath
+                , iFileFormat
+                , iQuality
+            )
+            , iPolicy
+            , true
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , iBlock.Rect()
+        )
+    );
+    */
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
 FContext::ClipboardLoad(
       FBlock& ioBlock
     , const FSchedulePolicy& iPolicy

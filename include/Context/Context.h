@@ -805,9 +805,58 @@ public:
     /*!
         Perform a save operation of the input iBlock at the specified path.
         iQuality is only used for jpeg files and is beetween 0 and 100
+
+        \warning Some blocks cannot be saved, because some formats will not
+        always fit a given input eFileFormat. For example, you cannot save 8bits
+        HDR, or Lab pngs right out of the box, or 32bits jpegs. If such a situation
+        occurs, the function will No-OP and return directly an ulError code,
+        ULIS_WARNING_NO_OP_BAD_FILE_FORMAT.
+
+        You can either perform a conversion in an appropriate format beforehand,
+        or use the FileSaveConvSafe() to make sure it is always saved, at the cost
+        of a potential extra conversion call. See the docs for FileSaveConvSafe()
+        as it has drawbacks too.
+
+        \sa FileLoad()
+        \sa FileSaveConvSafe()
     */
     ulError
     FileSave(
+          const FBlock& iBlock
+        , const std::string& iPath
+        , eFileFormat iFileFormat = eFileFormat::FileFormat_png
+        , int iQuality = 100
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a save operation of the input iBlock at the specified path.
+        iQuality is only used for jpeg files and is beetween 0 and 100
+
+        \warning When using this method, the implementation can possibly
+        perform a conversion the input block in order to make sure it is in the
+        appropriate memory format to match the specs of the input file format.
+        This converted version won't be made available to you, it will remain
+        internal so you don't have to worry about it much, but comes with an
+        extra overhead in performances.
+
+        The conversion that is performed will use the equivalent of a call to
+        ConvertFormat() beforehand, so the saved file will be the converted
+        version and upon reloading the file, it may not match the initial
+        format. For instance, saving a block with eFormat::Format_LabAF with an
+        input eFileFormat::FileFormat_png will trigger a conversion to
+        eFormat::Format_RGBA8 beforehand, so when loading the same file it will
+        have format eFormat::Format_RGBA8, the Lab information was lost in the
+        process.
+
+        \sa FileLoad()
+        \sa FileSave()
+    */
+    ulError
+    FileSaveConvSafe(
           const FBlock& iBlock
         , const std::string& iPath
         , eFileFormat iFileFormat = eFileFormat::FileFormat_png
