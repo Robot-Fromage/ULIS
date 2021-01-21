@@ -68,10 +68,12 @@ FContext::Format() const
 }
 
 void
-FContext::FinishEventNo_OP( FEvent* iEvent )
+FContext::FinishEventNo_OP( FEvent* iEvent, ulError iError )
 {
     if( iEvent )
         iEvent->d->m->SetStatus( eEventStatus::EventStatus_Finished );
+
+    return  iError;
 }
 
 ULIS_NAMESPACE_END
