@@ -331,19 +331,6 @@ enum eColorModel {
     X( Yxy,     Yxy )
 
 /////////////////////////////////////////////////////
-// Named booleans literals
-#define ULIS_BLOCKING              1
-#define ULIS_NONBLOCKING           0
-#define ULIS_CALLCB                1
-#define ULIS_NOCB                  0
-#define ULIS_AA                    1
-#define ULIS_NOAA                  0
-#define ULIS_PREMULTIPLIED         1
-#define ULIS_UNPREMULTIPLIED       0
-#define ULIS_GAMMA_COMPRESSED      1
-#define ULIS_GAMMA_UNCOMPRESSED    0
-
-/////////////////////////////////////////////////////
 // Extrapolation Method
 enum eBorderMode {
       Border_Transparent
