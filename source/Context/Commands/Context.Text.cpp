@@ -28,7 +28,7 @@
 #include FT_GLYPH_H
 
 ULIS_NAMESPACE_BEGIN
-void
+ulError
 FContext::RasterText(
       FBlock& iBlock
     , const std::wstring& iText
@@ -48,7 +48,7 @@ FContext::RasterText(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward Arguments Baking
     FT_Matrix matrix;
@@ -82,9 +82,11 @@ FContext::RasterText(
             , roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
-void
+ulError
 FContext::RasterTextAA(
       FBlock& iBlock
     , const std::wstring& iText
@@ -104,7 +106,7 @@ FContext::RasterTextAA(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward Arguments Baking
     FT_Matrix matrix;
@@ -138,6 +140,8 @@ FContext::RasterTextAA(
             , roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
 //static

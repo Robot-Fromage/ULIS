@@ -24,7 +24,7 @@
 #include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
-void
+ulError
 FContext::Fill(
           FBlock& iBlock
         , const FRectI& iRect
@@ -41,7 +41,7 @@ FContext::Fill(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     // This one is a bit tricky so here is a breakdown of the steps:
@@ -73,9 +73,11 @@ FContext::Fill(
             , roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
-void
+ulError
 FContext::FillPreserveAlpha(
           FBlock& iBlock
         , const FRectI& iRect
@@ -92,7 +94,7 @@ FContext::FillPreserveAlpha(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent );
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -112,6 +114,8 @@ FContext::FillPreserveAlpha(
             , roi
         )
     );
+
+    return  ULIS_NO_ERROR;
 }
 
 ULIS_NAMESPACE_END
