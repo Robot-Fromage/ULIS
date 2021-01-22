@@ -84,14 +84,11 @@ endif()
 set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_FORCE_ASSERT -D ULIS_FORCE_STATISTICS -D ULIS_RELWITHDEBINFO" )
 
 # Add Dependencies
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip         ${PROJECT_BINARY_DIR}/3rdparty/build_clip       )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
 
-set_target_properties( clip PROPERTIES COMPILE_FLAGS "/wd4267" )
 set_target_properties( freetype PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312" )
 
-set_target_properties( clip                 PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( lcms2                PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( freetype             PROPERTIES FOLDER ULIS/3rdparty )
 
@@ -158,7 +155,6 @@ target_compile_definitions(
 set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS${ULIS_VERSION_MAJOR}" )
 set_target_properties( ULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
 set_target_properties( ULIS PROPERTIES FOLDER ULIS )
-target_link_libraries( ULIS PRIVATE clip )
 target_link_libraries( ULIS PRIVATE lcms2 )
 target_link_libraries( ULIS PRIVATE freetype )
 #target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
@@ -170,11 +166,9 @@ target_include_directories(
     PRIVATE
     #${OpenCL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/clip/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/FeatureDetector/
     "source/"
 )
 
