@@ -91,29 +91,6 @@ InvokeSaveToFile_MEM_Generic(
     , const FDiskIOCommandArgs* cargs
 )
 {
-    // Old test fallback to conv, not used here.
-    /*
-    eType type = cargs->dst.Type();
-    eFormat format = cargs->dst.Format();
-    eColorModel model = cargs->dst.Model();
-
-    bool layout_valid = ULIS_R_RS( format ) == 0;
-    bool model_valid = model == CM_GREY || model == CM_RGB;
-    bool type_valid = ( cargs->fileFormat != FileFormat_hdr && type == Type_uint8 ) ||
-                      ( cargs->fileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
-
-
-    FBlock* conv = nullptr;
-    if( !( layout_valid && model_valid && type_valid ) ) {
-        eFormat dstformat = static_cast< eFormat >( 0 );
-        if( cargs->fileFormat == FileFormat_hdr )    dstformat = eFormat::Format_RGBF;
-        else if( model == CM_GREY )     dstformat = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( cargs->dst.HasAlpha() ) );
-        else                            dstformat = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( cargs->dst.HasAlpha() ) );
-        //conv = XConv( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, dstformat );
-        dat = conv->Bits();
-    }
-    */
-
     int w = cargs->dst.Width();
     int h = cargs->dst.Height();
     int c = cargs->dst.SamplesPerPixel();
