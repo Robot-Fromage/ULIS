@@ -182,8 +182,6 @@ private:
 #ifdef ULIS_FEATURE_IO_ENABLED
     const fpCommandScheduler mScheduleFileLoad;
     const fpCommandScheduler mScheduleFileSave;
-    const fpCommandScheduler mScheduleClipboardLoad;
-    const fpCommandScheduler mScheduleClipboardSave;
 #endif // ULIS_FEATURE_IO_ENABLED
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )

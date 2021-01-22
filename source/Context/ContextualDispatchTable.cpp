@@ -81,8 +81,6 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
 #ifdef ULIS_FEATURE_IO_ENABLED
         , mScheduleFileLoad(                        nullptr )
         , mScheduleFileSave(                        nullptr )
-        , mScheduleClipboardLoad(                   nullptr )
-        , mScheduleClipboardSave(                   nullptr )
 #endif // ULIS_FEATURE_IO_ENABLED
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
