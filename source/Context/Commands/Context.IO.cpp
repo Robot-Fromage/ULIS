@@ -14,7 +14,6 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Process/IO/Disk.h"
-//#include "Process/IO/Clipboard.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
@@ -23,12 +22,16 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 
+#include <fstream>
+
+#include <stb_image.h>
+
 #include <filesystem>
 namespace fs = std::filesystem;
 
 ULIS_NAMESPACE_BEGIN
 ulError
-FContext::FileLoad(
+FContext::LoadBlockFromDisk(
       FBlock& ioBlock
     , const std::string& iPath
     , const FSchedulePolicy& iPolicy
@@ -64,7 +67,7 @@ FContext::FileLoad(
 }
 
 ulError
-FContext::FileSave(
+FContext::SaveBlockToDisk(
       const FBlock& iBlock
     , const std::string& iPath
     , eFileFormat iFileFormat
@@ -112,7 +115,7 @@ FContext::FileSave(
 }
 
 ulError
-FContext::FileSaveConvSafe(
+FContext::SaveProxyToDisk(
       const FBlock& iBlock
     , const std::string& iPath
     , eFileFormat iFileFormat
@@ -152,59 +155,84 @@ FContext::FileSaveConvSafe(
 
     // TODO: extra wait event preprocess_conv_event
     // TODO: extra cleanup conv after FileSave is finished
-    return  FileSave( *target, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
+    return  SaveBlockToDisk( *target, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
 }
 
-ulError
-FContext::ClipboardLoad(
-      FBlock& ioBlock
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
+//static
+void
+FContext::LoadBlockFromFileMetrics(
+      const std::string& iPath
+    , bool *oFileExists
+    , FVec2I *oSize
+    , eFormat *oFormat
 )
 {
-    return  ULIS_NO_ERROR;
-}
+    *oFileExists = false;
+    *oSize = FVec2I( 0, 0 );
+    *oFormat = eFormat::Format_RGBA8;
 
-ulError
-FContext::ClipboardSave(
-      const FBlock& iBlock
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    return  ULIS_NO_ERROR;
+    // Does the file exist ?
+    fs::path path( iPath );
+    if( ( !( fs::exists( path ) ) ) || ( !( fs::is_regular_file( path ) ) ) )
+       return;
+
+    // Can we read it right now ?
+    std::ifstream file( iPath.c_str(), std::ios::binary | std::ios::ate );
+    std::streamsize size = file.tellg();
+    file.seekg( 0, std::ios::beg );
+    std::vector<char> buffer( size );
+    if( !file.read( buffer.data(), size ) )
+        return;
+
+    // Can we get info about its format ?
+    int width, height, numchannels;
+    stbi_info_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ), &width, &height, &numchannels );
+
+    eType type = Type_uint8;
+    if( stbi_is_16_bit_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) ) )
+        type = Type_uint16;
+    else if( stbi_is_hdr_from_memory( (const stbi_uc*)buffer.data(), static_cast< int >( size ) ) )
+        type = Type_ufloat;
+
+    int depth = 1;
+    bool floating = false;
+    switch( type ) {
+        case Type_uint8:    depth = 1; floating = false;  break;
+        case Type_uint16:   depth = 2; floating = false;  break;
+        case Type_ufloat:   depth = 4; floating = true;   break;
+    }
+
+    eColorModel model;
+    bool hea = false;
+    switch( numchannels ) {
+        case 1: model = CM_GREY;    hea = false;    break;
+        case 2: model = CM_GREY;    hea = true;     break;
+        case 3: model = CM_RGB;     hea = false;    break;
+        case 4: model = CM_RGB;     hea = true;     break;
+    }
+    int color_channels = numchannels - hea;
+
+    eFormat fmt =
+        static_cast< eFormat >(
+              ULIS_W_TYPE( type )
+            | ULIS_W_CHANNELS( color_channels )
+            | ULIS_W_MODEL( model )
+            | ULIS_W_ALPHA( hea )
+            | ULIS_W_DEPTH( depth )
+            | ULIS_W_FLOATING( floating )
+        );
+
+    *oFileExists = true;
+    *oSize = FVec2I( width, height );
+    *oFormat = fmt;
+    return;
 }
 
 //static
-bool
-ClipboardCanBeLoadedFrom()
+void
+FContext::SaveBlockToDiskMetrics()
 {
-    return  false;
-}
-
-//static
-bool
-ClipboardCanBeSavedTo()
-{
-    return  false;
-}
-
-//static
-bool
-FileCanBeLoadedFrom()
-{
-    return  false;
-}
-
-//static
-bool
-FileCanBeSavedTo()
-{
-    return  false;
+    return;
 }
 
 ULIS_NAMESPACE_END
