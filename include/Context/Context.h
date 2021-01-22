@@ -793,7 +793,7 @@ public:
         sure it is not referenced elsewhere.
     */
     ulError
-    FileLoad(
+    LoadBlockFromDisk(
           FBlock& ioBlock
         , const std::string& iPath
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -813,15 +813,15 @@ public:
         ULIS_WARNING_NO_OP_BAD_FILE_FORMAT.
 
         You can either perform a conversion in an appropriate format beforehand,
-        or use the FileSaveConvSafe() to make sure it is always saved, at the cost
-        of a potential extra conversion call. See the docs for FileSaveConvSafe()
+        or use the SaveProxyToDisk() to make sure it is always saved, at the cost
+        of a potential extra conversion call. See the docs for SaveProxyToDisk()
         as it has drawbacks too.
 
-        \sa FileLoad()
-        \sa FileSaveConvSafe()
+        \sa LoadBlockFromDisk()
+        \sa SaveProxyToDisk()
     */
     ulError
-    FileSave(
+    SaveBlockToDisk(
           const FBlock& iBlock
         , const std::string& iPath
         , eFileFormat iFileFormat = eFileFormat::FileFormat_png
@@ -852,11 +852,11 @@ public:
         have format eFormat::Format_RGBA8, the Lab information was lost in the
         process.
 
-        \sa FileLoad()
-        \sa FileSave()
+        \sa LoadBlockFromDisk()
+        \sa SaveBlockToDisk()
     */
     ulError
-    FileSaveConvSafe(
+    SaveProxyToDisk(
           const FBlock& iBlock
         , const std::string& iPath
         , eFileFormat iFileFormat = eFileFormat::FileFormat_png
@@ -868,72 +868,23 @@ public:
     );
 
     /*!
-        Perform a load operation into the input ioBlock. The result of the load
-        is written in the ioBlock.
-
-        The internal size and formats of ioBlock will be changed to match that
-        of the clipboard. The method might reallocate the internal data of the
-        ioBlock asynchronously, but the ioBlock reference itself is not
-        invalidated. It is only safe to access the ioBlock fields after the
-        command has actually completed, you can ensure that with a Fence, a
-        Finish, a Wait on the associated FEvent, or with an FEvent callback.
-
-        If the internals are invalidated, the cleanup function of the internal
-        data will be called and could destroy the already present memory so make
-        sure it is not referenced elsewhere.
-
-        \warning This feature is only available on windows at the moment.
+        Collect metrics before a LoadBlockFromDisk call
     */
-    ulError
-    ClipboardLoad(
-          FBlock& ioBlock
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
+    static
+    void
+    LoadBlockFromFileMetrics(
+          const std::string& iPath
+        , bool *oFileExists
+        , FVec2I *oSize
+        , eFormat *oFormat
     );
 
     /*!
-        Perform a store operation of the input iBlock into the clipboard.
-
-        \warning This feature is only available on windows at the moment.
-    */
-    ulError
-    ClipboardSave(
-          const FBlock& iBlock
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Collect metrics before a LoadFromClipboard call
+        Collect metrics before a SaveBlockToDisk call
     */
     static
-    bool
-    ClipboardCanBeLoadedFrom();
-
-    /*!
-        Collect metrics before a SaveToClipboard call
-    */
-    static
-    bool
-    ClipboardCanBeSavedTo();
-
-    /*!
-        Collect metrics before a SaveToClipboard call
-    */
-    static
-    bool
-    FileCanBeLoadedFrom();
-
-    /*!
-        Collect metrics before a SaveToClipboard call
-    */
-    static
-    bool
-    FileCanBeSavedTo();
+    void
+    SaveBlockToDiskMetrics();
 
 private:
     FCommandQueue& mCommandQueue;
