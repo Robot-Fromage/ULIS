@@ -89,14 +89,32 @@ main( int argc, char *argv[] ) {
         ctx.BlendColor( FColor::RGB( 255, 255, 255, 255 ), canvas, canvas.Rect(), Blend_Normal, Alpha_Normal, 0.75f, policy_cache_efficient, 1, &events[ 11 ], nullptr );
         ctx.Finish();
 
-        std::wstring test;
-        for( int i = 32; i < 127; ++i )
-            test += wchar_t( i );
-        FEvent testev;
-        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 240 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy(), 0, 0, &testev );
-        ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 280 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy(), 1, &testev );
+        auto zozo = FMat3F::MakeRotationMatrix( 0.01f );
+        auto zizi = FMat3F::MakeRotationMatrix( 0.01f ) * FMat3F();
+        ctx.TransformAffine(
+              blockC
+            , canvas
+            , blockC.Rect()
+            , FMat3F::MakeRotationMatrix( 0.01f ) * FMat3F() * FMat3F::MakeTranslationMatrix( 50.f, 50.f )
+            , Resampling_NearestNeighbour
+            , Border_Transparent
+            , FColor()
+            , policy_mono_chunk
+            , 0
+            , nullptr
+            , nullptr
+        );
+
         ctx.Finish();
-        ctx.Finish();
+
+        //std::wstring test;
+        //for( int i = 32; i < 127; ++i )
+        //    test += wchar_t( i );
+        //FEvent testev;
+        //ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 240 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy(), 0, 0, &testev );
+        //ctx.RasterText( canvas, test, font, 32, FMat3F::MakeTranslationMatrix( 50, 280 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy(), 1, &testev );
+        //ctx.Finish();
+        //ctx.Finish();
     }
 
     // Bake Qt App / Window
