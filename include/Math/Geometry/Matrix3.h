@@ -684,13 +684,13 @@ template< typename T >
 ULIS_MATRIX_FUNC TMatrix3< T > operator*( const TMatrix3< T >& iMat, const TMatrix3< T >& iOther ) {
     return  TMatrix3< T >(
           iMat[0][0] * iOther[0][0] + iMat[1][0] * iOther[0][1] + iMat[2][0] * iOther[0][2]
-        , iMat[0][0] * iOther[1][0] + iMat[1][0] * iOther[1][1] + iMat[2][0] * iOther[1][2]
-        , iMat[0][0] * iOther[2][0] + iMat[1][0] * iOther[2][1] + iMat[2][0] * iOther[2][2]
         , iMat[0][1] * iOther[0][0] + iMat[1][1] * iOther[0][1] + iMat[2][1] * iOther[0][2]
-        , iMat[0][1] * iOther[1][0] + iMat[1][1] * iOther[1][1] + iMat[2][1] * iOther[1][2]
-        , iMat[0][1] * iOther[2][0] + iMat[1][1] * iOther[2][1] + iMat[2][1] * iOther[2][2]
         , iMat[0][2] * iOther[0][0] + iMat[1][2] * iOther[0][1] + iMat[2][2] * iOther[0][2]
+        , iMat[0][0] * iOther[1][0] + iMat[1][0] * iOther[1][1] + iMat[2][0] * iOther[1][2]
+        , iMat[0][1] * iOther[1][0] + iMat[1][1] * iOther[1][1] + iMat[2][1] * iOther[1][2]
         , iMat[0][2] * iOther[1][0] + iMat[1][2] * iOther[1][1] + iMat[2][2] * iOther[1][2]
+        , iMat[0][0] * iOther[2][0] + iMat[1][0] * iOther[2][1] + iMat[2][0] * iOther[2][2]
+        , iMat[0][1] * iOther[2][0] + iMat[1][1] * iOther[2][1] + iMat[2][1] * iOther[2][2]
         , iMat[0][2] * iOther[2][0] + iMat[1][2] * iOther[2][1] + iMat[2][2] * iOther[2][2]
     );
 }

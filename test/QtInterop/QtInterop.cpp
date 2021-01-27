@@ -95,8 +95,8 @@ main( int argc, char *argv[] ) {
               blockC
             , canvas
             , blockC.Rect()
-            , FMat3F::MakeRotationMatrix( 0.01f ) * FMat3F() * FMat3F::MakeTranslationMatrix( 50.f, 50.f )
-            , Resampling_NearestNeighbour
+            , FMat3F::MakeRotationMatrix( 0.01f ) * FMat3F::MakeTranslationMatrix( 50.f, 50.f )
+            , Resampling_Bilinear
             , Border_Transparent
             , FColor()
             , policy_mono_chunk
