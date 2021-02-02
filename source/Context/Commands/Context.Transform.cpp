@@ -76,7 +76,7 @@ FContext::TransformAffine(
                 , iTransformMatrix.Inverse()
             )
             , iPolicy
-            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // Non-contiguous, disable chunks, force scanlines.
             , false // No need to force mono.
             , iNumWait
             , iWaitList
@@ -141,7 +141,7 @@ FContext::TransformAffineTiled(
                 , true // Tiled
             )
             , iPolicy
-            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // Non-contiguous, disable chunks, force scanlines.
             , false // No need to force mono.
             , iNumWait
             , iWaitList
@@ -205,7 +205,7 @@ FContext::TransformPerspective(
                 , iTransformMatrix.Inverse()
             )
             , iPolicy
-            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // Non-contiguous, disable chunks, force scanlines.
             , false // No need to force mono.
             , iNumWait
             , iWaitList
@@ -327,7 +327,7 @@ FContext::Resize(
                 , nullptr // SAT
             )
             , iPolicy
-            , false // Non-contiguous, dissallow chunks, force scanlines.
+            , false // Non-contiguous, disable chunks, force scanlines.
             , false // No need to force mono.
             , iNumWait
             , iWaitList

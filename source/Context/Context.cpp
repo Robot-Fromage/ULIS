@@ -13,9 +13,11 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Scheduling/CommandQueue.h"
+#include "Scheduling/CommandQueue_Private.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include "Process/No_OP/No_OP.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -74,6 +76,28 @@ FContext::FinishEventNo_OP( FEvent* iEvent, ulError iError )
         iEvent->d->m->SetStatus( eEventStatus::EventStatus_Finished );
 
     return  iError;
+}
+
+ulError
+FContext::Dummy_OP(
+      uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    mCommandQueue.d->Push(
+        new FCommand(
+              &ScheduleNo_OP
+            , new FNo_OPCommandArgs()
+            , FSchedulePolicy()
+            , true
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , FRectI()
+        )
+    );
 }
 
 ULIS_NAMESPACE_END
