@@ -22,6 +22,7 @@
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include <vector>
 
 ULIS_NAMESPACE_BEGIN
 ulError
@@ -30,6 +31,7 @@ FContext::Extract(
     , FBlock& iDestination
     , uint8 iSourceExtractMask
     , uint8 iDestinationExtractMask
+    , bool iUseRawMask
     , const FRectI& iSourceRect
     , const FVec2I& iPosition
     , const FSchedulePolicy& iPolicy
@@ -38,6 +40,78 @@ FContext::Extract(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Forward arguments baking
+    const FFormatMetrics& srcFormatMetrics( iSource.FormatMetrics() );
+    const FFormatMetrics& dstFormatMetrics( iDestination.FormatMetrics() );
+
+    // Channels
+    uint8 max_channels_both = FMath::Min( FMath::Max( srcFormatMetrics.SPP, dstFormatMetrics.SPP ), static_cast< uint8 >( ULIS_MAX_CHANNELS ) );
+    std::vector< uint8 > sourceChannelsToExtract;
+    std::vector< uint8 > destinationChannelsToExtract;
+    sourceChannelsToExtract.reserve( max_channels_both );
+    destinationChannelsToExtract.reserve( max_channels_both );
+    for( int i = 0; i < max_channels_both; ++i ) {
+        if( iSourceExtractMask & ( 1 << i ) )
+            sourceChannelsToExtract.push_back( iUseRawMask ? i : srcFormatMetrics.IDT[i] );
+
+        if( iDestinationExtractMask & ( 1 << i ) )
+            destinationChannelsToExtract.push_back( iUseRawMask ? i : dstFormatMetrics.IDT[i] );
+    }
+    sourceChannelsToExtract.shrink_to_fit();
+    destinationChannelsToExtract.shrink_to_fit();
+
+    ULIS_ASSERT_RETURN_ERROR( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( sourceChannelsToExtract.size() && destinationChannelsToExtract.size(), "Bad Extraction parameters", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+
+    // Strides
+    uint8* sourceStrides = new uint8[ sourceChannelsToExtract.size() ];
+    uint8* destinationStrides = new uint8[ destinationChannelsToExtract.size() ];
+    sourceStrides[0] = sourceChannelsToExtract[0];
+    destinationStrides[0] = destinationChannelsToExtract[0];
+    for( int i = 1; i < sourceChannelsToExtract.size(); ++i ) {
+        sourceStrides[i] = sourceChannelsToExtract[i] - sourceChannelsToExtract[i-1];
+        destinationStrides[i] = destinationChannelsToExtract[i] - destinationChannelsToExtract[i-1];
+    }
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleConvertFormat
+            , new FExtractCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , sourceStrides
+                , destinationStrides
+                , QueryDispatchedExtractInvocation( iSource.Type(), iDestination.Type() )
+            )
+            , iPolicy
+            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , dst_roi
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 

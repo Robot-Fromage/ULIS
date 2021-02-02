@@ -932,6 +932,7 @@ public:
         , FBlock& iDestination
         , uint8 iSourceExtractMask
         , uint8 iDestinationExtractMask
+        , bool iUseRawMask = false
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
