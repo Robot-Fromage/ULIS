@@ -5,22 +5,28 @@
 *__________________
 * @file         Extract.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the Extract entry point functions.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        This file provides the definitions for the Extract API.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Misc/Extract.h"
-#include "System/Device.h"
+#include "Process/Misc/Extract.h"
 #include "Image/Block.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
-#include "Math/Math.h"
-#include "Thread/ThreadPool.h"
-#include <vector>
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Invocations
 template< typename T1, typename T2 >
-void InvokeExtractInto( size_t iW, const uint8* iSrc, uint8* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP ) {
+void
+InvokeExtractInto(
+      const uint8* iSrc
+    , uint8* iDst
+    , uint8* iStridesSrc
+    , uint8* iStridesDst
+    , uint8 iSRCSPP
+    , uint8 iDSTSPP
+    , uint32 iLen
+)
+{
     const T1*   src = reinterpret_cast< const T1* >( iSrc );
     T2*         dst = reinterpret_cast< T2* >( iDst );
     const size_t len = iStridesSrc.size();
@@ -32,46 +38,72 @@ void InvokeExtractInto( size_t iW, const uint8* iSrc, uint8* iDst, std::vector< 
     }
 }
 
-typedef void (*fpDispatchedExtractInvoke)( size_t iW, const uint8* iSrc, uint8* iDst, std::vector< uint8 > iStridesSrc, std::vector< uint8 > iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP );
-fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType );
+void
+InvokeExtract_MEM(
+      const FDualBufferJobArgs* jargs
+    , const FExtractCommandArgs* cargs
+)
+{
+    cargs->invocation(
+          jargs->src
+        , jargs->dst
+        , nullptr
+        , nullptr
+        , cargs->src.SamplesPerPixel()
+        , cargs->dst.SamplesPerPixel()
+        , static_cast< uint32 >( jargs->size / cargs->dst.BytesPerPixel() )
+    );
+}
 
-fpDispatchedExtractInvoke QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
+/////////////////////////////////////////////////////
+// Dispatch / Schedule
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleExtract, FDualBufferJobArgs, FExtractCommandArgs, &InvokeExtract_MEM )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedExtractInvocationSchedulerSelector )
+
+/////////////////////////////////////////////////////
+// Extract Dispatcher
+fpExtract QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
     switch( iSrcType ) {
         case Type_uint8: switch( iDstType ) {
-                case Type_uint8:    return  InvokeExtractInto< uint8, uint8        >;
-                case Type_uint16:   return  InvokeExtractInto< uint8, uint16       >;
-                case Type_uint32:   return  InvokeExtractInto< uint8, uint32       >;
-                case Type_ufloat:   return  InvokeExtractInto< uint8, ufloat       >;
-                case TYPE_UDOUBLE:  return  InvokeExtractInto< uint8, udouble      >; }
+                case Type_uint8:    return  InvokeExtractInto< uint8, uint8  >;
+                case Type_uint16:   return  InvokeExtractInto< uint8, uint16 >;
+                case Type_uint32:   return  InvokeExtractInto< uint8, uint32 >;
+                case Type_ufloat:   return  InvokeExtractInto< uint8, ufloat >;
+                //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint8, udouble      >;
+        }
         case Type_uint16: switch( iDstType ) {
-                case Type_uint8:    return  InvokeExtractInto< uint16, uint8       >;
-                case Type_uint16:   return  InvokeExtractInto< uint16, uint16      >;
-                case Type_uint32:   return  InvokeExtractInto< uint16, uint32      >;
-                case Type_ufloat:   return  InvokeExtractInto< uint16, ufloat      >;
-                case TYPE_UDOUBLE:  return  InvokeExtractInto< uint16, udouble     >; }
+                case Type_uint8:    return  InvokeExtractInto< uint16, uint8  >;
+                case Type_uint16:   return  InvokeExtractInto< uint16, uint16 >;
+                case Type_uint32:   return  InvokeExtractInto< uint16, uint32 >;
+                case Type_ufloat:   return  InvokeExtractInto< uint16, ufloat >;
+                //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint16, udouble     >;
+        }
         case Type_uint32: switch( iDstType ) {
-                case Type_uint8:    return  InvokeExtractInto< uint32, uint8       >;
-                case Type_uint16:   return  InvokeExtractInto< uint32, uint16      >;
-                case Type_uint32:   return  InvokeExtractInto< uint32, uint32      >;
-                case Type_ufloat:   return  InvokeExtractInto< uint32, ufloat      >;
-                case TYPE_UDOUBLE:  return  InvokeExtractInto< uint32, udouble     >; }
+                case Type_uint8:    return  InvokeExtractInto< uint32, uint8  >;
+                case Type_uint16:   return  InvokeExtractInto< uint32, uint16 >;
+                case Type_uint32:   return  InvokeExtractInto< uint32, uint32 >;
+                case Type_ufloat:   return  InvokeExtractInto< uint32, ufloat >;
+                //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint32, udouble     >;
+        }
         case Type_ufloat: switch( iDstType ) {
-                case Type_uint8:    return  InvokeExtractInto< ufloat, uint8       >;
-                case Type_uint16:   return  InvokeExtractInto< ufloat, uint16      >;
-                case Type_uint32:   return  InvokeExtractInto< ufloat, uint32      >;
-                case Type_ufloat:   return  InvokeExtractInto< ufloat, ufloat      >;
-                case TYPE_UDOUBLE:  return  InvokeExtractInto< ufloat, udouble     >; }
-        case TYPE_UDOUBLE: switch( iDstType ) {
-                case Type_uint8:    return  InvokeExtractInto< udouble, uint8      >;
-                case Type_uint16:   return  InvokeExtractInto< udouble, uint16     >;
-                case Type_uint32:   return  InvokeExtractInto< udouble, uint32     >;
-                case Type_ufloat:   return  InvokeExtractInto< udouble, ufloat     >;
-                case TYPE_UDOUBLE:  return  InvokeExtractInto< udouble, udouble    >; }
+                case Type_uint8:    return  InvokeExtractInto< ufloat, uint8  >;
+                case Type_uint16:   return  InvokeExtractInto< ufloat, uint16 >;
+                case Type_uint32:   return  InvokeExtractInto< ufloat, uint32 >;
+                case Type_ufloat:   return  InvokeExtractInto< ufloat, ufloat >;
+                //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< ufloat, udouble     >;
+        }
+        //case TYPE_UDOUBLE: switch( iDstType ) {
+        //        case Type_uint8:    return  InvokeExtractInto< udouble, uint8      >;
+        //        case Type_uint16:   return  InvokeExtractInto< udouble, uint16     >;
+        //        case Type_uint32:   return  InvokeExtractInto< udouble, uint32     >;
+        //        case Type_ufloat:   return  InvokeExtractInto< udouble, ufloat     >;
+        //        case TYPE_UDOUBLE:  return  InvokeExtractInto< udouble, udouble    >; }
     }
+
     return  nullptr;
 }
 
-
+/*
 void
 Extract( FOldThreadPool*           iOldThreadPool
        , bool                   iBlocking
@@ -152,26 +184,7 @@ Extract( FOldThreadPool*           iOldThreadPool
 
     iDestination->Dirty( iCallCB );
 }
-
-
-FBlock* XExtract( FOldThreadPool*              iOldThreadPool
-                , bool                      iBlocking
-                , uint32                    iPerfIntent
-                , const FHardwareMetrics&    iHostDeviceInfo
-                , bool                      iCallCB
-                , const FBlock*             iSource
-                , bool                      iSourceRawIndicesFlag
-                , uint8                     iSourceExtractMask
-                , eFormat                   iDestinationFormat
-                , bool                      iDestinationRawIndicesFlag
-                , uint8                     iDestinationExtractMask )
-{
-    // Assertions
-    ULIS_ASSERT( iSource, "Bad source." );
-    FBlock* ret = new  FBlock( iSource->Width(), iSource->Height(), iDestinationFormat );
-    Extract( iOldThreadPool, iBlocking, iPerfIntent, iHostDeviceInfo, iCallCB, iSource, iSourceRawIndicesFlag, iSourceExtractMask, ret, iDestinationRawIndicesFlag, iDestinationExtractMask );
-    return  ret;
-}
+*/
 
 ULIS_NAMESPACE_END
 
