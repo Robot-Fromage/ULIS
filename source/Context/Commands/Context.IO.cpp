@@ -114,6 +114,47 @@ FContext::SaveBlockToDisk(
     return  ULIS_NO_ERROR;
 }
 
+/*
+ulError
+FContext::LoadProxyFromDisk(
+      FBlock& ioBlock
+    , eFormat iFormat
+    , const std::string& iPath
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // TODO: Async Block Allocation
+    bool disk_exists = false;
+    FVec2I disk_size( 0, 0 );
+    eFormat disk_format = Format_RGBA8;
+    LoadBlockFromDiskMetrics( iPath, &disk_exists, &disk_size, &disk_format );
+    ULIS_ASSERT_RETURN_ERROR( disk_exists, "File doesn't exist.", ULIS_ERROR_BAD_INPUT_DATA );
+
+    if( disk_format != iFormat ) {
+        ioBlock.ReallocInternalData( disk_size.x, disk_size.y, iFormat, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
+        FBlock* src_hollow = new FBlock();
+
+        FEvent subcommand_event;
+        ulError err = LoadBlockFromDisk( *src_hollow, iPath, iPolicy, iNumWait, iWaitList, &subcommand_event );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within subcommand" );
+
+        FEvent maincommand_event( FOnEventComplete( []( const FRectI&, void* iUserData ){ delete  reinterpret_cast< FBlock* >( iUserData ); }, src_hollow ) );
+        err = ConvertFormat( *src_hollow, ioBlock, ioBlock.Rect(), FVec2I( 0, 0 ), iPolicy, 1, &subcommand_event, &maincommand_event );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within maincommand" );
+
+        err = Dummy_OP( 1, &maincommand_event, iEvent );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within postcommand" );
+        return  ULIS_NO_ERROR;
+    } else {
+        return  LoadBlockFromDisk( ioBlock, iPath, iPolicy, iNumWait, iWaitList, iEvent );
+    }
+}
+*/
+
+/*
 ulError
 FContext::SaveProxyToDisk(
       const FBlock& iBlock
@@ -159,44 +200,7 @@ FContext::SaveProxyToDisk(
         return  SaveBlockToDisk( iBlock, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
     }
 }
-
-ulError
-FContext::LoadProxyFromDisk(
-      FBlock& ioBlock
-    , eFormat iFormat
-    , const std::string& iPath
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    // TODO: Async Block Allocation
-    bool disk_exists = false;
-    FVec2I disk_size( 0, 0 );
-    eFormat disk_format = Format_RGBA8;
-    LoadBlockFromDiskMetrics( iPath, &disk_exists, &disk_size, &disk_format );
-    ULIS_ASSERT_RETURN_ERROR( disk_exists, "File doesn't exist.", ULIS_ERROR_BAD_INPUT_DATA );
-
-    if( disk_format != iFormat ) {
-        ioBlock.ReallocInternalData( disk_size.x, disk_size.y, iFormat, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
-        FBlock* src_hollow = new FBlock();
-
-        FEvent subcommand_event;
-        ulError err = LoadBlockFromDisk( *src_hollow, iPath, iPolicy, iNumWait, iWaitList, &subcommand_event );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within subcommand" );
-
-        FEvent maincommand_event( FOnEventComplete( []( const FRectI&, void* iUserData ){ delete  reinterpret_cast< FBlock* >( iUserData ); }, src_hollow ) );
-        err = ConvertFormat( *src_hollow, ioBlock, ioBlock.Rect(), FVec2I( 0, 0 ), iPolicy, 1, &subcommand_event, &maincommand_event );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within maincommand" );
-
-        err = Dummy_OP( 1, &maincommand_event, iEvent );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within postcommand" );
-        return  ULIS_NO_ERROR;
-    } else {
-        return  LoadBlockFromDisk( ioBlock, iPath, iPolicy, iNumWait, iWaitList, iEvent );
-    }
-}
+*/
 
 //static
 void

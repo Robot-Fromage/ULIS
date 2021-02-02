@@ -833,67 +833,67 @@ public:
         , FEvent* iEvent = nullptr
     );
 
-    /*!
-        Perform a save operation of the input iBlock at the specified path.
-        iQuality is only used for jpeg files and is beetween 0 and 100
+    ///*!
+    //    Perform a load operation into the input ioBlock. The result of the load
+    //    is written in the ioBlock.
+    //
+    //    The internal size and data of ioBlock will be changed to match that
+    //    of the file. The format will remain the same as the block.
+    //    The method might reallocate the internal data of the ioBlock
+    //    asynchronously, but the ioBlock reference itself is not
+    //    invalidated. It is only safe to access the ioBlock fields after the
+    //    command has actually completed, you can ensure that with a Fence, a
+    //    Finish, a Wait on the associated FEvent, or with an FEvent callback.
+    //
+    //    If the internals are invalidated, the cleanup function of the internal
+    //    data will be called and could destroy the already present memory so make
+    //    sure it is not referenced elsewhere.
+    //*/
+    //ulError
+    //LoadProxyFromDisk(
+    //      FBlock& ioBlock
+    //    , eFormat iFormat
+    //    , const std::string& iPath
+    //    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    //    , uint32 iNumWait = 0
+    //    , const FEvent* iWaitList = nullptr
+    //    , FEvent* iEvent = nullptr
+    //);
 
-        \warning When using this method, the implementation can possibly
-        perform a conversion the input block in order to make sure it is in the
-        appropriate memory format to match the specs of the input file format.
-        This converted version won't be made available to you, it will remain
-        internal so you don't have to worry about it much, but comes with an
-        extra overhead in performances.
-
-        The conversion that is performed will use the equivalent of a call to
-        ConvertFormat() beforehand, so the saved file will be the converted
-        version and upon reloading the file, it may not match the initial
-        format. For instance, saving a block with eFormat::Format_LabAF with an
-        input eFileFormat::FileFormat_png will trigger a conversion to
-        eFormat::Format_RGBA8 beforehand, so when loading the same file it will
-        have format eFormat::Format_RGBA8, the Lab information was lost in the
-        process.
-
-        \sa LoadBlockFromDisk()
-        \sa SaveBlockToDisk()
-    */
-    ulError
-    SaveProxyToDisk(
-          const FBlock& iBlock
-        , const std::string& iPath
-        , eFileFormat iFileFormat = eFileFormat::FileFormat_png
-        , int iQuality = 100
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Perform a load operation into the input ioBlock. The result of the load
-        is written in the ioBlock.
-
-        The internal size and data of ioBlock will be changed to match that
-        of the file. The format will remain the same as the block.
-        The method might reallocate the internal data of the ioBlock
-        asynchronously, but the ioBlock reference itself is not
-        invalidated. It is only safe to access the ioBlock fields after the
-        command has actually completed, you can ensure that with a Fence, a
-        Finish, a Wait on the associated FEvent, or with an FEvent callback.
-
-        If the internals are invalidated, the cleanup function of the internal
-        data will be called and could destroy the already present memory so make
-        sure it is not referenced elsewhere.
-    */
-    ulError
-    LoadProxyFromDisk(
-          FBlock& ioBlock
-        , eFormat iFormat
-        , const std::string& iPath
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
+    ///*!
+    //    Perform a save operation of the input iBlock at the specified path.
+    //    iQuality is only used for jpeg files and is beetween 0 and 100
+    //
+    //    \warning When using this method, the implementation can possibly
+    //    perform a conversion the input block in order to make sure it is in the
+    //    appropriate memory format to match the specs of the input file format.
+    //    This converted version won't be made available to you, it will remain
+    //    internal so you don't have to worry about it much, but comes with an
+    //    extra overhead in performances.
+    //
+    //    The conversion that is performed will use the equivalent of a call to
+    //    ConvertFormat() beforehand, so the saved file will be the converted
+    //    version and upon reloading the file, it may not match the initial
+    //    format. For instance, saving a block with eFormat::Format_LabAF with an
+    //    input eFileFormat::FileFormat_png will trigger a conversion to
+    //    eFormat::Format_RGBA8 beforehand, so when loading the same file it will
+    //    have format eFormat::Format_RGBA8, the Lab information was lost in the
+    //    process.
+    //
+    //    \sa LoadBlockFromDisk()
+    //    \sa SaveBlockToDisk()
+    //*/
+    //ulError
+    //SaveProxyToDisk(
+    //      const FBlock& iBlock
+    //    , const std::string& iPath
+    //    , eFileFormat iFileFormat = eFileFormat::FileFormat_png
+    //    , int iQuality = 100
+    //    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    //    , uint32 iNumWait = 0
+    //    , const FEvent* iWaitList = nullptr
+    //    , FEvent* iEvent = nullptr
+    //);
 
     /*!
         Collect metrics before a LoadBlockFromDisk call
