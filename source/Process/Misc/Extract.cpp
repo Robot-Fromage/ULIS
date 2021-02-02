@@ -47,8 +47,8 @@ InvokeExtract_MEM(
     cargs->invocation(
           jargs->src
         , jargs->dst
-        , nullptr
-        , nullptr
+        , cargs->sourceExtractMask
+        , cargs->destinationExtractMask
         , cargs->src.SamplesPerPixel()
         , cargs->dst.SamplesPerPixel()
         , static_cast< uint32 >( jargs->size / cargs->dst.BytesPerPixel() )

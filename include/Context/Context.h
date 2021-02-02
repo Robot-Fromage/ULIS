@@ -914,6 +914,32 @@ public:
     void
     SaveBlockToDiskMetrics( const FBlock& iBlock, eFileFormat iFileFormat, bool *oCanSaveWithoutProxy );
 
+
+/////////////////////////////////////////////////////
+// Misc
+    /*!
+        Perform an extract operation from the input source into the destination.
+        The result of the extract is that channels specified by the input masks
+        are extracted from the source and placed in the destination, with the
+        appropriate type transformation if necessary.
+
+        Masks are used as bitfields, if a bit is on that means the channel is up
+        for extraction.
+    */
+    ulError
+    Extract(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , uint8 iSourceExtractMask
+        , uint8 iDestinationExtractMask
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;

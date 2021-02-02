@@ -17,6 +17,9 @@
 #include "Process/Fill/Fill.h"
 #include "Process/Text/Text.h"
 #include "Process/Transform/Transform.h"
+#include "Process/IO/Disk.h"
+#include "Process/Misc/Extract.h"
+
 
 ULIS_NAMESPACE_BEGIN
 FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat, ePerformanceIntent iPerfIntent )
@@ -79,9 +82,11 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
 #endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
 #ifdef ULIS_FEATURE_IO_ENABLED
-        , mScheduleFileLoad(                        nullptr )
-        , mScheduleFileSave(                        nullptr )
+        , mScheduleFileLoad(                        TDispatcher< FDispatchedLoadFromFileInvocationSchedulerSelector                     >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleFileSave(                        TDispatcher< FDispatchedSaveToFileInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 #endif // ULIS_FEATURE_IO_ENABLED
+
+        , mScheduleExtract(                         TDispatcher< FDispatchedExtractInvocationSchedulerSelector                          >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

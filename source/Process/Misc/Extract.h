@@ -30,6 +30,8 @@ class FExtractCommandArgs final
 public:
     ~FExtractCommandArgs() override
     {
+        delete [] sourceExtractMask;
+        delete [] destinationExtractMask;
     }
 
     FExtractCommandArgs(
@@ -37,10 +39,8 @@ public:
         , FBlock& iDst
         , const FRectI& iSrcRect
         , const FRectI& iDstRect
-        , bool iSourceRawIndicesFlag
-        , uint8 iSourceExtractMask
-        , bool iDestinationRawIndicesFlag
-        , uint8 iDestinationExtractMask
+        , uint8* iSourceExtractMask
+        , uint8* iDestinationExtractMask
         , fpExtract iInvocation
     )
         : FDualBufferCommandArgs(
@@ -49,17 +49,13 @@ public:
             , iSrcRect
             , iDstRect
             )
-        , sourceRawIndicesFlag( iSourceRawIndicesFlag )
         , sourceExtractMask( iSourceExtractMask )
-        , destinationRawIndicesFlag( iDestinationRawIndicesFlag )
         , destinationExtractMask( iDestinationExtractMask )
         , invocation( iInvocation )
         {}
 
-    bool sourceRawIndicesFlag;
-    uint8 sourceExtractMask;
-    bool destinationRawIndicesFlag;
-    uint8 destinationExtractMask;
+    uint8* sourceExtractMask;
+    uint8* destinationExtractMask;
     fpExtract invocation;
 };
 
