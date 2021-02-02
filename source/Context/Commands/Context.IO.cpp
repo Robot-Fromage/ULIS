@@ -154,6 +154,7 @@ FContext::SaveProxyToDisk(
 
         err = Dummy_OP( 1, &maincommand_event, iEvent );
         ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within postcommand" );
+        return  ULIS_NO_ERROR;
     } else {
         return  SaveBlockToDisk( iBlock, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
     }
@@ -191,6 +192,7 @@ FContext::LoadProxyFromDisk(
 
         err = Dummy_OP( 1, &maincommand_event, iEvent );
         ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within postcommand" );
+        return  ULIS_NO_ERROR;
     } else {
         return  LoadBlockFromDisk( ioBlock, iPath, iPolicy, iNumWait, iWaitList, iEvent );
     }
