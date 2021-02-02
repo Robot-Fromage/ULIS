@@ -24,9 +24,9 @@ ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleClearMT_MEM );
 ULIS_DECLARE_DISPATCHER( FDispatchedClearInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP(
       FDispatchedClearInvocationSchedulerSelector
-    , ScheduleClearMT_AVX
-    , ScheduleClearMT_SSE
-    , ScheduleClearMT_MEM
+    , &ScheduleClearMT_AVX
+    , &ScheduleClearMT_SSE
+    , &ScheduleClearMT_MEM
 )
 
 ULIS_NAMESPACE_END
