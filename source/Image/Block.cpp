@@ -312,5 +312,34 @@ FBlock::LoadFromData(
     mBytesTotal = mHeight * mBytesPerScanline;
 }
 
+void
+FBlock::ReallocInternalData(
+      uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , const FColorSpace* iColorSpace
+    , const FOnInvalidBlock& iOnInvalid
+    , const FOnCleanupData& iOnCleanup
+)
+{
+    ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
+    ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
+
+    mOnCleanup.ExecuteIfBound( mBitmap );
+
+    ReinterpretFormat( iFormat );
+    AssignColorSpace( iColorSpace );
+
+    mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
+    ULIS_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
+    mWidth = iWidth;
+    mHeight = iHeight;
+    mOnInvalid = iOnInvalid;
+    mOnCleanup = iOnCleanup;
+
+    mBytesPerScanline = mWidth * FormatMetrics().BPP;
+    mBytesTotal = mHeight * mBytesPerScanline;
+}
+
 ULIS_NAMESPACE_END
 

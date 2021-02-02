@@ -468,6 +468,24 @@ public:
         , const FOnCleanupData& iOnCleanup = FOnCleanupData()
     );
 
+    /*!
+    Reconstruct the internal representation with input size and format.
+
+    If a cleanup callback was setup, it will be called beforehand, effectively
+    cleaning the data if needed. Although the format might change, references
+    to the format info object itself are not invalidated.
+
+    \sa FBlock()
+    */
+    void ReallocInternalData(
+          uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat
+        , const FColorSpace* iColorSpace = nullptr
+        , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
+        , const FOnCleanupData& iOnCleanup = FOnCleanupData()
+    );
+
 private:
     uint8* mBitmap; ///< Contiguous memory storage buffer for the block.
     uint16 mWidth; ///< The width of the block.

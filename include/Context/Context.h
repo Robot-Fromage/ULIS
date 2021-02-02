@@ -869,6 +869,33 @@ public:
     );
 
     /*!
+        Perform a load operation into the input ioBlock. The result of the load
+        is written in the ioBlock.
+
+        The internal size and data of ioBlock will be changed to match that
+        of the file. The format will remain the same as the block.
+        The method might reallocate the internal data of the ioBlock
+        asynchronously, but the ioBlock reference itself is not
+        invalidated. It is only safe to access the ioBlock fields after the
+        command has actually completed, you can ensure that with a Fence, a
+        Finish, a Wait on the associated FEvent, or with an FEvent callback.
+
+        If the internals are invalidated, the cleanup function of the internal
+        data will be called and could destroy the already present memory so make
+        sure it is not referenced elsewhere.
+    */
+    ulError
+    LoadProxyFromDisk(
+          FBlock& ioBlock
+        , eFormat iFormat
+        , const std::string& iPath
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
         Collect metrics before a LoadBlockFromDisk call
     */
     static
