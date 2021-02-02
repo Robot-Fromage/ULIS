@@ -12,5 +12,6 @@
 #pragma once
 #include "Core/Core.h"
 
-#define ULIS_MATRIX_FUNC constexpr
+#define ULIS_MATRIX_FUNC
+//#define ULIS_MATRIX_FUNC constexpr
 
