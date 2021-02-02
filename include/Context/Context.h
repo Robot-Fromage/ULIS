@@ -885,7 +885,7 @@ public:
     */
     static
     void
-    SaveBlockToDiskMetrics();
+    SaveBlockToDiskMetrics( const FBlock& iBlock, eFileFormat iFileFormat, bool *oCanSaveWithoutProxy );
 
 private:
     FCommandQueue& mCommandQueue;

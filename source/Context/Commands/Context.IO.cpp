@@ -230,9 +230,21 @@ FContext::LoadBlockFromDiskMetrics(
 
 //static
 void
-FContext::SaveBlockToDiskMetrics()
+FContext::SaveBlockToDiskMetrics( const FBlock& iBlock, eFileFormat iFileFormat, bool *oCanSaveWithoutProxy )
 {
-    return;
+    ULIS_ASSERT( oCanSaveWithoutProxy, "Bad input" );
+    *oCanSaveWithoutProxy = false;
+    eType type = iBlock.Type();
+    eFormat format = iBlock.Format();
+    eColorModel model = iBlock.Model();
+
+    bool layout_valid = ULIS_R_RS( format ) == 0;
+    bool model_valid = model == CM_GREY || model == CM_RGB;
+    bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
+                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
+
+    if( ( layout_valid && model_valid && type_valid ) )
+        *oCanSaveWithoutProxy = true;
 }
 
 ULIS_NAMESPACE_END
