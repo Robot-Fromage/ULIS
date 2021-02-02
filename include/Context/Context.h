@@ -873,7 +873,7 @@ public:
     */
     static
     void
-    LoadBlockFromFileMetrics(
+    LoadBlockFromDiskMetrics(
           const std::string& iPath
         , bool *oFileExists
         , FVec2I *oSize

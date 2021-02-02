@@ -136,31 +136,31 @@ FContext::SaveProxyToDisk(
     bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
                       ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
 
-    FEvent preprocess_conv_event;
-    const FBlock* target = &iBlock;
     if( !( layout_valid && model_valid && type_valid ) ) {
         eFormat conv_format = static_cast< eFormat >( 0 );
         if( iFileFormat == FileFormat_hdr ) conv_format = eFormat::Format_RGBF;
         else if( model == CM_GREY )         conv_format = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( hasAlpha ) );
         else                                conv_format = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( hasAlpha ) );
-        FBlock* conv = new FBlock( iBlock.Width(), iBlock.Height() );
-        target = conv;
-        ulError err = ConvertFormat( iBlock, *conv, iBlock.Rect(), FVec2I( 0, 0 ), iPolicy, iNumWait, iWaitList, &preprocess_conv_event );
-        if( err )
-            ULIS_ASSERT( false, "Error occured within subcommand" );
+        FBlock* conv = new FBlock( iBlock.Width(), iBlock.Height(), conv_format );
 
+        FEvent subcommand_event;
+        ulError err = ConvertFormat( iBlock, *conv, iBlock.Rect(), FVec2I( 0, 0 ), iPolicy, iNumWait, iWaitList, &subcommand_event );
+        ULIS_ASSERT( err, "Error occured within subcommand" );
+
+        FEvent maincommand_event( FOnEventComplete( []( const FRectI&, void* iUserData ){ delete  reinterpret_cast< FBlock* >( iUserData ); }, conv ) );
+        err = SaveBlockToDisk( *conv, iPath, iFileFormat, iQuality, iPolicy, 1, &subcommand_event, &maincommand_event );
+        ULIS_ASSERT( err, "Error occured within maincommand" );
+
+        err = Dummy_OP( 1, &maincommand_event, iEvent );
+        ULIS_ASSERT( err, "Error occured within postcommand" );
     } else {
-        FinishEventNo_OP( &preprocess_conv_event, ULIS_NO_ERROR );
+        return  SaveBlockToDisk( iBlock, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
     }
-
-    // TODO: extra wait event preprocess_conv_event
-    // TODO: extra cleanup conv after FileSave is finished
-    return  SaveBlockToDisk( *target, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
 }
 
 //static
 void
-FContext::LoadBlockFromFileMetrics(
+FContext::LoadBlockFromDiskMetrics(
       const std::string& iPath
     , bool *oFileExists
     , FVec2I *oSize
