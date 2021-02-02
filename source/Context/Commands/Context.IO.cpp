@@ -145,14 +145,15 @@ FContext::SaveProxyToDisk(
 
         FEvent subcommand_event;
         ulError err = ConvertFormat( iBlock, *conv, iBlock.Rect(), FVec2I( 0, 0 ), iPolicy, iNumWait, iWaitList, &subcommand_event );
-        ULIS_ASSERT( err, "Error occured within subcommand" );
+        ULIS_ASSERT_RETURN_ERROR( err, "Error occured within subcommand" );
 
+        // Lambda with no captures can be used as function pointers. The TCallback and reinterpret_cast are used as a primitive capture instead.
         FEvent maincommand_event( FOnEventComplete( []( const FRectI&, void* iUserData ){ delete  reinterpret_cast< FBlock* >( iUserData ); }, conv ) );
         err = SaveBlockToDisk( *conv, iPath, iFileFormat, iQuality, iPolicy, 1, &subcommand_event, &maincommand_event );
-        ULIS_ASSERT( err, "Error occured within maincommand" );
+        ULIS_ASSERT_RETURN_ERROR( err, "Error occured within maincommand" );
 
         err = Dummy_OP( 1, &maincommand_event, iEvent );
-        ULIS_ASSERT( err, "Error occured within postcommand" );
+        ULIS_ASSERT_RETURN_ERROR( err, "Error occured within maincommand" );
     } else {
         return  SaveBlockToDisk( iBlock, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );
     }

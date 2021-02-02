@@ -276,7 +276,7 @@ namespace ULIS_NAMESPACE_NAME {}
     #define ULIS_ASSERT_ENABLED
 #else
     #define ULIS_ASSERT( cond, log )
-    #define ULIS_ASSERT_RETURN_ERROR( cond, log, ret ) { return  ret; }
+    #define ULIS_ASSERT_RETURN_ERROR( cond, log, ret ) if( !( cond ) ) { return  ret; }
 #endif
 
 /////////////////////////////////////////////////////
