@@ -5,65 +5,40 @@
 *__________________
 * @file         Swap.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the Swap entry point functions.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        This file provides the implementations for the Swap API.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Misc/Swap.h"
-#include "System/Device.h"
+#include "Process/Misc/Swap.h"
 #include "Image/Block.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
-#include "Thread/ThreadPool.h"
+#include "Scheduling/RangeBasedPolicyScheduler.h"
+#include "Scheduling/SimpleBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Invocations
+//--------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------- MEM
 void
-InvokeSwapMT_MEM( uint8* iDst, uint32 iCount, uint8 iC1, uint8 iC2, uint32 iBPC, uint32 iBPP ) {
-    uint8* dst = iDst;
-    uint8* tmp = new uint8[iBPC];
-    for( uint32 i = 0; i < iCount; ++i ) {
-        memcpy( tmp, dst + iC1, iBPC );
-        memcpy( dst + iC1, dst + iC2, iBPC );
-        memcpy( dst + iC2, tmp, iBPC );
-        dst += iBPP;
+InvokeSwapMT_MEM( const FSimpleBufferJobArgs* jargs, const FSwapCommandArgs* cargs ) {
+    uint8* dst = jargs->dst;
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    uint8* tmp = new uint8[ fmt.BPC ];
+    const uint8 c1 = cargs->channel1;
+    const uint8 c2 = cargs->channel2;
+    for( uint32 i = 0; i < jargs->size; ++i ) {
+        memcpy( tmp, dst + c1, fmt.BPC );
+        memcpy( dst + c1, dst + c2, fmt.BPC );
+        memcpy( dst + c2, tmp, fmt.BPC );
+        dst += fmt.BPP;
     }
     delete [] tmp;
 }
 
-void
-Swap( FOldThreadPool*              iOldThreadPool
-    , bool                      iBlocking
-    , uint32                    iPerfIntent
-    , const FHardwareMetrics&    iHostDeviceInfo
-    , bool                      iCallCB
-    , FBlock*                   iDestination
-    , uint8                     iChannel1
-    , uint8                     iChannel2 )
-{
-    // Assertions
-    // Assertions
-    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
-    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS_ASSERT( iChannel1 < iDestination->SamplesPerPixel(),  "Bad channel"                                           );
-    ULIS_ASSERT( iChannel2 < iDestination->SamplesPerPixel(),  "Bad channel"                                           );
-    if( iChannel1 == iChannel2 )
-        return;
-
-    FBlock* dst = iDestination;
-    const uint32 bpc = dst->BytesPerSample();
-    const uint32 bpp = dst->BytesPerPixel();
-    const uint32 w   = dst->Width();
-    const int64 bps = dst->BytesPerScanLine();
-    uint8*      dsb = dst->Bits();
-    #define DST dsb + ( pLINE * bps )
-    const int max = dst->Height();
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                   , max
-                                   , InvokeSwapMT_MEM, DST, w, iChannel1, iChannel2, bpc, bpp )
-
-    dst->Dirty( iCallCB );
-}
+/////////////////////////////////////////////////////
+// Dispatch / Schedule
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleSwapMT_MEM, FSimpleBufferJobArgs, FSwapCommandArgs, &InvokeSwapMT_MEM )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedSwapInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
