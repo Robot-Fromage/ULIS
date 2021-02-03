@@ -113,6 +113,11 @@ public:
     );
 
     /*!
+    Construct a hollow block with no internal data or size.
+    */
+    FBlock MakeHollow();
+
+    /*!
     Explicitely disabled copy constructor.
 
     If you need to make a shallow copy with shared image data, use the explicit

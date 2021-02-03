@@ -72,6 +72,12 @@ FBlock::FBlock(
     mBytesTotal = mHeight * mBytesPerScanline;
 }
 
+FBlock
+FBlock::MakeHollow()
+{
+    return  FBlock();
+}
+
 uint8*
 FBlock::Bits()
 {
