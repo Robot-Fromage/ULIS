@@ -23,7 +23,7 @@ ULIS_NAMESPACE_BEGIN
 // Invocations
 template< typename T >
 void
-InvokePremult(
+InvokePremultMT_MEM_Generic(
       const FSimpleBufferJobArgs* jargs
     , const FSimpleBufferCommandArgs* cargs
 )
@@ -42,7 +42,7 @@ InvokePremult(
 
 template< typename T >
 void
-InvokeUnpremult(
+InvokeUnpremultMT_MEM_Generic(
       const FSimpleBufferJobArgs* jargs
     , const FSimpleBufferCommandArgs* cargs
 )
