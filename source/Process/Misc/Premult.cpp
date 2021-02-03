@@ -5,126 +5,17 @@
 *__________________
 * @file         Premult.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the Premult entry point functions.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        This file provides the definitions for the Premult API.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Misc/Premult.h"
-#include "System/Device.h"
-#include "Image/Block.h"
-#include "Math/Geometry/Rectangle.h"
-#include "Math/Geometry/Vector.h"
-#include "Math/Math.h"
-#include "Thread/ThreadPool.h"
+#include "Process/Misc/Premult.h"
 
 ULIS_NAMESPACE_BEGIN
-template< typename T >
-void InvokesPremult( size_t iW, uint8* iDst, const FFormatMetrics& iFmt ) {
-    T* dst = reinterpret_cast< T* >( iDst );
-    for( int i = 0; i < iW; ++i ) {
-        T alpha = iFmt.HEA ? *( dst + iFmt.AID ) : MaxType< T >();
-        for( int j = 0; j < iFmt.NCC; ++j ) {
-            uint8 r = iFmt.IDT[j];
-            *( dst + r ) = ( *( dst + r ) * alpha ) / MaxType< T >();
-        }
-        dst += iFmt.SPP;
-    }
-}
-
-template< typename T >
-void InvokesUnpremult( size_t iW, uint8* iDst, const FFormatMetrics& iFmt ) {
-    T* dst = reinterpret_cast< T* >( iDst );
-    for( int i = 0; i < iW; ++i ) {
-        T alpha = iFmt.HEA ? *( dst + iFmt.AID ) : MaxType< T >();
-        for( int j = 0; j < iFmt.NCC; ++j ) {
-            uint8 r = iFmt.IDT[j];
-            *( dst + r ) = ( *( dst + r ) * MaxType< T >() ) / alpha;
-        }
-        dst += iFmt.SPP;
-    }
-}
-
-typedef void (*fpDispatchedAlphamulInvoke)( size_t iW, uint8* iDst, const FFormatMetrics& iFmt );
-fpDispatchedAlphamulInvoke QueryDispatchedPremultInvokeForParameters( eType iType ) {
-    switch( iType ) {
-        case Type_uint8     : return  InvokesPremult< uint8 >;
-        case Type_uint16    : return  InvokesPremult< uint16 >;
-        case Type_uint32    : return  InvokesPremult< uint32 >;
-        case Type_ufloat    : return  InvokesPremult< ufloat >;
-        case TYPE_UDOUBLE   : return  InvokesPremult< udouble >;
-    }
-    return  nullptr;
-}
-
-fpDispatchedAlphamulInvoke QueryDispatchedUnpremultInvokeForParameters( eType iType ) {
-    switch( iType ) {
-        case Type_uint8     : return  InvokesUnpremult< uint8 >;
-        case Type_uint16    : return  InvokesUnpremult< uint16 >;
-        case Type_uint32    : return  InvokesUnpremult< uint32 >;
-        case Type_ufloat    : return  InvokesUnpremult< ufloat >;
-        case TYPE_UDOUBLE   : return  InvokesUnpremult< udouble >;
-    }
-    return  nullptr;
-}
-
-
-void
-Premultiply( FOldThreadPool*           iOldThreadPool
-           , bool                   iBlocking
-           , uint32                 iPerfIntent
-           , const FHardwareMetrics& iHostDeviceInfo
-           , bool                   iCallCB
-           , FBlock*                iDestination )
-{
-    // Assertions
-    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
-    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-
-    fpDispatchedAlphamulInvoke fptr = QueryDispatchedPremultInvokeForParameters( iDestination->Type() );
-    ULIS_ASSERT( fptr, "No invocation found." );
-
-    // Bake Params
-    uint8*          dst = iDestination->Bits();
-    size_t          bps = iDestination->BytesPerScanLine();
-    const int       max = iDestination->Height();
-    const size_t    len = iDestination->Width();
-    ULIS_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                   , max
-                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatMetrics() )
-    iDestination->Dirty( iCallCB );
-}
-
-
-void
-Unpremultiply( FOldThreadPool*             iOldThreadPool
-             , bool                     iBlocking
-             , uint32                   iPerfIntent
-             , const FHardwareMetrics&   iHostDeviceInfo
-             , bool                     iCallCB
-             , FBlock*                  iDestination )
-{
-    // Assertions
-    ULIS_ASSERT( iOldThreadPool,                                  "Bad pool."                                             );
-    ULIS_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-
-    fpDispatchedAlphamulInvoke fptr = QueryDispatchedUnpremultInvokeForParameters( iDestination->Type() );
-    ULIS_ASSERT( fptr, "No invocation found." );
-
-    // Bake Params
-    uint8*          dst = iDestination->Bits();
-    size_t          bps = iDestination->BytesPerScanLine();
-    const int       max = iDestination->Height();
-    const size_t    len = iDestination->Width();
-    ULIS_ASSERT( fptr, "No dispatch invocation found." );
-    ULIS_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iOldThreadPool, iBlocking
-                                   , max
-                                   , fptr, len, dst + ( pLINE * bps ), iDestination->FormatMetrics() )
-    iDestination->Dirty( iCallCB );
-}
-
+/////////////////////////////////////////////////////
+// Dispatch
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedPremultInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedUnpremultInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

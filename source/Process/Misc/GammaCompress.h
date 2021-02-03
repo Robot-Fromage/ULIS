@@ -49,7 +49,7 @@ InvokeApplyLinear2sRGBMT_MEM_Generic(
 {
     T* dst = reinterpret_cast< T* >( jargs->dst );
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
-    for( int i = 0; i < iW; ++i ) {
+    for( int i = 0; i < jargs->size; ++i ) {
         for( int j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
             *( dst + r ) = sel_linear2srgbT< T >( *( dst + r ) );
