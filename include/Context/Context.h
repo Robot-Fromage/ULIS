@@ -951,7 +951,7 @@ public:
     */
     ulError
     Filter(
-          std::function< void( const FBlock& iBlock, const uint8* iPtr ) > iInvocation
+          std::function< void( const FBlock&, const uint8* ) > iInvocation
         , const FBlock& iSource
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -968,7 +968,7 @@ public:
     */
     ulError
     FilterInPlace(
-          std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+          std::function< void( FBlock&, uint8* ) > iInvocation
         , FBlock& iDestination
         , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -986,11 +986,43 @@ public:
     */
     ulError
     FilterInto(
-          std::function< void( const FBlock& iSrcBlock, const uint8* iSrcPtr, FBlock& iDstBlock, uint8* iDstPtr ) >
+          std::function< void( const FBlock&, const uint8*, FBlock&, uint8* ) >
         , const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a gamma uncompress from sRGB to linear RGB on the input block.
+        The input block will be modified in place. This will work with any formats,
+        but makes sense only for formats with color models GREY or RGB, with or
+        without alpha. In case of grey, it will work like sGrey to linear grey.
+    */
+    ulError
+    sRGBToLinear(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a gamma compress from linear RGB to sRGB on the input block.
+        The input block will be modified in place. This will work with any formats,
+        but makes sense only for formats with color models GREY or RGB, with or
+        without alpha. In case of grey, it will work like linear grey to sGrey.
+    */
+    ulError
+    LinearTosRGB(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr

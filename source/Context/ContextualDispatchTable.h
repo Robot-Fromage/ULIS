@@ -190,6 +190,9 @@ private:
     const fpCommandScheduler mScheduleFilterInPlace;
     const fpCommandScheduler mScheduleFilterInto;
 
+    const fpCommandScheduler mSchedulesRGBToLinear;
+    const fpCommandScheduler mScheduleLinearTosRGB;
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;

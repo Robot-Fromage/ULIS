@@ -20,6 +20,7 @@
 #include "Process/IO/Disk.h"
 #include "Process/Misc/Extract.h"
 #include "Process/Misc/Filter.h"
+#include "Process/Misc/GammaCompress.h"
 
 
 ULIS_NAMESPACE_BEGIN
@@ -92,6 +93,9 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleFilter(                          TDispatcher< FDispatchedFilterInvocationSchedulerSelector                           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleFilterInPlace(                   TDispatcher< FDispatchedFilterInPlaceInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleFilterInto(                      TDispatcher< FDispatchedFilterIntoInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+
+        , mSchedulesRGBToLinear(                    TDispatcher< FDispatchedApplysRGB2LinearInvocationSchedulerSelector                 >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleLinearTosRGB(                    TDispatcher< FDispatchedApplyLinear2sRGBInvocationSchedulerSelector                 >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

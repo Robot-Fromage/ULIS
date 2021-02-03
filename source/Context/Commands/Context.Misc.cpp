@@ -117,13 +117,13 @@ FContext::Extract(
 
 ulError
 FContext::Filter(
-      std::function< void( const FBlock& iBlock, const uint8* iPtr ) > iInvocation
+      std::function< void( const FBlock&, const uint8* ) > iInvocation
     , const FBlock& iSource
-    , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-    , uint32 iNumWait = 0
-    , const FEvent* iWaitList = nullptr
-    , FEvent* iEvent = nullptr
+    , const FRectI& iSourceRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
 {
     // Sanitize geometry
@@ -158,13 +158,13 @@ FContext::Filter(
 
 ulError
 FContext::FilterInPlace(
-      std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+      std::function< void( FBlock&, uint8* ) > iInvocation
     , FBlock& iDestination
-    , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-    , uint32 iNumWait = 0
-    , const FEvent* iWaitList = nullptr
-    , FEvent* iEvent = nullptr
+    , const FRectI& iDestinationRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
 {
     // Sanitize geometry
@@ -199,15 +199,15 @@ FContext::FilterInPlace(
 
 ulError
 FContext::FilterInto(
-      std::function< void( const FBlock& iSrcBlock, const uint8* iSrcPtr, FBlock& iDstBlock, uint8* iDstPtr ) > iInvocation
+      std::function< void( const FBlock&, const uint8*, FBlock&, uint8* ) > iInvocation
     , const FBlock& iSource
     , FBlock& iDestination
-    , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-    , const FVec2I& iPosition = FVec2I( 0, 0 )
-    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-    , uint32 iNumWait = 0
-    , const FEvent* iWaitList = nullptr
-    , FEvent* iEvent = nullptr
+    , const FRectI& iSourceRect
+    , const FVec2I& iPosition
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
@@ -245,6 +245,84 @@ FContext::FilterInto(
             , iWaitList
             , iEvent
             , dst_roi
+        )
+    );
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::sRGBToLinear(
+      FBlock& iBlock
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mSchedulesRGBToLinear
+            , new FSimpleBufferCommandArgs(
+                  iBlock
+                , src_roi
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::LinearTosRGB(
+      FBlock& iBlock
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleLinearTosRGB
+            , new FSimpleBufferCommandArgs(
+                  iBlock
+                , src_roi
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
         )
     );
 
