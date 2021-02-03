@@ -794,9 +794,11 @@ public:
         If the internals are invalidated, the cleanup function of the internal
         data will be called and could destroy the already present memory so make
         sure it is not referenced elsewhere.
+        \warning Functions with a prefix X means they have side effects in terms
+        of the actual storage of the input block.
     */
     ulError
-    LoadBlockFromDisk(
+    XLoadBlockFromDisk(
           FBlock& ioBlock
         , const std::string& iPath
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -1129,9 +1131,11 @@ public:
         so that no resources are wasted.
 
         \warning This will always run on detached monothread.
+        \warning Functions with a prefix X means they have side effects in terms
+        of the actual storage of the input block.
     */
     ulError
-    AllocateBlockData(
+    XAllocateBlockData(
           FBlock& iBlock
         , uint16 iWidth
         , uint16 iHeight
@@ -1153,10 +1157,47 @@ public:
         thread for a non-blocking flow.
 
         \warning This will always run on detached monothread.
+        \warning Functions with a prefix X means they have side effects in terms
+        of the actual storage of the input block.
     */
     ulError
-    DeallocateBlockData(
+    XDeallocateBlockData(
           FBlock& iBlock
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Build a Summed Area Table ( used for Area resampling ) into iDestination.
+
+        \warning This will trigger a block allocation within the iDestination.
+        \warning Functions with a prefix X means they have side effects in terms
+        of the actual storage of the input block.
+    */
+    ulError
+    XBuildSummedAreaTable(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Build a Summed Area Table ( used for Area resampling ) into iDestination,
+        with premultiplication.
+
+        \warning This will trigger a block allocation within the iDestination.
+        \warning Functions with a prefix X means they have side effects in terms
+        of the actual storage of the input block.
+    */
+    ulError
+    XBuildPremultipliedSummedAreaTable(
+          const FBlock& iSource
+        , FBlock& iDestination
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr

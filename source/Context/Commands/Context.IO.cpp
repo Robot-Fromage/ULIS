@@ -31,7 +31,7 @@ namespace fs = std::filesystem;
 
 ULIS_NAMESPACE_BEGIN
 ulError
-FContext::LoadBlockFromDisk(
+FContext::XLoadBlockFromDisk(
       FBlock& ioBlock
     , const std::string& iPath
     , const FSchedulePolicy& iPolicy

@@ -551,7 +551,7 @@ FContext::AnalyzeSmallestVisibleRect(
 }
 
 ulError
-FContext::AllocateBlockData(
+FContext::XAllocateBlockData(
       FBlock& iBlock
     , uint16 iWidth
     , uint16 iHeight
@@ -592,7 +592,7 @@ FContext::AllocateBlockData(
 }
 
 ulError
-FContext::DeallocateBlockData(
+FContext::XDeallocateBlockData(
       FBlock& iBlock
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
@@ -618,6 +618,34 @@ FContext::DeallocateBlockData(
         )
     );
 
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+XBuildSummedAreaTable(
+      const FBlock& iSource
+    , FBlock& iDestination
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // TODO
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+XBuildPremultipliedSummedAreaTable(
+      const FBlock& iSource
+    , FBlock& iDestination
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // TODO
     return  ULIS_NO_ERROR;
 }
 
