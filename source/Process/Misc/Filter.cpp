@@ -18,7 +18,7 @@ ULIS_NAMESPACE_BEGIN
 void InvokeFilter( const FSimpleBufferJobArgs* jargs, const FFilterCommandArgs* cargs ) {
     uint8* dst = jargs->dst;
     uint8 bpp = cargs->dst.BytesPerPixel();
-    for( size_t i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < jargs->size; ++i ) {
         cargs->invocation( cargs->dst, dst );
         dst += bpp;
     }
@@ -27,19 +27,18 @@ void InvokeFilter( const FSimpleBufferJobArgs* jargs, const FFilterCommandArgs* 
 void InvokeFilterInPlace( const FSimpleBufferJobArgs* jargs, const FFilterInPlaceCommandArgs* cargs ) {
     uint8* dst = jargs->dst;
     uint8 bpp = cargs->dst.BytesPerPixel();
-    for( size_t i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < jargs->size; ++i ) {
         cargs->invocation( cargs->dst, dst );
         dst += bpp;
     }
 }
 
-//void InvokeFilterInto( const size_t iLen, const FBlock* iSrcBlock, const uint8* iSrcPtr, const size_t iSrcBPP, FBlock* iDstBlock, uint8* iDstPtr, const size_t iDstBPP, std::function< void( const FBlock* iSrcBlock, const uint8* iSrcPtr, FBlock* iDstBlock, uint8* iDstPtr ) > iFunc ) {
 void InvokeFilterInto( const FDualBufferJobArgs* jargs, const FFilterIntoCommandArgs* cargs ) {
     const uint8* src = jargs->src;
     uint8* dst = jargs->dst;
     uint8 src_bpp = cargs->src.BytesPerPixel();
     uint8 dst_bpp = cargs->dst.BytesPerPixel();
-    for( size_t i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < jargs->size; ++i ) {
         cargs->invocation( cargs->src, src, cargs->dst, dst );
         src += src_bpp;
         dst += dst_bpp;
