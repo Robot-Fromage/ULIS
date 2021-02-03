@@ -14,7 +14,7 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Process/Misc/Extract.h"
-#include "Process/Conv/Conv.h"
+#include "Process/Misc/Filter.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
@@ -92,7 +92,7 @@ FContext::Extract(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleConvertFormat
+              mContextualDispatchTable->mScheduleExtract
             , new FExtractCommandArgs(
                   iSource
                 , iDestination
@@ -112,6 +112,50 @@ FContext::Extract(
         )
     );
 
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::Filter(
+      std::function< void( const FBlock& iBlock, const uint8* iPtr ) > iInvocation
+    , const FBlock& iSource
+    , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    , uint32 iNumWait = 0
+    , const FEvent* iWaitList = nullptr
+    , FEvent* iEvent = nullptr
+)
+{
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FilterInPlace(
+      std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+    , FBlock& iDestination
+    , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    , uint32 iNumWait = 0
+    , const FEvent* iWaitList = nullptr
+    , FEvent* iEvent = nullptr
+)
+{
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FilterInto(
+      std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+    , const FBlock& iSource
+    , FBlock& iDestination
+    , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+    , const FVec2I& iPosition = FVec2I( 0, 0 )
+    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    , uint32 iNumWait = 0
+    , const FEvent* iWaitList = nullptr
+    , FEvent* iEvent = nullptr
+)
+{
     return  ULIS_NO_ERROR;
 }
 

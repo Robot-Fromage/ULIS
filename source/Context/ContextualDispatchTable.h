@@ -186,6 +186,10 @@ private:
 
     const fpCommandScheduler mScheduleExtract;
 
+    const fpCommandScheduler mScheduleFilter;
+    const fpCommandScheduler mScheduleFilterInPlace;
+    const fpCommandScheduler mScheduleFilterInto;
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;

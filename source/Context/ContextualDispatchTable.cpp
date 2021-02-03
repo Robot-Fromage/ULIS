@@ -19,6 +19,7 @@
 #include "Process/Transform/Transform.h"
 #include "Process/IO/Disk.h"
 #include "Process/Misc/Extract.h"
+#include "Process/Misc/Filter.h"
 
 
 ULIS_NAMESPACE_BEGIN
@@ -87,6 +88,10 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
 #endif // ULIS_FEATURE_IO_ENABLED
 
         , mScheduleExtract(                         TDispatcher< FDispatchedExtractInvocationSchedulerSelector                          >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+
+        , mScheduleFilter(                          TDispatcher< FDispatchedFilterInvocationSchedulerSelector                           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleFilterInPlace(                   TDispatcher< FDispatchedFilterInPlaceInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleFilterInto(                      TDispatcher< FDispatchedFilterIntoInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

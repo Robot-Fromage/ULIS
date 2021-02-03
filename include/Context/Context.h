@@ -18,6 +18,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "System/Device.h"
+#include <functional>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -933,6 +934,61 @@ public:
         , uint8 iSourceExtractMask
         , uint8 iDestinationExtractMask
         , bool iUseRawMask = false
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a filter operation on the block. The block will not be modified
+        but the process will iterate over it and invoke the input function for
+        every pixel. You can read and compute things while it does so within the
+        function you provide and collect results with an event callback or a
+        lambda capture scope.
+    */
+    ulError
+    Filter(
+          std::function< void( const FBlock& iBlock, const uint8* iPtr ) > iInvocation
+        , const FBlock& iSource
+        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a filter in place operation on the block. The block can be
+        modified, and the process will iterate over it and invoke the input
+        function for every pixel. You can read and write pixels and compute
+        anything while it does so within the function you provide.
+    */
+    ulError
+    FilterInPlace(
+          std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+        , FBlock& iDestination
+        , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a filter into operation on the blocks. The source block can't be
+        modified, but the process will iterate over it and invoke the input
+        function for every pixel. The destination block can be modified.
+        You can read and write pixels and compute anything while it does so
+        within the function you provide.
+    */
+    ulError
+    FilterInto(
+          std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+        , const FBlock& iSource
+        , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
