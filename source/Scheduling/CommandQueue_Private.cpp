@@ -56,7 +56,7 @@ void
 FCommandQueue_Private::Push( const FCommand* iCommand )
 {
     ULIS_ASSERT( iCommand, "Error: no input command" );
-    iCommand->Event()->SetStatus( eEventStatus::EventStatus_Queued );
+    iCommand->Event()->NotifyQueued();
     mQueue.Push( iCommand );
 }
 

@@ -53,13 +53,15 @@ public:
     bool ReadyForProcessing() const;
     bool ReadyForScheduling() const;
     void CheckCyclicSelfReference() const;
-    void SetStatus( eEventStatus iStatus );
     eEventStatus Status() const;
     void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
     bool NotifyOneJobFinished();
+    void NotifyAllJobsFinished();
+    void NotifyQueued();
     void Wait() const;
 
 private:
+    void SetStatus( eEventStatus iStatus );
     void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
     void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
 

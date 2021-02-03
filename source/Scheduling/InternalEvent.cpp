@@ -124,11 +124,23 @@ FInternalEvent::NotifyOneJobFinished()
     --mNumJobsRemaining;
     if( mNumJobsRemaining == 0 ) {
         delete  mCommand;
-        SetStatus( eEventStatus::EventStatus_Finished );
-        mOnEventComplete.ExecuteIfBound( mGeometry );
+        NotifyAllJobsFinished();
         return  true;
     }
     return  false;
+}
+
+void
+FInternalEvent::NotifyAllJobsFinished()
+{
+    SetStatus( eEventStatus::EventStatus_Finished );
+    mOnEventComplete.ExecuteIfBound( mGeometry );
+}
+
+void
+FInternalEvent::NotifyQueued()
+{
+    SetStatus( eEventStatus::EventStatus_Queued );
 }
 
 void

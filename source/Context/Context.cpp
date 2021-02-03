@@ -73,7 +73,7 @@ ulError
 FContext::FinishEventNo_OP( FEvent* iEvent, ulError iError )
 {
     if( iEvent )
-        iEvent->d->m->SetStatus( eEventStatus::EventStatus_Finished );
+        iEvent->d->m->NotifyAllJobsFinished();
 
     return  iError;
 }
