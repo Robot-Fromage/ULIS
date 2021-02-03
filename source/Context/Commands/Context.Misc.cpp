@@ -329,5 +329,91 @@ FContext::LinearTosRGB(
     return  ULIS_NO_ERROR;
 }
 
+ulError
+FContext::Premultiply(
+      FBlock& iBlock
+    , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    , uint32 iNumWait = 0
+    , const FEvent* iWaitList = nullptr
+    , FEvent* iEvent = nullptr
+)
+{
+    if( !iBlock.HasAlpha() )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mSchedulePremultiply
+            , new FSimpleBufferCommandArgs(
+                  iBlock
+                , src_roi
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::Unpremultiply(
+      FBlock& iBlock
+    , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    , uint32 iNumWait = 0
+    , const FEvent* iWaitList = nullptr
+    , FEvent* iEvent = nullptr
+)
+{
+    if( !iBlock.HasAlpha() )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleUnpremultiply
+            , new FSimpleBufferCommandArgs(
+                  iBlock
+                , src_roi
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+
+    return  ULIS_NO_ERROR;
+}
+
+
+
 ULIS_NAMESPACE_END
 

@@ -1029,6 +1029,38 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+        Perform a premultiplication operation in iBlock.
+        The input block will be modified in place. This will work with any formats,
+        but formats without an alpha channel will actually return immediately in
+        a no-op.
+    */
+    ulError
+    Premultiply(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform an unpremultiplication operation in iBlock.
+        The input block will be modified in place. This will work with any formats,
+        but formats without an alpha channel will actually return immediately in
+        a no-op.
+    */
+    ulError
+    Unpremultiply(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;

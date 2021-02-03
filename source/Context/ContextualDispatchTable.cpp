@@ -21,6 +21,7 @@
 #include "Process/Misc/Extract.h"
 #include "Process/Misc/Filter.h"
 #include "Process/Misc/GammaCompress.h"
+#include "Process/Misc/Premult.h"
 
 
 ULIS_NAMESPACE_BEGIN
@@ -96,6 +97,9 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
 
         , mSchedulesRGBToLinear(                    TDispatcher< FDispatchedApplysRGB2LinearInvocationSchedulerSelector                 >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleLinearTosRGB(                    TDispatcher< FDispatchedApplyLinear2sRGBInvocationSchedulerSelector                 >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+
+        , mSchedulePremultiply(                     TDispatcher< FDispatchedPremultInvocationSchedulerSelector                          >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleUnpremultiply(                   TDispatcher< FDispatchedUnpremultInvocationSchedulerSelector                        >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )
