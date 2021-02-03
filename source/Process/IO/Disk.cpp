@@ -26,7 +26,7 @@ ULIS_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
 void
-InvokeLoadFromFile_MEM_Generic(
+InvokeLoadFromFile_MEM(
       const FSimpleBufferJobArgs* jargs
     , const FDiskIOCommandArgs* cargs
 )
@@ -86,7 +86,7 @@ InvokeLoadFromFile_MEM_Generic(
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
 void
-InvokeSaveToFile_MEM_Generic(
+InvokeSaveToFile_MEM(
       const FSimpleBufferJobArgs* jargs
     , const FDiskIOCommandArgs* cargs
 )
@@ -107,8 +107,8 @@ InvokeSaveToFile_MEM_Generic(
 
 /////////////////////////////////////////////////////
 // Dispatch
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleLoadFromFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeLoadFromFile_MEM_Generic )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleSaveToFile_MEM_Generic, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeSaveToFile_MEM_Generic )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleLoadFromFile_MEM, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeLoadFromFile_MEM )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleSaveToFile_MEM, FSimpleBufferJobArgs, FDiskIOCommandArgs, &InvokeSaveToFile_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedLoadFromFileInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedSaveToFileInvocationSchedulerSelector )
 

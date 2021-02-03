@@ -49,19 +49,19 @@ public:
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleLoadFromFile_MEM_Generic )
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleSaveToFile_MEM_Generic )
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleLoadFromFile_MEM )
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleSaveToFile_MEM )
 
 ULIS_DECLARE_DISPATCHER( FDispatchedLoadFromFileInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedLoadFromFileInvocationSchedulerSelector
-    , &ScheduleLoadFromFile_MEM_Generic< T >
+    , &ScheduleLoadFromFile_MEM
 )
 
 ULIS_DECLARE_DISPATCHER( FDispatchedSaveToFileInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedSaveToFileInvocationSchedulerSelector
-    , &ScheduleSaveToFile_MEM_Generic< T >
+    , &ScheduleSaveToFile_MEM
 )
 
 ULIS_NAMESPACE_END

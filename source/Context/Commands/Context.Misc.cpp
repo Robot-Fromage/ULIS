@@ -104,6 +104,7 @@ FContext::Extract(
                 , dst_roi
                 , sourceStrides
                 , destinationStrides
+                , uint8( sourceChannelsToExtract.size() )
                 , QueryDispatchedExtractInvocation( iSource.Type(), iDestination.Type() )
             )
             , iPolicy

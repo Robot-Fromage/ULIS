@@ -24,13 +24,14 @@ InvokeExtractInto(
     , uint8* iStridesDst
     , uint8 iSRCSPP
     , uint8 iDSTSPP
+    , uint8 iNumExtract
     , uint32 iLen
 )
 {
     const T1*   src = reinterpret_cast< const T1* >( iSrc );
     T2*         dst = reinterpret_cast< T2* >( iDst );
-    const size_t len = iStridesSrc.size();
-    for( size_t i = 0; i < iW; ++i ) {
+    const size_t len = iNumExtract;
+    for( size_t i = 0; i < iLen; ++i ) {
         for( size_t j = 0; j < len; ++j )
             *( dst+ iStridesDst[j] ) = ConvType< T1, T2 >( *( src+ iStridesSrc[j] ) );
         src+= iSRCSPP;
@@ -51,6 +52,7 @@ InvokeExtract_MEM(
         , cargs->destinationExtractMask
         , cargs->src.SamplesPerPixel()
         , cargs->dst.SamplesPerPixel()
+        , cargs->numExtract
         , static_cast< uint32 >( jargs->size / cargs->dst.BytesPerPixel() )
     );
 }

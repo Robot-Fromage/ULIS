@@ -19,7 +19,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Typedefs
-typedef void (*fpExtract)( const uint8* iSrc, uint8* iDst, uint8* iStridesSrc, uint8* iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP, uint32 iLen );
+typedef void (*fpExtract)( const uint8* iSrc, uint8* iDst, uint8* iStridesSrc, uint8* iStridesDst, uint8 iSRCSPP, uint8 iDSTSPP, uint8 iNumExtract, uint32 iLen );
 ULIS_API fpExtract QueryDispatchedExtractInvocation( eType iSrcType, eType iDstType );
 
 /////////////////////////////////////////////////////
@@ -41,6 +41,7 @@ public:
         , const FRectI& iDstRect
         , uint8* iSourceExtractMask
         , uint8* iDestinationExtractMask
+        , uint8 iNumExtract
         , fpExtract iInvocation
     )
         : FDualBufferCommandArgs(
@@ -51,11 +52,13 @@ public:
             )
         , sourceExtractMask( iSourceExtractMask )
         , destinationExtractMask( iDestinationExtractMask )
+        , numExtract( iNumExtract )
         , invocation( iInvocation )
         {}
 
     uint8* sourceExtractMask;
     uint8* destinationExtractMask;
+    uint8 numExtract;
     fpExtract invocation;
 };
 
