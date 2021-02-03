@@ -14,6 +14,7 @@
 #include "Image/Color.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
+#include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
@@ -1126,6 +1127,8 @@ public:
 
         It is recommended to use it on a block created from FBlock::MakeHollow()
         so that no resources are wasted.
+
+        \warning This will always run on detached monothread.
     */
     ulError
     AllocateBlockData(
@@ -1148,6 +1151,8 @@ public:
         The block will have no size or data once the command is finished. It
         might be usefull for delegating deallocation of many blocks on a separate
         thread for a non-blocking flow.
+
+        \warning This will always run on detached monothread.
     */
     ulError
     DeallocateBlockData(

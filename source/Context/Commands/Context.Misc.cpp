@@ -20,6 +20,7 @@
 #include "Process/Misc/Premult.h"
 #include "Process/Misc/Sanitize.h"
 #include "Process/Misc/Swap.h"
+#include "Process/Misc/Alloc.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/CommandQueue_Private.h"
@@ -545,6 +546,77 @@ FContext::AnalyzeSmallestVisibleRect(
 
     // Bake and push command
     // TODO
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::AllocateBlockData(
+      FBlock& iBlock
+    , uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , const FColorSpace* iColorSpace
+    , const FOnInvalidBlock& iOnInvalid
+    , const FOnCleanupData& iOnCleanup
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              &ScheduleAlloc
+            , new FAllocCommandArgs(
+                  iBlock
+                , FRectI( 0, 0, iWidth, iHeight )
+                , FVec2I( iWidth, iHeight )
+                , iFormat
+                , iColorSpace
+                , iOnInvalid
+                , iOnCleanup
+            )
+            , iPolicy
+            , false
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , FRectI( 0, 0, iWidth, iHeight )
+        )
+    );
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::DeallocateBlockData(
+      FBlock& iBlock
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              &ScheduleDealloc
+            , new FSimpleBufferCommandArgs(
+                  iBlock
+                , iBlock.Rect()
+            )
+            , iPolicy
+            , false
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , iBlock.Rect()
+        )
+    );
 
     return  ULIS_NO_ERROR;
 }
