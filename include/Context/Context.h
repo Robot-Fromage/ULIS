@@ -1117,6 +1117,47 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+        Perform a block allocation or reallocation on the input iBlock.
+        Any data that was there will be deleted and replaced according to the
+        input parameters. This is mostly useful for internal subcommands but it
+        might be usefull for delegating allocation of many blocks on a separate
+        thread for a non-blocking flow.
+
+        It is recommended to use it on a block created from FBlock::MakeHollow()
+        so that no resources are wasted.
+    */
+    ulError
+    AllocateBlockData(
+          FBlock& iBlock
+        , uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat = eFormat::Format_RGBA8
+        , const FColorSpace* iColorSpace = nullptr
+        , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
+        , const FOnCleanupData& iOnCleanup = FOnCleanupData( &OnCleanup_FreeMemory )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a block deallocation on the input iBlock.
+        Any data that was there will be deleted and replaced by nullptr.
+        The block will have no size or data once the command is finished. It
+        might be usefull for delegating deallocation of many blocks on a separate
+        thread for a non-blocking flow.
+    */
+    ulError
+    DeallocateBlockData(
+          FBlock& iBlock
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;
