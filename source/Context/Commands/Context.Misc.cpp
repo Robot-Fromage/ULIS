@@ -126,11 +126,38 @@ FContext::Filter(
     , FEvent* iEvent = nullptr
 )
 {
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleFilter
+            , new FFilterCommandArgs(
+                  const_cast< FBlock& >( iSource )
+                , src_roi
+                , iInvocation
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 
 ulError
-FilterInPlace(
+FContext::FilterInPlace(
       std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
     , FBlock& iDestination
     , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
@@ -140,12 +167,39 @@ FilterInPlace(
     , FEvent* iEvent = nullptr
 )
 {
+    // Sanitize geometry
+    const FRectI src_rect = iDestination.Rect();
+    const FRectI src_roi = iDestinationRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleFilterInPlace
+            , new FFilterInPlaceCommandArgs(
+                  iDestination
+                , src_roi
+                , iInvocation
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 
 ulError
-FilterInto(
-      std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+FContext::FilterInto(
+      std::function< void( const FBlock& iSrcBlock, const uint8* iSrcPtr, FBlock& iDstBlock, uint8* iDstPtr ) > iInvocation
     , const FBlock& iSource
     , FBlock& iDestination
     , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
@@ -156,6 +210,44 @@ FilterInto(
     , FEvent* iEvent = nullptr
 )
 {
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Backdrop are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_aim = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
+    const FRectI dst_roi = dst_aim & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleFilterInto
+            , new FFilterIntoCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , iInvocation
+            )
+            , iPolicy
+            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , dst_roi
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 

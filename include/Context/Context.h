@@ -986,7 +986,7 @@ public:
     */
     ulError
     FilterInto(
-          std::function< void( FBlock& iBlock, uint8* iPtr ) > iInvocation
+          std::function< void( const FBlock& iSrcBlock, const uint8* iSrcPtr, FBlock& iDstBlock, uint8* iDstPtr ) >
         , const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
