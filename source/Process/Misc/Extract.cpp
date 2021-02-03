@@ -62,7 +62,7 @@ ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedExtractInvocationSchedu
 
 /////////////////////////////////////////////////////
 // Extract Dispatcher
-fpExtract QueryDispatchedExtractInvokeForParameters( eType iSrcType, eType iDstType ) {
+fpExtract QueryDispatchedExtractInvocation( eType iSrcType, eType iDstType ) {
     switch( iSrcType ) {
         case Type_uint8: switch( iDstType ) {
                 case Type_uint8:    return  InvokeExtractInto< uint8, uint8  >;
