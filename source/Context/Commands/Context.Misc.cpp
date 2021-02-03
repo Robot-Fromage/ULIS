@@ -13,13 +13,13 @@
 #pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
+#include "Image/Block.h"
 #include "Process/Misc/Extract.h"
 #include "Process/Misc/Filter.h"
 #include "Process/Misc/GammaCompress.h"
 #include "Process/Misc/Premult.h"
 #include "Process/Misc/Sanitize.h"
 #include "Process/Misc/Swap.h"
-#include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/CommandQueue_Private.h"
@@ -511,6 +511,42 @@ FContext::Swap(
     return  ULIS_NO_ERROR;
 }
 
+ulError
+FContext::AnalyzeSmallestVisibleRect(
+      FBlock& iBlock
+    , FRectI* oRect
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    ULIS_ASSERT_RETURN_ERROR(
+          oRect
+        , "No input."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+    );
+
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    if( !iBlock.HasAlpha() )
+    {
+        *oRect = src_roi;
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+    }
+
+    // Bake and push command
+    // TODO
+
+    return  ULIS_NO_ERROR;
+}
 
 ULIS_NAMESPACE_END
 

@@ -1096,6 +1096,27 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+        Perform an analysis operation on iBlock to detect the smallest possible
+        rect that has visual information with alpha > 0.
+        The input block will not be modified. This will work with any formats,
+        but formats without an alpha channel will actually return immediately
+        with a rectangle the same size as the block.
+        The result of the analysis operation will be stored in the oRect parameter,
+        it is unsafe to read or modify this oRect until the command is finished,
+        you can ensure that with a Fence on the event or a Finish on the context.
+    */
+    ulError
+    AnalyzeSmallestVisibleRect(
+          FBlock& iBlock
+        , FRectI* oRect
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;
