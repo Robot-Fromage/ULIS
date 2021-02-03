@@ -1061,6 +1061,41 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+        Perform a sanitize operation in iBlock.
+        The input block will be modified in place. This will work with any formats,
+        but formats without an alpha channel will actually return immediately in
+        a no-op.
+        What SanitizeZeroAlpha is set the color components to zero if the alpha
+        is already zero for a given pixel.
+    */
+    ulError
+    SanitizeZeroAlpha(
+          FBlock& iBlock
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a swap operation in iBlock.
+        The input block will be modified in place. This will work with any formats.
+        You specify input channels and they are swapped accross the entire block.
+    */
+    ulError
+    Swap(
+          FBlock& iBlock
+        , uint8 iChannel1
+        , uint8 iChannel2
+        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;

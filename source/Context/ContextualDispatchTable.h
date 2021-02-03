@@ -185,16 +185,15 @@ private:
 #endif // ULIS_FEATURE_IO_ENABLED
 
     const fpCommandScheduler mScheduleExtract;
-
     const fpCommandScheduler mScheduleFilter;
     const fpCommandScheduler mScheduleFilterInPlace;
     const fpCommandScheduler mScheduleFilterInto;
-
     const fpCommandScheduler mSchedulesRGBToLinear;
     const fpCommandScheduler mScheduleLinearTosRGB;
-
     const fpCommandScheduler mSchedulePremultiply;
     const fpCommandScheduler mScheduleUnpremultiply;
+    const fpCommandScheduler mScheduleSanitize;
+    const fpCommandScheduler mScheduleSwap;
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;

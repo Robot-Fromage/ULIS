@@ -15,6 +15,10 @@
 #include "Context/ContextualDispatchTable.h"
 #include "Process/Misc/Extract.h"
 #include "Process/Misc/Filter.h"
+#include "Process/Misc/GammaCompress.h"
+#include "Process/Misc/Premult.h"
+#include "Process/Misc/Sanitize.h"
+#include "Process/Misc/Swap.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
@@ -332,11 +336,11 @@ FContext::LinearTosRGB(
 ulError
 FContext::Premultiply(
       FBlock& iBlock
-    , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-    , uint32 iNumWait = 0
-    , const FEvent* iWaitList = nullptr
-    , FEvent* iEvent = nullptr
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
 {
     if( !iBlock.HasAlpha() )
@@ -374,11 +378,11 @@ FContext::Premultiply(
 ulError
 FContext::Unpremultiply(
       FBlock& iBlock
-    , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-    , uint32 iNumWait = 0
-    , const FEvent* iWaitList = nullptr
-    , FEvent* iEvent = nullptr
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
 )
 {
     if( !iBlock.HasAlpha() )
@@ -413,6 +417,99 @@ FContext::Unpremultiply(
     return  ULIS_NO_ERROR;
 }
 
+ulError
+FContext::SanitizeZeroAlpha(
+      FBlock& iBlock
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    if( !iBlock.HasAlpha() )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleSanitize
+            , new FSimpleBufferCommandArgs(
+                  iBlock
+                , src_roi
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::Swap(
+      FBlock& iBlock
+    , uint8 iChannel1
+    , uint8 iChannel2
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    if(    iBlock.SamplesPerPixel() == 1
+        || iChannel1 == iChannel2
+        || iChannel1 >= iBlock.SamplesPerPixel()
+        || iChannel2 >= iBlock.SamplesPerPixel()
+    )
+    {
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+    }
+
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleSwap
+            , new FSwapCommandArgs(
+                  iBlock
+                , src_roi
+                , iChannel1
+                , iChannel2
+            )
+            , iPolicy
+            , src_roi == src_rect
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+
+    return  ULIS_NO_ERROR;
+}
 
 
 ULIS_NAMESPACE_END
