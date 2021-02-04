@@ -60,7 +60,7 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
 
 /////////////////////////////////////////////////////
 // Convert Format Invocations Declarations
-#define X_DECLARE_CONVERT_FORMAT_INVOCATION( A, B ) template< typename T1, typename T2 > void ConvertFormat ## A ## To ## B ## ( const FPixel iSrc, FPixel iDst, uint32 iLen );
+#define X_DECLARE_CONVERT_FORMAT_INVOCATION( A, B ) template< typename T1, typename T2 > void ConvertFormat ## A ## To ## B ( const FPixel iSrc, FPixel iDst, uint32 iLen );
 ULIS_FOR_ALL_COLOR_MODELS_COMBINATIONS_DO( X_DECLARE_CONVERT_FORMAT_INVOCATION )
 #undef X_DECLARE_CONVERT_FORMAT_INVOCATION
 
