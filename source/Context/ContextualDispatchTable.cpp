@@ -24,6 +24,7 @@
 #include "Process/Misc/Premult.h"
 #include "Process/Misc/Sanitize.h"
 #include "Process/Misc/Swap.h"
+#include "Process/SAT/SAT.h"
 
 
 ULIS_NAMESPACE_BEGIN
@@ -102,6 +103,10 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleSanitize(                        TDispatcher< FDispatchedSanitizeZeroAlphaInvocationSchedulerSelector                >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleSwap(                            TDispatcher< FDispatchedSwapInvocationSchedulerSelector                             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
+        , mScheduleBuildSATXPass(                   TDispatcher< FDispatchedBuildSATXPassInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleBuildSATYPass(                   TDispatcher< FDispatchedBuildSATYPassInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleBuildPremultipliedSATXPass(      TDispatcher< FDispatchedBuildPremultSATXPassInvocationSchedulerSelector             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleBuildPremultipliedSATYPass(      TDispatcher< FDispatchedBuildPremultSATYPassInvocationSchedulerSelector             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

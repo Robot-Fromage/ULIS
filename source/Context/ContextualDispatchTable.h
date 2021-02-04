@@ -195,6 +195,11 @@ private:
     const fpCommandScheduler mScheduleSanitize;
     const fpCommandScheduler mScheduleSwap;
 
+    const fpCommandScheduler mScheduleBuildSATXPass;
+    const fpCommandScheduler mScheduleBuildSATYPass;
+    const fpCommandScheduler mScheduleBuildPremultipliedSATXPass;
+    const fpCommandScheduler mScheduleBuildPremultipliedSATYPass;
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;
