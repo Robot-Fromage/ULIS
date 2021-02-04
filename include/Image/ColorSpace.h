@@ -17,6 +17,9 @@ ULIS_NAMESPACE_BEGIN
 /// @class  FColorSpace
 class ULIS_API FColorSpace
 {
+public:
+    ~FColorSpace();
+    FColorSpace();
 };
 
 /////////////////////////////////////////////////////

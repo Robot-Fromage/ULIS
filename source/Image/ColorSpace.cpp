@@ -12,5 +12,14 @@
 #include "Image/ColorSpace.h"
 
 ULIS_NAMESPACE_BEGIN
+
+FColorSpace::~FColorSpace()
+{
+}
+
+FColorSpace::FColorSpace()
+{
+}
+
 ULIS_NAMESPACE_END
 
