@@ -88,14 +88,12 @@ struct TRectangle
     }
 
     /*! Vertical collision test with y coordinate value. */
-    template< class T >
     bool InVerticalRange( T iV ) {
         return  iV >= y
             &&  iV <  ( y + h );
     }
 
     /*! Horizontal collision test with x coordinate value. */
-    template< class T >
     bool InHorizontalRange( T iV ) {
         return  iV >= x
             &&  iV <  ( x + w );
