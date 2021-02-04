@@ -15,6 +15,7 @@
 #include "Math/Geometry/Matrix.h"
 #include "Math/Geometry/Transformation2D.h"
 #include "Math/Math.h"
+#include <vector>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
