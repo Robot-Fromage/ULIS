@@ -10,7 +10,6 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Process/Clear/Clear.h"

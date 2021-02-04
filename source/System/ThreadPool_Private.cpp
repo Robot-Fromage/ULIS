@@ -9,7 +9,6 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "System/ThreadPool_Private.h"
 
 #ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT

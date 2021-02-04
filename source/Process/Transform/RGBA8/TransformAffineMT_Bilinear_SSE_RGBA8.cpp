@@ -9,7 +9,6 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Core/Core.h"
 #include "Process/Transform/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.h"
 #include "Process/Transform/TransformHelpers.h"

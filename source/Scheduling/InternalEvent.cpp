@@ -9,7 +9,6 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Scheduling/InternalEvent.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
