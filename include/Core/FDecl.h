@@ -29,7 +29,7 @@ class   FFontRegistry;
 class   FFontStyleEntry;
 struct  FFormatMetrics;
 class   FHardwareMetrics;
-struct  FMath;
+//struct  FMath;
 class   FPixel;
 class   FSchedulePolicy;
 struct  FSplineLinearSample;

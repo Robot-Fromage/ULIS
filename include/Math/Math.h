@@ -18,7 +18,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FMath
-struct ULIS_API FMath
+namespace FMath
 {
     // Do not change this value
     static constexpr float  kEpsilonf = .000001f;
@@ -253,7 +253,7 @@ struct ULIS_API FMath
         return convf;
     }
 
-}; // struct FMath
+} // namespace FMath
 
 ULIS_NAMESPACE_END
 
