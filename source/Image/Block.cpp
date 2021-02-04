@@ -161,7 +161,8 @@ FBlock::BytesTotal() const
 void
 FBlock::Dirty( bool iCall ) const
 {
-    Dirty( &Rect(), 1, iCall );
+    FRectI rect= Rect();
+    Dirty( &rect, 1, iCall );
 }
 
 void
@@ -274,7 +275,8 @@ FBlock::Pixel( uint16 iX, uint16 iY ) const
 void
 FBlock::SetPixel( uint16 iX, uint16 iY, const ISample& iSample )
 {
-    ISample::ConvertFormat( iSample, Pixel( iX, iY ) );
+    FPixel pixel = Pixel( iX, iY );
+    ISample::ConvertFormat( iSample, pixel );
 }
 
 void
