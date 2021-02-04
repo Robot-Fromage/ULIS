@@ -916,7 +916,11 @@ public:
     */
     static
     void
-    SaveBlockToDiskMetrics( const FBlock& iBlock, eFileFormat iFileFormat, bool *oCanSaveWithoutProxy );
+    SaveBlockToDiskMetrics(
+          const FBlock& iBlock
+        , eFileFormat iFileFormat
+        , bool *oCanSaveWithoutProxy
+    );
 
 
 /////////////////////////////////////////////////////
@@ -1177,7 +1181,7 @@ public:
         of the actual storage of the input block.
     */
     ulError
-    XBuildSummedAreaTable(
+    BuildSummedAreaTable(
           const FBlock& iSource
         , FBlock& iDestination
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -1195,7 +1199,7 @@ public:
         of the actual storage of the input block.
     */
     ulError
-    XBuildPremultipliedSummedAreaTable(
+    BuildPremultipliedSummedAreaTable(
           const FBlock& iSource
         , FBlock& iDestination
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -1203,6 +1207,16 @@ public:
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
+
+    /*!
+        Get metrics before building a SAT, this will give you the needed format
+        before building the sat.
+        A block used for SAT based in input iSource needs to have the same format
+        as the source, but with its type changed to float, and it must have the
+        same size.
+    */
+    static
+    eFormat SummedAreaTableMetrics( const FBlock& iSource );
 
 private:
     FCommandQueue& mCommandQueue;

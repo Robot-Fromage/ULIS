@@ -622,7 +622,7 @@ FContext::XDeallocateBlockData(
 }
 
 ulError
-XBuildSummedAreaTable(
+FContext::BuildSummedAreaTable(
       const FBlock& iSource
     , FBlock& iDestination
     , const FSchedulePolicy& iPolicy
@@ -631,12 +631,22 @@ XBuildSummedAreaTable(
     , FEvent* iEvent
 )
 {
-    // TODO
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Destination are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iDestination.Format() == SummedAreaTableMetrics( iSource )
+        , "Cannot build an SAT in this format, use SummedAreaTableMetrics."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+    );
+
     return  ULIS_NO_ERROR;
 }
 
 ulError
-XBuildPremultipliedSummedAreaTable(
+FContext::BuildPremultipliedSummedAreaTable(
       const FBlock& iSource
     , FBlock& iDestination
     , const FSchedulePolicy& iPolicy
@@ -645,8 +655,27 @@ XBuildPremultipliedSummedAreaTable(
     , FEvent* iEvent
 )
 {
-    // TODO
+    ULIS_ASSERT_RETURN_ERROR(
+          &iSource != &iDestination
+        , "Source and Destination are the same block."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    );
+    ULIS_ASSERT_RETURN_ERROR(
+          iDestination.Format() == SummedAreaTableMetrics( iSource )
+        , "Cannot build an SAT in this format, use SummedAreaTableMetrics."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+    );
+
     return  ULIS_NO_ERROR;
+}
+
+//static
+eFormat
+FContext::SummedAreaTableMetrics(
+    const FBlock& iSource
+)
+{
+    return  iSource.FormatMetrics().ReinterpretedType( eType::Type_ufloat ).FMT;
 }
 
 ULIS_NAMESPACE_END
