@@ -190,7 +190,7 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     Schedule ## iName                                       \
     , FBlendJobArgs                                         \
     , FBlendCommandArgs                                     \
-    , &Invoke ## iName ## < T >                             \
+    , &Invoke ## iName < T >                                \
     , &BuildBlendJob_Scanlines                              \
     , &BuildBlendJob_Chunks                                 \
 )

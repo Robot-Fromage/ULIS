@@ -203,7 +203,7 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(      \
     Schedule ## iName                                           \
     , FTransformJobArgs                                         \
     , FTransformCommandArgs                                     \
-    , &Invoke ## iName ## < T >                                 \
+    , &Invoke ## iName < T >                                    \
     , &BuildTransformJob_Scanlines                              \
     , &BuildTransformJob_Chunks                                 \
 )
@@ -222,7 +222,7 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
     Schedule ## iName                                       \
     , FTransformJobArgs                                     \
     , FResizeCommandArgs                                    \
-    , &Invoke ## iName ## < T >                             \
+    , &Invoke ## iName < T >                                \
     , &BuildResizeJob_Scanlines                             \
     , &BuildResizeJob_Chunks                                \
 )
