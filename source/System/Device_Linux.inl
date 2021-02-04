@@ -14,7 +14,7 @@
 #include "System/DeviceHelpers.h"
 
 #include <cpuid.h>
-#include <intrin.h>
+//#include <intrin.h>
 #include <stdint.h>
 #include <string>
 #include <stdlib.h>
