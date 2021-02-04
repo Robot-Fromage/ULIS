@@ -136,7 +136,7 @@ namespace FMath
     }
 
     template<>
-    static ULIS_FORCEINLINE float PyModulo< float >( float iValue, float iMod ) {
+    /*static*/ ULIS_FORCEINLINE float PyModulo< float >( float iValue, float iMod ) {
         return  fmod( iMod + fmod( iValue, iMod ), iMod );
     }
 
@@ -146,12 +146,12 @@ namespace FMath
     }
 
     template<>
-    static ULIS_FORCEINLINE double Mod( double iA, double iB ) {
+    /*static*/ ULIS_FORCEINLINE double Mod( double iA, double iB ) {
         return  fmod( iA, iB );
     }
 
     template<>
-    static ULIS_FORCEINLINE float Mod( float iA, float iB ) {
+    /*static*/ ULIS_FORCEINLINE float Mod( float iA, float iB ) {
         return  fmodf( iA, iB );
     }
 
@@ -224,13 +224,13 @@ namespace FMath
     }
 
     template<>
-    static ULIS_FORCEINLINE double Sqrt< double >( double iValue )
+    /*static*/ ULIS_FORCEINLINE double Sqrt< double >( double iValue )
     {
         return  sqrt( iValue );
     }
 
     template<>
-    static ULIS_FORCEINLINE float Sqrt< float >( float iValue )
+    /*static*/ ULIS_FORCEINLINE float Sqrt< float >( float iValue )
     {
         return  sqrtf( iValue );
     }
@@ -241,7 +241,7 @@ namespace FMath
     }
 
     template<>
-    static ULIS_FORCEINLINE float InvSqrt( float iValue ) {
+    /*static*/ ULIS_FORCEINLINE float InvSqrt( float iValue ) {
         float x2 = iValue * 0.5f;
         const float threehalfs = 1.5f;
         float  convf = iValue;
