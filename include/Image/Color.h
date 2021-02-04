@@ -45,6 +45,9 @@ public:
     /*! Copy Constructor */
     FColor( const FColor& iValue );
 
+    /*! Constructor from Sample */
+    FColor( const ISample& iValue );
+
     /*! Move Constructor. */
     FColor( FColor&& iValue );
 

@@ -192,7 +192,7 @@ ISample::Unpremultiply()
 FColor
 ISample::Premultiplied() const
 {
-    FColor res = *this;
+    FColor res( *this );
     res.Premultiply();
     return  res;
 }
@@ -200,7 +200,7 @@ ISample::Premultiplied() const
 FColor
 ISample::Unpremultiplied() const
 {
-    FColor res = *this;
+    FColor res( *this );
     res.Unpremultiply();
     return  res;
 }

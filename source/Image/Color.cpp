@@ -129,6 +129,13 @@ FColor::FColor( const FPixel& iPixel )
     memcpy( mSignal, iPixel.Bits(), BytesPerPixel() );
 }
 
+FColor::FColor( const ISample& iPixel )
+    : ISample( nullptr, iPixel.Format(), iPixel.ColorSpace() )
+{
+    mSignal = new uint8[ BytesPerPixel() ];
+    memcpy( mSignal, iPixel.Bits(), BytesPerPixel() );
+}
+
 FColor::FColor( const FColor& iValue )
     : ISample( nullptr, iValue.Format(), iValue.ColorSpace() )
 {
