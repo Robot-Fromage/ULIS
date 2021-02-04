@@ -22,6 +22,9 @@ ULIS_FORCEINLINE Vec4f ComposeNonSeparableSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb,
 
 /////////////////////////////////////////////////////
 // Helper static values for Computing Non Separable Blending functions
+#ifndef FLT_MAX
+#define FLT_MAX __FLT_MAX__
+#endif
 static Vec4f gLum( 0.3f, 0.59f, 0.11f, 0.0f );
 static Vec4f gFixMin( 0.f, 0.f, 0.f, FLT_MAX );
 static Vec4f gFixFind( 1.0e-20F, 1.0e-21F, 1.0e-22F, 0.f );
