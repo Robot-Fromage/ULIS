@@ -121,7 +121,7 @@ ULIS_API float inline  CubicBezierGenerateLinearLUT_imp( std::vector< FSplinePar
 
 ULIS_API float inline CubicBezierGenerateLinearLUT( std::vector< FSplineParametricSample >* oArray, const FVec2F& iP0, const FVec2F& iP1, const FVec2F& iP2, const FVec2F& iP3, float iThreshold ) {
     oArray->clear();
-    oArray->push_back( { iP0, 0.f } );
+    oArray->push_back( { iP0, 0.f, 0.f } );
     float length = CubicBezierGenerateLinearLUT_imp( oArray, iP0, iP1, iP2, iP3, iThreshold*iThreshold );
     oArray->push_back( { iP3, length, 1.f } );
     return  length;

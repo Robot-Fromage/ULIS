@@ -254,7 +254,7 @@ FContext::TransformBezier(
     const FRectI dst_rect = iDestination.Rect();
     const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
     FRectI dst_aim = TransformBezierMetrics( src_roi, iControlPoints );
-    int plotSize = FMath::Clamp( iPlotSize, 1ui32, 8ui32 );
+    int plotSize = FMath::Clamp( iPlotSize, uint32( 1 ), uint32( 8 ) );
     dst_aim.w += plotSize;
     dst_aim.h += plotSize;
     const FRectI dst_roi = dst_aim & dst_rect;

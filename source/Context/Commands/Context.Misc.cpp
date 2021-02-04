@@ -88,7 +88,7 @@ FContext::Extract(
     uint8* destinationStrides = new uint8[ destinationChannelsToExtract.size() ];
     sourceStrides[0] = sourceChannelsToExtract[0];
     destinationStrides[0] = destinationChannelsToExtract[0];
-    for( int i = 1; i < sourceChannelsToExtract.size(); ++i ) {
+    for( size_t i = 1; i < sourceChannelsToExtract.size(); ++i ) {
         sourceStrides[i] = sourceChannelsToExtract[i] - sourceChannelsToExtract[i-1];
         destinationStrides[i] = destinationChannelsToExtract[i] - destinationChannelsToExtract[i-1];
     }
