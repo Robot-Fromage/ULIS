@@ -87,7 +87,9 @@ set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_F
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
 
-set_target_properties( freetype PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312" )
+if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
+    set_target_properties( freetype PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312" )
+endif()
 
 set_target_properties( lcms2                PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( freetype             PROPERTIES FOLDER ULIS/3rdparty )
