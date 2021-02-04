@@ -19,6 +19,7 @@
 
 ULIS_NAMESPACE_BEGIN
 class FInternalEvent;
+class FCommand;
 typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 
 /////////////////////////////////////////////////////
