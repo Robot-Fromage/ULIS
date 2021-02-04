@@ -56,7 +56,7 @@ endif()
 # Flags for Compiler / Platforms
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
     # CLANG
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -mfma" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -mfma -Wno-comment -Wno-unused-function -Wno-missing-braces -Wno-switch" )
 
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
     # GNU
