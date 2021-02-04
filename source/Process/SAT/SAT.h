@@ -29,3 +29,4 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBuildPremultSATXPassInvoca
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedBuildPremultSATYPassInvocationSchedulerSelector,   &ScheduleBuildPremultSATYPassMT_MEM_Generic< T > )
 
 ULIS_NAMESPACE_END
+
