@@ -451,7 +451,7 @@ ULIS_MATRIX_FUNC typename TMatrix4< T >::tColumn& TMatrix4< T >::operator[]( int
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC const TMatrix4< T >::tColumn& TMatrix4< T >::operator[]( int iIndex ) const {
+ULIS_MATRIX_FUNC const typename TMatrix4< T >::tColumn& TMatrix4< T >::operator[]( int iIndex ) const {
     ULIS_ASSERT( iIndex >= 0 && iIndex < 4, "Bad Index" );
     return  mCols[ iIndex ];
 }
