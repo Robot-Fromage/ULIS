@@ -392,14 +392,14 @@ template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 T*
 TMatrixN< T, P, N >::Bits() {
-    return  &(m[0].m[0])
+    return  &(m[0].m[0]);
 }
 
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 const T*
 TMatrixN< T, P, N >::Bits() const {
-    return  &(m[0].m[0])
+    return  &(m[0].m[0]);
 }
 
 template< typename T, typename P, uint8 N >

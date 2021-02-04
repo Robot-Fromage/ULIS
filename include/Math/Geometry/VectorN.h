@@ -268,7 +268,7 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >& TVectorN< T, P, N >::Normalize() {
     for( uint8 i = 0; i < N; ++i )
         m[i] = static_cast< T >( m[i] * inv_distance );
 
-    return  *this
+    return  *this;
 }
 
 template< typename T, typename P, uint8 N >
