@@ -26,6 +26,22 @@ InvokeBuildSATXPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    const T* ULIS_RESTRICT src = reinterpret_cast< const T* >( jargs->src );
+    float*   ULIS_RESTRICT dst = reinterpret_cast< float* >( jargs->dst );
+
+    for( uint8 j = 0; j < fmt.SPP; ++j )
+        dst[j] = static_cast< float >( src[j] );
+
+    src += fmt.SPP;
+    dst += fmt.SPP;
+
+    for( uint32 x = 1; x < jargs->size; ++x ) {
+        for( uint8 j = 0; j < fmt.SPP; ++j )
+            dst[j] = static_cast< float >( src[j] + *( dst - fmt.SPP + j ) );
+        src += fmt.SPP;
+        dst += fmt.SPP;
+    }
 }
 
 template< typename T >
@@ -35,6 +51,15 @@ InvokeBuildSATYPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    const uint32 stride = cargs->dst->Width() * fmt.SPP;
+    float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
+
+    for( uint32 y = 1; y < jargs->size; ++y ) {
+        for( uint8 j = 0; j < fmt.SPP; ++j )
+            dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
+        dst += stride;
+    }
 }
 
 template< typename T >
@@ -44,6 +69,33 @@ InvokeBuildPremultSATXPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    const T* ULIS_RESTRICT src = reinterpret_cast< const T* >( jargs->src );
+    float*   ULIS_RESTRICT dst = reinterpret_cast< float* >( jargs->dst );
+    float max = static_cast< float >( MaxType< T >() );
+
+    {
+        float alpha = static_cast< float >( src[fmt.AID] );
+        dst[fmt.AID] = alpha;
+        for( uint8 j = 0; j < fmt.NCC; ++j ) {
+            uint8 r = fmt.IDT[j];
+            dst[r] = static_cast< float >( src[r] * alpha / max );
+        }
+    }
+
+    src += fmt.SPP;
+    dst += fmt.SPP;
+
+    for( uint32 x = 1; x < jargs->size; ++x ) {
+        float alpha = static_cast< float >( src[fmt.AID] );
+        dst[fmt.AID] = alpha + *( dst - fmt.SPP + fmt.AID );
+        for( uint8 j = 0; j < fmt.NCC; ++j ) {
+            uint8 r = fmt.IDT[j];
+            dst[r] = static_cast< float >( src[r] * alpha / max + *( dst - fmt.SPP + r ) );
+        }
+        src += fmt.SPP;
+        dst += fmt.SPP;
+    }
 }
 
 template< typename T >
@@ -53,6 +105,15 @@ InvokeBuildPremultSATYPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    const uint32 stride = cargs->dst->Width() * fmt.SPP;
+    float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
+
+    for( uint32 y = 1; y < jargs->size; ++y ) {
+        for( uint8 j = 0; j < fmt.SPP; ++j )
+            dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
+        dst += stride;
+    }
 }
 
 /////////////////////////////////////////////////////
