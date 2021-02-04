@@ -62,7 +62,7 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
     # GNU
     if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux" )
         # LINUX GNU GCC
-        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread" )
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse2 -msse3 -mssse3 -msse4.1 -mxop -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread" )
 
     elseif( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
         # WINDOWS MINGW GCC
