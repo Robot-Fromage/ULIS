@@ -28,6 +28,17 @@ FEvent::FEvent(
 {
 }
 
+FEvent::FEvent( const FEvent& iOther )
+    : d( new FEvent_Private( *iOther.d ) )
+{
+}
+
+FEvent&
+FEvent::operator=( const FEvent& iOther )
+{
+    d = iOther.d;
+}
+
 eEventStatus
 FEvent::Status() const
 {

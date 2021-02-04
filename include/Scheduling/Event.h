@@ -54,8 +54,11 @@ public:
     /*! Constructor */
     FEvent( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
 
-    FEvent( const FEvent& ) = delete;
-    FEvent& operator=( const FEvent& ) = delete;
+    FEvent( const FEvent& );
+    FEvent& operator=( const FEvent& );
+    FEvent( FEvent&& ) = delete;
+    FEvent& operator=( FEvent&& ) = delete;
+    
     eEventStatus Status() const;
     void Wait() const;
 
