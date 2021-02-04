@@ -205,7 +205,7 @@ FBlock::Color( uint16 iX, uint16 iY ) const
 }
 
 FColor
-FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, FColor& iConstant ) const
+FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, const FColor& iConstant ) const
 {
     switch( iBorderMode ) {
         case eBorderMode::Border_Transparent : {
@@ -233,7 +233,7 @@ FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, FColor& iConstant )
 }
 
 FColor
-FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, FColor& iColor, bool iCompensateBlackDrifting ) const
+FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, const FColor& iColor, bool iCompensateBlackDrifting ) const
 {
     int16 x0 = static_cast< int16 >( FMath::RoundToNegativeInfinity( iX ) );
     int16 y0 = static_cast< int16 >( FMath::RoundToNegativeInfinity( iY ) );
