@@ -116,5 +116,19 @@ FFormatMetrics::FFormatMetrics( FFormatMetrics&& iOther )
     iOther.IDT = nullptr;
 }
 
+FFormatMetrics
+FFormatMetrics::ReinterpretedType( eType iType ) const
+{
+    uint32 newType = static_cast< uint32 >( iType );
+    uint32 newFormat = static_cast< uint32 >( FMT );
+    newFormat &= ULIS_E_TYPE;
+    newFormat &= ULIS_E_FLOATING;
+    newFormat &= ULIS_E_DEPTH;
+    newFormat |= ULIS_W_TYPE( newType );
+    newFormat |= ULIS_W_FLOATING( 1 );
+    newFormat |= ULIS_W_DEPTH( 4 );
+    return  FFormatMetrics( static_cast< eFormat >( newFormat ) );
+}
+
 ULIS_NAMESPACE_END
 

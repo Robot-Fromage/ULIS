@@ -33,11 +33,14 @@ struct ULIS_API FFormatMetrics
     /*! Copy constructor. */
     FFormatMetrics( const FFormatMetrics& iOther );
 
+    /*! Copy assignment operator. */
+    FFormatMetrics& operator=( const FFormatMetrics& iOther );
+
     /*! Move constructor. */
     FFormatMetrics( FFormatMetrics&& iOther );
 
-    /*! Copy assignment operator. */
-    FFormatMetrics& operator=( const FFormatMetrics& iOther );
+    /*! Reinterpret the format by changing its type only. */
+    FFormatMetrics ReinterpretedType( eType iType ) const;
 
     /*! Cached Index Table */
     uint8*      IDT;
