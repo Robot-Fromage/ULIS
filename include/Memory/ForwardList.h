@@ -458,7 +458,7 @@ public:
                 if( prev )
                     prev->mNext = next;
                 else
-                    mFront = mNext;
+                    mFront = node;
                 return  true;
             }
 
