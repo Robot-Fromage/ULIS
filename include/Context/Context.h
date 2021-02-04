@@ -103,7 +103,7 @@ private:
         Internal tool for notifying an user event the task is a no-op
     */
     ulError FinishEventNo_OP( FEvent* iEvent, ulError iError );
-    ulError FContext::Dummy_OP( uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent );
+    ulError Dummy_OP( uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent );
 
 public:
 /////////////////////////////////////////////////////
