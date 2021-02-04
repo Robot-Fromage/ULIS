@@ -12,9 +12,9 @@
 #pragma once
 #include "Core/Platform.h"
 #include <cstdint>
+#include <limits>
 #include <cstring>
 #include <memory>
-
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Domain Range Typdefs
@@ -29,6 +29,8 @@ typedef  int64_t    int64;      ///< Used for signed 64bit images domain range v
 typedef  float      ufloat;     ///< Used for float images domain range values, indicates normalized range [0;1]
 typedef  double     udouble;    ///< Used for double images domain range values, indicates normalized range [0;1]
 typedef  int64      ulError;    ///< Used for errors reports defined below in this file
+
+#define ULIS_UINT16_MAX 0xFFFF
 
 /////////////////////////////////////////////////////
 // Type codes

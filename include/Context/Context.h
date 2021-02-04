@@ -130,7 +130,7 @@ public:
     Blend(
           const FBlock& iSource
         , FBlock& iBackdrop
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
@@ -167,7 +167,7 @@ public:
     BlendAA(
           const FBlock& iSource
         , FBlock& iBackdrop
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
@@ -201,7 +201,7 @@ public:
     AlphaBlend(
           const FBlock& iSource
         , FBlock& iBackdrop
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -237,7 +237,7 @@ public:
     AlphaBlendAA(
           const FBlock& iSource
         , FBlock& iBackdrop
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
         , ufloat iOpacity = 1.0f
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -269,8 +269,8 @@ public:
     BlendTiled(
           const FBlock& iSource
         , FBlock& iBackdrop
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-        , const FRectI& iBackdropRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FRectI& iBackdropRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
@@ -297,7 +297,7 @@ public:
     BlendColor(
           const ISample& iColor
         , FBlock& iBackdrop
-        , const FRectI& iBackdropRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iBackdropRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
@@ -325,7 +325,7 @@ public:
     ulError
     Clear(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -354,7 +354,7 @@ public:
     ConvertFormat(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -384,7 +384,7 @@ public:
     Copy(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -410,7 +410,7 @@ public:
     ulError
     Fill(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -435,7 +435,7 @@ public:
     ulError
     FillPreserveAlpha(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -559,7 +559,7 @@ public:
     TransformAffine(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FMat3F& iTransformMatrix = FMat3F()
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
@@ -597,8 +597,8 @@ public:
     TransformAffineTiled(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-        , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FRectI& iDestinationRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FMat3F& iTransformMatrix = FMat3F()
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
@@ -637,7 +637,7 @@ public:
     TransformPerspective(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FMat3F& iTransformMatrix = FMat3F()
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
@@ -680,7 +680,7 @@ public:
         , const TArray< FCubicBezierControlPoint >& iControlPoints
         , float iThreshold = 1.f
         , uint32 iPlotSize = 1
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
@@ -715,8 +715,8 @@ public:
     Resize(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
-        , const FRectF& iDestinationRect = FRectF( 0.f, 0.f, float( INT_MAX ), float( INT_MAX ) )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FRectF& iDestinationRect = FRectF( 0.f, 0.f, float( ULIS_UINT16_MAX ), float( ULIS_UINT16_MAX ) )
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
@@ -941,7 +941,7 @@ public:
         , uint8 iSourceExtractMask
         , uint8 iDestinationExtractMask
         , bool iUseRawMask = false
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -960,7 +960,7 @@ public:
     Filter(
           std::function< void( const FBlock&, const uint8* ) > iInvocation
         , const FBlock& iSource
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -977,7 +977,7 @@ public:
     FilterInPlace(
           std::function< void( FBlock&, uint8* ) > iInvocation
         , FBlock& iDestination
-        , const FRectI& iDestinationRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iDestinationRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -996,7 +996,7 @@ public:
           std::function< void( const FBlock&, const uint8*, FBlock&, uint8* ) >
         , const FBlock& iSource
         , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
@@ -1013,7 +1013,7 @@ public:
     ulError
     sRGBToLinear(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -1029,7 +1029,7 @@ public:
     ulError
     LinearTosRGB(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -1045,7 +1045,7 @@ public:
     ulError
     Premultiply(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -1061,7 +1061,7 @@ public:
     ulError
     Unpremultiply(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -1079,7 +1079,7 @@ public:
     ulError
     SanitizeZeroAlpha(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -1096,7 +1096,7 @@ public:
           FBlock& iBlock
         , uint8 iChannel1
         , uint8 iChannel2
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -1117,7 +1117,7 @@ public:
     AnalyzeSmallestVisibleRect(
           FBlock& iBlock
         , FRectI* oRect
-        , const FRectI& iRect = FRectI( 0, 0, INT_MAX, INT_MAX )
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr

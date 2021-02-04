@@ -49,7 +49,7 @@ FContext::XLoadBlockFromDisk(
               mContextualDispatchTable->mScheduleFileLoad
             , new FDiskIOCommandArgs(
                   ioBlock
-                , FRectI( 0, 0, INT_MAX, INT_MAX )
+                , FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
                 , iPath
             )
             , iPolicy
@@ -58,7 +58,7 @@ FContext::XLoadBlockFromDisk(
             , iNumWait
             , iWaitList
             , iEvent
-            , FRectI( 0, 0, INT_MAX, INT_MAX )
+            , FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         )
     );
 
