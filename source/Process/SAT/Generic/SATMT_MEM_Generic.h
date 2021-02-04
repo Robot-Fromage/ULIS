@@ -52,7 +52,7 @@ InvokeBuildSATYPassMT_MEM_Generic(
 )
 {
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
-    const uint32 stride = cargs->dst->Width() * fmt.SPP;
+    const uint32 stride = cargs->dst.Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
 
     for( uint32 y = 1; y < jargs->size; ++y ) {
@@ -106,7 +106,7 @@ InvokeBuildPremultSATYPassMT_MEM_Generic(
 )
 {
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
-    const uint32 stride = cargs->dst->Width() * fmt.SPP;
+    const uint32 stride = cargs->dst.Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
 
     for( uint32 y = 1; y < jargs->size; ++y ) {

@@ -36,7 +36,8 @@ FEvent::FEvent( const FEvent& iOther )
 FEvent&
 FEvent::operator=( const FEvent& iOther )
 {
-    d = iOther.d;
+    *d = *iOther.d;
+    return  *this;
 }
 
 eEventStatus
