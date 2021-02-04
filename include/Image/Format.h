@@ -197,7 +197,7 @@ public:
     \sa IndexTable()
     */
     ULIS_FORCEINLINE uint8 RedirectedIndex( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex >= 0 && iIndex < mFormatMetrics.SPP, "Bad Index" );
+        ULIS_ASSERT( iIndex < mFormatMetrics.SPP, "Bad Index" );
         return  mFormatMetrics.IDT[ iIndex ];
     }
 
