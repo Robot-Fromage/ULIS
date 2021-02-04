@@ -193,6 +193,8 @@
             #define ULIS_API __declspec( dllimport )
         #endif
     #endif
+#else
+    #define ULIS_API
 #endif
 
 /////////////////////////////////////////////////////
