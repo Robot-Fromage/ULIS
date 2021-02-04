@@ -30,7 +30,15 @@ typedef  float      ufloat;     ///< Used for float images domain range values, 
 typedef  double     udouble;    ///< Used for double images domain range values, indicates normalized range [0;1]
 typedef  int64      ulError;    ///< Used for errors reports defined below in this file
 
+/////////////////////////////////////////////////////
+// MAX
 #define ULIS_UINT16_MAX 0xFFFF
+
+#ifndef FLT_MAX
+#define FLT_MAX __FLT_MAX__
+#endif
+
+#define ULIS_FLOAT_MAX FLT_MAX
 
 /////////////////////////////////////////////////////
 // Type codes
