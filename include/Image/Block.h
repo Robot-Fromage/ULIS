@@ -357,7 +357,8 @@ public:
     \sa PixelBits()
     \sa FColor
     */
-    FColor Sample(
+    FColor
+    Sample(
           int16 iX
         , int16 iY
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
@@ -374,7 +375,8 @@ public:
     \sa PixelBits()
     \sa FColor
     */
-    FColor SampleSubpixel(
+    FColor
+    SampleSubpixel(
           float iX
         , float iY
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
