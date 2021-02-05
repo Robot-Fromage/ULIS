@@ -323,7 +323,7 @@ FContext::Resize(
                 , iBorderValue.ToFormat( iDestination.Format() )
                 , inverseScale
                 , dst_roi.Position()
-                , nullptr // SAT
+                , iOptionalSummedAreaTable // SAT
             )
             , iPolicy
             , false // Non-contiguous, disable chunks, force scanlines.
