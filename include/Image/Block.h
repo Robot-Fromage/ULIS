@@ -58,7 +58,7 @@ ULIS_NAMESPACE_BEGIN
 ///             \snippet data/block_snippet.h FBlock on stack
 ///             But you can also allocate blocks dynamically:
 ///             \snippet data/block_snippet.h FBlock on heap
-class ULIS_API FBlock final
+class ULIS_API FBlock
     : public IHasFormat
     , public IHasColorSpace
 {
@@ -491,7 +491,7 @@ public:
         , const FOnCleanupData& iOnCleanup = FOnCleanupData()
     );
 
-private:
+protected:
     uint8* mBitmap; ///< Contiguous memory storage buffer for the block.
     uint16 mWidth; ///< The width of the block.
     uint16 mHeight; ///< Height of the block.
