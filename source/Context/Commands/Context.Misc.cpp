@@ -27,6 +27,7 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 #include <vector>
+#include <atomic>
 
 ULIS_NAMESPACE_BEGIN
 ulError
@@ -543,8 +544,49 @@ FContext::AnalyzeSmallestVisibleRect(
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     }
 
-    // Bake and push command
-    // TODO
+    struct FAtomicRect {
+        std::atomic_int left;
+        std::atomic_int top;
+        std::atomic_int right;
+        std::atomic_int bot;
+    };
+    FAtomicRect* atomic_rect = new FAtomicRect{ ULIS_UINT16_MAX, ULIS_UINT16_MAX, 0, 0 };
+
+    auto func =[atomic_rect]( const FBlock& iBlock, const uint8* iPtr ){
+        uint32 index = static_cast< uint32 >( reinterpret_cast< intptr_t >( iPtr ) / iBlock.BytesPerPixel() );
+        uint16 x = index % iBlock.Width();
+        uint16 y = index / iBlock.Height();
+        const FFormatMetrics& fmt = iBlock.FormatMetrics();
+        double cmp = 0.0;
+        if( memcmp( ( iPtr + fmt.AID ), &cmp, fmt.BPC ) ) {
+            if( y < atomic_rect->top    )   atomic_rect->top    = y;
+            if( x < atomic_rect->left   )   atomic_rect->left   = x;
+            if( y > atomic_rect->bot    )   atomic_rect->bot    = y;
+            if( x > atomic_rect->right  )   atomic_rect->right  = x;
+        }
+    };
+
+    struct FBundle {
+        const FAtomicRect* at;
+        FRectI* res;
+    };
+    FBundle* bundle = new FBundle{ atomic_rect, oRect };
+
+    FEvent event(
+        FOnEventComplete(
+            []( const FRectI&, void* iUserData ) {
+                FBundle* bundle = reinterpret_cast< FBundle* >( iUserData );
+                const FAtomicRect* at = bundle->at;
+                FRectI* res = bundle->res;
+                *res = FRectI::FromMinMax( at->left, at->top, at->right, at->bot ).Sanitized();
+                delete  at;
+                delete  bundle;
+            }
+        , bundle
+        )
+    );
+    Filter( func, iBlock, src_roi, iPolicy, iNumWait, iWaitList, &event );
+    Dummy_OP( 1, &event, iEvent );
 
     return  ULIS_NO_ERROR;
 }
