@@ -922,7 +922,6 @@ public:
         , bool *oCanSaveWithoutProxy
     );
 
-
 /////////////////////////////////////////////////////
 // Misc
     /*!
@@ -1173,6 +1172,8 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+/////////////////////////////////////////////////////
+// SAT
     /*!
         Build a Summed Area Table ( used for Area resampling ) into iDestination.
 
