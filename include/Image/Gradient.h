@@ -15,22 +15,66 @@
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"
 #include "Image/Pixel.h"
+#include "Image/Sample.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Memory/Array.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
+/// @class      FGradientStep
+/// @brief      The FGradientStep class provides a mean of storing a gradient
+///             step.
+class ULIS_API FGradientStep final
+{
+public:
+    /*! Destroy the gradient step. */
+    ~FGradientStep();
+
+    /*! Construct gradient step. */
+    FGradientStep();
+
+    /*! Construct gradient step. */
+    FGradientStep( const FColor& iColor, ufloat iStep );
+
+public:
+    /*! Set the step. */
+    void Step( ufloat iValue );
+
+    /*! Get the step. */
+    ufloat Step() const;
+
+    /*! Get the color, editable. */
+    FColor& Color();
+
+    /*! Get the color. */
+    const FColor& Color() const;
+
+private:
+    ufloat mStep;   ///< The gradient step value.
+    FColor mColor;  ///< The gradient step color.
+};
+
+template class ULIS_API TArray< FGradientStep >;
+
+/////////////////////////////////////////////////////
 /// @class      FGradient
 /// @brief      The FGradient class provides a mean of storing and manipulating
 ///             gradients in various formats.
+/// @details    Gradients have at least two colors, white to black by default.
+///             Steps are in [0;1]. Interpolation is linear in the preferred
+///             format. It is assumed for simplicity that there are always two
+///             colors, one at 0 and one at 1.
 class ULIS_API FGradient final
 {
 public:
     /*! Destroy the gradient. */
     ~FGradient();
 
-    /*! Construct an empty gradient with preferred interpolation format. */
+    /*!
+    Construct gradient with preferred interpolation format.
+    By default, gradients are white to black.
+    */
     FGradient( eFormat iFormat );
 
     FGradient( const FGradient& ) = delete;
@@ -38,10 +82,7 @@ public:
 
 public:
     /*! Getter for gradient steps. */
-    const TArray< ufloat >& Steps() const;
-
-    /*! Getter for gradient colors. */
-    const TArray< FColor >& Colors() const;
+    const TArray< FGradientStep >& Steps() const;
 
     /*! Reset the gradient, keep the same format. */
     void Reset();
@@ -53,21 +94,20 @@ public:
     void ReinterpretInterpolationFormat( eFormat iFormat );
 
     /*! Add a step to the gradient, value is clamped in [0;1]. Return the index.*/
-    int AddStep( ufloat iStep, const ISample& iValue );
+    uint64 AddStep( ufloat iStep, const ISample& iValue );
 
-    /*! Getter for first Index at step */
-    int IndexAtStep( ufloat iStep ) const;
+    /*! Erase a step in the gradient from index. */
+    void EraseStep( uint64 iIndex );
 
     /*! Getter for num steps */
-    int NumSteps() const;
+    uint64 NumSteps() const;
 
     /*! Compute linearly interpolated color at step. */
     FColor ColorAtStep( ufloat iStep ) const;
 
 private:
-    TArray< ufloat > mSteps;    ///< The gradient steps.
-    TArray< FColor > mColors;   ///< The gradient colors.
-    eFormat mFormat;            ///< The gradient prefered interpolation format.
+    TArray< FGradientStep > mSteps; ///< The gradient steps.
+    eFormat mFormat; ///< The gradient prefered interpolation format.
 };
 
 ULIS_NAMESPACE_END
