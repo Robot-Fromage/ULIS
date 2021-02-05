@@ -171,6 +171,11 @@ struct TRectangle
         return  ( x == iOther.x && y == iOther.y && w == iOther.w && h == iOther.h );
     }
 
+    /*! Strict inequality comparison. */
+    bool operator!=( const TRectangle< T >& iOther ) const {
+        return  !operator==( iOther );
+    }
+
     /*! Return the area of the rect. */
     T Area() const {
         return  w * h;

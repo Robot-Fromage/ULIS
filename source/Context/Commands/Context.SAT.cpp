@@ -33,16 +33,50 @@ FContext::BuildSummedAreaTable(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Destination are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() != iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+
+    FEvent xpass_event;
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleBuildSATXPass
+            , new FDualBufferCommandArgs(
+                  iSource
+                , iDestination
+                , iSource.Rect()
+                , iDestination.Rect()
+            )
+            , iPolicy
+            , true
+            , false
+            , iNumWait
+            , iWaitList
+            , &xpass_event
+            , iDestination.Rect()
+        )
     );
-    ULIS_ASSERT_RETURN_ERROR(
-          iDestination.Format() == SummedAreaTableMetrics( iSource )
-        , "Cannot build an SAT in this format, use SummedAreaTableMetrics."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+
+    FEvent ypass_event;
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleBuildSATYPass
+            , new FDualBufferCommandArgs(
+                  iSource
+                , iDestination
+                , iSource.Rect()
+                , iDestination.Rect()
+            )
+            , iPolicy
+            , true
+            , false
+            , 1
+            , &xpass_event
+            , &ypass_event
+            , iDestination.Rect()
+        )
     );
+    Dummy_OP( 1, &ypass_event, iEvent );
 
     return  ULIS_NO_ERROR;
 }
@@ -57,16 +91,50 @@ FContext::BuildPremultipliedSummedAreaTable(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Destination are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
+    ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() != iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+
+    FEvent xpass_event;
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleBuildPremultipliedSATXPass
+            , new FDualBufferCommandArgs(
+                  iSource
+                , iDestination
+                , iSource.Rect()
+                , iDestination.Rect()
+            )
+            , iPolicy
+            , true
+            , false
+            , iNumWait
+            , iWaitList
+            , &xpass_event
+            , iDestination.Rect()
+        )
     );
-    ULIS_ASSERT_RETURN_ERROR(
-          iDestination.Format() == SummedAreaTableMetrics( iSource )
-        , "Cannot build an SAT in this format, use SummedAreaTableMetrics."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+
+    FEvent ypass_event;
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleBuildPremultipliedSATYPass
+            , new FDualBufferCommandArgs(
+                  iSource
+                , iDestination
+                , iSource.Rect()
+                , iDestination.Rect()
+            )
+            , iPolicy
+            , true
+            , false
+            , 1
+            , &xpass_event
+            , &ypass_event
+            , iDestination.Rect()
+        )
     );
+    Dummy_OP( 1, &ypass_event, iEvent );
 
     return  ULIS_NO_ERROR;
 }
