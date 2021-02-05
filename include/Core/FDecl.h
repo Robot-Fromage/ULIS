@@ -21,6 +21,8 @@ class   FCommandQueue;
 class   FContext;
 struct  FCubicBezierControlPoint;
 class   FEvent;
+class   FGradient;
+class   FGradientStep;
 class   FFilePathRegistry;
 class   FFont;
 class   FFontEngine;

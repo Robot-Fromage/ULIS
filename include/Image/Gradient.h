@@ -102,7 +102,11 @@ public:
     /*! Getter for num steps */
     uint64 NumSteps() const;
 
-    /*! Compute linearly interpolated color at step. */
+    /*!
+    Compute linearly interpolated color at step.
+    This method is convenient and abstracts away a lot of stuff, but it is also
+    quite inefficient if called in a performance critical loop.
+    */
     FColor ColorAtStep( ufloat iStep ) const;
 
 private:
