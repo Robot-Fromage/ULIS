@@ -1103,27 +1103,6 @@ public:
     );
 
     /*!
-        Perform an analysis operation on iBlock to detect the smallest possible
-        rect that has visual information with alpha > 0.
-        The input block will not be modified. This will work with any formats,
-        but formats without an alpha channel will actually return immediately
-        with a rectangle the same size as the block.
-        The result of the analysis operation will be stored in the oRect parameter,
-        it is unsafe to read or modify this oRect until the command is finished,
-        you can ensure that with a Fence on the event or a Finish on the context.
-    */
-    ulError
-    AnalyzeSmallestVisibleRect(
-          FBlock& iBlock
-        , FRectI* oRect
-        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
         Perform a block allocation or reallocation on the input iBlock.
         Any data that was there will be deleted and replaced according to the
         input parameters. This is mostly useful for internal subcommands but it
@@ -1218,6 +1197,29 @@ public:
     */
     static
     eFormat SummedAreaTableMetrics( const FBlock& iSource );
+
+/////////////////////////////////////////////////////
+// Analysis
+    /*!
+        Perform an analysis operation on iBlock to detect the smallest possible
+        rect that has visual information with alpha > 0.
+        The input block will not be modified. This will work with any formats,
+        but formats without an alpha channel will actually return immediately
+        with a rectangle the same size as the block.
+        The result of the analysis operation will be stored in the oRect parameter,
+        it is unsafe to read or modify this oRect until the command is finished,
+        you can ensure that with a Fence on the event or a Finish on the context.
+    */
+    ulError
+    AnalyzeSmallestVisibleRect(
+          FBlock& iBlock
+        , FRectI* oRect
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
 
 private:
     FCommandQueue& mCommandQueue;
