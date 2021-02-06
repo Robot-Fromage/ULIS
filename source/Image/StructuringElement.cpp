@@ -114,7 +114,7 @@ FStructuringElement::SetAt( FVec2I iPoint, eMorphologicalElementValue iValue ) {
 
 void
 FStructuringElement::Clear() {
-    Fill( MorphEl_Zero );
+    Fill( MpE_Zero );
 }
 
 void
@@ -130,7 +130,7 @@ FStructuringElement::SetZeroes() {
 
 void
 FStructuringElement::SetOnes() {
-    Fill( MorphEl_One );
+    Fill( MpE_One );
 }
 
 void

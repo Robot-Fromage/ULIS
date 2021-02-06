@@ -15,9 +15,9 @@
 
 ULIS_NAMESPACE_BEGIN
 enum eMorphologicalElementValue {
-      MorphEl_Zero  = 0
-    , MorphEl_One   = 1
-    , MorphEl_Any   = 2
+      MpE_Zero  = 0
+    , MpE_One   = 1
+    , MpE_Any   = 2
 };
 
 /////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ public:
 public:
     // Construction / Destruction
     ~FStructuringElement();
-    FStructuringElement( const FVec2I& iSize, eMorphologicalElementValue iValue = MorphEl_Zero );
+    FStructuringElement( const FVec2I& iSize, eMorphologicalElementValue iValue = MpE_Zero );
     FStructuringElement( const FVec2I& iSize, std::initializer_list< eMorphologicalElementValue > iNums );
     FStructuringElement( const FStructuringElement& );
     FStructuringElement( FStructuringElement&& );
