@@ -243,4 +243,8 @@ install( FILES binding/UnrealEngine4/ULIS.Build.cs  DESTINATION "." COMPONENT ru
 install( FILES "${PROJECT_BINARY_DIR}/.VERSION"     DESTINATION "." COMPONENT runtime )
 install( FILES "${PROJECT_BINARY_DIR}/.TIMESTAMP"   DESTINATION "." COMPONENT runtime )
 install( FILES "${PROJECT_BINARY_DIR}/.COMMIT"      DESTINATION "." COMPONENT runtime )
+install( FILES 3rdparty/freetype2/docs/FTL.txt      DESTINATION "./3rdparty/freetype2/."    COMPONENT runtime )
+install( FILES 3rdparty/Little-CMS/COPYING          DESTINATION "./3rdparty/Little-CMS/."   COMPONENT runtime )
+install( FILES 3rdparty/stb/LICENSE                 DESTINATION "./3rdparty/stb/."          COMPONENT runtime )
+install( FILES 3rdparty/VCL/LICENSE                 DESTINATION "./3rdparty/VCL/."          COMPONENT runtime )
 
