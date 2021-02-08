@@ -205,6 +205,9 @@ private:
     const fpCommandScheduler mScheduleAccumulativeSamplingXPass;
     const fpCommandScheduler mScheduleAccumulativeSamplingYPass;
 
+    const fpCommandScheduler mScheduleConvolve;
+    const fpCommandScheduler mScheduleMorphologicalProcess;
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;

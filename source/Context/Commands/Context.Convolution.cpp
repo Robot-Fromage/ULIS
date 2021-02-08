@@ -63,7 +63,7 @@ FContext::Convolve(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              nullptr
+              mContextualDispatchTable->mScheduleConvolve
             , new FDualBufferCommandArgs(
                   iSource
                 , iDestination
@@ -123,7 +123,7 @@ FContext::MorphologicalProcess(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              nullptr
+              mContextualDispatchTable->mScheduleMorphologicalProcess
             , new FDualBufferCommandArgs(
                   iSource
                 , iDestination

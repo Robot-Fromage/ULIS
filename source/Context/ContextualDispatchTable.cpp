@@ -24,6 +24,8 @@
 #include "Process/Misc/Sanitize.h"
 #include "Process/Misc/Swap.h"
 #include "Process/SAT/SAT.h"
+#include "Process/Convolution/Convolution.h"
+#include "Process/Convolution/Morpho.h"
 #include "Process/Analysis/AccumulativeSampling.h"
 #include "Process/Analysis/AnalyzeSmallestVisibleRect.h"
 
@@ -113,6 +115,9 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleAnalyzeSmallestVisibleRectYPass( TDispatcher< FDispatchedAnalyzeSmallestVisibleRectYPassInvocationSchedulerSelector  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleAccumulativeSamplingXPass(       TDispatcher< FDispatchedAccumulativeSamplingXPassInvocationSchedulerSelector        >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleAccumulativeSamplingYPass(       TDispatcher< FDispatchedAccumulativeSamplingYPassInvocationSchedulerSelector        >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+
+        , mScheduleConvolve(                        TDispatcher< FDispatchedConvolutionInvocationSchedulerSelector                      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleMorphologicalProcess(            TDispatcher< FDispatchedMorphoInvocationSchedulerSelector                           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )
