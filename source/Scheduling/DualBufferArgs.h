@@ -59,6 +59,7 @@ public:
     const uint8* ULIS_RESTRICT src;
     uint8* ULIS_RESTRICT dst;
     int64 size;
+    uint32 line;
 };
 
 /////////////////////////////////////////////////////
@@ -82,6 +83,7 @@ BuildDualBufferJob_Scanlines(
     oJargs.src                              = src + ( iCargs->srcRect.y + iIndex ) * src_bps;
     oJargs.dst                              = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
     oJargs.size                             = size;
+    oJargs.line                             = static_cast< uint32 >( iIndex );
 }
 
 static
@@ -101,6 +103,7 @@ BuildDualBufferJob_Chunks(
     oJargs.src                              = src + iIndex;
     oJargs.dst                              = dst + iIndex;
     oJargs.size                             = FMath::Min( iOffset + iSize, btt ) - iOffset;
+    oJargs.line                             = ULIS_UINT16_MAX; // N/A for chunks
 }
 
 template<
