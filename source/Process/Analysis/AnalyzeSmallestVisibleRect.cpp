@@ -15,6 +15,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/DualBufferArgs.h"
+#include "Scheduling/SimpleBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -88,7 +89,7 @@ InvokeAnalyzeSmallestVisibleRectYPassMT_MEM(
 /////////////////////////////////////////////////////
 // Dispatch
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleAnalyzeSmallestVisibleRectXPassMT_MEM, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeAnalyzeSmallestVisibleRectXPassMT_MEM )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleAnalyzeSmallestVisibleRectYPassMT_MEM, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeAnalyzeSmallestVisibleRectYPassMT_MEM )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleAnalyzeSmallestVisibleRectYPassMT_MEM, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeAnalyzeSmallestVisibleRectYPassMT_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedAnalyzeSmallestVisibleRectXPassInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedAnalyzeSmallestVisibleRectYPassInvocationSchedulerSelector )
 

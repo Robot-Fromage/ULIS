@@ -67,7 +67,7 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedAccumulativeSamplingYPassInvocationSchedulerSelector
-    , &ScheduleAccumulativeSamplingYPassMT_MEM< T >
+    , &ScheduleAccumulativeSamplingYPassMT_MEM
 )
 
 ULIS_NAMESPACE_END
