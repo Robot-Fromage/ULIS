@@ -15,6 +15,8 @@
 #include "Image/Block.h"
 #include "Image/Kernel.h"
 #include "Image/StructuringElement.h"
+#include "Process/Convolution/Convolution.h"
+#include "Process/Convolution/Morpho.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/CommandQueue_Private.h"
@@ -64,11 +66,12 @@ FContext::Convolve(
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleConvolve
-            , new FDualBufferCommandArgs(
+            , new FConvolutionCommandArgs(
                   iSource
                 , iDestination
                 , src_roi
                 , dst_roi
+                , iKernel
             )
             , iPolicy
             , false // force scanlines
@@ -124,11 +127,12 @@ FContext::MorphologicalProcess(
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleMorphologicalProcess
-            , new FDualBufferCommandArgs(
+            , new FMorphoCommandArgs(
                   iSource
                 , iDestination
                 , src_roi
                 , dst_roi
+                , iKernel
             )
             , iPolicy
             , false // force scanlines
