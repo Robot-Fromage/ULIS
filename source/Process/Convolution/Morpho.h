@@ -14,6 +14,7 @@
 #include "Scheduling/Dispatcher.h"
 #include "Image/Color.h"
 #include "Image/Block.h"
+#include "Image/StructuringElement.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Process/Conv/srgb2linear.h"
 #include "Scheduling/ScheduleArgs.h"
@@ -22,6 +23,24 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Args
+class FMorphoCommandArgs final
+    : public FDualBufferCommandArgs
+{
+public:
+    ~FMorphoCommandArgs() override {}
+    FMorphoCommandArgs(
+          const FBlock& iSrc
+        , FBlock& iDst
+        , const FRectI& iSrcRect
+        , const FRectI& iDstRect
+        , const FStructuringElement& iKernel
+    )
+        : FDualBufferCommandArgs( iSrc, iDst, iSrcRect, iDstRect )
+        , kernel( iKernel )
+        {}
+
+    const FStructuringElement& kernel;
+};
 
 /////////////////////////////////////////////////////
 // Invocations
@@ -29,14 +48,14 @@ template< typename T >
 void
 InvokeMorphoMT_MEM_Generic(
       const FDualBufferJobArgs* jargs
-    , const FDualBufferCommandArgs* cargs
+    , const FMorphoCommandArgs* cargs
 )
 {
 }
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleMorphoMT_MEM_Generic, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeMorphoMT_MEM_Generic< T > )
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleMorphoMT_MEM_Generic, FDualBufferJobArgs, FMorphoCommandArgs, &InvokeMorphoMT_MEM_Generic< T > )
 ULIS_DECLARE_DISPATCHER( FDispatchedMorphoInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedMorphoInvocationSchedulerSelector, &ScheduleMorphoMT_MEM_Generic< T > )
 
