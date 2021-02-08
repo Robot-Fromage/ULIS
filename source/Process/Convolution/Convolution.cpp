@@ -3,19 +3,18 @@
 /*
 *   ULIS
 *__________________
-* @file         GammaCompress.cpp
+* @file         Convolution.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definitions for the GammaCompress API.
+* @brief        This file provides the definitions for the Convolution API.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Process/Misc/GammaCompress.h"
+#include "Process/Convolution/Convolution.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedApplysRGB2LinearInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedApplyLinear2sRGBInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 
