@@ -1212,8 +1212,27 @@ public:
     */
     ulError
     AnalyzeSmallestVisibleRect(
-          FBlock& iBlock
+          const FBlock& iBlock
         , FRectI* oRect
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform an accumulative sampling operation on iBlock to get an averaged
+        area sample of a given input rect.
+        The input block will not be modified. This will work with any formats,
+        The result of the analysis operation will be stored in the oColor parameter,
+        it is unsafe to read or modify this oColor until the command is finished,
+        you can ensure that with a Fence on the event or a Finish on the context.
+    */
+    ulError
+    AccumulateSample(
+          const FBlock& iBlock
+        , FColor* oColor
         , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0

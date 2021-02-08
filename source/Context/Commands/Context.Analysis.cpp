@@ -103,7 +103,7 @@ ULIS_NAMESPACE_BEGIN
 
 ulError
 FContext::AnalyzeSmallestVisibleRect(
-      FBlock& iBlock
+      const FBlock& iBlock
     , FRectI* oRect
     , const FRectI& iRect
     , const FSchedulePolicy& iPolicy
@@ -155,7 +155,20 @@ FContext::AnalyzeSmallestVisibleRect(
         )
     );
 
-    FEvent ypass_event;
+    FEvent ypass_event(
+        FOnEventComplete(
+            [strip, oRect]( const FRectI& ) {
+                FPixel proxy = strip->Pixel( strip->Width() - 1, 0 );
+                *oRect = FRectI::FromMinMax(
+                      proxy.Channel16( 0 )
+                    , proxy.Channel16( 1 )
+                    , proxy.Channel16( 2 )
+                    , proxy.Channel16( 3 )
+                );
+                delete  strip;
+            }
+        )
+    );
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleAnalyzeSmallestVisibleRectYPass
@@ -173,6 +186,88 @@ FContext::AnalyzeSmallestVisibleRect(
         )
     );
 
+    Dummy_OP( 1, &ypass_event, iEvent );
+
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::AccumulateSample(
+      const FBlock& iBlock
+    , FColor* oColor
+    , const FRectI& iRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    ULIS_ASSERT_RETURN_ERROR(
+          oColor
+        , "No input."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+    );
+
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iRect.Sanitized() & src_rect;
+
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    FEvent event_alloc;
+    FBlock* strip = new FBlock(); // Hollow
+    XAllocateBlockData( *strip, src_roi.h, 1, SummedAreaTableMetrics( iBlock ), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, iNumWait, iWaitList, &event_alloc );
+
+    FEvent xpass_event;
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleAccumulativeSamplingXPass
+            , new FDualBufferCommandArgs(
+                  iBlock
+                , *strip
+                , src_roi
+                , strip->Rect()
+            )
+            , iPolicy
+            , false // force scanline
+            , false
+            , 1
+            , &event_alloc
+            , &xpass_event
+            , strip->Rect()
+        )
+    );
+
+    FEvent ypass_event(
+        FOnEventComplete(
+            [strip, oColor, &src_roi]( const FRectI& ) {
+                FPixel proxy = strip->Pixel( strip->Width() - 1, 0 );
+                proxy.Unpremultiply();
+                float area = static_cast< float >( src_roi.Area() );
+                for( uint8 i = 0; i < proxy.SamplesPerPixel(); ++i )
+                    proxy.SetChannelF( i, proxy.ChannelF( i ) / area );
+                delete  strip;
+            }
+        )
+    );
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleAccumulativeSamplingYPass
+            , new FSimpleBufferCommandArgs(
+                  *strip
+                , strip->Rect()
+            )
+            , iPolicy
+            , false
+            , false
+            , 1
+            , &xpass_event
+            , &ypass_event
+            , strip->Rect()
+        )
+    );
     Dummy_OP( 1, &ypass_event, iEvent );
 
     return  ULIS_NO_ERROR;
