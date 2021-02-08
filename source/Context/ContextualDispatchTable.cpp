@@ -24,6 +24,8 @@
 #include "Process/Misc/Sanitize.h"
 #include "Process/Misc/Swap.h"
 #include "Process/SAT/SAT.h"
+#include "Process/Analysis/AccumulativeSampling.h"
+#include "Process/Analysis/AnalyzeSmallestVisibleRect.h"
 
 
 ULIS_NAMESPACE_BEGIN
@@ -106,6 +108,11 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleBuildSATYPass(                   TDispatcher< FDispatchedBuildSATYPassInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleBuildPremultipliedSATXPass(      TDispatcher< FDispatchedBuildPremultSATXPassInvocationSchedulerSelector             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleBuildPremultipliedSATYPass(      TDispatcher< FDispatchedBuildPremultSATYPassInvocationSchedulerSelector             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+
+        , mScheduleAnalyzeSmallestVisibleRectXPass( TDispatcher< FDispatchedAnalyzeSmallestVisibleRectXPassInvocationSchedulerSelector  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleAnalyzeSmallestVisibleRectYPass( TDispatcher< FDispatchedAnalyzeSmallestVisibleRectYPassInvocationSchedulerSelector  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleAccumulativeSamplingXPass(       TDispatcher< FDispatchedAccumulativeSamplingXPassInvocationSchedulerSelector        >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleAccumulativeSamplingYPass(       TDispatcher< FDispatchedAccumulativeSamplingYPassInvocationSchedulerSelector        >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

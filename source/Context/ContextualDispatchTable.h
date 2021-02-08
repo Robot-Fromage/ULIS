@@ -200,6 +200,11 @@ private:
     const fpCommandScheduler mScheduleBuildPremultipliedSATXPass;
     const fpCommandScheduler mScheduleBuildPremultipliedSATYPass;
 
+    const fpCommandScheduler mScheduleAnalyzeSmallestVisibleRectXPass;
+    const fpCommandScheduler mScheduleAnalyzeSmallestVisibleRectYPass;
+    const fpCommandScheduler mScheduleAccumulativeSamplingXPass;
+    const fpCommandScheduler mScheduleAccumulativeSamplingYPass;
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;

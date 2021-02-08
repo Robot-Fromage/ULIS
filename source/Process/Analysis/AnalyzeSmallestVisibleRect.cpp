@@ -59,13 +59,14 @@ InvokeAnalyzeSmallestVisibleRectXPassMT_MEM(
 //---------------------------------------------------------------------------------- MEM
 void
 InvokeAnalyzeSmallestVisibleRectYPassMT_MEM(
-      const FDualBufferJobArgs* jargs
-    , const FDualBufferCommandArgs* cargs
+      const FSimpleBufferJobArgs* jargs
+    , const FSimpleBufferCommandArgs* cargs
 )
 {
-    const FFormatMetrics& fmt = cargs->src.Format();
-    const uint16* ULIS_RESTRICT src = reinterpret_cast< const uint16* >( jargs->src );
-    uint16* ULIS_RESTRICT dst = reinterpret_cast< uint16* >( jargs->dst );
+    const FFormatMetrics& fmt = cargs->dst.Format();
+    const uint16* ULIS_RESTRICT src = reinterpret_cast< const uint16* >( jargs->dst );
+    FColor dst_holder( fmt.FMT );
+    uint16* ULIS_RESTRICT dst = reinterpret_cast< uint16* >( dst_holder.Bits() );
 
     // dst is a dot ( assumed CMYK16 )
     // left top right bot
@@ -82,11 +83,12 @@ InvokeAnalyzeSmallestVisibleRectYPassMT_MEM(
         if( src[3] > dst[3] ) dst[3] = src[3];
         src += fmt.SPP;
     }
+    memcpy( dst, src, fmt.BPP );
 }
 /////////////////////////////////////////////////////
 // Dispatch
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleAnalyzeSmallestVisibleRectXPassMT_MEM, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeAnalyzeSmallestVisibleRectXPassMT_MEM )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleAnalyzeSmallestVisibleRectYPassMT_MEM, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeAnalyzeSmallestVisibleRectYPassMT_MEM )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleAnalyzeSmallestVisibleRectYPassMT_MEM, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeAnalyzeSmallestVisibleRectYPassMT_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedAnalyzeSmallestVisibleRectXPassInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedAnalyzeSmallestVisibleRectYPassInvocationSchedulerSelector )
 
