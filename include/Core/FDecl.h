@@ -31,6 +31,8 @@ class   FFontRegistry;
 class   FFontStyleEntry;
 struct  FFormatMetrics;
 class   FHardwareMetrics;
+class   FKernel;
+class   FStructuringElement;
 //struct  FMath;
 class   FPixel;
 class   FSchedulePolicy;
