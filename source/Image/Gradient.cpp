@@ -49,6 +49,7 @@ FGradientStep::Color()
 {
     return  mColor;
 }
+
 const
 FColor& FGradientStep::Color() const
 {
