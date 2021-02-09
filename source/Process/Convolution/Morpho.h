@@ -79,6 +79,7 @@ InvokeMorphoMT_MEM_Generic(
                     continue;
                 for( int k = 0; k < fmt.SPP; ++k ) {
                     T binary = ( *( (T*)( color.Bits() + k ) ) ) > MinType< T >() ? MaxType< T >() : MinType< T >();
+                    // see De Morgan's laws
                     bool A = binary == MinType< T >();
                     bool B = mpel == MpE_Zero;
                     bool C = binary == MaxType< T >();
