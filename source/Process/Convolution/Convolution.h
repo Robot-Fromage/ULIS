@@ -51,6 +51,29 @@ InvokeConvolutionMT_MEM_Generic(
     , const FConvolutionCommandArgs* cargs
 )
 {
+    const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
+    uint8*       ULIS_RESTRICT  dst = jargs->dst;
+    float* sum = new float[fmt.SPP];
+
+    for( int x = 0; x < cargs->dstRect.w; ++x ) {
+        for( int i = 0; i < cargs->kernel.Width(); ++i ) {
+            for( int j = 0; j < cargs->kernel.Width(); ++j ) {
+                int src_x = x + i - cargs->kernel.Pivot().x;
+                int src_y = jargs->line + j - cargs->kernel.Pivot().y;
+                FColor color = cargs->src.Sample( src_x, src_y );
+                float value = cargs->kernel.At( i, j );
+                for( int k = 0; k < fmt.SPP; ++k ) {
+                    sum[k] += ( *( (T*)( color.Bits() + k ) ) ) * value;
+                }
+            }
+        }
+        for( int k = 0; k < fmt.SPP; ++k ) {
+            ( *( (T*)( dst + k ) ) ) = FMath::Clamp( static_cast< T >( sum[k] ), MinType< T >(), MaxType< T >() );
+        }
+        dst += fmt.BPP;
+    }
+
+    delete [] sum;
 }
 
 /////////////////////////////////////////////////////
