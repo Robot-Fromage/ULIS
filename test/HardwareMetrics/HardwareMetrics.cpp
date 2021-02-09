@@ -5,11 +5,11 @@
 *__________________
 * @file         CPUDeviceInfo.cpp
 * @author       Clement Berthaud
-* @brief        CPUDeviceInfo application for ULIS3.
+* @brief        CPUDeviceInfo application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS3>
+#include <ULIS>
 
 int main( int argc, char *argv[] ) {
     ::ul3::FHardwareMetrics deviceInfo = ::ul3::FHardwareMetrics::Detect();

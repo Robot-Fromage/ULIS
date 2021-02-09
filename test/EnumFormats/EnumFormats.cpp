@@ -5,7 +5,7 @@
 *__________________
 * @file         Formats.cpp
 * @author       Clement Berthaud
-* @brief        Formats application for ULIS3.
+* @brief        Formats application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

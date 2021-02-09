@@ -5,11 +5,11 @@
 *__________________
 * @file         Benchmark.cpp
 * @author       Clement Berthaud
-* @brief        Benchmark application for ULIS3.
+* @brief        Benchmark application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS3>
+#include <ULIS>
 #include <chrono>
 #include <sstream>
 #include <iomanip>
