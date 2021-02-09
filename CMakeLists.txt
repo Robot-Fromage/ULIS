@@ -16,9 +16,8 @@ cmake_minimum_required(VERSION 3.11.0)
 option( ULIS_BUILD_SHARED           "Build the library shared or statically"            ON  )
 option( ULIS_BUILD_PYTHON_MODULE    "Build the library python module"                   OFF )
 option( ULIS_BUILD_TESTS            "Build the library test modules"                    OFF )
-option( ULIS_BUILD_SAMPLES          "Build the library sample modules"                  OFF )
+option( ULIS_BUILD_EXAMPLES         "Build the library example modules"                 OFF )
 option( ULIS_FORCE_ASSERT           "Build the library with forced assert in release"   OFF )
-option( ULIS_FORCE_STATISTICS       "Build the library with forced stats in release"    OFF )
 SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries"            )
 SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package"                )
 SET( ULIS_PYTHON_REL_LIB            "" CACHE STRING "Indicates the path to python release static library"   )
@@ -81,7 +80,7 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
 
 endif()
 
-set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_FORCE_ASSERT -D ULIS_FORCE_STATISTICS -D ULIS_RELWITHDEBINFO" )
+set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_FORCE_ASSERT -D ULIS_RELWITHDEBINFO" )
 
 # Add Dependencies
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
@@ -115,10 +114,6 @@ endif()
 
 if( ${ULIS_FORCE_ASSERT} )
     target_compile_definitions( ULIS PUBLIC ULIS_FORCE_ASSERT )
-endif()
-
-if( ${ULIS_FORCE_STATISTICS} )
-    target_compile_definitions( ULIS PUBLIC ULIS_FORCE_STATISTICS )
 endif()
 
 # git commit hash macro
@@ -208,8 +203,8 @@ if( ${ULIS_BUILD_TESTS} )
 include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
 endif()
 
-if( ${ULIS_BUILD_SAMPLES} )
-include(${CMAKE_CURRENT_SOURCE_DIR}/sample/CMakeLists.txt)
+if( ${ULIS_BUILD_EXAMPLES} )
+include(${CMAKE_CURRENT_SOURCE_DIR}/example/CMakeLists.txt)
 endif()
 
 ####################################

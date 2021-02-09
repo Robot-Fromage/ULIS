@@ -5,11 +5,11 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "test/Test/Test.cpp"
+    "test/HardwareMetrics/HardwareMetrics.cpp"
 )
 
-add_executable( Test ${source_list} )
-target_link_libraries( Test ULIS )
+add_executable( HardwareMetrics ${source_list} )
+target_link_libraries( HardwareMetrics ULIS )
 
 # For MSVC parse pretty filter names
 foreach(source IN LISTS source_list)

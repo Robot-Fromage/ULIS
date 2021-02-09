@@ -5,7 +5,7 @@
 *__________________
 * @file         Sandbox.cpp
 * @author       Clement Berthaud
-* @brief        Sandbox program without ULIS.
+* @brief        Sandbox program without ULIS for quick tests.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -15,32 +15,8 @@ typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 
-class A;
-class B;
-
-class A
-{
-public:
-    ~A() {}
-
-    B Ret();
-};
-
-class B : public A
-{
-public:
-    ~B() {};
-};
-
-B A::Ret() {
-    return  B();
-}
-
 int
 main() {
-    A a;
-    B b = a.Ret();
-
     return  0;
 }
 

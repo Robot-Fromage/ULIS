@@ -5,11 +5,11 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "test/SIMD/SIMD.cpp"
+    "test/EnumFormats/EnumFormats.cpp"
 )
 
-add_executable( SIMD ${source_list} )
-target_link_libraries( SIMD ULIS )
+add_executable( EnumFormats ${source_list} )
+target_link_libraries( EnumFormats ULIS )
 
 # For MSVC parse pretty filter names
 foreach(source IN LISTS source_list)
