@@ -8,7 +8,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/test/Profiling/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/test/Sandbox/CMakeLists.txt)
 
 # Set default startup project
-set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Test )
+set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Info )
 
 set_target_properties( Benchmark        PROPERTIES FOLDER ULIS/test )
 set_target_properties( EnumFormats      PROPERTIES FOLDER ULIS/test )
