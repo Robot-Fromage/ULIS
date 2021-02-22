@@ -6,7 +6,7 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/Raster/Raster.cpp"
+        "example/Raster/Raster.cpp"
     )
 
     add_executable( Raster ${source_list} )
