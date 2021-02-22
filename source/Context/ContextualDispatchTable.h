@@ -207,6 +207,8 @@ private:
 
     const fpCommandScheduler mScheduleConvolve;
     const fpCommandScheduler mScheduleMorphologicalProcess;
+    
+    const fpCommandScheduler mScheduleDrawLine;
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;

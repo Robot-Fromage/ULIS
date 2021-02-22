@@ -26,6 +26,7 @@
 #include "Process/SAT/SAT.h"
 #include "Process/Convolution/Convolution.h"
 #include "Process/Convolution/Morpho.h"
+#include "Process/Raster/DrawLine.h"
 #include "Process/Analysis/AccumulativeSampling.h"
 #include "Process/Analysis/AnalyzeSmallestVisibleRect.h"
 
@@ -118,6 +119,8 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
 
         , mScheduleConvolve(                        TDispatcher< FDispatchedConvolutionInvocationSchedulerSelector                      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleMorphologicalProcess(            TDispatcher< FDispatchedMorphoInvocationSchedulerSelector                           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        
+        , mScheduleDrawLine(                        TDispatcher< FDispatchedDrawLineInvocationSchedulerSelector                         >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

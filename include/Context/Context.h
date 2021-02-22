@@ -1281,6 +1281,26 @@ public:
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
+    
+/////////////////////////////////////////////////////
+// Raster
+
+    /*!
+        Draws a line between iP0 and iP1
+    */
+    ulError
+    DrawLine(
+          FBlock& iBlock
+        , const FVec2F& iP0
+        , const FVec2F& iP1
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 
 private:
     FCommandQueue& mCommandQueue;
