@@ -6,9 +6,9 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/SimpleFluid/main.cpp"
-        "sample/SimpleFluid/SimpleFluid.cpp"
-        "sample/SimpleFluid/SimpleFluid.h"
+        "example/SimpleFluid/main.cpp"
+        "example/SimpleFluid/SimpleFluid.cpp"
+        "example/SimpleFluid/SimpleFluid.h"
     )
 
     add_executable( SimpleFluid ${source_list} )

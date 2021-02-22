@@ -6,9 +6,9 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/Particles/main.cpp"
-        "sample/Particles/Particles.cpp"
-        "sample/Particles/Particles.h"
+        "example/Particles/main.cpp"
+        "example/Particles/Particles.cpp"
+        "example/Particles/Particles.h"
     )
 
     add_executable( Particles ${source_list} )

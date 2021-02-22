@@ -6,7 +6,7 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/Transform/Transform.cpp"
+        "example/Transform/Transform.cpp"
     )
 
     add_executable( Transform ${source_list} )

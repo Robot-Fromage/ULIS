@@ -6,9 +6,9 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/TiledBlock/main.cpp"
-        "sample/TiledBlock/Canvas.cpp"
-        "sample/TiledBlock/Canvas.h"
+        "example/TiledBlock/main.cpp"
+        "example/TiledBlock/Canvas.cpp"
+        "example/TiledBlock/Canvas.h"
     )
 
     add_executable( TiledBlock ${source_list} )

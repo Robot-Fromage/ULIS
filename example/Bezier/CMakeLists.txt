@@ -6,7 +6,7 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/Bezier/Bezier.cpp"
+        "example/Bezier/Bezier.cpp"
     )
 
     add_executable( Bezier ${source_list} )

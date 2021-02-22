@@ -6,7 +6,7 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/TiledBlend/TiledBlend.cpp"
+        "example/TiledBlend/TiledBlend.cpp"
     )
 
     add_executable( TiledBlend ${source_list} )

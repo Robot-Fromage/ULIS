@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "sample/Kernel/Kernel.cpp"
+    "example/Kernel/Kernel.cpp"
 )
 
 add_executable( Kernel ${source_list} )

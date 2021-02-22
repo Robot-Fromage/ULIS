@@ -6,7 +6,7 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "sample/BlendShowcase/BlendShowcase.cpp"
+        "example/BlendShowcase/BlendShowcase.cpp"
     )
 
     add_executable( BlendShowcase ${source_list} )

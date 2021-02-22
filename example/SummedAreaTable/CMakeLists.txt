@@ -5,7 +5,7 @@ file(
     source_list
     RELATIVE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "sample/SummedAreaTable/SummedAreaTable.cpp"
+    "example/SummedAreaTable/SummedAreaTable.cpp"
 )
 
 add_executable( SummedAreaTable ${source_list} )
