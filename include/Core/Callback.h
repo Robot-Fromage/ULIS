@@ -82,7 +82,8 @@ public:
         No return value because we can't ensure a generic default return value if not bound.
     */
     ULIS_FORCEINLINE void ExecuteIfBound( Ts ... args ) const {
-        mFptr( args ... );
+        if( mFptr )
+            mFptr( args ... );
     }
 
     /*!
