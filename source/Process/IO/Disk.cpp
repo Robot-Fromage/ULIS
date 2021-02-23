@@ -62,11 +62,12 @@ InvokeLoadFromFile_MEM(
 
     eColorModel model;
     bool hea;
+    uint8 cs = 0;
     switch( channels ) {
-        case 1: model = CM_GREY;    hea = false;    break;
-        case 2: model = CM_GREY;    hea = true;     break;
-        case 3: model = CM_RGB;     hea = false;    break;
-        case 4: model = CM_RGB;     hea = true;     break;
+        case 1: model = CM_GREY;    hea = false;    cs = ULIS_sGrey;    break;
+        case 2: model = CM_GREY;    hea = true;     cs = ULIS_sGrey;    break;
+        case 3: model = CM_RGB;     hea = false;    cs = ULIS_sRGB;     break;
+        case 4: model = CM_RGB;     hea = true;     cs = ULIS_sRGB;     break;
     }
     int color_channels = channels - hea;
 
@@ -78,6 +79,7 @@ InvokeLoadFromFile_MEM(
             | ULIS_W_ALPHA( hea )
             | ULIS_W_DEPTH( depth )
             | ULIS_W_FLOATING( floating )
+            | ULIS_W_PROFILE( ULIS_sRGB )
         );
 
     cargs->dst.LoadFromData( data, width, height, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
