@@ -23,39 +23,47 @@ using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
+    // Start by defining thread pool, to host workers.
+    // Then command queue to enqueue commands deferred commands.
+    // Then working format and context for this format with specified performance intent.
+    // Finally, some policies for how the tasks should be carried out.
+    FThreadPool pool;
+    FCommandQueue queue( pool );
+    eFormat fmt = Format_RGBA8;
+    FContext ctx( queue, fmt, PerformanceIntent_Max );
+    FHardwareMetrics hw;
+    FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
+    FSchedulePolicy policy_multi_scanlines( ScheduleRun_Multi, ScheduleMode_Scanlines );
+    FSchedulePolicy policy_mono_scanlines( ScheduleRun_Mono, ScheduleMode_Scanlines );
+
     // Gather start time to output the time it took to perform the blend composition
     auto startTime = std::chrono::steady_clock::now();
 
-    // Start by defining pool thread to host workers
-    // Define the perfIntent flag to use Multithread, Type Specializations, SSE42 or AVX2 if available.
-    // ( Note 1: if both SSE42 and AVX2 are available, AVX2 will be chosen. )
-    // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
-    // Finally, detect host device to get runtime information about support for SSE and AVX features.
-    FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = 0;
-    FHardwareMetrics host = FHardwareMetrics::Detect();
+    // Create both "hollow" blocks Base and Over.
+    FBlock blockBase;
+    FBlock blockOver;
+    {
+        // Collect hard-coded paths to images.
+        std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
+        std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
+        // Load from file into blocks
+        ulError err;
+        err = ctx.XLoadBlockFromDisk( blockBase, pathBase );
+        ULIS_ASSERT( !err, "Load failed" );
+        err = ctx.XLoadBlockFromDisk( blockOver, pathOver );
+        ULIS_ASSERT( !err, "Load failed" );
+        ULIS_ASSERT( blockBase.Format() == fmt, "Bad format assumption." );
+        ULIS_ASSERT( blockOver.Format() == fmt, "Bad format assumption." );
 
-    // Collect hard-coded paths to images.
-    std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
-    std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
+        // Flush all commands
+        ctx.Flush();
 
-    // Load both blocks Base and Over.
-    // Specify ULIS_FORMAT_RGBA8 as desired format,
-    // meaning that if the loaded block format is not already RGBA8,
-    // a conversion will be performed to obtain the expected format.
-    // Specify ULIS_NONBLOCKING flag, so that pool will not wait for completion after each function
-    // We can do that because both loading processes are independant and do not interfere with each other
-    // Passing ULIS_NONBLOCKING avoids stalling beetween the two functions.
-    // ( Note: the 'X' prefix before a function name always means the function allocates a block and returns the pointer,
-    // the caller is now responsible for the FBlock* lifetime, and should delete it ).
-    FBlock* blockBase = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathBase, Format_RGBA8 );
-    FBlock* blockOver = XLoadFromFile( threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, pathOver, Format_RGBA8 );
+        // Wait for completion
+        ctx.Fence();
 
-    // Fence the pool here,
-    // After the two calls to XLoadFromFile, the functions returned immediately even though the data isn't loaded yet
-    // ( Note: the blocks buffers have been allocated and the pointers to blockBase and blockOver are valid though )
-    // A fence allows the program to halt here until the data is actually loaded.
-    Fence( *threadPool );
+        // Flush() + Fence() is equivalent to Finish()
+    }
 
     // Gather a few information on loaded images
     // They will be tiled onto a background block to display all the blending modes.
@@ -65,14 +73,14 @@ main( int argc, char *argv[] ) {
     // We will reuse its value many times.
     // We don't need to seek a subrect in Base / Over as we want to blend the full tile.
     // We also assume Base and Over share the same size here for nicer results.
-    FRectI srcRect = blockBase->Rect();
+    FRectI srcRect = blockBase.Rect();
     int w = srcRect.w * 8;
     int h = srcRect.h * 5;
 
     // Allocate a new block
     // The caller is responsible for destructing the blockCanvas object here too.
     // The block has the same format ULIS_FORMAT_RGBA8 as requested for the two blocks before.
-    FBlock* blockCanvas = new  FBlock( w, h, Format_RGBA8 );
+    FBlock* blockCanvas = new  FBlock( w, h, fmt );
 
     // Start processing the blocks
     // We will first tile the base block layout on a regular grid in the blockCanvas block
@@ -83,27 +91,18 @@ main( int argc, char *argv[] ) {
         int x = ( i % 8 ) * srcRect.w;
         int y = ( i / 8 ) * srcRect.h;
 
-        // First perform the Copy, specifying threadPool, blocking flag, performance intent, host, callback, and parameters as usual.
-        // The first 5 parameters are common to most ULIS3 functions and are used to know how to perform a task.
-        // The user provides intent and control over the CPU optimization dispatch method ( MEM, SSE, AVX ) and over the CPU multithreading dispatch too.
-        // Notice the BLOCKING here: we don't want Copy and Blend to be concurrent as they work on the same region in a given loop iteration.
-        Copy(   threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockBase, blockCanvas, srcRect, FVec2I( x, y ) );
-
-        // Then we perform the blend by iterating over all blending modes ( see i cast to eBlendMode enum value ).
-        // By default we'll use a normal alphaMode for nicer results in this context, and an opacity of 0.5, which is a normalized value that corresponds to 50%, half-fade.
-        Blend(  threadPool, ULIS_NONBLOCKING, perfIntent, host, ULIS_NOCB, blockOver, blockCanvas, srcRect, FVec2F( x, y ), ULIS_NOAA, static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f );
+        // Notice the async part:
+        // All copies are non concurrent and can be scheduled without wait dependencies
+        // But the blends are concurrent with their respective copy, so each blend waits on one copy.
+        // The policies will default to mono scanlines despite our input because of the nature of the task ( unaligned non contiguous images )
+        FEvent cp_ev;
+        ctx.Copy( blockBase, *blockCanvas, srcRect, FVec2I( x, y ), policy_mono_chunk, 0, nullptr, &cp_ev );
+        ctx.Flush();
+        ctx.Blend( blockOver, *blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, policy_mono_chunk, 1, &cp_ev, nullptr );
     }
-    // Fence the pool here to make sure the very last blend is completed.
-    // You may have noticed that we did not fence after Blend inside the loop.
-    // This may strike you as odd, as one could be worried about data race and concurrency issues while reading and writing to blocks.
-    // This is safe here because copy and blend *might* be concurrent only within a given loop iteration.
-    // On the next loop, even if the Blend is not complete, the copy can take over and be scheduled regardless of blend completion status,
-    // because it will work on another region. That way we can avoid a few stalls and this is perfectly safe concurrency wise.
-    Fence( *threadPool );
 
-    // Get rid of Base and Over, we don't need them anymore.
-    delete  blockBase;
-    delete  blockOver;
+    // Flush and Fence.
+    ctx.Finish();
 
     // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS3 operations.
     // We are not interested in the time it took Qt to create the window.
@@ -121,11 +120,12 @@ main( int argc, char *argv[] ) {
     //      1 Alloc     ( 1280*800 )
     //      40 Copy     ( 160² )
     //      40 Blend    ( 160² )
-    // Average on my desktop setup: 55ms
+    // Average on my desktop setup BEFORE ULIS3: 55ms
+    // Average on my desktop setup NOW WITH ULIS4: 7ms
     // Average on my laptop setup:  <unavailable>
     // Remember: everything is multithreaded, SSE and AVX are used whenever possible, everything is computed on CPU
     // Print out the result time.
-    std::cout << "ULIS3 Blend: Composition took " << delta << "ms." << std::endl;
+    std::cout << "ULIS Blend: Composition took " << delta << "ms." << std::endl;
 
     // Create a Qt application and a simple window to display the result block we computed.
     // We create a QImage from the blockCanvas data, QImage does not own the data, so it still lives in blockCanvas, so we don't delete it right now.
@@ -153,9 +153,6 @@ main( int argc, char *argv[] ) {
 
     // Delete our block Canvas.
     delete  blockCanvas;
-
-    // Delete the thread pool
-    XDeleteThreadPool( threadPool );
 
     // Return exit code.
     return  exit_code;
