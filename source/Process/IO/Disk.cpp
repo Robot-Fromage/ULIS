@@ -79,7 +79,7 @@ InvokeLoadFromFile_MEM(
             | ULIS_W_ALPHA( hea )
             | ULIS_W_DEPTH( depth )
             | ULIS_W_FLOATING( floating )
-            | ULIS_W_PROFILE( ULIS_sRGB )
+            | ULIS_W_PROFILE( cs )
         );
 
     cargs->dst.LoadFromData( data, width, height, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
