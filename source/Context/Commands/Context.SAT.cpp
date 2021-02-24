@@ -57,7 +57,6 @@ FContext::BuildSummedAreaTable(
         )
     );
 
-    FEvent ypass_event;
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleBuildSATYPass
@@ -72,11 +71,10 @@ FContext::BuildSummedAreaTable(
             , false
             , 1
             , &xpass_event
-            , &ypass_event
+            , iEvent
             , iDestination.Rect()
         )
     );
-    Dummy_OP( 1, &ypass_event, iEvent );
 
     return  ULIS_NO_ERROR;
 }
@@ -115,7 +113,6 @@ FContext::BuildPremultipliedSummedAreaTable(
         )
     );
 
-    FEvent ypass_event;
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleBuildPremultipliedSATYPass
@@ -130,11 +127,10 @@ FContext::BuildPremultipliedSummedAreaTable(
             , false
             , 1
             , &xpass_event
-            , &ypass_event
+            , iEvent
             , iDestination.Rect()
         )
     );
-    Dummy_OP( 1, &ypass_event, iEvent );
 
     return  ULIS_NO_ERROR;
 }

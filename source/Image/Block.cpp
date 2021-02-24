@@ -78,6 +78,12 @@ FBlock::MakeHollow()
     return  FBlock();
 }
 
+bool
+FBlock::IsHollow() const
+{
+    return  mBitmap == nullptr;
+}
+
 uint8*
 FBlock::Bits()
 {

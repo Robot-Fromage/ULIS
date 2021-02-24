@@ -118,6 +118,11 @@ public:
     FBlock MakeHollow();
 
     /*!
+    Check wether a block is hollow.
+    */
+    bool IsHollow() const;
+
+    /*!
     Explicitely disabled copy constructor.
 
     If you need to make a shallow copy with shared image data, use the explicit

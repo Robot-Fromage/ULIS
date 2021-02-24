@@ -309,31 +309,74 @@ FContext::Resize(
     // Forward Arguments Baking
     FVec2F inverseScale = src_roi.Size() / dst_roi.Size();
 
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->QueryScheduleResize( iResamplingMethod )
-            , new FResizeCommandArgs(
-                  iSource
-                , iDestination
-                , src_roi
-                , dst_roi
-                , iResamplingMethod
-                , iBorderMode
-                , iBorderValue.ToFormat( iDestination.Format() )
-                , inverseScale
-                , dst_roi.Position()
-                , iOptionalSummedAreaTable // SAT
+    // If AREA and SAT is not provided, build it.
+    if( iResamplingMethod == Resampling_Area && iOptionalSummedAreaTable == nullptr ) {
+        FEvent event_alloc;
+        FBlock* sat = new FBlock(); // Hollow
+        XAllocateBlockData( *sat, iSource.Width(), iSource.Height(), SummedAreaTableMetrics( iSource ), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, iNumWait, iWaitList, &event_alloc );
+        FEvent event_sat;
+        BuildSummedAreaTable( iSource, *sat, iPolicy, 1, &event_alloc, &event_sat );
+
+        FEvent resize_event(
+            FOnEventComplete(
+                [sat]( const FRectI& ) {
+                    delete  sat;
+                }
             )
-            , iPolicy
-            , false // Non-contiguous, disable chunks, force scanlines.
-            , false // No need to force mono.
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , dst_roi
-        )
-    );
+        );
+        // Bake and push command
+        mCommandQueue.d->Push(
+            new FCommand(
+                  mContextualDispatchTable->mScheduleResizeArea
+                , new FResizeCommandArgs(
+                      iSource
+                    , iDestination
+                    , src_roi
+                    , dst_roi
+                    , iResamplingMethod
+                    , iBorderMode
+                    , iBorderValue.ToFormat( iDestination.Format() )
+                    , inverseScale
+                    , dst_roi.Position()
+                    , sat
+                )
+                , iPolicy
+                , false // Non-contiguous, disable chunks, force scanlines.
+                , false // No need to force mono.
+                , 1
+                , &event_sat
+                , &resize_event
+                , dst_roi
+            )
+        );
+        Dummy_OP( 1, &resize_event, iEvent );
+    } else {
+        // Bake and push command
+        mCommandQueue.d->Push(
+            new FCommand(
+                  mContextualDispatchTable->QueryScheduleResize( iResamplingMethod )
+                , new FResizeCommandArgs(
+                      iSource
+                    , iDestination
+                    , src_roi
+                    , dst_roi
+                    , iResamplingMethod
+                    , iBorderMode
+                    , iBorderValue.ToFormat( iDestination.Format() )
+                    , inverseScale
+                    , dst_roi.Position()
+                    , iOptionalSummedAreaTable // SAT
+                )
+                , iPolicy
+                , false // Non-contiguous, disable chunks, force scanlines.
+                , false // No need to force mono.
+                , iNumWait
+                , iWaitList
+                , iEvent
+                , dst_roi
+            )
+        );
+    }
 
     return  ULIS_NO_ERROR;
 }
