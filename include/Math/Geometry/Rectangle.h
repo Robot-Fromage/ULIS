@@ -13,7 +13,6 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Geometry/Matrix.h"
-#include "Math/Geometry/Transformation2D.h"
 #include "Math/Math.h"
 #include <vector>
 
@@ -198,10 +197,10 @@ struct TRectangle
     }
 
     /*! Affine transform this rect by input transform ( AABB ). */
-    void TransformAffine( const FTransformation2D& iTransform ) {
+    void TransformAffine( const FMat3F& iTransform ) {
         float src_x2 = static_cast< float >( x + w );
         float src_y2 = static_cast< float >( y + h );
-        const FMat3F& mat = iTransform.Matrix();
+        const FMat3F& mat = iTransform;
         FVec3F m00 = mat * FVec3F( x, y, 1 );
         FVec3F m10 = mat * FVec3F( src_x2, y, 1 );
         FVec3F m11 = mat * FVec3F( src_x2, src_y2, 1 );
@@ -213,12 +212,12 @@ struct TRectangle
     }
 
     /*! Perspective transform this rect by input transform ( AABB ). */
-    void TransformPerspective( const FTransformation2D& iTransform ) {
+    void TransformPerspective( const FMat3F& iTransform ) {
         float x1 = static_cast< float >( x );
         float y1 = static_cast< float >( y );
         float x2 = static_cast< float >( x + w );
         float y2 = static_cast< float >( y + h );
-        const FMat3F& mat = iTransform.Matrix();
+        const FMat3F& mat = iTransform;
         FVec2F A = mat.ApplyHomography( FVec2F( x1, y1 ) );
         FVec2F B = mat.ApplyHomography( FVec2F( x2, y1 ) );
         FVec2F C = mat.ApplyHomography( FVec2F( x2, y2 ) );
@@ -230,14 +229,14 @@ struct TRectangle
     }
 
     /*! Return the affine transformed version of this rect ( AABB ). */
-    TRectangle< T > TransformedAffine( const FTransformation2D& iTransform ) const {
+    TRectangle< T > TransformedAffine( const FMat3F& iTransform ) const {
         TRectangle< T > result = *this;
         result.TransformAffine( iTransform );
         return  result;
     }
 
     /*! Return the perspective transformed version of this rect ( AABB ). */
-    TRectangle< T > TransformedPerspective( const FTransformation2D& iTransform ) const {
+    TRectangle< T > TransformedPerspective( const FMat3F& iTransform ) const {
         TRectangle< T > result = *this;
         result.TransformPerspective( iTransform );
         return  result;
