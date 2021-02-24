@@ -428,5 +428,19 @@ FContext::TransformBezierMetrics(
                                          , iControlPoints[3].point.y, iControlPoints[3].ctrlCW.y, iControlPoints[3].ctrlCCW.y ) ) );
 }
 
+//static
+eFormat
+FContext::BezierDisplacmentFieldMetrics( const FBlock& iSource )
+{
+    return  eFormat::Format_GAF;
+}
+
+//static
+eFormat
+FContext::BezierDisplacmentMaskMetrics( const FBlock& iSource )
+{
+    return  eFormat::Format_G8;
+}
+
 ULIS_NAMESPACE_END
 

@@ -778,6 +778,22 @@ public:
         , const TArray< FCubicBezierControlPoint >& iControlPoints
     );
 
+    /*!
+        Get metrics before building a bezier displacement field, this will give
+        you the needed format before building.
+        same size.
+    */
+    static
+    eFormat BezierDisplacmentFieldMetrics( const FBlock& iSource );
+
+    /*!
+        Get metrics before building a bezier displacement mask, this will give
+        you the needed format before building.
+        same size.
+    */
+    static
+    eFormat BezierDisplacmentMaskMetrics( const FBlock& iSource );
+
 /////////////////////////////////////////////////////
 // IO
     /*!
