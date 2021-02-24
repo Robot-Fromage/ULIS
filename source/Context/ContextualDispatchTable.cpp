@@ -26,7 +26,7 @@
 #include "Process/SAT/SAT.h"
 #include "Process/Convolution/Convolution.h"
 #include "Process/Convolution/Morpho.h"
-#include "Process/Raster/DrawLine.h"
+#include "Process/Raster/RasterInvocations.h"
 #include "Process/Analysis/AccumulativeSampling.h"
 #include "Process/Analysis/AnalyzeSmallestVisibleRect.h"
 
@@ -121,6 +121,25 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleMorphologicalProcess(            TDispatcher< FDispatchedMorphoInvocationSchedulerSelector                           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         
         , mScheduleDrawLine(                        TDispatcher< FDispatchedDrawLineInvocationSchedulerSelector                         >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawLineAA(                      TDispatcher< FDispatchedDrawLineAAInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawCircleAndres(                TDispatcher< FDispatchedDrawCircleAndresInvocationSchedulerSelector                 >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawCircleAndresAA(              TDispatcher< FDispatchedDrawCircleAndresAAInvocationSchedulerSelector               >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        /*, mScheduleDrawCircleBresenham(             TDispatcher< FDispatchedDrawCircleBresenhamInvocationSchedulerSelector              >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawCircleBresenhamAA(           TDispatcher< FDispatchedDrawCircleBresenhamAAInvocationSchedulerSelector            >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawArcAndres(                   TDispatcher< FDispatchedDrawDrawArcAndresInvocationSchedulerSelector                >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawArcAndresAA(                 TDispatcher< FDispatchedDrawDrawArcAndresAAInvocationSchedulerSelector              >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawArcBresenham(                TDispatcher< FDispatchedDrawArcBresenhamInvocationSchedulerSelector                 >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawArcBresenhamAA(              TDispatcher< FDispatchedDrawArcBresenhamAAInvocationSchedulerSelector               >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawEllipse(                     TDispatcher< FDispatchedDrawEllipseInvocationSchedulerSelector                      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawEllipseAA(                   TDispatcher< FDispatchedDrawEllipseAAInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawRotatedEllipse(              TDispatcher< FDispatchedDrawRotatedEllipseInvocationSchedulerSelector               >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawRotatedEllipseAA(            TDispatcher< FDispatchedDrawRotatedEllipseAAInvocationSchedulerSelector             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawRectangle(                   TDispatcher< FDispatchedDrawRectangleInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawPolygon(                     TDispatcher< FDispatchedDrawPolygonInvocationSchedulerSelector                      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawPolygonAA(                   TDispatcher< FDispatchedDrawPolygonAAInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawQuadraticBezier(             TDispatcher< FDispatchedDrawQuadraticBezierInvocationSchedulerSelector              >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawQuadraticBezierAA(           TDispatcher< FDispatchedDrawQuadraticBezierAAInvocationSchedulerSelector            >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )*/
+
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

@@ -209,6 +209,24 @@ private:
     const fpCommandScheduler mScheduleMorphologicalProcess;
     
     const fpCommandScheduler mScheduleDrawLine;
+    const fpCommandScheduler mScheduleDrawLineAA;
+    const fpCommandScheduler mScheduleDrawCircleAndres;
+    const fpCommandScheduler mScheduleDrawCircleAndresAA;
+    /*const fpCommandScheduler mScheduleDrawCircleBresenham;
+    const fpCommandScheduler mScheduleDrawCircleBresenhamAA;
+    const fpCommandScheduler mScheduleDrawArcAndres;
+    const fpCommandScheduler mScheduleDrawArcAndresAA;
+    const fpCommandScheduler mScheduleDrawArcBresenham;
+    const fpCommandScheduler mScheduleDrawArcBresenhamAA;
+    const fpCommandScheduler mScheduleDrawEllipse;
+    const fpCommandScheduler mScheduleDrawEllipseAA;
+    const fpCommandScheduler mScheduleDrawRotatedEllipse;
+    const fpCommandScheduler mScheduleDrawRotatedEllipseAA;
+    const fpCommandScheduler mScheduleDrawRectangle;
+    const fpCommandScheduler mScheduleDrawPolygon;
+    const fpCommandScheduler mScheduleDrawPolygonAA;
+    const fpCommandScheduler mScheduleDrawQuadraticBezier;
+    const fpCommandScheduler mScheduleDrawQuadraticBezierAA;*/
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;

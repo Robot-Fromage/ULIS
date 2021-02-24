@@ -12,7 +12,7 @@
 */
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
-#include "Process/Raster/DrawLine.h"
+#include "Process/Raster/RasterInvocations.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
@@ -22,11 +22,12 @@
 #include "Scheduling/InternalEvent.h"
 
 ULIS_NAMESPACE_BEGIN
+
 ulError
 FContext::DrawLine(
       FBlock& iBlock
-    , const FVec2F& iP0
-    , const FVec2F& iP1
+    , const FVec2I& iP0
+    , const FVec2I& iP1
     , const FColor& iColor
     , const FRectI& iClippingRect
     , const FSchedulePolicy& iPolicy
@@ -35,7 +36,7 @@ FContext::DrawLine(
     , FEvent* iEvent
 )
 {
-        // Sanitize geometry
+    // Sanitize geometry
     const FRectI src_rect = iBlock.Rect();
     const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
     
@@ -43,7 +44,7 @@ FContext::DrawLine(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
-        // Bake and push command
+    // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleDrawLine
@@ -67,6 +68,144 @@ FContext::DrawLine(
     return  ULIS_NO_ERROR;
 }
 
+ulError
+FContext::DrawLineAA(
+      FBlock& iBlock
+    , const FVec2I& iP0
+    , const FVec2I& iP1
+    , const FColor& iColor
+    , const FRectI& iClippingRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
+    
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+    
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleDrawLineAA
+            , new FDrawLineCommandArgs(
+                  iBlock
+                , src_roi
+                , iP0
+                , iP1
+                , iColor
+            )
+            , iPolicy
+            , false
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+    
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::DrawCircleAndres(
+      FBlock& iBlock
+    , const FVec2I&            iCenter
+    , const int                iRadius
+    , const FColor&            iColor
+    , const bool               iFilled
+    , const FRectI&            iClippingRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
+    
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+    
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleDrawCircleAndres
+            , new FDrawCircleCommandArgs(
+                  iBlock
+                , src_roi
+                , iCenter
+                , iRadius
+                , iColor
+                , iFilled
+            )
+            , iPolicy
+            , false
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+    
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::DrawCircleAndresAA(
+      FBlock& iBlock
+    , const FVec2I&            iCenter
+    , const int                iRadius
+    , const FColor&            iColor
+    , const bool               iFilled
+    , const FRectI&            iClippingRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
+    
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+    
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleDrawCircleAndresAA
+            , new FDrawCircleCommandArgs(
+                  iBlock
+                , src_roi
+                , iCenter
+                , iRadius
+                , iColor
+                , iFilled
+            )
+            , iPolicy
+            , false
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+    
+    return  ULIS_NO_ERROR;
+}
 
 ULIS_NAMESPACE_END
 

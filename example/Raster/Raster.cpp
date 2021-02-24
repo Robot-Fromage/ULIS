@@ -30,9 +30,15 @@ main(int argc,char *argv[])
 
     //Data
     FBlock canvas(1024,1024,fmt);
-
     {
-        ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 500, 400 ), FColor::RGBA8(200,0,0) );
+        //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 500, 400 ), FColor::RGBA8(200,0,0) );
+
+        //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 500, 400 ), FColor::RGBA8(200,0,0, 120) );
+        //ctx.DrawLineAA( canvas, FVec2F( 1, 1 ), FVec2F( 63, 48 ), FColor::RGBA8(0,255,0, 255) );
+
+        //ctx.DrawCircleAndres( canvas, FVec2I( 300, 300 ), 250, FColor::RGBA8(0,0,0,255) );
+        ctx.DrawCircleAndresAA(canvas,FVec2I(300,300),250,FColor::RGBA8(0,0,0,255));
+
         ctx.Finish();
     }
 

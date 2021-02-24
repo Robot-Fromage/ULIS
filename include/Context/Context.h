@@ -1307,8 +1307,8 @@ public:
     ulError
     DrawLine(
           FBlock& iBlock
-        , const FVec2F& iP0
-        , const FVec2F& iP1
+        , const FVec2I& iP0
+        , const FVec2I& iP1
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -1317,6 +1317,321 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+    Draws a line between iP0 and iP1, AA version
+    */
+    ulError
+    DrawLineAA(
+          FBlock& iBlock
+        , const FVec2I& iP0
+        , const FVec2I& iP1
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle with Andres algorithm. Nice for multiple concentric drawings.
+    */
+    ulError
+    DrawCircleAndres(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle with Andres algorithm. Nice for multiple concentric drawings. AA version
+    */
+    ulError
+    DrawCircleAndresAA(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle with Bresenham algorithm. Nice for drawing a single circle.
+    */
+    ulError
+    DrawCircleBresenham(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle with Bresenham algorithm. Nice for drawing a single circle. AA version
+    */
+    ulError
+    DrawCircleBresenhamAA(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings.
+    */
+    ulError
+    DrawArcAndres(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const int iStartDegree
+        , const int iEndDegree
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings. AA version
+    */
+    ulError
+    DrawArcAndresAA(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const int iStartDegree
+        , const int iEndDegree
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle.
+    */
+    ulError
+    DrawArcBresenham(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const int iStartDegree
+        , const int iEndDegree
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle. AA version
+    */
+    ulError
+    DrawArcBresenhamAA(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iRadius
+        , const int iStartDegree
+        , const int iEndDegree
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws an ellipse
+    */
+    ulError
+    DrawEllipse(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iA
+        , const int iB
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws an ellipse, AA version
+    */
+    ulError
+    DrawEllipseAA(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iA
+        , const int iB
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a rotated ellipse
+    */
+    ulError
+    DrawRotatedEllipse(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iA
+        , const int iB
+        , const int iRotationDegrees
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a rotated ellipse
+    */
+    ulError
+    DrawRotatedEllipseAA(
+          FBlock& iBlock
+        , const FVec2I& iCenter
+        , const int iA
+        , const int iB
+        , const int iRotationDegrees
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a rectangle
+    */
+    ulError
+    DrawRectangle(
+          FBlock& iBlock
+        , const FVec2I& iTopLeft
+        , const FVec2I& iBottomRight
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a polygon
+    */
+    ulError
+    DrawPolygon(
+          FBlock& iBlock
+        , const std::vector< FVec2I >& iPoints
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a polygon, AA version
+    */
+    ulError
+    DrawPolygonAA(
+          FBlock& iBlock
+        , const std::vector< FVec2I >& iPoints
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const bool iFilled = false
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+    Draws a quadratic bezier
+    */
+    ulError
+    DrawQuadraticBezier(
+          FBlock& iBlock
+        , const FVec2I iCtrlPt0
+        , const FVec2I iCtrlPt1
+        , const FVec2I iCtrlPt2
+        , const float iWeight
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+
+    /*!
+    Draws a quadratic bezier, AA version
+    */
+    ulError
+    DrawQuadraticBezierAA(
+          FBlock& iBlock
+        , const FVec2I iCtrlPt0
+        , const FVec2I iCtrlPt1
+        , const FVec2I iCtrlPt2
+        , const float iWeight
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
 
 private:
     FCommandQueue& mCommandQueue;
