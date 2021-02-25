@@ -212,7 +212,7 @@ private:
     const fpCommandScheduler mScheduleDrawLineAA;
     const fpCommandScheduler mScheduleDrawCircleAndres;
     const fpCommandScheduler mScheduleDrawCircleAndresAA;
-    /*const fpCommandScheduler mScheduleDrawCircleBresenham;
+    const fpCommandScheduler mScheduleDrawCircleBresenham;
     const fpCommandScheduler mScheduleDrawCircleBresenhamAA;
     const fpCommandScheduler mScheduleDrawArcAndres;
     const fpCommandScheduler mScheduleDrawArcAndresAA;
@@ -226,7 +226,7 @@ private:
     const fpCommandScheduler mScheduleDrawPolygon;
     const fpCommandScheduler mScheduleDrawPolygonAA;
     const fpCommandScheduler mScheduleDrawQuadraticBezier;
-    const fpCommandScheduler mScheduleDrawQuadraticBezierAA;*/
+    const fpCommandScheduler mScheduleDrawQuadraticBezierAA;
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;

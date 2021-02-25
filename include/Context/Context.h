@@ -1602,9 +1602,9 @@ public:
     ulError
     DrawQuadraticBezier(
           FBlock& iBlock
-        , const FVec2I iCtrlPt0
-        , const FVec2I iCtrlPt1
-        , const FVec2I iCtrlPt2
+        , const FVec2I& iCtrlPt0
+        , const FVec2I& iCtrlPt1
+        , const FVec2I& iCtrlPt2
         , const float iWeight
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
@@ -1621,9 +1621,9 @@ public:
     ulError
     DrawQuadraticBezierAA(
           FBlock& iBlock
-        , const FVec2I iCtrlPt0
-        , const FVec2I iCtrlPt1
-        , const FVec2I iCtrlPt2
+        , const FVec2I& iCtrlPt0
+        , const FVec2I& iCtrlPt1
+        , const FVec2I& iCtrlPt2
         , const float iWeight
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )

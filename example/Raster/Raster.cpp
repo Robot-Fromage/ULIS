@@ -34,10 +34,14 @@ main(int argc,char *argv[])
         //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 500, 400 ), FColor::RGBA8(200,0,0) );
 
         //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 500, 400 ), FColor::RGBA8(200,0,0, 120) );
-        //ctx.DrawLineAA( canvas, FVec2F( 1, 1 ), FVec2F( 63, 48 ), FColor::RGBA8(0,255,0, 255) );
+        //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 600, 400 ), FColor::RGBAF(0,0,0,1) );
 
         //ctx.DrawCircleAndres( canvas, FVec2I( 300, 300 ), 250, FColor::RGBA8(0,0,0,255) );
-        ctx.DrawCircleAndresAA(canvas,FVec2I(300,300),250,FColor::RGBA8(0,0,0,255));
+        ctx.DrawCircleAndresAA(canvas,FVec2I(300,300),250,FColor::RGBA8(0,0,0,200));
+
+        ctx.DrawEllipseAA( canvas, FVec2I( 500, 500), 100, 200 );
+
+        ctx.DrawRotatedEllipseAA( canvas, FVec2I( 700, 700), 100, 200, 53 );
 
         ctx.Finish();
     }
