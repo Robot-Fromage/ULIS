@@ -44,6 +44,9 @@ FContext::DrawLine(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -53,7 +56,7 @@ FContext::DrawLine(
                 , src_roi
                 , iP0
                 , iP1
-                , iColor
+                , color
             )
             , iPolicy
             , false
@@ -89,6 +92,9 @@ FContext::DrawLineAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -98,7 +104,7 @@ FContext::DrawLineAA(
                 , src_roi
                 , iP0
                 , iP1
-                , iColor
+                , color
             )
             , iPolicy
             , false
@@ -135,6 +141,9 @@ FContext::DrawCircleAndres(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -144,7 +153,7 @@ FContext::DrawCircleAndres(
                 , src_roi
                 , iCenter
                 , iRadius
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -182,6 +191,9 @@ FContext::DrawCircleAndresAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -191,7 +203,7 @@ FContext::DrawCircleAndresAA(
                 , src_roi
                 , iCenter
                 , iRadius
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -229,6 +241,9 @@ FContext::DrawCircleBresenham(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -238,7 +253,7 @@ FContext::DrawCircleBresenham(
                 , src_roi
                 , iCenter
                 , iRadius
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -276,6 +291,9 @@ FContext::DrawCircleBresenhamAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -285,7 +303,7 @@ FContext::DrawCircleBresenhamAA(
                 , src_roi
                 , iCenter
                 , iRadius
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -324,6 +342,9 @@ FContext::DrawArcAndres(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -335,7 +356,7 @@ FContext::DrawArcAndres(
                 , iRadius
                 , iStartDegree
                 , iEndDegree
-                , iColor
+                , color
             )
             , iPolicy
             , false
@@ -373,6 +394,9 @@ FContext::DrawArcAndresAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -384,7 +408,7 @@ FContext::DrawArcAndresAA(
                 , iRadius
                 , iStartDegree
                 , iEndDegree
-                , iColor
+                , color
             )
             , iPolicy
             , false
@@ -422,6 +446,9 @@ FContext::DrawArcBresenham(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -433,7 +460,7 @@ FContext::DrawArcBresenham(
                 , iRadius
                 , iStartDegree
                 , iEndDegree
-                , iColor
+                , color
             )
             , iPolicy
             , false
@@ -471,6 +498,9 @@ FContext::DrawArcBresenhamAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -482,7 +512,7 @@ FContext::DrawArcBresenhamAA(
                 , iRadius
                 , iStartDegree
                 , iEndDegree
-                , iColor
+                , color
             )
             , iPolicy
             , false
@@ -520,6 +550,9 @@ FContext::DrawEllipse(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -530,7 +563,7 @@ FContext::DrawEllipse(
                 , iCenter
                 , iA
                 , iB
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -569,6 +602,9 @@ FContext::DrawEllipseAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -579,7 +615,7 @@ FContext::DrawEllipseAA(
                 , iCenter
                 , iA
                 , iB
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -620,6 +656,9 @@ FContext::DrawRotatedEllipse(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -631,7 +670,7 @@ FContext::DrawRotatedEllipse(
                 , iA
                 , iB
                 , iRotationDegrees
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -671,6 +710,9 @@ FContext::DrawRotatedEllipseAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -682,7 +724,7 @@ FContext::DrawRotatedEllipseAA(
                 , iA
                 , iB
                 , iRotationDegrees
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -720,27 +762,41 @@ FContext::DrawRectangle(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleDrawRectangle
-            , new FDrawRectangleCommandArgs(
-                  iBlock
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
+    if( iFilled )
+    {
+        const int xmin = FMath::Min3(iTopLeft.x,iBottomRight.x,src_roi.x + src_roi.w);
+        const int ymin = FMath::Min3(iTopLeft.y,iBottomRight.y,src_roi.y + src_roi.h);
+        const int xmax = FMath::Max3(iTopLeft.x,iBottomRight.x,src_roi.x);
+        const int ymax = FMath::Max3(iTopLeft.y,iBottomRight.y,src_roi.y);
+        const int width = FMath::Max(xmax - xmin,0);
+        const int height = FMath::Max(ymax - ymin,0);
+        FRectI rect = FRectI( xmin, ymin, width, height );
+        this->Fill( iBlock, rect, color, iPolicy, iNumWait, iWaitList, iEvent );
+    }
+    else
+        // Bake and push command
+        mCommandQueue.d->Push(
+            new FCommand(
+                  mContextualDispatchTable->mScheduleDrawRectangle
+                , new FDrawRectangleCommandArgs(
+                      iBlock
+                    , src_roi
+                    , iTopLeft
+                    , iBottomRight
+                    , color
+                )
+                , iPolicy
+                , false
+                , true
+                , iNumWait
+                , iWaitList
+                , iEvent
                 , src_roi
-                , iTopLeft
-                , iBottomRight
-                , iColor
-                , iFilled
             )
-            , iPolicy
-            , false
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , src_roi
-        )
-    );
+        );
     
     return  ULIS_NO_ERROR;
 }
@@ -766,6 +822,9 @@ FContext::DrawPolygon(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -774,7 +833,7 @@ FContext::DrawPolygon(
                   iBlock
                 , src_roi
                 , iPoints
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -811,6 +870,9 @@ FContext::DrawPolygonAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -819,7 +881,7 @@ FContext::DrawPolygonAA(
                   iBlock
                 , src_roi
                 , iPoints
-                , iColor
+                , color
                 , iFilled
             )
             , iPolicy
@@ -858,6 +920,9 @@ FContext::DrawQuadraticBezier(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -869,7 +934,7 @@ FContext::DrawQuadraticBezier(
                 , iCtrlPt1
                 , iCtrlPt2
                 , iWeight
-                , iColor
+                , color
             )
             , iPolicy
             , false
@@ -907,6 +972,9 @@ FContext::DrawQuadraticBezierAA(
     if( src_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
@@ -918,7 +986,7 @@ FContext::DrawQuadraticBezierAA(
                 , iCtrlPt1
                 , iCtrlPt2
                 , iWeight
-                , iColor
+                , color
             )
             , iPolicy
             , false

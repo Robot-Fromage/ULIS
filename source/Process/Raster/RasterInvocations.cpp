@@ -66,7 +66,7 @@ InvokeDrawArcBresenhamMT_MEM(
     , const FDrawArcCommandArgs* cargs
 )
 {
-    //DrawArcBresenham( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color );
+    DrawArcBresenham( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
 }
 
 
@@ -76,7 +76,7 @@ InvokeDrawEllipseMT_MEM(
     , const FDrawEllipseCommandArgs* cargs
 )
 {
-    //DrawEllipse( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->color, cargs->filled, cargs->)
+    DrawEllipse( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 void
@@ -85,6 +85,7 @@ InvokeDrawRotatedEllipseMT_MEM(
     , const FDrawRotatedEllipseCommandArgs* cargs
 )
 {
+    DrawRotatedEllipse( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->rotationDegrees, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 
@@ -94,6 +95,7 @@ InvokeDrawRectangleMT_MEM(
     , const FDrawRectangleCommandArgs* cargs
 )
 {
+    DrawRectangle( cargs->dst, cargs->topLeft, cargs->bottomRight, cargs->color, cargs->dstRect );
 }
 
 void
@@ -102,6 +104,7 @@ InvokeDrawPolygonMT_MEM(
     , const FDrawPolygonCommandArgs* cargs
 )
 {
+    DrawPolygon( cargs->dst, cargs->points, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 void
@@ -110,6 +113,7 @@ InvokeDrawQuadraticBezierMT_MEM(
     , const FDrawQuadraticBezierCommandArgs* cargs
 )
 {
+    DrawQuadraticBezier( cargs->dst, cargs->ctrlPt0, cargs->ctrlPt1, cargs->ctrlPt2, cargs->weight, cargs->color, cargs->dstRect );
 }
 
 

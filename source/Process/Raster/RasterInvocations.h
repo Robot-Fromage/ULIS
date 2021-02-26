@@ -201,19 +201,16 @@ public:
         , const FVec2I& iTopLeft
         , const FVec2I& iBottomRight
         , const FColor& iColor
-        , const bool    iFilled
     )
         : FSimpleBufferCommandArgs(iBlock,iRect)
         , topLeft( iTopLeft )
         , bottomRight( iBottomRight )
         , color( iColor )
-        , filled( iFilled )
     {}
 
     FVec2I topLeft;
     FVec2I bottomRight;
     FColor color;
-    bool   filled;
 };
 
 /////////////////////////////////////////////////////
