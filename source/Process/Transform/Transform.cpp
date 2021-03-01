@@ -184,6 +184,20 @@ ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspective
         , &ScheduleTransformPerspectiveMT_NN_SSE_RGBA8
         , &ScheduleTransformPerspectiveMT_NN_MEM_Generic< uint8 > )
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedTransformPerspectiveNNInvocationSchedulerSelector )
+/////////////////////////////////////////////////////
+// Bezier Deform Field
+void
+InvokeProcessBezierDeformField(
+      const FSimpleBufferJobArgs* jargs
+    , const FProcessBezierDeformFieldArgs* cargs
+)
+{
+    FBlock& field = cargs->dst;
+    FBlock& mask = cargs->mask;
+}
+
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleProcessBezierDeformField, FSimpleBufferJobArgs, FProcessBezierDeformFieldArgs, &InvokeProcessBezierDeformField );
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedProcessBezierDeformFieldSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

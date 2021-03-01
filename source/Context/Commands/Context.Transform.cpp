@@ -263,13 +263,14 @@ FContext::TransformBezier(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    FBlock field;
-    FBlock mask;
+    FBlock* field = new FBlock();
+    FBlock* mask = new FBlock();
+    FEvent preprocess;
     XProcessBezierDisplacementField(
           iSource
         , iDestination
-        , field
-        , mask
+        , *field
+        , *mask
         , iControlPoints
         , iThreshold
         , iPlotSize
@@ -280,9 +281,17 @@ FContext::TransformBezier(
         , iPolicy
         , iNumWait
         , iWaitList
-        , iEvent
+        , &preprocess
     );
-    /*
+
+    FEvent event(
+        FOnEventComplete(
+            [field, mask]( const FRectI& ) {
+                delete  field;
+                delete  mask;
+            }
+        )
+    );
     mCommandQueue.d->Push(
         new FCommand(
                 mContextualDispatchTable->QueryScheduleTransformBezier( iResamplingMethod )
@@ -291,23 +300,23 @@ FContext::TransformBezier(
                 , iDestination
                 , src_roi
                 , dst_roi
+                , *field
+                , *mask
                 , iResamplingMethod
                 , iBorderMode
                 , iBorderValue.ToFormat( iDestination.Format() )
-                , inverseScale
-                , dst_roi.Position()
-                , iOptionalSummedAreaTable // SAT
             )
             , iPolicy
             , false // Non-contiguous, disable chunks, force scanlines.
             , false // No need to force mono.
-            , iNumWait
-            , iWaitList
-            , iEvent
+            , 1
+            , &preprocess
+            , &event
             , dst_roi
         )
     );
-    */
+    Dummy_OP( 1, &event, iEvent );
+
     return  ULIS_NO_ERROR;
 }
 
@@ -524,21 +533,16 @@ FContext::XProcessBezierDisplacementField(
     FEvent eventClear;
     Clear( iMask, roi, iPolicy, 1, &eventAllocation[1], &eventClear );
 
-    /*
     mCommandQueue.d->Push(
         new FCommand(
-                mContextualDispatchTable->QueryScheduleTransformBezier( iResamplingMethod )
-            , new FTransformBezierCommandArgs(
-                  iSource
-                , iDestination
-                , src_roi
+                mContextualDispatchTable->mScheduleProcessBezierDeformField
+            , new FProcessBezierDeformFieldArgs(
+                  iField
+                , iMask
                 , dst_roi
                 , iResamplingMethod
                 , iBorderMode
                 , iBorderValue.ToFormat( iDestination.Format() )
-                , inverseScale
-                , dst_roi.Position()
-                , iOptionalSummedAreaTable // SAT
             )
             , iPolicy
             , false
@@ -549,7 +553,6 @@ FContext::XProcessBezierDisplacementField(
             , dst_roi
         )
     );
-    */
 
     return  ULIS_NO_ERROR;
 }

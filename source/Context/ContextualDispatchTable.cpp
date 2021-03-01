@@ -89,6 +89,8 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleTransformPerspectiveBicubic(     TDispatcher< FDispatchedTransformPerspectiveBicubicInvocationSchedulerSelector      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleTransformPerspectiveBilinear(    TDispatcher< FDispatchedTransformPerspectiveBilinearInvocationSchedulerSelector     >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleTransformPerspectiveNN(          TDispatcher< FDispatchedTransformPerspectiveNNInvocationSchedulerSelector           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+
+        , mScheduleProcessBezierDeformField(        TDispatcher< FDispatchedProcessBezierDeformFieldSchedulerSelector                   >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 #endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
 #ifdef ULIS_FEATURE_IO_ENABLED

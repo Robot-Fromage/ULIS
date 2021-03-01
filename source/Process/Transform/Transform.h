@@ -32,7 +32,6 @@
 #include "Process/Transform/Generic/TransformPerspectiveMT_NN_MEM_Generic.h"
 
 ULIS_NAMESPACE_BEGIN
-
 /////////////////////////////////////////////////////
 // Dispatchers
 ULIS_DECLARE_DISPATCHER( FDispatchedResizeAreaInvocationSchedulerSelector                   )
@@ -51,6 +50,7 @@ ULIS_DECLARE_DISPATCHER( FDispatchedTransformBezierNNInvocationSchedulerSelector
 ULIS_DECLARE_DISPATCHER( FDispatchedTransformPerspectiveBicubicInvocationSchedulerSelector  )
 ULIS_DECLARE_DISPATCHER( FDispatchedTransformPerspectiveBilinearInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedTransformPerspectiveNNInvocationSchedulerSelector       )
+
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedResizeAreaInvocationSchedulerSelector,                    &ScheduleResizeMT_Area_MEM_Generic< T >                     )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedResizeBicubicInvocationSchedulerSelector,                 &ScheduleResizeMT_Bicubic_MEM_Generic< T >                  )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedResizeBilinearInvocationSchedulerSelector,                &ScheduleResizeMT_Bilinear_MEM_Generic< T >                 )
@@ -67,6 +67,10 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTransformBezierNNInvocatio
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTransformPerspectiveBicubicInvocationSchedulerSelector,   &ScheduleTransformPerspectiveMT_Bicubic_MEM_Generic< T >    )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTransformPerspectiveBilinearInvocationSchedulerSelector,  &ScheduleTransformPerspectiveMT_Bilinear_MEM_Generic< T >   )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedTransformPerspectiveNNInvocationSchedulerSelector,        &ScheduleTransformPerspectiveMT_NN_MEM_Generic< T >         )
+
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleProcessBezierDeformField )
+ULIS_DECLARE_DISPATCHER( FDispatchedProcessBezierDeformFieldSchedulerSelector )
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO( FDispatchedProcessBezierDeformFieldSchedulerSelector, &ScheduleProcessBezierDeformField )
 
 ULIS_NAMESPACE_END
 

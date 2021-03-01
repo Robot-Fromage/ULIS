@@ -52,7 +52,7 @@ public:
         , borderValue( iBorderValue )
         , inverseMatrix( iInverseMatrix )
         , tiled( iTiled )
-        {}
+    {}
 
     eResamplingMethod resamplingMethod;
     eBorderMode borderMode;
@@ -97,7 +97,7 @@ public:
         , shift( iShift )
         , optionalSAT( iOptionalSAT )
         , tiled( iTiled )
-        {}
+    {}
 
     eResamplingMethod resamplingMethod;
     eBorderMode borderMode;
@@ -106,6 +106,81 @@ public:
     FVec2F shift;
     const FBlock* optionalSAT;
     bool tiled;
+};
+
+/////////////////////////////////////////////////////
+// FTransformBezierCommandArgs
+class FTransformBezierCommandArgs final
+    : public FDualBufferCommandArgs
+{
+public:
+    ~FTransformBezierCommandArgs() override
+    {
+    };
+
+    FTransformBezierCommandArgs(
+          const FBlock& iSrc
+        , FBlock& iDst
+        , const FRectI& iSrcRect
+        , const FRectI& iDstRect
+        , const FBlock& iField
+        , const FBlock& iMask
+        , eResamplingMethod iResamplingMethod
+        , eBorderMode iBorderMode
+        , const FColor& iBorderValue
+    )
+        : FDualBufferCommandArgs(
+              iSrc
+            , iDst
+            , iSrcRect
+            , iDstRect
+            )
+        , field( iField )
+        , mask( iMask )
+        , resamplingMethod( iResamplingMethod )
+        , borderMode( iBorderMode )
+        , borderValue( iBorderValue )
+    {}
+
+    const FBlock& field;
+    const FBlock& mask;
+    eResamplingMethod resamplingMethod;
+    eBorderMode borderMode;
+    FColor borderValue;
+};
+
+/////////////////////////////////////////////////////
+// FTransformBezierCommandArgs
+class FProcessBezierDeformFieldArgs final
+    : public FSimpleBufferCommandArgs
+{
+public:
+    ~FProcessBezierDeformFieldArgs() override
+    {
+    };
+
+    FProcessBezierDeformFieldArgs(
+          FBlock& iField
+        , FBlock& iMask
+        , const FRectI& iRect
+        , eResamplingMethod iResamplingMethod
+        , eBorderMode iBorderMode
+        , const FColor& iBorderValue
+    )
+        : FSimpleBufferCommandArgs(
+              iField
+            , iRect
+        )
+        , mask( iMask )
+        , resamplingMethod( iResamplingMethod )
+        , borderMode( iBorderMode )
+        , borderValue( iBorderValue )
+    {}
+
+    FBlock& mask;
+    eResamplingMethod resamplingMethod;
+    eBorderMode borderMode;
+    FColor borderValue;
 };
 
 /////////////////////////////////////////////////////

@@ -177,6 +177,8 @@ private:
     const fpCommandScheduler mScheduleTransformPerspectiveBicubic;
     const fpCommandScheduler mScheduleTransformPerspectiveBilinear;
     const fpCommandScheduler mScheduleTransformPerspectiveNN;
+
+    const fpCommandScheduler mScheduleProcessBezierDeformField;
 #endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
 #ifdef ULIS_FEATURE_IO_ENABLED
