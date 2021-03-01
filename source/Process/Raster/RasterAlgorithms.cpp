@@ -32,7 +32,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         clippingRect = FRectI::FromXYWH(0, 0, iBlock.Width() - 1, iBlock.Height() - 1);
     }
     
-    int shift45 = std::sin( FMath::DegToRad( 45 ) ) * iRadius;
+    int shift45 = int(std::sin( FMath::DegToRadF( 45.f ) ) * iRadius);
     FVec2I point0 = FVec2I( iCenter.x, iCenter.y - iRadius );
     FVec2I point45 = FVec2I( iCenter.x + shift45, iCenter.y - shift45 );
     FVec2I point90 = FVec2I( iCenter.x + iRadius, iCenter.y );
@@ -800,7 +800,7 @@ void DrawCircleBresenham(        FBlock&                  iBlock
         clippingRect = FRectI::FromXYWH(0,0,iBlock.Width() - 1,iBlock.Height() - 1);
     }
 
-    int shift45 = std::sin(FMath::DegToRad(45)) * iRadius;
+    int shift45 = int(std::sin(FMath::DegToRad(45)) * iRadius);
     FVec2I point0 = FVec2I(iCenter.x,iCenter.y - iRadius);
     FVec2I point45 = FVec2I(iCenter.x + shift45,iCenter.y - shift45);
     FVec2I point90 = FVec2I(iCenter.x + iRadius,iCenter.y);
@@ -1303,7 +1303,7 @@ void DrawArcAndres(           FBlock&                   iBlock
         clippingRect = FRectI::FromXYWH(0,0,iBlock.Width() - 1,iBlock.Height() - 1);
     }
 
-    int shift45 = std::sin(FMath::DegToRad(45)) * iRadius;
+    int shift45 = int(std::sin(FMath::DegToRad(45)) * iRadius);
     FVec2I point0 = FVec2I(iCenter.x,iCenter.y - iRadius);
     FVec2I point45 = FVec2I(iCenter.x + shift45,iCenter.y - shift45);
     FVec2I point90 = FVec2I(iCenter.x + iRadius,iCenter.y);
@@ -2158,7 +2158,7 @@ void DrawArcBresenham(        FBlock&                   iBlock
         clippingRect = FRectI::FromXYWH(0,0,iBlock.Width() - 1,iBlock.Height() - 1);
     }
 
-    int shift45 = std::sin(FMath::DegToRad(45)) * iRadius;
+    int shift45 = int(std::sin(FMath::DegToRad(45)) * iRadius);
     FVec2I point0 = FVec2I(iCenter.x,iCenter.y - iRadius);
     FVec2I point45 = FVec2I(iCenter.x + shift45,iCenter.y - shift45);
     FVec2I point90 = FVec2I(iCenter.x + iRadius,iCenter.y);
@@ -2835,8 +2835,8 @@ void DrawEllipse(         FBlock&                  iBlock
     }
 
     float angleTo45 = std::atan(- float(iB) / float(iA));
-    int shift45x = FMath::Abs(std::cos(angleTo45) * iA) + 1;
-    int shift45y = FMath::Abs(std::sin(angleTo45) * iB) + 1;
+    int shift45x = int(FMath::Abs(std::cos(angleTo45) * iA) + 1);
+    int shift45y = int(FMath::Abs(std::sin(angleTo45) * iB) + 1);
 
     FVec2I point0 = FVec2I(iCenter.x,iCenter.y - iB);
     FVec2I point45 = FVec2I(iCenter.x + shift45x,iCenter.y - shift45y);
@@ -3360,25 +3360,25 @@ void DrawRotatedEllipse(        FBlock&                  iBlock
     int a = iA;
     int b = iB;
 
-    float dx = (long)iA*iA;
-    float dy = (long)iB*iB;
-    float s = std::sin(FMath::DegToRad(iRotationDegrees));
+    float dx = (float)iA*iA;
+    float dy = (float)iB*iB;
+    float s = std::sin(FMath::DegToRadF(float(iRotationDegrees)));
     float dz = (dx - dy) * s;
     dx = std::sqrt(dx - dz * s);
     dy = std::sqrt(dy + dz * s);
-    a = dx + 0.5;
-    b = dy + 0.5;
+    a = int(dx + 0.5f);
+    b = int(dy + 0.5f);
     dz = dz * a * b / (dx * dy);
 
     int x0 = iCenter.x - a;
     int y0 = iCenter.y - b;
     int x1 = iCenter.x + a;
     int y1 = iCenter.y + b;
-    dz = (4 * dz * std::cos(FMath::DegToRad(iRotationDegrees)));
+    dz = (4.f * dz * std::cos(FMath::DegToRadF(float(iRotationDegrees))));
 
 
-    dx = x1 - x0;
-    dy = y1 - y0;
+    dx = float(x1 - x0);
+    dy = float(y1 - y0);
     float w = dx * dy;
     if(w != 0.0)
         w = (w - dz) / (w + w);
@@ -3386,13 +3386,13 @@ void DrawRotatedEllipse(        FBlock&                  iBlock
     if(w > 1 || w < 0)
         return;
 
-    dx = std::floor(dx * w + 0.5);
-    dy = std::floor(dy * w + 0.5);
+    dx = std::floor(dx * w + 0.5f);
+    dy = std::floor(dy * w + 0.5f);
 
-    InternalDrawQuadRationalBezierSeg(iBlock,x0,y0 + dy,x0,y0,x0 + dx,y0,1 - w,iColor,iClippingRect,&storagePoints);
-    InternalDrawQuadRationalBezierSeg(iBlock,x0,y0 + dy,x0,y1,x1 - dx,y1,w,iColor,iClippingRect,&storagePoints);
-    InternalDrawQuadRationalBezierSeg(iBlock,x1,y1 - dy,x1,y1,x1 - dx,y1,1 - w,iColor,iClippingRect,&storagePoints);
-    InternalDrawQuadRationalBezierSeg(iBlock,x1,y1 - dy,x1,y0,x0 + dx,y0,w,iColor,iClippingRect,&storagePoints);
+    InternalDrawQuadRationalBezierSeg(iBlock,x0,int(y0 + dy),x0,y0,int(x0 + dx),y0,1.f - w,iColor,iClippingRect,&storagePoints);
+    InternalDrawQuadRationalBezierSeg(iBlock,x0,int(y0 + dy),x0,y1,int(x1 - dx),y1,w,iColor,iClippingRect,&storagePoints);
+    InternalDrawQuadRationalBezierSeg(iBlock,x1,int(y1 - dy),x1,y1,int(x1 - dx),y1,1.f - w,iColor,iClippingRect,&storagePoints);
+    InternalDrawQuadRationalBezierSeg(iBlock,x1,int(y1 - dy),x1,y0,int(x0 + dx),y0,w,iColor,iClippingRect,&storagePoints);
 
     if(iFilled) //We fill the ellipse by drawing vertical lines
     {
@@ -3468,7 +3468,7 @@ void DrawPolygon(        FBlock&                      iBlock
     if(iPoints.size() < 3)
         return;
 
-    int j = iPoints.size() - 1;
+    int j = int(iPoints.size() - 1);
     for(int i = 0; i < iPoints.size(); i++)
     {
         DrawLine(iBlock,iPoints.at(i),iPoints.at(j),iColor,iClippingRect);
@@ -3500,20 +3500,20 @@ void DrawPolygon(        FBlock&                      iBlock
         for(int y = minY; y <= maxY; y++)
         {
             std::vector< int > nodesX;
-            int j = iPoints.size() - 1;
+            int j = int(iPoints.size() - 1);
 
             for(int i = 0; i < iPoints.size(); i++)
             {
                 if((iPoints[i].y < y && iPoints[j].y >= y) || (iPoints[j].y < y && iPoints[i].y >= y))
                 {
-                    nodesX.push_back(iPoints[i].x  + double(y - iPoints[i].y) / double(iPoints[j].y - iPoints[i].y) * (iPoints[j].x - iPoints[i].x));
+                    nodesX.push_back(int(iPoints[i].x  + double(y - iPoints[i].y) / double(iPoints[j].y - iPoints[i].y) * (iPoints[j].x - iPoints[i].x)));
                 }
                 j = i;
             }
 
             //Sorting the nodes on X
             int i = 0;
-            int size = nodesX.size() - 1;
+            int size = int(nodesX.size() - 1);
             while(i < size)
             {
                 if(nodesX[i] > nodesX[i+1])
@@ -3580,35 +3580,35 @@ void DrawQuadraticBezier(        FBlock&                         iBlock
             if(FMath::Abs(dx * y) > FMath::Abs(dy * x))
             {
                 pt0.x = pt2.x;
-                pt2.x = dx + pt1.x;
+                pt2.x = int(dx) + pt1.x;
                 pt0.y = pt2.y;
-                pt2.y = dy + pt1.y;
+                pt2.y = int(dy) + pt1.y;
             }
         }
-        if(pt0.x == pt2.x || weight == 1.0)
+        if(pt0.x == pt2.x || weight == 1.0f)
         {
             dt = (pt0.x - pt1.x) / (double)x;
         } else
         {
-            dq = std::sqrt(4.0 * weight * weight * (pt0.x - pt1.x) * (pt2.x - pt1.x) + (pt2.x - pt0.x) * (long)(pt2.x - pt0.x));
+            dq = std::sqrt(4.0f * weight * weight * (pt0.x - pt1.x) * (pt2.x - pt1.x) + (pt2.x - pt0.x) * (long)(pt2.x - pt0.x));
 
             if(pt1.x < pt0.x)
                 dq = -dq;
 
-            dt = (2.0 * weight * (pt0.x - pt1.x) - pt0.x + pt2.x + dq) / (2.0 * (1.0 - weight) * (pt2.x - pt0.x));
+            dt = (2.0f * weight * (pt0.x - pt1.x) - pt0.x + pt2.x + dq) / (2.0f * (1.0f - weight) * (pt2.x - pt0.x));
         }
-        dq = 1.0 / (2.0 * dt * (1.0 - dt) * (weight - 1.0) + 1.0);
-        dx = (dt * dt * (pt0.x - 2.0 * weight * pt1.x + pt2.x) + 2.0 * dt * (weight * pt1.x - pt0.x) + pt0.x) * dq;
-        dy = (dt * dt * (pt0.y - 2.0 * weight * pt1.y + pt2.y) + 2.0 * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
-        dWeight = dt * (weight - 1.0) + 1.0;
+        dq = 1.0f / (2.0f * dt * (1.0f - dt) * (weight - 1.0f) + 1.0f);
+        dx = (dt * dt * (pt0.x - 2.0f * weight * pt1.x + pt2.x) + 2.0f * dt * (weight * pt1.x - pt0.x) + pt0.x) * dq;
+        dy = (dt * dt * (pt0.y - 2.0f * weight * pt1.y + pt2.y) + 2.0f * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
+        dWeight = dt * (weight - 1.0f) + 1.0f;
         dWeight *= (dWeight * dq);
-        weight = ((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq);
-        x = std::floor(dx + 0.5);
-        y = std::floor(dy + 0.5);
+        weight = float(((1.0f - dt) * (weight - 1.0f) + 1.0f) * std::sqrt(dq));
+        x = int(std::floor(dx + 0.5f));
+        y = int(std::floor(dy + 0.5f));
         dy = (dx - pt0.x) * (pt1.y - pt0.y) / (pt1.x - pt0.x) + pt0.y;
-        InternalDrawQuadRationalBezierSeg(iBlock,pt0.x,pt0.y,x,std::floor(dy + 0.5),x,y,dWeight,iColor,iClippingRect);
+        InternalDrawQuadRationalBezierSeg(iBlock,pt0.x,pt0.y,x,int(std::floor(dy + 0.5f)),x,y,float(dWeight),iColor,iClippingRect);
         dy = (dx - pt2.x) * (pt1.y - pt2.y) / (pt1.x - pt2.x) + pt2.y;
-        pt1.y = std::floor(dy + 0.5);
+        pt1.y = int(std::floor(dy + 0.5f));
         pt0.x = pt1.x = x;
         pt0.y = y;
 
@@ -3616,31 +3616,31 @@ void DrawQuadraticBezier(        FBlock&                         iBlock
 
     if((pt0.y - pt1.y) * (long)(pt2.y - pt1.y) > 0)
     {
-        if(pt0.y == pt2.y || iWeight == 1.0)
+        if(pt0.y == pt2.y || iWeight == 1.0f)
         {
-            dt = (pt0.y - pt1.y) / (pt0.y - 2.0 * pt1.y + pt2.y);
+            dt = (pt0.y - pt1.y) / (pt0.y - 2.0f * pt1.y + pt2.y);
         } else
         {
-            dq = std::sqrt(4.0 * weight * weight * (pt0.y - pt1.y) * (pt2.y - pt1.y) + (pt2.y - pt0.y) * (long)(pt2.y - pt0.y));
+            dq = std::sqrt(4.0f * weight * weight * (pt0.y - pt1.y) * (pt2.y - pt1.y) + (pt2.y - pt0.y) * (long)(pt2.y - pt0.y));
 
             if(pt1.y < pt0.y)
                 dq = -dq;
 
-            dt = (2.0 * weight * (pt0.y - pt1.y) - pt0.y + pt2.y + dq) / (2.0 * (1.0 - weight) * (pt2.y - pt0.y));
+            dt = (2.0f * weight * (pt0.y - pt1.y) - pt0.y + pt2.y + dq) / (2.0f * (1.0f - weight) * (pt2.y - pt0.y));
         }
-        dq = 1.0 / (2.0 * dt * (1.0 - dt) * (weight - 1.0) + 1.0);
-        dx = (dt * dt * (pt0.x - 2.0 * weight * pt1.x + pt2.x) + 2.0 * dt * (weight * pt1.x - pt0.x) + pt0.x) * dq;
-        dy = (dt * dt * (pt0.y - 2.0 * weight * pt1.y + pt2.y) + 2.0 * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
-        dWeight = dt * (weight - 1.0) + 1.0;
+        dq = 1.0f / (2.0f * dt * (1.0f - dt) * (weight - 1.0f) + 1.0f);
+        dx = (dt * dt * (pt0.x - 2.0f * weight * pt1.x + pt2.x) + 2.0f * dt * (weight * pt1.x - pt0.x) + pt0.x) * dq;
+        dy = (dt * dt * (pt0.y - 2.0f * weight * pt1.y + pt2.y) + 2.0f * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
+        dWeight = dt * (weight - 1.0f) + 1.0f;
         dWeight *= (dWeight * dq);
-        weight = ((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq);
-        x = std::floor(dx + 0.5);
-        y = std::floor(dy + 0.5);
+        weight = float(((1.0f - dt) * (weight - 1.0f) + 1.0f) * std::sqrt(dq));
+        x = int(std::floor(dx + 0.5f));
+        y = int(std::floor(dy + 0.5f));
         dx = (pt1.x - pt0.x) * (dy - pt0.y) / (pt1.y - pt0.y) + pt0.x;
-        InternalDrawQuadRationalBezierSeg(iBlock,pt0.x,pt0.y,std::floor(dx + 0.5),y,x,y,dWeight,iColor,iClippingRect);
+        InternalDrawQuadRationalBezierSeg(iBlock,pt0.x,pt0.y,int(std::floor(dx + 0.5f)),y,x,y,float(dWeight),iColor,iClippingRect);
 
         dx = (pt1.x - pt2.x) * (dy - pt2.y) / (pt1.y - pt2.y) + pt2.x;
-        pt1.x = std::floor(dx + 0.5);
+        pt1.x = int(std::floor(dx + 0.5f));
         pt0.x = x;
         pt0.y = pt1.y = y;
 

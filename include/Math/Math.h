@@ -160,6 +160,11 @@ namespace FMath
         return ( iRad * 180 / FMath::kPId );
     }
 
+    static ULIS_FORCEINLINE float RadToDegF(float iRad)
+    {
+        return (iRad * 180.f / FMath::kPIf);
+    }
+
     static ULIS_FORCEINLINE double DegToRad( double iDeg )
     {
         return ( iDeg * FMath::kPId / 180 );

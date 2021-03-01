@@ -964,7 +964,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
     FColor val = iColor;
     T maxAlpha = val.AlphaT<T>();
 
-    //0° is on top and we turn clockwise
+    //0ï¿½ is on top and we turn clockwise
     //Octant 1 ------
     if( drawRectOctant1 == 1)
     {
@@ -978,11 +978,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0ï¿½ to 45ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y - y - 1, val ); // 0ï¿½ to 45ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1043,7 +1043,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 
                 val.SetAlphaT<T>( MaxAlpha * alphaTop );
                 
-                iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+                iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0ï¿½ to 45ï¿½
                 
                 if( diff >= ( 2 * x ) )
                 {
@@ -1073,11 +1073,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0ï¿½ to 45ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y - y - 1, val ); // 0ï¿½ to 45ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1113,11 +1113,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90ï¿½ to 45ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
+            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y - x, val ); // 90ï¿½ to 45ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1176,11 +1176,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
+            iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90ï¿½ to 45ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y - x, val ); // 90° to 45°
+            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y - x, val ); // 90ï¿½ to 45ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1216,11 +1216,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90ï¿½ to 135ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
+            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y + x, val ); // 90ï¿½ to 135ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1279,11 +1279,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
+            iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90ï¿½ to 135ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y + x, val ); // 90° to 135°
+            iBlock.SetPixel( iCenter.x + y + 1, iCenter.y + x, val ); // 90ï¿½ to 135ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1319,11 +1319,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180ï¿½ to 135ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y + y + 1, val ); // 180ï¿½ to 135ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1382,11 +1382,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180ï¿½ to 135ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+            iBlock.SetPixel( iCenter.x + x, iCenter.y + y + 1, val ); // 180ï¿½ to 135ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1422,11 +1422,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180ï¿½ to 225ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y + y + 1, val ); // 180ï¿½ to 225ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1485,11 +1485,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180ï¿½ to 225ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y + y + 1, val ); // 180ï¿½ to 225ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1526,11 +1526,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270ï¿½ to 225ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
+            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y + x, val );  // 270ï¿½ to 225ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1589,11 +1589,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
+            iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270ï¿½ to 225ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y + x, val );  // 270° to 225°
+            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y + x, val );  // 270ï¿½ to 225ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1630,11 +1630,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270ï¿½ to 315ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
+            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y - x, val ); // 270ï¿½ to 315ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1693,11 +1693,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
+            iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270ï¿½ to 315ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y - x, val ); // 270° to 315°
+            iBlock.SetPixel( iCenter.x - y - 1, iCenter.y - x, val ); // 270ï¿½ to 315ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1734,11 +1734,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0ï¿½ to 315ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y - y - 1, val ); // 0ï¿½ to 315ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1797,11 +1797,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             
             val.SetAlphaT<T>( maxAlpha * alphaTop );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0ï¿½ to 315ï¿½
             
             val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
             
-            iBlock.SetPixel( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
+            iBlock.SetPixel( iCenter.x - x, iCenter.y - y - 1, val ); // 0ï¿½ to 315ï¿½
             
             if( diff >= ( 2 * x ) )
             {
@@ -1931,7 +1931,7 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
     T maxAlpha = val.AlphaT<T>();
 
-    //0° is on top and we turn clockwise
+    //0ï¿½ is on top and we turn clockwise
     //Octant 1 ------
     if(drawRectOctant1 == 1)
     {
@@ -1950,11 +1950,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0ï¿½ to 45ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0° to 45°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0ï¿½ to 45ï¿½
 
             if(diff > 0)
             {
@@ -2001,11 +2001,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0ï¿½ to 45ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0° to 45°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0ï¿½ to 45ï¿½
 
             if(diff > 0)
             {
@@ -2036,11 +2036,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
+            iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90° to 45°
+            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(diff > 0)
             {
@@ -2087,11 +2087,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
+            iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90° to 45°
+            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(diff > 0)
             {
@@ -2122,11 +2122,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
+            iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90° to 135°
+            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(diff > 0)
             {
@@ -2173,11 +2173,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
+            iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90° to 135°
+            iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(diff > 0)
             {
@@ -2208,11 +2208,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180ï¿½ to 135ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180° to 135°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180ï¿½ to 135ï¿½
 
             if(diff > 0)
             {
@@ -2259,11 +2259,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180ï¿½ to 135ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180° to 135°
+            iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180ï¿½ to 135ï¿½
 
             if(diff > 0)
             {
@@ -2294,11 +2294,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180ï¿½ to 225ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180° to 225°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180ï¿½ to 225ï¿½
 
             if(diff > 0)
             {
@@ -2345,11 +2345,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180ï¿½ to 225ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180° to 225°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180ï¿½ to 225ï¿½
 
             if(diff > 0)
             {
@@ -2380,11 +2380,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
+            iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270° to 225°
+            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(diff > 0)
             {
@@ -2431,11 +2431,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
+            iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270° to 225°
+            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(diff > 0)
             {
@@ -2466,11 +2466,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
+            iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270° to 315°
+            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(diff > 0)
             {
@@ -2517,11 +2517,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
+            iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270° to 315°
+            iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(diff > 0)
             {
@@ -2552,11 +2552,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0ï¿½ to 315ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0° to 315°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0ï¿½ to 315ï¿½
 
             if(diff > 0)
             {
@@ -2603,11 +2603,11 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 
             val.SetAlphaT<T>(maxAlpha * alphaTop);
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0ï¿½ to 315ï¿½
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0° to 315°
+            iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0ï¿½ to 315ï¿½
 
             if(diff > 0)
             {
@@ -2759,7 +2759,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
         directionToDraw[currentAngle / 45][1] = sizeAngleToDraw;
     }
 
-    //0° is on top and we turn clockwise
+    //0ï¿½ is on top and we turn clockwise
     //Octant 1 ------
     if(drawRectOctant1 == 1)
     {
@@ -2773,7 +2773,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -2785,7 +2785,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -2845,7 +2845,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -2857,7 +2857,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -2899,7 +2899,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -2910,7 +2910,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -2969,7 +2969,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -2980,7 +2980,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -3021,7 +3021,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -3032,7 +3032,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -3094,7 +3094,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -3105,7 +3105,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -3146,7 +3146,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -3157,7 +3157,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -3218,7 +3218,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -3229,7 +3229,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -3271,7 +3271,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -3282,7 +3282,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -3343,7 +3343,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -3354,7 +3354,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -3396,7 +3396,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -3407,7 +3407,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -3468,7 +3468,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -3479,7 +3479,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -3521,7 +3521,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -3532,7 +3532,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -3593,7 +3593,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -3604,7 +3604,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -3646,7 +3646,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -3657,7 +3657,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -3718,7 +3718,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -3729,7 +3729,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -3869,7 +3869,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         directionToDraw[currentAngle / 45][1] = sizeAngleToDraw;
     }
 
-    //0° is on top and we turn clockwise
+    //0ï¿½ is on top and we turn clockwise
     //Octant 1 ------
     if(drawRectOctant1 == 1)
     {
@@ -3888,7 +3888,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -3900,7 +3900,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -3949,7 +3949,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -3961,7 +3961,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0° to 45°
+            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0ï¿½ to 45ï¿½
 
             // Complex cases
             if(octantsToDraw[0] == 2)
@@ -4000,7 +4000,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -4011,7 +4011,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -4060,7 +4060,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -4071,7 +4071,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90° to 45°
+            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90ï¿½ to 45ï¿½
 
             if(octantsToDraw[1] == 2)
             {
@@ -4109,7 +4109,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -4120,7 +4120,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -4171,7 +4171,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -4182,7 +4182,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90° to 135°
+            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90ï¿½ to 135ï¿½
 
             if(octantsToDraw[2] == 2)
             {
@@ -4220,7 +4220,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -4231,7 +4231,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -4282,7 +4282,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -4293,7 +4293,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180° to 135°
+            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180ï¿½ to 135ï¿½
 
             if(octantsToDraw[3] == 2)
             {
@@ -4330,7 +4330,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -4341,7 +4341,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -4392,7 +4392,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -4403,7 +4403,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180° to 225°
+            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180ï¿½ to 225ï¿½
 
             if(octantsToDraw[4] == 2)
             {
@@ -4441,7 +4441,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -4452,7 +4452,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -4503,7 +4503,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -4514,7 +4514,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270° to 225°
+            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270ï¿½ to 225ï¿½
 
             if(octantsToDraw[5] == 2)
             {
@@ -4552,7 +4552,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -4563,7 +4563,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -4614,7 +4614,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -4625,7 +4625,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270° to 315°
+            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270ï¿½ to 315ï¿½
 
             if(octantsToDraw[6] == 2)
             {
@@ -4663,7 +4663,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -4674,7 +4674,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -4725,7 +4725,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -4736,7 +4736,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
             val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
 
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0° to 315°
+            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0ï¿½ to 315ï¿½
 
             if(octantsToDraw[7] == 2)
             {
@@ -4837,7 +4837,7 @@ static void DrawEllipseAA( FBlock&                  iBlock
     int errMax = 0;
     int errMin =  2 * (2*b2+a2*(1-2*iB));
 
-    //0° is on top and we turn clockwise
+    //0ï¿½ is on top and we turn clockwise
     //Octant 1 ------
     if(drawRectOctant1 == 1)
     {
@@ -5501,7 +5501,7 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
 
     float dx = (long)a*a;
     float dy = (long)b*b;
-    float s = std::sin(FMath::DegToRad(rotation + 90));
+    float s = std::sin(FMath::DegToRad(rotation));
     float dz = (dx - dy) * s;
     dx = std::sqrt(dx - dz * s);
     dy = std::sqrt(dy + dz * s);
@@ -5513,7 +5513,7 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
     int y0 = iCenter.y - b;
     int x1 = iCenter.x + a;
     int y1 = iCenter.y + b;
-    dz = (4 * dz * std::cos(FMath::DegToRad(rotation + 90)));
+    dz = (4 * dz * std::cos(FMath::DegToRad(rotation)));
 
 
     dx = x1 - x0;
