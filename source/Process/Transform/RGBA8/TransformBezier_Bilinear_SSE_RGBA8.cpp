@@ -18,7 +18,7 @@ ULIS_NAMESPACE_BEGIN
 void
 InvokeTransformBezierMT_Bilinear_SSE_RGBA8(
       const FTransformJobArgs* jargs
-    , const FTransformCommandArgs* cargs
+    , const FTransformBezierCommandArgs* cargs
 )
 {
     /*
@@ -85,7 +85,7 @@ InvokeTransformBezierMT_Bilinear_SSE_RGBA8(
     */
 }
 
-ULIS_DEFINE_TRANSFORM_COMMAND_SPECIALIZATION( TransformBezierMT_Bilinear_SSE_RGBA8 )
+ULIS_DEFINE_BEZIER_COMMAND_SPECIALIZATION( TransformBezierMT_Bilinear_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
 

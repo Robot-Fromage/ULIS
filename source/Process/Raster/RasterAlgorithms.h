@@ -5846,6 +5846,5 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
     InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);
 }
 
-
 ULIS_NAMESPACE_END
 

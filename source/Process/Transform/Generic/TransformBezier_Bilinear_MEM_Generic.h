@@ -18,7 +18,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T > void
 InvokeTransformBezierMT_Bilinear_MEM_Generic(
       const FTransformJobArgs* jargs
-    , const FTransformCommandArgs* cargs
+    , const FTransformBezierCommandArgs* cargs
 )
 {
     /*
@@ -73,7 +73,7 @@ InvokeTransformBezierMT_Bilinear_MEM_Generic(
     */
 }
 
-ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( TransformBezierMT_Bilinear_MEM_Generic )
+ULIS_DEFINE_BEZIER_COMMAND_GENERIC( TransformBezierMT_Bilinear_MEM_Generic )
 
 ULIS_NAMESPACE_END
 

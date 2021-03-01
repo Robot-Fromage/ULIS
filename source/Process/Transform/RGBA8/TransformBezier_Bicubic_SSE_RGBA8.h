@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 void
 InvokeTransformBezierMT_Bicubic_SSE_RGBA8(
       const FTransformJobArgs* jargs
-    , const FTransformCommandArgs* cargs
+    , const FTransformBezierCommandArgs* cargs
 );
 
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleTransformBezierMT_Bicubic_SSE_RGBA8 );

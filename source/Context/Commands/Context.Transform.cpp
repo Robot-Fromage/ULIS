@@ -533,17 +533,24 @@ FContext::XProcessBezierDisplacementField(
     FEvent eventClear;
     Clear( iMask, roi, iPolicy, 1, &eventAllocation[1], &eventClear );
 
+    FRectI trans = TransformBezierMetrics( src_roi, iControlPoints );
+    FVec2F shift = trans.Position();
+    auto cargs = new FProcessBezierDeformFieldArgs(
+          iField
+        , iMask
+        , dst_roi
+        , iResamplingMethod
+        , iBorderMode
+        , iBorderValue.ToFormat( iDestination.Format() )
+    );
+    cargs->points.Reserve( 4 );
+    for( int i = 0; i < 4; ++i )
+        cargs->points.PushBack( FCubicBezierControlPoint{ iControlPoints[i].point - shift, iControlPoints[i].ctrlCW - shift, iControlPoints[i].ctrlCCW - shift } );
+
     mCommandQueue.d->Push(
         new FCommand(
-                mContextualDispatchTable->mScheduleProcessBezierDeformField
-            , new FProcessBezierDeformFieldArgs(
-                  iField
-                , iMask
-                , dst_roi
-                , iResamplingMethod
-                , iBorderMode
-                , iBorderValue.ToFormat( iDestination.Format() )
-            )
+              mContextualDispatchTable->mScheduleProcessBezierDeformField
+            , cargs
             , iPolicy
             , false
             , true // Force mono.

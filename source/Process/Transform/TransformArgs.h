@@ -16,6 +16,8 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Math/Geometry/Matrix.h"
+#include "Math/Interpolation/Spline.h"
+#include "Math/Interpolation/Bezier.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/DualBufferArgs.h"
 
@@ -181,6 +183,7 @@ public:
     eResamplingMethod resamplingMethod;
     eBorderMode borderMode;
     FColor borderValue;
+    TArray< FCubicBezierControlPoint > points;
 };
 
 /////////////////////////////////////////////////////
@@ -271,6 +274,43 @@ BuildResizeJob_Chunks(
     ULIS_ASSERT( false, "Chunk Scheduling not available for Resize" );
 }
 
+
+static
+void
+BuildBezierJob_Scanlines(
+      const FTransformBezierCommandArgs* iCargs
+    , const int64 iNumJobs
+    , const int64 iNumTasksPerJob
+    , const int64 iIndex
+    , FTransformJobArgs& oJargs
+)
+{
+    const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
+    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+    uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
+    const uint32 src_bps                    = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
+    const uint32 dst_bps                    = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
+    const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
+    const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
+    oJargs.src                              = nullptr;
+    oJargs.dst                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;
+    oJargs.line                             = static_cast< uint32 >( iIndex );
+}
+
+static
+void
+BuildBezierJob_Chunks(
+      const FTransformBezierCommandArgs* iCargs
+    , const int64 iSize
+    , const int64 iCount
+    , const int64 iOffset
+    , const int64 iIndex
+    , FTransformJobArgs& oJargs
+)
+{
+    ULIS_ASSERT( false, "Chunk Scheduling not available for Bezier" );
+}
+
 /////////////////////////////////////////////////////
 // Schedulers
 #define ULIS_DEFINE_TRANSFORM_COMMAND_GENERIC( iName )          \
@@ -309,6 +349,25 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(          \
     , &Invoke ## iName                                      \
     , &BuildResizeJob_Scanlines                             \
     , &BuildResizeJob_Chunks                                \
+)
+
+#define ULIS_DEFINE_BEZIER_COMMAND_GENERIC( iName )         \
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(  \
+    Schedule ## iName                                       \
+    , FTransformJobArgs                                     \
+    , FTransformBezierCommandArgs                           \
+    , &Invoke ## iName < T >                                \
+    , &BuildBezierJob_Scanlines                             \
+    , &BuildBezierJob_Chunks                                \
+)
+#define ULIS_DEFINE_BEZIER_COMMAND_SPECIALIZATION( iName )  \
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL_CUSTOM(          \
+    Schedule ## iName                                       \
+    , FTransformJobArgs                                     \
+    , FTransformBezierCommandArgs                           \
+    , &Invoke ## iName                                      \
+    , &BuildBezierJob_Scanlines                             \
+    , &BuildBezierJob_Chunks                                \
 )
 
 ULIS_NAMESPACE_END
