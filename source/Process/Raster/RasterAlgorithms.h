@@ -606,9 +606,7 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
             clippingRect = FRectI::FromXYWH(0,0,iBlock.Width() - 1,iBlock.Height() - 1);
         }
 
-        FRectI bezierRect = FRectI::FromMinMax(FMath::Min3(x0,x1,x2),FMath::Min3(y0,y1,y2),FMath::Max3(x0,x1,x2),FMath::Max3(y0,y1,y2));
-
-        clippingRect = clippingRect & bezierRect;
+        clippingRect = clippingRect;
 
         if(clippingRect.Area() == 0)
             return;
