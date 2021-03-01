@@ -33,6 +33,11 @@ set( CMAKE_DEBUG_POSTFIX d )
 set( CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true )
 # For freetype skip install
 set( SKIP_INSTALL_ALL true )
+set( CMAKE_DISABLE_FIND_PACKAGE_ZLIB        ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_PNG         ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_BZip2       ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz    ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_BrotliDec   ON )
 
 # Set C++ standard options
 set( CMAKE_CXX_STANDARD 17 )
