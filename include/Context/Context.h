@@ -794,6 +794,48 @@ public:
     static
     eFormat BezierDisplacmentMaskMetrics( const FBlock& iSource );
 
+    /*!
+        Perform a bezier transform operation using iSource as input. The result
+        is written in the iDestination block.
+
+        A bezier transform is a distortion of an input source covering a 2D bezier
+        surface shape. Think about a flag.
+
+        You can use TransformBezierMetrics() in order to compute the geometry of
+        the transformed output before actually scheduling the operation.
+
+        You can specify a sub-rectangular area in the source input with the
+        iSourceRect input parameter.
+
+        \warning The input iControlPoints array should have size 4 and control
+        points define the corners of a bezier path with four control points,
+        each one of them using two tangents control points. Two adjacent
+        control points define a cubic bezier curve.
+
+        \sa TransformBezier()
+        \sa TransformBezierMetrics()
+        \sa BezierDisplacmentFieldMetrics()
+        \sa BezierDisplacmentMaskMetrics()
+    */
+    ulError
+    XProcessBezierDisplacementField(
+          const FBlock& iSource
+        , const FBlock& iDestination
+        , FBlock& iField
+        , FBlock& iMask
+        , const TArray< FCubicBezierControlPoint >& iControlPoints
+        , float iThreshold = 1.f
+        , uint32 iPlotSize = 1
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 /////////////////////////////////////////////////////
 // IO
     /*!

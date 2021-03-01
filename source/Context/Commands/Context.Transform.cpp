@@ -263,9 +263,51 @@ FContext::TransformBezier(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    //TODO:
-    ULIS_ASSERT( false, "Todo" );
-
+    FBlock field;
+    FBlock mask;
+    XProcessBezierDisplacementField(
+          iSource
+        , iDestination
+        , field
+        , mask
+        , iControlPoints
+        , iThreshold
+        , iPlotSize
+        , iSourceRect
+        , iResamplingMethod
+        , iBorderMode
+        , iBorderValue
+        , iPolicy
+        , iNumWait
+        , iWaitList
+        , iEvent
+    );
+    /*
+    mCommandQueue.d->Push(
+        new FCommand(
+                mContextualDispatchTable->QueryScheduleTransformBezier( iResamplingMethod )
+            , new FTransformBezierCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , iResamplingMethod
+                , iBorderMode
+                , iBorderValue.ToFormat( iDestination.Format() )
+                , inverseScale
+                , dst_roi.Position()
+                , iOptionalSummedAreaTable // SAT
+            )
+            , iPolicy
+            , false // Non-contiguous, disable chunks, force scanlines.
+            , false // No need to force mono.
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , dst_roi
+        )
+    );
+    */
     return  ULIS_NO_ERROR;
 }
 
@@ -440,6 +482,76 @@ eFormat
 FContext::BezierDisplacmentMaskMetrics( const FBlock& iSource )
 {
     return  eFormat::Format_G8;
+}
+
+ulError
+FContext::XProcessBezierDisplacementField(
+      const FBlock& iSource
+    , const FBlock& iDestination
+    , FBlock& iField
+    , FBlock& iMask
+    , const TArray< FCubicBezierControlPoint >& iControlPoints
+    , float iThreshold
+    , uint32 iPlotSize
+    , const FRectI& iSourceRect
+    , eResamplingMethod iResamplingMethod
+    , eBorderMode iBorderMode
+    , const ISample& iBorderValue
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    FRectI dst_aim = TransformBezierMetrics( src_roi, iControlPoints );
+    int plotSize = FMath::Clamp( iPlotSize, uint32( 1 ), uint32( 8 ) );
+    dst_aim.w += plotSize;
+    dst_aim.h += plotSize;
+    const FRectI dst_roi = dst_aim & dst_rect;
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    FRectI roi = FRectI::FromPositionAndSize( FVec2I(), dst_roi.Size() );
+    TArray< FEvent > eventAllocation( 2 );
+    XAllocateBlockData( iField, dst_roi.w, dst_roi.h, Format_GAF, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, iNumWait, iWaitList, &eventAllocation[0] );
+    XAllocateBlockData( iMask, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, 0, nullptr, &eventAllocation[1] );
+    FEvent eventClear;
+    Clear( iMask, roi, iPolicy, 1, &eventAllocation[1], &eventClear );
+
+    /*
+    mCommandQueue.d->Push(
+        new FCommand(
+                mContextualDispatchTable->QueryScheduleTransformBezier( iResamplingMethod )
+            , new FTransformBezierCommandArgs(
+                  iSource
+                , iDestination
+                , src_roi
+                , dst_roi
+                , iResamplingMethod
+                , iBorderMode
+                , iBorderValue.ToFormat( iDestination.Format() )
+                , inverseScale
+                , dst_roi.Position()
+                , iOptionalSummedAreaTable // SAT
+            )
+            , iPolicy
+            , false
+            , true // Force mono.
+            , 1
+            , &eventClear
+            , iEvent
+            , dst_roi
+        )
+    );
+    */
+
+    return  ULIS_NO_ERROR;
 }
 
 ULIS_NAMESPACE_END
