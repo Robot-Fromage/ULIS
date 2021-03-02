@@ -30,8 +30,11 @@ main(int argc,char *argv[])
 
     //Data
     FBlock canvas(1024,1024,fmt);
-    ctx.Clear( canvas );
-    ctx.Finish();
+    for( int i = 0; i < 5000; i++ )
+    {
+        ctx.Clear(canvas);
+        ctx.Finish();
+    }
     {
         //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 500, 400 ), FColor::RGBA8(255,0,0) );
 

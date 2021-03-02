@@ -15,10 +15,12 @@ using namespace ::ULIS;
 int
 main(int argc,char *argv[]) 
 {
+    //_sleep(5000);
+
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat fmt = Format_LabAF;
-    FContext ctx( queue, fmt );
+    eFormat fmt = Format_RGBA8;
+    FContext ctx( queue, fmt, PerformanceIntent_MEM );
     FHardwareMetrics hw;
     FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
@@ -26,14 +28,24 @@ main(int argc,char *argv[])
     //Data
     FBlock canvas( 1024, 1024, fmt );
 
-    int repeat = 500;
+    /*int repeat = 500;
     TArray< FEvent > events( repeat );
-    ctx.Clear( canvas, canvas.Rect(), policy_cache_efficient, 0, nullptr, &events[0] );
+    ctx.Fill( canvas, canvas.Rect(), FColor::RGBA8(0,0,0), policy_mono_chunk, 0, nullptr, &events[0] );
     for( int i = 1; i < repeat; ++i ) {
-        ctx.Clear( canvas, canvas.Rect(), policy_cache_efficient, 1, &events[i-1], &events[i] );
+        ctx.Fill(canvas,canvas.Rect(), FColor::RGBA8(0,0,0), policy_mono_chunk,1,&events[i-1],&events[i]);
         ctx.Flush();
+    }*/
+    int i = 0;
+    while( 1 )
+    {
+        ctx.Fill(canvas,canvas.Rect(),FColor::RGBA8(0,0,0),policy_mono_chunk);
+        ctx.Finish();
+        i++;
     }
-    ctx.Fence();
+
+    //ctx.Wait(events[499]);
+    //_sleep( 5000 );
+    //ctx.Fence();
 
     return  0;
 }
