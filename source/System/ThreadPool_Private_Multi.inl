@@ -197,6 +197,8 @@ FThreadPool_Private::ScheduleProcess()
             {
                 mCommands.push_back( cmd );
             }
+
+            cvJobsFinished.notify_one();
         }
         else if( bStop )
         {
