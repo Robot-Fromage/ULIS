@@ -16,22 +16,24 @@
 ULIS_NAMESPACE_BEGIN
 FThreadPool_Private::~FThreadPool_Private()
 {
-    // Temp safe
+    // Complete commands
     WaitForCompletion();
 
     // Notify stop condition
-    std::unique_lock< std::mutex > latch( mJobsQueueMutex );
-    std::unique_lock< std::mutex > lock( mCommandsQueueMutex );
-    bStop = true;
-    cvJob.notify_all();
-    latch.unlock();
-    lock.unlock();
+    {
+        std::lock( mJobsQueueMutex, mCommandsQueueMutex );
+        std::lock_guard< std::mutex > lock0( mJobsQueueMutex, std::adopt_lock );
+        std::lock_guard< std::mutex > lock1( mCommandsQueueMutex, std::adopt_lock );
+        bStop = true;
+        cvJob.notify_all();
+    }
 
     // Join all threads
+    mScheduler.join();
+
     for( auto& t : mWorkers )
         t.join();
 
-    mScheduler.join();
 }
 
 FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
@@ -65,7 +67,7 @@ FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 void
 FThreadPool_Private::ScheduleJob( const FJob* iJob )
 {
-    std::unique_lock< std::mutex > lock( mJobsQueueMutex );
+    std::lock_guard< std::mutex > lock( mJobsQueueMutex );
     mJobs.push_back( iJob );
     cvJob.notify_one();
 }
@@ -73,18 +75,6 @@ FThreadPool_Private::ScheduleJob( const FJob* iJob )
 void
 FThreadPool_Private::WaitForCompletion()
 {
-    /*
-    while( true )
-    {
-        std::lock_guard< std::mutex > latch( mCommandsQueueMutex );
-
-        std::unique_lock< std::mutex > lock( mJobsQueueMutex );
-        cvJobsFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ); } );
-
-        if( mCommands.empty() )
-            break;
-    }
-    */
     std::unique_lock< std::mutex > lock( mJobsQueueMutex );
     cvJobsFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ) && ( mNumQueued == 0 ); } );
 }
@@ -95,10 +85,11 @@ FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
     WaitForCompletion();
 
     // Notify stop condition
-    std::unique_lock< std::mutex > latch( mJobsQueueMutex );
-    bStop = true;
-    cvJob.notify_all();
-    latch.unlock();
+    {
+        std::lock_guard< std::mutex > lock( mJobsQueueMutex );
+        bStop = true;
+        cvJob.notify_all();
+    }
 
     // Join all threads
     for( auto& t : mWorkers )
@@ -107,7 +98,8 @@ FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
     bStop = false;
 
     uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
-    mWorkers.clear();
+    mWorkers.reserve( max );
+    mWorkers.shrink_to_fit();
     for( uint32 i = 0; i < max; ++i )
         mWorkers.emplace_back( std::bind( &FThreadPool_Private::WorkProcess, this ) );
 }
@@ -130,8 +122,13 @@ FThreadPool_Private::WorkProcess()
 {
     while( true )
     {
+        // Acquire Mutex
         std::unique_lock< std::mutex > latch( mJobsQueueMutex );
+
+        // Release held mutex and put to sleep until notified
+        // Then wake up of signal and re-acquire the mutex to check condition
         cvJob.wait( latch, [ this ](){ return bStop || !mJobs.empty(); } );
+
         if( !mJobs.empty() )
         {
             // got work. set busy.
@@ -154,11 +151,13 @@ FThreadPool_Private::WorkProcess()
             latch.lock();
 
             // Notify event
-            evt->NotifyOneJobFinished();
+            bool notify = evt->NotifyOneJobFinished();
 
             // Managing internals
             --mNumBusy;
-            cvJobsFinished.notify_one();
+
+            if( notify )
+                cvJobsFinished.notify_one();
         }
         else if( bStop )
         {
