@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.11.0)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/example/Pixels/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/example/Pool/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/example/Kernel/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/example/SummedAreaTable/CMakeLists.txt)
 if( ${ULIS_USE_QT} )
@@ -26,6 +27,7 @@ if( ${ULIS_USE_QT} )
 endif()
 
 set_target_properties( Pixels               PROPERTIES FOLDER ULIS/example )
+set_target_properties( Pool                 PROPERTIES FOLDER ULIS/example )
 set_target_properties( Kernel               PROPERTIES FOLDER ULIS/example )
 set_target_properties( SummedAreaTable      PROPERTIES FOLDER ULIS/example )
 if( ${ULIS_USE_QT} )
