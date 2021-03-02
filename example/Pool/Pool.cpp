@@ -40,6 +40,7 @@ main(int argc,char *argv[])
     {
         ctx.Fill(canvas,canvas.Rect(),FColor::RGBA8(0,0,0),policy_mono_chunk);
         ctx.Finish();
+        std::cout << i << std::endl;
         i++;
     }
 

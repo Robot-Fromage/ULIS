@@ -149,13 +149,12 @@ FThreadPool_Private::WorkProcess()
 
             // lock again, run sync.
             latch.lock();
-
             // Notify event
             bool notify = evt->NotifyOneJobFinished();
-
             // Managing internals
             --mNumBusy;
 
+            latch.unlock();
             if( notify )
                 cvJobsFinished.notify_one();
         }
