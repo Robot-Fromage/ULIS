@@ -76,8 +76,9 @@ elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
 
 elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
     # MSVC
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc -D__SSE4_2__ -D__AVX2__" )
-    set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Z7 -MP -Od -MDd" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /EHsc -D__SSE4_2__ -D__AVX2__" )
+    set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Z7 /Od /MDd" )
+    set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Z7" )
     # EHsc: Exception stuff
     # Z7:   Produced object files contain full symbolic debugging information.
     # MP:   Parallelize compilation of source files.
