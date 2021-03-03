@@ -26,6 +26,8 @@ void DrawCircleAndres(            FBlock&                  iBlock
     int y = iRadius; //We start from the top of the circle for the first octant
 
     FRectI clippingRect = iClippingRect;
+    clippingRect.w--;
+    clippingRect.h--;
     
     if( clippingRect.Area() == 0 )
     {
@@ -794,6 +796,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
     int y = iRadius;
 
     FRectI clippingRect = iClippingRect;
+    clippingRect.w--;
+    clippingRect.h--;
 
     if(clippingRect.Area() == 0)
     {
@@ -1297,6 +1301,8 @@ void DrawArcAndres(           FBlock&                   iBlock
     int y = iRadius; //We start from the top of the circle for the first octant
 
     FRectI clippingRect = iClippingRect;
+    clippingRect.w--;
+    clippingRect.h--;
 
     if(clippingRect.Area() == 0)
     {
@@ -2152,6 +2158,8 @@ void DrawArcBresenham(        FBlock&                   iBlock
     int y = iRadius; //We start from the top of the circle for the first octant
 
     FRectI clippingRect = iClippingRect;
+    clippingRect.w--;
+    clippingRect.h--;
 
     if(clippingRect.Area() == 0)
     {
@@ -2828,6 +2836,8 @@ void DrawEllipse(         FBlock&                  iBlock
                         , const FRectI&            iClippingRect )
 {
     FRectI clippingRect = iClippingRect;
+    clippingRect.w--;
+    clippingRect.h--;
 
     if(clippingRect.Area() == 0)
     {
@@ -3433,6 +3443,8 @@ void DrawRectangle(        FBlock&                        iBlock
                          , const FRectI&                  iClippingRect )
 {
     FRectI clippingRect = iClippingRect;
+    clippingRect.w--;
+    clippingRect.h--;
 
     if(clippingRect.Area() == 0)
     {
