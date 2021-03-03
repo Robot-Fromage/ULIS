@@ -133,6 +133,27 @@ static const bool InternalCropLineToRectangle(FVec2I& ioP0,FVec2I& ioP1,const FR
     return accept;
 }
 
+static const float InternalGetPixelBaseAlphaFromCoord( FVec2F& iPt )
+{
+    float xDec = iPt.x - int( iPt.x );
+    float xAlpha = 0.f;
+
+    if( xDec <= 0.5f )
+        xAlpha = xDec;
+    else
+        xAlpha = FMath::Abs( xAlpha - 1.f );
+
+    float yDec = iPt.y - int(iPt.y);
+    float yAlpha = 0.f;
+
+    if(yDec <= 0.5f)
+        yAlpha = yDec;
+    else
+        yAlpha = FMath::Abs(yAlpha - 1.f);
+
+    return ( xAlpha + yAlpha );
+}
+
 
 static void DrawLine( FBlock&       iBlock
                     , const FVec2I& iP0
@@ -363,12 +384,12 @@ void DrawLineAA(      FBlock&     iBlock
 
         for( int x = p0.x; x <= p1.x; x++)
         {
-            float alphaTop = (1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
+            float alphaTop = float(1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
 
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             iBlock.SetPixel( x, y, val );
 
-            val.SetAlphaT<T>(maxAlpha * (1 - alphaTop));
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop)) );
             iBlock.SetPixel( x, y + yStep, val );
 
             if( slopeDifferential >= dx )
@@ -405,12 +426,12 @@ void DrawLineAA(      FBlock&     iBlock
 
         for( int y = p0.y; y <= p1.y; y++)
         {
-            float alphaTop = (1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
+            float alphaTop = float(1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
 
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             iBlock.SetPixel( x, y, val );
 
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             iBlock.SetPixel( x + xStep, y, val );
 
             if( slopeDifferential >= dy )
@@ -435,6 +456,7 @@ static void InternalDrawQuadRationalBezierSeg( FBlock& iBlock
                                              , const FRectI& iClippingRect
                                              , std::map< int,std::vector< int > >* iStoragePoints = NULL)
 {
+    /*
     FColor val = iColor;
 
     int sx = x2-x1,sy = y2-y1;
@@ -892,7 +914,7 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
                 (*iStoragePoints)[i - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
         }
         //We don't need to take care of vertical lines, since storagePoints is used to fill an ellipse using the exact same type of vertical lines
-    }
+    }*/
 }
 
 void DrawCircleAndres(            FBlock&                  iBlock
@@ -910,7 +932,8 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                                 , const bool               iFilled
                                 , const FRectI&            iClippingRect )
 {
-        //Clipping -----
+    /*
+    //Clipping -----
     int x = 0;
     int y = iRadius; //We start from the top of the circle for the first octant
     
@@ -1065,7 +1088,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 }
             }
         }*/
-        
+        /*
         //Right and bottom clip
         while (xx <= limitX && yy <= limitY )
         {
@@ -1858,7 +1881,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++;
             }
         }
-    }
+    }*/
 }
 
 
@@ -1877,6 +1900,7 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
                                     , const bool               iFilled
                                     , const FRectI&            iClippingRect )
 {
+    /*
     //Clipping -----
     int x = 0;
     int y = iRadius;
@@ -2643,7 +2667,7 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    }
+    }*/
 }
 
 void DrawArcAndres(           FBlock&                   iBlock
@@ -2663,6 +2687,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
                             , const FColor&             iColor
                             , const FRectI&             iClippingRect )
 {
+    /*
     if(iRadius == 0)
         return;
 
@@ -3753,7 +3778,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
                 x++; xx--;
             }
         }
-    }
+    }*/
 }
 
 void DrawArcBresenham(        FBlock&                   iBlock
@@ -3773,6 +3798,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                                , const FColor&             iColor
                                , const FRectI&             iClippingRect)
 {
+    /*
     if(iRadius == 0)
         return;
 
@@ -4752,7 +4778,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
             x++; xx--;
             diff = diff + 8 * x + 4;
         }
-    }
+    }*/
 }
 
 
@@ -4772,7 +4798,7 @@ static void DrawEllipseAA( FBlock&                  iBlock
                          , const FColor&            iColor
                          , const bool               iFilled
                          , const FRectI&            iClippingRect )
-{
+{/*
     FRectI clippingRect = iClippingRect;
 
     if(clippingRect.Area() == 0)
@@ -5461,7 +5487,7 @@ static void DrawEllipseAA( FBlock&                  iBlock
             sigma += a2*(4 * y + 6);
             y++;
         }
-    }
+    }*/
 }
 
 
@@ -5483,7 +5509,7 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
                                 , const FColor&            iColor
                                 , const bool               iFilled
                                 , const FRectI&            iClippingRect )
-{
+{/*
     if(iRotationDegrees % 180 == 0)
     {
         DrawEllipseAA<T>(iBlock,iCenter,iA,iB,iColor,iFilled,iClippingRect); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
@@ -5622,7 +5648,7 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
                 DrawLine(iBlock,FVec2I(iCenter.x + it->first,iCenter.y + minY),FVec2I(iCenter.x + it->first,iCenter.y + maxY),iColor,iClippingRect);
             }
         }
-    }
+    }*/
 }
 
 
@@ -5647,7 +5673,7 @@ static void DrawPolygonAA( FBlock&                      iBlock
                          , const FColor&                iColor
                          , const bool                   iFilled
                          , const FRectI&                iClippingRect )
-{
+{/*
     if(iPoints.size() < 3)
         return;
 
@@ -5726,7 +5752,7 @@ static void DrawPolygonAA( FBlock&                      iBlock
                 }
             }
         }
-    }
+    }*/
 }
 
 
@@ -5748,7 +5774,7 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
                                  , const float                     iWeight
                                  , const FColor&                   iColor
                                  , const FRectI&                   iClippingRect )
-{
+{/*
     int x = iCtrlPt0.x - 2 * iCtrlPt1.x + iCtrlPt2.x;
     int y = iCtrlPt0.y - 2 * iCtrlPt1.y + iCtrlPt2.y;
     double dx = iCtrlPt0.x - iCtrlPt1.x;
@@ -5836,7 +5862,7 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
         pt0.x = x;
         pt0.y = pt1.y = y;
     }
-    InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);
+    InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);*/
 }
 
 ULIS_NAMESPACE_END
