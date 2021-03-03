@@ -3808,7 +3808,6 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                                , const FColor&             iColor
                                , const FRectI&             iClippingRect)
 {
-    /*
     if(iRadius == 0)
         return;
 
@@ -3827,7 +3826,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         clippingRect = FRectI::FromXYWH(0,0,iBlock.Width() - 1,iBlock.Height() - 1);
     }
 
-    int shift45 = std::sin(FMath::DegToRad(45)) * iRadius;
+    int shift45 = int(std::sin(FMath::DegToRad(45)) * iRadius);
     FVec2I point0 = FVec2I(iCenter.x,iCenter.y - iRadius);
     FVec2I point45 = FVec2I(iCenter.x + shift45,iCenter.y - shift45);
     FVec2I point90 = FVec2I(iCenter.x + iRadius,iCenter.y);
@@ -3915,14 +3914,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -3936,7 +3934,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0� to 45�
 
@@ -3977,13 +3975,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(xx <= limitX && yy <= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; yy++;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;yy++;
             }
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -3997,7 +3995,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y - 1,val); // 0� to 45�
 
@@ -4027,14 +4025,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4047,7 +4044,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90� to 45�
 
@@ -4087,14 +4084,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(xx >= limitX && yy >= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; xx--;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;xx--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4107,7 +4103,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y - x,val); // 90� to 45�
 
@@ -4136,14 +4132,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4156,7 +4151,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90� to 135�
 
@@ -4198,14 +4193,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         //Bottom and left clip
         while(xx >= limitX && yy <= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; xx--;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;xx--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4218,7 +4212,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y + 1,iCenter.y + x,val); // 90� to 135�
 
@@ -4247,14 +4241,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4267,7 +4260,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180� to 135�
 
@@ -4309,14 +4302,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         //Bottom and left clip
         while(xx <= limitX && yy >= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; yy--;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;yy--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4329,7 +4321,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y + 1,val); // 180� to 135�
 
@@ -4358,13 +4350,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4377,7 +4369,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180� to 225�
 
@@ -4419,14 +4411,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         //Bottom and left clip
         while(xx >= limitX && yy >= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; yy--;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;yy--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4439,7 +4430,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y + 1,val); // 180� to 225�
 
@@ -4468,14 +4459,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4488,7 +4478,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270� to 225�
 
@@ -4530,14 +4520,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         //Bottom and left clip
         while(xx <= limitX && yy <= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; xx++;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;xx++;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4550,7 +4539,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y + x,val);  // 270� to 225�
 
@@ -4579,14 +4568,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4599,7 +4587,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270� to 315�
 
@@ -4641,14 +4629,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         //Bottom and left clip
         while(xx <= limitX && yy >= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; xx++;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;xx++;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4661,7 +4648,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y - 1,iCenter.y - x,val); // 270� to 315�
 
@@ -4690,14 +4677,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
 
         while(y >= x)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
+                alphaTop = 1 - FMath::Abs(alphaTop);
                 y--;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4710,7 +4696,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0� to 315�
 
@@ -4752,14 +4738,13 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
         //Bottom and left clip
         while(xx >= limitX && yy <= limitY)
         {
-            if(diff > 0)
+            float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+            if(alphaTop < 0.f)
             {
-                y--; yy++;
+                alphaTop = 1 - FMath::Abs(alphaTop);
+                y--;yy++;
             }
-
-            float alphaTop = 1 - FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
-
-            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
@@ -4772,7 +4757,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
                 else if(directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
             }
 
-            val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+            val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
             if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y - 1,val); // 0� to 315�
 
@@ -4790,7 +4775,7 @@ static void DrawArcBresenhamAA(  FBlock&                   iBlock
             x++; xx--;
             diff = diff + 8 * x + 4;
         }
-    }*/
+    }
 }
 
 

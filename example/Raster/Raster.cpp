@@ -48,8 +48,9 @@ main(int argc,char *argv[])
         //ctx.DrawCircleBresenham(canvas,FVec2I(950,300),250,FColor::RGBA8(50,0,0,100));
 
         //ctx.DrawArcAndres(canvas,FVec2I(950,300),250,13,250,FColor::RGBA8(50,0,0,100));
-        ctx.DrawArcAndresAA(canvas,FVec2I(950,300),250,13,250,FColor::RGBA8(50,0,0,100));
-        //ctx.DrawArcBresenhamAA(canvas,FVec2I(950,300),250,13,250,FColor::RGBA8(50,0,0,100));
+        //ctx.DrawArcAndresAA(canvas,FVec2I(950,300),250,13,250,FColor::RGBA8(50,0,0,100));
+        ctx.DrawArcBresenhamAA(canvas,FVec2I(950,300),250,13,250,FColor::RGBA8(50,0,0,100));
+        ctx.DrawArcBresenhamAA(canvas,FVec2I(450,300),250,311,95,FColor::RGBA8(50,0,0,100));
 
         //ctx.DrawEllipseAA( canvas, FVec2I( 500, 500), 100, 200 );
 
