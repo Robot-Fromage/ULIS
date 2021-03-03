@@ -75,8 +75,17 @@ FThreadPool_Private::ScheduleJob( const FJob* iJob )
 void
 FThreadPool_Private::WaitForCompletion()
 {
-    std::unique_lock< std::mutex > lock( mJobsQueueMutex );
-    cvJobsFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ) && ( mNumQueued == 0 ); } );
+    //std::unique_lock< std::mutex > lock( mJobsQueueMutex );
+    //cvJobsFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ) && ( mNumQueued == 0 ); } );
+
+    while( true )
+    {
+        std::lock( mJobsQueueMutex, mCommandsQueueMutex );
+        std::lock_guard< std::mutex > lock0( mJobsQueueMutex, std::adopt_lock );
+        std::lock_guard< std::mutex > lock1( mCommandsQueueMutex, std::adopt_lock );
+        if( mJobs.empty() && ( mNumBusy == 0 ) && ( mNumQueued == 0 ) && mCommands.empty() )
+            break;
+    }
 }
 
 void
