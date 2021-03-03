@@ -568,7 +568,7 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
                                               ,const FColor& iColor
                                               ,const FRectI& iClippingRect
                                               ,std::map< int,std::vector< int > >* iStoragePoints = NULL)
-{/*
+{
     FColor val = iColor;
     T maxAlpha = val.AlphaT<T>();
 
@@ -913,7 +913,7 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
                 (*iStoragePoints)[i - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
         }
         //We don't need to take care of vertical lines, since storagePoints is used to fill an ellipse using the exact same type of vertical lines
-    }*/
+    }
 }
 
 void DrawCircleAndres(            FBlock&                  iBlock
@@ -931,7 +931,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                                 , const bool               iFilled
                                 , const FRectI&            iClippingRect )
 {
-    /*
     //Clipping -----
     int x = 0;
     int y = iRadius; //We start from the top of the circle for the first octant
@@ -943,7 +942,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         clippingRect = FRectI::FromXYWH(0, 0, iBlock.Width() - 1, iBlock.Height() - 1);
     }
     
-    int shift45 = std::sin( FMath::DegToRad( 45 ) ) * iRadius;
+    int shift45 = int(std::sin( FMath::DegToRad( 45 ) ) * iRadius);
     FVec2I point0 = FVec2I( iCenter.x, iCenter.y - iRadius );
     FVec2I point45 = FVec2I( iCenter.x + shift45, iCenter.y - shift45 );
     FVec2I point90 = FVec2I( iCenter.x + iRadius, iCenter.y );
@@ -998,11 +997,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0� to 45�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y - y - 1, val ); // 0� to 45�
             
@@ -1087,17 +1086,17 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 }
             }
         }*/
-        /*
+        
         //Right and bottom clip
         while (xx <= limitX && yy <= limitY )
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0� to 45�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y - y - 1, val ); // 0� to 45�
             
@@ -1133,11 +1132,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90� to 45�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + y + 1, iCenter.y - x, val ); // 90� to 45�
             
@@ -1196,11 +1195,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90� to 45�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + y + 1, iCenter.y - x, val ); // 90� to 45�
             
@@ -1236,11 +1235,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90� to 135�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + y + 1, iCenter.y + x, val ); // 90� to 135�
             
@@ -1299,11 +1298,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90� to 135�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + y + 1, iCenter.y + x, val ); // 90� to 135�
             
@@ -1339,11 +1338,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180� to 135�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y + y + 1, val ); // 180� to 135�
             
@@ -1402,11 +1401,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180� to 135�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x + x, iCenter.y + y + 1, val ); // 180� to 135�
             
@@ -1442,11 +1441,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180� to 225�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y + y + 1, val ); // 180� to 225�
             
@@ -1505,11 +1504,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180� to 225�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y + y + 1, val ); // 180� to 225�
             
@@ -1546,11 +1545,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270� to 225�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - y - 1, iCenter.y + x, val );  // 270� to 225�
             
@@ -1609,11 +1608,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270� to 225�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - y - 1, iCenter.y + x, val );  // 270� to 225�
             
@@ -1650,11 +1649,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270� to 315�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - y - 1, iCenter.y - x, val ); // 270� to 315�
             
@@ -1713,11 +1712,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270� to 315�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - y - 1, iCenter.y - x, val ); // 270� to 315�
             
@@ -1754,11 +1753,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0� to 315�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y - y - 1, val ); // 0� to 315�
             
@@ -1817,11 +1816,11 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         {
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
-            val.SetAlphaT<T>( maxAlpha * alphaTop );
+            val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0� to 315�
             
-            val.SetAlphaT<T>( maxAlpha * (1 - alphaTop ) );
+            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
             
             iBlock.SetPixel( iCenter.x - x, iCenter.y - y - 1, val ); // 0� to 315�
             
@@ -1880,7 +1879,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++;
             }
         }
-    }*/
+    }
 }
 
 
