@@ -4795,7 +4795,7 @@ static void DrawEllipseAA( FBlock&                  iBlock
                          , const FColor&            iColor
                          , const bool               iFilled
                          , const FRectI&            iClippingRect )
-{/*
+{
     FRectI clippingRect = iClippingRect;
     clippingRect.w--;
     clippingRect.h--;
@@ -4806,8 +4806,8 @@ static void DrawEllipseAA( FBlock&                  iBlock
     }
 
     float angleTo45 = std::atan(- float(iB) / float(iA));
-    int shift45x = FMath::Abs(std::cos(angleTo45) * iA);
-    int shift45y = FMath::Abs(std::sin(angleTo45) * iB);
+    int shift45x = int(FMath::Abs(std::cos(angleTo45) * iA));
+    int shift45y = int(FMath::Abs(std::sin(angleTo45) * iB));
 
     FVec2I point0 = FVec2I(iCenter.x,iCenter.y - iB);
     FVec2I point45 = FVec2I(iCenter.x + shift45x,iCenter.y - shift45y);
@@ -5486,7 +5486,7 @@ static void DrawEllipseAA( FBlock&                  iBlock
             sigma += a2*(4 * y + 6);
             y++;
         }
-    }*/
+    }
 }
 
 
