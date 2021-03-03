@@ -456,7 +456,6 @@ static void InternalDrawQuadRationalBezierSeg( FBlock& iBlock
                                              , const FRectI& iClippingRect
                                              , std::map< int,std::vector< int > >* iStoragePoints = NULL)
 {
-    /*
     FColor val = iColor;
 
     int sx = x2-x1,sy = y2-y1;
@@ -470,7 +469,7 @@ static void InternalDrawQuadRationalBezierSeg( FBlock& iBlock
 
     if(cur != 0.0 && w > 0.0) {
         if(sx*(long)sx+sy*(long)sy > xx*xx+yy*yy) {
-            x2 = x0; x0 -= dx; y2 = y0; y0 -= dy; cur = -cur;
+            x2 = x0; x0 -= int(dx); y2 = y0; y0 -= int(dy); cur = -cur;
         }
         xx = 2.0*(4.0*w*sx*xx+dx*dx);
         yy = 2.0*(4.0*w*sy*yy+dy*dy);
@@ -488,14 +487,14 @@ static void InternalDrawQuadRationalBezierSeg( FBlock& iBlock
             cur = -(w+1.0)/2.0;
             w = sqrt(w);
             xy = 1.0/(w+1.0);
-            sx = floor((x0+2.0*w*x1+x2)*xy/2.0+0.5);
-            sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
+            sx = int(floor((x0+2.0*w*x1+x2)*xy/2.0+0.5));
+            sy = int(floor((y0+2.0*w*y1+y2)*xy/2.0+0.5));
             dx = floor((w*x1+x0)*xy+0.5);
             dy = floor((y1*w+y0)*xy+0.5);
-            InternalDrawQuadRationalBezierSeg(iBlock,x0,y0,dx,dy,sx,sy,cur,iColor,iClippingRect,iStoragePoints);
+            InternalDrawQuadRationalBezierSeg(iBlock,x0,y0,int(dx),int(dy),sx,sy,float(cur),iColor,iClippingRect,iStoragePoints);
             dx = floor((w*x1+x2)*xy+0.5);
             dy = floor((y1*w+y2)*xy+0.5);
-            InternalDrawQuadRationalBezierSeg(iBlock,sx,sy,dx,dy,x2,y2,cur,iColor,iClippingRect,iStoragePoints);
+            InternalDrawQuadRationalBezierSeg(iBlock,sx,sy,int(dx),int(dy),x2,y2,float(cur),iColor,iClippingRect,iStoragePoints);
             return;
         }
         err = dx+dy-xy;
@@ -569,7 +568,7 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
                                               ,const FColor& iColor
                                               ,const FRectI& iClippingRect
                                               ,std::map< int,std::vector< int > >* iStoragePoints = NULL)
-{
+{/*
     FColor val = iColor;
     T maxAlpha = val.AlphaT<T>();
 
