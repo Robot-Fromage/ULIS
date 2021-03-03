@@ -168,6 +168,8 @@ public:
         , eResamplingMethod iResamplingMethod
         , eBorderMode iBorderMode
         , const FColor& iBorderValue
+        , float iThreshold
+        , uint32 iPlotSize
     )
         : FSimpleBufferCommandArgs(
               iField
@@ -177,6 +179,8 @@ public:
         , resamplingMethod( iResamplingMethod )
         , borderMode( iBorderMode )
         , borderValue( iBorderValue )
+        , threshold( iThreshold )
+        , plotSize( iPlotSize )
     {}
 
     FBlock& mask;
@@ -184,6 +188,8 @@ public:
     eBorderMode borderMode;
     FColor borderValue;
     TArray< FCubicBezierControlPoint > points;
+    float threshold;
+    uint32 plotSize;
 };
 
 /////////////////////////////////////////////////////

@@ -10,6 +10,9 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Process/Transform/Transform.h"
+#include "Math/Math.h"
+#include "Math/Interpolation/Bezier.h"
+#include "Math/Interpolation/Spline.h"
 
 // Include SSE RGBA8 Implementation
 #ifdef ULIS_COMPILETIME_SSE_SUPPORT
@@ -194,6 +197,41 @@ InvokeProcessBezierDeformField(
 {
     FBlock& field = cargs->dst;
     FBlock& mask = cargs->mask;
+    std::vector< FSplineParametricSample > LUTV0;
+    std::vector< FSplineParametricSample > LUTV1;
+    CubicBezierGenerateLinearLUT( &LUTV0, cargs->points[0].point, cargs->points[0].ctrlCCW, cargs->points[3].ctrlCW, cargs->points[3].point, cargs->threshold );
+    CubicBezierGenerateLinearLUT( &LUTV1, cargs->points[1].point, cargs->points[1].ctrlCW, cargs->points[2].ctrlCCW, cargs->points[2].point, cargs->threshold );
+    const int max = static_cast< int >( FMath::Max( LUTV0.size(), LUTV1.size() ) );
+    const float maxf = static_cast< float >( max );
+
+    for( int i = 0; i < max; ++i ) {
+        float v = i / maxf;
+        int index_v0 = static_cast< int >( floor( v * LUTV0.size() ) );
+        int index_v1 = static_cast< int >( floor( v * LUTV1.size() ) );
+        const FVec2F& V0 = LUTV0[index_v0].point;
+        const FVec2F& V1 = LUTV1[index_v1].point;
+        FVec2F _v0 = V0 + ( cargs->points[0].ctrlCW  - cargs->points[0].point ) * ( 1.f - v ) + ( cargs->points[3].ctrlCCW - cargs->points[3].point ) * v;
+        FVec2F _v1 = V1 + ( cargs->points[1].ctrlCCW - cargs->points[1].point ) * ( 1.f - v ) + ( cargs->points[2].ctrlCW  - cargs->points[2].point ) * v;
+        float parametricDistortedV = ( LUTV0[index_v0].param + LUTV1[index_v1].param ) / 2.f;
+        std::vector< FSplineParametricSample > lutTemp;
+        CubicBezierGenerateLinearLUT( &lutTemp, V0, _v0, _v1, V1, cargs->threshold );
+        for( int i = 0; i < lutTemp.size(); ++i ) {
+            float parametricDistortedU = lutTemp[i].param;
+            FVec2F P = lutTemp[i].point;
+            int x = static_cast< int >( P.x );
+            int y = static_cast< int >( P.y );
+
+            for( uint32 i = 0; i < cargs->plotSize; ++i ) {
+                for( uint32 j = 0; j < cargs->plotSize; ++j ) {
+                    uint8* maskptr = reinterpret_cast< uint8* >( mask.PixelBits( x + i, y + j ) );
+                    float* fieldptr = reinterpret_cast< float* >( field.PixelBits( x + i, y + j ) );
+                    *maskptr = 0xFF;
+                    fieldptr[0] = parametricDistortedU;
+                    fieldptr[1] = parametricDistortedV;
+                }
+            }
+        }
+    }
 }
 
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleProcessBezierDeformField, FSimpleBufferJobArgs, FProcessBezierDeformFieldArgs, &InvokeProcessBezierDeformField );

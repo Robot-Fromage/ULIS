@@ -530,6 +530,8 @@ FContext::XProcessBezierDisplacementField(
     TArray< FEvent > eventAllocation( 2 );
     XAllocateBlockData( iField, dst_roi.w, dst_roi.h, Format_GAF, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, iNumWait, iWaitList, &eventAllocation[0] );
     XAllocateBlockData( iMask, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, 0, nullptr, &eventAllocation[1] );
+    // Only load fake geometry to avoid return on hollow block.
+    iMask.LoadFromData( nullptr, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
     FEvent eventClear;
     Clear( iMask, roi, iPolicy, 1, &eventAllocation[1], &eventClear );
 
@@ -542,6 +544,8 @@ FContext::XProcessBezierDisplacementField(
         , iResamplingMethod
         , iBorderMode
         , iBorderValue.ToFormat( iDestination.Format() )
+        , iThreshold
+        , iPlotSize
     );
     cargs->points.Reserve( 4 );
     for( int i = 0; i < 4; ++i )

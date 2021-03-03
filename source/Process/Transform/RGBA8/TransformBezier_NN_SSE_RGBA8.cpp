@@ -22,11 +22,10 @@ InvokeTransformBezierMT_NN_SSE_RGBA8(
     , const FTransformBezierCommandArgs* cargs
 )
 {
-    /*
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     uint8* ULIS_RESTRICT dst = jargs->dst;
-    const float*            field   = reinterpret_cast< const float* >( iField->ScanlineBits( jargs->line ) );
-    const uint8*            mask    = reinterpret_cast< const uint8* >( iMask->ScanlineBits( jargs->line ) );
+    const float*            field   = reinterpret_cast< const float* >( cargs->field.ScanlineBits( jargs->line ) );
+    const uint8*            mask    = reinterpret_cast< const uint8* >( cargs->mask.ScanlineBits( jargs->line ) );
     const int rangex = cargs->srcRect.w - 1;
     const int rangey = cargs->srcRect.h - 1;
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
@@ -40,7 +39,6 @@ InvokeTransformBezierMT_NN_SSE_RGBA8(
         field += 2;
         ++mask;
     }
-    */
 }
 
 ULIS_DEFINE_BEZIER_COMMAND_SPECIALIZATION( TransformBezierMT_NN_SSE_RGBA8 )
