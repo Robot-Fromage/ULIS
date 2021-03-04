@@ -17,7 +17,7 @@ main(int argc,char *argv[])
 {
     //_sleep(5000);
 
-    FThreadPool pool;
+    FThreadPool pool( 4 );
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_MEM );
@@ -38,7 +38,7 @@ main(int argc,char *argv[])
     int i = 0;
     while( 1 )
     {
-        ctx.Fill( canvas, canvas.Rect(), FColor::RGBA8( 0, 0, 0 ), policy_cache_efficient );
+        ctx.Fill( canvas, canvas.Rect(), FColor::RGBA8( 0, 0, 0 ), policy_mono_chunk );
         ctx.Finish();
         std::cout << i << std::endl;
         i++;
