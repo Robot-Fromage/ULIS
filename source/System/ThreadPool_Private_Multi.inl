@@ -194,7 +194,8 @@ FThreadPool_Private::ScheduleProcess()
             if( ready )
             {
                 const TArray< const FJob* >& jobs = cmd->Jobs();
-                for( uint64 i = 0; i < jobs.Size(); ++i )
+                const uint64 size = jobs.Size();
+                for( uint64 i = 0; i < size; ++i )
                     ScheduleJob( jobs[i] );
                 mNumQueued.fetch_sub( 1 );
             }
