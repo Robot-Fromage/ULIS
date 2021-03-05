@@ -517,24 +517,11 @@ static void InternalDrawQuadRationalBezierSeg( FBlock& iBlock
 
         clippingRect = clippingRect & bezierRect;
 
-        //Out
-        while((x0 < clippingRect.x || x0 > (clippingRect.x + clippingRect.w) || y0 < clippingRect.y || y0 > (clippingRect.y + clippingRect.h)) && (dy <= xy && dx >= xy))
+        while(dy <= xy && dx >= xy)
         {
-            if(iStoragePoints)
-            {
-                (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
-            }
-            if(x0 == x2 && y0 == y2)
-                return;
-            x1 = 2 * err > dy; y1 = 2*(err + yy) < -dy;
-            if(2 * err < dx || y1) { y0 += sy; dy += xy; err += dx += xx; }
-            if(2 * err > dx || x1) { x0 += sx; dx += xy; err += dy += yy; }
-        }
+            if( x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h) )
+                iBlock.SetPixel(x0,y0,val);
 
-        //In
-        while(x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h) && (dy <= xy && dx >= xy))
-        {
-            iBlock.SetPixel(x0,y0,val);
             if(iStoragePoints)
             {
                 (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
@@ -592,7 +579,7 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
     {
         if(sx*(long)sx+sy*(long)sy > xx*xx+yy*yy)
         {
-            x2 = x0; x0 -= dx; y2 = y0; y0 -= dy; cur = -cur;
+            x2 = x0; x0 -= int(dx); y2 = y0; y0 -= int(dy); cur = -cur;
         }
         xx = 2.0*(4.0*w*sx*xx+dx*dx);
         yy = 2.0*(4.0*w*sy*yy+dy*dy);
@@ -613,14 +600,14 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
             cur = -(w+1.0)/2.0;
             w = sqrt(w);
             xy = 1.0/(w+1.0);
-            sx = floor((x0+2.0*w*x1+x2)*xy/2.0+0.5);
-            sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
+            sx = int(floor((x0+2.0*w*x1+x2)*xy/2.0+0.5));
+            sy = int(floor((y0+2.0*w*y1+y2)*xy/2.0+0.5));
             dx = floor((w*x1+x0)*xy+0.5);
             dy = floor((y1*w+y0)*xy+0.5);
-            InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,y0,dx,dy,sx,sy,cur,iColor,iClippingRect,iStoragePoints);
+            InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,y0,int(dx),int(dy),sx,sy,float(cur),iColor,iClippingRect,iStoragePoints);
             dx = floor((w*x1+x2)*xy+0.5);
             dy = floor((y1*w+y2)*xy+0.5);
-            InternalDrawQuadRationalBezierSegAA<T>(iBlock,sx,sy,dx,dy,x2,y2,cur,iColor,iClippingRect,iStoragePoints);
+            InternalDrawQuadRationalBezierSegAA<T>(iBlock,sx,sy,int(dx),int(dy),x2,y2,float(cur),iColor,iClippingRect,iStoragePoints);
             return;
         }
         err = dx+dy-xy;
@@ -635,79 +622,24 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
             clippingRect = FRectI::FromXYWH(0,0,iBlock.Width() - 1,iBlock.Height() - 1);
         }
 
-        //Out
-        while((x0 < clippingRect.x || x0 > (clippingRect.x + clippingRect.w) || y0 < clippingRect.y || y0 > (clippingRect.y + clippingRect.h)) && (dy < dx))
+        while(dy < dx)
         {
             cur = FMath::Min(dx - xy,xy - dy);
             ed = FMath::Max(dx - xy,xy - dy);
             ed += (2 * ed * cur * cur / (4.0 * ed * ed + cur * cur));
 
-            float errorRatio = (err - dx - dy + xy) / ed;
+            float errorRatio = float((err - dx - dy + xy) / ed);
 
-            x1 = maxAlpha * (1 - FMath::Abs(errorRatio));
+            T alphaTop = T(maxAlpha * (1 - FMath::Abs(errorRatio)));
             f = (2 * err + dy) < 0;
 
-            if(x1 <= maxAlpha)
+            if(alphaTop <= maxAlpha)
             {
-                if(iStoragePoints && errorRatio >= 0)
+                if( x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h) )
                 {
-                    (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
+                    val.SetAlphaT<T>(alphaTop);
+                    iBlock.SetPixel(x0,y0,val);
                 }
-            }
-
-            if(f)
-            {
-                if(y0 == y2)
-                    return;
-                if((dx - err) < ed)
-                {
-                    if(iStoragePoints && errorRatio <= 0)
-                    {
-                        (*iStoragePoints)[x0 + sx - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
-                    }
-                }
-            }
-
-            if(2 * err + dx > 0)
-            {
-                if(x0 == x2)
-                    return;
-                if((err - dy) < ed)
-                {
-                    if(iStoragePoints && errorRatio >= 0)
-                    {
-                        (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 + sy - (*iStoragePoints)[0][1]);
-                    }
-                }
-                x0 += sx;
-                dx += xy;
-                err += dy += yy;
-            }
-
-            if(f)
-            {
-                y0 += sy;
-                dy += xy;
-                err += dx += xx;
-            }
-        }
-
-        //Border Case
-        while((x0 == clippingRect.x || x0 == (clippingRect.x + clippingRect.w) || y0 == clippingRect.y || y0 == (clippingRect.y + clippingRect.h)) && (dy < dx))
-        {
-            cur = FMath::Min(dx - xy,xy - dy);
-            ed = FMath::Max(dx - xy,xy - dy);
-            ed += (2 * ed * cur * cur / (4.0 * ed * ed + cur * cur));
-
-            float errorRatio = (err - dx - dy + xy) / ed;
-
-            x1 = maxAlpha * (1 - FMath::Abs(errorRatio));
-            f = (2 * err + dy) < 0;
-
-            if(x1 <= maxAlpha)
-            {
-                val.SetAlphaT<T>(x1);
-                iBlock.SetPixel(x0,y0,val);
 
                 if(iStoragePoints && errorRatio >= 0)
                 {
@@ -721,83 +653,14 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
                     return;
                 if((dx - err) < ed)
                 {
-                    //float errorRatio = 1 - ( dx - err ) / ed ;
-                    //float alpha = FMath::Abs( errorRatio );
-
-                    //val.SetAlphaT<T>( MaxAlpha * alpha );
-                    //iBlock.SetPixel( x0 + sx, y0, val );
-
-                    if(iStoragePoints && errorRatio <= 0)
-                    {
-                        (*iStoragePoints)[x0 + sx - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
-                    }
-                }
-            }
-
-            if(2 * err + dx > 0)
-            {
-                if(x0 == x2)
-                    return;
-                if((err - dy) < ed)
-                {
-                    //float errorRatio = 1 - ( err - dy ) / ed;
-                    //float alpha = FMath::Abs( errorRatio );
-
-                    //val.SetAlphaT<T>( MaxAlpha * alpha );
-                    //iBlock.SetPixel( x0, y0 + sy, val );
-
-                    if(iStoragePoints && errorRatio >= 0)
-                    {
-                        (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 + sy - (*iStoragePoints)[0][1]);
-                    }
-                }
-                x0 += sx;
-                dx += xy;
-                err += dy += yy;
-            }
-
-            if(f)
-            {
-                y0 += sy;
-                dy += xy;
-                err += dx += xx;
-            }
-        }
-
-        //In
-        while(x0 > clippingRect.x && x0 < (clippingRect.x + clippingRect.w) && y0 > clippingRect.y && y0 < (clippingRect.y + clippingRect.h) && (dy < dx))
-        {
-            cur = FMath::Min(dx - xy,xy - dy);
-            ed = FMath::Max(dx - xy,xy - dy);
-            ed += (2 * ed * cur * cur / (4.0 * ed * ed + cur * cur));
-
-            float errorRatio = (err - dx - dy + xy) / ed;
-
-            x1 = maxAlpha * (1 - FMath::Abs(errorRatio));
-            f = (2 * err + dy) < 0;
-
-            if(x1 <= maxAlpha)
-            {
-                val.SetAlphaT<T>(x1);
-                iBlock.SetPixel(x0,y0,val);
-
-                if(iStoragePoints && errorRatio >= 0)
-                {
-                    (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
-                }
-            }
-
-            if(f)
-            {
-                if(y0 == y2)
-                    return;
-                if((dx - err) < ed)
-                {
-                    float errorRatio = 1 - (dx - err) / ed ;
+                    float errorRatio = float(1 - (dx - err) / ed);
                     float alpha = FMath::Abs(errorRatio);
 
-                    val.SetAlphaT<T>(maxAlpha * alpha);
-                    iBlock.SetPixel(x0 + sx,y0,val);
+                    if(x0 > clippingRect.x && x0 < (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h))
+                    {
+                        val.SetAlphaT<T>(T(maxAlpha * alpha));
+                        iBlock.SetPixel(x0 + sx,y0,val);
+                    }
 
                     if(iStoragePoints && errorRatio <= 0)
                     {
@@ -812,83 +675,14 @@ static void InternalDrawQuadRationalBezierSegAA(FBlock& iBlock
                     return;
                 if((err - dy) < ed)
                 {
-                    float errorRatio = 1 - (err - dy) / ed;
+                    float errorRatio = float(1 - (err - dy) / ed);
                     float alpha = FMath::Abs(errorRatio);
 
-                    val.SetAlphaT<T>(maxAlpha * alpha);
-                    iBlock.SetPixel(x0,y0 + sy,val);
-
-                    if(iStoragePoints && errorRatio >= 0)
+                    if(x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 > clippingRect.y && y0 < (clippingRect.y + clippingRect.h))
                     {
-                        (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 + sy - (*iStoragePoints)[0][1]);
+                        val.SetAlphaT<T>(T(maxAlpha * alpha));
+                        iBlock.SetPixel(x0,y0 + sy,val);
                     }
-                }
-                x0 += sx;
-                dx += xy;
-                err += dy += yy;
-            }
-
-            if(f)
-            {
-                y0 += sy;
-                dy += xy;
-                err += dx += xx;
-            }
-        }
-
-        //Border Case
-        while((x0 == clippingRect.x || x0 == (clippingRect.x + clippingRect.w) || y0 == clippingRect.y || y0 == (clippingRect.y + clippingRect.h)) && (dy < dx))
-        {
-            cur = FMath::Min(dx - xy,xy - dy);
-            ed = FMath::Max(dx - xy,xy - dy);
-            ed += (2 * ed * cur * cur / (4.0 * ed * ed + cur * cur));
-
-            float errorRatio = (err - dx - dy + xy) / ed;
-
-            x1 = maxAlpha * (1 - FMath::Abs(errorRatio));
-            f = (2 * err + dy) < 0;
-
-            if(x1 <= maxAlpha)
-            {
-                val.SetAlphaT<T>(x1);
-                iBlock.SetPixel(x0,y0,val);
-
-                if(iStoragePoints && errorRatio >= 0)
-                {
-                    (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
-                }
-            }
-
-            if(f)
-            {
-                if(y0 == y2)
-                    return;
-                if((dx - err) < ed)
-                {
-                    //float errorRatio = 1 - ( dx - err ) / ed ;
-                    //float alpha = FMath::Abs( errorRatio );
-
-                    //val.SetAlphaT<T>( MaxAlpha * alpha );
-                    //iBlock.SetPixel( x0 + sx, y0, val );
-
-                    if(iStoragePoints && errorRatio <= 0)
-                    {
-                        (*iStoragePoints)[x0 + sx - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
-                    }
-                }
-            }
-
-            if(2 * err + dx > 0)
-            {
-                if(x0 == x2)
-                    return;
-                if((err - dy) < ed)
-                {
-                    //float errorRatio = 1 - ( err - dy ) / ed;
-                    //float alpha = FMath::Abs( errorRatio );
-
-                    //val.SetAlphaT<T>( MaxAlpha * alpha );
-                    //iBlock.SetPixel( x0, y0 + sy, val );
 
                     if(iStoragePoints && errorRatio >= 0)
                     {
@@ -5508,7 +5302,7 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
                                 , const FColor&            iColor
                                 , const bool               iFilled
                                 , const FRectI&            iClippingRect )
-{/*
+{
     if(iRotationDegrees % 180 == 0)
     {
         DrawEllipseAA<T>(iBlock,iCenter,iA,iB,iColor,iFilled,iClippingRect); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
@@ -5520,29 +5314,43 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
         return;
     }
 
-    int a = iA;
-    int b = iB;
-    int rotation = ((iRotationDegrees % 180) + 180) % 180; //Positive modulo
+    int a = 0;
+    int b = 0;
+    int rotation = 0;
+    int rotationDegreesBase = iRotationDegrees;
+    if( iA > iB )
+    {
+        a = iA;
+        b = iB;
+        rotation = ((iRotationDegrees % 180) + 180) % 180; //Positive modulo
+    }
+    else
+    {
+        rotationDegreesBase+=90;
+        a = iB;
+        b = iA;
+        rotation = ((rotationDegreesBase % 180) + 180 ) % 180; //Positive modulo
+    }
 
-    float dx = (long)a*a;
-    float dy = (long)b*b;
-    float s = std::sin(FMath::DegToRad(rotation));
+    float dx = float(a*a);
+    float dy = float(b*b);
+    float s = float(std::sin(FMath::DegToRad(rotation)));
     float dz = (dx - dy) * s;
     dx = std::sqrt(dx - dz * s);
     dy = std::sqrt(dy + dz * s);
-    a = dx + 0.5;
-    b = dy + 0.5;
+    a = int(dx + 0.5);
+    b = int(dy + 0.5);
     dz = dz * a * b / (dx * dy);
 
     int x0 = iCenter.x - a;
     int y0 = iCenter.y - b;
     int x1 = iCenter.x + a;
     int y1 = iCenter.y + b;
-    dz = (4 * dz * std::cos(FMath::DegToRad(rotation)));
+    dz = float(4 * dz * std::cos(FMath::DegToRad(rotation)));
 
 
-    dx = x1 - x0;
-    dy = y1 - y0;
+    dx = float(x1 - x0);
+    dy = float(y1 - y0);
     float w = dx * dy;
     if(w != 0.0)
         w = (w - dz) / (w + w);
@@ -5550,17 +5358,17 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
     if(w > 1 || w < 0)
         return;
 
-    dx = std::floor(dx * w + 0.5);
-    dy = std::floor(dy * w + 0.5);
+    dx = float(std::floor(dx * w + 0.5));
+    dy = float(std::floor(dy * w + 0.5));
 
 
 
     if(!iFilled)
     {
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,y0 + dy,x0,y0,x0 + dx,y0,1 - w,iColor,iClippingRect); //top left
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,y0 + dy,x0,y1,x1 - dx,y1,w,iColor,iClippingRect); //bottom left
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,y1 - dy,x1,y1,x1 - dx,y1,1 - w,iColor,iClippingRect); //bottom right
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,y1 - dy,x1,y0,x0 + dx,y0,w,iColor,iClippingRect); //top right
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,int(y0 + dy),x0,y0,int(x0 + dx),y0,1 - w,iColor,iClippingRect); //top left
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,int(y0 + dy),x0,y1,int(x1 - dx),y1,w,iColor,iClippingRect); //bottom left
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,int(y1 - dy),x1,y1,int(x1 - dx),y1,1 - w,iColor,iClippingRect); //bottom right
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,int(y1 - dy),x1,y0,int(x0 + dx),y0,w,iColor,iClippingRect); //top right
     } else //Filled Ellipse
     {
         //               x  y
@@ -5612,18 +5420,18 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
         // Depending of the angle of the ellipse, we either get the outer antialiased pixels or the inner antialiased pixels of the ellipse. If we get the outer pixels, we need to draw from the less outer one on top to the less outer one on bottom, and shift them one pixel inwards so we don't draw on outer pixels at all
         // If we get the inner pixels, we draw from the less inner one on top to the less inner one on bottom, no need to shift the pixels, we're already inside the ellipse, so we can fill from there.
 
-        int shift = ((((iRotationDegrees + 45) % 180) + 180) % 180) < 90 ? 0 : 1;
+        int shift = ((((rotationDegreesBase + 45) % 180) + 180) % 180) < 90 ? 0 : 1;
 
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,y0 + dy,x0,y0,x0 + dx,y0,1 - w,iColor,iClippingRect,&storagePoints); //top left
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,int(y0 + dy),x0,y0,int(x0 + dx),y0,1 - w,iColor,iClippingRect,&storagePoints); //top left
         fillPointsForFill(true,shift);
 
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,y0 + dy,x0,y1,x1 - dx,y1,w,iColor,iClippingRect,&storagePoints); //bottom left
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x0,int(y0 + dy),x0,y1,int(x1 - dx),y1,w,iColor,iClippingRect,&storagePoints); //bottom left
         fillPointsForFill(false,shift);
 
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,y1 - dy,x1,y1,x1 - dx,y1,1 - w,iColor,iClippingRect,&storagePoints); //bottom right
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,int(y1 - dy),x1,y1,int(x1 - dx),y1,1 - w,iColor,iClippingRect,&storagePoints); //bottom right
         fillPointsForFill(false,shift);
 
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,y1 - dy,x1,y0,x0 + dx,y0,w,iColor,iClippingRect,&storagePoints); //top right
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,x1,int(y1 - dy),x1,y0,int(x0 + dx),y0,w,iColor,iClippingRect,&storagePoints); //top right
         fillPointsForFill(true,shift);
 
         for(std::map< int,std::vector< int > >::iterator it=pointsForFill.begin(); it!=pointsForFill.end(); ++it)
@@ -5647,7 +5455,7 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
                 DrawLine(iBlock,FVec2I(iCenter.x + it->first,iCenter.y + minY),FVec2I(iCenter.x + it->first,iCenter.y + maxY),iColor,iClippingRect);
             }
         }
-    }*/
+    }
 }
 
 
