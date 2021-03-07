@@ -5485,7 +5485,7 @@ static void DrawPolygonAA( FBlock&                      iBlock
         return;
 
     int j = int(iPoints.size() - 1);
-    for(int i = 0; i < iPoints.size(); i++)
+    for(int i = 0; i < iPoints.size(); i++)  //TODO ? Drawing can be cleaner by blending the lines together instead of drawing them one by one
     {
         DrawLineAA<T>(iBlock,iPoints.at(i),iPoints.at(j),iColor,iClippingRect);
         j = i;
@@ -5585,7 +5585,7 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
                                  , const float                     iWeight
                                  , const FColor&                   iColor
                                  , const FRectI&                   iClippingRect )
-{/*
+{
     int x = iCtrlPt0.x - 2 * iCtrlPt1.x + iCtrlPt2.x;
     int y = iCtrlPt0.y - 2 * iCtrlPt1.y + iCtrlPt2.y;
     double dx = iCtrlPt0.x - iCtrlPt1.x;
@@ -5610,9 +5610,9 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
             if(FMath::Abs(dx * y) > FMath::Abs(dy * x))
             {
                 pt0.x = pt2.x;
-                pt2.x = dx + pt1.x;
+                pt2.x = int(dx + pt1.x);
                 pt0.y = pt2.y;
-                pt2.y = dy + pt1.y;
+                pt2.y = int(dy + pt1.y);
             }
         }
         if(pt0.x == pt2.x || weight == 1.0)
@@ -5632,13 +5632,13 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
         dy = (dt * dt * (pt0.y - 2.0 * weight * pt1.y + pt2.y) + 2.0 * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
         dWeight = dt * (weight - 1.0) + 1.0;
         dWeight *= (dWeight * dq);
-        weight = ((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq);
-        x = std::floor(dx + 0.5);
-        y = std::floor(dy + 0.5);
+        weight = float(((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq));
+        x = int(std::floor(dx + 0.5));
+        y = int(std::floor(dy + 0.5));
         dy = (dx - pt0.x) * (pt1.y - pt0.y) / (pt1.x - pt0.x) + pt0.y;
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,x,std::floor(dy + 0.5),x,y,dWeight,iColor,iClippingRect);
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,x,int(std::floor(dy + 0.5)),x,y,float(dWeight),iColor,iClippingRect);
         dy = (dx - pt2.x) * (pt1.y - pt2.y) / (pt1.x - pt2.x) + pt2.y;
-        pt1.y = std::floor(dy + 0.5);
+        pt1.y = int(std::floor(dy + 0.5));
         pt0.x = pt1.x = x;
         pt0.y = y;
     }
@@ -5662,18 +5662,18 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
         dy = (dt * dt * (pt0.y - 2.0 * weight * pt1.y + pt2.y) + 2.0 * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
         dWeight = dt * (weight - 1.0) + 1.0;
         dWeight *= (dWeight * dq);
-        weight = ((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq);
-        x = std::floor(dx + 0.5);
-        y = std::floor(dy + 0.5);
+        weight = float(((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq));
+        x = int(std::floor(dx + 0.5));
+        y = int(std::floor(dy + 0.5));
         dx = (pt1.x - pt0.x) * (dy - pt0.y) / (pt1.y - pt0.y) + pt0.x;
-        InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,std::floor(dx + 0.5),y,x,y,dWeight,iColor,iClippingRect);
+        InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,int(std::floor(dx + 0.5)),y,x,y,float(dWeight),iColor,iClippingRect);
 
         dx = (pt1.x - pt2.x) * (dy - pt2.y) / (pt1.y - pt2.y) + pt2.x;
-        pt1.x = std::floor(dx + 0.5);
+        pt1.x = int(std::floor(dx + 0.5));
         pt0.x = x;
         pt0.y = pt1.y = y;
     }
-    InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);*/
+    InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);
 }
 
 ULIS_NAMESPACE_END

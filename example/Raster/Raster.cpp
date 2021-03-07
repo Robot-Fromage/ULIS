@@ -34,8 +34,8 @@ main(int argc,char *argv[])
     ctx.Clear(canvas);
     ctx.Finish();
     {
-        //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 2154, 3254 ), FColor::RGBA8(255,0,0, 255) );
-        //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 600, 400 ), FColor::RGBAF(0,0,0,1) );
+        //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBA8(255,0,0, 255) );
+        //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBAF(1,0,0,1) );
         
         //ctx.DrawRectangle( canvas, FVec2I( 200, 200 ), FVec2I( 300, 400 ), FColor::RGBA8( 0, 255, 0, 255 ), true);
         //ctx.DrawCircleAndres( canvas, FVec2I( 300, 300 ), 250, FColor::RGBA8(0,0,0,255) );
@@ -74,15 +74,18 @@ main(int argc,char *argv[])
 
         ctx.DrawQuadraticBezier( canvas, FVec2I( 150, 150 ),  FVec2I( 250, 126 ), FVec2I( 72, 59 ), 1 );*/
 
-        std::vector< FVec2I > points;
-        points.push_back( FVec2I( 500,500 ));
-        points.push_back(FVec2I(500,500));
-        points.push_back(FVec2I(383,185));
-        points.push_back(FVec2I(142,875));
-        points.push_back(FVec2I(365,24));
+        /*std::vector< FVec2I > points;
+        points.push_back( FVec2I( 381, 144 ));
+        points.push_back(FVec2I(211,586));
+        points.push_back(FVec2I(511,234));
+        points.push_back(FVec2I(158,236));
+        points.push_back(FVec2I(502,589));
 
-        ctx.DrawPolygonAA( canvas, points, FColor::RGBA8(0,200,0, 155), false);
+        ctx.DrawPolygon( canvas, points, FColor::RGBA8(0,200,0, 155), false);*/
 
+        //ctx.DrawLineAA( canvas, FVec2F( 381, 144 ), FVec2F( 211, 586 ), FColor::RGBA8(0,200,0,155) );
+
+        ctx.DrawQuadraticBezierAA( canvas, FVec2F( 211, 586 ), FVec2I(511,234), FVec2I(502,589), 1.0, FColor::RGBA8(0,200,0,155) );
 
         ctx.Finish();
     }
