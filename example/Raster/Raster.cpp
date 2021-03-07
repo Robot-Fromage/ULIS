@@ -22,7 +22,7 @@ main(int argc,char *argv[])
 {
     FThreadPool pool;
     FCommandQueue queue(pool);
-    eFormat fmt = Format_RGBA8;
+    eFormat fmt = Format_RGBAF;
     FContext ctx(queue,fmt,PerformanceIntent_AVX);
     FHardwareMetrics hw;
     FSchedulePolicy policy_cache_efficient(ScheduleRun_Multi,ScheduleMode_Chunks,ScheduleParameter_Length,hw.L1CacheSize());
@@ -57,7 +57,8 @@ main(int argc,char *argv[])
         
         //ctx.DrawRotatedEllipse(canvas,FVec2I(500,800),300,100,285,FColor::RGBA8(50,0,0,100),true);
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(500,800),100,300,285,FColor::RGBA8(50,0,0,100),true);
-        ctx.DrawRotatedEllipseAA(canvas,FVec2I(200,200),320,750,148,FColor::RGBA8(50,0,0,100),true);
+        //ctx.DrawRotatedEllipseAA(canvas,FVec2I(200,200),320,750,148,FColor::RGBAF(0.2,0,0,0.45),true);
+        
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(352,400),215,120,124,FColor::RGBA8(50,0,0,100), true);
 
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(800,800),458,236,148,FColor::RGBA8(50,0,0,100), true);
@@ -73,10 +74,20 @@ main(int argc,char *argv[])
 
         ctx.DrawQuadraticBezier( canvas, FVec2I( 150, 150 ),  FVec2I( 250, 126 ), FVec2I( 72, 59 ), 1 );*/
 
+        std::vector< FVec2I > points;
+        points.push_back( FVec2I( 500,500 ));
+        points.push_back(FVec2I(500,500));
+        points.push_back(FVec2I(383,185));
+        points.push_back(FVec2I(142,875));
+        points.push_back(FVec2I(365,24));
+
+        ctx.DrawPolygonAA( canvas, points, FColor::RGBA8(0,200,0, 155), false);
+
+
         ctx.Finish();
     }
 
-    FBlock canvasOut(1024,1024,Format_RGBA8);
+    FBlock canvasOut(800,800,Format_RGBA8);
     ctx.ConvertFormat( canvas, canvasOut );
 
     ctx.Finish();

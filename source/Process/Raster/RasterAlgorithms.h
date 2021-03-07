@@ -5480,11 +5480,11 @@ static void DrawPolygonAA( FBlock&                      iBlock
                          , const FColor&                iColor
                          , const bool                   iFilled
                          , const FRectI&                iClippingRect )
-{/*
+{
     if(iPoints.size() < 3)
         return;
 
-    int j = iPoints.size() - 1;
+    int j = int(iPoints.size() - 1);
     for(int i = 0; i < iPoints.size(); i++)
     {
         DrawLineAA<T>(iBlock,iPoints.at(i),iPoints.at(j),iColor,iClippingRect);
@@ -5510,25 +5510,29 @@ static void DrawPolygonAA( FBlock&                      iBlock
             if(minY > iPoints[i].y)
                 minY = iPoints[i].y;
         }
+        minX++;
+        maxX--;
+        minY++;
+        maxY--;
 
         //We go through the polygon by scanning it top to bottom
         for(int y = minY; y <= maxY; y++)
         {
             std::vector< int > nodesX;
-            int j = iPoints.size() - 1;
+            int j = int(iPoints.size() - 1);
 
             for(int i = 0; i < iPoints.size(); i++)
             {
                 if((iPoints[i].y < y && iPoints[j].y >= y) || (iPoints[j].y < y && iPoints[i].y >= y))
                 {
-                    nodesX.push_back(iPoints[i].x  + double(y - iPoints[i].y) / double(iPoints[j].y - iPoints[i].y) * (iPoints[j].x - iPoints[i].x));
+                    nodesX.push_back(int(iPoints[i].x  + double(y - iPoints[i].y) / double(iPoints[j].y - iPoints[i].y) * (iPoints[j].x - iPoints[i].x)));
                 }
                 j = i;
             }
 
             //Sorting the nodes on X
             int i = 0;
-            int size = nodesX.size() - 1;
+            int size = int(nodesX.size() - 1);
             while(i < size)
             {
                 if(nodesX[i] > nodesX[i+1])
@@ -5559,7 +5563,7 @@ static void DrawPolygonAA( FBlock&                      iBlock
                 }
             }
         }
-    }*/
+    }
 }
 
 
