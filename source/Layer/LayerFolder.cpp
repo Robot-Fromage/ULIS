@@ -36,7 +36,7 @@ FLayerFolder::Layers() const
 }
 
 void
-FLayerFolder::AddLayer( ILayer* iLayer, int iIndex = -1 )
+FLayerFolder::AddLayer( ILayer* iLayer, int iIndex )
 {
     mLayers.Insert( iIndex, iLayer );
 }
