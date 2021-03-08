@@ -11,6 +11,8 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Image/ColorSpace.h"
+#include "Image/Format.h"
 #include "Layer/Layer.h"
 #include "Layer/LayerImage.h"
 #include "Layer/LayerFolder.h"
@@ -21,7 +23,32 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The FLayerStack class provides a class to store a layer stack
 ///             for painting applications.
 class ULIS_API FLayerStack
+    : public IHasFormat
+    , public IHasColorSpace
 {
+public:
+    ~FLayerStack();
+    FLayerStack(
+          uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat = eFormat::Format_RGBA8
+        , const FColorSpace* iColorSpace = nullptr
+    );
+
+    FLayerStack( const FLayerStack& ) = delete;
+    FLayerStack& operator=( const FLayerStack& ) = delete;
+
+public:
+    uint16 Width() const;
+    uint16 Height() const;
+    uint32 Area() const;
+    FRectI Rect() const;
+
+    FLayerFolder& Root();
+    const FLayerFolder& Root() const;
+
+private:
+    FLayerFolder mRoot;
 };
 
 ULIS_NAMESPACE_END

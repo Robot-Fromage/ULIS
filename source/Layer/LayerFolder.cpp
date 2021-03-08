@@ -12,5 +12,40 @@
 #include "Layer/LayerFolder.h"
 
 ULIS_NAMESPACE_BEGIN
+
+FLayerFolder::~FLayerFolder()
+{
+}
+
+FLayerFolder::FLayerFolder( const FString& iName )
+    : ILayer( Layer_Folder, iName )
+    , mLayers()
+{
+}
+
+TArray< ILayer* >&
+FLayerFolder::Layers()
+{
+    return  mLayers;
+}
+
+const TArray< ILayer* >&
+FLayerFolder::Layers() const
+{
+    return  mLayers;
+}
+
+void
+FLayerFolder::AddLayer( ILayer* iLayer, int iIndex = -1 )
+{
+    mLayers.Insert( iIndex, iLayer );
+}
+
+void
+FLayerFolder::RemoveLayer( int iIndex )
+{
+    mLayers.Erase( iIndex, 1 );
+}
+
 ULIS_NAMESPACE_END
 

@@ -11,14 +11,40 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "String/String.h"
 
 ULIS_NAMESPACE_BEGIN
+enum eLayerType
+{
+    Layer_Image,
+    Layer_Folder,
+};
+
 /////////////////////////////////////////////////////
 /// @class      ILayer
 /// @brief      The ILayer class provides a base abstract class to store a layer
 ///             in a layer stack for painting applications.
 class ULIS_API ILayer
 {
+public:
+    virtual ~ILayer() = 0;
+    ILayer( eLayerType iType );
+    ILayer( eLayerType iType, const FString& iName );
+
+public:
+    eLayerType Type() const;
+    const FString& Name() const;
+    void SetName( const FString& iName );
+    bool Locked() const;
+    bool Visible() const;
+    void SetLocked( bool iValue );
+    void SetVisible( bool iValue );
+
+private:
+    eLayerType mType;
+    FString mName;
+    bool mLocked;
+    bool mVisible;
 };
 
 ULIS_NAMESPACE_END

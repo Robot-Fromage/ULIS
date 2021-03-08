@@ -10,7 +10,46 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/LayerImage.h"
+#include "Image/Block.h"
 
 ULIS_NAMESPACE_BEGIN
+
+FLayerImage::~FLayerImage()
+{
+    delete  mBlock;
+}
+
+FLayerImage::FLayerImage( const FString& iName, const FVec2F& iSize, eFormat iFormat )
+    : ILayer( eLayerType::Layer_Image, iName )
+    , mAlphaLock( false )
+    , mBlock( nullptr )
+{
+    mBlock = new FBlock( iSize.x, iSize.y, iFormat );
+}
+
+FBlock&
+FLayerImage::Block()
+{
+    return  *mBlock;
+}
+
+const FBlock&
+FLayerImage::Block() const
+{
+    return  *mBlock;
+}
+
+bool
+FLayerImage::IsAlphaLocked() const
+{
+    return  mAlphaLock;
+}
+
+void
+FLayerImage::SetAlphaLocked( bool iValue )
+{
+    mAlphaLock = iValue;
+}
+
 ULIS_NAMESPACE_END
 

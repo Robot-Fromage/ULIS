@@ -12,6 +12,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Layer.h"
+#include "Memory/Array.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -19,7 +20,23 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The FLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
 class ULIS_API FLayerFolder
+    : public ILayer
 {
+public:
+    ~FLayerFolder() override;
+    FLayerFolder( const FString& iName );
+
+    FLayerFolder( const FLayerFolder& ) = delete;
+    FLayerFolder& operator=( const FLayerFolder& ) = delete;
+
+public:
+    TArray< ILayer* >& Layers();
+    const TArray< ILayer* >& Layers() const;
+    void AddLayer( ILayer* iLayer, int iIndex = -1 );
+    void RemoveLayer( int iIndex );
+
+private:
+    TArray< ILayer* > mLayers;
 };
 
 ULIS_NAMESPACE_END
