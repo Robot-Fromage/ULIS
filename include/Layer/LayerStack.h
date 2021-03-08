@@ -47,7 +47,18 @@ public:
     FLayerFolder& Root();
     const FLayerFolder& Root() const;
 
+    void Reset(
+          uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat = eFormat::Format_RGBA8
+        , const FColorSpace* iColorSpace = nullptr
+    );
+
+    bool CheckSanity() const;
+
 private:
+    uint16 mWidth;
+    uint16 mHeight;
     FLayerFolder mRoot;
 };
 

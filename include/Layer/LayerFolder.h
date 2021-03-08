@@ -15,6 +15,9 @@
 #include "Memory/Array.h"
 
 ULIS_NAMESPACE_BEGIN
+
+template class ULIS_API TArray< ILayer* >;
+
 /////////////////////////////////////////////////////
 /// @class      FLayerFolder
 /// @brief      The FLayerFolder class provides a class to store a folder of
@@ -34,6 +37,7 @@ public:
     const TArray< ILayer* >& Layers() const;
     void AddLayer( ILayer* iLayer, int iIndex = -1 );
     void RemoveLayer( int iIndex );
+    void Reset();
 
 private:
     TArray< ILayer* > mLayers;

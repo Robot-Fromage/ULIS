@@ -15,6 +15,7 @@ ULIS_NAMESPACE_BEGIN
 
 FLayerFolder::~FLayerFolder()
 {
+    Reset();
 }
 
 FLayerFolder::FLayerFolder( const FString& iName )
@@ -45,6 +46,15 @@ void
 FLayerFolder::RemoveLayer( int iIndex )
 {
     mLayers.Erase( iIndex, 1 );
+}
+
+void
+FLayerFolder::Reset()
+{
+    for( uint64 i = 0; i < mLayers.Size(); ++i ) {
+        delete  mLayers[i];
+    }
+    mLayers.Clear();
 }
 
 ULIS_NAMESPACE_END
