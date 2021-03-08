@@ -57,8 +57,10 @@ FCommand::FCommand(
 
     // Start Enqueuing Jobs
     // iSched( this, iPolicy, iContiguous, iForceMonoChunk );
-
     mEvent->Bind( this, iNumWait, iWaitList, iEventGeometry );
+
+    if( mPolicy.TimePolicy() == eScheduleTimePolicy::ScheduleTime_Sync )
+        ProcessAsyncScheduling();
 }
 
 const ICommandArgs*
