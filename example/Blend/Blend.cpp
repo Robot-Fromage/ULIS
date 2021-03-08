@@ -37,9 +37,6 @@ main( int argc, char *argv[] ) {
     FSchedulePolicy policy_sync_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
     FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
-    // Gather start time to output the time it took to perform the blend composition
-    auto startTime = std::chrono::steady_clock::now();
-
     // Create both "hollow" blocks Base and Over.
     FBlock blockBase;
     FBlock blockOver;
@@ -81,6 +78,9 @@ main( int argc, char *argv[] ) {
     // The caller is responsible for destructing the blockCanvas object here too.
     // The block has the same format ULIS_FORMAT_RGBA8 as requested for the two blocks before.
     FBlock* blockCanvas = new  FBlock( w, h, fmt );
+
+    // Gather start time to output the time it took to perform the blend composition
+    auto startTime = std::chrono::steady_clock::now();
 
     // Start processing the blocks
     // We will first tile the base block layout on a regular grid in the blockCanvas block
