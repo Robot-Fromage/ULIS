@@ -41,6 +41,11 @@ FCommand::FCommand(
     : mArgs( iArgs )
     , mEvent( nullptr )
     , mJobs( TArray< const FJob* >() )
+    , mSched( iSched )
+    , mPolicy( iPolicy )
+    , mContiguous( iContiguous )
+    , mForceMonoChunk( iForceMonoChunk )
+    , mScheduled( false )
 {
     // Bind Event
     if( iEvent ) {
@@ -51,7 +56,7 @@ FCommand::FCommand(
     }
 
     // Start Enqueuing Jobs
-    iSched( this, iPolicy, iContiguous, iForceMonoChunk );
+    // iSched( this, iPolicy, iContiguous, iForceMonoChunk );
 
     mEvent->Bind( this, iNumWait, iWaitList, iEventGeometry );
 }
@@ -90,6 +95,16 @@ bool
 FCommand::ReadyForScheduling() const
 {
     return  mEvent->ReadyForScheduling();
+}
+
+void
+FCommand::ProcessAsyncScheduling()
+{
+    if( !mScheduled ) {
+        mSched( this, mPolicy, mContiguous, mForceMonoChunk );
+        mEvent->PostBindAsync();
+        mScheduled = true;
+    }
 }
 
 FSharedInternalEvent

@@ -27,15 +27,15 @@ main( int argc, char *argv[] ) {
     // Then command queue to enqueue commands deferred commands.
     // Then working format and context for this format with specified performance intent.
     // Finally, some policies for how the tasks should be carried out.
-    FThreadPool pool;
+    FThreadPool pool( 4 );
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_AVX );
     FHardwareMetrics hw;
-    FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
-    FSchedulePolicy policy_multi_scanlines( ScheduleRun_Multi, ScheduleMode_Scanlines );
-    FSchedulePolicy policy_mono_scanlines( ScheduleRun_Mono, ScheduleMode_Scanlines );
+    FSchedulePolicy policy_sync_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy_sync_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
+    FSchedulePolicy policy_sync_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
+    FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
     // Gather start time to output the time it took to perform the blend composition
     auto startTime = std::chrono::steady_clock::now();
@@ -96,9 +96,9 @@ main( int argc, char *argv[] ) {
         // But the blends are concurrent with their respective copy, so each blend waits on one copy.
         // The policies will default to mono scanlines despite our input because of the nature of the task ( unaligned non contiguous images )
         FEvent cp_ev;
-        ctx.Copy( blockBase, *blockCanvas, srcRect, FVec2I( x, y ), policy_mono_chunk, 0, nullptr, &cp_ev );
+        ctx.Copy( blockBase, *blockCanvas, srcRect, FVec2I( x, y ), policy_sync_mono_chunk, 0, nullptr, &cp_ev );
         ctx.Flush();
-        ctx.Blend( blockOver, *blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, policy_mono_chunk, 1, &cp_ev, nullptr );
+        ctx.Blend( blockOver, *blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, policy_sync_mono_chunk, 1, &cp_ev, nullptr );
     }
 
     // Flush and Fence.

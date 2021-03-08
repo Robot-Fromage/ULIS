@@ -91,6 +91,8 @@ public:
     */
     bool ReadyForScheduling() const;
 
+    void ProcessAsyncScheduling();
+
     FSharedInternalEvent Event() const;
 
     const TArray< const FJob* >& Jobs() const;
@@ -99,6 +101,11 @@ private:
     const ICommandArgs* mArgs;
     FSharedInternalEvent mEvent;
     TArray< const FJob* > mJobs;
+    fpCommandScheduler mSched;
+    FSchedulePolicy mPolicy;
+    bool mContiguous;
+    bool mForceMonoChunk;
+    bool mScheduled;
 };
 
 ULIS_NAMESPACE_END

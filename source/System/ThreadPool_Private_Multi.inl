@@ -193,6 +193,7 @@ FThreadPool_Private::ScheduleProcess()
             bool ready = cmd->ReadyForProcessing();
             if( ready )
             {
+                const_cast< FCommand* >( cmd )->ProcessAsyncScheduling();
                 const TArray< const FJob* >& jobs = cmd->Jobs();
                 const uint64 size = jobs.Size();
                 for( uint64 i = 0; i < size; ++i )

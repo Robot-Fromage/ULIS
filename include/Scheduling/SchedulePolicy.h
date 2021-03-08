@@ -13,6 +13,11 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
+enum eScheduleTimePolicy : uint8 {
+      ScheduleTime_Sync = 0
+    , ScheduleTime_Async = 1
+};
+
 enum eScheduleRunPolicy : uint8 {
       ScheduleRun_Mono  = 0
     , ScheduleRun_Multi = 1
@@ -50,14 +55,18 @@ public:
 
     /*!
         Constructor with default values.
-        Defaults to mono scanline run.
+        Defaults to mono scanline run and synchronous.
     */
     FSchedulePolicy(
-          eScheduleRunPolicy iRun = ScheduleRun_Multi
+          eScheduleTimePolicy iTime = ScheduleTime_Sync
+        , eScheduleRunPolicy iRun = ScheduleRun_Multi
         , eScheduleModePolicy iMode = ScheduleMode_Chunks
         , eScheduleParameterPolicy iParam = ScheduleParameter_Count
         , int64 iValue = -1
     );
+
+    /*! Getter for the Time Value. */
+    eScheduleTimePolicy TimePolicy() const;
 
     /*! Getter for the Run Policy. */
     eScheduleRunPolicy RunPolicy() const;
@@ -72,6 +81,7 @@ public:
     int64 Value() const;
 
 private:
+    eScheduleTimePolicy         mTime;
     eScheduleRunPolicy          mRun;
     eScheduleModePolicy         mMode;
     eScheduleParameterPolicy    mParameter;

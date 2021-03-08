@@ -56,6 +56,7 @@ public:
     void CheckCyclicSelfReference() const;
     eEventStatus Status() const;
     void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
+    void PostBindAsync();
     bool NotifyOneJobFinished();
     void NotifyAllJobsFinished();
     void NotifyQueued();

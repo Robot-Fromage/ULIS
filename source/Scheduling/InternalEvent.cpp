@@ -117,6 +117,12 @@ FInternalEvent::Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitLi
     mGeometry = iGeometry;
 }
 
+void
+FInternalEvent::PostBindAsync()
+{
+    mNumJobsRemaining = mCommand->NumJobs();
+}
+
 bool
 FInternalEvent::NotifyOneJobFinished()
 {

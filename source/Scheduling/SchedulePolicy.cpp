@@ -17,16 +17,24 @@ FSchedulePolicy::~FSchedulePolicy()
 }
 
 FSchedulePolicy::FSchedulePolicy(
-      eScheduleRunPolicy iRun
+      eScheduleTimePolicy iTime
+    , eScheduleRunPolicy iRun
     , eScheduleModePolicy iMode
     , eScheduleParameterPolicy iParam
     , int64 iValue
 )
-    : mRun( iRun )
+    : mTime( iTime )
+    , mRun( iRun )
     , mMode( iMode )
     , mParameter( iParam )
     , mValue( iValue )
 {
+}
+
+eScheduleTimePolicy
+FSchedulePolicy::TimePolicy() const
+{
+    return  mTime;
 }
 
 eScheduleRunPolicy
