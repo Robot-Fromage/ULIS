@@ -19,12 +19,12 @@ FLayerImage::~FLayerImage()
     delete  mBlock;
 }
 
-FLayerImage::FLayerImage( const FString& iName, const FVec2F& iSize, eFormat iFormat )
+FLayerImage::FLayerImage( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat )
     : ILayer( eLayerType::Layer_Image, iName )
     , mAlphaLock( false )
     , mBlock( nullptr )
 {
-    mBlock = new FBlock( iSize.x, iSize.y, iFormat );
+    mBlock = new FBlock( iWidth, iHeight, iFormat );
 }
 
 FBlock&

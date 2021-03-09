@@ -91,13 +91,22 @@ set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_F
 # Add Dependencies
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/zlib         ${PROJECT_BINARY_DIR}/3rdparty/build_zlib  )
 
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
     set_target_properties( freetype PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312" )
 endif()
 
+if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
+    set_target_properties( zlibstatic PROPERTIES COMPILE_FLAGS "/wd4267" )
+endif()
+
 set_target_properties( lcms2                PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( freetype             PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( zlib                 PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( zlibstatic           PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( minigzip             PROPERTIES FOLDER ULIS/3rdparty )
+set_target_properties( example              PROPERTIES FOLDER ULIS/3rdparty )
 
 ####################################
 # Add Main Project
@@ -160,6 +169,7 @@ set_target_properties( ULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
 set_target_properties( ULIS PROPERTIES FOLDER ULIS )
 target_link_libraries( ULIS PRIVATE lcms2 )
 target_link_libraries( ULIS PRIVATE freetype )
+target_link_libraries( ULIS PRIVATE zlibstatic )
 #target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
 
 target_include_directories(
@@ -172,6 +182,7 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/zlib/
     "source/"
 )
 

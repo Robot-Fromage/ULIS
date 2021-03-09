@@ -23,7 +23,7 @@ class ULIS_API FLayerImage
 {
 public:
     ~FLayerImage() override;
-    FLayerImage( const FString& iName, const FVec2F& iSize, eFormat iFormat );
+    FLayerImage( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat );
 
     FLayerImage( const FLayerImage& ) = delete;
     FLayerImage& operator=( const FLayerImage& ) = delete;
