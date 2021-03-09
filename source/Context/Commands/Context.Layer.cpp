@@ -78,5 +78,20 @@ FContext::Flatten(
     return  ULIS_NO_ERROR;
 }
 
+ulError
+FContext::XLoadPSDFromDisk(
+      FLayerStack& iStack
+    , const std::string& iPath
+    , const FRectI& iSourceRect
+    , const FVec2I& iPosition
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    return  ULIS_NO_ERROR;
+}
+
 ULIS_NAMESPACE_END
 

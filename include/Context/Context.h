@@ -123,6 +123,21 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+        Perform a load of a PSD file in a layer stack
+    */
+    ulError
+    XLoadPSDFromDisk(
+          FLayerStack& iStack
+        , const std::string& iPath
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 /////////////////////////////////////////////////////
 // Blend
     /*!
