@@ -107,6 +107,23 @@ private:
 
 public:
 /////////////////////////////////////////////////////
+// Layers
+    /*!
+        Perform a flattened blend of the whole layer stack
+    */
+    ulError
+    Flatten(
+          FLayerStack& iStack
+        , FBlock& iDestination
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+/////////////////////////////////////////////////////
 // Blend
     /*!
         Perform a blend operation with iSource composited on top of iBackdrop.
