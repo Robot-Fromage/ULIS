@@ -19,6 +19,8 @@
 
 #include <chrono>
 
+#include "Layer/LayerStack.h"
+
 using namespace ::ULIS;
 
 int
@@ -34,10 +36,11 @@ main( int argc, char *argv[] ) {
     FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
     FBlock blockCanvas( 1024, 1024, fmt );
+    FLayerStack layerStack( 1024, 1024, fmt );
 
     auto startTime = std::chrono::steady_clock::now();
     {
-        // ctx.XLoadPSDFromDisk( ... );
+        ctx.XLoadPSDFromDisk( layerStack, "C:/Users/Galendil/Desktop/RGBA8.psd" );
     }
     ctx.Finish();
     auto endTime = std::chrono::steady_clock::now();

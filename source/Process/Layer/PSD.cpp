@@ -10,12 +10,15 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Process/Layer/PSD.h"
-
+#include "Math/Math.h"
 //#include "OdysseyPsdOperations.h"
 /*#include "OdysseyMathUtils.h"
 #include <ULIS3>
 #include "ULISLoaderModule.h"
 #include "zlib.h"*/
+
+#include <filesystem>
+namespace fs = std::filesystem;
 
 ULIS_NAMESPACE_BEGIN
 FPSDOperations::~FPSDOperations()
@@ -49,26 +52,32 @@ FPSDOperations::~FPSDOperations()
 }
 
 FPSDOperations::FPSDOperations(const std::string& iFilename)
-    : mFileHandle( iFilename.c_str(), std::ios::binary | std::ios::ate )
+    : mFileHandle( iFilename.c_str(), std::ios::in | std::ios::ate )
 {
-    //std::streamsize size = mFileHandle.tellg();
+    std::streamsize size = mFileHandle.tellg();
+    mFileHandle.seekg(0,std::ios::beg);
+
+    /*std::vector<char> buffer(size);
+    mFileHandle.read(buffer.data(),size);
+
+    std::cout << "gygdygys" << std::endl;*/
     /*std::vector<char> buffer(size);
     if(!file.read(buffer.data(),size))*/
 
-    /* mChannelsNumber = 0;
+     mChannelsNumber = 0;
      mImageHeight = 0;
      mImageWidth = 0;
      mBitDepth = 0;
      mColorMode = 0;
 
      mImageStart = 0;
-     mImageDst = nullptr;
+     /*mImageDst = nullptr;
      mImageDst16 = nullptr;
-     mImageDst32 = nullptr;
+     mImageDst32 = nullptr;*/
 
-     mLayerStack = nullptr;
+     //mLayerStack = nullptr;
 
-     mLayersInfo = TArray<FPSDLayerInfo>();*/
+     //mLayersInfo = TArray<FPSDLayerInfo>();
 }
 
 bool FPSDOperations::ReadFileHeader()
@@ -76,143 +85,161 @@ bool FPSDOperations::ReadFileHeader()
     mFileHandle.seekg(0,std::ios::beg);
 
     char psdValidator[5] = { 0 }; // 4 characters + null termination
+
     if(!mFileHandle.read(psdValidator,4))
+        return false;
 
     if( strcmp(psdValidator, "8BPS") != 0 )
     {
-        //UE_LOG(LogTemp,Warning,TEXT("This is likely not a PSD file, import failed"));
+        std::cout << "This is likely not a PSD file, import failed" << std::endl;
         return false;
     }
 
     //---
-    /*
-    uint16_t versionNumber;
-    mFileHandle->Read((uint8*)&versionNumber,2);
-    FOdysseyMathUtils::ByteSwap(&versionNumber,2);
+    
+    uint16 versionNumber;
+    if(!mFileHandle.read((char*)&versionNumber,2))
+        return false;
+
+    FMath::ByteSwap(&versionNumber,2);
     if( versionNumber != 1 )
     {
-        UE_LOG(LogTemp,Warning,TEXT("Unknown psd file version, import failed"));
+        std::cout << "Unknown psd file version, import failed" << std::endl;
         return false;
     }
 
     //---
 
-    mFileHandle->Seek( mFileHandle->Tell() + 6 ); // There are 6 zeroed bytes here, we don't care about them
-
+    mFileHandle.seekg( 6, std::ios::cur ); // There are 6 zeroed bytes here, we don't care about them
+    
     //---
 
-    mFileHandle->Read((uint8*)&mChannelsNumber,2);
-    FOdysseyMathUtils::ByteSwap(&mChannelsNumber,2);
-    mFileHandle->Read((uint8*)&mImageHeight,4);
-    FOdysseyMathUtils::ByteSwap(&mImageHeight,4);
-    mFileHandle->Read((uint8*)&mImageWidth,4);
-    FOdysseyMathUtils::ByteSwap(&mImageWidth,4);
-    mFileHandle->Read((uint8*)&mBitDepth,2);
-    FOdysseyMathUtils::ByteSwap(&mBitDepth,2);
-    mFileHandle->Read((uint8*)&mColorMode,2);
-    FOdysseyMathUtils::ByteSwap(&mColorMode,2);
+    if(!mFileHandle.read((char*)&mChannelsNumber,2))
+        return false;
+    FMath::ByteSwap(&mChannelsNumber,2);
+
+    if(!mFileHandle.read((char*)&mImageHeight,4))
+        return false;
+    FMath::ByteSwap(&mImageHeight,4);
+
+    if(!mFileHandle.read((char*)&mImageWidth,4))
+        return false;
+    FMath::ByteSwap(&mImageWidth,4);
+
+    if(!mFileHandle.read((char*)&mBitDepth,2))
+        return false;
+    FMath::ByteSwap(&mBitDepth,2);
+
+    if(!mFileHandle.read((char*)&mColorMode,2))
+        return false;
+    FMath::ByteSwap(&mColorMode,2);
 
     //UE_LOG(LogTemp, Display, TEXT("ChannelsNumber: %d"), mChannelsNumber );
     //UE_LOG(LogTemp,Display,TEXT("mImageHeight: %d"),mImageHeight);
     //UE_LOG(LogTemp,Display,TEXT("mImageWidth: %d"),mImageWidth);
     //UE_LOG(LogTemp,Display,TEXT("mBitDepth: %d"),mBitDepth);
     //UE_LOG(LogTemp,Display,TEXT("mColorMode: %d"),mColorMode);
-    */
+    
     return true;
 }
-//
-//bool FPSDOperations::ReadFileColorMode()
-//{
-//    uint32_t colorModeSize;
-//    mFileHandle->Read((uint8*)&colorModeSize,4);
-//    FOdysseyMathUtils::ByteSwap(&colorModeSize,4);
-//    mFileHandle->Seek( mFileHandle->Tell() + colorModeSize );
-//
-//    //UE_LOG(LogTemp,Display,TEXT("colorModeSize: %d"),colorModeSize);
-//
-//    return true;
-//}
-//
-//bool FPSDOperations::ReadImageResources()
-//{
-//    uint32_t imageResourcesSize;
-//    mFileHandle->Read((uint8*)&imageResourcesSize,4);
-//    FOdysseyMathUtils::ByteSwap( &imageResourcesSize, 4 );
-//
-//    //UE_LOG(LogTemp,Display,TEXT("imageResourcesSize: %d"),imageResourcesSize);
-//
-//    mFileHandle->Seek( mFileHandle->Tell() + imageResourcesSize );
-//    return true;
-//}
-//
-//bool FPSDOperations::ReadLayerAndMaskInfo()
-//{
-//    uint32_t layerAndMaskInfoSize;
-//    mFileHandle->Read((uint8*)&layerAndMaskInfoSize,4);
-//    FOdysseyMathUtils::ByteSwap(&layerAndMaskInfoSize,4);
-//
-//    uint32_t position = mFileHandle->Tell();
-//
-//    //UE_LOG(LogTemp,Display,TEXT("layerAndMaskInfoSize: %d"),layerAndMaskInfoSize);
-//
-//    bool isAnyLayer = true;
-//    if( layerAndMaskInfoSize > 0) 
-//    {
-//        isAnyLayer = ReadLayerInfo();
-//
-//        if( isAnyLayer )
-//            isAnyLayer = ReadMaskInfo();
-//
-//        ReadAdditionalLayerInfo(position + layerAndMaskInfoSize);
-//    }
-//
-//    mFileHandle->Seek( mFileHandle->Tell() + layerAndMaskInfoSize );
-//
-//    mImageStart = position + layerAndMaskInfoSize;
-//    //UE_LOG(LogTemp, Display, TEXT("mImageStart:%d"), mImageStart)
-//    return isAnyLayer;
-//}
-//
-//bool FPSDOperations::ReadLayerInfo()
-//{
-//    uint32_t layerInfoSize;
-//    mFileHandle->Read((uint8*)&layerInfoSize,4);
-//    FOdysseyMathUtils::ByteSwap(&layerInfoSize,4);
-//
-//    uint32_t position = mFileHandle->Tell();
-//
-//    //UE_LOG(LogTemp, Display, TEXT("layerInfoSize: %d"), layerInfoSize);
-//
-//    if( mBitDepth >= 16 && layerInfoSize != 0) 
-//    {
-//        UE_LOG(LogTemp, Warning, TEXT("Shouldn't have any info for 16+ bit depth, import failed"))
-//        return false;
-//    }
-//
-//    if(layerInfoSize != 0)
-//        ReadLayers();
-//
-//    mFileHandle->Seek( position + layerInfoSize );
-//    return true;
-//}
-//
-//bool FPSDOperations::ReadMaskInfo()
-//{
-//    uint32_t maskInfoSize;
-//    mFileHandle->Read((uint8*)&maskInfoSize,4);
-//    FOdysseyMathUtils::ByteSwap(&maskInfoSize,4);
-//    
-//    //UE_LOG(LogTemp,Display,TEXT("maskInfoSize: %d"),maskInfoSize);
-//
-//    mFileHandle->Seek( mFileHandle->Tell() + maskInfoSize );
-//    return true;
-//}
-//
+
+bool FPSDOperations::ReadFileColorMode()
+{
+    uint32 colorModeSize;
+    if(!mFileHandle.read((char*)&colorModeSize,4))
+        return false;
+    FMath::ByteSwap(&colorModeSize,4);
+    mFileHandle.seekg( colorModeSize, std::ios::cur );
+
+    //UE_LOG(LogTemp,Display,TEXT("colorModeSize: %d"),colorModeSize);
+
+    return true;
+}
+
+bool FPSDOperations::ReadImageResources()
+{
+    uint32 imageResourcesSize;
+    if(!mFileHandle.read((char*)&imageResourcesSize,4))
+        return false;
+    FMath::ByteSwap( &imageResourcesSize, 4 );
+
+    //UE_LOG(LogTemp,Display,TEXT("imageResourcesSize: %d"),imageResourcesSize);
+
+    mFileHandle.seekg( imageResourcesSize, std::ios::cur );
+    return true;
+}
+
+bool FPSDOperations::ReadLayerAndMaskInfo()
+{
+    uint32 layerAndMaskInfoSize;
+    if(!mFileHandle.read((char*)&layerAndMaskInfoSize,4))
+        return false;
+    FMath::ByteSwap(&layerAndMaskInfoSize,4);
+
+    uint32 position = uint32(mFileHandle.tellg());
+
+    //UE_LOG(LogTemp,Display,TEXT("layerAndMaskInfoSize: %d"),layerAndMaskInfoSize);
+
+    bool isAnyLayer = true;
+    if( layerAndMaskInfoSize > 0) 
+    {
+        isAnyLayer = ReadLayerInfo();
+
+        if( isAnyLayer )
+            isAnyLayer = ReadMaskInfo();
+
+        //ReadAdditionalLayerInfo(position + layerAndMaskInfoSize);
+    }
+
+    mFileHandle.seekg( layerAndMaskInfoSize, std::ios::cur );
+
+    mImageStart = position + layerAndMaskInfoSize;
+    //UE_LOG(LogTemp, Display, TEXT("mImageStart:%d"), mImageStart)
+    return isAnyLayer;
+}
+
+bool FPSDOperations::ReadLayerInfo()
+{
+    uint32 layerInfoSize;
+    if(!mFileHandle.read((char*)&layerInfoSize,4))
+        return false;
+    FMath::ByteSwap(&layerInfoSize,4);
+
+    uint32 position = uint32(mFileHandle.tellg());
+
+    //UE_LOG(LogTemp, Display, TEXT("layerInfoSize: %d"), layerInfoSize);
+
+    if( mBitDepth >= 16 && layerInfoSize != 0) 
+    {
+        std::cout << "Shouldn't have any info for 16+ bit depth, import failed" << std::endl;
+        return false;
+    }
+
+    /*if(layerInfoSize != 0)
+        ReadLayers();*/
+
+    mFileHandle.seekg( layerInfoSize, std::ios::cur );
+    return true;
+}
+
+bool FPSDOperations::ReadMaskInfo()
+{
+    uint32 maskInfoSize;
+    if(!mFileHandle.read((char*)&maskInfoSize,4))
+        return false;
+    FMath::ByteSwap(&maskInfoSize,4);
+    
+    //UE_LOG(LogTemp,Display,TEXT("maskInfoSize: %d"),maskInfoSize);
+
+    mFileHandle.seekg( maskInfoSize, std::ios::cur );
+    return true;
+}
+
 //bool FPSDOperations::ReadLayers()
 //{
 //    int16 numLayers;
 //    mFileHandle->Read( (uint8*)&numLayers, 2);
-//    FOdysseyMathUtils::ByteSwap( &numLayers, 2);
+//    FMath::ByteSwap( &numLayers, 2);
 //    
 //    if( numLayers < 0 )
 //        numLayers = -numLayers;
@@ -222,16 +249,16 @@ bool FPSDOperations::ReadFileHeader()
 //    {
 //        mLayersInfo.Add( FPSDLayerInfo() );
 //
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mTop,4);
-//        FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mTop,4);
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mLeft,4);
-//        FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mLeft,4);
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mBottom,4);
-//        FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mBottom,4);
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mRight,4);
-//        FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mRight,4);
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mNumChannels,2);
-//        FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mNumChannels,2);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mTop,4));
+//        FMath::ByteSwap(&mLayersInfo[currLayer].mTop,4);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mLeft,4));
+//        FMath::ByteSwap(&mLayersInfo[currLayer].mLeft,4);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mBottom,4));
+//        FMath::ByteSwap(&mLayersInfo[currLayer].mBottom,4);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mRight,4));
+//        FMath::ByteSwap(&mLayersInfo[currLayer].mRight,4);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mNumChannels,2));
+//        FMath::ByteSwap(&mLayersInfo[currLayer].mNumChannels,2);
 //
 //
 //        /*UE_LOG(LogTemp,Display,TEXT("y: %d"),mLayersInfo[currLayer].mTop);
@@ -242,56 +269,56 @@ bool FPSDOperations::ReadFileHeader()
 //
 //        for(int currChannel = 0; currChannel < mLayersInfo[currLayer].mNumChannels; currChannel++) 
 //        {
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mID[currChannel],2);
-//            FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mID[currChannel],2);
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mChannelSize[currChannel],4);
-//            FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mChannelSize[currChannel],4);
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mID[currChannel],2));
+//            FMath::ByteSwap(&mLayersInfo[currLayer].mID[currChannel],2);
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mChannelSize[currChannel],4));
+//            FMath::ByteSwap(&mLayersInfo[currLayer].mChannelSize[currChannel],4);
 //            /*UE_LOG(LogTemp,Display,TEXT("id: %d"),mLayersInfo[currLayer].mID[currChannel]);
 //            UE_LOG(LogTemp,Display,TEXT("channelSize: %d"),mLayersInfo[currLayer].mChannelSize[currChannel]);*/
 //        }
 //
 //        char psdValidator[5] = {0}; // 4 characters + null termination
-//        mFileHandle->Read((uint8*)psdValidator,4);
+//        if(!mFileHandle.read((char*)psdValidator,4));
 //        if(strcmp(psdValidator,"8BIM") != 0)
 //        {
-//            UE_LOG(LogTemp,Warning,TEXT("This is likely not a PSD file, import failed"));
+//            std::cout << "This is likely not a PSD file, import failed" << std::endl;
 //            return false;
 //        }
 //
-//        mFileHandle->Read((uint8*) mLayersInfo[currLayer].mBlendModeKey, 4);
+//        if(!mFileHandle.read((char*) mLayersInfo[currLayer].mBlendModeKey, 4));
 //
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mOpacity,1);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mOpacity,1));
 //        //UE_LOG(LogTemp,Display,TEXT("opacity: %d"),mLayersInfo[currLayer].mOpacity);
 //
-//        mFileHandle->Seek( mFileHandle->Tell() + 1 ); //Clipping byte
+//        mFileHandle.seekg( mFileHandle.tellg() + 1 ); //Clipping byte
 //
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mFlags,1);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mFlags,1));
 //
-//        mFileHandle->Seek(mFileHandle->Tell() + 1); //Filler byte
+//        mFileHandle.seekg(mFileHandle.tellg() + 1); //Filler byte
 //
 //        mFileHandle->Read( (uint8*) &mLayersInfo[currLayer].mExtraSize, 4 );
-//        FOdysseyMathUtils::ByteSwap( &mLayersInfo[currLayer].mExtraSize, 4);
+//        FMath::ByteSwap( &mLayersInfo[currLayer].mExtraSize, 4);
 //
-//        mLayersInfo[currLayer].mExtraPosition = mFileHandle->Tell();
+//        mLayersInfo[currLayer].mExtraPosition = mFileHandle.tellg();
 //        mLayersInfo[currLayer].mExtraRead = 0;
 //
-//        mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mLayerMaskSize,4);
-//        FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mLayerMaskSize,4);
+//        if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mLayerMaskSize,4));
+//        FMath::ByteSwap(&mLayersInfo[currLayer].mLayerMaskSize,4);
 //
-//        uint32_t position = mFileHandle->Tell();
+//        uint32 position = mFileHandle.tellg();
 //
 //        if(mLayersInfo[currLayer].mLayerMaskSize != 0) 
 //        {
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mYMask,4);
-//            FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mYMask,4);
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mXMask,4);
-//            FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mXMask,4);
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mWMask,4);
-//            FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mWMask,4);
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mHMask,4);
-//            FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mHMask,4);
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mColorMask,1);
-//            mFileHandle->Read((uint8*)&mLayersInfo[currLayer].mFlagsMask,1);
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mYMask,4));
+//            FMath::ByteSwap(&mLayersInfo[currLayer].mYMask,4);
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mXMask,4));
+//            FMath::ByteSwap(&mLayersInfo[currLayer].mXMask,4);
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mWMask,4));
+//            FMath::ByteSwap(&mLayersInfo[currLayer].mWMask,4);
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mHMask,4));
+//            FMath::ByteSwap(&mLayersInfo[currLayer].mHMask,4);
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mColorMask,1));
+//            if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mFlagsMask,1));
 //
 //            /*UE_LOG(LogTemp,Display,TEXT("yMask: %d"),mLayersInfo[currLayer].mYMask);
 //            UE_LOG(LogTemp,Display,TEXT("xMask: %d"),mLayersInfo[currLayer].mXMask);
@@ -301,19 +328,19 @@ bool FPSDOperations::ReadFileHeader()
 //            UE_LOG(LogTemp,Display,TEXT("flagsMask: %d"),mLayersInfo[currLayer].mFlagsMask);*/
 //        }
 //
-//        mFileHandle->Seek( position + mLayersInfo[currLayer].mLayerMaskSize );
+//        mFileHandle.seekg( position + mLayersInfo[currLayer].mLayerMaskSize );
 //        mLayersInfo[currLayer].mExtraRead += 4 + mLayersInfo[currLayer].mLayerMaskSize;
 //
 //        mFileHandle->Read( (uint8*) &mLayersInfo[currLayer].mLayerBlendingSize, 4 );
-//        FOdysseyMathUtils::ByteSwap( &mLayersInfo[currLayer].mLayerBlendingSize, 4 );
+//        FMath::ByteSwap( &mLayersInfo[currLayer].mLayerBlendingSize, 4 );
 //        mLayersInfo[currLayer].mExtraRead += 4 + mLayersInfo[currLayer].mLayerBlendingSize;
-//        mFileHandle->Seek( mFileHandle->Tell() + mLayersInfo[currLayer].mLayerBlendingSize );
+//        mFileHandle.seekg( mFileHandle.tellg() + mLayersInfo[currLayer].mLayerBlendingSize );
 //
 //        mFileHandle->Read( (uint8*) &mLayersInfo[currLayer].mNameSize, 1 );
 //        mLayersInfo[currLayer].mName[256] = {0};
 //        mFileHandle->Read( (uint8*) mLayersInfo[currLayer].mName, mLayersInfo[currLayer].mNameSize );
 //
-//        mFileHandle->Seek( mFileHandle->Tell() + (3 - mLayersInfo[currLayer].mNameSize % 4) ); //4 bytes increments for the name
+//        mFileHandle.seekg( mFileHandle.tellg() + (3 - mLayersInfo[currLayer].mNameSize % 4) ); //4 bytes increments for the name
 //        mLayersInfo[currLayer].mExtraRead  += mLayersInfo[currLayer].mNameSize + 4 - mLayersInfo[currLayer].mNameSize%4;
 //
 //        if(mLayersInfo[currLayer].mName[0] == 0)
@@ -321,7 +348,7 @@ bool FPSDOperations::ReadFileHeader()
 //
 //        //UE_LOG(LogTemp, Display, TEXT("%s"), mLayersInfo[currLayer].mName);
 //
-//        position = mFileHandle->Tell();
+//        position = mFileHandle.tellg();
 //
 //        while( mLayersInfo[currLayer].mExtraRead < mLayersInfo[currLayer].mExtraSize ) 
 //        {
@@ -329,27 +356,27 @@ bool FPSDOperations::ReadFileHeader()
 //                break;
 //
 //            char lsctKey[5] = {0}; // 4 characters + null termination
-//            mFileHandle->Read((uint8*)lsctKey,4);
+//            if(!mFileHandle.read((char*)lsctKey,4));
 //
-//            uint32_t len;
+//            uint32 len;
 //            mFileHandle->Read( (uint8*) &len, 4);
-//            FOdysseyMathUtils::ByteSwap( &len, 4);
-//            position = mFileHandle->Tell();
+//            FMath::ByteSwap( &len, 4);
+//            position = mFileHandle.tellg();
 //            mLayersInfo[currLayer].mExtraRead += 12 + len;
 //
 //            if(strcmp(lsctKey,"lsct") == 0)
 //            {
 //                mFileHandle->Read( (uint8*) &mLayersInfo[currLayer].mDividerType,4);
-//                FOdysseyMathUtils::ByteSwap(&mLayersInfo[currLayer].mDividerType,4);
+//                FMath::ByteSwap(&mLayersInfo[currLayer].mDividerType,4);
 //                //UE_LOG(LogTemp,Display,TEXT("mDividerType: %d"),mLayersInfo[currLayer].mDividerType);
 //            }
-//            mFileHandle->Seek( position + len );
+//            mFileHandle.seekg( position + len );
 //        }
-//        mFileHandle->Seek( mLayersInfo[currLayer].mExtraPosition + mLayersInfo[currLayer].mExtraSize );
+//        mFileHandle.seekg( mLayersInfo[currLayer].mExtraPosition + mLayersInfo[currLayer].mExtraSize );
 //    }
 //
 //
-//    uint32_t imgData = mFileHandle->Tell();
+//    uint32 imgData = mFileHandle.tellg();
 //    for(int i = 0; i < numLayers; i++) 
 //    {
 //        for(int c = 0; c < mLayersInfo[i].mNumChannels; c++) 
@@ -365,7 +392,7 @@ bool FPSDOperations::ReadFileHeader()
 //bool FPSDOperations::ReadAdditionalLayerInfoSignature()
 //{
 //    char psdValidator[5] = {0}; // 4 characters + null termination
-//    mFileHandle->Read((uint8*)psdValidator,4);
+//    if(!mFileHandle.read((char*)psdValidator,4));
 //
 //    if(strcmp(psdValidator,"8BIM") != 0 && strcmp(psdValidator,"8B64") != 0)
 //    {
@@ -376,9 +403,9 @@ bool FPSDOperations::ReadFileHeader()
 //    return true;
 //}
 //
-//bool FPSDOperations::ReadAdditionalLayerInfo(uint32_t sectionEnd)
+//bool FPSDOperations::ReadAdditionalLayerInfo(uint32 sectionEnd)
 //{
-//    uint32_t position = mFileHandle->Tell();
+//    uint32 position = mFileHandle.tellg();
 //    if( position > sectionEnd ) 
 //    {
 //        UE_LOG(LogTemp, Display, TEXT("Error while loading data: out of bounds"));
@@ -391,28 +418,28 @@ bool FPSDOperations::ReadFileHeader()
 //            return false;
 //
 //        char key[5] ={0}; // 4 characters + null termination
-//        mFileHandle->Read((uint8*)key,4);
+//        if(!mFileHandle.read((char*)key,4));
 //
-//        uint32_t len;
+//        uint32 len;
 //        mFileHandle->Read( (uint8*) &len, 4);
-//        FOdysseyMathUtils::ByteSwap( &len, 4);
+//        FMath::ByteSwap( &len, 4);
 //        //UE_LOG(LogTemp, Display, TEXT("len: %d"), len);
 //
-//        position = mFileHandle->Tell();
+//        position = mFileHandle.tellg();
 //
 //        if(strcmp(key,"Lr16") == 0 || strcmp(key,"Lr32") == 0)
 //        {
-//            ReadLayers();
+//            //ReadLayers();
 //            break;
 //        } 
 //        else if( strcmp(key,"Mt32") == 0 )
 //        {
-//            mFileHandle->Seek(mFileHandle->Tell() + len);
+//            mFileHandle.seekg(mFileHandle.tellg() + len);
 //            ReadAdditionalLayerInfo(sectionEnd);
 //        }
 //        else 
 //        {
-//            mFileHandle->Seek( mFileHandle->Tell() + len );
+//            mFileHandle.seekg( mFileHandle.tellg() + len );
 //            position += len + 4 + 4 + 4;
 //        }
 //    }
@@ -428,60 +455,60 @@ bool FPSDOperations::ReadFileHeader()
 //        delete [] mImageDst;
 //        mImageDst = nullptr;
 //    }
-//    mFileHandle->Seek( mImageStart );
-//    uint16_t compressionType;
+//    mFileHandle.seekg( mImageStart );
+//    uint16 compressionType;
 //    mFileHandle->Read( (uint8*) &compressionType, 2 );
-//    FOdysseyMathUtils::ByteSwap( &compressionType, 2 );
+//    FMath::ByteSwap( &compressionType, 2 );
 //    int srcChannelsNumber = mChannelsNumber;
 //    if( mChannelsNumber > 4 )
 //        srcChannelsNumber = 4; //We're limiting the channels to 4 and try to translate it into RGBA
 //    if( mBitDepth > 8 )
 //    {
-//        uint32_t size = mImageWidth * mImageHeight * srcChannelsNumber;
-//        mImageDst16 = new uint16_t[size];
+//        uint32 size = mImageWidth * mImageHeight * srcChannelsNumber;
+//        mImageDst16 = new uint16[size];
 //        if( compressionType == 0 ) //Uncompressed
 //        {
-//            uint16_t* planarDst = new uint16_t[size];
+//            uint16* planarDst = new uint16[size];
 //            CopyUncompressed(planarDst, size);
 //            PlanarByteConvert(planarDst,mImageDst16,size,mChannelsNumber);
 //            delete [] planarDst;
 //        }
 //        else if(compressionType == 1) //RLE 16 Bits
 //        {
-//            uint16_t* planarDst = new uint16_t[size];
-//            mFileHandle->Seek( mFileHandle->Tell() + mImageHeight * srcChannelsNumber * 2 );
+//            uint16* planarDst = new uint16[size];
+//            mFileHandle.seekg( mFileHandle.tellg() + mImageHeight * srcChannelsNumber * 2 );
 //            DecodeAndCopyRLE(planarDst,size);
 //            PlanarByteConvert(planarDst,mImageDst16,size,mChannelsNumber);
 //            delete [] planarDst;
 //        }
 //        else
 //        {
-//            UE_LOG(LogTemp,Warning,TEXT("Compression type unknown, import failed"));
+//            std::cout << "Compression type unknown, import failed" << std::endl;
 //            return false;
 //        }
 //    }
 //    else 
 //    {
-//        uint32_t size =  mImageWidth * mImageHeight * srcChannelsNumber;
-//        mImageDst = new uint8_t[ size ];
+//        uint32 size =  mImageWidth * mImageHeight * srcChannelsNumber;
+//        mImageDst = new uint8[ size ];
 //        if( compressionType == 0 ) // uncompressed
 //        {
-//            uint8_t* planarDst = new uint8_t[size];
+//            uint8* planarDst = new uint8[size];
 //            CopyUncompressed( mImageDst, size );
 //            PlanarByteConvert(planarDst,mImageDst,size,mChannelsNumber);
 //            delete [] planarDst;
 //        } 
 //        else if(compressionType == 1) //RLE
 //        {
-//            uint8_t* planarDst = new uint8_t[size];
-//            mFileHandle->Seek( mFileHandle->Tell() + mImageHeight * mChannelsNumber * 2 );
+//            uint8* planarDst = new uint8[size];
+//            mFileHandle.seekg( mFileHandle.tellg() + mImageHeight * mChannelsNumber * 2 );
 //            DecodeAndCopyRLE( planarDst, size );
 //            PlanarByteConvert( planarDst, mImageDst, size, mChannelsNumber );
 //            delete [] planarDst;
 //        } 
 //        else 
 //        {
-//            UE_LOG(LogTemp,Warning,TEXT("Compression type unknown, import failed"));
+//            std::cout << "Compression type unknown, import failed" << std::endl;
 //            return false;
 //        }
 //    }
@@ -490,31 +517,31 @@ bool FPSDOperations::ReadFileHeader()
 //
 //bool FPSDOperations::ReadLayerStackData()
 //{
-//    for( uint8_t i = 0; i < mLayersInfo.Num(); i++) 
+//    for( uint8 i = 0; i < mLayersInfo.Num(); i++) 
 //    {
 //        //UE_LOG(LogTemp, Display, TEXT("Layer Number %d"), i)
-//        uint8_t** channelContents = new uint8_t*[mLayersInfo[i].mNumChannels];
+//        uint8** channelContents = new uint8*[mLayersInfo[i].mNumChannels];
 //
 //        int lx = mLayersInfo[i].mLeft;
 //        int ly = mLayersInfo[i].mTop;
 //        int lw = mLayersInfo[i].mRight;
 //        int lh = mLayersInfo[i].mBottom;
-//        uint32_t channelSize =  (lw - lx) * (lh - ly);
+//        uint32 channelSize =  (lw - lx) * (lh - ly);
 //        //UE_LOG(LogTemp, Display, TEXT("CHannelSize layer %d: %d"), i, channelSize );
 //
-//        for(uint8_t j = 0; j < mLayersInfo[i].mNumChannels; j++) 
+//        for(uint8 j = 0; j < mLayersInfo[i].mNumChannels; j++) 
 //        {
 //            //UE_LOG(LogTemp,Display,TEXT("ChannelStart layer %d channel %d: %d"),i, j, mLayersInfo[i].mStartChannelPos[j]);
 //
 //            //Future TODO: add masks gestion here when we'll have them
 //
-//            mFileHandle->Seek( mLayersInfo[i].mStartChannelPos[j] );
-//            uint16_t cp;
+//            mFileHandle.seekg( mLayersInfo[i].mStartChannelPos[j] );
+//            uint16 cp;
 //            mFileHandle->Read( (uint8*) &cp, 2);
-//            FOdysseyMathUtils::ByteSwap( &cp, 2 );
+//            FMath::ByteSwap( &cp, 2 );
 //            //UE_LOG(LogTemp, Display, TEXT ("LayerCompression: %d" ), cp );
 //
-//            channelContents[j] = new uint8_t[channelSize];
+//            channelContents[j] = new uint8[channelSize];
 //
 //            if( cp == 0 ) //No compression
 //            {
@@ -523,7 +550,7 @@ bool FPSDOperations::ReadFileHeader()
 //            }
 //            else if ( cp == 1 ) //RLE
 //            {
-//                mFileHandle->Seek(mFileHandle->Tell() + (lh - ly) * 2);
+//                mFileHandle.seekg(mFileHandle.tellg() + (lh - ly) * 2);
 //                DecodeAndCopyRLE(channelContents[j],channelSize);
 //                mLayersInfo[i].mSizeLayerImage += channelSize;
 //            }
@@ -537,13 +564,13 @@ bool FPSDOperations::ReadFileHeader()
 //                NegateImage(channelContents[j],channelSize);
 //        }
 //
-//        uint8_t* planarDst = new uint8_t[mLayersInfo[i].mSizeLayerImage];
-//        mLayersInfo[i].mLayerImageDst = new uint8_t[ mLayersInfo[i].mSizeLayerImage ];
+//        uint8* planarDst = new uint8[mLayersInfo[i].mSizeLayerImage];
+//        mLayersInfo[i].mLayerImageDst = new uint8[ mLayersInfo[i].mSizeLayerImage ];
 //
-//        uint32_t numBytesWritten = 0;
-//        for ( uint16_t currChannel = 0; currChannel < mLayersInfo[i].mNumChannels; currChannel++ )
+//        uint32 numBytesWritten = 0;
+//        for ( uint16 currChannel = 0; currChannel < mLayersInfo[i].mNumChannels; currChannel++ )
 //        {
-//            for( uint32_t currWrite = 0; currWrite < channelSize; currWrite++)
+//            for( uint32 currWrite = 0; currWrite < channelSize; currWrite++)
 //            {
 //                planarDst[numBytesWritten] = channelContents[currChannel][currWrite];
 //                numBytesWritten++;
@@ -567,32 +594,32 @@ bool FPSDOperations::ReadFileHeader()
 //
 //bool FPSDOperations::ReadLayerStackData16()
 //{
-//    for(uint8_t i = 0; i < mLayersInfo.Num(); i++)
+//    for(uint8 i = 0; i < mLayersInfo.Num(); i++)
 //    {
 //        //UE_LOG(LogTemp, Display, TEXT("Layer Number %d"), i)
-//        uint16_t** channelContents = new uint16_t*[mLayersInfo[i].mNumChannels];
+//        uint16** channelContents = new uint16*[mLayersInfo[i].mNumChannels];
 //
 //        int ll = mLayersInfo[i].mLeft;
 //        int lt = mLayersInfo[i].mTop;
 //        int lr = mLayersInfo[i].mRight;
 //        int lb = mLayersInfo[i].mBottom;
-//        uint32_t channelSize =  (lr - ll) * (lb - lt);
+//        uint32 channelSize =  (lr - ll) * (lb - lt);
 //
 //        //UE_LOG(LogTemp, Display, TEXT("CHannelSize layer %d: %d"), i, channelSize );
 //
-//        for(uint8_t j = 0; j < mLayersInfo[i].mNumChannels; j++)
+//        for(uint8 j = 0; j < mLayersInfo[i].mNumChannels; j++)
 //        {
 //            //UE_LOG(LogTemp,Display,TEXT("ChannelStart layer %d channel %d: %d"),i, j, mLayersInfo[i].mStartChannelPos[j]);
 //
 //            //Future TODO: add masks gestion here when we'll have them
 //
-//            mFileHandle->Seek(mLayersInfo[i].mStartChannelPos[j]);
-//            uint16_t cp;
-//            mFileHandle->Read((uint8*)&cp,2);
-//            FOdysseyMathUtils::ByteSwap(&cp,2);
+//            mFileHandle.seekg(mLayersInfo[i].mStartChannelPos[j]);
+//            uint16 cp;
+//            if(!mFileHandle.read((char*)&cp,2));
+//            FMath::ByteSwap(&cp,2);
 //            //UE_LOG(LogTemp, Display, TEXT ("LayerCompression: %d" ), cp );
 //
-//            channelContents[j] = new uint16_t[channelSize];
+//            channelContents[j] = new uint16[channelSize];
 //
 //            if(cp == 0) //No compression
 //            {
@@ -601,13 +628,13 @@ bool FPSDOperations::ReadFileHeader()
 //            } 
 //            else if(cp == 1) //RLE
 //            {
-//                mFileHandle->Seek(mFileHandle->Tell() + (lb - lt) * 2);
+//                mFileHandle.seekg(mFileHandle.tellg() + (lb - lt) * 2);
 //                DecodeAndCopyRLE(channelContents[j],channelSize);
 //                mLayersInfo[i].mSizeLayerImage += channelSize;
 //            } 
 //            else if( (cp == 2 || cp == 3) )
 //            {
-//                uLongf dstSize = channelSize * sizeof( uint16_t );
+//                uLongf dstSize = channelSize * sizeof( uint16 );
 //                uLongf srcSize = mLayersInfo[i].mChannelSize[j];
 //                uint8* srcData = new uint8[srcSize];
 //                mFileHandle->Read( srcData, srcSize );
@@ -615,11 +642,11 @@ bool FPSDOperations::ReadFileHeader()
 //                int zResult = uncompress( (uint8*)channelContents[j], &dstSize, srcData, srcSize );
 //
 //                if( cp == 3 )
-//                    UnpredictZip16( (uint8*)channelContents[j], channelSize * sizeof( uint16_t ), lr - ll, (lr - ll) * sizeof( uint16_t) );
+//                    UnpredictZip16( (uint8*)channelContents[j], channelSize * sizeof( uint16 ), lr - ll, (lr - ll) * sizeof( uint16) );
 //
-//                for( uint32_t currShort = 0; currShort < channelSize; currShort++ )
+//                for( uint32 currShort = 0; currShort < channelSize; currShort++ )
 //                {
-//                    FOdysseyMathUtils::ByteSwap( &channelContents[j][currShort], 2 );
+//                    FMath::ByteSwap( &channelContents[j][currShort], 2 );
 //                }
 //
 //                mLayersInfo[i].mSizeLayerImage += channelSize;
@@ -637,13 +664,13 @@ bool FPSDOperations::ReadFileHeader()
 //                NegateImage(channelContents[j],channelSize);
 //        }
 //
-//        uint16_t* planarDst = new uint16_t[mLayersInfo[i].mSizeLayerImage];
-//        mLayersInfo[i].mLayerImageDst16 = new uint16_t[mLayersInfo[i].mSizeLayerImage];
+//        uint16* planarDst = new uint16[mLayersInfo[i].mSizeLayerImage];
+//        mLayersInfo[i].mLayerImageDst16 = new uint16[mLayersInfo[i].mSizeLayerImage];
 //
-//        uint32_t numShortWritten = 0;
-//        for(uint16_t currChannel = 0; currChannel < mLayersInfo[i].mNumChannels; currChannel++)
+//        uint32 numShortWritten = 0;
+//        for(uint16 currChannel = 0; currChannel < mLayersInfo[i].mNumChannels; currChannel++)
 //        {
-//            for(uint32_t currWrite = 0; currWrite < channelSize; currWrite++)
+//            for(uint32 currWrite = 0; currWrite < channelSize; currWrite++)
 //            {
 //                planarDst[numShortWritten] = channelContents[currChannel][currWrite];
 //                numShortWritten++;
@@ -667,32 +694,32 @@ bool FPSDOperations::ReadFileHeader()
 //
 //bool FPSDOperations::ReadLayerStackData32()
 //{
-//    for(uint8_t i = 0; i < mLayersInfo.Num(); i++)
+//    for(uint8 i = 0; i < mLayersInfo.Num(); i++)
 //    {
 //        //UE_LOG(LogTemp, Display, TEXT("Layer Number %d"), i)
-//        uint32_t** channelContents = new uint32_t*[mLayersInfo[i].mNumChannels];
+//        uint32** channelContents = new uint32*[mLayersInfo[i].mNumChannels];
 //
 //        int ll = mLayersInfo[i].mLeft;
 //        int lt = mLayersInfo[i].mTop;
 //        int lr = mLayersInfo[i].mRight;
 //        int lb = mLayersInfo[i].mBottom;
-//        uint32_t channelSize =  (lr - ll) * (lb - lt);
+//        uint32 channelSize =  (lr - ll) * (lb - lt);
 //
 //        //UE_LOG(LogTemp, Display, TEXT("CHannelSize layer %d: %d"), i, channelSize );
 //
-//        for(uint8_t j = 0; j < mLayersInfo[i].mNumChannels; j++)
+//        for(uint8 j = 0; j < mLayersInfo[i].mNumChannels; j++)
 //        {
 //            //UE_LOG(LogTemp,Display,TEXT("ChannelStart layer %d channel %d: %d"),i, j, mLayersInfo[i].mStartChannelPos[j]);
 //
 //            //Future TODO: add masks gestion here when we'll have them
 //
-//            mFileHandle->Seek(mLayersInfo[i].mStartChannelPos[j]);
-//            uint16_t cp;
-//            mFileHandle->Read((uint8*)&cp,2);
-//            FOdysseyMathUtils::ByteSwap(&cp,2);
+//            mFileHandle.seekg(mLayersInfo[i].mStartChannelPos[j]);
+//            uint16 cp;
+//            if(!mFileHandle.read((char*)&cp,2));
+//            FMath::ByteSwap(&cp,2);
 //            //UE_LOG(LogTemp, Display, TEXT ("LayerCompression: %d" ), cp );
 //
-//            channelContents[j] = new uint32_t[channelSize];
+//            channelContents[j] = new uint32[channelSize];
 //
 //            if(cp == 0) //No compression
 //            {
@@ -701,28 +728,28 @@ bool FPSDOperations::ReadFileHeader()
 //            } 
 //            else if(cp == 1) //RLE
 //            {
-//                mFileHandle->Seek(mFileHandle->Tell() + (lb - lt) * 2);
+//                mFileHandle.seekg(mFileHandle.tellg() + (lb - lt) * 2);
 //                DecodeAndCopyRLE(channelContents[j],channelSize);
 //                mLayersInfo[i].mSizeLayerImage += channelSize;
 //            } 
 //            else if((cp == 2 || cp == 3))
 //            {
-//                uLongf dstSize = channelSize * sizeof(uint32_t);
+//                uLongf dstSize = channelSize * sizeof(uint32);
 //                uLongf srcSize = mLayersInfo[i].mChannelSize[j];
 //                uint8* srcData = new uint8[srcSize];
-//                uint32_t* dstData = new uint32_t[channelSize];
+//                uint32* dstData = new uint32[channelSize];
 //
 //                mFileHandle->Read(srcData,srcSize);
 //
 //                int zResult = uncompress((uint8*)dstData,&dstSize,srcData,srcSize);
 //
 //                if(cp == 3)
-//                    UnpredictZip32((uint8*)dstData, (uint8*)channelContents[j], channelSize * sizeof(uint32_t),lr - ll, lb - lt, (lr - ll) * sizeof(uint32_t));
+//                    UnpredictZip32((uint8*)dstData, (uint8*)channelContents[j], channelSize * sizeof(uint32),lr - ll, lb - lt, (lr - ll) * sizeof(uint32));
 //
-//                for(uint32_t currLong = 0; currLong < channelSize; currLong++)
+//                for(uint32 currLong = 0; currLong < channelSize; currLong++)
 //                {
 //                    //channelContents[j][currLong] = channelContents[j][currLong] >> 8;
-//                    FOdysseyMathUtils::ByteSwap(&channelContents[j][currLong],4);
+//                    FMath::ByteSwap(&channelContents[j][currLong],4);
 //                    //channelContents[j][currLong]*=255;
 //                }
 //
@@ -744,13 +771,13 @@ bool FPSDOperations::ReadFileHeader()
 //                NegateImage(channelContents[j],channelSize);
 //        }
 //
-//        uint32_t* planarDst = new uint32_t[mLayersInfo[i].mSizeLayerImage];
-//        mLayersInfo[i].mLayerImageDst32 = new uint32_t[mLayersInfo[i].mSizeLayerImage];
+//        uint32* planarDst = new uint32[mLayersInfo[i].mSizeLayerImage];
+//        mLayersInfo[i].mLayerImageDst32 = new uint32[mLayersInfo[i].mSizeLayerImage];
 //
-//        uint32_t numLongWritten = 0;
-//        for(uint16_t currChannel = 0; currChannel < mLayersInfo[i].mNumChannels; currChannel++)
+//        uint32 numLongWritten = 0;
+//        for(uint16 currChannel = 0; currChannel < mLayersInfo[i].mNumChannels; currChannel++)
 //        {
-//            for(uint32_t currWrite = 0; currWrite < channelSize; currWrite++)
+//            for(uint32 currWrite = 0; currWrite < channelSize; currWrite++)
 //            {
 //                planarDst[numLongWritten] = channelContents[currChannel][currWrite];
 //                numLongWritten++;
@@ -802,27 +829,27 @@ bool FPSDOperations::ReadFileHeader()
 //        mLayerStack = new FOdysseyLayerStack();
 //        mLayerStack->Init(mImageWidth,mImageHeight,format);
 //
-//        mFileHandle->Seek(mImageStart);
+//        mFileHandle.seekg(mImageStart);
 //
-//        uint16_t compressionType;
-//        mFileHandle->Read((uint8*)&compressionType,2);
-//        FOdysseyMathUtils::ByteSwap(&compressionType,2);
+//        uint16 compressionType;
+//        if(!mFileHandle.read((char*)&compressionType,2));
+//        FMath::ByteSwap(&compressionType,2);
 //
-//        uint32_t size =  mImageWidth * mImageHeight * 4; //Converted to BGRA -> 4 channels;
-//        mImageDst = new uint8_t[size];
+//        uint32 size =  mImageWidth * mImageHeight * 4; //Converted to BGRA -> 4 channels;
+//        mImageDst = new uint8[size];
 //
 //        if(compressionType == 0) // uncompressed
 //        {
-//            uint8_t* planar = new uint8_t[(mImageWidth * mImageHeight) / 8 + 1];
+//            uint8* planar = new uint8[(mImageWidth * mImageHeight) / 8 + 1];
 //            CopyUncompressed(planar,size);
 //            PlanarByteConvertBitMapToBGRA8( planar, mImageDst, (mImageWidth * mImageHeight) / 8 + 1 );
 //            delete[] planar;
 //        } 
 //        else if(compressionType == 1) //RLE
 //        {
-//            uint32_t sizeBitmap = (mImageWidth * mImageHeight) / 8 + 1;
-//            uint8_t* planar = new uint8_t[sizeBitmap];
-//            mFileHandle->Seek(mFileHandle->Tell() + mImageHeight * 2);
+//            uint32 sizeBitmap = (mImageWidth * mImageHeight) / 8 + 1;
+//            uint8* planar = new uint8[sizeBitmap];
+//            mFileHandle.seekg(mFileHandle.tellg() + mImageHeight * 2);
 //            DecodeAndCopyRLE(planar,sizeBitmap);
 //            PlanarByteConvertBitMapToBGRA8(planar,mImageDst,sizeBitmap);
 //            delete[] planar;
@@ -859,8 +886,8 @@ bool FPSDOperations::ReadFileHeader()
 //        if( mLayersInfo[i].mDividerType == 0 ) //Rasterizable layer
 //        {
 //            FName layerName = FName(mLayersInfo[i].mName);
-//            uint32_t w = mLayersInfo[i].mRight - mLayersInfo[i].mLeft;
-//            uint32_t h = mLayersInfo[i].mBottom - mLayersInfo[i].mTop;
+//            uint32 w = mLayersInfo[i].mRight - mLayersInfo[i].mLeft;
+//            uint32 h = mLayersInfo[i].mBottom - mLayersInfo[i].mTop;
 //
 //            ::ul3::FBlock* srcblock;
 //            FOdysseyBlock* convBlock;
@@ -1064,61 +1091,61 @@ bool FPSDOperations::ReadFileHeader()
 //    }
 //}
 //
-//void FPSDOperations::CopyUncompressed(uint32_t* dst,uint32_t length)
+//void FPSDOperations::CopyUncompressed(uint32* dst,uint32 length)
 //{
-//    for(uint32_t i = 0; i < length; i++)
+//    for(uint32 i = 0; i < length; i++)
 //    {
-//        mFileHandle->Read((uint8*) &(dst[i]),4);
-//        FOdysseyMathUtils::ByteSwap(&(dst[i]),4);
+//        if(!mFileHandle.read((char*) &(dst[i]),4));
+//        FMath::ByteSwap(&(dst[i]),4);
 //    }
 //}
 //
-//void FPSDOperations::CopyUncompressed(uint16_t* dst, uint32_t length)
+//void FPSDOperations::CopyUncompressed(uint16* dst, uint32 length)
 //{
-//    for( uint32_t i = 0; i < length; i++ )
+//    for( uint32 i = 0; i < length; i++ )
 //    {
 //        mFileHandle->Read( (uint8*) &(dst[i]), 2 );
-//        FOdysseyMathUtils::ByteSwap( &(dst[i]), 2 );
+//        FMath::ByteSwap( &(dst[i]), 2 );
 //    }
 //}
 //
-//void FPSDOperations::CopyUncompressed(uint8_t* dst, uint32_t length)
+//void FPSDOperations::CopyUncompressed(uint8* dst, uint32 length)
 //{
-//    mFileHandle->Read((uint8*) dst, length);
+//    if(!mFileHandle.read((char*) dst, length));
 //}
 //
-//void FPSDOperations::DecodeAndCopyRLE(uint32_t* dst,uint32_t length)
+//void FPSDOperations::DecodeAndCopyRLE(uint32* dst,uint32 length)
 //{
 //    while(length > 0)
 //    {
 //        int32_t k;
-//        mFileHandle->Read((uint8*)&k,4);
-//        FOdysseyMathUtils::ByteSwap(&k,4);
+//        if(!mFileHandle.read((char*)&k,4));
+//        FMath::ByteSwap(&k,4);
 //
 //        if(k >= 0)
 //        {
-//            uint32_t n = k + 1;
+//            uint32 n = k + 1;
 //            if(n > length)
 //                n = length;
 //
-//            for(uint32_t i = 0; i < n; i++)
+//            for(uint32 i = 0; i < n; i++)
 //            {
-//                mFileHandle->Read((uint8*)dst,n);
-//                FOdysseyMathUtils::ByteSwap(&dst,4);
+//                if(!mFileHandle.read((char*)dst,n));
+//                FMath::ByteSwap(&dst,4);
 //                dst++;
 //            }
 //            length -= n;
 //        } else
 //        {
-//            uint32_t n = -k + 1;
+//            uint32 n = -k + 1;
 //            if(n > length)
 //                n = length;
 //
-//            uint32_t fileLong;
-//            mFileHandle->Read((uint8*)&fileLong,4);
-//            FOdysseyMathUtils::ByteSwap(&fileLong,4);
+//            uint32 fileLong;
+//            if(!mFileHandle.read((char*)&fileLong,4));
+//            FMath::ByteSwap(&fileLong,4);
 //
-//            for(uint32_t i = 0; i < n; i++)
+//            for(uint32 i = 0; i < n; i++)
 //                *dst++ = fileLong;
 //
 //            length -= n;
@@ -1126,39 +1153,39 @@ bool FPSDOperations::ReadFileHeader()
 //    }
 //}
 //
-//void FPSDOperations::DecodeAndCopyRLE(uint16_t* dst,uint32_t length)
+//void FPSDOperations::DecodeAndCopyRLE(uint16* dst,uint32 length)
 //{
 //    while( length > 0 )
 //    {
 //        int16_t k;
 //        mFileHandle->Read( (uint8*) &k, 2 );
-//        FOdysseyMathUtils::ByteSwap( &k, 2 );
+//        FMath::ByteSwap( &k, 2 );
 //
 //        if(k >= 0)
 //        {
-//            uint32_t n = k + 1;
+//            uint32 n = k + 1;
 //            if( n > length )
 //                n = length;
 //
-//            for( uint32_t i = 0; i < n; i++ )
+//            for( uint32 i = 0; i < n; i++ )
 //            {
-//                mFileHandle->Read((uint8*)dst,n);
-//                FOdysseyMathUtils::ByteSwap( &dst, 2 );
+//                if(!mFileHandle.read((char*)dst,n));
+//                FMath::ByteSwap( &dst, 2 );
 //                dst++;
 //            }
 //            length -= n;
 //        }
 //        else
 //        {
-//            uint32_t n = -k + 1;
+//            uint32 n = -k + 1;
 //            if(n > length)
 //                n = length;
 //
-//            uint16_t fileShort;
-//            mFileHandle->Read((uint8*)&fileShort,2);
-//            FOdysseyMathUtils::ByteSwap( &fileShort, 2 );
+//            uint16 fileShort;
+//            if(!mFileHandle.read((char*)&fileShort,2));
+//            FMath::ByteSwap( &fileShort, 2 );
 //
-//            for(uint32_t i = 0; i < n; i++)
+//            for(uint32 i = 0; i < n; i++)
 //                *dst++ = fileShort; 
 //
 //            length -= n;
@@ -1166,9 +1193,9 @@ bool FPSDOperations::ReadFileHeader()
 //    }
 //}
 //
-//void FPSDOperations::DecodeAndCopyRLE(uint8_t* dst, uint32_t length)
+//void FPSDOperations::DecodeAndCopyRLE(uint8* dst, uint32 length)
 //{
-//    //uint32_t numBytesRead = 0;
+//    //uint32 numBytesRead = 0;
 //    while( length > 0 )
 //    {
 //        char k;
@@ -1176,7 +1203,7 @@ bool FPSDOperations::ReadFileHeader()
 //
 //        if(k >= 0) 
 //        {
-//            uint32_t n = k + 1;
+//            uint32 n = k + 1;
 //            if(n > length)
 //                n = length;
 //
@@ -1188,11 +1215,11 @@ bool FPSDOperations::ReadFileHeader()
 //        } 
 //        else 
 //        {
-//            uint32_t n = -k + 1;
+//            uint32 n = -k + 1;
 //            if(n > length)
 //                n = length;
 //
-//            uint8_t fileByte;
+//            uint8 fileByte;
 //            mFileHandle->Read( (uint8*) &fileByte, 1 );
 //            //numBytesRead ++;
 //
@@ -1205,11 +1232,11 @@ bool FPSDOperations::ReadFileHeader()
 //    //UE_LOG(LogTemp, Display, TEXT("%d"), numBytesRead)
 //}
 //
-//void FPSDOperations::UnpredictZip16(uint8_t* dst,uint32_t length, uint32_t numColumns, uint32_t rowSize)
+//void FPSDOperations::UnpredictZip16(uint8* dst,uint32 length, uint32 numColumns, uint32 rowSize)
 //{
 //    while (length > 0)
 //    {
-//        uint32_t c = numColumns;
+//        uint32 c = numColumns;
 //        while( --c )
 //        {
 //            dst[2]+=dst[0]+((dst[1]+dst[3]) >> 8);
@@ -1221,12 +1248,12 @@ bool FPSDOperations::ReadFileHeader()
 //    }
 //}
 //
-//void FPSDOperations::UnpredictZip32(uint8* src, uint8* dst, uint32_t length,uint32_t numColumns, uint32_t numRows, uint32_t rowSize)
+//void FPSDOperations::UnpredictZip32(uint8* src, uint8* dst, uint32 length,uint32 numColumns, uint32 numRows, uint32 rowSize)
 //{
 //    uint32 remaining;
 //    uint8* start;
 //
-//    for(uint32_t y = 0; y < numRows; y++)
+//    for(uint32 y = 0; y < numRows; y++)
 //    {
 //        start=src;
 //        remaining=rowSize;
@@ -1251,10 +1278,10 @@ bool FPSDOperations::ReadFileHeader()
 //    }
 //}
 //
-//void FPSDOperations::PlanarByteConvertBitMapToBGRA8(uint8_t* src,uint8_t* dst,uint32_t length)
+//void FPSDOperations::PlanarByteConvertBitMapToBGRA8(uint8* src,uint8* dst,uint32 length)
 //{
 //    unsigned int mask = 1U << 7;
-//    for( uint32_t i = 0; i < length; i++ )
+//    for( uint32 i = 0; i < length; i++ )
 //    {
 //        for(int j = 0; j < 8; j++)
 //        {
@@ -1270,87 +1297,87 @@ bool FPSDOperations::ReadFileHeader()
 //
 //
 //
-//void FPSDOperations::PlanarByteConvertOrdered(uint8_t* src,uint8_t* dst,uint32_t length,uint8_t numChannels,uint8_t channelsOrder[])
+//void FPSDOperations::PlanarByteConvertOrdered(uint8* src,uint8* dst,uint32 length,uint8 numChannels,uint8 channelsOrder[])
 //{
-//    uint32_t maxByChannel = length / numChannels;
-//    for(uint32_t i = 0; i < maxByChannel; i++)
+//    uint32 maxByChannel = length / numChannels;
+//    for(uint32 i = 0; i < maxByChannel; i++)
 //    {
-//        for(uint16_t j = 0; j < numChannels; j++)
+//        for(uint16 j = 0; j < numChannels; j++)
 //        {
 //            dst[i * numChannels + channelsOrder[j]] = src[i + j * maxByChannel];
 //        }
 //    }
 //}
 //
-//void FPSDOperations::PlanarByteConvertOrdered(uint16_t* src,uint16_t* dst,uint32_t length,uint8_t numChannels,uint8_t channelsOrder[])
+//void FPSDOperations::PlanarByteConvertOrdered(uint16* src,uint16* dst,uint32 length,uint8 numChannels,uint8 channelsOrder[])
 //{
-//    uint32_t maxByChannel = length / numChannels;
-//    for(uint32_t i = 0; i < maxByChannel; i++)
+//    uint32 maxByChannel = length / numChannels;
+//    for(uint32 i = 0; i < maxByChannel; i++)
 //    {
-//        for(uint16_t j = 0; j < numChannels; j++)
+//        for(uint16 j = 0; j < numChannels; j++)
 //        {
 //            dst[i * numChannels + channelsOrder[j]] = src[i + j * maxByChannel];
 //        }
 //    }
 //}
 //
-//void FPSDOperations::PlanarByteConvert( uint8_t* src, uint8_t* dst, uint32_t length, uint8_t numChannels )
+//void FPSDOperations::PlanarByteConvert( uint8* src, uint8* dst, uint32 length, uint8 numChannels )
 //{
-//    uint32_t maxByChannel = length / numChannels;
-//    for( uint32_t i = 0; i < maxByChannel; i++ )
+//    uint32 maxByChannel = length / numChannels;
+//    for( uint32 i = 0; i < maxByChannel; i++ )
 //    {
-//        for (uint16_t j = 0; j < numChannels; j++)
+//        for (uint16 j = 0; j < numChannels; j++)
 //        {
 //            dst[i * numChannels + j] = src[i + j * maxByChannel];
 //        }
 //    }
 //}
 //
-//void FPSDOperations::PlanarByteConvert(uint16_t* src,uint16_t* dst,uint32_t length,uint8_t numChannels)
+//void FPSDOperations::PlanarByteConvert(uint16* src,uint16* dst,uint32 length,uint8 numChannels)
 //{
-//    uint32_t maxByChannel = length / numChannels;
-//    for(uint32_t i = 0; i < maxByChannel; i++)
+//    uint32 maxByChannel = length / numChannels;
+//    for(uint32 i = 0; i < maxByChannel; i++)
 //    {
-//        for(uint16_t j = 0; j < numChannels; j++)
+//        for(uint16 j = 0; j < numChannels; j++)
 //        {
 //            dst[i * numChannels + j] = src[i + j * maxByChannel];
 //        }
 //    }
 //}
 //
-//void FPSDOperations::PlanarByteConvert(uint32_t* src,uint32_t* dst,uint32_t length,uint8_t numChannels)
+//void FPSDOperations::PlanarByteConvert(uint32* src,uint32* dst,uint32 length,uint8 numChannels)
 //{
-//    uint32_t maxByChannel = length / numChannels;
-//    for(uint32_t i = 0; i < maxByChannel; i++)
+//    uint32 maxByChannel = length / numChannels;
+//    for(uint32 i = 0; i < maxByChannel; i++)
 //    {
-//        for(uint16_t j = 0; j < numChannels; j++)
+//        for(uint16 j = 0; j < numChannels; j++)
 //        {
 //            dst[i * numChannels + j] = src[i + j * maxByChannel];
 //        }
 //    }
 //}
 //
-//void FPSDOperations::NegateImage(uint8_t* ioSrc,uint32_t length )
+//void FPSDOperations::NegateImage(uint8* ioSrc,uint32 length )
 //{
-//    for( uint32_t i = 0; i < length; i++ )
+//    for( uint32 i = 0; i < length; i++ )
 //        ioSrc[i] = MAX_uint8 - ioSrc[i];
 //}
 //
-//void FPSDOperations::NegateImage(uint16_t* ioSrc,uint32_t length )
+//void FPSDOperations::NegateImage(uint16* ioSrc,uint32 length )
 //{
-//    for(uint32_t i = 0; i < length; i++)
+//    for(uint32 i = 0; i < length; i++)
 //        ioSrc[i] = MAX_uint16 - ioSrc[i];
 //}
 //
-//void FPSDOperations::NegateImage(uint32_t* ioSrc,uint32_t length)
+//void FPSDOperations::NegateImage(uint32* ioSrc,uint32 length)
 //{
-//    for(uint32_t i = 0; i < length; i++)
+//    for(uint32 i = 0; i < length; i++)
 //        ioSrc[i] = MAX_uint32 - ioSrc[i];
 //}
 //
-//void FPSDOperations::lerp24BitsInto32Bits(uint32_t* ioSrc,uint32_t length)
+//void FPSDOperations::lerp24BitsInto32Bits(uint32* ioSrc,uint32 length)
 //{
-//    for(uint32_t i = 0; i < length; i++)
+//    for(uint32 i = 0; i < length; i++)
 //    {
 //        ioSrc[i] = ioSrc[i] << 8;
 //    }
@@ -1390,37 +1417,37 @@ bool FPSDOperations::ReadFileHeader()
 //    return ::ul3::eBlendingMode::BM_NORMAL;
 //}
 //
-//uint16_t FPSDOperations::GetChannelsNumber()
+//uint16 FPSDOperations::GetChannelsNumber()
 //{
 //    return mChannelsNumber;
 //}
 //
-//uint32_t FPSDOperations::GetImageHeight()
+//uint32 FPSDOperations::GetImageHeight()
 //{
 //    return mImageHeight;
 //}
 //
-//uint32_t FPSDOperations::GetImageWidth()
+//uint32 FPSDOperations::GetImageWidth()
 //{
 //    return mImageWidth;
 //}
 //
-//uint16_t FPSDOperations::GetBitDepth()
+//uint16 FPSDOperations::GetBitDepth()
 //{
 //    return mBitDepth;
 //}
 //
-//uint16_t FPSDOperations::GetColorMode()
+//uint16 FPSDOperations::GetColorMode()
 //{
 //    return mColorMode;
 //}
 //
-//uint8_t* FPSDOperations::GetImageDst()
+//uint8* FPSDOperations::GetImageDst()
 //{
 //    return mImageDst;
 //}
 //
-//uint16_t* FPSDOperations::GetImageDst16()
+//uint16* FPSDOperations::GetImageDst16()
 //{
 //    return mImageDst16;
 //}
@@ -1430,48 +1457,48 @@ bool FPSDOperations::ReadFileHeader()
 //    return mLayerStack;
 //}
 //
-//bool FPSDOperations::Import()
-//{
-//    if(!ReadFileHeader() )
-//        return false;
-//
-//    if(!ReadFileColorMode() )
-//        return false;
-//
-//    if( !ReadImageResources() )
-//        return false;
-//
-//    if( !ReadLayerAndMaskInfo() )
-//        return false;
-//
-//    //We can get it faster by blending the whole layer stack
-//    /*if( !ReadImageData() )
-//        return false;*/
-//    if( mBitDepth == 32)
-//    {
-//        if(!ReadLayerStackData32())
-//            return false;
-//    }
-//    else if( mBitDepth == 16 )
-//    {
-//        if( !ReadLayerStackData16() )
-//            return false;
-//    }
-//    else if( mBitDepth == 8 )
-//    {
-//        if(!ReadLayerStackData())
-//            return false;
-//    }
-//    else
-//    {
-//        UE_LOG(LogTemp, Warning, TEXT("Unsupported bit depth, Import failed"));
-//        return false;
-//    }
-//
-//    GenerateLayerStackFromLayerStackData();
-//    
-//    return true;
-//}
+bool FPSDOperations::Import()
+{
+    if(!ReadFileHeader() )
+        return false;
+
+    if(!ReadFileColorMode())
+        return false;
+
+    if(!ReadImageResources())
+        return false;
+
+    if(!ReadLayerAndMaskInfo())
+        return false;
+
+    ////We can get it faster by blending the whole layer stack
+    ///*if( !ReadImageData() )
+    //    return false;*/
+    //if( mBitDepth == 32)
+    //{
+    //    if(!ReadLayerStackData32())
+    //        return false;
+    //}
+    //else if( mBitDepth == 16 )
+    //{
+    //    if( !ReadLayerStackData16() )
+    //        return false;
+    //}
+    //else if( mBitDepth == 8 )
+    //{
+    //    if(!ReadLayerStackData())
+    //        return false;
+    //}
+    //else
+    //{
+    //    UE_LOG(LogTemp, Warning, TEXT("Unsupported bit depth, Import failed"));
+    //    return false;
+    //}
+
+    //GenerateLayerStackFromLayerStackData();
+    //
+    return true;
+}
 
 ULIS_NAMESPACE_END
 

@@ -91,6 +91,8 @@ FContext::XLoadPSDFromDisk(
     , FEvent* iEvent
 )
 {
+    FPSDOperations op( iPath );
+    op.Import();
     return  ULIS_NO_ERROR;
 }
 
