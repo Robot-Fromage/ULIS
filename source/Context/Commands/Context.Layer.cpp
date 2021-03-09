@@ -21,6 +21,7 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 #include "Process/Conv/Conv.h"
+#include "Process/Layer/PSD.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
