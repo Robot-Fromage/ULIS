@@ -25,8 +25,8 @@ main(int argc,char *argv[])
     eFormat fmt = Format_RGBAF;
     FContext ctx(queue,fmt,PerformanceIntent_AVX);
     FHardwareMetrics hw;
-    FSchedulePolicy policy_cache_efficient(ScheduleRun_Multi,ScheduleMode_Chunks,ScheduleParameter_Length,hw.L1CacheSize());
-    FSchedulePolicy policy_mono_chunk(ScheduleRun_Mono,ScheduleMode_Chunks,ScheduleParameter_Count,1);
+    FSchedulePolicy policy_cache_efficient(ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks,ScheduleParameter_Length,hw.L1CacheSize());
+    FSchedulePolicy policy_mono_chunk(ScheduleTime_Sync, ScheduleRun_Mono,ScheduleMode_Chunks,ScheduleParameter_Count,1);
 
     _sleep(500);
     //Data
