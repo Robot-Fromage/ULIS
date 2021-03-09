@@ -56,25 +56,43 @@ FContext::Flatten(
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push multiple subcommands
-    std::function< bool( const FLayerFolder& ) > sched;
-    sched = [&sched, this]( const FLayerFolder& iFolder )->bool {
+    //          L1  L2  L3
+    //  • root <-
+    //  |-0             ]
+    //  |-1             ]
+    //  |-• 2       ]   ]
+    //  | |-3       ]   ]
+    //  | |-• a ]   ]   ]
+    //  | | |-b ]   ]   ]
+    //  | | |-c ]   ]   ]
+    //  | | |-d ]   ]   ]
+    //  |-5             ]
+    //  |-• 6   ]       ]
+    //  | |-7   ]       ]
+    //  | |-8   ]       ]
+    std::function< void( const FLayerFolder&, FEvent& oEvent ) > sched;
+    sched = [&sched, this]( const FLayerFolder& iFolder, FEvent& oEvent )->void {
+        TArray< FEvent > events( iFolder.Layers().Size() );
+        TArray< FBlock* > blocks( iFolder.Layers().Size() );
         for( uint64 i = 0; i < iFolder.Layers().Size(); ++i ) {
             eLayerType type = iFolder.Layers()[i]->Type();
             switch( type ) {
                 case Layer_Image: {
                     FLayerImage& img = dynamic_cast< FLayerImage& >( *( iFolder.Layers()[i] ) );
+                    blocks[i] = &(img.Block());
                     break;
                 }
                 case Layer_Folder: {
                     FLayerFolder& folder = dynamic_cast< FLayerFolder& >( *( iFolder.Layers()[i] ) );
-                    sched( folder );
+                    blocks[i] = &(folder.FolderBlock());
+                    sched( folder, events[i] );
                     break;
                 }
             }
         }
-        return  true;
     };
-    sched( iStack.Root() );
+    FEvent event;
+    sched( iStack.Root(), event );
 
     return  ULIS_NO_ERROR;
 }
