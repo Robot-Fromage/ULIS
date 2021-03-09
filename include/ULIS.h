@@ -21,6 +21,11 @@
 #include "Image/Format.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
+// Layer
+#include "Layer/Layer.h"
+#include "Layer/LayerFolder.h"
+#include "Layer/LayerImage.h"
+#include "Layer/LayerStack.h"
 // Font
 #include "Font/Font.h"
 #include "Font/FontEngine.h"
