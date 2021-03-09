@@ -29,7 +29,7 @@ FLayerStack::FLayerStack(
     , IHasColorSpace( iColorSpace )
     , mWidth( iWidth )
     , mHeight( iHeight )
-    , mRoot( "Root" )
+    , mRoot( "Root", iWidth, iHeight, iFormat )
 {
 }
 
@@ -100,6 +100,11 @@ FLayerStack::CheckSanity() const
                 }
                 case Layer_Folder: {
                     FLayerFolder* ptr = dynamic_cast< FLayerFolder* >( iFolder->Layers()[i] );
+                    bool goodFormat = this->Format() == ptr->FolderBlock().Format();
+                    bool goodSize   = this->Rect() == ptr->FolderBlock().Rect();
+                    bool goodCS     = this->ColorSpace() == ptr->FolderBlock().ColorSpace();
+                    if( !( goodFormat && goodSize && goodCS ) )
+                        return  false;
                     CheckSanity_imp( ptr );
                     break;
                 }

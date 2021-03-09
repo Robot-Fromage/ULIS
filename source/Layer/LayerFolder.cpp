@@ -10,18 +10,20 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/LayerFolder.h"
+#include "Image/Block.h"
 
 ULIS_NAMESPACE_BEGIN
-
 FLayerFolder::~FLayerFolder()
 {
     Reset();
 }
 
-FLayerFolder::FLayerFolder( const FString& iName )
+FLayerFolder::FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat )
     : ILayer( Layer_Folder, iName )
     , mLayers()
+    , mFolderBlock( nullptr )
 {
+    mFolderBlock = new FBlock( iWidth, iHeight, iFormat );
 }
 
 TArray< ILayer* >&
@@ -55,6 +57,18 @@ FLayerFolder::Reset()
         delete  mLayers[i];
     }
     mLayers.Clear();
+}
+
+FBlock&
+FLayerFolder::FolderBlock()
+{
+    return  *mFolderBlock;
+}
+
+const FBlock&
+FLayerFolder::FolderBlock() const
+{
+    return  *mFolderBlock;
 }
 
 ULIS_NAMESPACE_END

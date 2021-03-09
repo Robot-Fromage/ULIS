@@ -27,7 +27,7 @@ class ULIS_API FLayerFolder
 {
 public:
     ~FLayerFolder() override;
-    FLayerFolder( const FString& iName );
+    FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat );
 
     FLayerFolder( const FLayerFolder& ) = delete;
     FLayerFolder& operator=( const FLayerFolder& ) = delete;
@@ -38,9 +38,12 @@ public:
     void AddLayer( ILayer* iLayer, int iIndex = -1 );
     void RemoveLayer( int iIndex );
     void Reset();
+    FBlock& FolderBlock();
+    const FBlock& FolderBlock() const;
 
 private:
     TArray< ILayer* > mLayers;
+    FBlock* mFolderBlock;
 };
 
 ULIS_NAMESPACE_END

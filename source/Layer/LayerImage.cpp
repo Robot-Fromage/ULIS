@@ -13,7 +13,6 @@
 #include "Image/Block.h"
 
 ULIS_NAMESPACE_BEGIN
-
 FLayerImage::~FLayerImage()
 {
     delete  mBlock;
