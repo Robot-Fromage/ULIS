@@ -16,6 +16,7 @@ ULIS_NAMESPACE_BEGIN
 FLayerFolder::~FLayerFolder()
 {
     Reset();
+    delete  mFolderBlock;
 }
 
 FLayerFolder::FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat )
