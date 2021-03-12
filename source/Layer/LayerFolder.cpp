@@ -17,10 +17,63 @@ FLayerFolder::~FLayerFolder()
 {
 }
 
-FLayerFolder::FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat, FLayerRoot* iParent )
-    : ILayer( iName, iParent )
-    , FLayerImage( iName, iWidth, iHeight, iFormat, iParent )
-    , FLayerRoot( iName, iParent )
+FLayerFolder::FLayerFolder(
+      const FString& iName
+    , uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , eBlendMode iBlendMode
+    , eAlphaMode iAlphaMode
+    , FLayerRoot* iParent
+)
+    : ILayer(
+          iName
+        , iParent
+    )
+    , FLayerImage(
+          iName
+        , iWidth
+        , iHeight
+        , iFormat
+        , iBlendMode
+        , iAlphaMode
+        , iParent
+    )
+    , FLayerRoot(
+          iName
+        , iParent
+    )
+{
+}
+
+FLayerFolder::FLayerFolder(
+      FBlock* iBlock
+    , const FString& iName
+    , uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , eBlendMode iBlendMode
+    , eAlphaMode iAlphaMode
+    , FLayerRoot* iParent
+)
+    : ILayer(
+          iName
+        , iParent
+    )
+    , FLayerImage(
+          iBlock
+        , iName
+        , iWidth
+        , iHeight
+        , iFormat
+        , iBlendMode
+        , iAlphaMode
+        , iParent
+    )
+    , FLayerRoot(
+          iName
+        , iParent
+    )
 {
 }
 

@@ -26,7 +26,26 @@ class ULIS_API FLayerFolder final
 {
 public:
     ~FLayerFolder() override final;
-    FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat, FLayerRoot* iParent );
+    FLayerFolder(
+          const FString& iName
+        , uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat
+        , eBlendMode iBlendMode
+        , eAlphaMode iAlphaMode
+        , FLayerRoot* iParent
+    );
+
+    FLayerFolder(
+          FBlock* iBlock
+        , const FString& iName
+        , uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat
+        , eBlendMode iBlendMode
+        , eAlphaMode iAlphaMode
+        , FLayerRoot* iParent
+    );
 
     FLayerFolder( const FLayerFolder& ) = delete;
     FLayerFolder& operator=( const FLayerFolder& ) = delete;

@@ -22,6 +22,8 @@ FLayerText::FLayerText(
     , uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
+    , eBlendMode iBlendMode
+    , eAlphaMode iAlphaMode
     , const std::wstring& iText
     , const FFont& iFont
     , uint32 iFontSize
@@ -30,8 +32,58 @@ FLayerText::FLayerText(
     , bool iAA
     , FLayerRoot* iParent
 )
-    : ILayer( iName, iParent )
-    , FLayerImage( iName, iWidth, iHeight, iFormat, iParent )
+    : ILayer(
+          iName
+        , iParent
+    )
+    , FLayerImage(
+          iName
+        , iWidth
+        , iHeight
+        , iFormat
+        , iBlendMode
+        , iAlphaMode
+        , iParent
+    )
+    , mText( iText )
+    , mFont( iFont )
+    , mFontSize( iFontSize )
+    , mTransform( iTransform )
+    , mColor( iColor )
+    , mAA( iAA )
+{
+}
+
+FLayerText::FLayerText(
+      FBlock* iBlock
+    , const FString& iName
+    , uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , eBlendMode iBlendMode
+    , eAlphaMode iAlphaMode
+    , const std::wstring& iText
+    , const FFont& iFont
+    , uint32 iFontSize
+    , const FMat3F& iTransform
+    , const ISample& iColor
+    , bool iAA
+    , FLayerRoot* iParent
+)
+    : ILayer(
+          iName
+        , iParent
+    )
+    , FLayerImage(
+          iBlock
+        , iName
+        , iWidth
+        , iHeight
+        , iFormat
+        , iBlendMode
+        , iAlphaMode
+        , iParent
+    )
     , mText( iText )
     , mFont( iFont )
     , mFontSize( iFontSize )

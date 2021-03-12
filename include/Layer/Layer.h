@@ -16,14 +16,14 @@
 ULIS_NAMESPACE_BEGIN
 enum eLayerType
 {
-      Layer_Root
+      Layer_Invalid
+    , Layer_Root
     , Layer_Image
     , Layer_Folder
     , Layer_Text
     , Layer_Vector
     , Layer_FX
     , Layer_Mask
-    , NumLayerTypes
 };
 
 class FLayerRoot;

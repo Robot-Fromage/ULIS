@@ -35,6 +35,25 @@ public:
         , uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
+        , eBlendMode iBlendMode
+        , eAlphaMode iAlphaMode
+        , const std::wstring& iText
+        , const FFont& iFont
+        , uint32 iFontSize
+        , const FMat3F& iTransform
+        , const ISample& iColor
+        , bool iAA
+        , FLayerRoot* iParent
+    );
+
+    FLayerText(
+          FBlock* iBlock
+        , const FString& iName
+        , uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat
+        , eBlendMode iBlendMode
+        , eAlphaMode iAlphaMode
         , const std::wstring& iText
         , const FFont& iFont
         , uint32 iFontSize

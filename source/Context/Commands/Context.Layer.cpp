@@ -29,7 +29,7 @@ ULIS_NAMESPACE_BEGIN
 ulError
 FContext::Flatten(
       FLayerStack& iStack
-    , FBlock& iDestination
+    , FBlock& oDestination
     , const FRectI& iSourceRect
     , const FVec2I& iPosition
     , const FSchedulePolicy& iPolicy
@@ -39,14 +39,14 @@ FContext::Flatten(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          iStack.Format() == iDestination.Format()
+          iStack.Format() == oDestination.Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
     const FRectI src_rect = iStack.Rect();
-    const FRectI dst_rect = iDestination.Rect();
+    const FRectI dst_rect = oDestination.Rect();
     const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
     const FRectI dst_aim = FRectI::FromPositionAndSize( iPosition, src_roi.Size() );
     const FRectI dst_roi = dst_aim & dst_rect;
@@ -70,8 +70,8 @@ FContext::Flatten(
     //  |-• 6   ]       ]
     //  | |-7   ]       ]
     //  | |-8   ]       ]
-    std::function< void( FLayerFolder&, FEvent& oEvent ) > sched;
-    sched = [&sched, this]( FLayerFolder& iFolder, FEvent& oEvent )->void {
+    std::function< void( FLayerRoot&, FBlock& oDst, FEvent& oEvent ) > sched;
+    sched = [&sched, this]( FLayerRoot& iFolder, FBlock& oDst, FEvent& oEvent )->void {
         TArray< FEvent > events( iFolder.Layers().Size() );
         TArray< FBlock* > blocks( iFolder.Layers().Size() );
         for( uint64 i = 0; i < iFolder.Layers().Size(); ++i ) {
@@ -85,7 +85,7 @@ FContext::Flatten(
                 case Layer_Folder: {
                     FLayerFolder& folder = dynamic_cast< FLayerFolder& >( *( iFolder.Layers()[i] ) );
                     blocks[i] = &(folder.Block());
-                    sched( folder, events[i] );
+                    sched( folder, folder.Block(), events[i] );
                     break;
                 }
             }
@@ -93,7 +93,7 @@ FContext::Flatten(
         for( uint64 i = 1; i < iFolder.Layers().Size(); ++i ) {
             Blend(
                   *blocks[i]
-                , iFolder.Block()
+                , oDst
                 , blocks[i]->Rect()
                 , FVec2I()
                 , Blend_Normal
@@ -107,7 +107,7 @@ FContext::Flatten(
         }
     };
     FEvent event;
-    sched( iStack.Root(), event );
+    sched( iStack.Root(), oDestination, event );
 
     return  ULIS_NO_ERROR;
 }

@@ -23,7 +23,7 @@ template class ULIS_API TArray< ILayer* >;
 class ULIS_API FLayerRoot
     : public virtual ILayer
 {
-public:
+protected:
     virtual ~FLayerRoot() override;
     FLayerRoot( const FString& iName, FLayerRoot* iParent );
 

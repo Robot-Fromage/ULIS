@@ -23,7 +23,26 @@ class ULIS_API FLayerImage
 {
 public:
     virtual ~FLayerImage() override;
-    FLayerImage( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat, FLayerRoot* iParent );
+    FLayerImage(
+          const FString& iName
+        , uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat
+        , eBlendMode iBlendMode
+        , eAlphaMode iAlphaMode
+        , FLayerRoot* iParent
+    );
+
+    FLayerImage(
+          FBlock* iBlock
+        , const FString& iName
+        , uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat
+        , eBlendMode iBlendMode
+        , eAlphaMode iAlphaMode
+        , FLayerRoot* iParent
+    );
 
     FLayerImage( const FLayerImage& ) = delete;
     FLayerImage& operator=( const FLayerImage& ) = delete;
@@ -38,6 +57,8 @@ public:
 private:
     bool mAlphaLock;
     FBlock* mBlock;
+    eBlendMode mBlendMode;
+    eAlphaMode mAlphaMode;
 };
 
 ULIS_NAMESPACE_END

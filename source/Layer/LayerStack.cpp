@@ -27,9 +27,9 @@ FLayerStack::FLayerStack(
 )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
+    , FLayerRoot( "Root", nullptr )
     , mWidth( iWidth )
     , mHeight( iHeight )
-    , mRoot( "Root", iWidth, iHeight, iFormat, nullptr )
 {
 }
 
@@ -57,15 +57,15 @@ FLayerStack::Rect() const
     return  FRectI( 0, 0, mWidth, mHeight );
 }
 
-FLayerFolder&
+FLayerRoot&
 FLayerStack::Root()
 {
-    return  mRoot;
+    return  *this;
 }
-const FLayerFolder&
+const FLayerRoot&
 FLayerStack::Root() const
 {
-    return  mRoot;
+    return  *this;
 }
 
 void
@@ -78,14 +78,14 @@ FLayerStack::Reset(
 {
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
-    mRoot.Reset();
+    this->FLayerRoot::Reset();
 }
 
 bool
 FLayerStack::CheckSanity() const
 {
-    std::function< bool( const FLayerFolder* ) > CheckSanity_imp;
-    CheckSanity_imp = [&CheckSanity_imp, this]( const FLayerFolder* iFolder )->bool {
+    std::function< bool( const FLayerRoot* ) > CheckSanity_imp;
+    CheckSanity_imp = [&CheckSanity_imp, this]( const FLayerRoot* iFolder )->bool {
         for( uint64 i = 0; i < iFolder->Layers().Size(); ++i ) {
             eLayerType type = iFolder->Layers()[i]->Type();
             switch( type ) {
@@ -112,7 +112,7 @@ FLayerStack::CheckSanity() const
         }
         return  true;
     };
-    return  CheckSanity_imp( &mRoot );
+    return  CheckSanity_imp( this );
 }
 
 ULIS_NAMESPACE_END

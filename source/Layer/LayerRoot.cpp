@@ -19,7 +19,10 @@ FLayerRoot::~FLayerRoot()
 }
 
 FLayerRoot::FLayerRoot( const FString& iName, FLayerRoot* iParent )
-    : ILayer( iName, iParent )
+    : ILayer(
+          iName
+        , iParent
+    )
     , mLayers()
 {
 }
@@ -51,6 +54,7 @@ FLayerRoot::AddLayer( ILayer* iLayer, int iIndex )
 void
 FLayerRoot::RemoveLayer( int iIndex )
 {
+    delete mLayers[ iIndex ];
     mLayers.Erase( iIndex, 1 );
 }
 

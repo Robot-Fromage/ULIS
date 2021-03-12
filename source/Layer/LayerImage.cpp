@@ -18,12 +18,45 @@ FLayerImage::~FLayerImage()
     delete  mBlock;
 }
 
-FLayerImage::FLayerImage( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat, FLayerRoot* iParent )
-    : ILayer( iName, iParent )
+FLayerImage::FLayerImage(
+      const FString& iName
+    , uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , eBlendMode iBlendMode
+    , eAlphaMode iAlphaMode
+    , FLayerRoot* iParent
+)
+    : ILayer(
+          iName
+        , iParent
+    )
     , mAlphaLock( false )
-    , mBlock( nullptr )
+    , mBlock( new FBlock( iWidth, iHeight, iFormat ) )
+    , mBlendMode( iBlendMode )
+    , mAlphaMode( iAlphaMode )
 {
-    mBlock = new FBlock( iWidth, iHeight, iFormat );
+}
+
+FLayerImage::FLayerImage(
+      FBlock* iBlock
+    , const FString& iName
+    , uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , eBlendMode iBlendMode
+    , eAlphaMode iAlphaMode
+    , FLayerRoot* iParent
+)
+    : ILayer(
+          iName
+        , iParent
+    )
+    , mAlphaLock( false )
+    , mBlock( iBlock )
+    , mBlendMode( iBlendMode )
+    , mAlphaMode( iAlphaMode )
+{
 }
 
 eLayerType

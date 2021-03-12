@@ -34,7 +34,7 @@ ILayer::ILayer( const FString& iName, FLayerRoot* iParent )
 eLayerType
 ILayer::Type() const
 {
-    return  NumLayerTypes;
+    return  Layer_Invalid;
 }
 
 const FString&

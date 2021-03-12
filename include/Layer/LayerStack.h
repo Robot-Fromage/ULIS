@@ -25,9 +25,10 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FLayerStack
     : public IHasFormat
     , public IHasColorSpace
+    , public FLayerRoot
 {
 public:
-    ~FLayerStack();
+    virtual ~FLayerStack();
     FLayerStack(
           uint16 iWidth
         , uint16 iHeight
@@ -44,8 +45,8 @@ public:
     uint32 Area() const;
     FRectI Rect() const;
 
-    FLayerFolder& Root();
-    const FLayerFolder& Root() const;
+    FLayerRoot& Root();
+    const FLayerRoot& Root() const;
 
     void Reset(
           uint16 iWidth
@@ -59,7 +60,6 @@ public:
 private:
     uint16 mWidth;
     uint16 mHeight;
-    FLayerFolder mRoot;
 };
 
 ULIS_NAMESPACE_END
