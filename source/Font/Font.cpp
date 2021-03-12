@@ -78,6 +78,40 @@ FFont::FFont(
     mStyle = std::string( face->style_name );
 }
 
+FFont::FFont( const FFont& iOther )
+    : mFontHandle( nullptr )
+    , mFontEngine( iOther.mFontEngine )
+    , mFamily( iOther.mFamily )
+    , mStyle( iOther.mStyle )
+{
+    const FFontStyleEntry* entry = mFontEngine.FuzzyFindFontStyle( mFamily, mStyle );
+    ULIS_ASSERT( entry, "Error loading font" );
+    mFamily = entry->Family();
+    mStyle = entry->Style();
+    std::string path = entry->Path();
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.LibraryHandle() ), path.c_str(), 0, reinterpret_cast< FT_Face* >( &mFontHandle ) );
+    ULIS_ASSERT( !error, "Error initializing font handle" );
+}
+
+FFont&
+FFont::operator=( const FFont& iOther )
+{
+    ULIS_ASSERT( mFontHandle, "Bad state" );
+    FT_Done_Face( reinterpret_cast< FT_Face >( mFontHandle ) );
+    mFontHandle = nullptr;
+    mFamily = iOther.mFamily;
+    mStyle = iOther.mStyle;
+    const FFontStyleEntry* entry = mFontEngine.FuzzyFindFontStyle( mFamily, mStyle );
+    ULIS_ASSERT( entry, "Error loading font" );
+    mFamily = entry->Family();
+    mStyle = entry->Style();
+    std::string path = entry->Path();
+    FT_Error error = FT_New_Face( reinterpret_cast< FT_Library >( mFontEngine.LibraryHandle() ), path.c_str(), 0, reinterpret_cast< FT_Face* >( &mFontHandle ) );
+    ULIS_ASSERT( !error, "Error initializing font handle" );
+
+    return  *this;
+}
+
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------- Public API
 void*

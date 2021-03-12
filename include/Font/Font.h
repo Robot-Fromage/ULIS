@@ -23,9 +23,7 @@ class ULIS_API FFont
 public:
     // Construction / Destruction
     ~FFont();
-    FFont( const FFont& ) = delete;
     FFont( FFont&& ) = delete;
-    FFont& operator=( const FFont& ) = delete;
     FFont& operator=( FFont&& iOther ) = delete;
     FFont(
           const FFontEngine& iFontEngine
@@ -42,6 +40,10 @@ public:
           const FFontEngine& iFontEngine
         , const std::string& iRequestedPath
     );
+
+    FFont( const FFont& );
+
+    FFont& operator=( const FFont& );
 
 public:
     // Public API

@@ -19,16 +19,17 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The FLayerImage class provides a class to store an image in a
 ///             layer stack for painting applications.
 class ULIS_API FLayerImage
-    : public ILayer
+    : public virtual ILayer
 {
 public:
-    ~FLayerImage() override;
-    FLayerImage( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat );
+    virtual ~FLayerImage() override;
+    FLayerImage( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat, FLayerRoot* iParent );
 
     FLayerImage( const FLayerImage& ) = delete;
     FLayerImage& operator=( const FLayerImage& ) = delete;
 
 public:
+    virtual eLayerType Type() const override;
     FBlock& Block();
     const FBlock& Block() const;
     bool IsAlphaLocked() const;

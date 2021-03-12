@@ -16,10 +16,17 @@
 ULIS_NAMESPACE_BEGIN
 enum eLayerType
 {
-    Layer_Image,
-    Layer_Folder,
+      Layer_Root
+    , Layer_Image
+    , Layer_Folder
+    , Layer_Text
+    , Layer_Vector
+    , Layer_FX
+    , Layer_Mask
+    , NumLayerTypes
 };
 
+class FLayerRoot;
 /////////////////////////////////////////////////////
 /// @class      ILayer
 /// @brief      The ILayer class provides a base abstract class to store a layer
@@ -28,23 +35,25 @@ class ULIS_API ILayer
 {
 public:
     virtual ~ILayer() = 0;
-    ILayer( eLayerType iType );
-    ILayer( eLayerType iType, const FString& iName );
+    ILayer();
+    ILayer( const FString& iName, FLayerRoot* iParent );
 
 public:
-    eLayerType Type() const;
+    virtual eLayerType Type() const = 0;
     const FString& Name() const;
     void SetName( const FString& iName );
     bool Locked() const;
     bool Visible() const;
     void SetLocked( bool iValue );
     void SetVisible( bool iValue );
+    FLayerRoot* Parent();
+    const FLayerRoot* Parent() const;
 
 private:
-    eLayerType mType;
     FString mName;
     bool mLocked;
     bool mVisible;
+    FLayerRoot* mParent;
 };
 
 ULIS_NAMESPACE_END

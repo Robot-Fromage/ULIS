@@ -12,38 +12,27 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Layer.h"
-#include "Memory/Array.h"
+#include "Layer/LayerRoot.h"
+#include "Layer/LayerImage.h"
 
 ULIS_NAMESPACE_BEGIN
-
-template class ULIS_API TArray< ILayer* >;
-
 /////////////////////////////////////////////////////
 /// @class      FLayerFolder
 /// @brief      The FLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
-class ULIS_API FLayerFolder
-    : public ILayer
+class ULIS_API FLayerFolder final
+    : public FLayerRoot
+    , public FLayerImage
 {
 public:
-    ~FLayerFolder() override;
-    FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat );
+    ~FLayerFolder() override final;
+    FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat, FLayerRoot* iParent );
 
     FLayerFolder( const FLayerFolder& ) = delete;
     FLayerFolder& operator=( const FLayerFolder& ) = delete;
 
 public:
-    TArray< ILayer* >& Layers();
-    const TArray< ILayer* >& Layers() const;
-    void AddLayer( ILayer* iLayer, int iIndex = -1 );
-    void RemoveLayer( int iIndex );
-    void Reset();
-    FBlock& FolderBlock();
-    const FBlock& FolderBlock() const;
-
-private:
-    TArray< ILayer* > mLayers;
-    FBlock* mFolderBlock;
+    eLayerType Type() const override;
 };
 
 ULIS_NAMESPACE_END

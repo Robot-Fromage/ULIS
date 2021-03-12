@@ -70,8 +70,8 @@ FContext::Flatten(
     //  |-• 6   ]       ]
     //  | |-7   ]       ]
     //  | |-8   ]       ]
-    std::function< void( const FLayerFolder&, FEvent& oEvent ) > sched;
-    sched = [&sched, this]( const FLayerFolder& iFolder, FEvent& oEvent )->void {
+    std::function< void( FLayerFolder&, FEvent& oEvent ) > sched;
+    sched = [&sched, this]( FLayerFolder& iFolder, FEvent& oEvent )->void {
         TArray< FEvent > events( iFolder.Layers().Size() );
         TArray< FBlock* > blocks( iFolder.Layers().Size() );
         for( uint64 i = 0; i < iFolder.Layers().Size(); ++i ) {
@@ -84,11 +84,26 @@ FContext::Flatten(
                 }
                 case Layer_Folder: {
                     FLayerFolder& folder = dynamic_cast< FLayerFolder& >( *( iFolder.Layers()[i] ) );
-                    blocks[i] = &(folder.FolderBlock());
+                    blocks[i] = &(folder.Block());
                     sched( folder, events[i] );
                     break;
                 }
             }
+        }
+        for( uint64 i = 1; i < iFolder.Layers().Size(); ++i ) {
+            Blend(
+                  *blocks[i]
+                , iFolder.Block()
+                , blocks[i]->Rect()
+                , FVec2I()
+                , Blend_Normal
+                , Alpha_Normal
+                , 1.f
+                , FSchedulePolicy()
+                , 1
+                , &events[i + 1]
+                , &events[i]
+            );
         }
     };
     FEvent event;

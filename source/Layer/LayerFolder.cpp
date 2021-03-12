@@ -15,61 +15,19 @@
 ULIS_NAMESPACE_BEGIN
 FLayerFolder::~FLayerFolder()
 {
-    Reset();
-    delete  mFolderBlock;
 }
 
-FLayerFolder::FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat )
-    : ILayer( Layer_Folder, iName )
-    , mLayers()
-    , mFolderBlock( nullptr )
+FLayerFolder::FLayerFolder( const FString& iName, uint16 iWidth, uint16 iHeight, eFormat iFormat, FLayerRoot* iParent )
+    : ILayer( iName, iParent )
+    , FLayerImage( iName, iWidth, iHeight, iFormat, iParent )
+    , FLayerRoot( iName, iParent )
 {
-    mFolderBlock = new FBlock( iWidth, iHeight, iFormat );
 }
 
-TArray< ILayer* >&
-FLayerFolder::Layers()
+eLayerType
+FLayerFolder::Type() const
 {
-    return  mLayers;
-}
-
-const TArray< ILayer* >&
-FLayerFolder::Layers() const
-{
-    return  mLayers;
-}
-
-void
-FLayerFolder::AddLayer( ILayer* iLayer, int iIndex )
-{
-    mLayers.Insert( iIndex, iLayer );
-}
-
-void
-FLayerFolder::RemoveLayer( int iIndex )
-{
-    mLayers.Erase( iIndex, 1 );
-}
-
-void
-FLayerFolder::Reset()
-{
-    for( uint64 i = 0; i < mLayers.Size(); ++i ) {
-        delete  mLayers[i];
-    }
-    mLayers.Clear();
-}
-
-FBlock&
-FLayerFolder::FolderBlock()
-{
-    return  *mFolderBlock;
-}
-
-const FBlock&
-FLayerFolder::FolderBlock() const
-{
-    return  *mFolderBlock;
+    return  Layer_Folder;
 }
 
 ULIS_NAMESPACE_END

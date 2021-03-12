@@ -16,25 +16,25 @@ ILayer::~ILayer()
 {
 }
 
-ILayer::ILayer( eLayerType iType )
-    : mType( iType )
-    , mName( "Untitled" )
+ILayer::ILayer()
+    : mName( "Untitled" )
     , mLocked( false )
     , mVisible( true )
+    , mParent( nullptr )
 {
 }
 
-ILayer::ILayer( eLayerType iType, const FString& iName )
-    : mType( iType )
-    , mName( iName )
+ILayer::ILayer( const FString& iName, FLayerRoot* iParent )
+    : mName( iName )
     , mLocked( false )
     , mVisible( true )
+    , mParent( iParent )
 {}
 
 eLayerType
 ILayer::Type() const
 {
-    return  mType;
+    return  NumLayerTypes;
 }
 
 const FString&
@@ -71,6 +71,18 @@ void
 ILayer::SetVisible( bool iValue )
 {
     mVisible = iValue;
+}
+
+FLayerRoot*
+ILayer::Parent()
+{
+    return  mParent;
+}
+
+const FLayerRoot*
+ILayer::Parent() const
+{
+    return  mParent;
 }
 
 ULIS_NAMESPACE_END
