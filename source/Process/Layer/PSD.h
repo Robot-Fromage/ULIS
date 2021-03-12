@@ -13,10 +13,6 @@
 #include "Core/Core.h"
 #include "Layer/LayerStack.h"
 #include <fstream>
-/*
-#include "CoreMinimal.h"
-#include "Serialization/BufferArchive.h"
-#include "OdysseyLayerStack.h"*/
 
 ULIS_NAMESPACE_BEGIN
 struct FPSDLayerInfo
@@ -76,64 +72,64 @@ private:
     bool ReadLayerInfo();
 
     bool ReadMaskInfo();
-//
-//    bool ReadLayers();
-//
-    //bool ReadAdditionalLayerInfoSignature();
 
-    //bool ReadAdditionalLayerInfo( uint32 sectionEnd );
-//
-//    bool ReadImageData();
-//
-//    bool ReadLayerStackData();
-//    bool ReadLayerStackData16();
-//    bool ReadLayerStackData32();
-//
-//    void GenerateLayerStackFromLayerStackData();
-//
-//    void CopyUncompressed(uint32* dst,uint32 length);
-//    void CopyUncompressed(uint16* dst,uint32 length);
-//    void CopyUncompressed(uint8* dst,uint32 length);
-//
-//    void DecodeAndCopyRLE(uint32* dst,uint32 length);
-//    void DecodeAndCopyRLE(uint16* dst,uint32 length);
-//    void DecodeAndCopyRLE(uint8* dst,uint32 length);
-//
-//    void UnpredictZip16(uint8* dst,uint32 length, uint32 numColumns, uint32 rowSize);
-//    void UnpredictZip32(uint8* src, uint8* dst, uint32 length,uint32 numColumns, uint32 numRows, uint32 rowSize);
-//
-//    Size of dst should be 8(bits) * 3(channels) = 24 times size of src
-//    void PlanarByteConvertBitMapToBGRA8(uint8* src,uint8* dst,uint32 length);
-//
-//    void PlanarByteConvertOrdered(uint8* src,uint8* dst,uint32 length, uint8 numChannels, uint8 channelsOrder[]);
-//    void PlanarByteConvertOrdered(uint16* src,uint16* dst,uint32 length,uint8 numChannels,uint8 channelsOrder[]);
-//
-//    void PlanarByteConvert( uint8* src, uint8* dst, uint32 length, uint8 numChannels );
-//    void PlanarByteConvert(uint16* src,uint16* dst,uint32 length,uint8 numChannels);
-//    void PlanarByteConvert(uint32* src,uint32* dst,uint32 length,uint8 numChannels);
-//
-//    void NegateImage( uint8* ioSrc, uint32 length );
-//    void NegateImage( uint16* ioSrc, uint32 length );
-//    void NegateImage( uint32* ioSrc,uint32 length );
-//
-//    void lerp24BitsInto32Bits( uint32* ioSrc,uint32 length );
-//
-//    eBlendMode GetBlendingModeFromPSD( char iBlendModeKey[5] );
-//
+    bool ReadLayers();
+
+    bool ReadAdditionalLayerInfoSignature();
+
+    bool ReadAdditionalLayerInfo( uint32 sectionEnd );
+
+    //bool ReadImageData();
+
+    bool ReadLayerStackData();
+    bool ReadLayerStackData16();
+    bool ReadLayerStackData32();
+
+    void GenerateLayerStackFromLayerStackData();
+
+    void CopyUncompressed(uint32* dst,uint32 length);
+    void CopyUncompressed(uint16* dst,uint32 length);
+    void CopyUncompressed(uint8* dst,uint32 length);
+
+    void DecodeAndCopyRLE(uint32* dst,uint32 length);
+    void DecodeAndCopyRLE(uint16* dst,uint32 length);
+    void DecodeAndCopyRLE(uint8* dst,uint32 length);
+
+    void UnpredictZip16(uint8* dst,uint32 length, uint32 numColumns, uint32 rowSize);
+    void UnpredictZip32(uint8* src, uint8* dst, uint32 length,uint32 numColumns, uint32 numRows, uint32 rowSize);
+
+    //Size of dst should be 8(bits) * 3(channels) = 24 times size of src
+    void PlanarByteConvertBitMapToBGRA8(uint8* src,uint8* dst,uint32 length);
+
+    void PlanarByteConvertOrdered(uint8* src,uint8* dst,uint32 length, uint8 numChannels, uint8 channelsOrder[]);
+    void PlanarByteConvertOrdered(uint16* src,uint16* dst,uint32 length,uint8 numChannels,uint8 channelsOrder[]);
+
+    void PlanarByteConvert( uint8* src, uint8* dst, uint32 length, uint8 numChannels );
+    void PlanarByteConvert(uint16* src,uint16* dst,uint32 length,uint8 numChannels);
+    void PlanarByteConvert(uint32* src,uint32* dst,uint32 length,uint8 numChannels);
+
+    void NegateImage( uint8* ioSrc, uint32 length );
+    void NegateImage( uint16* ioSrc, uint32 length );
+    void NegateImage( uint32* ioSrc,uint32 length );
+
+    void lerp24BitsInto32Bits( uint32* ioSrc,uint32 length );
+
+    eBlendMode GetBlendingModeFromPSD( char iBlendModeKey[5] );
+
 public:
-//
-//    -- Getters / Setters
-//    uint16 GetChannelsNumber();
-//    uint32 GetImageHeight();
-//    uint32 GetImageWidth();
-//    uint16 GetBitDepth();
-//    uint16 GetColorMode();
-//
-//    uint8* GetImageDst();
-//    uint16* GetImageDst16();
-//
-//    FOdysseyLayerStack* GetLayerStack();
-//
+
+    //-- Getters / Setters
+    uint16 GetChannelsNumber();
+    uint32 GetImageHeight();
+    uint32 GetImageWidth();
+    uint16 GetBitDepth();
+    uint16 GetColorMode();
+
+    uint8* GetImageDst();
+    uint16* GetImageDst16();
+
+    FLayerStack* GetLayerStack();
+
     //-- Import / Export
     /** Tries to import the file passed in the constructor, return true if succeeded */
     bool Import();
@@ -148,14 +144,14 @@ private:
       uint16 mColorMode;
 
       uint32 mImageStart;
-//
-//    uint8* mImageDst;
-//    uint16* mImageDst16;
-//    uint32* mImageDst32;
-//
-//    FLayerStack* mLayerStack;
-//
-//    TArray<FPSDLayerInfo> mLayersInfo;
+
+    uint8* mImageDst;
+    uint16* mImageDst16;
+    uint32* mImageDst32;
+
+    FLayerStack* mLayerStack;
+
+    TArray<FPSDLayerInfo> mLayersInfo;
 };
 
 ULIS_NAMESPACE_END
