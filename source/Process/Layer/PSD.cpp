@@ -272,14 +272,14 @@ bool FPSDOperations::ReadLayers()
             return false;
         FMath::ByteSwap( &mLayersInfo[currLayer].mExtraSize, 4);
 
-        mLayersInfo[currLayer].mExtraPosition = mFileHandle.tellg();
+        mLayersInfo[currLayer].mExtraPosition = uint32(mFileHandle.tellg());
         mLayersInfo[currLayer].mExtraRead = 0;
 
         if(!mFileHandle.read((char*)&mLayersInfo[currLayer].mLayerMaskSize,4))
             return false;
         FMath::ByteSwap(&mLayersInfo[currLayer].mLayerMaskSize,4);
 
-        uint32 position = mFileHandle.tellg();
+        uint32 position = uint32(mFileHandle.tellg());
 
         if(mLayersInfo[currLayer].mLayerMaskSize != 0) 
         {
@@ -329,7 +329,7 @@ bool FPSDOperations::ReadLayers()
         if(mLayersInfo[currLayer].mName[0] == 0)
             strcpy(mLayersInfo[currLayer].mName,"background");
 
-        position = mFileHandle.tellg();
+        position = uint32(mFileHandle.tellg());
 
         while( mLayersInfo[currLayer].mExtraRead < mLayersInfo[currLayer].mExtraSize ) 
         {
@@ -345,12 +345,13 @@ bool FPSDOperations::ReadLayers()
                 return false;
             FMath::ByteSwap( &len, 4);
 
-            position = mFileHandle.tellg();
+            position = uint32(mFileHandle.tellg());
             mLayersInfo[currLayer].mExtraRead += 12 + len;
 
             if(strcmp(lsctKey,"lsct") == 0)
             {
-                if(!mFileHandle.read((char*) &mLayersInfo[currLayer].mDividerType,4));
+                if(!mFileHandle.read((char*) &mLayersInfo[currLayer].mDividerType,4))
+                    return false;
                 FMath::ByteSwap(&mLayersInfo[currLayer].mDividerType,4);
             }
             mFileHandle.seekg( std::streampos(position + len) );
@@ -359,7 +360,7 @@ bool FPSDOperations::ReadLayers()
     }
 
 
-    uint32 imgData = mFileHandle.tellg();
+    uint32 imgData = uint32(mFileHandle.tellg());
     for(int i = 0; i < numLayers; i++) 
     {
         for(int c = 0; c < mLayersInfo[i].mNumChannels; c++) 
@@ -389,7 +390,7 @@ bool FPSDOperations::ReadAdditionalLayerInfoSignature()
 
 bool FPSDOperations::ReadAdditionalLayerInfo(uint32 sectionEnd)
 {
-    uint32 position = mFileHandle.tellg();
+    uint32 position = uint32(mFileHandle.tellg());
     if( position > sectionEnd ) 
     {
         std::cout << "Error while loading data: out of bounds" << std::endl;
@@ -410,7 +411,7 @@ bool FPSDOperations::ReadAdditionalLayerInfo(uint32 sectionEnd)
             return false;
         FMath::ByteSwap( &len, 4);
 
-        position = mFileHandle.tellg();
+        position = uint32(mFileHandle.tellg());
 
         if(strcmp(key,"Lr16") == 0 || strcmp(key,"Lr32") == 0)
         {
@@ -559,7 +560,7 @@ bool FPSDOperations::ReadLayerStackData()
             }
         }
 
-        PlanarByteConvert(planarDst,mLayersInfo[i].mLayerImageDst,mLayersInfo[i].mSizeLayerImage,mLayersInfo[i].mNumChannels);
+        PlanarByteConvert(planarDst,mLayersInfo[i].mLayerImageDst,mLayersInfo[i].mSizeLayerImage,uint8(mLayersInfo[i].mNumChannels));
 
         delete [] planarDst;
 
@@ -616,8 +617,7 @@ bool FPSDOperations::ReadLayerStackData16()
                 if(!mFileHandle.read( srcData, srcSize ))
                     return false;
 
-
-                int zResult = uncompress( (uint8*)channelContents[j], &dstSize, srcData, srcSize );
+                int zResult = uncompress( (uint8*)channelContents[j], &dstSize, (uint8*)srcData, srcSize );
 
                 if( cp == 3 )
                     UnpredictZip16( (uint8*)channelContents[j], channelSize * sizeof( uint16 ), lr - ll, (lr - ll) * sizeof( uint16) );
@@ -629,7 +629,7 @@ bool FPSDOperations::ReadLayerStackData16()
 
                 mLayersInfo[i].mSizeLayerImage += channelSize;
 
-                delete [] srcData;);
+                delete [] srcData;
             }
             else
             {
@@ -654,7 +654,7 @@ bool FPSDOperations::ReadLayerStackData16()
             }
         }
 
-        PlanarByteConvert(planarDst,mLayersInfo[i].mLayerImageDst16,mLayersInfo[i].mSizeLayerImage,mLayersInfo[i].mNumChannels);
+        PlanarByteConvert(planarDst,mLayersInfo[i].mLayerImageDst16,mLayersInfo[i].mSizeLayerImage,uint8(mLayersInfo[i].mNumChannels));
 
         delete[] planarDst;
 
@@ -698,7 +698,7 @@ bool FPSDOperations::ReadLayerStackData32()
             } 
             else if(cp == 1) //RLE
             {
-                mFileHandle.seekg(mFileHandle.tellg() + (lb - lt) * 2);
+                mFileHandle.seekg((lb - lt) * 2, std::ios::cur);
                 DecodeAndCopyRLE(channelContents[j],channelSize);
                 mLayersInfo[i].mSizeLayerImage += channelSize;
             } 
@@ -712,7 +712,7 @@ bool FPSDOperations::ReadLayerStackData32()
                 if(!mFileHandle.read(srcData,srcSize))
                     return false;
 
-                int zResult = uncompress((uint8*)dstData,&dstSize,srcData,srcSize);
+                int zResult = uncompress((uint8*)dstData,&dstSize,(uint8*)srcData,srcSize);
 
                 if(cp == 3)
                     UnpredictZip32((uint8*)dstData, (uint8*)channelContents[j], channelSize * sizeof(uint32),lr - ll, lb - lt, (lr - ll) * sizeof(uint32));
@@ -750,7 +750,7 @@ bool FPSDOperations::ReadLayerStackData32()
             }
         }
 
-        PlanarByteConvert(planarDst,mLayersInfo[i].mLayerImageDst32,mLayersInfo[i].mSizeLayerImage,mLayersInfo[i].mNumChannels);
+        PlanarByteConvert(planarDst,mLayersInfo[i].mLayerImageDst32,mLayersInfo[i].mSizeLayerImage,uint8(mLayersInfo[i].mNumChannels));
 
         delete[] planarDst;
 
@@ -1353,39 +1353,39 @@ void FPSDOperations::lerp24BitsInto32Bits(uint32* ioSrc,uint32 length)
     }
 }
 
-//eBlendMode FPSDOperations::GetBlendingModeFromPSD(char iBlendModeKey[5])
-//{
-//    if(strcmp(iBlendModeKey,"norm") == 0) { return ::ul3::eBlendingMode::BM_NORMAL; }
-//    if(strcmp(iBlendModeKey,"diss") == 0) { return ::ul3::eBlendingMode::BM_DISSOLVE; }
-//    if(strcmp(iBlendModeKey,"dark") == 0) { return ::ul3::eBlendingMode::BM_DARKEN; }
-//    if(strcmp(iBlendModeKey,"mul ") == 0) { return ::ul3::eBlendingMode::BM_MULTIPLY; }
-//    if(strcmp(iBlendModeKey,"idiv") == 0) { return ::ul3::eBlendingMode::BM_COLORBURN; }
-//    if(strcmp(iBlendModeKey,"lbrn") == 0) { return ::ul3::eBlendingMode::BM_LINEARBURN; }
-//    if(strcmp(iBlendModeKey,"dkCl") == 0) { return ::ul3::eBlendingMode::BM_DARKERCOLOR; }
-//    if(strcmp(iBlendModeKey,"lite") == 0) { return ::ul3::eBlendingMode::BM_LIGHTEN; }
-//    if(strcmp(iBlendModeKey,"scrn") == 0) { return ::ul3::eBlendingMode::BM_SCREEN; }
-//    if(strcmp(iBlendModeKey,"div ") == 0) { return ::ul3::eBlendingMode::BM_COLORDODGE; }
-//    if(strcmp(iBlendModeKey,"lddg") == 0) { return ::ul3::eBlendingMode::BM_LINEARDODGE; }
-//    if(strcmp(iBlendModeKey,"lgCl") == 0) { return ::ul3::eBlendingMode::BM_LIGHTERCOLOR; }
-//    if(strcmp(iBlendModeKey,"over") == 0) { return ::ul3::eBlendingMode::BM_OVERLAY; }
-//    if(strcmp(iBlendModeKey,"sLit") == 0) { return ::ul3::eBlendingMode::BM_SOFTLIGHT; }
-//    if(strcmp(iBlendModeKey,"hLit") == 0) { return ::ul3::eBlendingMode::BM_HARDLIGHT; }
-//    if(strcmp(iBlendModeKey,"vLit") == 0) { return ::ul3::eBlendingMode::BM_VIVIDLIGHT; }
-//    if(strcmp(iBlendModeKey,"lLit") == 0) { return ::ul3::eBlendingMode::BM_LINEARLIGHT; }
-//    if(strcmp(iBlendModeKey,"pLit") == 0) { return ::ul3::eBlendingMode::BM_PINLIGHT; }
-//    if(strcmp(iBlendModeKey,"hMix") == 0) { return ::ul3::eBlendingMode::BM_HARDMIX; }
-//    if(strcmp(iBlendModeKey,"diff") == 0) { return ::ul3::eBlendingMode::BM_DIFFERENCE; }
-//    if(strcmp(iBlendModeKey,"smud") == 0) { return ::ul3::eBlendingMode::BM_EXCLUSION; }
-//    if(strcmp(iBlendModeKey,"fsub") == 0) { return ::ul3::eBlendingMode::BM_SUBSTRACT; }
-//    if(strcmp(iBlendModeKey,"fdiv") == 0) { return ::ul3::eBlendingMode::BM_DIVIDE; }
-//    if(strcmp(iBlendModeKey,"hue ") == 0) { return ::ul3::eBlendingMode::BM_HUE; }
-//    if(strcmp(iBlendModeKey,"sat ") == 0) { return ::ul3::eBlendingMode::BM_SATURATION; }
-//    if(strcmp(iBlendModeKey,"colr") == 0) { return ::ul3::eBlendingMode::BM_COLOR; }
-//    if(strcmp(iBlendModeKey,"lum ") == 0) { return ::ul3::eBlendingMode::BM_LUMINOSITY; }
-//
-//    //unknown blending mode, we return the normal one by default
-//    return ::ul3::eBlendingMode::BM_NORMAL;
-//}
+eBlendMode FPSDOperations::GetBlendingModeFromPSD(char iBlendModeKey[5])
+{
+    if(strcmp(iBlendModeKey,"norm") == 0) { return eBlendMode::Blend_Normal; }
+    if(strcmp(iBlendModeKey,"diss") == 0) { return eBlendMode::Blend_Dissolve; }
+    if(strcmp(iBlendModeKey,"dark") == 0) { return eBlendMode::Blend_Darken; }
+    if(strcmp(iBlendModeKey,"mul ") == 0) { return eBlendMode::Blend_Multiply; }
+    if(strcmp(iBlendModeKey,"idiv") == 0) { return eBlendMode::Blend_ColorBurn; }
+    if(strcmp(iBlendModeKey,"lbrn") == 0) { return eBlendMode::Blend_LinearBurn; }
+    if(strcmp(iBlendModeKey,"dkCl") == 0) { return eBlendMode::Blend_DarkerColor; }
+    if(strcmp(iBlendModeKey,"lite") == 0) { return eBlendMode::Blend_Lighten; }
+    if(strcmp(iBlendModeKey,"scrn") == 0) { return eBlendMode::Blend_Screen; }
+    if(strcmp(iBlendModeKey,"div ") == 0) { return eBlendMode::Blend_ColorDodge; }
+    if(strcmp(iBlendModeKey,"lddg") == 0) { return eBlendMode::Blend_LinearDodge; }
+    if(strcmp(iBlendModeKey,"lgCl") == 0) { return eBlendMode::Blend_LighterColor; }
+    if(strcmp(iBlendModeKey,"over") == 0) { return eBlendMode::Blend_Overlay; }
+    if(strcmp(iBlendModeKey,"sLit") == 0) { return eBlendMode::Blend_SoftLight; }
+    if(strcmp(iBlendModeKey,"hLit") == 0) { return eBlendMode::Blend_HardLight; }
+    if(strcmp(iBlendModeKey,"vLit") == 0) { return eBlendMode::Blend_VividLight; }
+    if(strcmp(iBlendModeKey,"lLit") == 0) { return eBlendMode::Blend_LinearLight; }
+    if(strcmp(iBlendModeKey,"pLit") == 0) { return eBlendMode::Blend_PinLight; }
+    if(strcmp(iBlendModeKey,"hMix") == 0) { return eBlendMode::Blend_HardMix; }
+    if(strcmp(iBlendModeKey,"diff") == 0) { return eBlendMode::Blend_Difference; }
+    if(strcmp(iBlendModeKey,"smud") == 0) { return eBlendMode::Blend_Exclusion; }
+    if(strcmp(iBlendModeKey,"fsub") == 0) { return eBlendMode::Blend_Substract; }
+    if(strcmp(iBlendModeKey,"fdiv") == 0) { return eBlendMode::Blend_Divide; }
+    if(strcmp(iBlendModeKey,"hue ") == 0) { return eBlendMode::Blend_Hue; }
+    if(strcmp(iBlendModeKey,"sat ") == 0) { return eBlendMode::Blend_Saturation; }
+    if(strcmp(iBlendModeKey,"colr") == 0) { return eBlendMode::Blend_Color; }
+    if(strcmp(iBlendModeKey,"lum ") == 0) { return eBlendMode::Blend_Luminosity; }
+
+    //unknown blending mode, we return the normal one by default
+    return eBlendMode::Blend_Normal;
+}
 
 uint16 FPSDOperations::GetChannelsNumber()
 {
@@ -1441,32 +1441,33 @@ bool FPSDOperations::Import()
     if(!ReadLayerAndMaskInfo())
         return false;
 
-    ////We can get it faster by blending the whole layer stack
-    ///*if( !ReadImageData() )
-    //    return false;*/
-    //if( mBitDepth == 32)
-    //{
-    //    if(!ReadLayerStackData32())
-    //        return false;
-    //}
-    //else if( mBitDepth == 16 )
-    //{
-    //    if( !ReadLayerStackData16() )
-    //        return false;
-    //}
-    //else if( mBitDepth == 8 )
-    //{
-    //    if(!ReadLayerStackData())
-    //        return false;
-    //}
-    //else
-    //{
-    //    UE_LOG(LogTemp, Warning, TEXT("Unsupported bit depth, Import failed"));
-    //    return false;
-    //}
+    //We can get it faster by blending the whole layer stack
+    /*if( !ReadImageData() )
+        return false;*/
 
-    //GenerateLayerStackFromLayerStackData();
-    //
+    if( mBitDepth == 32)
+    {
+        if(!ReadLayerStackData32())
+            return false;
+    }
+    else if( mBitDepth == 16 )
+    {
+        if( !ReadLayerStackData16() )
+            return false;
+    }
+    else if( mBitDepth == 8 )
+    {
+        if(!ReadLayerStackData())
+            return false;
+    }
+    else
+    {
+        std::cout << "Unsupported bit depth, Import failed" << std::endl;
+        return false;
+    }
+
+    GenerateLayerStackFromLayerStackData();
+    
     return true;
 }
 
