@@ -212,6 +212,7 @@ private:
     
     const fpCommandScheduler mScheduleDrawLine;
     const fpCommandScheduler mScheduleDrawLineAA;
+    const fpCommandScheduler mScheduleDrawLineSP;
     const fpCommandScheduler mScheduleDrawCircleAndres;
     const fpCommandScheduler mScheduleDrawCircleAndresAA;
     const fpCommandScheduler mScheduleDrawCircleBresenham;

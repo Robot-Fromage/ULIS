@@ -1408,6 +1408,22 @@ public:
     );
 
     /*!
+    Draws a line between iP0 and iP1, SP version
+    */
+    ulError
+    DrawLineSP(
+          FBlock& iBlock
+        , const FVec2F& iP0
+        , const FVec2F& iP1
+        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
     Draws a circle with Andres algorithm. Nice for multiple concentric drawings.
     */
     ulError

@@ -120,6 +120,54 @@ FContext::DrawLineAA(
 }
 
 ulError
+FContext::DrawLineSP(
+      FBlock& iBlock
+    , const FVec2F& iP0
+    , const FVec2F& iP1
+    , const FColor& iColor
+    , const FRectI& iClippingRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iBlock.Rect();
+    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
+    
+    // Check no-op
+    if( src_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+    
+    // Convert color to right format
+    FColor color = iColor.ToFormat(iBlock.Format());
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleDrawLineSP
+            , new FDrawLineSPCommandArgs(
+                  iBlock
+                , src_roi
+                , iP0
+                , iP1
+                , color
+            )
+            , iPolicy
+            , false
+            , true
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , src_roi
+        )
+    );
+    
+    return  ULIS_NO_ERROR;
+}
+
+ulError
 FContext::DrawCircleAndres(
       FBlock& iBlock
     , const FVec2I&            iCenter

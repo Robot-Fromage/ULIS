@@ -124,6 +124,7 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         
         , mScheduleDrawLine(                        TDispatcher< FDispatchedDrawLineInvocationSchedulerSelector                         >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawLineAA(                      TDispatcher< FDispatchedDrawLineAAInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleDrawLineSP(                      TDispatcher< FDispatchedDrawLineSPInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawCircleAndres(                TDispatcher< FDispatchedDrawCircleAndresInvocationSchedulerSelector                 >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawCircleAndresAA(              TDispatcher< FDispatchedDrawCircleAndresAAInvocationSchedulerSelector               >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawCircleBresenham(             TDispatcher< FDispatchedDrawCircleBresenhamInvocationSchedulerSelector              >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )

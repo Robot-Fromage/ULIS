@@ -36,7 +36,10 @@ main(int argc,char *argv[])
     {
         //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBA8(255,0,0, 255) );
         //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBAF(1,0,0,1) );
-        
+        //ctx.DrawLineSP( canvas, FVec2F( 200.45, 200.2 ), FVec2F( 515.1, 321.2 ), FColor::RGBAF(1,0,0,1) );
+        ctx.DrawLineSP(canvas, FVec2F(145.25, 24.2), FVec2F(421.24, 685.2), FColor::RGBAF(1, 0, 0, 1));
+        //ctx.DrawLineSP(canvas, FVec2F(145.25, 24.2), FVec2F(521, 200.21), FColor::RGBAF(1, 0, 0, 1));
+
         //ctx.DrawRectangle( canvas, FVec2I( 200, 200 ), FVec2I( 300, 400 ), FColor::RGBA8( 0, 255, 0, 255 ), true);
         //ctx.DrawCircleAndres( canvas, FVec2I( 300, 300 ), 250, FColor::RGBA8(0,0,0,255) );
         //ctx.DrawCircleAndres(canvas,FVec2I(23,300),250,FColor::RGBA8(50,0,0,100));
@@ -85,7 +88,7 @@ main(int argc,char *argv[])
 
         //ctx.DrawLineAA( canvas, FVec2F( 381, 144 ), FVec2F( 211, 586 ), FColor::RGBA8(0,200,0,155) );
 
-        ctx.DrawQuadraticBezierAA( canvas, FVec2F( 211, 586 ), FVec2I(511,234), FVec2I(502,589), 1.0, FColor::RGBA8(0,200,0,155) );
+        //ctx.DrawQuadraticBezierAA( canvas, FVec2F( 211, 586 ), FVec2I(511,234), FVec2I(502,589), 1.0, FColor::RGBA8(0,200,0,155) );
 
         ctx.Finish();
     }

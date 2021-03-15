@@ -48,6 +48,32 @@ public:
     FColor color;
 };
 
+class FDrawLineSPCommandArgs final
+    : public FSimpleBufferCommandArgs
+{
+public:
+    ~FDrawLineSPCommandArgs() override
+    {
+    }
+
+    FDrawLineSPCommandArgs(
+          FBlock& iBlock
+        , const FRectI& iRect
+        , const FVec2F& iP0
+        , const FVec2F& iP1
+        , const FColor& iColor
+    )
+        : FSimpleBufferCommandArgs(iBlock,iRect)
+        , p0(iP0)
+        , p1(iP1)
+        , color (iColor)
+    {}
+
+    FVec2F p0;
+    FVec2F p1;
+    FColor color;
+};
+
 /////////////////////////////////////////////////////
 // FDrawCircleCommandArgs
 class FDrawCircleCommandArgs final
@@ -290,6 +316,16 @@ InvokeDrawLineAAMT_MEM_Generic(
 
 template<typename T>
 void
+InvokeDrawLineSPMT_MEM_Generic(
+      const FSimpleBufferJobArgs* jargs
+    , const FDrawLineSPCommandArgs* cargs
+)
+{
+    DrawLineSP<T>(cargs->dst,cargs->p0,cargs->p1,cargs->color,cargs->dstRect);
+}
+
+template<typename T>
+void
 InvokeDrawCircleAndresAAMT_MEM_Generic(
       const FSimpleBufferJobArgs*   jargs
     , const FDrawCircleCommandArgs* cargs
@@ -373,6 +409,7 @@ InvokeDrawQuadraticBezierAAMT_MEM_Generic(
 // Dispatch / Schedule
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawLineMT_MEM );
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawLineAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawLineCommandArgs, &InvokeDrawLineAAMT_MEM_Generic<T> )
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawLineSPMT_MEM_Generic,FSimpleBufferJobArgs,FDrawLineSPCommandArgs,&InvokeDrawLineSPMT_MEM_Generic<T>)
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawCircleAndresMT_MEM );
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE(ScheduleDrawCircleAndresAAMT_MEM_Generic,FSimpleBufferJobArgs, FDrawCircleCommandArgs, &InvokeDrawCircleAndresAAMT_MEM_Generic<T>)
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawCircleBresenhamMT_MEM );
@@ -394,6 +431,7 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE(ScheduleDrawQuadraticBezier
 
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineAAInvocationSchedulerSelector )
+ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineSPInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleAndresInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleAndresAAInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleBresenhamInvocationSchedulerSelector )
@@ -419,6 +457,10 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedDrawLineAAInvocationSchedulerSelector
     ,&ScheduleDrawLineAAMT_MEM_Generic<T>
+)
+ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
+      FDispatchedDrawLineSPInvocationSchedulerSelector
+    ,&ScheduleDrawLineSPMT_MEM_Generic<T>
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedDrawCircleAndresInvocationSchedulerSelector
