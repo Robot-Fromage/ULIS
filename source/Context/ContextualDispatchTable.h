@@ -215,21 +215,30 @@ private:
     const fpCommandScheduler mScheduleDrawLineSP;
     const fpCommandScheduler mScheduleDrawCircleAndres;
     const fpCommandScheduler mScheduleDrawCircleAndresAA;
+    const fpCommandScheduler mScheduleDrawCircleAndresSP;
     const fpCommandScheduler mScheduleDrawCircleBresenham;
     const fpCommandScheduler mScheduleDrawCircleBresenhamAA;
+    const fpCommandScheduler mScheduleDrawCircleBresenhamSP;
     const fpCommandScheduler mScheduleDrawArcAndres;
     const fpCommandScheduler mScheduleDrawArcAndresAA;
+    const fpCommandScheduler mScheduleDrawArcAndresSP;
     const fpCommandScheduler mScheduleDrawArcBresenham;
     const fpCommandScheduler mScheduleDrawArcBresenhamAA;
+    const fpCommandScheduler mScheduleDrawArcBresenhamSP;
     const fpCommandScheduler mScheduleDrawEllipse;
     const fpCommandScheduler mScheduleDrawEllipseAA;
+    const fpCommandScheduler mScheduleDrawEllipseSP;
     const fpCommandScheduler mScheduleDrawRotatedEllipse;
     const fpCommandScheduler mScheduleDrawRotatedEllipseAA;
+    const fpCommandScheduler mScheduleDrawRotatedEllipseSP;
     const fpCommandScheduler mScheduleDrawRectangle;
+    const fpCommandScheduler mScheduleDrawRectangleSP;
     const fpCommandScheduler mScheduleDrawPolygon;
     const fpCommandScheduler mScheduleDrawPolygonAA;
+    const fpCommandScheduler mScheduleDrawPolygonSP;
     const fpCommandScheduler mScheduleDrawQuadraticBezier;
     const fpCommandScheduler mScheduleDrawQuadraticBezierAA;
+    const fpCommandScheduler mScheduleDrawQuadraticBezierSP;
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
