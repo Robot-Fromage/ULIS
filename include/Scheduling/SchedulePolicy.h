@@ -60,7 +60,7 @@ public:
     FSchedulePolicy(
           eScheduleTimePolicy iTime = ScheduleTime_Sync
         , eScheduleRunPolicy iRun = ScheduleRun_Multi
-        , eScheduleModePolicy iMode = ScheduleMode_Chunks
+        , eScheduleModePolicy iMode = ScheduleMode_Scanlines
         , eScheduleParameterPolicy iParam = ScheduleParameter_Count
         , int64 iValue = -1
     );

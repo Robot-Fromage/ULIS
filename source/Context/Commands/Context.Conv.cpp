@@ -69,7 +69,7 @@ FContext::ConvertFormat(
                 , QueryDispatchedConvertFormatInvocation( iSource.Format(), iDestination.Format() )
             )
             , iPolicy
-            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false // No chunk allowed, incompatible. ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
             , false
             , iNumWait
             , iWaitList
