@@ -35,7 +35,7 @@ InvokeConvertFormat_MEM(
     cargs->invocation(
           FPixel( jargs->src, cargs->src.Format() )
         , FPixel( jargs->dst, cargs->dst.Format() )
-        , static_cast< uint32 >( jargs->size / cargs->dst.BytesPerPixel() )
+        , static_cast< uint32 >( jargs->size / cargs->src.BytesPerPixel() )
     );
 }
 
