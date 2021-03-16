@@ -19,17 +19,25 @@
 
 #include <chrono>
 
-using namespace ::ul3;
+using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
-    FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = /* ULIS_PERF_MT | */ ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
-    FHardwareMetrics host = FHardwareMetrics::Detect();
+    FThreadPool pool;
+    FCommandQueue queue( pool );
+    eFormat format = Format_RGBA8;
+    FContext ctx( queue, format );
+    FHardwareMetrics hw;
+    FSchedulePolicy policy_sync_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy_sync_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
+    FSchedulePolicy policy_sync_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
+    FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
     FVec2I size( 800, 600 );
-    FBlock* blockSRC = new FBlock( size.x, size.y, ULIS_FORMAT_RGBA8 );
-    Clear( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockSRC, blockSRC->Rect() );
+    FBlock* blockSRC = new FBlock( size.x, size.y, format );
+    ctx.Clear( *blockSRC );
+    ctx.Finish();
+
     FVec2I mid = size / 2;
     int rad = 250;
     for( int x = 0; x < size.x; ++x ) {
@@ -43,8 +51,9 @@ main( int argc, char *argv[] ) {
             }
         }
     }
-
-    FBlock* blockDST = XExtract( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockSRC, false, 1 << blockSRC->AlphaIndex(), ULIS_FORMAT_G8, false, 1 );
+    FBlock* blockDST = new FBlock( size.x, size.y, Format_G8 );
+    ctx.Extract( *blockSRC, *blockDST, 1 << blockSRC->AlphaIndex(), 1, false );
+    ctx.Finish();
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
@@ -70,8 +79,6 @@ main( int argc, char *argv[] ) {
     // Delete our block Canvas.
     delete  blockSRC;
     delete  blockDST;
-
-    XDeleteThreadPool( threadPool );
 
     // Return exit code.
     return  exit_code;

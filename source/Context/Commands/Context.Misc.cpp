@@ -109,7 +109,7 @@ FContext::Extract(
                 , QueryDispatchedExtractInvocation( iSource.Type(), iDestination.Type() )
             )
             , iPolicy
-            , ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
+            , false // No chunk for now, ( ( src_roi == src_rect ) && ( dst_roi == dst_rect ) && ( src_rect == dst_rect ) )
             , false
             , iNumWait
             , iWaitList

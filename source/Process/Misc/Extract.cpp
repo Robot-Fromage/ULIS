@@ -53,7 +53,7 @@ InvokeExtract_MEM(
         , cargs->src.SamplesPerPixel()
         , cargs->dst.SamplesPerPixel()
         , cargs->numExtract
-        , static_cast< uint32 >( jargs->size / cargs->dst.BytesPerPixel() )
+        , static_cast< uint32 >( jargs->size / cargs->src.BytesPerPixel() )
     );
 }
 
