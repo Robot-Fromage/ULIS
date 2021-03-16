@@ -533,7 +533,7 @@ FContext::XProcessBezierDisplacementField(
     // Only load fake geometry to avoid return on hollow block.
     iMask.LoadFromData( nullptr, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
     FEvent eventClear;
-    Clear( iMask, roi, iPolicy, 1, &eventAllocation[1], &eventClear );
+    Clear( iMask, roi, FSchedulePolicy( ScheduleTime_Async, iPolicy.RunPolicy(), iPolicy.ModePolicy(), iPolicy.ParameterPolicy(), iPolicy.Value() ), 1, &eventAllocation[1], &eventClear );
 
     FRectI trans = TransformBezierMetrics( src_roi, iControlPoints );
     FVec2F shift = trans.Position();

@@ -5,11 +5,11 @@
 *__________________
 * @file         Extract.cpp
 * @author       Clement Berthaud
-* @brief        Extract application for ULIS3.
+* @brief        Extract application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS3>
+#include <ULIS>
 
 #include <QApplication>
 #include <QWidget>

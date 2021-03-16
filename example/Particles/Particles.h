@@ -5,11 +5,11 @@
 *__________________
 * @file         Particles.h
 * @author       Clement Berthaud
-* @brief        Particles application for ULIS3.
+* @brief        Particles application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS3>
+#include <ULIS>
 
 #include <QWidget>
 #include <QPoint>

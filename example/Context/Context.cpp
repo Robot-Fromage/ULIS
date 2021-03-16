@@ -5,7 +5,7 @@
 *__________________
 * @file         Blend.cpp
 * @author       Clement Berthaud
-* @brief        Blend application for ULIS3.
+* @brief        Blend application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -23,10 +23,11 @@ main( int argc, char *argv[] ) {
     FBlock test( 64, 64, format );
 
     FEvent eventBlendTile;
-    FSchedulePolicy policy( ScheduleRun_Mono );
+    FSchedulePolicy policy;
     ctx.Blend( test, canvas, test.Rect(), FVec2I( 0, 0 ),  Blend_Normal, Alpha_Normal, 1.f, policy, 0, 0, &eventBlendTile );
     ctx.Blend( test, canvas, test.Rect(), FVec2F( 64, 0 ), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &eventBlendTile, 0 );
     ctx.Finish();
 
     return  0;
 }
+

@@ -5,7 +5,7 @@
 *__________________
 * @file         PSD.cpp
 * @author       Clement Berthaud
-* @brief        PSD application for ULIS3.
+* @brief        PSD application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */

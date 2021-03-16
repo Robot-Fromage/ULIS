@@ -5,11 +5,11 @@
 *__________________
 * @file         Conversion.cpp
 * @author       Clement Berthaud
-* @brief        Conversion application for ULIS3.
+* @brief        Conversion application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS3>
+#include <ULIS>
 
 #include <QApplication>
 #include <QWidget>
@@ -83,7 +83,7 @@ main( int argc, char *argv[] ) {
     // Get rid of block Lab, we don't need it anymore.
     delete  blockLAB;
 
-    // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS3 operations.
+    // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS operations.
     // We are not interested in the time it took Qt to create the window.
     auto endTime = std::chrono::steady_clock::now();
     auto delta   = std::chrono::duration_cast< std::chrono::milliseconds >( endTime - startTime ).count();
@@ -100,11 +100,11 @@ main( int argc, char *argv[] ) {
     // Average on my laptop setup:  <unavailable>   | Conversion only ( without manual unoptimized gradient ) : <unavailable>
     // Remember: everything is multithreaded, SSE and AVX are used whenever possible, everything is computed on CPU
     // Print out the result time.
-    std::cout << "ULIS3 Conversion: Conversion took " << delta << "ms." << std::endl;
+    std::cout << "ULIS Conversion: Conversion took " << delta << "ms." << std::endl;
 
     // Create a Qt application and a simple window to display the result block we computed.
     // We create a QImage from the blockCanvas data, QImage does not own the data, so it still lives in blockCanvas, so we don't delete it right now.
-    // For Qt Interoperability, several formats are compatible with ULIS3 formats. Here we chose RGBA8888 which has the same memory layout as ULIS_FORMAT_RGBA8
+    // For Qt Interoperability, several formats are compatible with ULIS formats. Here we chose RGBA8888 which has the same memory layout as ULIS_FORMAT_RGBA8
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
     QImage*         image   = new QImage( blockRGB->Bits()
