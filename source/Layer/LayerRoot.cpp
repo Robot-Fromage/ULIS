@@ -46,7 +46,7 @@ FLayerRoot::Layers() const
 }
 
 void
-FLayerRoot::AddLayer( ILayer* iLayer, int iIndex )
+FLayerRoot::AddLayer( ILayer* iLayer, uint64 iIndex )
 {
     mLayers.Insert( iIndex, iLayer );
 }
