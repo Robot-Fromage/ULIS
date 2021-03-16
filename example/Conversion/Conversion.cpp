@@ -79,7 +79,7 @@ main( int argc, char *argv[] ) {
     // The channel type is different for the two blocks here too, so conv can be used to convert a block depth too ( e.g: RGBA16 to RGBA8 ).
     // Notice we passed the ULIS_BLOCKING flag here, that means the Conv function will not return until the conversion is complete.
     // We don't care about stalling here since there are no multihtreaded operations following, yet we need to ensure the blockRGB is valid before we go on.
-    ctx.ConvertFormat( *blockLAB, *blockRGB, blockLAB->Rect(), FVec2I(), policy_sync_cache_efficient );
+    ctx.ConvertFormat( *blockLAB, *blockRGB, blockLAB->Rect(), FVec2I(), policy_sync_multi_scanlines );
     ctx.Finish();
 
     // Get rid of block Lab, we don't need it anymore.
@@ -87,6 +87,7 @@ main( int argc, char *argv[] ) {
 
     // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS operations.
     // We are not interested in the time it took Qt to create the window.
+    // Result on my end: average 7ms.
     auto endTime = std::chrono::steady_clock::now();
     auto delta   = std::chrono::duration_cast< std::chrono::milliseconds >( endTime - startTime ).count();
 
