@@ -11,6 +11,7 @@
 */
 #include "Layer/LayerRoot.h"
 #include "Image/Block.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 FLayerRoot::~FLayerRoot()
@@ -48,7 +49,10 @@ FLayerRoot::Layers() const
 void
 FLayerRoot::AddLayer( ILayer* iLayer, uint64 iIndex )
 {
-    mLayers.Insert( iIndex, iLayer );
+    if( iIndex >= mLayers.Size() )
+        mLayers.PushBack( iLayer );
+    else
+        mLayers.Insert( iIndex, iLayer );
 }
 
 void

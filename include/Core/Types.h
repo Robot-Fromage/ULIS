@@ -33,6 +33,7 @@ typedef  int64      ulError;    ///< Used for errors reports defined below in th
 /////////////////////////////////////////////////////
 // MAX
 #define ULIS_UINT16_MAX 0xFFFF
+#define ULIS_UINT64_MAX 0xFFFFFFFFFFFFFFFF
 
 #ifndef FLT_MAX
 #define FLT_MAX __FLT_MAX__

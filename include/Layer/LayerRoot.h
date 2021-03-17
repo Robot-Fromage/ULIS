@@ -34,7 +34,7 @@ public:
     virtual eLayerType Type() const override;
     TArray< ILayer* >& Layers();
     const TArray< ILayer* >& Layers() const;
-    void AddLayer( ILayer* iLayer, uint64 iIndex );
+    void AddLayer( ILayer* iLayer, uint64 iIndex = ULIS_UINT64_MAX );
     void RemoveLayer( int iIndex );
     void Reset();
 
