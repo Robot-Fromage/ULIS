@@ -37,6 +37,7 @@ public:
         , eFormat iFormat
         , eBlendMode iBlendMode
         , eAlphaMode iAlphaMode
+        , ufloat iOpacity
         , const std::wstring& iText
         , const FFont& iFont
         , uint32 iFontSize
@@ -54,6 +55,7 @@ public:
         , eFormat iFormat
         , eBlendMode iBlendMode
         , eAlphaMode iAlphaMode
+        , ufloat iOpacity
         , const std::wstring& iText
         , const FFont& iFont
         , uint32 iFontSize

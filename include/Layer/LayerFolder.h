@@ -33,6 +33,7 @@ public:
         , eFormat iFormat
         , eBlendMode iBlendMode
         , eAlphaMode iAlphaMode
+        , ufloat iOpacity
         , FLayerRoot* iParent
     );
 
@@ -44,6 +45,7 @@ public:
         , eFormat iFormat
         , eBlendMode iBlendMode
         , eAlphaMode iAlphaMode
+        , ufloat iOpacity
         , FLayerRoot* iParent
     );
 

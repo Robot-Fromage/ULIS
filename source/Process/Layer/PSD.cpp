@@ -820,7 +820,7 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
         }
         FBlock* srcblock = new FBlock( mImageDst, mImageWidth, mImageHeight, Format_Linear_BGRA8 );
 
-        mLayerStack->AddLayer( new FLayerImage(srcblock, FString("Layer1"), mImageWidth, mImageHeight, Format_Linear_BGRA8, eBlendMode::Blend_Normal, eAlphaMode::Alpha_Normal, &(mLayerStack->Root()) ) );
+        mLayerStack->AddLayer( new FLayerImage(srcblock, FString("Layer1"), mImageWidth, mImageHeight, Format_Linear_BGRA8, eBlendMode::Blend_Normal, eAlphaMode::Alpha_Normal, 1.f, &(mLayerStack->Root()) ) );
 
         delete srcblock;
     }
@@ -828,7 +828,8 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
 
     FLayerRoot* currentRoot = &(mLayerStack->Root());
 
-    for( int i = mLayersInfo.Size() - 1; i >= 0; i-- )
+    const int64 max = static_cast< int64 >( mLayersInfo.Size() ) - 1;
+    for( int64 i = max; i >= 0; i-- )
     {
         if( mLayersInfo[i].mDividerType == 0 ) //Rasterizable layer
         {
@@ -987,15 +988,15 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
 
             //TSharedPtr<FOdysseyImageLayer> imageLayer = MakeShareable(new FOdysseyImageLayer(layerName,layerBlock));
 
-            float opacity = (float)mLayersInfo[i].mOpacity / 255.0;
+            float opacity = (float)mLayersInfo[i].mOpacity / 255.0f;
             bool isAlphaLocked = mLayersInfo[i].mFlags & 0x01;
             bool isVisible = !(mLayersInfo[i].mFlags & 0x02);
             eBlendMode blendMode = GetBlendingModeFromPSD(mLayersInfo[i].mBlendModeKey);
 
             if( currentRoot->Type() == eLayerType::Layer_Folder )
-                mLayerStack->AddLayer( new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, currentRoot ));
+                mLayerStack->AddLayer( new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, currentRoot ));
             else
-                mLayerStack->AddLayer(new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, &(mLayerStack->Root()) ) );
+                mLayerStack->AddLayer(new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, &(mLayerStack->Root()) ) );
             
             //UE_LOG(LogTemp,Display,TEXT("flags: %d"),mLayersInfo[i].mFlags)
             //Todo: Locked
@@ -1005,7 +1006,7 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
         }
         else if( mLayersInfo[i].mDividerType == 1 || mLayersInfo[i].mDividerType == 2 ) //Open folder / Closed Folder
         {
-            float opacity = (float)mLayersInfo[i].mOpacity / 255.0;
+            float opacity = (float)mLayersInfo[i].mOpacity / 255.0f;
             bool isAlphaLocked = mLayersInfo[i].mFlags & 0x01;
             bool isVisible = !(mLayersInfo[i].mFlags & 0x02);
             eBlendMode blendMode = GetBlendingModeFromPSD(mLayersInfo[i].mBlendModeKey);
@@ -1013,9 +1014,9 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
             FLayerFolder* layerFolder = nullptr; 
 
             if(currentRoot->Type() == eLayerType::Layer_Folder )
-                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, currentRoot);
+                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, currentRoot);
             else
-                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, &(mLayerStack->Root()));
+                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, &(mLayerStack->Root()));
 
             mLayerStack->AddLayer( layerFolder );
             currentRoot = layerFolder;

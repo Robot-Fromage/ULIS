@@ -86,7 +86,7 @@ main( int argc, char *argv[] ) {
     // We will first tile the base block layout on a regular grid in the blockCanvas block
     // For that we do not need to perform a blend, a simple copy should suffice.
     // Then we blend the over block over the canvas, where the base has been copied first.
-    for( int i = 0; i < NumBlendingModes; ++i ) {
+    for( int i = 0; i < NumBlendModes; ++i ) {
         // Compute x & y in regular grid, remember we tile it in a 8 * 5 grid and NUM_BLENDING_MODES = 40.
         int x = ( i % 8 ) * srcRect.w;
         int y = ( i / 8 ) * srcRect.h;

@@ -25,6 +25,7 @@ FLayerImage::FLayerImage(
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
+    , ufloat iOpacity
     , FLayerRoot* iParent
 )
     : ILayer(
@@ -35,6 +36,7 @@ FLayerImage::FLayerImage(
     , mBlock( new FBlock( iWidth, iHeight, iFormat ) )
     , mBlendMode( iBlendMode )
     , mAlphaMode( iAlphaMode )
+    , mOpacity( iOpacity )
 {
 }
 
@@ -46,6 +48,7 @@ FLayerImage::FLayerImage(
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
+    , ufloat iOpacity
     , FLayerRoot* iParent
 )
     : ILayer(
@@ -56,6 +59,7 @@ FLayerImage::FLayerImage(
     , mBlock( iBlock )
     , mBlendMode( iBlendMode )
     , mAlphaMode( iAlphaMode )
+    , mOpacity( iOpacity )
 {
 }
 
@@ -87,6 +91,24 @@ void
 FLayerImage::SetAlphaLocked( bool iValue )
 {
     mAlphaLock = iValue;
+}
+
+eBlendMode
+FLayerImage::BlendMode() const
+{
+    return  mBlendMode;
+}
+
+eAlphaMode
+FLayerImage::AlphaMode() const
+{
+    return  mAlphaMode;
+}
+
+ufloat
+FLayerImage::Opacity() const
+{
+    return  mOpacity;
 }
 
 ULIS_NAMESPACE_END

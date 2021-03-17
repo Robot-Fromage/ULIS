@@ -24,6 +24,7 @@ FLayerText::FLayerText(
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
+    , ufloat iOpacity
     , const std::wstring& iText
     , const FFont& iFont
     , uint32 iFontSize
@@ -43,6 +44,7 @@ FLayerText::FLayerText(
         , iFormat
         , iBlendMode
         , iAlphaMode
+        , iOpacity
         , iParent
     )
     , mText( iText )
@@ -62,6 +64,7 @@ FLayerText::FLayerText(
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
+    , ufloat iOpacity
     , const std::wstring& iText
     , const FFont& iFont
     , uint32 iFontSize
@@ -82,6 +85,7 @@ FLayerText::FLayerText(
         , iFormat
         , iBlendMode
         , iAlphaMode
+        , iOpacity
         , iParent
     )
     , mText( iText )

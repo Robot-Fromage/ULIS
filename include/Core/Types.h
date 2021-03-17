@@ -443,7 +443,7 @@ enum eBlendMode : uint8
     , Blend_PartialDerivative
     , Blend_Whiteout
     , Blend_AngleCorrected
-    , NumBlendingModes
+    , NumBlendModes
 };
 
 static const char* kwBlendMode[] =

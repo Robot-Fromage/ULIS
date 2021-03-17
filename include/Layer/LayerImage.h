@@ -30,6 +30,7 @@ public:
         , eFormat iFormat
         , eBlendMode iBlendMode
         , eAlphaMode iAlphaMode
+        , ufloat iOpacity
         , FLayerRoot* iParent
     );
 
@@ -41,6 +42,7 @@ public:
         , eFormat iFormat
         , eBlendMode iBlendMode
         , eAlphaMode iAlphaMode
+        , ufloat iOpacity
         , FLayerRoot* iParent
     );
 
@@ -53,12 +55,16 @@ public:
     const FBlock& Block() const;
     bool IsAlphaLocked() const;
     void SetAlphaLocked( bool iValue );
+    eBlendMode BlendMode() const;
+    eAlphaMode AlphaMode() const;
+    ufloat Opacity() const;
 
 private:
     bool mAlphaLock;
     FBlock* mBlock;
     eBlendMode mBlendMode;
     eAlphaMode mAlphaMode;
+    ufloat mOpacity;
 };
 
 ULIS_NAMESPACE_END

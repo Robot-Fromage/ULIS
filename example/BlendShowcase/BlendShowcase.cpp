@@ -69,7 +69,7 @@ main( int argc, char *argv[] ) {
     FFontEngine fontEngine;
     FFont font( fontEngine, "Segoe UI", "Light" );
 
-    for( int i = 0; i < NumBlendingModes; ++i ) {
+    for( int i = 0; i < NumBlendModes; ++i ) {
         int x = ( i % 8 ) * srcRect.w;
         int y = ( i / 8 ) * srcRect.h;
         FEvent event_copy;
@@ -83,7 +83,7 @@ main( int argc, char *argv[] ) {
     ctx.Finish();
 
     // We process the text in a separate loop because we have a concurrency constraint on the FFont object.
-    for( int i = 0; i < NumBlendingModes; ++i ) {
+    for( int i = 0; i < NumBlendModes; ++i ) {
         int x = ( i % 8 ) * srcRect.w;
         int y = ( i / 8 ) * srcRect.h;
         std::string bm = kwBlendMode[i];

@@ -24,6 +24,7 @@ FLayerFolder::FLayerFolder(
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
+    , ufloat iOpacity
     , FLayerRoot* iParent
 )
     : ILayer(
@@ -37,6 +38,7 @@ FLayerFolder::FLayerFolder(
         , iFormat
         , iBlendMode
         , iAlphaMode
+        , iOpacity
         , iParent
     )
     , FLayerRoot(
@@ -54,6 +56,7 @@ FLayerFolder::FLayerFolder(
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
+    , ufloat iOpacity
     , FLayerRoot* iParent
 )
     : ILayer(
@@ -68,6 +71,7 @@ FLayerFolder::FLayerFolder(
         , iFormat
         , iBlendMode
         , iAlphaMode
+        , iOpacity
         , iParent
     )
     , FLayerRoot(

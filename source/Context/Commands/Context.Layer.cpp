@@ -55,7 +55,7 @@ FContext::Flatten(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    // Bake and push multiple subcommands
+    // Bake and push multiple subcommands in recursive local lambda.
     //          L1  L2  L3
     //  • root <-
     //  |-0             ]
@@ -70,44 +70,63 @@ FContext::Flatten(
     //  |-• 6   ]       ]
     //  | |-7   ]       ]
     //  | |-8   ]       ]
+
+    // Bake Policy
+    FHardwareMetrics hw;
+    FSchedulePolicy policyClear( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policyBlend( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
+
+    // Function object declared first
     std::function< void( FLayerRoot&, FBlock& oDst, FEvent& oEvent ) > sched;
-    sched = [&sched, this]( FLayerRoot& iFolder, FBlock& oDst, FEvent& oEvent )->void {
-        TArray< FEvent > events( iFolder.Layers().Size() );
-        TArray< FBlock* > blocks( iFolder.Layers().Size() );
-        for( uint64 i = 0; i < iFolder.Layers().Size(); ++i ) {
+
+    // Lambda definition
+    sched =
+        [ &sched, policyClear, policyBlend, src_roi, dst_roi, iPosition, this ]
+        ( FLayerRoot& iFolder, FBlock& oDst, FEvent& oEvent ) -> void
+    {
+        TArray< FEvent > events( iFolder.Layers().Size() + 1 );
+        Clear( oDst, dst_roi, policyClear, 0, nullptr, &(events.Back()) );
+
+        const int64 max = static_cast< int64 >( iFolder.Layers().Size() ) - 1;
+        for( int64 i = max; i >= 0; --i ) {
             eLayerType type = iFolder.Layers()[i]->Type();
+            FLayerImage* layer = nullptr;
             switch( type ) {
                 case Layer_Image: {
-                    FLayerImage& img = dynamic_cast< FLayerImage& >( *( iFolder.Layers()[i] ) );
-                    blocks[i] = &(img.Block());
+                    layer = dynamic_cast< FLayerImage* >( iFolder.Layers()[i] );
                     break;
                 }
                 case Layer_Folder: {
-                    FLayerFolder& folder = dynamic_cast< FLayerFolder& >( *( iFolder.Layers()[i] ) );
-                    blocks[i] = &(folder.Block());
-                    sched( folder, folder.Block(), events[i] );
+                    FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Layers()[i] );
+                    layer = dynamic_cast< FLayerImage* >( folder );
+                    // block = &(folder.Block());
+                    // sched( folder, folder.Block(), events[i] );
                     break;
                 }
             }
-        }
-        for( uint64 i = 1; i < iFolder.Layers().Size(); ++i ) {
-            Blend(
-                  *blocks[i]
-                , oDst
-                , blocks[i]->Rect()
-                , FVec2I()
-                , Blend_Normal
-                , Alpha_Normal
-                , 1.f
-                , FSchedulePolicy()
-                , 1
-                , &events[i + 1]
-                , &events[i]
-            );
+
+            if( layer )
+            {
+                Blend(
+                      layer->Block()
+                    , oDst
+                    , src_roi
+                    , iPosition
+                    , layer->BlendMode()
+                    , layer->AlphaMode()
+                    , layer->Opacity()
+                    , policyBlend
+                    , 1
+                    , &events[i + 1]
+                    , &events[i]
+                );
+            }
         }
     };
+
     FEvent event;
-    sched( iStack.Root(), oDestination, event );
+    // Call recursive lambda sched.
+    sched( iStack, oDestination, event );
 
     return  ULIS_NO_ERROR;
 }
