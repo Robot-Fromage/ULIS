@@ -71,21 +71,17 @@ FContext::Flatten(
     //  | |-7   ]       ]
     //  | |-8   ]       ]
 
-    // Bake Policy
-    FHardwareMetrics hw;
-    FSchedulePolicy policyClear( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    FSchedulePolicy policyBlend( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
-
     // Function object declared first
-    std::function< void( FLayerRoot&, FBlock& oDst, FEvent& oEvent ) > sched;
+    std::function< ulError( FLayerRoot&, FBlock& oDst, uint32 iNumWait, const FEvent* iWaitList, FEvent& oEvent ) > sched;
 
-    // Lambda definition
+    // Recursive lambda definition
     sched =
-        [ &sched, policyClear, policyBlend, src_roi, dst_roi, iPosition, this ]
-        ( FLayerRoot& iFolder, FBlock& oDst, FEvent& oEvent ) -> void
+        [ &sched, iPolicy, src_roi, dst_roi, iPosition, this ]
+        ( FLayerRoot& iFolder, FBlock& oDst, uint32 iNumWait, const FEvent* iWaitList, FEvent& oEvent ) -> ulError
     {
-        TArray< FEvent > events( iFolder.Layers().Size() + 1 );
-        Clear( oDst, dst_roi, policyClear, 0, nullptr, &(events.Back()) );
+        TArray< FEvent > events( iFolder.Layers().Size() );
+        ulError err = Clear( oDst, dst_roi, iPolicy, iNumWait, iWaitList, &(events.Back()) );
+        ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten preprocess clear of dst block", err );
 
         const int64 max = static_cast< int64 >( iFolder.Layers().Size() ) - 1;
         for( int64 i = max; i >= 0; --i ) {
@@ -99,15 +95,14 @@ FContext::Flatten(
                 case Layer_Folder: {
                     FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Layers()[i] );
                     layer = dynamic_cast< FLayerImage* >( folder );
-                    // block = &(folder.Block());
-                    // sched( folder, folder.Block(), events[i] );
+                    sched( dynamic_cast< FLayerRoot& >( *folder ), folder->Block(), 0, nullptr, events[i] );
                     break;
                 }
             }
 
             if( layer )
             {
-                Blend(
+                err = Blend(
                       layer->Block()
                     , oDst
                     , src_roi
@@ -115,18 +110,20 @@ FContext::Flatten(
                     , layer->BlendMode()
                     , layer->AlphaMode()
                     , layer->Opacity()
-                    , policyBlend
+                    , iPolicy
                     , 1
-                    , &events[i + 1]
                     , &events[i]
+                    , i ? &events[i - 1] : &oEvent
                 );
+                ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process blend in dst block", err );
             }
         }
+
+        return  ULIS_NO_ERROR;
     };
 
-    FEvent event;
     // Call recursive lambda sched.
-    sched( iStack, oDestination, event );
+    sched( iStack, oDestination, iNumWait, iWaitList, *iEvent );
 
     return  ULIS_NO_ERROR;
 }
