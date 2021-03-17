@@ -553,7 +553,7 @@ InvokeDrawCircleAndresSPMT_MEM_Generic(
     , const FDrawCircleSPCommandArgs* cargs
 )
 {
-    //DrawCircleAndresSP<T>(cargs->dst,cargs->center,cargs->radius,cargs->color,cargs->filled,cargs->dstRect);
+    DrawCircleAndresSP<T>(cargs->dst,cargs->center,cargs->radius,cargs->color,cargs->filled,cargs->dstRect);
 }
 
 template<typename T>
