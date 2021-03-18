@@ -111,5 +111,23 @@ FLayerImage::Opacity() const
     return  mOpacity;
 }
 
+void
+FLayerImage::SetBlendMode( eBlendMode iValue )
+{
+    mBlendMode = iValue;
+}
+
+void
+FLayerImage::SetAlphaMode( eAlphaMode iValue )
+{
+    mAlphaMode = iValue;
+}
+
+void
+FLayerImage::SetOpacity( ufloat iValue )
+{
+    mOpacity = iValue;
+}
+
 ULIS_NAMESPACE_END
 

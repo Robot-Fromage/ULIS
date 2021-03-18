@@ -56,8 +56,6 @@ public:
 
     FEvent( const FEvent& );
     FEvent& operator=( const FEvent& );
-    FEvent( FEvent&& ) = delete;
-    FEvent& operator=( FEvent&& ) = delete;
     
     eEventStatus Status() const;
     void Wait() const;

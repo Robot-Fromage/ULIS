@@ -77,6 +77,13 @@ public:
     const FColor& Color() const;
     bool AA() const;
 
+    void SetText( const std::wstring& iValue );
+    void SetFont( const FFont& iValue );
+    void SetFontSize( uint32 iValue );
+    void SetTransform( const FMat3F& iValue );
+    void SetColor( const ISample& iValue );
+    void SetAA( bool iValue );
+
 private:
     std::wstring mText;
     FFont mFont;

@@ -16,6 +16,8 @@
 #include "Layer/Layer.h"
 #include "Layer/LayerImage.h"
 #include "Layer/LayerFolder.h"
+#include "Layer/LayerText.h"
+#include "Layer/LayerRoot.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

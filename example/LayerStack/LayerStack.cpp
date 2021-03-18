@@ -34,28 +34,77 @@ main( int argc, char *argv[] ) {
     uint16 h = 1024;
     FBlock canvas( w, h, fmt );
     FLayerStack layerStack( w, h, fmt );
-    FLayerFolder* folder0 = new FLayerFolder( "folder0", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
+    FLayerFolder* folder0 = new FLayerFolder( "folder0", w, h, fmt, Blend_Dissolve, Alpha_Normal, 0.9f, &layerStack );
+    FLayerImage* image0 = new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack );
+    FLayerImage* image1 = new FLayerImage( "image1", w, h, fmt, Blend_Normal, Alpha_Normal, 0.5f, &layerStack );
+    FLayerImage* image2 = new FLayerImage( "image2", w, h, fmt, Blend_BayerDither8x8, Alpha_Normal, 0.5f, &layerStack );
+    FLayerImage* image3 = new FLayerImage( "image3", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
+    FLayerImage* image00 = new FLayerImage( "image00", w, h, fmt, Blend_Normal, Alpha_Erase, 1.f, &layerStack );
+    FLayerImage* image01 = new FLayerImage( "image01", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
     FLayerFolder* folder1 = new FLayerFolder( "folder1", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
-    FLayerFolder* folder00 = new FLayerFolder( "folder00", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, folder0 );
-    layerStack.AddLayer( new FLayerImage( "image0", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    layerStack.AddLayer( new FLayerImage( "image1", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    layerStack.AddLayer( folder0 );
-    folder0->AddLayer( new FLayerImage( "image00", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    folder0->AddLayer( folder00 );
-    folder00->AddLayer( new FLayerImage( "image000", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    folder00->AddLayer( new FLayerImage( "image001", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    folder00->AddLayer( new FLayerImage( "image002", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    folder0->AddLayer( new FLayerImage( "image01", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    layerStack.AddLayer( folder1 );
-    folder1->AddLayer( new FLayerImage( "image10", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    folder1->AddLayer( new FLayerImage( "image11", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    folder1->AddLayer( new FLayerImage( "image12", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    folder1->AddLayer( new FLayerImage( "image13", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    layerStack.AddLayer( new FLayerImage( "image2", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    layerStack.AddLayer( new FLayerImage( "image3", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
+    FLayerImage* image10 = new FLayerImage( "image10", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
+    FLayerImage* image11 = new FLayerImage( "image11", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
+    FLayerImage* image12 = new FLayerImage( "image12", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
+    FLayerImage* image13 = new FLayerImage( "image13", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
+
+    //FLayerFolder* folder00 = new FLayerFolder( "folder00", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, folder0 );
+    layerStack.AddLayer( image0 );
+    layerStack.AddLayer( image1 );
+        layerStack.AddLayer( folder0 );
+            folder0->AddLayer( image00 );
+    //folder0->AddLayer( folder00 );
+    //folder00->AddLayer( new FLayerImage( "image000", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
+    //folder00->AddLayer( new FLayerImage( "image001", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
+    //folder00->AddLayer( new FLayerImage( "image002", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
+            folder0->AddLayer( image01 );
+        layerStack.AddLayer( folder1 );
+            folder1->AddLayer( image10 );
+            folder1->AddLayer( image11 );
+            folder1->AddLayer( image12 );
+            folder1->AddLayer( image13 );
+    layerStack.AddLayer( image2 );
+    layerStack.AddLayer( image3 );
+
+    {
+        ctx.Clear( canvas, canvas.Rect(), policy_sync_cache_efficient );
+
+        {
+            FEvent eventClear0;
+            FEvent eventFill0;
+            ctx.Clear( image0->Block(), image0->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear0 );
+            ctx.Fill( image0->Block(), FRectI( 10, 50, 504, 1004 ), FColor::RGB( 0, 255, 255 ), policy_sync_cache_efficient, 1, &eventClear0, &eventFill0 );
+            ctx.DrawCircleAndresAA( image0->Block(), image0->Block().Rect().Size() / 2, 128, FColor::RGB( 255, 0, 255 ), true, image0->Block().Rect(), FSchedulePolicy(), 1, &eventFill0, nullptr );
+        }
+
+        {
+            FEvent eventClear1;
+            ctx.Clear( image1->Block(), image1->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear1 );
+            ctx.Fill( image1->Block(), FRectI( 500, 500, 800, 800 ), FColor::RGB( 0, 255, 0 ), policy_sync_cache_efficient, 1, &eventClear1 );
+        }
+
+        {
+            FEvent eventClear2;
+            ctx.Clear( image2->Block(), image2->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear2 );
+            ctx.Fill( image2->Block(), FRectI( 20, 20, 100, 200 ), FColor::RGB( 255, 0, 0 ), policy_sync_cache_efficient, 1, &eventClear2 );
+        }
+
+        {
+            FEvent eventClear00;
+            ctx.Clear( image00->Block(), image00->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear00 );
+            ctx.Fill( image00->Block(), FRectI( 410, 410, 380, 380 ), FColor::RGB( 0, 0, 0 ), policy_sync_cache_efficient, 1, &eventClear00 );
+        }
+
+        {
+            FEvent eventClear01;
+            ctx.Clear( image01->Block(), image01->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear01 );
+            ctx.Fill( image01->Block(), FRectI( 400, 400, 400, 400 ), FColor::RGB( 255, 255, 0 ), policy_sync_cache_efficient, 1, &eventClear01 );
+        }
+
+        ctx.Fill( image3->Block(), image3->Block().Rect(), FColor::RGB( 127, 127, 255 ), policy_sync_cache_efficient );
+    }
+    ctx.Finish();
 
     auto startTime = std::chrono::steady_clock::now();
-
     {
         ctx.Flatten(
               layerStack
@@ -68,7 +117,6 @@ main( int argc, char *argv[] ) {
             , nullptr
         );
     }
-
     ctx.Finish();
 
     auto endTime = std::chrono::steady_clock::now();

@@ -123,6 +123,24 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    ulError
+    RenderLayerFolder(
+          FLayerFolder& iStack
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    ulError
+    RenderLayerText(
+          FLayerText& iStack
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
     /*!
         Perform a load of a PSD file in a layer stack
     */

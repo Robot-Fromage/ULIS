@@ -58,6 +58,9 @@ public:
     eBlendMode BlendMode() const;
     eAlphaMode AlphaMode() const;
     ufloat Opacity() const;
+    void SetBlendMode( eBlendMode iValue );
+    void SetAlphaMode( eAlphaMode iValue );
+    void SetOpacity( ufloat iValue );
 
 private:
     bool mAlphaLock;

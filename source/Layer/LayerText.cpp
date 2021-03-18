@@ -139,5 +139,41 @@ FLayerText::AA() const
     return  mAA;
 }
 
+void
+FLayerText::SetText( const std::wstring& iValue )
+{
+    mText = iValue;
+}
+
+void
+FLayerText::SetFont( const FFont& iValue )
+{
+    mFont = iValue;
+}
+
+void
+FLayerText::SetFontSize( uint32 iValue )
+{
+    mFontSize = iValue;
+}
+
+void
+FLayerText::SetTransform( const FMat3F& iValue )
+{
+    mTransform = iValue;
+}
+
+void
+FLayerText::SetColor( const ISample& iValue )
+{
+    mColor = iValue;
+}
+
+void
+FLayerText::SetAA( bool iValue )
+{
+    mAA = iValue;
+}
+
 ULIS_NAMESPACE_END
 

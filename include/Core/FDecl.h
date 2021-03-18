@@ -34,6 +34,7 @@ class   FHardwareMetrics;
 class   FKernel;
 class   FLayerImage;
 class   FLayerFolder;
+class   FLayerText;
 class   FLayerStack;
 class   ILayer;
 class   FStructuringElement;
