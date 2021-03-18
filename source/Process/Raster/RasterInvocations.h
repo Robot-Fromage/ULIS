@@ -613,7 +613,7 @@ InvokeDrawArcBresenhamSPMT_MEM_Generic(
     , const FDrawArcSPCommandArgs* cargs
 )
 {
-    //DrawArcBresenhamSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
+    DrawArcBresenhamSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
 }
 
 template<typename T>
