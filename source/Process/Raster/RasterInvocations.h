@@ -573,7 +573,7 @@ InvokeDrawCircleBresenhamSPMT_MEM_Generic(
     , const FDrawCircleSPCommandArgs* cargs
 )
 {
-    //DrawCircleBresenhamSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->color, cargs->filled, cargs->dstRect );
+    DrawCircleBresenhamSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 template<typename T>
@@ -593,7 +593,7 @@ InvokeDrawArcAndresSPMT_MEM_Generic(
     , const FDrawArcSPCommandArgs* cargs
 )
 {
-    //DrawArcAndresSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
+    DrawArcAndresSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
 }
 
 template<typename T>
