@@ -633,7 +633,7 @@ InvokeDrawEllipseSPMT_MEM_Generic(
     , const FDrawEllipseSPCommandArgs* cargs
 )
 {
-    //DrawEllipseSP<T>( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->color, cargs->filled, cargs->dstRect );
+    DrawEllipseSP<T>( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 template<typename T>

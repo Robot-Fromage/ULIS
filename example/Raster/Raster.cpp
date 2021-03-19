@@ -42,7 +42,7 @@ main(int argc,char *argv[])
         //ctx.DrawCircleAndresSP( canvas, FVec2F( 621, 300 ), 250.22, FColor::RGBA8(0,0,0,255) );
         //ctx.DrawCircleAndresSP( canvas, FVec2F( 650, 300 ), 200, FColor::RGBA8(0,0,0,255) );
         //ctx.DrawCircleAndresSP(canvas, FVec2F(250, 250), 200, FColor::RGBA8(0, 0, 0, 255));
-        ctx.DrawArcBresenhamSP( canvas, FVec2F(250,250), 200, 15, 68, FColor::RGBA8(0, 0, 0, 255));
+
         //ctx.DrawCircleAndres(canvas,FVec2I(23,300),250,FColor::RGBA8(50,0,0,100));
         //ctx.DrawCircleBresenhamAA(canvas,FVec2I(23,300),250,FColor::RGBA8(50,0,0,100));
         //ctx.DrawCircleBresenhamAA(canvas,FVec2I(950,300),250,FColor::RGBA8(50,0,0,100), true);
@@ -58,7 +58,8 @@ main(int argc,char *argv[])
 
         //ctx.DrawEllipse( canvas, FVec2I( 500, 850 ), 150, 400, FColor::RGBA8(50,0,0,100), true);
         //ctx.DrawEllipseAA(canvas,FVec2I(500,200),213,352,FColor::RGBA8(50,0,0,100));
-        
+        ctx.DrawEllipseSP(canvas,FVec2I(500,200),213,352,FColor::RGBA8(50,0,0,100));
+
         //ctx.DrawRotatedEllipse(canvas,FVec2I(500,800),300,100,285,FColor::RGBA8(50,0,0,100),true);
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(500,800),100,300,285,FColor::RGBA8(50,0,0,100),true);
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(200,200),320,750,148,FColor::RGBAF(0.2,0,0,0.45),true);
