@@ -297,7 +297,7 @@ public:
         PushBack, insert a new element at the end of the buffer, possibly
         reallocating the underlying storage if the capacity has been reached.
     */
-    void PushBack( const T& iValue ) {
+    void PushBack( const T& iValue = T() ) {
         CheckGrowBulk();
         new  ( mBulk + ( mSize++ ) )  T( iValue );
     }

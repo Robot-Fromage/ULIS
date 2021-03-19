@@ -79,38 +79,35 @@ FContext::Flatten(
         [ &sched, iPolicy, src_roi, dst_roi, iPosition, this ]
         ( FLayerRoot& iFolder, FBlock& oDst, uint32 iNumWait, const FEvent* iWaitList, FEvent* oEvent ) -> ulError
     {
-        TArray< FEvent > events( 1 );
         const uint64 size = iFolder.Layers().Size();
+        const int64 max = static_cast< int64 >( size ) - 1;
+        TArray< FEvent > events( 1 );
         events.Reserve( size );
         ulError err = Clear( oDst, dst_roi, iPolicy, iNumWait, iWaitList, size ? &(events.Front()) : oEvent );
         ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten preprocess clear of dst block", err );
 
-        const int64 max = static_cast< int64 >( size ) - 1;
-        for( int64 i = max, j = 1; i >= 0; --i, ++j ) {
+        for( int64 i = max; i >= 0; --i ) {
             eLayerType type = iFolder.Layers()[i]->Type();
             FLayerImage* layer = nullptr;
             int num_wait = 1;
             switch( type ) {
                 case Layer_Image: {
                     layer = dynamic_cast< FLayerImage* >( iFolder.Layers()[i] );
-                    events.PushBack( FEvent() );
                     break;
                 }
                 case Layer_Folder: {
                     FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Layers()[i] );
                     layer = dynamic_cast< FLayerImage* >( folder );
-                    FEvent folderEvent;
-                    sched( dynamic_cast< FLayerRoot& >( *folder ), folder->Block(), 0, nullptr, &folderEvent );
-                    events.PushBack( folderEvent );
-                    events.PushBack( FEvent() );
+                    events.PushBack();
+                    sched( dynamic_cast< FLayerRoot& >( *folder ), folder->Block(), 0, nullptr, &events.Back() );
                     num_wait = 2;
-                    ++j;
                     break;
                 }
             }
 
             if( layer )
             {
+                events.PushBack();
                 err = Blend(
                       layer->Block()
                     , oDst
@@ -121,8 +118,8 @@ FContext::Flatten(
                     , layer->Opacity()
                     , iPolicy
                     , num_wait
-                    , &events[j-num_wait]
-                    , i ? &(events.Back()) : oEvent
+                    , &events[ events.Size() - 1 - num_wait ]
+                    , i ? &events.Back() : oEvent
                 );
                 ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process blend in dst block", err );
             }
