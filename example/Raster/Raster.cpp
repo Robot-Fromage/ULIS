@@ -58,12 +58,13 @@ main(int argc,char *argv[])
 
         //ctx.DrawEllipse( canvas, FVec2I( 500, 850 ), 150, 400, FColor::RGBA8(50,0,0,100), true);
         //ctx.DrawEllipseAA(canvas,FVec2I(500,200),213,352,FColor::RGBA8(50,0,0,100));
-        ctx.DrawEllipseSP(canvas,FVec2I(500,200),213,352,FColor::RGBA8(50,0,0,100));
+        //ctx.DrawEllipseSP(canvas,FVec2I(500,200),213,352,FColor::RGBA8(50,0,0,100));
 
         //ctx.DrawRotatedEllipse(canvas,FVec2I(500,800),300,100,285,FColor::RGBA8(50,0,0,100),true);
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(500,800),100,300,285,FColor::RGBA8(50,0,0,100),true);
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(200,200),320,750,148,FColor::RGBAF(0.2,0,0,0.45),true);
-        
+        ctx.DrawRotatedEllipseSP(canvas,FVec2I(200,200),320,750,148,FColor::RGBAF(0.2,0,0,0.45));
+
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(352,400),215,120,124,FColor::RGBA8(50,0,0,100), true);
 
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(800,800),458,236,148,FColor::RGBA8(50,0,0,100), true);

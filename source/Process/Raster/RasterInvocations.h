@@ -653,7 +653,7 @@ InvokeDrawRotatedEllipseSPMT_MEM_Generic(
     , const FDrawRotatedEllipseSPCommandArgs* cargs
 )
 {
-    //DrawRotatedEllipseSP<T>( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->rotationDegrees, cargs->color, cargs->filled, cargs->dstRect );
+    DrawRotatedEllipseSP<T>( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->rotationDegrees, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 template<typename T>
