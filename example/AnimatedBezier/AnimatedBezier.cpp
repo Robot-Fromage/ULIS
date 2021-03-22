@@ -21,34 +21,39 @@
 #include <cstdlib>
 
 SWindow::~SWindow() {
+    mCtx.Finish();
     delete  mImage;
     delete  mPixmap;
     delete  mLabel;
     delete  mTimer;
-    delete  mSRC;
-    delete  mDST;
-    XDeleteThreadPool( mPool );
 }
 
 
 SWindow::SWindow()
-    : mHost( FHardwareMetrics::Detect() )
-    , mPool( XCreateThreadPool() )
-    , mSRC( nullptr )
-    , mDST( nullptr )
+    : mPool()
+    , mQueue( mPool )
+    , mFmt( Format_RGBA8 )
+    , mCtx( mQueue, mFmt, PerformanceIntent_Max )
+    , mHw()
+    , mPolicyCacheEfficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, mHw.L1CacheSize() )
+    , mPolicyMultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines )
+    , mSrc()
+    , mDst( 1024, 512, mFmt )
+    , mCtrlPts( 4 )
     , mImage( nullptr )
+    , mAngle( 0.f )
     , mPixmap( nullptr )
     , mLabel( nullptr )
     , mTimer( nullptr )
-    , mLeftButtonDown( false )
-    , mEvolutiveAngle( 0.f )
 {
-    uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
-    std::string path = "C:/Users/PRAXINOS/Documents/work/TEST.png";
-    mSRC = XLoadFromFile( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, path, ULIS_FORMAT_RGBA8 );
-    mDST = new  FBlock( 1024, 512, ULIS_FORMAT_RGBA8 );
-    Clear( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, mDST, mDST->Rect() );
-    mImage = new QImage( mDST->Bits(), mDST->Width(), mDST->Height(), mDST->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    {
+        std::string path = "C:/Users/PRAXINOS/Documents/work/TEST.png";
+        mCtx.XLoadBlockFromDisk( mSrc, path );
+        mCtx.Clear( mDst, mDst.Rect(), mPolicyCacheEfficient );
+    }
+    mCtx.Finish();
+
+    mImage = new QImage( mDst.Bits(), mDst.Width(), mDst.Height(), mDst.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel = new QLabel( this );
     mLabel->setPixmap( *mPixmap );
@@ -57,40 +62,18 @@ SWindow::SWindow()
     mTimer->setInterval( 1000.0 / 24.0 );
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
-    mCtrlPts = { { FVec2F( 442, 186 ), FVec2F(), FVec2F() }
-               , { FVec2F( 582, 186 ), FVec2F(), FVec2F() }
-               , { FVec2F( 582, 326 ), FVec2F(), FVec2F() }
-               , { FVec2F( 442, 326 ), FVec2F(), FVec2F() } };
-}
-
-
-void
-SWindow::mousePressEvent( QMouseEvent* event ) {
-    if( event->button() == Qt::LeftButton ) {
-        mLeftButtonDown = true;
-    }
-}
-
-void
-SWindow::mouseMoveEvent( QMouseEvent* event ) {
-}
-
-void
-SWindow::mouseReleaseEvent( QMouseEvent* event ) {
-    if( event->button() == Qt::LeftButton )
-        mLeftButtonDown = false;
-}
-
-void
-SWindow::keyPressEvent( QKeyEvent* event ) {
+    mCtrlPts[0] = { FVec2F( 442, 186 ), FVec2F(), FVec2F() };
+    mCtrlPts[1] = { FVec2F( 582, 186 ), FVec2F(), FVec2F() };
+    mCtrlPts[2] = { FVec2F( 582, 326 ), FVec2F(), FVec2F() };
+    mCtrlPts[3] = { FVec2F( 442, 326 ), FVec2F(), FVec2F() };
 }
 
 void
 SWindow::tickEvent() {
 
     float len = 150;
-    mEvolutiveAngle += 0.08f;
-    float evoAngle0 = mEvolutiveAngle;
+    mAngle += 0.08f;
+    float evoAngle0 = mAngle;
     float evoAngle1 = evoAngle0 + FMath::kPIf / 2;
     float evoAngle2 = evoAngle1 + FMath::kPIf / 2;
     float evoAngle3 = evoAngle2 + FMath::kPIf / 2;
@@ -103,10 +86,17 @@ SWindow::tickEvent() {
     mCtrlPts[3].ctrlCW  = mCtrlPts[3].point + FVec2F( cos( evoAngle3 ), sin( evoAngle3 ) ) * len;
     mCtrlPts[3].ctrlCCW = mCtrlPts[3].point + FVec2F( cos( evoAngle0 ), sin( evoAngle0 ) ) * len;
 
-    Clear( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mDST, mDST->Rect() );
-
-    TransformBezier( mPool, ULIS_BLOCKING, ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mSRC, mDST, mSRC->Rect(), mCtrlPts, 0.5f, 1, INTERP_BILINEAR );
+    mCtx.Fence();
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
+
+    // Gross estimate of bezier with large thresold and plot size for interactivity in debug.
+    // Notice this new pattern: scheduling and flushing at the end of the tick, to let the workers
+    // work when the GUI does its own stuff, and simply fencing before the render.
+    // Small gain, but still noticeable.
+    FEvent eventClear;
+    mCtx.Clear( mDst, mDst.Rect(), mPolicyCacheEfficient, 0, nullptr, &eventClear );
+    mCtx.TransformBezier( mSrc, mDst, mCtrlPts, 3.f, 6, mSrc.Rect(), Resampling_Bicubic, Border_Transparent, FColor::Transparent(), mPolicyMultiScanlines, 1, &eventClear, nullptr );
+    mCtx.Flush();
 }
 

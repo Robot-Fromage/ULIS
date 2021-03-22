@@ -10,20 +10,16 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS>
-
 #include <QWidget>
 #include <QPoint>
-
-#include <vector>
-
 class QImage;
 class QLabel;
 class QPixmap;
 class QTimer;
+using namespace ::ULIS;
 
-using namespace ::ul3;
-
-class SWindow : public QWidget
+class SWindow
+    : public QWidget
 {
     Q_OBJECT
 
@@ -31,27 +27,25 @@ public:
     ~SWindow();
     SWindow();
 
-protected:
-    virtual void mousePressEvent( QMouseEvent* event ) override;
-    virtual void mouseMoveEvent( QMouseEvent* event ) override;
-    virtual void mouseReleaseEvent( QMouseEvent* event ) override;
-    virtual void keyPressEvent( QKeyEvent* event ) override;
-
 private:
     Q_SLOT void tickEvent();
 
 private:
-    FHardwareMetrics             mHost;
-    FThreadPool*                mPool;
-    FBlock*                     mSRC;
-    FBlock*                     mDST;
-    std::vector< FCubicBezierControlPoint > mCtrlPts;
-    float                       mEvolutiveAngle;
+    FThreadPool mPool;
+    FCommandQueue mQueue;
+    eFormat mFmt;
+    FContext mCtx;
+    FHardwareMetrics mHw;
+    FSchedulePolicy mPolicyCacheEfficient;
+    FSchedulePolicy mPolicyMultiScanlines;
+    FBlock mSrc;
+    FBlock mDst;
+    TArray< FCubicBezierControlPoint > mCtrlPts;
+    float mAngle;
 
-    QImage*                     mImage;
-    QPixmap*                    mPixmap;
-    QLabel*                     mLabel;
-    QTimer*                     mTimer;
-    bool                        mLeftButtonDown;
+    QImage* mImage;
+    QPixmap* mPixmap;
+    QLabel* mLabel;
+    QTimer* mTimer;
 };
 
