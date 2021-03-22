@@ -9,12 +9,10 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-
 #pragma once
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Image/Block.h"
-
 #include <map>
 
 ULIS_NAMESPACE_BEGIN

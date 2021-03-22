@@ -32,7 +32,7 @@ InvokeDrawLineMT_MEM(
 
 void
 InvokeDrawCircleAndresMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawCircleCommandArgs* cargs
 )
 {
@@ -41,7 +41,7 @@ InvokeDrawCircleAndresMT_MEM(
 
 void
 InvokeDrawCircleBresenhamMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawCircleCommandArgs* cargs
 )
 {
@@ -51,7 +51,7 @@ InvokeDrawCircleBresenhamMT_MEM(
 
 void
 InvokeDrawArcAndresMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawArcCommandArgs* cargs
 )
 {
@@ -62,7 +62,7 @@ InvokeDrawArcAndresMT_MEM(
 
 void
 InvokeDrawArcBresenhamMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawArcCommandArgs* cargs
 )
 {
@@ -72,7 +72,7 @@ InvokeDrawArcBresenhamMT_MEM(
 
 void
 InvokeDrawEllipseMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawEllipseCommandArgs* cargs
 )
 {
@@ -81,7 +81,7 @@ InvokeDrawEllipseMT_MEM(
 
 void
 InvokeDrawRotatedEllipseMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawRotatedEllipseCommandArgs* cargs
 )
 {
@@ -91,7 +91,7 @@ InvokeDrawRotatedEllipseMT_MEM(
 
 void
 InvokeDrawRectangleMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawRectangleCommandArgs* cargs
 )
 {
@@ -100,7 +100,7 @@ InvokeDrawRectangleMT_MEM(
 
 void
 InvokeDrawPolygonMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawPolygonCommandArgs* cargs
 )
 {
@@ -109,13 +109,12 @@ InvokeDrawPolygonMT_MEM(
 
 void
 InvokeDrawQuadraticBezierMT_MEM(
-      const FSimpleBufferJobArgs*   jargs
+      const FSimpleBufferJobArgs* jargs
     , const FDrawQuadraticBezierCommandArgs* cargs
 )
 {
     DrawQuadraticBezier( cargs->dst, cargs->ctrlPt0, cargs->ctrlPt1, cargs->ctrlPt2, cargs->weight, cargs->color, cargs->dstRect );
 }
-
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
@@ -129,7 +128,6 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawRotatedEllipseMT_MEM, 
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawRectangleMT_MEM, FSimpleBufferJobArgs, FDrawRectangleCommandArgs, &InvokeDrawRectangleMT_MEM )
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawPolygonMT_MEM, FSimpleBufferJobArgs, FDrawPolygonCommandArgs, &InvokeDrawPolygonMT_MEM )
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawQuadraticBezierMT_MEM, FSimpleBufferJobArgs, FDrawQuadraticBezierCommandArgs, &InvokeDrawQuadraticBezierMT_MEM )
-
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawLineInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawLineAAInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawLineSPInvocationSchedulerSelector )
@@ -158,7 +156,6 @@ ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawPolygonSPInvocation
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawQuadraticBezierInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawQuadraticBezierAAInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawQuadraticBezierSPInvocationSchedulerSelector )
-
 
 ULIS_NAMESPACE_END
 

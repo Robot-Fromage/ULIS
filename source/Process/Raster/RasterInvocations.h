@@ -9,7 +9,6 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-
 #pragma once
 #include "Core/Core.h"
 #include "Scheduling/Dispatcher.h"
@@ -19,7 +18,6 @@
 #include "Process/Raster/RasterAlgorithms.h"
 
 ULIS_NAMESPACE_BEGIN
-
 /////////////////////////////////////////////////////
 // FDrawLineCommandArgs
 class FDrawLineCommandArgs final
@@ -199,7 +197,6 @@ public:
     int    endDegree;
     FColor color;
 };
-
 
 /////////////////////////////////////////////////////
 // FDrawEllipseCommandArgs
@@ -490,7 +487,6 @@ public:
 
 /////////////////////////////////////////////////////
 // Template Invocations
-
 template<typename T>
 void
 InvokeDrawLineAAMT_MEM_Generic(
@@ -703,7 +699,6 @@ ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawQuadraticBezierMT_MEM );
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawQuadraticBezierAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawQuadraticBezierCommandArgs, &InvokeDrawQuadraticBezierAAMT_MEM_Generic<T> )
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawQuadraticBezierSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawQuadraticBezierSPCommandArgs, &InvokeDrawQuadraticBezierSPMT_MEM_Generic<T> )
 
-
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineAAInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineSPInvocationSchedulerSelector )
@@ -845,7 +840,6 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedDrawQuadraticBezierSPInvocationSchedulerSelector
     ,&ScheduleDrawQuadraticBezierSPMT_MEM_Generic<T>
 )
-
 
 ULIS_NAMESPACE_END
 
