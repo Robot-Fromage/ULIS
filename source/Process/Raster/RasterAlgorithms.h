@@ -10540,7 +10540,6 @@ void DrawRectangle(        FBlock&                        iBlock
                          //, const bool                     iFilled // Done in invocation
                          , const FRectI&                  iClippingRect );
 
-
 void DrawPolygon(        FBlock&                      iBlock
                        , const std::vector< FVec2I >& iPoints
                        , const FColor&                iColor
@@ -10583,6 +10582,98 @@ static void DrawPolygonAA( FBlock&                      iBlock
                 minX = iPoints[i].x;
             if(minY > iPoints[i].y)
                 minY = iPoints[i].y;
+        }
+        minX++;
+        maxX--;
+        minY++;
+        maxY--;
+
+        //We go through the polygon by scanning it top to bottom
+        for(int y = minY; y <= maxY; y++)
+        {
+            std::vector< int > nodesX;
+            int j = int(iPoints.size() - 1);
+
+            for(int i = 0; i < iPoints.size(); i++)
+            {
+                if((iPoints[i].y < y && iPoints[j].y >= y) || (iPoints[j].y < y && iPoints[i].y >= y))
+                {
+                    nodesX.push_back(int(iPoints[i].x  + double(y - iPoints[i].y) / double(iPoints[j].y - iPoints[i].y) * (iPoints[j].x - iPoints[i].x)));
+                }
+                j = i;
+            }
+
+            //Sorting the nodes on X
+            int i = 0;
+            int size = int(nodesX.size() - 1);
+            while(i < size)
+            {
+                if(nodesX[i] > nodesX[i+1])
+                {
+                    int temp = nodesX[i];
+                    nodesX[i]=nodesX[i+1];
+                    nodesX[i+1] = temp;
+                    if(i > 0)
+                        i--;
+                } else
+                {
+                    i++;
+                }
+            }
+
+            //Filling the polygon on line y
+            for(i = 0; i < nodesX.size(); i+= 2)
+            {
+                if(nodesX[i] > maxX) break;
+                if(nodesX[i+1] > minX)
+                {
+                    if(nodesX[i] < minX)
+                        nodesX[i] = minX;
+                    if(nodesX[i+1] > maxX)
+                        nodesX[i+1] = maxX;
+
+                    DrawLine(iBlock,FVec2I(nodesX[i] + 1,y),FVec2I(nodesX[i+1],y),iColor,iClippingRect);
+                }
+            }
+        }
+    }
+}
+
+template< typename T >
+static void DrawPolygonSP( FBlock&                      iBlock
+                         , const std::vector< FVec2F >& iPoints
+                         , const FColor&                iColor
+                         , const bool                   iFilled
+                         , const FRectI&                iClippingRect )
+{
+    if(iPoints.size() < 3)
+        return;
+
+    int j = int(iPoints.size() - 1);
+    for(int i = 0; i < iPoints.size(); i++)  //TODO ? Drawing can be cleaner by blending the lines together instead of drawing them one by one
+    {
+        DrawLineSP<T>(iBlock,iPoints.at(i),iPoints.at(j),iColor,iClippingRect);
+        j = i;
+    }
+
+    if(iFilled)
+    {
+        int maxX = 0;
+        int maxY = 0;
+        int minX = INT_MAX;
+        int minY = INT_MAX;
+
+        //Initialization of useful variables
+        for(int i = 0; i < iPoints.size(); i++)
+        {
+            if(maxX < iPoints[i].x)
+                maxX = int(iPoints[i].x);
+            if(maxY < iPoints[i].y)
+                maxY = int(iPoints[i].y);
+            if(minX > iPoints[i].x)
+                minX = int(iPoints[i].x);
+            if(minY > iPoints[i].y)
+                minY = int(iPoints[i].y);
         }
         minX++;
         maxX--;
@@ -10748,6 +10839,107 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
         pt0.y = pt1.y = y;
     }
     InternalDrawQuadRationalBezierSegAA<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);
+}
+
+template< typename T >
+static void DrawQuadraticBezierSP( FBlock&                         iBlock
+                                 , const FVec2F&                   iCtrlPt0
+                                 , const FVec2F&                   iCtrlPt1
+                                 , const FVec2F&                   iCtrlPt2
+                                 , const float                     iWeight
+                                 , const FColor&                   iColor
+                                 , const FRectI&                   iClippingRect )
+{
+    double x = iCtrlPt0.x - 2 * iCtrlPt1.x + iCtrlPt2.x;
+    double y = iCtrlPt0.y - 2 * iCtrlPt1.y + iCtrlPt2.y;
+    double dx = iCtrlPt0.x - iCtrlPt1.x;
+    double dy = iCtrlPt0.y - iCtrlPt1.y;
+    double dWeight;
+    double dt;
+    double dq;
+
+    FVec2F pt0 = iCtrlPt0;
+    FVec2F pt1 = iCtrlPt1;
+    FVec2F pt2 = iCtrlPt2;
+
+    float weight = iWeight;
+
+    if(weight < 0) //Can't draw a bezier curve with a weight < 0
+        return;
+
+    if(dx * (pt2.x - pt1.x) > 0)
+    {
+        if(dy * (pt2.y - pt1.y) > 0)
+        {
+            if(FMath::Abs(dx * y) > FMath::Abs(dy * x))
+            {
+                pt0.x = pt2.x;
+                pt2.x = float(dx + pt1.x);
+                pt0.y = pt2.y;
+                pt2.y = float(dy + pt1.y);
+            }
+        }
+        if(pt0.x == pt2.x || weight == 1.0)
+        {
+            dt = (pt0.x - pt1.x) / (double)x;
+        } 
+        else
+        {
+            dq = std::sqrt(4.0 * weight * weight * (pt0.x - pt1.x) * (pt2.x - pt1.x) + (pt2.x - pt0.x) * (pt2.x - pt0.x));
+
+            if(pt1.x < pt0.x)
+                dq = -dq;
+
+            dt = (2.0 * weight * (pt0.x - pt1.x) - pt0.x + pt2.x + dq) / (2.0 * (1.0 - weight) * (pt2.x - pt0.x));
+        }
+        dq = 1.0 / (2.0 * dt * (1.0 - dt) * (weight - 1.0) + 1.0);
+        dx = (dt * dt * (pt0.x - 2.0 * weight * pt1.x + pt2.x) + 2.0 * dt * (weight * pt1.x - pt0.x) + pt0.x) * dq;
+        dy = (dt * dt * (pt0.y - 2.0 * weight * pt1.y + pt2.y) + 2.0 * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
+        dWeight = dt * (weight - 1.0) + 1.0;
+        dWeight *= (dWeight * dq);
+        weight = float(((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq));
+        x = dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) );
+        y = dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) );
+        dy = (dx - pt0.x) * (pt1.y - pt0.y) / (pt1.x - pt0.x) + pt0.y;
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock,pt0.x,pt0.y,x,dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) ),x,y,dWeight,iColor,iClippingRect);
+        dy = (dx - pt2.x) * (pt1.y - pt2.y) / (pt1.x - pt2.x) + pt2.y;
+        pt1.y = float(dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) ));
+        pt0.x = pt1.x = float(x);
+        pt0.y = float(y);
+    }
+
+    if((pt0.y - pt1.y) * (long)(pt2.y - pt1.y) > 0)
+    {
+        if(pt0.y == pt2.y || iWeight == 1.0)
+        {
+            dt = (pt0.y - pt1.y) / (pt0.y - 2.0 * pt1.y + pt2.y);
+        } 
+        else
+        {
+            dq = std::sqrt(4.0 * weight * weight * (pt0.y - pt1.y) * (pt2.y - pt1.y) + (pt2.y - pt0.y) * (long)(pt2.y - pt0.y));
+
+            if(pt1.y < pt0.y)
+                dq = -dq;
+
+            dt = (2.0 * weight * (pt0.y - pt1.y) - pt0.y + pt2.y + dq) / (2.0 * (1.0 - weight) * (pt2.y - pt0.y));
+        }
+        dq = 1.0 / (2.0 * dt * (1.0 - dt) * (weight - 1.0) + 1.0);
+        dx = (dt * dt * (pt0.x - 2.0 * weight * pt1.x + pt2.x) + 2.0 * dt * (weight * pt1.x - pt0.x) + pt0.x) * dq;
+        dy = (dt * dt * (pt0.y - 2.0 * weight * pt1.y + pt2.y) + 2.0 * dt * (weight * pt1.y - pt0.y) + pt0.y) * dq;
+        dWeight = dt * (weight - 1.0) + 1.0;
+        dWeight *= (dWeight * dq);
+        weight = float(((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq));
+        x = dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) );
+        y = dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) );
+        dx = (pt1.x - pt0.x) * (dy - pt0.y) / (pt1.y - pt0.y) + pt0.x;
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock,pt0.x,pt0.y,dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) ),y,x,y,float(dWeight),iColor,iClippingRect);
+
+        dx = (pt1.x - pt2.x) * (dy - pt2.y) / (pt1.y - pt2.y) + pt2.x;
+        pt1.x = float(dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) ));
+        pt0.x = float(x);
+        pt0.y = pt1.y = float(y);
+    }
+    InternalDrawQuadRationalBezierSegSP<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);
 }
 
 ULIS_NAMESPACE_END

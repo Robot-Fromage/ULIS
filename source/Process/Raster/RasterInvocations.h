@@ -367,31 +367,6 @@ public:
     FColor color;
 };
 
-class FDrawRectangleSPCommandArgs final
-    : public FSimpleBufferCommandArgs
-{
-public:
-    ~FDrawRectangleSPCommandArgs() override
-    {
-    }
-
-    FDrawRectangleSPCommandArgs(
-        FBlock&         iBlock
-        , const FRectI& iRect
-        , const FVec2F& iTopLeft
-        , const FVec2F& iBottomRight
-        , const FColor& iColor
-    )
-        : FSimpleBufferCommandArgs(iBlock, iRect)
-        , topLeft(iTopLeft)
-        , bottomRight(iBottomRight)
-        , color(iColor)
-    {}
-
-    FVec2F topLeft;
-    FVec2F bottomRight;
-    FColor color;
-};
 
 /////////////////////////////////////////////////////
 // FDrawPolygonCommandArgs
@@ -658,16 +633,6 @@ InvokeDrawRotatedEllipseSPMT_MEM_Generic(
 
 template<typename T>
 void
-InvokeDrawRectangleSPMT_MEM_Generic(
-      const FSimpleBufferJobArgs*   jargs
-    , const FDrawRectangleSPCommandArgs* cargs
-)
-{
-    //DrawRectangleSP<T>(cargs->dst, cargs->topLeft, cargs->bottomRight, cargs->color, cargs->dstRect);
-}
-
-template<typename T>
-void
 InvokeDrawPolygonAAMT_MEM_Generic(
       const FSimpleBufferJobArgs*   jargs
     , const FDrawPolygonCommandArgs* cargs
@@ -683,7 +648,7 @@ InvokeDrawPolygonSPMT_MEM_Generic(
     , const FDrawPolygonSPCommandArgs* cargs
 )
 {
-    //DrawPolygonSP<T>( cargs->dst, cargs->points, cargs->color, cargs->filled, cargs->dstRect );
+    DrawPolygonSP<T>( cargs->dst, cargs->points, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 template<typename T>
@@ -703,7 +668,7 @@ InvokeDrawQuadraticBezierSPMT_MEM_Generic(
     , const FDrawQuadraticBezierSPCommandArgs* cargs
 )
 {
-    //DrawQuadraticBezierSP<T>( cargs->dst, cargs->ctrlPt0, cargs->ctrlPt1, cargs->ctrlPt2, cargs->weight, cargs->color, cargs->dstRect );
+    DrawQuadraticBezierSP<T>( cargs->dst, cargs->ctrlPt0, cargs->ctrlPt1, cargs->ctrlPt2, cargs->weight, cargs->color, cargs->dstRect );
 }
 
 
@@ -731,7 +696,6 @@ ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawRotatedEllipseMT_MEM );
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawRotatedEllipseAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawRotatedEllipseCommandArgs, &InvokeDrawRotatedEllipseAAMT_MEM_Generic<T> )
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawRotatedEllipseSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawRotatedEllipseSPCommandArgs, &InvokeDrawRotatedEllipseSPMT_MEM_Generic<T> )
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawRectangleMT_MEM );
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawRectangleSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawRectangleSPCommandArgs, &InvokeDrawRectangleSPMT_MEM_Generic<T> )
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawPolygonMT_MEM );
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawPolygonAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawPolygonCommandArgs, &InvokeDrawPolygonAAMT_MEM_Generic<T> )
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawPolygonSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawPolygonSPCommandArgs, &InvokeDrawPolygonSPMT_MEM_Generic<T> )
@@ -762,7 +726,6 @@ ULIS_DECLARE_DISPATCHER( FDispatchedDrawRotatedEllipseInvocationSchedulerSelecto
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawRotatedEllipseAAInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawRotatedEllipseSPInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawRectangleInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawRectangleSPInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawPolygonInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawPolygonAAInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawPolygonSPInvocationSchedulerSelector )
@@ -857,10 +820,6 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedDrawRectangleInvocationSchedulerSelector
     ,&ScheduleDrawRectangleMT_MEM
-)
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawRectangleSPInvocationSchedulerSelector
-    ,&ScheduleDrawRectangleSPMT_MEM_Generic<T>
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedDrawPolygonInvocationSchedulerSelector

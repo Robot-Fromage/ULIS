@@ -37,7 +37,7 @@ main(int argc,char *argv[])
         //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBAF(1,0,0,1) );
         //ctx.DrawLineSP( canvas, FVec2F( 200.45, 200.2 ), FVec2F( 515.1, 321.2 ), FColor::RGBAF(1,0,0,1) );
         //ctx.DrawLineSP(canvas, FVec2F(145.25, 24.2), FVec2F(421.24, 685.2), FColor::RGBAF(1, 0, 0, 1));
-        //ctx.DrawRectangle( canvas, FVec2I( 200, 200 ), FVec2I( 300, 400 ), FColor::RGBA8( 0, 255, 0, 255 ), true);
+        //ctx.DrawRectangle( canvas, FVec2I( 200.2, 200.2 ), FVec2I( 300.2, 400.2 ), FColor::RGBA8( 0, 255, 0, 255 ), true);
         //ctx.DrawCircleAndres( canvas, FVec2I( 300, 300 ), 250, FColor::RGBA8(0,0,0,255) );
         //ctx.DrawCircleAndresSP( canvas, FVec2F( 621, 300 ), 250.22, FColor::RGBA8(0,0,0,255) );
         //ctx.DrawCircleAndresSP( canvas, FVec2F( 650, 300 ), 200, FColor::RGBA8(0,0,0,255) );
@@ -63,7 +63,7 @@ main(int argc,char *argv[])
         //ctx.DrawRotatedEllipse(canvas,FVec2I(500,800),300,100,285,FColor::RGBA8(50,0,0,100),true);
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(500,800),100,300,285,FColor::RGBA8(50,0,0,100),true);
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(200,200),320,750,148,FColor::RGBAF(0.2,0,0,0.45),true);
-        ctx.DrawRotatedEllipseSP(canvas,FVec2I(200,200),320,750,148,FColor::RGBAF(0.2,0,0,0.45));
+        //ctx.DrawRotatedEllipseSP(canvas,FVec2I(200,200),320,750,148,FColor::RGBAF(0.2,0,0,0.45));
 
         //ctx.DrawRotatedEllipseAA(canvas,FVec2I(352,400),215,120,124,FColor::RGBA8(50,0,0,100), true);
 
@@ -75,10 +75,10 @@ main(int argc,char *argv[])
 
         //ctx.DrawRotatedEllipseAA( canvas, FVec2I( 700, 700), 100, 200, 53 );
 
-        /*ctx.DrawRotatedEllipse(canvas,FVec2I(700,700),100,200,1, FColor::RGBA8( 255, 0, 0, 255 ) );
-        ctx.DrawRotatedEllipse(canvas,FVec2I(300,300),200,300,79,FColor::RGBA8(255,0,0,255));
+        //ctx.DrawRotatedEllipse(canvas,FVec2I(700,700),100,200,1, FColor::RGBA8( 255, 0, 0, 255 ) );
+        //ctx.DrawRotatedEllipseSP(canvas,FVec2I(300,300),200,300,57,FColor::RGBA8(255,0,0,255));
 
-        ctx.DrawQuadraticBezier( canvas, FVec2I( 150, 150 ),  FVec2I( 250, 126 ), FVec2I( 72, 59 ), 1 );*/
+        //ctx.DrawQuadraticBezier( canvas, FVec2I( 150, 150 ),  FVec2I( 250, 126 ), FVec2I( 72, 59 ), 1 );
 
         /*std::vector< FVec2I > points;
         points.push_back( FVec2I( 381, 144 ));
@@ -92,6 +92,7 @@ main(int argc,char *argv[])
         //ctx.DrawLineAA( canvas, FVec2F( 381, 144 ), FVec2F( 211, 586 ), FColor::RGBA8(0,200,0,155) );
 
         //ctx.DrawQuadraticBezierAA( canvas, FVec2F( 211, 586 ), FVec2I(511,234), FVec2I(502,589), 1.0, FColor::RGBA8(0,200,0,155) );
+        //ctx.DrawQuadraticBezierSP( canvas, FVec2F( 211, 586 ), FVec2I(511,234), FVec2I(502,589), 1.0, FColor::RGBA8(0,200,0,155) );
 
         ctx.Finish();
     }

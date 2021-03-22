@@ -232,7 +232,6 @@ private:
     const fpCommandScheduler mScheduleDrawRotatedEllipseAA;
     const fpCommandScheduler mScheduleDrawRotatedEllipseSP;
     const fpCommandScheduler mScheduleDrawRectangle;
-    const fpCommandScheduler mScheduleDrawRectangleSP;
     const fpCommandScheduler mScheduleDrawPolygon;
     const fpCommandScheduler mScheduleDrawPolygonAA;
     const fpCommandScheduler mScheduleDrawPolygonSP;

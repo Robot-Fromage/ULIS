@@ -144,7 +144,6 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleDrawRotatedEllipseAA(            TDispatcher< FDispatchedDrawRotatedEllipseAAInvocationSchedulerSelector             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawRotatedEllipseSP(            TDispatcher< FDispatchedDrawRotatedEllipseSPInvocationSchedulerSelector             >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawRectangle(                   TDispatcher< FDispatchedDrawRectangleInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
-        , mScheduleDrawRectangleSP(                 TDispatcher< FDispatchedDrawRectangleSPInvocationSchedulerSelector                  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawPolygon(                     TDispatcher< FDispatchedDrawPolygonInvocationSchedulerSelector                      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawPolygonAA(                   TDispatcher< FDispatchedDrawPolygonAAInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawPolygonSP(                   TDispatcher< FDispatchedDrawPolygonSPInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )

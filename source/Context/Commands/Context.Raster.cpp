@@ -1159,67 +1159,6 @@ FContext::DrawRectangle(
 }
 
 ulError
-FContext::DrawRectangleSP(
-      FBlock&                  iBlock
-    , const FVec2F&            iTopLeft
-    , const FVec2F&            iBottomRight
-    , const FColor&            iColor
-    , const bool               iFilled
-    , const FRectI&            iClippingRect
-    , const FSchedulePolicy&   iPolicy
-    , uint32                   iNumWait
-    , const FEvent*            iWaitList
-    , FEvent*                  iEvent
-)
-{
-    // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
-    
-    // Check no-op
-    if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
-    
-    // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
-
-    if( iFilled )
-    {
-        const int xmin = FMath::Min3(int(iTopLeft.x),int(iBottomRight.x),src_roi.x + src_roi.w);
-        const int ymin = FMath::Min3(int(iTopLeft.y),int(iBottomRight.y),src_roi.y + src_roi.h);
-        const int xmax = FMath::Max3(int(iTopLeft.x + 1),int(iBottomRight.x + 1),src_roi.x);
-        const int ymax = FMath::Max3(int(iTopLeft.y + 1),int(iBottomRight.y + 1),src_roi.y);
-        const int width = FMath::Max(xmax - xmin,0);
-        const int height = FMath::Max(ymax - ymin,0);
-        FRectI rect = FRectI( xmin, ymin, width, height );
-        this->Fill( iBlock, rect, color, iPolicy, iNumWait, iWaitList, iEvent );
-    }
-    else
-        // Bake and push command
-        mCommandQueue.d->Push(
-            new FCommand(
-                  mContextualDispatchTable->mScheduleDrawRectangleSP
-                , new FDrawRectangleSPCommandArgs(
-                      iBlock
-                    , src_roi
-                    , iTopLeft
-                    , iBottomRight
-                    , color
-                )
-                , iPolicy
-                , false
-                , true
-                , iNumWait
-                , iWaitList
-                , iEvent
-                , src_roi
-            )
-        );
-    
-    return  ULIS_NO_ERROR;
-}
-
-ulError
 FContext::DrawPolygon(
       FBlock&                  iBlock
     , const std::vector< FVec2I >&   iPoints
