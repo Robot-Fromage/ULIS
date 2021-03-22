@@ -24,7 +24,10 @@ InvokeTransformBezierMT_Bicubic_SSE_RGBA8(
 {
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     uint8* ULIS_RESTRICT dst = jargs->dst;
-    Vec4i _idt( fmt.IDT[0], fmt.IDT[1], fmt.IDT[2], fmt.IDT[3] );
+    //Vec4i _idt( fmt.IDT[0], fmt.IDT[1], fmt.IDT[2], fmt.IDT[3] );
+    Vec4i _idt( 0, 1, 2, 3 );
+    _idt.insert( fmt.AID, 4 );
+
     const float*            field   = reinterpret_cast< const float* >( cargs->field.ScanlineBits( jargs->line ) );
     const uint8*            mask    = reinterpret_cast< const uint8* >( cargs->mask.ScanlineBits( jargs->line ) );
     const int rangex = cargs->srcRect.w - 1;

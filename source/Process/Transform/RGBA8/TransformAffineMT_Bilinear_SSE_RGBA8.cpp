@@ -24,7 +24,9 @@ InvokeTransformAffineMT_Bilinear_SSE_RGBA8(
 {
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     uint8* ULIS_RESTRICT dst = jargs->dst;
-    Vec4i _idt( fmt.IDT[0], fmt.IDT[1], fmt.IDT[2], fmt.IDT[3] );
+    //Vec4i _idt( fmt.IDT[0], fmt.IDT[1], fmt.IDT[2], fmt.IDT[3] );
+    Vec4i _idt( 0, 1, 2, 3 );
+    _idt.insert( fmt.AID, 4 );
 
     FVec3F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line, 1.f );
     FVec2F point_in_src( cargs->inverseMatrix * point_in_dst );
@@ -49,7 +51,7 @@ InvokeTransformAffineMT_Bilinear_SSE_RGBA8(
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define TEMP( _C, _X, _Y )                                                                                                                          \
             if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) {                                                                                      \
-                const uint8* pptr = cargs->src.PixelBits( _X, _Y );                                                                                        \
+                const uint8* pptr = cargs->src.PixelBits( _X, _Y );                                                                                         \
                 Vec4f _ch = LOAD( pptr );                                                                                                                   \
                 Vec4f _al = _mm_set_ps1( pptr[ fmt.AID ] );                                                                                                 \
                 _C = lookup8( _idt, ( _ch * _al ) / 255.f, _al );                                                                                           \

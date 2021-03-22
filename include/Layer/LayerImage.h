@@ -61,13 +61,16 @@ public:
     void SetBlendMode( eBlendMode iValue );
     void SetAlphaMode( eAlphaMode iValue );
     void SetOpacity( ufloat iValue );
-
+    bool IsCacheValid() const;
+    void InvalidateCache();
+    void ValidateCache();
 private:
     bool mAlphaLock;
     FBlock* mBlock;
     eBlendMode mBlendMode;
     eAlphaMode mAlphaMode;
     ufloat mOpacity;
+    bool bIsCacheValid;
 };
 
 ULIS_NAMESPACE_END
