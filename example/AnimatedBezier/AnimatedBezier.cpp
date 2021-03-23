@@ -17,7 +17,6 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QMouseEvent>
-
 #include <cstdlib>
 
 SWindow::~SWindow() {
@@ -27,7 +26,6 @@ SWindow::~SWindow() {
     delete  mLabel;
     delete  mTimer;
 }
-
 
 SWindow::SWindow()
     : mPool()
@@ -70,7 +68,6 @@ SWindow::SWindow()
 
 void
 SWindow::tickEvent() {
-
     float len = 150;
     mAngle += 0.08f;
     float evoAngle0 = mAngle;

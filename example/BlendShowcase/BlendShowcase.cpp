@@ -28,10 +28,10 @@ main( int argc, char *argv[] ) {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_Max );
     FHardwareMetrics hw;
-    FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    FSchedulePolicy policy_mono_chunk( ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
-    FSchedulePolicy policy_multi_scanlines( ScheduleRun_Multi, ScheduleMode_Scanlines );
-    FSchedulePolicy policy_mono_scanlines( ScheduleRun_Mono, ScheduleMode_Scanlines );
+    FSchedulePolicy policy_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
+    FSchedulePolicy policy_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
+    FSchedulePolicy policy_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
     // Create both "hollow" blocks Base and Over.
     FBlock blockBase;
