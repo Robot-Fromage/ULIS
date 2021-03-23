@@ -168,8 +168,8 @@ FContext::XLoadPSDFromDisk(
     , FEvent* iEvent
 )
 {
-    FPSDOperations op( iPath );
-    op.Import();
+    FPSDOperations op( iPath, iStack );
+    op.Import(mContextualDispatchTable->mScheduleConvertFormat,iPolicy,iNumWait,iWaitList,iEvent);
     return  ULIS_NO_ERROR;
 }
 

@@ -35,14 +35,21 @@ main( int argc, char *argv[] ) {
     FSchedulePolicy policy_sync_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
     FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
-    FBlock blockCanvas( 1024, 1024, fmt );
-    FLayerStack layerStack( 1024, 1024, fmt );
+    FLayerStack layerStack( 1, 1, fmt );
 
     auto startTime = std::chrono::steady_clock::now();
-    {
-        ctx.XLoadPSDFromDisk( layerStack, "C:/Users/Galendil/Desktop/RGBA8.psd" );
-    }
+
+    ctx.XLoadPSDFromDisk( layerStack, "C:/Users/Galendil/Desktop/RGBA8.psd" );
     ctx.Finish();
+
+    FBlock blockCanvas(layerStack.Width(), layerStack.Height(), layerStack.Format());
+    ctx.Flatten( layerStack, blockCanvas );
+    ctx.Finish();
+
+    FBlock blockCanvasConverted(layerStack.Width(), layerStack.Height(), Format_RGBA8);
+    ctx.ConvertFormat( blockCanvas, blockCanvasConverted );
+    ctx.Finish();
+    
     auto endTime = std::chrono::steady_clock::now();
     auto delta   = std::chrono::duration_cast< std::chrono::milliseconds >( endTime - startTime ).count();
 
@@ -50,10 +57,10 @@ main( int argc, char *argv[] ) {
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockCanvas.Bits()
-                                        , blockCanvas.Width()
-                                        , blockCanvas.Height()
-                                        , blockCanvas.BytesPerScanLine()
+    QImage*         image   = new QImage( blockCanvasConverted.Bits()
+                                        , blockCanvasConverted.Width()
+                                        , blockCanvasConverted.Height()
+                                        , blockCanvasConverted.BytesPerScanLine()
                                         , QImage::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );

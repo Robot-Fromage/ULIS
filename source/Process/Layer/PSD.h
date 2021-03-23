@@ -12,6 +12,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/LayerStack.h"
+#include "Scheduling/Command.h"
 #include <fstream>
 
 ULIS_NAMESPACE_BEGIN
@@ -55,7 +56,7 @@ class FPSDOperations
 public:
     // Construction / Destruction
     ~FPSDOperations();
-    FPSDOperations(const std::string& iFilename);
+    FPSDOperations(const std::string& iFilename, FLayerStack& iStack );
 
 private:
     /** The header of the file, with basic info about the image and verification that it's indeed a psd file */
@@ -85,7 +86,9 @@ private:
     bool ReadLayerStackData16();
     bool ReadLayerStackData32();
 
-    void GenerateLayerStackFromLayerStackData();
+    bool SetLayerStackFormatAndSize();
+
+    void GenerateLayerStackFromLayerStackData(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent);
 
     void CopyUncompressed(uint32* dst,uint32 length);
     void CopyUncompressed(uint16* dst,uint32 length);
@@ -128,28 +131,28 @@ public:
     uint8* GetImageDst();
     uint16* GetImageDst16();
 
-    FLayerStack* GetLayerStack();
+    //FLayerStack* GetLayerStack();
 
     //-- Import / Export
     /** Tries to import the file passed in the constructor, return true if succeeded */
-    bool Import();
+    bool Import(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent);
 
 private:
-      std::ifstream mFileHandle;
+    std::ifstream mFileHandle;
 
-      uint16 mChannelsNumber;
-      uint32 mImageHeight;
-      uint32 mImageWidth;
-      uint16 mBitDepth;
-      uint16 mColorMode;
+    uint16 mChannelsNumber;
+    uint32 mImageHeight;
+    uint32 mImageWidth;
+    uint16 mBitDepth;
+    uint16 mColorMode;
 
-      uint32 mImageStart;
+    uint32 mImageStart;
+
+    FLayerStack& mLayerStack; //Not owned, got from outside
 
     uint8* mImageDst;
     uint16* mImageDst16;
     uint32* mImageDst32;
-
-    FLayerStack* mLayerStack;
 
     TArray<FPSDLayerInfo> mLayersInfo;
 };

@@ -72,7 +72,7 @@ main( int argc, char *argv[] ) {
             FEvent eventClear0;
             FEvent eventFill0;
             ctx.Clear( image0->Block(), image0->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear0 );
-            ctx.Fill( image0->Block(), FRectI( 10, 50, 504, 1004 ), FColor::RGB( 0, 255, 255 ), policy_sync_cache_efficient, 1, &eventClear0, &eventFill0 );
+            ctx.Fill( image0->Block(), FRectI( 10, 50, 504, 1004 ), FColor::RGBA8( 0, 255, 255, 100 ), policy_sync_cache_efficient, 1, &eventClear0, &eventFill0 );
             ctx.DrawCircleAndresAA( image0->Block(), image0->Block().Rect().Size() / 2, 128, FColor::RGB( 255, 0, 255 ), true, image0->Block().Rect(), FSchedulePolicy(), 1, &eventFill0, nullptr );
         }
 
@@ -100,7 +100,7 @@ main( int argc, char *argv[] ) {
             ctx.Fill( image01->Block(), FRectI( 400, 400, 400, 400 ), FColor::RGB( 255, 255, 0 ), policy_sync_cache_efficient, 1, &eventClear01 );
         }
 
-        ctx.Fill( image3->Block(), image3->Block().Rect(), FColor::RGB( 127, 127, 255 ), policy_sync_cache_efficient );
+        ctx.Fill( image3->Block(), image3->Block().Rect(), FColor::RGBA8( 0, 0, 0, 100 ), policy_sync_cache_efficient );
     }
     ctx.Finish();
 

@@ -11,6 +11,7 @@
 */
 #include "Process/Layer/PSD.h"
 #include "Image/Block.h"
+#include "Process/Conv/Conv.h"
 #include "Math/Math.h"
 #include "zlib.h"
 
@@ -44,8 +45,8 @@ FPSDOperations::~FPSDOperations()
     }
 }
 
-FPSDOperations::FPSDOperations(const std::string& iFilename)
-    : mFileHandle( iFilename.c_str(), std::ios::in | std::ios::ate )
+FPSDOperations::FPSDOperations(const std::string& iFilename, FLayerStack& iStack)
+    : mFileHandle( iFilename.c_str(), std::ios::in | std::ios::binary )
     , mChannelsNumber( 0 )
     , mImageHeight( 0 )
     , mImageWidth( 0 )
@@ -55,7 +56,7 @@ FPSDOperations::FPSDOperations(const std::string& iFilename)
     , mImageDst(nullptr)
     , mImageDst16( nullptr )
     , mImageDst32( nullptr )
-    , mLayerStack( nullptr )
+    , mLayerStack( iStack )
     , mLayersInfo()
 {
      std::streamsize size = mFileHandle.tellg();
@@ -183,9 +184,10 @@ bool FPSDOperations::ReadLayerInfo()
     }
 
     if(layerInfoSize != 0)
-        ReadLayers();
+        if (!ReadLayers())
+            return false;
 
-    mFileHandle.seekg( layerInfoSize, std::ios::cur );
+    mFileHandle.seekg( position + layerInfoSize );
     return true;
 }
 
@@ -613,7 +615,7 @@ bool FPSDOperations::ReadLayerStackData16()
             {
                 uLongf dstSize = channelSize * sizeof( uint16 );
                 uLongf srcSize = mLayersInfo[i].mChannelSize[j];
-                char* srcData = new char[srcSize];
+                char* srcData = new char[srcSize]{0};
 
                 if(!mFileHandle.read( srcData, srcSize ))
                     return false;
@@ -764,19 +766,143 @@ bool FPSDOperations::ReadLayerStackData32()
     return true;
 }
 
-void FPSDOperations::GenerateLayerStackFromLayerStackData()
+bool FPSDOperations::SetLayerStackFormatAndSize()
 {
-    eFormat format;
+    if( mLayersInfo.Size() == 0 )
+        return false; // TODO Bitmap ?
 
-    if (mBitDepth > 8)
-        format = eFormat::Format_Linear_BGRA16;
-    else
-        format = eFormat::Format_Linear_BGRA8;
-
-    if (mLayersInfo.Size() != 0)
+    if (mBitDepth == 32)
     {
-        mLayerStack = new FLayerStack( mImageWidth, mImageHeight, format );
+        switch (mColorMode)
+        {
+            case 1: //GrayScale
+            {
+                if (mLayersInfo[0].mNumChannels == 2)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_AGF );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_GF );
+                break;
+            }
+            case 3: //RGB
+            {
+                if (mLayersInfo[0].mNumChannels == 4)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGBF );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_RGBF );
+                break;
+            }
+            case 4: //CMYK
+            {
+                if (mLayersInfo[0].mNumChannels == 5)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYKF );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_CMYKF );
+                break;
+            }
+            case 9: //LAB
+            {
+                if (mLayersInfo[0].mNumChannels == 4)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALabF );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_LabF );
+                break;
+            }
+            default: //ERROR
+                return false;
+        }
     }
+    else if (mBitDepth == 16)
+    {
+        switch (mColorMode)
+        {
+            case 1: //GrayScale
+            {
+                if (mLayersInfo[0].mNumChannels == 2)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG16 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_G16 );
+                break;
+            }
+            case 3: //RGB
+            {
+                if (mLayersInfo[0].mNumChannels == 4)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB16 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_RGB16 );
+                break;
+            }
+            case 4: //CMYK
+            {
+                if (mLayersInfo[0].mNumChannels == 5)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK16 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_CMYK16 );
+                break;
+            }
+            case 9: //LAB
+            {
+                if (mLayersInfo[0].mNumChannels == 4)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab16 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_Lab16 );
+                break;
+            }
+            default: //ERROR
+                return false;
+        }
+    }
+    else if (mBitDepth == 8)
+    {
+        switch (mColorMode)
+        {
+            case 1: //GrayScale
+            {
+                if (mLayersInfo[0].mNumChannels == 2)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG8 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_G8 );
+                break;
+            }
+            case 3: //RGB
+            {
+                if (mLayersInfo[0].mNumChannels == 4)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB8 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_RGB8 );
+                break;
+            }
+            case 4: //CMYK
+            {
+                if (mLayersInfo[0].mNumChannels == 5)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK8 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_CMYK8 );
+                break;
+            }
+            case 9: //LAB
+            {
+                if (mLayersInfo[0].mNumChannels == 4)
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab8 );
+                else
+                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_Lab8 );
+                break;
+            }
+            default: //ERROR
+                return false;
+        }
+    }
+    else
+    {
+        std::cout << "Error: we don't handle this bit depth, import failed" << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+void FPSDOperations::GenerateLayerStackFromLayerStackData(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent)
+{
+    eFormat layerStackFormat = mLayerStack.Format();
 
     //Special case: bitmap --------------------------------------
     if( mColorMode == 0  /*BitMap*/ ) //If we're dealing with bitmap, the data is at ImgDst, and not in the layers info
@@ -790,8 +916,6 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
             mImageDst = nullptr;
         }
 
-        mLayerStack = new FLayerStack(mImageWidth, mImageHeight, format);
-
         mFileHandle.seekg(mImageStart);
 
         uint16 compressionType;
@@ -799,14 +923,16 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
             return;
         FMath::ByteSwap(&compressionType,2);
 
-        uint32 size =  mImageWidth * mImageHeight * 4; //Converted to BGRA -> 4 channels;
+        uint32 size =  mImageWidth * mImageHeight;
         mImageDst = new uint8[size];
+
+        mLayerStack.Reset( mImageHeight, mImageWidth, eFormat::Format_G8);
 
         if(compressionType == 0) // uncompressed
         {
             uint8* planar = new uint8[(mImageWidth * mImageHeight) / 8 + 1];
-            CopyUncompressed(planar,size);
-            PlanarByteConvertBitMapToBGRA8( planar, mImageDst, (mImageWidth * mImageHeight) / 8 + 1 );
+            CopyUncompressed(mImageDst,size);
+            //PlanarByteConvertBitMapToBGRA8( planar, mImageDst, (mImageWidth * mImageHeight) / 8 + 1 );
             delete[] planar;
         } 
         else if(compressionType == 1) //RLE
@@ -814,19 +940,20 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
             uint32 sizeBitmap = (mImageWidth * mImageHeight) / 8 + 1;
             uint8* planar = new uint8[sizeBitmap];
             mFileHandle.seekg(mImageHeight * 2, std::ios::cur);
-            DecodeAndCopyRLE(planar,sizeBitmap);
-            PlanarByteConvertBitMapToBGRA8(planar,mImageDst,sizeBitmap);
+            DecodeAndCopyRLE(mImageDst,sizeBitmap);
+            //PlanarByteConvertBitMapToBGRA8(planar,mImageDst,sizeBitmap);
             delete[] planar;
         }
-        FBlock* srcblock = new FBlock( mImageDst, mImageWidth, mImageHeight, Format_Linear_BGRA8 );
+        FBlock* srcblock = new FBlock( mImageDst, mImageWidth, mImageHeight, eFormat::Format_G8);
 
-        mLayerStack->AddLayer( new FLayerImage(srcblock, FString("Layer1"), mImageWidth, mImageHeight, Format_Linear_BGRA8, eBlendMode::Blend_Normal, eAlphaMode::Alpha_Normal, 1.f, &(mLayerStack->Root()) ) );
+        //TODO Convert
+        mLayerStack.AddLayer( new FLayerImage(srcblock, FString("Layer1"), mImageWidth, mImageHeight, eFormat::Format_G8, eBlendMode::Blend_Normal, eAlphaMode::Alpha_Normal, 1.f, &mLayerStack ) );
 
         delete srcblock;
     }
     //-----------------------------------------------------------
 
-    FLayerRoot* currentRoot = &(mLayerStack->Root());
+    FLayerRoot* currentRoot = &mLayerStack;
 
     const int64 max = static_cast< int64 >( mLayersInfo.Size() ) - 1;
     for( int64 i = max; i >= 0; i-- )
@@ -838,165 +965,56 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
             uint32 h = mLayersInfo[i].mBottom - mLayersInfo[i].mTop;
 
             FBlock* srcblock;
-            FBlock* layerBlock;
+            FBlock* layerBlock = new FBlock(mImageWidth, mImageHeight, layerStackFormat);
 
+            
             if( mBitDepth == 32 )
             {
-                switch(mColorMode)
-                {
-                    case 1: //GrayScale
-                    {
-                        if(mLayersInfo[i].mNumChannels == 2)
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_AGF);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_GF);
-                        break;
-                    }
-                    case 3: //RGB
-                    {
-                        if(mLayersInfo[i].mNumChannels == 4)
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_ARGBF);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_RGBAF);
-                        break;
-                    }
-                    case 4: //CMYK
-                    {
-                        if(mLayersInfo[i].mNumChannels == 5)
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_ACMYKF);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_ACMYKF);
-                        break;
-                    }
-                    case 9: //LAB
-                    {
-                        if(mLayersInfo[i].mNumChannels == 4)
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_ALabF);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, Format_LabF);
-                        break;
-                    }
-                    default: //ERROR
-                        return;
-                }
-                //To do, check if we should keep the PSD format instead of converting to format below(In Iliad, to be able to draw, we have to convert)
-                layerBlock = new FBlock(nullptr, mImageWidth, mImageHeight, Format_RGBA16);
+                srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, layerStackFormat);
             }
             else if( mBitDepth == 16 )
             {
-                switch (mColorMode)
-                {
-                    case 1: //GrayScale
-                    {
-                        if(mLayersInfo[i].mNumChannels == 2)
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_AG16);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_G16);
-                        break;
-                    }
-                    case 3: //RGB
-                    {
-                        if( mLayersInfo[i].mNumChannels == 4 )
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_ARGB16);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_RGB16);
-                        break;
-                    }
-                    case 4: //CMYK
-                    {
-                        if( mLayersInfo[i].mNumChannels == 5 )
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_ACMYK16);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_CMYK16);
-                        break;
-                    }
-                    case 9: //LAB
-                    {
-                        if(mLayersInfo[i].mNumChannels == 4)
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_ALab16);
-                        else
-                            srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, Format_Lab16);
-                        break;
-                    }
-                    default: //ERROR
-                        return;
-                }
-                //To do, check if we should keep the PSD format instead of converting to format below(In Iliad, to be able to draw, we have to convert)
-                layerBlock = new FBlock(nullptr, mImageWidth, mImageHeight, Format_RGBA16);
+                srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, layerStackFormat);
             }
             else if( mBitDepth == 8 )
             {
-                switch(mColorMode)
-                {
-                    case 1: //GrayScale
-                    {
-                        if(mLayersInfo[i].mNumChannels == 2)
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_AG8);
-                        else
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_G8);
-                        break;
-                    }
-                    case 3: //RGB
-                    {
-                        if(mLayersInfo[i].mNumChannels == 4)
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_ARGB8);
-                        else
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_RGB8);
-                        break;
-                    }
-                    case 4: //CMYK
-                    {
-                        if(mLayersInfo[i].mNumChannels == 5)
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_ACMYK8);
-                        else
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_CMYK8);
-                        break;
-                    }
-                    case 9: //LAB
-                    {
-                        if(mLayersInfo[i].mNumChannels == 4)
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_ALab8);
-                        else
-                            srcblock = new FBlock(mLayersInfo[i].mLayerImageDst, w, h, Format_Lab8);
-                        break;
-                    }
-                    default: //ERROR
-                        return;
-                }
-                //To do, check if we should keep the PSD format instead of converting to format below(In Iliad, to be able to draw, we have to convert)
-                layerBlock = new FBlock(nullptr, mImageWidth, mImageHeight, Format_BGRA8);
+                srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst, w, h, layerStackFormat);
             }
-            else
+
+            //To do: clear the block before the conv ?
+            FRectI dstRect = FRectI(mLayersInfo[i].mLeft, mLayersInfo[i].mTop, srcblock->Width(), srcblock->Height());
+            FCommand* convCommand = new FCommand(
+                iConvScheduler
+                , new FConvCommandArgs(
+                      *srcblock
+                    , *layerBlock
+                    , srcblock->Rect()
+                    , dstRect
+                    , QueryDispatchedConvertFormatInvocation( srcblock->Format(), layerStackFormat)
+                )
+                , FSchedulePolicy(ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines)
+                , true
+                , false
+                , iNumWait
+                , iWaitList
+                , iEvent
+                , dstRect
+            );
+
+            for(int k = 0; k < convCommand->Jobs().Size(); k++ )
             {
-                std::cout << "Error: we don't handle this bit depth, import failed" << std::endl;
-                return;
+                convCommand->Jobs()[k]->Execute();
             }
 
-            //Copy + conv srcBlock into LayerBlock at the right position
-            
-            //::ul3::Clear( hULIS.ThreadPool(), ULIS3_BLOCKING, perfIntent, hULIS.HostDeviceInfo(), ULIS3_NOCB, layerBlock->GetBlock(), layerBlock->GetBlock()->Rect() );
-            //::ul3::Conv(hULIS.ThreadPool(),ULIS3_BLOCKING,perfIntent,hULIS.HostDeviceInfo(),ULIS3_NOCB,srcblock,convBlock->GetBlock());
-            //::ul3::Copy(hULIS.ThreadPool()
-            //                    ,ULIS3_BLOCKING
-            //                    ,perfIntent
-            //                    ,hULIS.HostDeviceInfo()
-            //                    ,ULIS3_NOCB
-            //                    ,convBlock->GetBlock()
-            //                    ,layerBlock->GetBlock()
-            //                    ,srcblock->Rect()
-            //                    ,::ul3::FVec2I( mLayersInfo[i].mLeft, mLayersInfo[i].mTop ));
-
-            //TSharedPtr<FOdysseyImageLayer> imageLayer = MakeShareable(new FOdysseyImageLayer(layerName,layerBlock));
-
-            float opacity = (float)mLayersInfo[i].mOpacity / 255.0f;
+            float opacity = float(mLayersInfo[i].mOpacity / 255.0);
             bool isAlphaLocked = mLayersInfo[i].mFlags & 0x01;
             bool isVisible = !(mLayersInfo[i].mFlags & 0x02);
             eBlendMode blendMode = GetBlendingModeFromPSD(mLayersInfo[i].mBlendModeKey);
 
             if( currentRoot->Type() == eLayerType::Layer_Folder )
-                mLayerStack->AddLayer( new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, currentRoot ));
+                mLayerStack.AddLayer( new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, currentRoot ));
             else
-                mLayerStack->AddLayer(new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, &(mLayerStack->Root()) ) );
+                mLayerStack.AddLayer( new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, &mLayerStack ) );
             
             //UE_LOG(LogTemp,Display,TEXT("flags: %d"),mLayersInfo[i].mFlags)
             //Todo: Locked
@@ -1006,7 +1024,7 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
         }
         else if( mLayersInfo[i].mDividerType == 1 || mLayersInfo[i].mDividerType == 2 ) //Open folder / Closed Folder
         {
-            float opacity = (float)mLayersInfo[i].mOpacity / 255.0f;
+            float opacity = float(mLayersInfo[i].mOpacity / 255.0);
             bool isAlphaLocked = mLayersInfo[i].mFlags & 0x01;
             bool isVisible = !(mLayersInfo[i].mFlags & 0x02);
             eBlendMode blendMode = GetBlendingModeFromPSD(mLayersInfo[i].mBlendModeKey);
@@ -1014,11 +1032,11 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
             FLayerFolder* layerFolder = nullptr; 
 
             if(currentRoot->Type() == eLayerType::Layer_Folder )
-                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, currentRoot);
+                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, currentRoot);
             else
-                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, format, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, 1.f, &(mLayerStack->Root()));
+                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, &mLayerStack);
 
-            mLayerStack->AddLayer( layerFolder );
+            mLayerStack.AddLayer( layerFolder );
             currentRoot = layerFolder;
 
             //UE_LOG(LogTemp, Display, TEXT("flags: %d"), mLayersInfo[i].mFlags)
@@ -1399,12 +1417,7 @@ uint16* FPSDOperations::GetImageDst16()
     return mImageDst16;
 }
 
-FLayerStack* FPSDOperations::GetLayerStack()
-{
-    return mLayerStack;
-}
-
-bool FPSDOperations::Import()
+bool FPSDOperations::Import(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent)
 {
     if(!ReadFileHeader() )
         return false;
@@ -1437,13 +1450,16 @@ bool FPSDOperations::Import()
         if(!ReadLayerStackData())
             return false;
     }
-    else
+    else if( mBitDepth != 1 )
     {
         std::cout << "Unsupported bit depth, Import failed" << std::endl;
         return false;
     }
 
-    GenerateLayerStackFromLayerStackData();
+    if( !SetLayerStackFormatAndSize() )
+        return false;
+
+    GenerateLayerStackFromLayerStackData(iConvScheduler, iPolicy, iNumWait, iWaitList, iEvent);
     
     return true;
 }
