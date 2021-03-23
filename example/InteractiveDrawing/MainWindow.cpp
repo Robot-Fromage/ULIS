@@ -39,8 +39,8 @@ SMainWindow::SMainWindow()
     , mPolicyMultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines )
     , mTemp()
     , mCanvas( 1280, 800, mFmt )
-    , mMiniBlockAA( 16, 16, mFmt )
-    , mMiniBlockSP( 16, 16, mFmt )
+    , mMiniBlockAA( 12, 10, mFmt )
+    , mMiniBlockSP( 12, 10, mFmt )
     , mCurrentRasterOp( kLine )
     , mCurrentRasterMode( kNone )
     , mImage( nullptr )
@@ -56,12 +56,14 @@ SMainWindow::SMainWindow()
     }
     mCtx.Flush();
     FFontEngine fontEngine;
-    FFont font( fontEngine, "Segoe UI", "Bold" );
+    FFont font( fontEngine, "Segoe UI", "Black" );
     FEvent eventText;
     {
         mCtx.Fence();
-        mCtx.RasterTextAA( mMiniBlockAA, L"AA", font, 12, FMat3F::MakeTranslationMatrix( 0, 12 ), FColor::RGB( 0, 0, 0 ), mPolicyCacheEfficient, 0, nullptr, &eventText );
-        mCtx.RasterTextAA( mMiniBlockSP, L"SP", font, 12, FMat3F::MakeTranslationMatrix( 0, 12 ), FColor::RGB( 0, 0, 0 ), mPolicyCacheEfficient, 1, &eventText, nullptr );
+        FColor blue = FColor::RGB( 0, 127, 255 );
+        int size = mMiniBlockAA.Height() - 2;
+        mCtx.RasterTextAA( mMiniBlockAA, L"AA", font, size, FMat3F::MakeTranslationMatrix( 0, size ), blue, mPolicyCacheEfficient, 0, nullptr, &eventText );
+        mCtx.RasterTextAA( mMiniBlockSP, L"SP", font, size, FMat3F::MakeTranslationMatrix( 0, size ), blue, mPolicyCacheEfficient, 1, &eventText, nullptr );
     }
     mCtx.Finish();
 
@@ -148,9 +150,9 @@ SMainWindow::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMod
     if( iRasterMode == kNone ) {
         mCtx.Dummy_OP( 1, &eventRaster, &eventText );
     } else if( iRasterMode == kAA ) {
-        mCtx.Blend( mMiniBlockAA, *block, mMiniBlockAA.Rect(), 1, Blend_Normal, Alpha_Normal, 0.5f, policyMonoChunk, 1, &eventRaster, &eventText );
+        mCtx.Blend( mMiniBlockAA, *block, mMiniBlockAA.Rect(), FVec2I( size.x - mMiniBlockAA.Width(), 1 ), Blend_Normal, Alpha_Normal, 1.f, policyMonoChunk, 1, &eventRaster, &eventText );
     } else if( iRasterMode == kSP ) {
-        mCtx.Blend( mMiniBlockSP, *block, mMiniBlockSP.Rect(), 1, Blend_Normal, Alpha_Normal, 0.5f, policyMonoChunk, 1, &eventRaster, &eventText );
+        mCtx.Blend( mMiniBlockSP, *block, mMiniBlockSP.Rect(), FVec2I( size.x - mMiniBlockSP.Width(), 1 ), Blend_Normal, Alpha_Normal, 1.f, policyMonoChunk, 1, &eventRaster, &eventText );
     }
 
     switch( iRasterOp ) {
