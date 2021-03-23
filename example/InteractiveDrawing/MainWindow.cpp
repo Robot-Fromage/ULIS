@@ -39,6 +39,8 @@ SMainWindow::SMainWindow()
     , mPolicyMultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines )
     , mTemp()
     , mCanvas( 1280, 800, mFmt )
+    , mCurrentRasterOp( kLine )
+    , mCurrentRasterMode( kNone )
     , mImage( nullptr )
     , mPixmap( nullptr )
     , mLabel( nullptr )
@@ -95,6 +97,7 @@ SMainWindow::tickEvent() {
 
 void
 SMainWindow::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode iRasterMode ) {
+    QObject::connect( ioButton, &QPushButton::clicked, [=](){ this->SetRaster( iRasterOp, iRasterMode ); } );
     FVec2I padding = 5;
     FVec2I size = 32;
     FVec2I center = size / 2;
@@ -255,5 +258,11 @@ SMainWindow::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMod
             break;
         }
     }
+}
+
+void
+SMainWindow::SetRaster( eRasterOp iRasterOp, eRasterMode iRasterMode ) {
+    mCurrentRasterOp = iRasterOp;
+    mCurrentRasterMode = iRasterMode;
 }
 

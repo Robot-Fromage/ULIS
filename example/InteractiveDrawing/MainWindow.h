@@ -75,7 +75,10 @@ private:
     virtual void mouseMoveEvent( QMouseEvent* event ) override;
     virtual void mouseReleaseEvent( QMouseEvent* event ) override;
     virtual void keyPressEvent( QKeyEvent* event ) override;
-    Q_SLOT void tickEvent();
+
+private slots:
+    void tickEvent();
+    void SetRaster( eRasterOp iRasterOp, eRasterMode iRasterMode );
 
 private:
     void BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode iRasterMode );
@@ -90,7 +93,8 @@ private:
     FSchedulePolicy mPolicyMultiScanlines;
     FBlock mTemp;
     FBlock mCanvas;
-
+    eRasterOp mCurrentRasterOp;
+    eRasterMode mCurrentRasterMode;
     QImage* mImage;
     QPixmap* mPixmap;
     QLabel* mLabel;
