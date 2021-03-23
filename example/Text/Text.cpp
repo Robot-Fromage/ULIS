@@ -10,77 +10,47 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS>
-
 #include <QApplication>
 #include <QWidget>
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-
 #include <chrono>
-
-using namespace ::ul3;
+using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
-    // Gather start time to output the time it took to perform the blend composition
-    auto startTime = std::chrono::steady_clock::now();
+    FThreadPool pool;
+    FCommandQueue queue( pool );
+    eFormat fmt = Format_RGBA8;
+    FContext ctx( queue, fmt, PerformanceIntent_AVX );
+    FHardwareMetrics hw;
+    FSchedulePolicy policy_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
+    FSchedulePolicy policy_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
-    // Start by defining pool thread to host workers
-    // Define the perfIntent flag to use Multithread, Type Specializations, SSE42 or AVX2 if available.
-    // ( Note 1: if both SSE42 and AVX2 are available, AVX2 will be chosen. )
-    // ( Note 2: often, SSE42 and AVX2 optimisations are available only if Type Specializations are enabled too. )
-    // Finally, detect host device to get runtime information about support for SSE and AVX features.
-    FThreadPool* threadPool = XCreateThreadPool();
-    uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42;
-    FHardwareMetrics host = FHardwareMetrics::Detect();
 
-    // Start processing the block
-    // Create one RGBA8 block to host the operations
-    // Specify ULIS_FORMAT_RGBA8 as desired format for display
-    // We will first fill the block background
-    // Next we will then draw some text onto it.
-    // Let's define everything:
-    int w = 900;
+    int w = 600;
     int h = 600;
-    FBlock* blockCanvas = new FBlock( w, h, ULIS_FORMAT_RGBA8 );
-    FColor color = FColor::FromRGBA8( 255, 0, 0 );
-    std::wstring str1 = L"ULIS";
-    std::wstring str2 = L"ユリッス";
-    std::wstring str3 = L"ゆりっす";
-    FFontEngine FontEngine;
-    FFontRegistry fontRegistry( FontEngine );
-    FFont fontEU( fontRegistry, "Arial", "Black" );
-    FFont fontJA( fontRegistry, "Yu Gothic", "Bold" );
-    FTransformation2D identityTransform = FTransformation2D();
-
-    int fontSize = 64;
-    FRectI rect1 = TextMetrics( str1, fontEU, fontSize, identityTransform );
-    FRectI rect2 = TextMetrics( str2, fontJA, fontSize, identityTransform );
-    FRectI rect3 = TextMetrics( str3, fontJA, fontSize, identityTransform );
+    FBlock* blockCanvas = new FBlock( w, h, Format_RGBA8 );
+    FColor color = FColor::RGBA8( 255, 0, 0 );
+    std::wstring str1 = L"Text.";
+    FFontEngine fontEngine;
+    FFont font( fontEngine, "Segoe UI", "Bold" );
+    int fontSize = 160;
+    FRectI rect1 = ctx.TextMetrics( str1, font, fontSize, FMat3F() );
     rect1.x = ( w - rect1.w ) / 2;
-    rect2.x = ( w - rect2.w ) / 2;
-    rect3.x = ( w - rect3.w ) / 2;
-    rect2.y = rect1.h;
-    rect3.y = rect1.h + rect2.h;
-    int maxy = rect3.y + rect3.h;
-    int miny = ( h - maxy ) / 2;
-    rect1.y = miny;
-    rect2.y = miny + rect1.h;
-    rect3.y = miny + rect1.h + rect1.h;
-    FTransformation2D transform1( FTransformation2D::MakeTranslationTransform( rect1.x, rect1.y ) );
-    FTransformation2D transform2( FTransformation2D::MakeTranslationTransform( rect2.x, rect2.y ) );
-    FTransformation2D transform3( FTransformation2D::MakeTranslationTransform( rect3.x, rect3.y ) );
-    FColor backgroundColor = FColor::FromHSVAF( 0.5f, 0.9f, 0.8f, 1.f );
-    FColor fontColor       = FColor::FromRGBA8( 255, 255, 255, 255 );
+    rect1.y = ( h - rect1.h ) / 2;
+    FMat3F transform1( FMat3F::MakeTranslationMatrix( rect1.x, rect1.y ) );
+    FColor backgroundColor = FColor::RGBA8( 180, 0, 255 );
+    FColor fontColor       = FColor::RGBA8( 255, 255, 255, 250 );
 
+    auto startTime = std::chrono::steady_clock::now();
     // Let's process the block:
-    Fill( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, backgroundColor, blockCanvas->Rect() );
-    RenderText( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, str1, fontEU, fontSize, fontColor, transform1, ULIS_AA );
-    RenderText( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform2, ULIS_AA );
-    RenderText( threadPool, ULIS_BLOCKING, perfIntent, host, ULIS_NOCB, blockCanvas, str2, fontJA, fontSize, fontColor, transform3, ULIS_AA );
+    ctx.Fill( *blockCanvas, blockCanvas->Rect(), backgroundColor );
+    ctx.Finish();
+    ctx.RasterTextAA( *blockCanvas, str1, font, fontSize, transform1, fontColor );
+    ctx.Finish();
 
-    // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS operations.
     // We are not interested in the time it took Qt to create the window.
     auto endTime = std::chrono::steady_clock::now();
     auto delta   = std::chrono::duration_cast< std::chrono::milliseconds >( endTime - startTime ).count();
@@ -116,7 +86,6 @@ main( int argc, char *argv[] ) {
 
     // Delete our block Canvas.
     delete  blockCanvas;
-    XDeleteThreadPool( threadPool );
 
     // Return exit code.
     return  exit_code;
