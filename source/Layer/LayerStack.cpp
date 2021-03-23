@@ -79,6 +79,8 @@ FLayerStack::Reset(
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
     this->FLayerRoot::Reset();
+    mWidth = iWidth;
+    mHeight = iHeight;
 }
 
 bool
