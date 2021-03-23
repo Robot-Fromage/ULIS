@@ -36,7 +36,7 @@ SWindow::SWindow()
     , mPolicyCacheEfficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, mHw.L1CacheSize() )
     , mPolicyMultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines )
     , mSrc()
-    , mDst( 1024, 512, mFmt )
+    , mDst( 1000, 1000, mFmt )
     , mCtrlPts( 4 )
     , mImage( nullptr )
     , mAngle( 0.f )
@@ -60,15 +60,15 @@ SWindow::SWindow()
     mTimer->setInterval( 1000.0 / 24.0 );
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
-    mCtrlPts[0] = { FVec2F( 442, 186 ), FVec2F(), FVec2F() };
-    mCtrlPts[1] = { FVec2F( 582, 186 ), FVec2F(), FVec2F() };
-    mCtrlPts[2] = { FVec2F( 582, 326 ), FVec2F(), FVec2F() };
-    mCtrlPts[3] = { FVec2F( 442, 326 ), FVec2F(), FVec2F() };
+    mCtrlPts[0] = { FVec2F( 300, 300 ), FVec2F(), FVec2F() };
+    mCtrlPts[1] = { FVec2F( 700, 300 ), FVec2F(), FVec2F() };
+    mCtrlPts[2] = { FVec2F( 700, 700 ), FVec2F(), FVec2F() };
+    mCtrlPts[3] = { FVec2F( 300, 700 ), FVec2F(), FVec2F() };
 }
 
 void
 SWindow::tickEvent() {
-    float len = 150;
+    float len = 300;
     mAngle += 0.08f;
     float evoAngle0 = mAngle;
     float evoAngle1 = evoAngle0 + FMath::kPIf / 2;
@@ -92,8 +92,8 @@ SWindow::tickEvent() {
     // work when the GUI does its own stuff, and simply fencing before the render.
     // Small gain, but still noticeable.
     FEvent eventClear;
-    mCtx.Clear( mDst, mDst.Rect(), mPolicyCacheEfficient, 0, nullptr, &eventClear );
-    mCtx.TransformBezier( mSrc, mDst, mCtrlPts, 3.f, 6, mSrc.Rect(), Resampling_Bicubic, Border_Transparent, FColor::Transparent(), mPolicyMultiScanlines, 1, &eventClear, nullptr );
+    mCtx.Fill( mDst, mDst.Rect(), FColor::RGB( 30, 255, 150 ), mPolicyCacheEfficient, 0, nullptr, &eventClear );
+    mCtx.TransformBezier( mSrc, mDst, mCtrlPts, 0.5f, 1, mSrc.Rect(), Resampling_Bicubic, Border_Transparent, FColor::Transparent(), mPolicyMultiScanlines, 1, &eventClear, nullptr );
     mCtx.Flush();
 }
 

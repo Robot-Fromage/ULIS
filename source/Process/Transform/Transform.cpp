@@ -222,9 +222,15 @@ InvokeProcessBezierDeformField(
             int y = static_cast< int >( P.y );
 
             for( uint32 i = 0; i < cargs->plotSize; ++i ) {
+                int _u = x + i;
+                if( _u < 0 || _u >= mask.Width() )
+                    continue;
                 for( uint32 j = 0; j < cargs->plotSize; ++j ) {
-                    uint8* maskptr = reinterpret_cast< uint8* >( mask.PixelBits( x + i, y + j ) );
-                    float* fieldptr = reinterpret_cast< float* >( field.PixelBits( x + i, y + j ) );
+                    int _v = y + j;
+                    if( _v < 0 || _v >= mask.Height() )
+                        continue;
+                    uint8* maskptr = reinterpret_cast< uint8* >( mask.PixelBits( _u, _v ) );
+                    float* fieldptr = reinterpret_cast< float* >( field.PixelBits( _u, _v ) );
                     *maskptr = 0xFF;
                     fieldptr[0] = parametricDistortedU;
                     fieldptr[1] = parametricDistortedV;
