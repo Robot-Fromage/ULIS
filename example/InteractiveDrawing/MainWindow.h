@@ -3,32 +3,82 @@
 /*
 *   ULIS
 *__________________
-* @file         AnimatedBezier.h
+* @file         MainWindow.h
 * @author       Clement Berthaud
-* @brief        AnimatedBezier application for ULIS.
+* @brief        InteractiveDrawing application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS>
 #include <QWidget>
-#include <QPoint>
 class QImage;
+class QIcon;
 class QLabel;
 class QPixmap;
+class QPushButton;
 class QTimer;
 using namespace ::ULIS;
 
-class SWindow
+enum eRasterOp {
+      kLine
+    , kCircleAndres
+    , kCircleBresenham
+    , kArcAndres
+    , kArcBresenham
+    , kEllipse
+    , kRotatedEllipse
+    , kRectangle
+    , kPolygon
+    , kQuadraticBezier
+    , kNumRasterOP
+};
+
+static const char* kwRasterOP[] = {
+      "Line"
+    , "CircleAndres"
+    , "CircleBresenham"
+    , "ArcAndres"
+    , "ArcBresenham"
+    , "Ellipse"
+    , "RotatedEllipse"
+    , "Rectangle"
+    , "Polygon"
+    , "QuadraticBezier"
+    , "Invalid"
+};
+
+enum eRasterMode {
+      kNone
+    , kAA
+    , kSP
+    , kNumRasterMode
+};
+
+static const char* kwRasterMode[] = {
+      ""
+    , "AA"
+    , "SP"
+    , "Invalid"
+};
+
+class SMainWindow
     : public QWidget
 {
     Q_OBJECT
 
 public:
-    ~SWindow();
-    SWindow();
+    ~SMainWindow();
+    SMainWindow();
 
 private:
+    virtual void mousePressEvent( QMouseEvent* event ) override;
+    virtual void mouseMoveEvent( QMouseEvent* event ) override;
+    virtual void mouseReleaseEvent( QMouseEvent* event ) override;
+    virtual void keyPressEvent( QKeyEvent* event ) override;
     Q_SLOT void tickEvent();
+
+private:
+    void BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode iRasterMode );
 
 private:
     FThreadPool mPool;
@@ -38,14 +88,13 @@ private:
     FHardwareMetrics mHw;
     FSchedulePolicy mPolicyCacheEfficient;
     FSchedulePolicy mPolicyMultiScanlines;
-    FBlock mSrc;
-    FBlock mDst;
-    TArray< FCubicBezierControlPoint > mCtrlPts;
-    float mAngle;
+    FBlock mTemp;
+    FBlock mCanvas;
 
     QImage* mImage;
     QPixmap* mPixmap;
     QLabel* mLabel;
     QTimer* mTimer;
+    QVector< QPushButton* > buttons;
 };
 

@@ -5,20 +5,20 @@
 *__________________
 * @file         main.cpp
 * @author       Clement Berthaud
-* @brief        AnimatedBezier application for ULIS.
+* @brief        InteractiveDrawing application for ULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "AnimatedBezier.h"
+#include "MainWindow.h"
 #include <QApplication>
-
 #include <cstdlib>
 #include <ctime>
+
 int
 main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     QApplication app( argc, argv );
-    SWindow* window = new SWindow();
+    SMainWindow* window = new SMainWindow();
     window->show();
     int exit_code = app.exec();
     delete  window;
