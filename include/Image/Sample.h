@@ -213,12 +213,12 @@ public:
     //DISABLED:DOUBLE    reinterpret_cast< udouble* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     //DISABLED:DOUBLE}
 
-    template< typename T > ULIS_FORCEINLINE T AlphaT() const { return  HasAlpha() ? ChannelT< T >( AlphaIndex() ) : MaxType< T >(); }
-    ULIS_FORCEINLINE uint8  Alpha8()    const { return  HasAlpha() ? Channel8( AlphaIndex() )   : MaxType< uint8 >();   }
-    ULIS_FORCEINLINE uint16 Alpha16()   const { return  HasAlpha() ? Channel16( AlphaIndex() )  : MaxType< uint16 >();  }
-    ULIS_FORCEINLINE uint32 Alpha32()   const { return  HasAlpha() ? Channel32( AlphaIndex() )  : MaxType< uint32 >();  }
-    ULIS_FORCEINLINE float  AlphaF()    const { return  HasAlpha() ? ChannelF( AlphaIndex() )   : MaxType< ufloat >();  }
-    //DISABLED:DOUBLEULIS_FORCEINLINE double    AlphaD()    const { return  HasAlpha() ? ChannelD( AlphaIndex() )   : MaxType< udouble >(); }
+    template< typename T > ULIS_FORCEINLINE T AlphaT() const { return  HasAlpha() ? ChannelT< T >( NumColorChannels() ) : MaxType< T >(); }
+    ULIS_FORCEINLINE uint8  Alpha8()    const { return  HasAlpha() ? Channel8( NumColorChannels() )   : MaxType< uint8 >();   }
+    ULIS_FORCEINLINE uint16 Alpha16()   const { return  HasAlpha() ? Channel16( NumColorChannels() )  : MaxType< uint16 >();  }
+    ULIS_FORCEINLINE uint32 Alpha32()   const { return  HasAlpha() ? Channel32( NumColorChannels() )  : MaxType< uint32 >();  }
+    ULIS_FORCEINLINE float  AlphaF()    const { return  HasAlpha() ? ChannelF( NumColorChannels() )   : MaxType< ufloat >();  }
+    //DISABLED:DOUBLEULIS_FORCEINLINE double    AlphaD()    const { return  HasAlpha() ? ChannelD( NumColorChannels() )   : MaxType< udouble >(); }
     template< typename T > ULIS_FORCEINLINE T AT() const { return  AlphaT< T >(); }
     ULIS_FORCEINLINE uint8  A8()        const { return  Alpha8();       }
     ULIS_FORCEINLINE uint16 A16()       const { return  Alpha16();      }
@@ -226,12 +226,12 @@ public:
     ULIS_FORCEINLINE float  AF()        const { return  AlphaF();       }
     //DISABLED:DOUBLEULIS_FORCEINLINE double    AD()        const { return  AlphaD();   }
 
-    template< typename T > ULIS_FORCEINLINE void SetAlphaT( T iValue ) { if( HasAlpha() ) SetChannelT< T >(  AlphaIndex(), iValue ); }
-    ULIS_FORCEINLINE void SetAlpha8(   uint8 iValue )   { if( HasAlpha() ) SetChannel8(  AlphaIndex(), iValue ); }
-    ULIS_FORCEINLINE void SetAlpha16(  uint16 iValue )  { if( HasAlpha() ) SetChannel16( AlphaIndex(), iValue ); }
-    ULIS_FORCEINLINE void SetAlpha32(  uint32 iValue )  { if( HasAlpha() ) SetChannel32( AlphaIndex(), iValue ); }
-    ULIS_FORCEINLINE void SetAlphaF(   float iValue )   { if( HasAlpha() ) SetChannelF(  AlphaIndex(), iValue ); }
-    //DISABLED:DOUBLEULIS_FORCEINLINE void SetAlphaD(   double iValue ) { if( HasAlpha() ) SetChannelD(  AlphaIndex(), iValue ); }
+    template< typename T > ULIS_FORCEINLINE void SetAlphaT( T iValue ) { if( HasAlpha() ) SetChannelT< T >(  NumColorChannels(), iValue ); }
+    ULIS_FORCEINLINE void SetAlpha8(   uint8 iValue )   { if( HasAlpha() ) SetChannel8(  NumColorChannels(), iValue ); }
+    ULIS_FORCEINLINE void SetAlpha16(  uint16 iValue )  { if( HasAlpha() ) SetChannel16( NumColorChannels(), iValue ); }
+    ULIS_FORCEINLINE void SetAlpha32(  uint32 iValue )  { if( HasAlpha() ) SetChannel32( NumColorChannels(), iValue ); }
+    ULIS_FORCEINLINE void SetAlphaF(   float iValue )   { if( HasAlpha() ) SetChannelF(  NumColorChannels(), iValue ); }
+    //DISABLED:DOUBLEULIS_FORCEINLINE void SetAlphaD(   double iValue ) { if( HasAlpha() ) SetChannelD(  NumColorChannels(), iValue ); }
     template< typename T > ULIS_FORCEINLINE void SetAT( T iValue ) { SetAlphaT< T >( iValue ); }
     ULIS_FORCEINLINE void SetA8(       uint8 iValue )  { SetAlpha8(  iValue ); }
     ULIS_FORCEINLINE void SetA16(      uint16 iValue ) { SetAlpha16( iValue ); }
