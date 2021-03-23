@@ -11,6 +11,8 @@
 */
 #include "MainWindow.h"
 #include <QImage>
+#include <QPushButton>
+#include <QIcon>
 #include <QLabel>
 #include <QPixmap>
 #include <QTimer>
@@ -59,12 +61,14 @@ SMainWindow::SMainWindow()
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    buttons.resize( kNumRasterOP * kNumRasterMode );
+    buttons.reserve( kNumRasterOP * kNumRasterMode );
     for( int i = 0; i < kNumRasterOP; ++i ) {
         for( int j = 0; j < kNumRasterMode; ++j ) {
-            BuildButton( buttons[i], eRasterOp(i), eRasterMode(j) );
+            buttons.push_back( new QPushButton( this ) );
+            BuildButton( buttons.back(), eRasterOp(i), eRasterMode(j) );
         }
     }
+    mCtx.Finish();
 }
 
 void
@@ -91,6 +95,165 @@ SMainWindow::tickEvent() {
 
 void
 SMainWindow::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode iRasterMode ) {
-
+    FVec2I padding = 5;
+    FVec2I size = 32;
+    FVec2I center = size / 2;
+    int radius = size.x / 2 - padding.x;
+    FBlock* block = new FBlock( size.x, size.y, Format_RGBA8 );
+    FColor black = FColor::RGB( 0, 0, 0 );
+    FSchedulePolicy policyMonoChunk(
+          ScheduleTime_Sync
+        , ScheduleRun_Mono
+        , ScheduleMode_Chunks
+        , ScheduleParameter_Count
+        , 1
+    );
+    FEvent eventClear;
+    FEvent eventRaster(
+        {
+            [ block, size, padding, ioButton, iRasterMode, iRasterOp ]( const FRectI& ) {
+                QImage image( block->Bits(), size.x, size.y, block->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+                QPixmap pixmap = QPixmap::fromImage( image );
+                QIcon icon( pixmap );
+                ioButton->setIcon( icon );
+                ioButton->setFixedSize( size.x, size.y );
+                ioButton->setIconSize( QSize( size.x, size.y ) );
+                ioButton->move(
+                      padding.x + int( iRasterMode ) * ( size.x + padding.x )
+                    , padding.y + int( iRasterOp ) * ( size.y + padding.y )
+                );
+                delete  block;
+            }
+        }
+    );
+    mCtx.Clear( *block, block->Rect(), policyMonoChunk, 0, nullptr, &eventClear );
+    switch( iRasterOp ) {
+        case kLine: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawLine( *block, padding, size - padding, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawLineAA( *block, padding, size - padding, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawLineSP( *block, padding, size - padding, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kCircleAndres: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawCircleAndres( *block, center, radius, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawCircleAndresAA( *block, center, radius, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawCircleAndresSP( *block, center, radius, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kCircleBresenham: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawCircleBresenham( *block, center, radius, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawCircleBresenhamAA( *block, center, radius, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawCircleBresenhamSP( *block, center, radius, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kArcAndres: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawArcAndres( *block, center, radius, 315, 90, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawArcAndresAA( *block, center, radius, 315, 90, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawArcAndresSP( *block, center, radius, 315, 90, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kArcBresenham: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawArcBresenham( *block, center, radius, 315, 90, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawArcBresenhamAA( *block, center, radius, 315, 90, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawArcBresenhamSP( *block, center, radius, 315, 90, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kEllipse: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawEllipse( *block, center, radius, radius / 2, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawEllipseAA( *block, center, radius, radius / 2, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawEllipseSP( *block, center, radius, radius / 2, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kRotatedEllipse: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawRotatedEllipse( *block, center, radius, radius / 2, 45, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawRotatedEllipseAA( *block, center, radius, radius / 2, 45, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawRotatedEllipseSP( *block, center, radius, radius / 2, 45, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kRectangle: {
+            if( iRasterMode == kNone ) {
+                mCtx.DrawRectangle( *block, padding, size - padding, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                // Rectangle AA ?
+                mCtx.DrawRectangle( *block, padding, size - padding, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                // Rectangle SP ?
+                mCtx.DrawRectangle( *block, padding, size - padding, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kPolygon: {
+            if( iRasterMode == kNone ) {
+                std::vector< FVec2I > vec {
+                      FVec2I( padding.x, padding.y )
+                    , FVec2I( size.x - padding.x, padding.y * 2 )
+                    , FVec2I( size.x - padding.x, size.y - padding.y )
+                    , FVec2I( size.x - padding.x * 6, size.y - padding.y )
+                    , FVec2I( center )
+                };
+                mCtx.DrawPolygon( *block, vec, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                std::vector< FVec2I > vec {
+                      FVec2I( padding.x, padding.y )
+                    , FVec2I( size.x - padding.x, padding.y * 2 )
+                    , FVec2I( size.x - padding.x, size.y - padding.y )
+                    , FVec2I( size.x - padding.x * 6, size.y - padding.y )
+                    , FVec2I( center )
+                };
+                mCtx.DrawPolygonAA( *block, vec, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                std::vector< FVec2F > vec {
+                      FVec2F( padding.x, padding.y )
+                    , FVec2F( size.x - padding.x, padding.y * 2 )
+                    , FVec2F( size.x - padding.x, size.y - padding.y )
+                    , FVec2F( size.x - padding.x * 6, size.y - padding.y )
+                    , FVec2F( center )
+                };
+                mCtx.DrawPolygonSP( *block, vec, black, false, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+        case kQuadraticBezier: {
+            FVec2I p0( padding.x, size.y - padding.y );
+            FVec2I p1( center.x, padding.y );
+            FVec2I p2( size.x - padding.x, size.y - padding.y );
+            if( iRasterMode == kNone ) {
+                mCtx.DrawQuadraticBezier( *block, p0, p1, p2, 1.f, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kAA ) {
+                mCtx.DrawQuadraticBezierAA( *block, p0, p1, p2, 1.f, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            } else if( iRasterMode == kSP ) {
+                mCtx.DrawQuadraticBezierSP( *block, p0, p1, p2, 1.f, black, block->Rect(), policyMonoChunk, 1, &eventClear, &eventRaster );
+            }
+            break;
+        }
+    }
 }
 
