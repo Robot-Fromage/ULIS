@@ -98,7 +98,7 @@ public:
     */
     eFormat Format() const;
 
-private:
+public:
     /*!
         Internal tool for notifying an user event the task is a no-op
     */

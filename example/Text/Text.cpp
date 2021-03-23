@@ -40,7 +40,7 @@ main( int argc, char *argv[] ) {
     FRectI rect1 = ctx.TextMetrics( str1, font, fontSize, FMat3F() );
     rect1.x = ( w - rect1.w ) / 2;
     rect1.y = ( h - rect1.h ) / 2;
-    FMat3F transform1( FMat3F::MakeTranslationMatrix( rect1.x, rect1.y ) );
+    FMat3F transform1( FMat3F::MakeTranslationMatrix( 0, 160 ) );
     FColor backgroundColor = FColor::RGBA8( 180, 0, 255 );
     FColor fontColor       = FColor::RGBA8( 255, 255, 255, 250 );
 

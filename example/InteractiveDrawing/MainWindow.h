@@ -93,6 +93,8 @@ private:
     FSchedulePolicy mPolicyMultiScanlines;
     FBlock mTemp;
     FBlock mCanvas;
+    FBlock mMiniBlockAA;
+    FBlock mMiniBlockSP;
     eRasterOp mCurrentRasterOp;
     eRasterMode mCurrentRasterMode;
     QImage* mImage;
