@@ -777,34 +777,22 @@ bool FPSDOperations::SetLayerStackFormatAndSize()
         {
             case 1: //GrayScale
             {
-                if (mLayersInfo[0].mNumChannels == 2)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_AGF );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_GF );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_AGF );
                 break;
             }
             case 3: //RGB
             {
-                if (mLayersInfo[0].mNumChannels == 4)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGBF );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_RGBF );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGBF );
                 break;
             }
             case 4: //CMYK
             {
-                if (mLayersInfo[0].mNumChannels == 5)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYKF );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_CMYKF );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYKF );
                 break;
             }
             case 9: //LAB
             {
-                if (mLayersInfo[0].mNumChannels == 4)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALabF );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_LabF );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALabF );
                 break;
             }
             default: //ERROR
@@ -817,34 +805,22 @@ bool FPSDOperations::SetLayerStackFormatAndSize()
         {
             case 1: //GrayScale
             {
-                if (mLayersInfo[0].mNumChannels == 2)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG16 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_G16 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG16 );
                 break;
             }
             case 3: //RGB
             {
-                if (mLayersInfo[0].mNumChannels == 4)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB16 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_RGB16 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB16 );
                 break;
             }
             case 4: //CMYK
             {
-                if (mLayersInfo[0].mNumChannels == 5)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK16 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_CMYK16 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK16 );
                 break;
             }
             case 9: //LAB
             {
-                if (mLayersInfo[0].mNumChannels == 4)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab16 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_Lab16 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab16 );
                 break;
             }
             default: //ERROR
@@ -857,34 +833,22 @@ bool FPSDOperations::SetLayerStackFormatAndSize()
         {
             case 1: //GrayScale
             {
-                if (mLayersInfo[0].mNumChannels == 2)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG8 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_G8 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG8 );
                 break;
             }
             case 3: //RGB
             {
-                if (mLayersInfo[0].mNumChannels == 4)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB8 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_RGB8 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB8 );
                 break;
             }
             case 4: //CMYK
             {
-                if (mLayersInfo[0].mNumChannels == 5)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK8 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_CMYK8 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK8 );
                 break;
             }
             case 9: //LAB
             {
-                if (mLayersInfo[0].mNumChannels == 4)
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab8 );
-                else
-                    mLayerStack.Reset( mImageWidth, mImageHeight, Format_Lab8 );
+                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab8 );
                 break;
             }
             default: //ERROR
@@ -900,10 +864,145 @@ bool FPSDOperations::SetLayerStackFormatAndSize()
     return true;
 }
 
+
+bool FPSDOperations::SetLayersFormat()
+{
+    if( mLayersInfo.Size() == 0 )
+        return false; // TODO Bitmap ?
+
+    for( int i = 0; i < mLayersInfo.Size(); i++ )
+    {
+        if (mBitDepth == 32)
+        {
+            switch (mColorMode)
+            {
+                case 1: //GrayScale
+                {
+                    if (mLayersInfo[i].mNumChannels == 2)
+                        mLayersInfo[i].mLayerFormat = Format_AGF;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_GF;
+                    break;
+                }
+                case 3: //RGB
+                {
+                    if (mLayersInfo[i].mNumChannels == 4)
+                        mLayersInfo[i].mLayerFormat = Format_ARGBF;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_RGBF;
+                    break;
+                }
+                case 4: //CMYK
+                {
+                    if (mLayersInfo[i].mNumChannels == 5)
+                        mLayersInfo[i].mLayerFormat = Format_ACMYKF;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_CMYKF;
+                    break;
+                }
+                case 9: //LAB
+                {
+                    if (mLayersInfo[i].mNumChannels == 4)
+                        mLayersInfo[i].mLayerFormat = Format_ALabF;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_LabF;
+                    break;
+                }
+                default: //ERROR
+                    return false;
+            }
+        }
+        else if (mBitDepth == 16)
+        {
+            switch (mColorMode)
+            {
+                case 1: //GrayScale
+                {
+                    if (mLayersInfo[i].mNumChannels == 2)
+                        mLayersInfo[i].mLayerFormat = Format_AG16;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_G16;
+                    break;
+                }
+                case 3: //RGB
+                {
+                    if (mLayersInfo[i].mNumChannels == 4)
+                        mLayersInfo[i].mLayerFormat = Format_ARGB16;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_RGB16;
+                    break;
+                }
+                case 4: //CMYK
+                {
+                    if (mLayersInfo[i].mNumChannels == 5)
+                        mLayersInfo[i].mLayerFormat = Format_ACMYK16;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_CMYK16;
+                    break;
+                }
+                case 9: //LAB
+                {
+                    if (mLayersInfo[i].mNumChannels == 4)
+                        mLayersInfo[i].mLayerFormat = Format_ALab16;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_Lab16;
+                    break;
+                }
+                default: //ERROR
+                    return false;
+            }
+        }
+        else if (mBitDepth == 8)
+        {
+            switch (mColorMode)
+            {
+                case 1: //GrayScale
+                {
+                    if (mLayersInfo[i].mNumChannels == 2)
+                        mLayersInfo[i].mLayerFormat = Format_AG8;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_G8;
+                    break;
+                }
+                case 3: //RGB
+                {
+                    if (mLayersInfo[i].mNumChannels == 4)
+                        mLayersInfo[i].mLayerFormat = Format_ARGB8;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_RGB8;
+                    break;
+                }
+                case 4: //CMYK
+                {
+                    if (mLayersInfo[i].mNumChannels == 5)
+                        mLayersInfo[i].mLayerFormat = Format_ACMYK8;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_CMYK8;
+                    break;
+                }
+                case 9: //LAB
+                {
+                    if (mLayersInfo[i].mNumChannels == 4)
+                        mLayersInfo[i].mLayerFormat = Format_ALab8;
+                    else
+                        mLayersInfo[i].mLayerFormat = Format_Lab8;
+                    break;
+                }
+                default: //ERROR
+                    return false;
+            }
+        }
+        else
+        {
+            std::cout << "Error: we don't handle this bit depth, import failed" << std::endl;
+            return false;
+        }
+    }
+    return true;
+}
+
 void FPSDOperations::GenerateLayerStackFromLayerStackData(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent)
 {
-    eFormat layerStackFormat = mLayerStack.Format();
-
     //Special case: bitmap --------------------------------------
     if( mColorMode == 0  /*BitMap*/ ) //If we're dealing with bitmap, the data is at ImgDst, and not in the layers info
     {
@@ -953,101 +1052,6 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData(const fpCommandSchedul
     }
     //-----------------------------------------------------------
 
-    FLayerRoot* currentRoot = &mLayerStack;
-
-    const int64 max = static_cast< int64 >( mLayersInfo.Size() ) - 1;
-    for( int64 i = max; i >= 0; i-- )
-    {
-        if( mLayersInfo[i].mDividerType == 0 ) //Rasterizable layer
-        {
-            //FName layerName = FName(mLayersInfo[i].mName);
-            uint32 w = mLayersInfo[i].mRight - mLayersInfo[i].mLeft;
-            uint32 h = mLayersInfo[i].mBottom - mLayersInfo[i].mTop;
-
-            FBlock* srcblock;
-            FBlock* layerBlock = new FBlock(mImageWidth, mImageHeight, layerStackFormat);
-
-            
-            if( mBitDepth == 32 )
-            {
-                srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst32, w, h, layerStackFormat);
-            }
-            else if( mBitDepth == 16 )
-            {
-                srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst16, w, h, layerStackFormat);
-            }
-            else if( mBitDepth == 8 )
-            {
-                srcblock = new FBlock((uint8*)mLayersInfo[i].mLayerImageDst, w, h, layerStackFormat);
-            }
-
-            //To do: clear the block before the conv ?
-            FRectI dstRect = FRectI(mLayersInfo[i].mLeft, mLayersInfo[i].mTop, srcblock->Width(), srcblock->Height());
-            FCommand* convCommand = new FCommand(
-                iConvScheduler
-                , new FConvCommandArgs(
-                      *srcblock
-                    , *layerBlock
-                    , srcblock->Rect()
-                    , dstRect
-                    , QueryDispatchedConvertFormatInvocation( srcblock->Format(), layerStackFormat)
-                )
-                , FSchedulePolicy(ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines)
-                , true
-                , false
-                , iNumWait
-                , iWaitList
-                , iEvent
-                , dstRect
-            );
-
-            for(int k = 0; k < convCommand->Jobs().Size(); k++ )
-            {
-                convCommand->Jobs()[k]->Execute();
-            }
-
-            float opacity = float(mLayersInfo[i].mOpacity / 255.0);
-            bool isAlphaLocked = mLayersInfo[i].mFlags & 0x01;
-            bool isVisible = !(mLayersInfo[i].mFlags & 0x02);
-            eBlendMode blendMode = GetBlendingModeFromPSD(mLayersInfo[i].mBlendModeKey);
-
-            if( currentRoot->Type() == eLayerType::Layer_Folder )
-                mLayerStack.AddLayer( new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, currentRoot ));
-            else
-                mLayerStack.AddLayer( new FLayerImage(layerBlock, FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, &mLayerStack ) );
-            
-            //UE_LOG(LogTemp,Display,TEXT("flags: %d"),mLayersInfo[i].mFlags)
-            //Todo: Locked
-
-            delete srcblock;
-
-        }
-        else if( mLayersInfo[i].mDividerType == 1 || mLayersInfo[i].mDividerType == 2 ) //Open folder / Closed Folder
-        {
-            float opacity = float(mLayersInfo[i].mOpacity / 255.0);
-            bool isAlphaLocked = mLayersInfo[i].mFlags & 0x01;
-            bool isVisible = !(mLayersInfo[i].mFlags & 0x02);
-            eBlendMode blendMode = GetBlendingModeFromPSD(mLayersInfo[i].mBlendModeKey);
-
-            FLayerFolder* layerFolder = nullptr; 
-
-            if(currentRoot->Type() == eLayerType::Layer_Folder )
-                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, currentRoot);
-            else
-                layerFolder = new FLayerFolder(FString(mLayersInfo[i].mName), mImageWidth, mImageHeight, layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, &mLayerStack);
-
-            mLayerStack.AddLayer( layerFolder );
-            currentRoot = layerFolder;
-
-            //UE_LOG(LogTemp, Display, TEXT("flags: %d"), mLayersInfo[i].mFlags)
-
-            //UE_LOG(LogTemp,Display,TEXT("Open folder"));
-        }
-        else if( mLayersInfo[i].mDividerType == 3 ) //Break -> Exit current folder
-        {
-            currentRoot = currentRoot->Parent();
-        }
-    }
 }
 
 void FPSDOperations::CopyUncompressed(uint32* dst,uint32 length)
@@ -1417,6 +1421,11 @@ uint16* FPSDOperations::GetImageDst16()
     return mImageDst16;
 }
 
+TArray<FPSDLayerInfo>& FPSDOperations::GetLayersInfo()
+{
+    return mLayersInfo;
+}
+
 bool FPSDOperations::Import(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent)
 {
     if(!ReadFileHeader() )
@@ -1455,6 +1464,9 @@ bool FPSDOperations::Import(const fpCommandScheduler& iConvScheduler, const FSch
         std::cout << "Unsupported bit depth, Import failed" << std::endl;
         return false;
     }
+
+    if ( !SetLayersFormat() )
+        return false;
 
     if( !SetLayerStackFormatAndSize() )
         return false;

@@ -170,6 +170,84 @@ FContext::XLoadPSDFromDisk(
 {
     FPSDOperations op( iPath, iStack );
     op.Import(mContextualDispatchTable->mScheduleConvertFormat,iPolicy,iNumWait,iWaitList,iEvent);
+
+    //Genarating layer stack from imported info ----
+
+    eFormat layerStackFormat = iStack.Format();
+    FLayerRoot* currentRoot = &iStack;
+
+    const int64 max = static_cast< int64 >( op.GetLayersInfo().Size() ) - 1;
+    for( int64 i = max; i >= 0; i-- )
+    {
+        if( op.GetLayersInfo()[i].mDividerType == 0 ) //Rasterizable layer
+        {
+            //FName layerName = FName(op.GetLayersInfo()[i].mName);
+            uint32 w = op.GetLayersInfo()[i].mRight - op.GetLayersInfo()[i].mLeft;
+            uint32 h = op.GetLayersInfo()[i].mBottom - op.GetLayersInfo()[i].mTop;
+
+            FBlock* srcblock;
+            FBlock* layerBlock = new FBlock(op.GetImageWidth(), op.GetImageHeight(), layerStackFormat);
+
+            
+            if( op.GetBitDepth() == 32 )
+            {
+                srcblock = new FBlock((uint8*)op.GetLayersInfo()[i].mLayerImageDst32, w, h, op.GetLayersInfo()[i].mLayerFormat);
+            }
+            else if( op.GetBitDepth() == 16 )
+            {
+                srcblock = new FBlock((uint8*)op.GetLayersInfo()[i].mLayerImageDst16, w, h, op.GetLayersInfo()[i].mLayerFormat);
+            }
+            else if( op.GetBitDepth() == 8 )
+            {
+                srcblock = new FBlock((uint8*)op.GetLayersInfo()[i].mLayerImageDst, w, h, op.GetLayersInfo()[i].mLayerFormat);
+            }
+
+            FRectI dstRect = FRectI(op.GetLayersInfo()[i].mLeft, op.GetLayersInfo()[i].mTop, srcblock->Width(), srcblock->Height());
+
+            this->Clear( *layerBlock, layerBlock->Rect(), iPolicy, iNumWait, iWaitList, iEvent );
+            this->Finish();
+
+            this->ConvertFormat( *srcblock, *layerBlock, srcblock->Rect(), FVec2I(op.GetLayersInfo()[i].mLeft, op.GetLayersInfo()[i].mTop), iPolicy, iNumWait, iWaitList, iEvent );
+            this->Finish();
+
+            float opacity = float(op.GetLayersInfo()[i].mOpacity / 255.0);
+            bool isAlphaLocked = op.GetLayersInfo()[i].mFlags & 0x01;
+            bool isVisible = !(op.GetLayersInfo()[i].mFlags & 0x02);
+            eBlendMode blendMode = op.GetBlendingModeFromPSD(op.GetLayersInfo()[i].mBlendModeKey);
+
+            if( currentRoot->Type() == eLayerType::Layer_Folder )
+                iStack.AddLayer( new FLayerImage(layerBlock, FString(op.GetLayersInfo()[i].mName), op.GetImageWidth(), op.GetImageHeight(), layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, currentRoot ));
+            else
+                iStack.AddLayer( new FLayerImage(layerBlock, FString(op.GetLayersInfo()[i].mName), op.GetImageWidth(), op.GetImageHeight(), layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, &iStack ) );
+            
+            //UE_LOG(LogTemp,Display,TEXT("flags: %d"),op.GetLayersInfo()[i].mFlags)
+            //Todo: Locked
+
+            delete srcblock;
+        }
+        else if( op.GetLayersInfo()[i].mDividerType == 1 || op.GetLayersInfo()[i].mDividerType == 2 ) //Open folder / Closed Folder
+        {
+            float opacity = float(op.GetLayersInfo()[i].mOpacity / 255.0);
+            bool isAlphaLocked = op.GetLayersInfo()[i].mFlags & 0x01;
+            bool isVisible = !(op.GetLayersInfo()[i].mFlags & 0x02);
+            eBlendMode blendMode = op.GetBlendingModeFromPSD(op.GetLayersInfo()[i].mBlendModeKey);
+
+            FLayerFolder* layerFolder = nullptr; 
+
+            if(currentRoot->Type() == eLayerType::Layer_Folder )
+                layerFolder = new FLayerFolder(FString(op.GetLayersInfo()[i].mName), op.GetImageWidth(), op.GetImageHeight(), layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, currentRoot);
+            else
+                layerFolder = new FLayerFolder(FString(op.GetLayersInfo()[i].mName), op.GetImageWidth(), op.GetImageHeight(), layerStackFormat, blendMode, isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal, opacity, &iStack);
+
+            iStack.AddLayer( layerFolder );
+            currentRoot = layerFolder;
+        }
+        else if( op.GetLayersInfo()[i].mDividerType == 3 ) //Break -> Exit current folder
+        {
+            currentRoot = currentRoot->Parent();
+        }
+    }
+
     return  ULIS_NO_ERROR;
 }
 

@@ -49,6 +49,7 @@ struct FPSDLayerInfo
     uint32* mLayerImageDst32 = nullptr;
 
     uint32 mDividerType;
+    eFormat mLayerFormat;
 };
 
 class FPSDOperations
@@ -87,6 +88,7 @@ private:
     bool ReadLayerStackData32();
 
     bool SetLayerStackFormatAndSize();
+    bool SetLayersFormat();
 
     void GenerateLayerStackFromLayerStackData(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent);
 
@@ -117,9 +119,9 @@ private:
 
     void lerp24BitsInto32Bits( uint32* ioSrc,uint32 length );
 
-    eBlendMode GetBlendingModeFromPSD( char iBlendModeKey[5] );
 
 public:
+    eBlendMode GetBlendingModeFromPSD(char iBlendModeKey[5]);
 
     //-- Getters / Setters
     uint16 GetChannelsNumber();
@@ -130,6 +132,8 @@ public:
 
     uint8* GetImageDst();
     uint16* GetImageDst16();
+
+    TArray<FPSDLayerInfo>& GetLayersInfo();
 
     //FLayerStack* GetLayerStack();
 

@@ -39,15 +39,17 @@ main( int argc, char *argv[] ) {
 
     auto startTime = std::chrono::steady_clock::now();
 
-    ctx.XLoadPSDFromDisk( layerStack, "C:/Users/Galendil/Desktop/RGBA8.psd" );
+    ctx.XLoadPSDFromDisk( layerStack, "C:/Users/Galendil/Desktop/RGBA32bitstest.psd" );
     ctx.Finish();
 
-    FBlock blockCanvas(layerStack.Width(), layerStack.Height(), layerStack.Format());
+    FLayerImage* layerImage = dynamic_cast<FLayerImage*>( layerStack.Layers()[0] );
+
+    /*FBlock blockCanvas(layerStack.Width(), layerStack.Height(), layerStack.Format());
     ctx.Flatten( layerStack, blockCanvas );
-    ctx.Finish();
+    ctx.Finish();*/
 
     FBlock blockCanvasConverted(layerStack.Width(), layerStack.Height(), Format_RGBA8);
-    ctx.ConvertFormat( blockCanvas, blockCanvasConverted );
+    ctx.ConvertFormat(layerImage->Block(), blockCanvasConverted );
     ctx.Finish();
     
     auto endTime = std::chrono::steady_clock::now();
