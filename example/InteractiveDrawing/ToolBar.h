@@ -11,7 +11,7 @@
 */
 #pragma once
 #include <QWidget>
-namespace ULIS { class FBlock; }
+#include <ULIS>
 class QPushButton;
 class QComboBox;
 class QLabel;
@@ -61,6 +61,50 @@ static const char* kwRasterMode[] = {
     , "Invalid"
 };
 
+enum eDocumentFormat {
+      kRGBA8
+    , kRGBA16
+    , kRGBA32
+    , kRGBAF
+    , kABGR8
+    , kBGRA16
+    , kHSVAF
+    , kCMYKA16
+    , kLabA32
+    , kLabAF
+    , kALab8
+    , kNumDocumentFormat
+};
+
+static const char* kwDocumentFormat[] = {
+      "RGBA8"
+    , "RGBA16"
+    , "RGBA32"
+    , "RGBAF"
+    , "ABGR8"
+    , "BGRA16"
+    , "HSVAF"
+    , "CMYKA16"
+    , "LabA32"
+    , "LabAF"
+    , "ALab8"
+    , "Invalid"
+};
+
+static const eFormat eDocumentFormaMatchingTable[] = {
+      Format_RGBA8
+    , Format_RGBA16
+    , Format_RGBA32
+    , Format_RGBAF
+    , Format_ABGR8
+    , Format_BGRA16
+    , Format_HSVAF
+    , Format_CMYKA16
+    , Format_LabA32
+    , Format_LabAF
+    , Format_ALab8
+};
+
 class SToolBar
     : public QWidget
 {
@@ -74,6 +118,7 @@ public slots:
     void SetRaster( eRasterOp iRasterOp, eRasterMode iRasterMode );
 
 signals:
+    void FormatChanged( int iIndex );
     void RasterChanged( eRasterOp iRasterOp, eRasterMode iRasterMode );
     void BlendChanged( int iIndex );
     void AlphaChanged( int iIndex );
@@ -85,6 +130,7 @@ private:
 private:
     FULISLoader& mHandle;
     QVector< QPushButton* > mButtons;
+    QComboBox* mFormats;
     QComboBox* mBlendModes;
     QComboBox* mAlphaModes;
     QCheckBox* mFilled;

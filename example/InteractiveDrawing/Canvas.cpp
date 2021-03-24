@@ -66,6 +66,13 @@ SCanvas::SCanvas( QWidget* iParent, FULISLoader& iHandle )
 }
 
 void
+SCanvas::SetFormat( int iIndex ) {
+    eFormat newFormat = eDocumentFormaMatchingTable[ iIndex ];
+    mHandle.SetContextCanvasFormat( newFormat );
+    ReallocInternalBuffers( size() );
+}
+
+void
 SCanvas::SetRaster( eRasterOp iRasterOp, eRasterMode iRasterMode ) {
     mRasterOp = iRasterOp;
     mRasterMode = iRasterMode;

@@ -19,6 +19,7 @@ SToolBar::~SToolBar() {
     for( auto it : mButtons )
         delete  it;
 
+    delete  mFormats;
     delete  mBlendModes;
     delete  mAlphaModes;
     delete  mFilled;
@@ -28,6 +29,7 @@ SToolBar::SToolBar( QWidget* iParent, FULISLoader& iHandle )
     : QWidget( iParent )
     , mHandle( iHandle )
     , mButtons()
+    , mFormats( nullptr )
     , mBlendModes( nullptr )
     , mAlphaModes( nullptr )
     , mFilled( nullptr )
@@ -63,23 +65,31 @@ SToolBar::SToolBar( QWidget* iParent, FULISLoader& iHandle )
     }
     ctx.Finish();
 
+    mFormats = new QComboBox( this );
+    mFormats->move( 5, 380 );
+    mFormats->setFixedWidth( 106 );
+    for( int i = 0; i < kNumDocumentFormat; ++i ) {
+        mFormats->addItem( QString( kwDocumentFormat[i] ) );
+    }
+
     mBlendModes = new QComboBox( this );
-    mBlendModes->move( 5, 380 );
+    mBlendModes->move( 5, 410 );
     mBlendModes->setFixedWidth( 106 );
     for( int i = 0; i < NumBlendModes; ++i ) {
         mBlendModes->addItem( QString( kwBlendMode[i] ) );
     }
 
     mAlphaModes = new QComboBox( this );
-    mAlphaModes->move( 5, 410 );
+    mAlphaModes->move( 5, 440 );
     mAlphaModes->setFixedWidth( 106 );
     for( int i = 0; i < NumAlphaModes; ++i ) {
         mAlphaModes->addItem( QString( kwAlphaMode[i] ) );
     }
 
     mFilled = new QCheckBox( "Filled", this );
-    mFilled->move( 5, 440 );
+    mFilled->move( 5, 470 );
 
+    QObject::connect( mFormats, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( FormatChanged( int ) ) );
     QObject::connect( mBlendModes, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( BlendChanged( int ) ) );
     QObject::connect( mAlphaModes, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( AlphaChanged( int ) ) );
     QObject::connect( mFilled, SIGNAL( stateChanged( int ) ), this, SIGNAL( FilledChanged( int ) ) );

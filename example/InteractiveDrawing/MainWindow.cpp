@@ -30,6 +30,7 @@ SMainWindow::SMainWindow( FULISLoader& iHandle )
     mCanvas->setFixedSize( 1280 - 116, 800 );
     mCanvas->move( 116, 0 );
 
+    QObject::connect( mToolBar, SIGNAL( FormatChanged( int ) ), mCanvas, SLOT( SetFormat( int ) ) );
     QObject::connect( mToolBar, SIGNAL( RasterChanged( eRasterOp, eRasterMode ) ), mCanvas, SLOT( SetRaster( eRasterOp, eRasterMode ) ) );
     QObject::connect( mToolBar, SIGNAL( BlendChanged( int ) ), mCanvas, SLOT( SetBlend( int ) ) );
     QObject::connect( mToolBar, SIGNAL( AlphaChanged( int ) ), mCanvas, SLOT( SetAlpha( int ) ) );

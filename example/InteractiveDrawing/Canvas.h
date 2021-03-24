@@ -32,6 +32,7 @@ public:
     SCanvas( QWidget* iParent, FULISLoader& iHandle );
 
 public slots:
+    void SetFormat( int iIndex );
     void SetRaster( eRasterOp iRasterOp, eRasterMode iRasterMode );
     void SetBlend( int iIndex );
     void SetAlpha( int iIndex );
