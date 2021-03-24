@@ -10,8 +10,17 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Scheduling/SchedulePolicy.h"
+#include "System/Device.h"
 
 ULIS_NAMESPACE_BEGIN
+//static
+static const FHardwareMetrics sHW;
+const FSchedulePolicy FSchedulePolicy::CacheEfficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, sHW.L1CacheSize() );
+const FSchedulePolicy FSchedulePolicy::MonoChunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
+const FSchedulePolicy FSchedulePolicy::MultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
+const FSchedulePolicy FSchedulePolicy::MonoScanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
+//
+
 FSchedulePolicy::~FSchedulePolicy()
 {
 }

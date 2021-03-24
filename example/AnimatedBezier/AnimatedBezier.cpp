@@ -93,7 +93,7 @@ SWindow::tickEvent() {
     // Small gain, but still noticeable.
     FEvent eventClear;
     mCtx.Fill( mDst, mDst.Rect(), FColor::RGB( 30, 255, 150 ), mPolicyCacheEfficient, 0, nullptr, &eventClear );
-    mCtx.TransformBezier( mSrc, mDst, mCtrlPts, 4.f, 8, mSrc.Rect(), Resampling_NearestNeighbour, Border_Transparent, FColor::Transparent(), mPolicyMultiScanlines, 1, &eventClear, nullptr );
+    mCtx.TransformBezier( mSrc, mDst, mCtrlPts, 4.f, 8, mSrc.Rect(), Resampling_NearestNeighbour, Border_Transparent, FColor::Transparent, mPolicyMultiScanlines, 1, &eventClear, nullptr );
     mCtx.Flush();
 }
 

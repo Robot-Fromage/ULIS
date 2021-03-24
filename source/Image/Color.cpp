@@ -13,6 +13,17 @@
 #include "Image/Pixel.h"
 
 ULIS_NAMESPACE_BEGIN
+//static
+const FColor FColor::Black          = FColor::RGBA8( 0, 0, 0, 255 );
+const FColor FColor::White          = FColor::RGBA8( 255, 255, 255, 255 );
+const FColor FColor::Red            = FColor::RGBA8( 255, 0, 0, 255 );
+const FColor FColor::Green          = FColor::RGBA8( 0, 255, 0, 255 );
+const FColor FColor::Blue           = FColor::RGBA8( 0, 0, 255, 255 );
+const FColor FColor::Yellow         = FColor::RGBA8( 255, 255, 0, 255 );
+const FColor FColor::Magenta        = FColor::RGBA8( 255, 0, 255, 255 );
+const FColor FColor::Cyan           = FColor::RGBA8( 0, 255, 255, 255 );
+const FColor FColor::Transparent    = FColor::RGBA8( 0, 0, 0, 0 );
+
 namespace detail {
 
 template< typename T >
@@ -173,14 +184,6 @@ FColor::FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColo
     ULIS_SWITCH_FOR_ALL_DO( Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
     #undef TMP_CALL
 }
-
-//static
-FColor
-FColor::Transparent()
-{
-    return  FColor( eFormat::Format_RGBA8, { 0, 0, 0, 0 } );
-}
-
 
 //static
 FColor

@@ -367,7 +367,7 @@ public:
           int16 iX
         , int16 iY
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
-        , const FColor& iConstant = FColor::Transparent()
+        , const FColor& iConstant = FColor::Transparent
     ) const;
 
     /*!
@@ -385,7 +385,7 @@ public:
           float iX
         , float iY
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
-        , const FColor& iConstant = FColor::Transparent()
+        , const FColor& iConstant = FColor::Transparent
         , bool iCompensateBlackDrifting = true
     ) const;
 

@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "MainWindow.h"
+#include "ULISLoader.h"
 #include <QApplication>
 #include <cstdlib>
 #include <ctime>
@@ -18,7 +19,8 @@ int
 main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     QApplication app( argc, argv );
-    SMainWindow* window = new SMainWindow();
+    FULISLoader handle;
+    SMainWindow* window = new SMainWindow( handle );
     window->show();
     int exit_code = app.exec();
     delete  window;

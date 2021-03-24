@@ -219,7 +219,7 @@ FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, const FColor& iCons
             if( Rect().HitTest( FVec2I( iX, iY ) ) )
                 return  Color( iX, iY );
             else
-                return  FColor::Transparent();
+                return  FColor::Transparent;
         }
         case eBorderMode::Border_Constant : {
             if( Rect().HitTest( FVec2I( iX, iY ) ) )
@@ -234,7 +234,7 @@ FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, const FColor& iCons
             return  Color( FMath::PyModulo( iX, int16( mWidth ) ), FMath::PyModulo( iY, int16( mHeight ) ) );
         }
         default : {
-            return  FColor::Transparent();
+            return  FColor::Transparent;
         }
     }
 }

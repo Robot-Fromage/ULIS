@@ -58,9 +58,6 @@ public:
     template< typename T >
     FColor( eFormat iFormat, std::initializer_list< T > iValues, const FColorSpace* iColorSpace = nullptr );
 
-    /*! Static maker, build a transparent color, the color will have format eFormat::Format_RGBA8 */
-    static FColor Transparent();
-
     /*! Static maker, build a color from RGBA8 values, the color will have format eFormat::Format_RGBA8 */
     static FColor RGB( uint8 iR, uint8 iG, uint8 iB, uint8 iA = UINT8_MAX );
 
@@ -213,6 +210,17 @@ public:
 
     //DISABLED:DOUBLE/*! Static maker, build a color from YxyAD values, the color will have format eFormat::Format_YxyAD */
     //DISABLED:DOUBLEstatic FColor YxyAD( udouble iY, udouble ix, udouble iy, udouble iA = 1.0 );
+
+public:
+    static const FColor Black;
+    static const FColor White;
+    static const FColor Red;
+    static const FColor Green;
+    static const FColor Blue;
+    static const FColor Yellow;
+    static const FColor Magenta;
+    static const FColor Cyan;
+    static const FColor Transparent;
 };
 
 extern template FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );

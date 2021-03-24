@@ -80,6 +80,12 @@ public:
     /*! Getter for the Parameter Value. */
     int64 Value() const;
 
+public:
+    static const FSchedulePolicy CacheEfficient;
+    static const FSchedulePolicy MonoChunk;
+    static const FSchedulePolicy MultiScanlines;
+    static const FSchedulePolicy MonoScanlines;
+
 private:
     eScheduleTimePolicy         mTime;
     eScheduleRunPolicy          mRun;
