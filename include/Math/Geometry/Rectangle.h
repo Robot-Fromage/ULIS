@@ -14,6 +14,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Math/Geometry/Matrix.h"
 #include "Math/Math.h"
+#include "Memory/Array.h"
 #include <vector>
 
 ULIS_NAMESPACE_BEGIN
@@ -152,6 +153,41 @@ struct TRectangle
             res = res | *vec[i];
 
         return  res;
+    }
+
+    /*! Compute exclude of this Rect with input Rect and return result array. */
+    void Exclusion( const TRectangle< T >& iOther, TArray< TRectangle< T > >* oResult ) const {
+        oResult->Clear();
+
+        TRectangle< T > inter = *this & iOther;
+        if( inter.Area() == 0 ) {
+            oResult->PushBack( *this );
+            return;
+        }
+
+        if( inter == *this ) {
+            oResult->PushBack( TRectangle< T >() );
+            return
+        }
+
+        T x1  = x;
+        T y1  = y;
+        T x2  = x + w;
+        T y2  = y + h;
+        T ux1 = inter.x;
+        T uy1 = inter.y;
+        T ux2 = inter.x + inter.w;
+        T uy2 = inter.y + inter.h;
+
+        TRectangle< T > top     = FromMinMax( ux1, y1, ux2, uy1 ); // top
+        TRectangle< T > left    = FromMinMax( x1, uy1, ux1, uy2 ); // left
+        TRectangle< T > right   = FromMinMax( ux2, uy1, x2, uy2 ); // right
+        TRectangle< T > bot     = FromMinMax( ux1, uy2, ux2, y2 ); // bot
+        if( top.Area() )    oResult->PushBack( top );
+        if( left.Area() )   oResult->PushBack( left );
+        if( right.Area() )  oResult->PushBack( right );
+        if( bot.Area() )    oResult->PushBack( bot );
+        return;
     }
 
     /*! Compute union of this Rect with input Rect and return result Rect, with safeguards for empty rects */

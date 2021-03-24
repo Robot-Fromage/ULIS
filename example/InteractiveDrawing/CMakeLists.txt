@@ -13,6 +13,8 @@ if( ${ULIS_USE_QT} )
         "example/InteractiveDrawing/ToolBar.h"
         "example/InteractiveDrawing/ULISLoader.cpp"
         "example/InteractiveDrawing/ULISLoader.h"
+        "example/InteractiveDrawing/Canvas.cpp"
+        "example/InteractiveDrawing/Canvas.h"
     )
 
     add_executable( InteractiveDrawing ${source_list} )

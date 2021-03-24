@@ -13,6 +13,9 @@
 #include <QWidget>
 namespace ULIS { class FBlock; }
 class QPushButton;
+class QComboBox;
+class QLabel;
+class QCheckBox;
 class FULISLoader;
 using namespace ::ULIS;
 
@@ -72,12 +75,18 @@ public slots:
 
 signals:
     void RasterChanged( eRasterOp iRasterOp, eRasterMode iRasterMode );
+    void BlendChanged( int iIndex );
+    void AlphaChanged( int iIndex );
+    void FilledChanged( int iState );
 
 private:
     void BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode iRasterMode, const FBlock& iAA, const FBlock& iSP );
 
 private:
     FULISLoader& mHandle;
-    QVector< QPushButton* > buttons;
+    QVector< QPushButton* > mButtons;
+    QComboBox* mBlendModes;
+    QComboBox* mAlphaModes;
+    QCheckBox* mFilled;
 };
 

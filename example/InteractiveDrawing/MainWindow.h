@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include <QWidget>
+class SCanvas;
 class SToolBar;
 class FULISLoader;
 
@@ -25,5 +26,6 @@ public:
 private:
     FULISLoader& mHandle;
     SToolBar* mToolBar;
+    SCanvas* mCanvas;
 };
 

@@ -12,15 +12,25 @@
 #include "ToolBar.h"
 #include "ULISLoader.h"
 #include <QPushButton>
+#include <QComboBox>
+#include <QCheckBox>
 
 SToolBar::~SToolBar() {
-    for( auto it : buttons )
-        delete it;
+    for( auto it : mButtons )
+        delete  it;
+
+    delete  mBlendModes;
+    delete  mAlphaModes;
+    delete  mFilled;
 }
 
 SToolBar::SToolBar( QWidget* iParent, FULISLoader& iHandle )
     : QWidget( iParent )
     , mHandle( iHandle )
+    , mButtons()
+    , mBlendModes( nullptr )
+    , mAlphaModes( nullptr )
+    , mFilled( nullptr )
 {
     eFormat fmt = mHandle.FormatGUI();
     FContext& ctx = mHandle.ContextGUI();
@@ -44,14 +54,36 @@ SToolBar::SToolBar( QWidget* iParent, FULISLoader& iHandle )
 
     this->QWidget::setFixedSize( 200, 800 );
 
-    buttons.reserve( kNumRasterOP * kNumRasterMode );
+    mButtons.reserve( kNumRasterOP * kNumRasterMode );
     for( int i = 0; i < kNumRasterOP; ++i ) {
         for( int j = 0; j < kNumRasterMode; ++j ) {
-            buttons.push_back( new QPushButton( this ) );
-            BuildButton( buttons.back(), eRasterOp(i), eRasterMode(j), miniBlockAA, miniBlockSP );
+            mButtons.push_back( new QPushButton( this ) );
+            BuildButton( mButtons.back(), eRasterOp(i), eRasterMode(j), miniBlockAA, miniBlockSP );
         }
     }
     ctx.Finish();
+
+    mBlendModes = new QComboBox( this );
+    mBlendModes->move( 5, 380 );
+    mBlendModes->setFixedWidth( 106 );
+    for( int i = 0; i < NumBlendModes; ++i ) {
+        mBlendModes->addItem( QString( kwBlendMode[i] ) );
+    }
+
+    mAlphaModes = new QComboBox( this );
+    mAlphaModes->move( 5, 410 );
+    mAlphaModes->setFixedWidth( 106 );
+    for( int i = 0; i < NumAlphaModes; ++i ) {
+        mAlphaModes->addItem( QString( kwAlphaMode[i] ) );
+    }
+
+    mFilled = new QCheckBox( "Filled", this );
+    mFilled->move( 5, 440 );
+
+    QObject::connect( mBlendModes, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( BlendChanged( int ) ) );
+    QObject::connect( mAlphaModes, SIGNAL( currentIndexChanged( int ) ), this, SIGNAL( AlphaChanged( int ) ) );
+    QObject::connect( mFilled, SIGNAL( stateChanged( int ) ), this, SIGNAL( FilledChanged( int ) ) );
+
 }
 
 void
@@ -78,15 +110,15 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
                 ioButton->setIcon( icon );
                 ioButton->setFixedSize( size.x, size.y );
                 ioButton->setIconSize( QSize( size.x, size.y ) );
-                ioButton->move(
-                      padding.x + int( iRasterMode ) * ( size.x + padding.x )
-                    , padding.y + int( iRasterOp ) * ( size.y + padding.y )
-                );
                 delete  block;
             }
         }
     );
     QObject::connect( ioButton, &QPushButton::clicked, [=](){ this->SetRaster( iRasterOp, iRasterMode ); } );
+    ioButton->move(
+          padding.x + int( iRasterMode ) * ( size.x + padding.x )
+        , padding.y + int( iRasterOp ) * ( size.y + padding.y )
+    );
 
     ctx.Clear( *block, block->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, &eventClear );
 
