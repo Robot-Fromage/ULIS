@@ -1001,7 +1001,7 @@ bool FPSDOperations::SetLayersFormat()
     return true;
 }
 
-void FPSDOperations::GenerateLayerStackFromLayerStackData(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent)
+void FPSDOperations::GenerateLayerStackFromLayerStackData()
 {
     //Special case: bitmap --------------------------------------
     if( mColorMode == 0  /*BitMap*/ ) //If we're dealing with bitmap, the data is at ImgDst, and not in the layers info
@@ -1426,7 +1426,7 @@ TArray<FPSDLayerInfo>& FPSDOperations::GetLayersInfo()
     return mLayersInfo;
 }
 
-bool FPSDOperations::Import(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent)
+bool FPSDOperations::Import()
 {
     if(!ReadFileHeader() )
         return false;
@@ -1471,7 +1471,7 @@ bool FPSDOperations::Import(const fpCommandScheduler& iConvScheduler, const FSch
     if( !SetLayerStackFormatAndSize() )
         return false;
 
-    GenerateLayerStackFromLayerStackData(iConvScheduler, iPolicy, iNumWait, iWaitList, iEvent);
+    GenerateLayerStackFromLayerStackData();
     
     return true;
 }

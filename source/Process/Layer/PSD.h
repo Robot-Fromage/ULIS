@@ -57,7 +57,7 @@ class FPSDOperations
 public:
     // Construction / Destruction
     ~FPSDOperations();
-    FPSDOperations(const std::string& iFilename, FLayerStack& iStack );
+    FPSDOperations( const std::string& iFilename, FLayerStack& iStack );
 
 private:
     /** The header of the file, with basic info about the image and verification that it's indeed a psd file */
@@ -90,7 +90,7 @@ private:
     bool SetLayerStackFormatAndSize();
     bool SetLayersFormat();
 
-    void GenerateLayerStackFromLayerStackData(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent);
+    void GenerateLayerStackFromLayerStackData();
 
     void CopyUncompressed(uint32* dst,uint32 length);
     void CopyUncompressed(uint16* dst,uint32 length);
@@ -139,7 +139,7 @@ public:
 
     //-- Import / Export
     /** Tries to import the file passed in the constructor, return true if succeeded */
-    bool Import(const fpCommandScheduler& iConvScheduler, const FSchedulePolicy& iPolicy, uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent);
+    bool Import();
 
 private:
     std::ifstream mFileHandle;

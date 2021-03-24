@@ -169,7 +169,7 @@ FContext::XLoadPSDFromDisk(
 )
 {
     FPSDOperations op( iPath, iStack );
-    op.Import(mContextualDispatchTable->mScheduleConvertFormat,iPolicy,iNumWait,iWaitList,iEvent);
+    op.Import();
 
     //Genarating layer stack from imported info ----
 
