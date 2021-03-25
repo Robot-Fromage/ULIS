@@ -204,8 +204,8 @@ InvokeProcessBezierDeformField(
     const int max = static_cast< int >( FMath::Max( LUTV0.size(), LUTV1.size() ) );
     const float maxf = static_cast< float >( max );
 
-    for( int i = 0; i < max; ++i ) {
-        float v = i / maxf;
+    for( int k = 0; k < max; ++k ) {
+        float v = k / maxf;
         int index_v0 = static_cast< int >( floor( v * LUTV0.size() ) );
         int index_v1 = static_cast< int >( floor( v * LUTV1.size() ) );
         const FVec2F& V0 = LUTV0[index_v0].point;
@@ -215,9 +215,9 @@ InvokeProcessBezierDeformField(
         float parametricDistortedV = ( LUTV0[index_v0].param + LUTV1[index_v1].param ) / 2.f;
         std::vector< FSplineParametricSample > lutTemp;
         CubicBezierGenerateLinearLUT( &lutTemp, V0, _v0, _v1, V1, cargs->threshold );
-        for( int i = 0; i < lutTemp.size(); ++i ) {
-            float parametricDistortedU = lutTemp[i].param;
-            FVec2F P = lutTemp[i].point;
+        for( int l = 0; l < lutTemp.size(); ++l ) {
+            float parametricDistortedU = lutTemp[l].param;
+            FVec2F P = lutTemp[l].point;
             int x = static_cast< int >( P.x );
             int y = static_cast< int >( P.y );
 

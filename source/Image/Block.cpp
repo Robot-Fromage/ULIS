@@ -100,8 +100,8 @@ FBlock::ScanlineBits( uint16 iRow )
 uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY )
 {
-    ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
-    ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
+    ULIS_ASSERT( iX < mWidth, "Index out of range: " << iX << " " << mWidth );
+    ULIS_ASSERT( iY < mHeight, "Index out of range: " << iY << " " << mHeight );
     return  mBitmap + ( iX * FormatMetrics().BPP + iY * mBytesPerScanline );
 }
 
