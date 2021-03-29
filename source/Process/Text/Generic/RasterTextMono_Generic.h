@@ -43,14 +43,15 @@ RasterPixmap(
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     int width   = cargs->dst.Width();
     int height  = cargs->dst.Height();
-    int xmax = iX + iBitmap->width;
-    int ymax = iY + iBitmap->rows;
-    uint8* ULIS_RESTRICT dst = cargs->dst.Bits() + iY * cargs->dst.BytesPerScanLine() + iX * fmt.BPP;
+    const int xmax = iX + iBitmap->width;
+    const int ymax = iY + iBitmap->rows;
+    uint8* dst = cargs->dst.Bits() + iY * int( cargs->dst.BytesPerScanLine() ) + iX * int( fmt.BPP );
     uint32 stride = ( width - iBitmap->width ) * fmt.BPP;
+    uint32 bps = cargs->dst.BytesPerScanLine();
 
     for( int y = iY, v = 0; y < ymax; ++y, ++v ) {
         if( y < 0 || y >= height ) {
-            dst += stride;
+            dst += bps;
             continue;
         }
 
@@ -99,10 +100,11 @@ RasterBitmap(
     int ymax = iY + iBitmap->rows;
     uint8* ULIS_RESTRICT dst = cargs->dst.Bits() + iY * cargs->dst.BytesPerScanLine() + iX * fmt.BPP;
     uint32 stride = ( width - iBitmap->width ) * fmt.BPP;
+    uint32 bps = cargs->dst.BytesPerScanLine();
 
     for( int y = iY, v = 0; y < ymax; ++y, ++v ) {
         if( y < 0 || y >= height ) {
-            dst += stride;
+            dst += bps;
             continue;
         }
 
