@@ -15,6 +15,7 @@
 ULIS_NAMESPACE_BEGIN
 //static
 static const FHardwareMetrics sHW;
+const FSchedulePolicy FSchedulePolicy::AsyncCacheEfficient( ScheduleTime_Async, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, sHW.L1CacheSize() );
 const FSchedulePolicy FSchedulePolicy::CacheEfficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, sHW.L1CacheSize() );
 const FSchedulePolicy FSchedulePolicy::MonoChunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 const FSchedulePolicy FSchedulePolicy::MultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );

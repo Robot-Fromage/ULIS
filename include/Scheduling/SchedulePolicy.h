@@ -81,6 +81,7 @@ public:
     int64 Value() const;
 
 public:
+    static const FSchedulePolicy AsyncCacheEfficient;
     static const FSchedulePolicy CacheEfficient;
     static const FSchedulePolicy MonoChunk;
     static const FSchedulePolicy MultiScanlines;

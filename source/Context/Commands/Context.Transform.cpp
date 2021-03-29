@@ -527,13 +527,12 @@ FContext::XProcessBezierDisplacementField(
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FRectI roi = FRectI::FromPositionAndSize( FVec2I(), dst_roi.Size() );
-    TArray< FEvent > eventAllocation( 2 );
-    XAllocateBlockData( iField, dst_roi.w, dst_roi.h, Format_GAF, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, iNumWait, iWaitList, &eventAllocation[0] );
-    XAllocateBlockData( iMask, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, 0, nullptr, &eventAllocation[1] );
+    TArray< FEvent > events( 3 );
+    XAllocateBlockData( iField, dst_roi.w, dst_roi.h, Format_GAF, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, iNumWait, iWaitList, &events[0] );
+    XAllocateBlockData( iMask, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, 0, nullptr, &events[1] );
     // Only load fake geometry to avoid return on hollow block.
     iMask.LoadFromData( nullptr, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
-    FEvent eventClear;
-    Clear( iMask, roi, FSchedulePolicy( ScheduleTime_Async, iPolicy.RunPolicy(), iPolicy.ModePolicy(), iPolicy.ParameterPolicy(), iPolicy.Value() ), 1, &eventAllocation[1], &eventClear );
+    Clear( iMask, roi, FSchedulePolicy::AsyncCacheEfficient, 1, &events[1], &events[2] );
 
     FRectI trans = TransformBezierMetrics( src_roi, iControlPoints );
     FVec2F shift = trans.Position();
@@ -558,8 +557,8 @@ FContext::XProcessBezierDisplacementField(
             , iPolicy
             , false
             , true // Force mono.
-            , 1
-            , &eventClear
+            , 3
+            , &events[0]
             , iEvent
             , dst_roi
         )
