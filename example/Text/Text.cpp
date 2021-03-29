@@ -28,7 +28,6 @@ main( int argc, char *argv[] ) {
     FSchedulePolicy policy_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     FSchedulePolicy policy_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
-
     int w = 600;
     int h = 600;
     FBlock* blockCanvas = new FBlock( w, h, Format_RGBA8 );
