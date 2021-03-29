@@ -61,19 +61,19 @@ private:
 #pragma warning(push)
 #pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 template< typename R, typename ... Ts >
-class TCallback2
+class TLambdaCallback
 {
 public:
     /*! Typedef tFptr for the internal function pointer type. */
     typedef std::function< R ( Ts ... ) > tFptr;
 
     /*! Default null constructor. */
-    TCallback2()
+    TLambdaCallback()
         : mFptr( nullptr )
     {}
 
     /*! Constructor from function pointer and optional extra info. */
-    TCallback2( tFptr iFptr )
+    TLambdaCallback( tFptr iFptr )
         : mFptr( iFptr )
     {}
 
@@ -100,10 +100,10 @@ private:
 
 typedef TCallback< void, uint8* /* iData */ > FOnCleanupData;
 typedef TCallback< void, const FBlock* /* iBlock */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidBlock;
-typedef TCallback2< void, const FRectI& /* iEvent */ > FOnEventComplete;
+typedef TLambdaCallback< void, const FRectI& /* iEvent */ > FOnEventComplete;
 template class ULIS_API TCallback< void, uint8* >;
 template class ULIS_API TCallback< void, const FBlock*, const FRectI*, const uint32 >;
-template class ULIS_API TCallback2< void, const FRectI& >;
+template class ULIS_API TLambdaCallback< void, const FRectI& >;
 
 #ifdef ULIS_FEATURE_GPU_ENABLED
 typedef TCallback< void, const FTexture* /* iTexture */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidTexture;
