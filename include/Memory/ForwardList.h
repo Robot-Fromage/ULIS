@@ -26,30 +26,30 @@ template< typename T >
 class TForwardList
 {
 public:
-    /// @class      TForwardListNode
-    /// @brief      The TForwardListNode class provides a simple node class
+    /// @class      TNode
+    /// @brief      The TNode class provides a simple node class
     ///             fot TForwardList
-    /// @details    TForwardListNode is really a simple way to store nodes
+    /// @details    TNode is really a simple way to store nodes
     ///             for singly linked lists, it holds the element and a pointer
     ///             to the next node.
     template< typename U >
-    struct TForwardListNode
+    struct TNode
     {
     public:
         template< typename > friend class TForwardList;
 
-        TForwardListNode( TForwardListNode< U >* iNext, const T& iValue )
+        TNode( TNode< U >* iNext, const T& iValue )
             : mNext( iNext )
             , mValue( iValue )
         {}
 
-        TForwardListNode( TForwardListNode< U >* iNext, T&& iValue )
+        TNode( TNode< U >* iNext, T&& iValue )
             : mNext( iNext )
             , mValue( std::forward< U >( iValue ) )
         {}
 
         template< class... Args >
-        TForwardListNode( TForwardListNode< U >* iNext, Args&& ... args )
+        TNode( TNode< U >* iNext, Args&& ... args )
             : mNext( iNext )
             , mValue( std::forward< Args >(args)... )
         {}
@@ -63,11 +63,11 @@ public:
         }
 
     private:
-        TForwardListNode< U >* mNext;
+        TNode< U >* mNext;
         U mValue;
     };
 
-    typedef TForwardListNode< T > tNode;
+    typedef TNode< T > tNode;
 
 public:
     /*! Destroy the list and cleanup memory. */
