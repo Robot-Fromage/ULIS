@@ -81,7 +81,7 @@ struct TRectangle
     }
 
     /*! Collision test with TVector2. */
-    bool HitTest( const TVector2< T >& iV ) {
+    bool HitTest( const TVector2< T >& iV ) const {
         return  iV.x >= x
             &&  iV.y >= y
             &&  iV.x <  (x + h )
@@ -89,13 +89,13 @@ struct TRectangle
     }
 
     /*! Vertical collision test with y coordinate value. */
-    bool InVerticalRange( T iV ) {
+    bool InVerticalRange( T iV ) const {
         return  iV >= y
             &&  iV <  ( y + h );
     }
 
     /*! Horizontal collision test with x coordinate value. */
-    bool InHorizontalRange( T iV ) {
+    bool InHorizontalRange( T iV ) const {
         return  iV >= x
             &&  iV <  ( x + w );
     }

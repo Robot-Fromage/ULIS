@@ -1375,6 +1375,26 @@ public:
         written in iDestination.
     */
     ulError
+    ConvolvePremult(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FKernel& iKernel
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a convolution operation with iSource as input. The result is
+        written in iDestination.
+    */
+    ulError
     MorphologicalProcess(
           const FBlock& iSource
         , FBlock iDestination

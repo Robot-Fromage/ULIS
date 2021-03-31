@@ -208,6 +208,7 @@ private:
     const fpCommandScheduler mScheduleAccumulativeSamplingYPass;
 
     const fpCommandScheduler mScheduleConvolve;
+    const fpCommandScheduler mScheduleConvolvePremult;
     const fpCommandScheduler mScheduleMorphologicalProcess;
     
     const fpCommandScheduler mScheduleDrawLine;

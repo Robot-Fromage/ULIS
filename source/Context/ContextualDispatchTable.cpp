@@ -120,6 +120,7 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleAccumulativeSamplingYPass(       TDispatcher< FDispatchedAccumulativeSamplingYPassInvocationSchedulerSelector        >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
         , mScheduleConvolve(                        TDispatcher< FDispatchedConvolutionInvocationSchedulerSelector                      >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleConvolvePremult(                 TDispatcher< FDispatchedConvolutionPremultInvocationSchedulerSelector               >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleMorphologicalProcess(            TDispatcher< FDispatchedMorphoInvocationSchedulerSelector                           >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         
         , mScheduleDrawLine(                        TDispatcher< FDispatchedDrawLineInvocationSchedulerSelector                         >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
