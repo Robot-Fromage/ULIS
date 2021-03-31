@@ -41,13 +41,13 @@ InvokeAnalyzeSmallestVisibleRectXPassMT_MEM(
     dst[3] = 0;
     bool found = false;
     uint32 cmp = 0;
-    for( uint32 i = 0; i < jargs->size; ++i ) {
-        if( memcmp( ( src + fmt.AID ), &cmp, fmt.BPC ) ) {
+    for( uint32 i = 0; i < cargs->dstRect.w; ++i ) {
+        if( memcmp( ( src + fmt.AID * fmt.BPC ), &cmp, fmt.BPC ) ) {
             found = true;
             if( i < dst[0] ) dst[0] = i;
             if( i > dst[2] ) dst[2] = i;
         }
-        src += fmt.SPP;
+        src += fmt.BPP;
     }
 
     if( found ) {
@@ -65,9 +65,9 @@ InvokeAnalyzeSmallestVisibleRectYPassMT_MEM(
 )
 {
     const FFormatMetrics& fmt = cargs->dst.Format();
-    const uint16* ULIS_RESTRICT src = reinterpret_cast< const uint16* >( jargs->dst );
+    uint16* src = reinterpret_cast< uint16* >( jargs->dst );
     FColor dst_holder( fmt.FMT );
-    uint16* ULIS_RESTRICT dst = reinterpret_cast< uint16* >( dst_holder.Bits() );
+    uint16* dst = reinterpret_cast< uint16* >( dst_holder.Bits() );
 
     // dst is a dot ( assumed CMYK16 )
     // left top right bot
@@ -77,14 +77,14 @@ InvokeAnalyzeSmallestVisibleRectYPassMT_MEM(
     dst[2] = 0;
     dst[3] = 0;
 
-    for( uint32 i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < cargs->dstRect.w; ++i ) {
         if( src[0] < dst[0] ) dst[0] = src[0];
         if( src[1] < dst[1] ) dst[1] = src[1];
         if( src[2] > dst[2] ) dst[2] = src[2];
         if( src[3] > dst[3] ) dst[3] = src[3];
         src += fmt.SPP;
     }
-    memcpy( dst, src, fmt.BPP );
+    memcpy( src - fmt.SPP, dst, fmt.BPP );
 }
 /////////////////////////////////////////////////////
 // Dispatch

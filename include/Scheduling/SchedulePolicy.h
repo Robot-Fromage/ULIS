@@ -83,7 +83,9 @@ public:
 public:
     static const FSchedulePolicy AsyncCacheEfficient;
     static const FSchedulePolicy CacheEfficient;
+    static const FSchedulePolicy AsyncMonoChunk;
     static const FSchedulePolicy MonoChunk;
+    static const FSchedulePolicy AsyncMultiScanlines;
     static const FSchedulePolicy MultiScanlines;
     static const FSchedulePolicy MonoScanlines;
 

@@ -60,7 +60,11 @@ main( int argc, char *argv[] ) {
           }
     );
 
-    ctx.ConvolvePremult( blockSource, blockCanvas, edge, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MonoChunk );
+    //ctx.ConvolvePremult( blockSource, blockCanvas, edge, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MultiScanlines );
+    //ctx.Finish();
+
+    FRectI rect;
+    ctx.AnalyzeSmallestVisibleRect( blockSource, &rect, blockSource.Rect(), FSchedulePolicy::MonoChunk );
     ctx.Finish();
 
     QApplication    app( argc, argv );

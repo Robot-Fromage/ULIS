@@ -132,8 +132,8 @@ FContext::AnalyzeSmallestVisibleRect(
     }
 
     FEvent event_alloc;
-    FBlock* strip = new FBlock(); // Hollow
-    XAllocateBlockData( *strip, src_roi.h, 1, Format_CMYK16, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, iNumWait, iWaitList, &event_alloc );
+    FBlock* strip = new FBlock( 1, src_roi.h, Format_CMYK16, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
+    XAllocateBlockData( *strip, 1, src_roi.h, Format_CMYK16, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, iNumWait, iWaitList, &event_alloc );
 
     FEvent xpass_event;
     mCommandQueue.d->Push(
@@ -145,7 +145,7 @@ FContext::AnalyzeSmallestVisibleRect(
                 , src_roi
                 , strip->Rect()
             )
-            , iPolicy
+            , FSchedulePolicy::AsyncMonoChunk
             , false // force scanline
             , false
             , 1
@@ -176,7 +176,7 @@ FContext::AnalyzeSmallestVisibleRect(
                   *strip
                 , strip->Rect()
             )
-            , iPolicy
+            , FSchedulePolicy::AsyncMultiScanlines
             , false
             , false
             , 1
@@ -187,7 +187,6 @@ FContext::AnalyzeSmallestVisibleRect(
     );
 
     Dummy_OP( 1, &ypass_event, iEvent );
-
     return  ULIS_NO_ERROR;
 }
 
