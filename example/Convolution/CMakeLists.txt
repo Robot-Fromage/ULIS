@@ -6,12 +6,12 @@ if( ${ULIS_USE_QT} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "test/QtInterop/QtInterop.cpp"
+        "example/Convolution/Convolution.cpp"
     )
 
-    add_executable( QtInterop ${source_list} )
+    add_executable( Convolution ${source_list} )
     target_link_libraries(
-        QtInterop
+        Convolution
         ULIS
         Qt5::Core
         Qt5::Widgets

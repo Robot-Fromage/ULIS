@@ -21,6 +21,9 @@
 #include "Image/Format.h"
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
+#include "Image/Gradient.h"
+#include "Image/Kernel.h"
+#include "Image/StructuringElement.h"
 // Layer
 #include "Layer/Layer.h"
 #include "Layer/LayerFolder.h"

@@ -1357,7 +1357,7 @@ public:
     ulError
     Convolve(
           const FBlock& iSource
-        , FBlock iDestination
+        , FBlock& iDestination
         , const FKernel& iKernel
         , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )

@@ -57,7 +57,7 @@ InvokeConvolutionMT_MEM_Generic(
 
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         for( int i = 0; i < cargs->kernel.Width(); ++i ) {
-            for( int j = 0; j < cargs->kernel.Width(); ++j ) {
+            for( int j = 0; j < cargs->kernel.Height(); ++j ) {
                 int src_x = x + i - cargs->kernel.Pivot().x;
                 int src_y = jargs->line + j - cargs->kernel.Pivot().y;
                 FColor color = cargs->src.Sample( src_x, src_y );

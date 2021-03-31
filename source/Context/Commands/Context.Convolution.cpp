@@ -28,7 +28,7 @@ ULIS_NAMESPACE_BEGIN
 ulError
 FContext::Convolve(
       const FBlock& iSource
-    , FBlock iDestination
+    , FBlock& iDestination
     , const FKernel& iKernel
     , const FRectI& iSourceRect
     , const FVec2I& iPosition
