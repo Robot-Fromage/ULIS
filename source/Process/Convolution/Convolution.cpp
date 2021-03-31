@@ -15,6 +15,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionPremultInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

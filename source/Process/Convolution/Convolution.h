@@ -100,6 +100,9 @@ InvokeConvolutionPremultMT_MEM_Generic(
     const int maxy = cargs->kernel.Height();
     FColor transparent( fmt.FMT );
     const T* src = nullptr;
+    const int cmin = fmt.AID ? 0 : 1;
+    const int cmax = fmt.NCC + cmin;
+    const float maxT = static_cast< float >( MaxType< T >() );
 
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         memset( sum, 0, fmt.SPP * sizeof( float ) );
@@ -108,15 +111,22 @@ InvokeConvolutionPremultMT_MEM_Generic(
                 int src_x = x + i - dx;
                 int src_y = jargs->line + j - dy;
                 src = cargs->srcRect.HitTest( FVec2I( src_x, src_y ) ) ? reinterpret_cast< const T* >( cargs->src.PixelBits( src_x, src_y ) ) : reinterpret_cast< const T* >( transparent.Bits() );
-
+                float alpha = maxT;
                 float value = cargs->kernel.At( i, j );
-                for( int k = 0; k < fmt.SPP; ++k ) {
-                    sum[k] += *( src + k ) * value;
+
+                if( fmt.HEA ) {
+                    alpha = static_cast< float >( src[ fmt.AID ] );
+                    sum[ fmt.AID ] += alpha * value;
+                }
+                for( int k = cmin; k < cmax; ++k ) {
+                    sum[k] += src[k] * alpha / maxT * value;
                 }
             }
         }
-        for( int k = 0; k < fmt.SPP; ++k ) {
-            *( dst + k ) = FMath::Clamp( static_cast< T >( sum[k] ), MinType< T >(), MaxType< T >() );
+
+        dst[fmt.AID] = FMath::Clamp( static_cast< T >( sum[fmt.AID] ), MinType< T >(), MaxType< T >() );
+        for( int k = cmin; k < cmax; ++k ) {
+            dst[k] = static_cast< T >( FMath::Clamp( static_cast< T >( sum[k] ), MinType< T >(), MaxType< T >() ) * maxT / sum[fmt.AID] );
         }
         dst += fmt.SPP;
     }

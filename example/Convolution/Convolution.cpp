@@ -48,7 +48,7 @@ main( int argc, char *argv[] ) {
           }
     ).Normalized();
 
-    ctx.Convolve( blockSource, blockCanvas, kernel, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MonoChunk );
+    ctx.ConvolvePremult( blockSource, blockCanvas, kernel, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MonoChunk );
     ctx.Finish();
 
     QApplication    app( argc, argv );

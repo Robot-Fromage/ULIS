@@ -1372,7 +1372,9 @@ public:
 
     /*!
         Perform a convolution operation with iSource as input. The result is
-        written in iDestination.
+        written in iDestination. This version of Convolve performs an on-the fly
+        premultiplication, suitable for unpremultiplied formats without having
+        to make a conversion first. Use when you have only on convolution to do.
     */
     ulError
     ConvolvePremult(
