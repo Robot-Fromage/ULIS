@@ -15,6 +15,51 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FKernel
+// Static common kernels
+const FKernel FKernel::Identity =
+    FKernel( FVec2I( 3, 3 ), {
+          0, 0, 0
+        , 0, 1, 0
+        , 0, 0, 0
+    } );
+const FKernel FKernel::Edge4 =
+    FKernel( FVec2I( 3, 3 ), {
+          +0, -1, +0
+        , -1, +4, -1
+        , +0, -1, +0
+    } );
+const FKernel FKernel::Edge8 =
+    FKernel( FVec2I( 3, 3 ), {
+          -1, -1, -1
+        , -1, +8, -1
+        , -1, -1, -1
+    } );
+const FKernel FKernel::Sharpen =
+    FKernel( FVec2I( 3, 3 ), {
+          +0, -1, +0
+        , -1, +5, -1
+        , +0, -1, +0
+    } );
+const FKernel FKernel::BoxBlur =
+    FKernel( FVec2I( 3, 3 ), {
+          1, 1, 1
+        , 1, 1, 1
+        , 1, 1, 1
+    } );
+const FKernel FKernel::GaussianBlur =
+    FKernel( FVec2I( 3, 3 ), {
+          1, 2, 1
+        , 2, 4, 1
+        , 1, 2, 1
+    } ).Normalized();
+const FKernel FKernel::UnsharpMask =
+    FKernel( FVec2I( 5, 5 ), {
+          1,  4,  6,  4, 1
+        , 4, 16, 24, 16, 4
+        , 6, 24, 36, 24, 6
+        , 4, 16, 24, 16, 4
+        , 1,  4,  6,  4, 1
+    } ).Normalized();
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
 FKernel::~FKernel()

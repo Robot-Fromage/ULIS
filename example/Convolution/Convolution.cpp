@@ -37,7 +37,10 @@ main( int argc, char *argv[] ) {
     ctx.Fill( blockSource, FRectI( 200, 200, 200, 200 ), FColor::Red, FSchedulePolicy::CacheEfficient );
     ctx.Fence();
     ctx.Flush();
-    FKernel kernel = FKernel(
+    ctx.Fill( blockSource, FRectI( 300, 300, 100, 100 ), FColor::RGBA8( 0, 0, 255, 127 ), FSchedulePolicy::CacheEfficient );
+    ctx.Fence();
+    ctx.Flush();
+    FKernel blur = FKernel(
           FVec2I( 5, 5 )
         , {
               0.00f, 0.12f, 0.25f, 0.12f, 0.00f
@@ -48,7 +51,16 @@ main( int argc, char *argv[] ) {
           }
     ).Normalized();
 
-    ctx.ConvolvePremult( blockSource, blockCanvas, kernel, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MonoChunk );
+    FKernel edge = FKernel(
+          FVec2I( 3, 3 )
+        , {
+              -1, -1, -1
+            , -1, +8, -1
+            , -1, -1, -1
+          }
+    );
+
+    ctx.ConvolvePremult( blockSource, blockCanvas, edge, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MonoChunk );
     ctx.Finish();
 
     QApplication    app( argc, argv );

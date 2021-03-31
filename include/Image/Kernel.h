@@ -67,6 +67,16 @@ public:
     const FVec2I& Pivot() const;
     void SetPivot( const FVec2I& iPivot );
 
+public:
+    // Static common kernels
+    static const FKernel Identity;
+    static const FKernel Edge4;
+    static const FKernel Edge8;
+    static const FKernel Sharpen;
+    static const FKernel BoxBlur;
+    static const FKernel GaussianBlur;
+    static const FKernel UnsharpMask;
+
 private:
     // Private Data Members
     FVec2I mPivot;
