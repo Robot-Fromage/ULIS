@@ -45,7 +45,7 @@ const FKernel FKernel::BoxBlur =
           1, 1, 1
         , 1, 1, 1
         , 1, 1, 1
-    } );
+    } ).Normalized();
 const FKernel FKernel::GaussianBlur =
     FKernel( FVec2I( 3, 3 ), {
           1, 2, 1
