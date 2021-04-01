@@ -37,7 +37,7 @@ main( int argc, char *argv[] ) {
     ctx.Fill( blockSource, FRectI( 200, 200, 200, 200 ), FColor::Red, FSchedulePolicy::CacheEfficient );
     ctx.Fence();
     ctx.Flush();
-    ctx.Fill( blockSource, FRectI( 300, 300, 100, 100 ), FColor::RGBA8( 0, 0, 255, 127 ), FSchedulePolicy::CacheEfficient );
+    ctx.Fill( blockSource, FRectI( 300, 300, 100, 100 ), FColor::RGBA8( 0, 0, 255, 255 ), FSchedulePolicy::CacheEfficient );
     ctx.Fence();
     ctx.Flush();
     FKernel blur = FKernel(
@@ -64,7 +64,11 @@ main( int argc, char *argv[] ) {
     //ctx.Finish();
 
     FRectI rect;
-    ctx.AnalyzeSmallestVisibleRect( blockSource, &rect, blockSource.Rect(), FSchedulePolicy::MonoChunk );
+    ctx.AnalyzeSmallestVisibleRect( blockSource, &rect, blockSource.Rect(), FSchedulePolicy::MultiScanlines );
+    ctx.Finish();
+
+    FColor average;
+    ctx.AccumulateSample( blockSource, &average, rect, FSchedulePolicy::MultiScanlines );
     ctx.Finish();
 
     QApplication    app( argc, argv );

@@ -13,28 +13,8 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Invocations YPass
-void
-InvokeAccumulativeSamplingYPassMT_MEM(
-      const FSimpleBufferJobArgs* jargs
-    , const FSimpleBufferCommandArgs* cargs
-)
-{
-    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
-    float* dst = reinterpret_cast< float* >( jargs->dst ) + fmt.SPP;
-
-    for( uint32 y = 1; y < jargs->size; ++y ) {
-        for( uint8 j = 0; j < fmt.SPP; ++j )
-            dst[j] = static_cast< float >( dst[j] + *( dst - fmt.SPP + j ) );
-        dst += fmt.SPP;
-    }
-}
-
-/////////////////////////////////////////////////////
 // Dispatch
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleAccumulativeSamplingYPassMT_MEM, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeAccumulativeSamplingYPassMT_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedAccumulativeSamplingXPassInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedAccumulativeSamplingYPassInvocationSchedulerSelector )
-
 ULIS_NAMESPACE_END
 

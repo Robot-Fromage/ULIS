@@ -44,7 +44,8 @@ InvokeAccumulativeSamplingXPassMT_MEM(
 
     src += fmt.SPP;
 
-    for( uint32 x = 1; x < jargs->size; ++x ) {
+    const uint32 len = cargs->srcRect.w;
+    for( uint32 x = 1; x < len; ++x ) {
         float alpha = static_cast< float >( src[fmt.AID] );
         dst[fmt.AID] += alpha;
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
@@ -56,9 +57,33 @@ InvokeAccumulativeSamplingXPassMT_MEM(
 }
 
 /////////////////////////////////////////////////////
+// Invocations YPass
+template< typename T >
+void
+InvokeAccumulativeSamplingYPassMT_MEM(
+      const FSimpleBufferJobArgs* jargs
+    , const FSimpleBufferCommandArgs* cargs
+)
+{
+    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    float* dst = reinterpret_cast< float* >( jargs->dst ) + fmt.SPP;
+
+    const uint32 len = jargs->size / fmt.BPP;
+    for( uint32 y = 1; y < len; ++y ) {
+        for( uint8 j = 0; j < fmt.SPP; ++j )
+            dst[j] = static_cast< float >( dst[j] + *( dst - fmt.SPP + j ) );
+        dst += fmt.SPP;
+    }
+
+    dst -= fmt.SPP;
+    for( uint8 j = 0; j < fmt.SPP; ++j )
+        dst[j] /= static_cast< float >( MaxType< T >() );
+}
+
+/////////////////////////////////////////////////////
 // Dispatch / Schedule
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleAccumulativeSamplingXPassMT_MEM, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeAccumulativeSamplingXPassMT_MEM< T > )
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleAccumulativeSamplingYPassMT_MEM );
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleAccumulativeSamplingYPassMT_MEM, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeAccumulativeSamplingYPassMT_MEM< T > )
 ULIS_DECLARE_DISPATCHER( FDispatchedAccumulativeSamplingXPassInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedAccumulativeSamplingYPassInvocationSchedulerSelector )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
@@ -67,7 +92,7 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedAccumulativeSamplingYPassInvocationSchedulerSelector
-    , &ScheduleAccumulativeSamplingYPassMT_MEM
+    , &ScheduleAccumulativeSamplingYPassMT_MEM< T >
 )
 
 ULIS_NAMESPACE_END

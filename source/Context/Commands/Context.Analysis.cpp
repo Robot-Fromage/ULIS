@@ -34,6 +34,28 @@ FContext::AnalyzeSmallestVisibleRect(
     , FEvent* iEvent
 )
 {
+    // strip CMYK16     iBlock
+    // C  M  Y  K
+    // x1 y1 x2 y2 << . . . . . . . . . . . . . . . . . . . . .
+    // x1 y1 x2 y2 << . . . . . . . . . . . . . . . . . . . . .
+    // x1 y1 x2 y2 << . . . . . y1. . . . . . . . . . . . . . .
+    // x1 y1 x2 y2 << . . . . . • • • • • • • • • • • • . . . .
+    // x1 y1 x2 y2 << . . . . . • • • • • • • • • • • • . . . .
+    // x1 y1 x2 y2 << . . . . . • • • • • • • • • • • • . . . .
+    // x1 y1 x2 y2 << . . x1• • • • • • • • • • • • • • . . . .
+    // x1 y1 x2 y2 << . . . • • • • • • • • • • • • • • . . . .
+    // x1 y1 x2 y2 << . . . . . • • • • • • • • • • • • . . . .
+    // x1 y1 x2 y2 << . . . . . • • • • • • • • • • • •x2 . . .
+    // x1 y1 x2 y2 << . . . . . . . . . . . . . . . . y2. . . .
+    // x1 y1 x2 y2 << . . . . . . . . . . . . . . . . . . . . .
+    // x1 y1 x2 y2 << . . . . . . . . . . . . . . . . . . . . .
+    // x1 y1 x2 y2 << . . . . . . . . . . . . . . . . . . . . .
+    // x1 y1 x2 y2 << . . . . . . . . . . . . . . . . . . . . .
+    // ==========
+    // |  |  |  |
+    // v  v  v  v
+    // x1 y2 x2 y2 min max
+
     ULIS_ASSERT_RETURN_ERROR(
           oRect
         , "No input."
@@ -69,7 +91,7 @@ FContext::AnalyzeSmallestVisibleRect(
             )
             , FSchedulePolicy::AsyncMultiScanlines
             , false // force scanline
-            , false
+            , false // no chunk
             , 1
             , &event_alloc
             , &xpass_event
@@ -123,6 +145,28 @@ FContext::AccumulateSample(
     , FEvent* iEvent
 )
 {
+    // strip fmt float  iBlock
+    // C0 C1 C2 C3  accumulate
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // +  +  +  + << . . . . . • • • • • • • • • • • • . . . .
+    // +  +  +  + << . . . . . • • • • • • • • • • • • . . . .
+    // +  +  +  + << . . . . . • • • • • • • • • • • • . . . .
+    // +  +  +  + << . . . • • • • • • • • • • • • • • . . . .
+    // +  +  +  + << . . . • • • • • • • • • • • • • • . . . .
+    // +  +  +  + << . . . . . • • • • • • • • • • • • . . . .
+    // +  +  +  + << . . . . . • • • • • • • • • • • • . . . .
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // +  +  +  + << . . . . . . . . . . . . . . . . . . . . .
+    // ==========
+    // |  |  |  |
+    // v  v  v  v
+    // A0 A1 A2 A3 accumulate
+
     ULIS_ASSERT_RETURN_ERROR(
           oColor
         , "No input."
@@ -134,12 +178,13 @@ FContext::AccumulateSample(
     const FRectI src_roi = iRect.Sanitized() & src_rect;
 
     // Check no-op
-    if( src_roi.Area() <= 0 )
+    const int area = src_roi.Area();
+    if( area <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FEvent event_alloc;
-    FBlock* strip = new FBlock(); // Hollow
-    XAllocateBlockData( *strip, src_roi.h, 1, SummedAreaTableMetrics( iBlock ), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), iPolicy, iNumWait, iWaitList, &event_alloc );
+    FBlock* strip = new FBlock( 1, src_roi.h, SummedAreaTableMetrics( iBlock ), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
+    XAllocateBlockData( *strip, 1, src_roi.h, SummedAreaTableMetrics( iBlock ), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, iNumWait, iWaitList, &event_alloc );
 
     FEvent xpass_event;
     mCommandQueue.d->Push(
@@ -151,8 +196,8 @@ FContext::AccumulateSample(
                 , src_roi
                 , strip->Rect()
             )
-            , iPolicy
-            , false // force scanline
+            , FSchedulePolicy::AsyncMonoChunk // FSchedulePolicy::AsyncMultiScanlines
+            , false
             , false
             , 1
             , &event_alloc
@@ -163,12 +208,13 @@ FContext::AccumulateSample(
 
     FEvent ypass_event(
         FOnEventComplete(
-            [strip, oColor, &src_roi]( const FRectI& ) {
-                FPixel proxy = strip->Pixel( strip->Width() - 1, 0 );
-                proxy.Unpremultiply();
-                float area = static_cast< float >( src_roi.Area() );
+            [strip, oColor, area]( const FRectI& ) {
+                FPixel proxy = strip->Pixel( 0, strip->Height() - 1 );
+                const float areaf = static_cast< float >( area );
                 for( uint8 i = 0; i < proxy.SamplesPerPixel(); ++i )
-                    proxy.SetChannelF( i, proxy.ChannelF( i ) / area );
+                    proxy.SetChannelF( i, proxy.ChannelF( i ) / areaf );
+                proxy.Unpremultiply();
+                FColor::ConvertFormat( proxy, *oColor );
                 delete  strip;
             }
         )
@@ -180,9 +226,9 @@ FContext::AccumulateSample(
                   *strip
                 , strip->Rect()
             )
-            , iPolicy
-            , false
-            , false
+            , FSchedulePolicy::AsyncMonoChunk
+            , true
+            , true
             , 1
             , &xpass_event
             , &ypass_event
