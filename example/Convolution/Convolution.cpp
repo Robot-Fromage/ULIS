@@ -23,7 +23,7 @@ main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_AVX );
+    FContext ctx( queue, fmt, PerformanceIntent_MEM );
     FHardwareMetrics hw;
     FSchedulePolicy policy_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     FSchedulePolicy policy_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
@@ -70,6 +70,21 @@ main( int argc, char *argv[] ) {
     FColor average;
     ctx.AccumulateSample( blockSource, &average, rect, FSchedulePolicy::MultiScanlines );
     ctx.Finish();
+
+    FBlock test( 5, 5, Format_RGBA8 );
+    ctx.Fill( test, test.Rect(), FColor::Red );
+    ctx.Finish();
+
+    FBlock SAT( test.Width(), test.Height(), ctx.SummedAreaTableMetrics( test ) );
+    ctx.BuildSummedAreaTable( test, SAT, FSchedulePolicy::MultiScanlines );
+    ctx.Finish();
+    for( int y = 0; y < SAT.Height(); ++y ) {
+        for( int x = 0; x < SAT.Width(); ++x ) {
+            FPixel proxy = SAT.Pixel( x, y );
+            std::cout << proxy.RF() << " ";
+        }
+        std::cout << std::endl;
+    }
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();

@@ -34,7 +34,7 @@ FContext::BuildSummedAreaTable(
 )
 {
     ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
-    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() != iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() == iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
     ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
 
     FEvent xpass_event;
@@ -48,7 +48,7 @@ FContext::BuildSummedAreaTable(
                 , iDestination.Rect()
             )
             , iPolicy
-            , true
+            , false
             , false
             , iNumWait
             , iWaitList
@@ -67,7 +67,7 @@ FContext::BuildSummedAreaTable(
                 , iDestination.Rect()
             )
             , iPolicy
-            , true
+            , false
             , false
             , 1
             , &xpass_event
@@ -90,7 +90,7 @@ FContext::BuildPremultipliedSummedAreaTable(
 )
 {
     ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
-    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() != iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() == iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
     ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
 
     FEvent xpass_event;
@@ -104,7 +104,7 @@ FContext::BuildPremultipliedSummedAreaTable(
                 , iDestination.Rect()
             )
             , iPolicy
-            , true
+            , false
             , false
             , iNumWait
             , iWaitList
@@ -123,7 +123,7 @@ FContext::BuildPremultipliedSummedAreaTable(
                 , iDestination.Rect()
             )
             , iPolicy
-            , true
+            , false
             , false
             , 1
             , &xpass_event

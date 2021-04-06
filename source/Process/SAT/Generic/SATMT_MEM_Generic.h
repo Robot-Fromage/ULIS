@@ -26,21 +26,22 @@ InvokeBuildSATXPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
-    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    const FFormatMetrics& src_fmt = cargs->src.FormatMetrics();
+    const FFormatMetrics& dst_fmt = cargs->dst.FormatMetrics();
     const T* ULIS_RESTRICT src = reinterpret_cast< const T* >( jargs->src );
     float*   ULIS_RESTRICT dst = reinterpret_cast< float* >( jargs->dst );
 
-    for( uint8 j = 0; j < fmt.SPP; ++j )
+    for( uint8 j = 0; j < src_fmt.SPP; ++j )
         dst[j] = static_cast< float >( src[j] );
 
-    src += fmt.SPP;
-    dst += fmt.SPP;
+    src += src_fmt.SPP;
+    dst += dst_fmt.SPP;
 
-    for( uint32 x = 1; x < jargs->size; ++x ) {
-        for( uint8 j = 0; j < fmt.SPP; ++j )
-            dst[j] = static_cast< float >( src[j] + *( dst - fmt.SPP + j ) );
-        src += fmt.SPP;
-        dst += fmt.SPP;
+    for( uint32 x = 1; x < cargs->srcRect.w; ++x ) {
+        for( uint8 j = 0; j < src_fmt.SPP; ++j )
+            dst[j] = static_cast< float >( src[j] + *( dst - dst_fmt.SPP + j ) );
+        src += src_fmt.SPP;
+        dst += dst_fmt.SPP;
     }
 }
 
@@ -55,7 +56,7 @@ InvokeBuildSATYPassMT_MEM_Generic(
     const uint32 stride = cargs->dst.Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
 
-    for( uint32 y = 1; y < jargs->size; ++y ) {
+    for( uint32 y = 1; y < cargs->dstRect.w; ++y ) {
         for( uint8 j = 0; j < fmt.SPP; ++j )
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
         dst += stride;
@@ -109,7 +110,7 @@ InvokeBuildPremultSATYPassMT_MEM_Generic(
     const uint32 stride = cargs->dst.Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
 
-    for( uint32 y = 1; y < jargs->size; ++y ) {
+    for( uint32 y = 1; y < cargs->dstRect.h; ++y ) {
         for( uint8 j = 0; j < fmt.SPP; ++j )
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
         dst += stride;
