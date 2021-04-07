@@ -61,10 +61,9 @@ template class ULIS_API TArray< FGradientStep >;
 /// @class      FGradient
 /// @brief      The FGradient class provides a mean of storing and manipulating
 ///             gradients in various formats.
-/// @details    Gradients have at least two colors, white to black by default.
+/// @details    Gradients can have a single or no color.
 ///             Steps are in [0;1]. Interpolation is linear in the preferred
-///             format. It is assumed for simplicity that there are always two
-///             colors, one at 0 and one at 1.
+///             format.
 class ULIS_API FGradient final
 {
 public:

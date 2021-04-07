@@ -325,3 +325,4 @@ SCanvas::Commit()
     mPixmap->convertFromImage( *mImage );
     mLabel->setPixmap( *mPixmap );
 }
+
