@@ -10,14 +10,16 @@
 #               platforms.
 # @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 # @license      Please refer to LICENSE.md
-#
 cmake_minimum_required(VERSION 3.11.0)
 
+# Message
+message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
+
+# Input
 option( ULIS_BUILD_SHARED           "Build the library shared or statically"            ON  )
 option( ULIS_BUILD_PYTHON_MODULE    "Build the library python module"                   OFF )
 option( ULIS_BUILD_TESTS            "Build the library test modules"                    OFF )
 option( ULIS_BUILD_EXAMPLES         "Build the library example modules"                 OFF )
-option( ULIS_FORCE_ASSERT           "Build the library with forced assert in release"   OFF )
 SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries"            )
 SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package"                )
 SET( ULIS_PYTHON_REL_LIB            "" CACHE STRING "Indicates the path to python release static library"   )
@@ -25,239 +27,45 @@ SET( ULIS_PYTHON_DEB_LIB            "" CACHE STRING "Indicates the path to pytho
 SET( ULIS_PYTHON_INCLUDE_PATH1      "" CACHE STRING "Indicates the path to python include path"             )
 SET( ULIS_PYTHON_INCLUDE_PATH2      "" CACHE STRING "Indicates extra path to python include path"           )
 
-# Setup generation options
-set( CMAKE_OSX_DEPLOYMENT_TARGET "10.13" )
-set( CMAKE_CONFIGURATION_TYPES RelWithDebInfo Debug Release CACHE STRING INTERNAL FORCE )
-set( CMAKE_SUPPRESS_REGENERATION true )
-set( CMAKE_DEBUG_POSTFIX d )
-set( CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true )
-# For freetype skip install
-set( SKIP_INSTALL_ALL true )
-set( CMAKE_DISABLE_FIND_PACKAGE_ZLIB        ON )
-set( CMAKE_DISABLE_FIND_PACKAGE_PNG         ON )
-set( CMAKE_DISABLE_FIND_PACKAGE_BZip2       ON )
-set( CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz    ON )
-set( CMAKE_DISABLE_FIND_PACKAGE_BrotliDec   ON )
+# Setup
+message( "Starting environnement setup before generation." )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/ConfigureGeneration.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/DetectVersion.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/DetectTimestamp.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/DetectGit.cmake )
 
-# Set C++ standard options
-set( CMAKE_CXX_STANDARD 17 )
-set( CMAKE_CXX_STANDARD_REQUIRED ON )
-set( CMAKE_CXX_EXTENSIONS OFF )
+# Functions
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/AddExampleModule.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/SubdirList.cmake )
 
-# Create solution
-project( ULIS )
-set( ULIS_VERSION_MAJOR 4 )
-set( ULIS_VERSION_MINOR 0 )
-set( ULIS_VERSION_PATCH 0 )
-set( ULIS_VERSION ${ULIS_VERSION_MAJOR}.${ULIS_VERSION_MINOR}.${ULIS_VERSION_PATCH} )
-set_property( GLOBAL PROPERTY USE_FOLDERS ON )
+# Project
+message( "Starting project generation." )
+project( ULIS${ULIS_VERSION_MAJOR}_Project )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/DetectCompiler.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/SetCompilerFlags.cmake )
 
-message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG" )
-    set( CMAKE_CXX_FLAGS "-std=c++17" )
-endif()
+# Library Dependencies
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindZlib.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindFreetype2.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindLCMS2.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindOpenGL.cmake )
 
-# Flags for Compiler / Platforms
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
-    # CLANG
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -mfma -Wno-comment -Wno-unused-function -Wno-missing-braces -Wno-switch" )
+# Library
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/Main.cmake )
 
-elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
-    # GNU
-    if( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux" )
-        # LINUX GNU GCC
-        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse2 -msse3 -mssse3 -msse4.1 -mxop -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread" )
-
-    elseif( "${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows" )
-        # WINDOWS MINGW GCC
-        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W" )
-
-    endif()
-
-elseif( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-    # MSVC
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /EHsc -D__SSE4_2__ -D__AVX2__" )
-    set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Z7 /Od /MDd" )
-    set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Z7" )
-    # EHsc: Exception stuff
-    # Z7:   Produced object files contain full symbolic debugging information.
-    # MP:   Parallelize compilation of source files.
-    # Od:   Turns off all optimizations in the program and speeds compilation.
-
-endif()
-
-set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -D ULIS_FORCE_ASSERT -D ULIS_RELWITHDEBINFO" )
-
-# Add Dependencies
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS   ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2    ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
-add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/zlib         ${PROJECT_BINARY_DIR}/3rdparty/build_zlib  )
-
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-    set_target_properties( freetype PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312" )
-endif()
-
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-    set_target_properties( zlibstatic PROPERTIES COMPILE_FLAGS "/wd4267" )
-endif()
-
-set_target_properties( lcms2                PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( freetype             PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( zlib                 PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( zlibstatic           PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( minigzip             PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( example              PROPERTIES FOLDER ULIS/3rdparty )
-
-####################################
-# Add Main Project
-file(
-    GLOB_RECURSE
-    source_list
-    RELATIVE
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "include/*"
-    "source/*"
-)
-
-if( ${ULIS_BUILD_SHARED} )
-   add_library( ULIS SHARED ${source_list} )
-   target_compile_definitions( ULIS PRIVATE ULIS_BUILD_SHARED )
-else()
-   add_library( ULIS STATIC ${source_list} )
-   target_compile_definitions( ULIS PRIVATE ULIS_STATIC_LIBRARY )
-endif()
-
-if( ${ULIS_FORCE_ASSERT} )
-    target_compile_definitions( ULIS PUBLIC ULIS_FORCE_ASSERT )
-endif()
-
-# git commit hash macro
-execute_process(
-  COMMAND git log -1 --format=%H
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE ULIS_GIT_COMMIT_HASH
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-  COMMAND git log -1 --format=%h
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE ULIS_GIT_COMMIT_ABBREVIATED_HASH
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-  COMMAND git rev-parse --abbrev-ref HEAD
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE ULIS_GIT_BRANCH_NAME
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-target_compile_definitions( ULIS PUBLIC UNICODE )
-target_compile_definitions(
-    ULIS
-    PRIVATE
-    ULIS_DEF_VERSION_MAJOR=${ULIS_VERSION_MAJOR}
-    ULIS_DEF_VERSION_MINOR=${ULIS_VERSION_MINOR}
-    ULIS_DEF_VERSION_PATCH=${ULIS_VERSION_PATCH}
-    ULIS_DEF_GIT_COMMIT_HASH=${ULIS_GIT_COMMIT_HASH}
-    ULIS_DEF_GIT_COMMIT_ABBREVIATED_HASH=${ULIS_GIT_COMMIT_ABBREVIATED_HASH}
-    ULIS_DEF_GIT_BRANCH_NAME=${ULIS_GIT_BRANCH_NAME}
-)
-set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS${ULIS_VERSION_MAJOR}" )
-set_target_properties( ULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
-set_target_properties( ULIS PROPERTIES FOLDER ULIS )
-target_link_libraries( ULIS PRIVATE lcms2 )
-target_link_libraries( ULIS PRIVATE freetype )
-target_link_libraries( ULIS PRIVATE zlibstatic )
-#target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
-
-target_include_directories(
-    ULIS
-    PUBLIC
-    "include/"
-    PRIVATE
-    #${OpenCL_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/zlib/
-    ${PROJECT_BINARY_DIR}/3rdparty/build_zlib/
-    "source/"
-)
-
-# For MSVC parse pretty filter names
-foreach(source IN LISTS source_list)
-    get_filename_component(source_path "${source}" PATH)
-    string(REPLACE "/" "\\" source_path_msvc "${source_path}")
-    source_group("${source_path_msvc}" FILES "${source}")
-endforeach()
-
-####################################
-# Load Qt
-# Set simple boolean for testing qt availability
-set( ULIS_USE_QT OFF )
-if( NOT "${ULIS_QT_CMAKE_PATH}" STREQUAL "" )
-    set( ULIS_USE_QT ON )
-    set( CMAKE_PREFIX_PATH ${ULIS_QT_CMAKE_PATH} )
-    find_package(
-        Qt5
-        REQUIRED COMPONENTS
-        Core
-        Widgets
-        Gui
-    )
-    set( CMAKE_AUTOMOC ON )
-endif()
-
-####################################
-# Add Python Project
+# Python
 include(${CMAKE_CURRENT_SOURCE_DIR}/binding/Python/CMakeLists.txt)
 
-####################################
-# Add Test Projects
+# Test & Example
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindQt.cmake )
 if( ${ULIS_BUILD_TESTS} )
-include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
 endif()
 
 if( ${ULIS_BUILD_EXAMPLES} )
-include(${CMAKE_CURRENT_SOURCE_DIR}/example/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/example/CMakeLists.txt)
 endif()
 
-####################################
 # Install
-string( TIMESTAMP ULIS_TODAY_DATE "%d/%m/%Y" )
-set( ULIS_INSTALL_NAME "install_ULIS${ULIS_VERSION}_${CMAKE_HOST_SYSTEM_NAME}_${CMAKE_CXX_COMPILER_ID}_x64" )
-set( CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/../${ULIS_INSTALL_NAME}" CACHE PATH "Install Path" FORCE )
-write_file( ".VERSION"      ${ULIS_VERSION}     )
-write_file( ".TIMESTAMP"    ${ULIS_TODAY_DATE}  )
-write_file( ".COMMIT"       "commit: [${ULIS_GIT_COMMIT_HASH}](${ULIS_GIT_COMMIT_ABBREVIATED_HASH}), on branch: [${ULIS_GIT_BRANCH_NAME}]" )
-
-install(
-    TARGETS ULIS
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-
-install(
-    DIRECTORY ${PROJECT_SOURCE_DIR}/include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    COMPONENT headers
-)
-
-install( FILES AUTHORS          DESTINATION "." COMPONENT runtime )
-install( FILES LICENSE.md       DESTINATION "." COMPONENT runtime )
-install( FILES ULIS_CLUF.txt    DESTINATION "." COMPONENT runtime )
-install( FILES ULIS_EULA.txt    DESTINATION "." COMPONENT runtime )
-install( FILES binding/UnrealEngine4/README.md      DESTINATION "." COMPONENT runtime )
-install( FILES binding/UnrealEngine4/ULIS.Build.cs  DESTINATION "." COMPONENT runtime )
-install( FILES "${PROJECT_BINARY_DIR}/.VERSION"     DESTINATION "." COMPONENT runtime )
-install( FILES "${PROJECT_BINARY_DIR}/.TIMESTAMP"   DESTINATION "." COMPONENT runtime )
-install( FILES "${PROJECT_BINARY_DIR}/.COMMIT"      DESTINATION "." COMPONENT runtime )
-install( FILES 3rdparty/freetype2/docs/FTL.txt      DESTINATION "./3rdparty/freetype2/."    COMPONENT runtime )
-install( FILES 3rdparty/Little-CMS/COPYING          DESTINATION "./3rdparty/Little-CMS/."   COMPONENT runtime )
-install( FILES 3rdparty/stb/LICENSE                 DESTINATION "./3rdparty/stb/."          COMPONENT runtime )
-install( FILES 3rdparty/VCL/LICENSE                 DESTINATION "./3rdparty/VCL/."          COMPONENT runtime )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/Install.cmake )
 
