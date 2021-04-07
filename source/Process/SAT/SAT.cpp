@@ -13,13 +13,14 @@
 
 // Include SSE RGBA8 Implementation
 #ifdef ULIS_COMPILETIME_SSE_SUPPORT
-#include "Process/SAT/RGBA8/SATMT_SSE_RGBA8.h"
+//#include "Process/SAT/RGBA8/SATMT_SSE_RGBA8.h"
 #endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
 // SAT X PASS
+/*
 ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBuildSATXPassInvocationSchedulerSelector )
     ULIS_DEFINE_DISPATCHER_SPECIALIZATION(
           &DispatchTestIsUnorderedRGBA8
@@ -51,6 +52,10 @@ ULIS_BEGIN_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBuildPremultSATYPass
         , &ScheduleBuildPremultSATYPassMT_SSE_RGBA8
         , &ScheduleBuildPremultSATYPassMT_MEM_Generic< uint8 > )
 ULIS_END_DISPATCHER_SPECIALIZATION_DEFINITION( FDispatchedBuildPremultSATYPassInvocationSchedulerSelector )
-
+*/
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedBuildSATXPassInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedBuildSATYPassInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedBuildPremultSATXPassInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedBuildPremultSATYPassInvocationSchedulerSelector )
 ULIS_NAMESPACE_END
 
