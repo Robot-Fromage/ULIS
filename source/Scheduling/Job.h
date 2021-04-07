@@ -56,19 +56,19 @@ public:
         , const FCommand* iParent
     );
 
-    /*! Explicitely deleted default constructor. */
+    /*! explicitly deleted default constructor. */
     FJob() = delete;
 
-    /*! Explicitely deleted copy constructor. */
+    /*! explicitly deleted copy constructor. */
     FJob( const FJob& ) = delete;
 
-    /*! Explicitely deleted move constructor. */
+    /*! explicitly deleted move constructor. */
     FJob( FJob&& ) = delete;
 
-    /*! Explicitely deleted copy assignment operator. */
+    /*! explicitly deleted copy assignment operator. */
     FJob& operator=( const FJob& ) = delete;
 
-    /*! Explicitely deleted move assignment operator. */
+    /*! explicitly deleted move assignment operator. */
     FJob& operator=( FJob&& ) = delete;
 
     /*! Start exec job tasks. */

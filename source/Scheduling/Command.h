@@ -51,19 +51,19 @@ public:
         , const FRectI& iEventGeometry
     );
 
-    /*! Explicitely deleted default constructor. */
+    /*! explicitly deleted default constructor. */
     FCommand() = delete;
 
-    /*! Explicitely deleted copy constructor. */
+    /*! explicitly deleted copy constructor. */
     FCommand( const FCommand& ) = delete;
 
-    /*! Explicitely deleted move constructor. */
+    /*! explicitly deleted move constructor. */
     FCommand( FCommand&& ) = delete;
 
-    /*! Explicitely deleted copy assignment operator. */
+    /*! explicitly deleted copy assignment operator. */
     FCommand& operator=( const FCommand& ) = delete;
 
-    /*! Explicitely deleted move assignment operator. */
+    /*! explicitly deleted move assignment operator. */
     FCommand& operator=( FCommand&& ) = delete;
 
     /*! Get the args */
