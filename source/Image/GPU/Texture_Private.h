@@ -50,7 +50,7 @@ public:
     );
 
     /*!
-    Explicitely disabled copy constructor.
+    explicitly disabled copy constructor.
 
     If you need to make a shallow copy with shared image data, use the explicit
     constructor from external data.
@@ -61,7 +61,7 @@ public:
     FTexture_Private( const FTexture_Private& ) = delete;
 
     /*!
-    Explicitely disabled copy assignment operator.
+    explicitly disabled copy assignment operator.
 
     If you need to make a shallow copy with shared image data, use the explicit
     constructor from external data.

@@ -38,7 +38,7 @@ ULIS_NAMESPACE_BEGIN
 ///             heavy operations. It does not communicate with the GPU or use
 ///             any kind of hardware accelerated feature just by itself.
 ///
-///             Copy, wether deep or shallow, is explicitely forbidden, If you
+///             Copy, wether deep or shallow, is explicitly forbidden, If you
 ///             need to copy image data, you can use the explicit Copy or XCopy
 ///             functions that ULIS provides.
 ///
@@ -123,7 +123,7 @@ public:
     bool IsHollow() const;
 
     /*!
-    Explicitely disabled copy constructor.
+    explicitly disabled copy constructor.
 
     If you need to make a shallow copy with shared image data, use the explicit
     constructor from external data.
@@ -134,7 +134,7 @@ public:
     FBlock( const FBlock& ) = delete;
 
     /*!
-    Explicitely disabled copy assignment operator.
+    explicitly disabled copy assignment operator.
 
     If you need to make a shallow copy with shared image data, use the explicit
     constructor from external data.

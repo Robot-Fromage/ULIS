@@ -37,7 +37,7 @@ class FTexture_Private;
 ///             data it points to in the VRAM, and the class never performs any
 ///             kind of heavy operations. It differs from FBlock because of that.
 ///
-///             Copy, wether deep or shallow, is explicitely forbidden, If you
+///             Copy, wether deep or shallow, is explicitly forbidden, If you
 ///             need to copy image data, you can use the explicit Copy functions
 ///             that ULIS provides.
 ///
@@ -79,7 +79,7 @@ public:
     );
 
     /*!
-    Explicitely disabled copy constructor.
+    explicitly disabled copy constructor.
 
     If you need to make a shallow copy with shared image data, use the explicit
     constructor from external data.
@@ -90,7 +90,7 @@ public:
     FTexture( const FTexture& ) = delete;
 
     /*!
-    Explicitely disabled copy assignment operator.
+    explicitly disabled copy assignment operator.
 
     If you need to make a shallow copy with shared image data, use the explicit
     constructor from external data.
