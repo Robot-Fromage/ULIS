@@ -52,13 +52,22 @@ InvokeBuildSATYPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
+    // Warning, explanation of dirty SAT trick:
+    // we trick the scheduler into scheduling columns by swapping width and
+    // height before scheduling the command so we have the right amount of
+    // tasks, jobs, and workers assigned, but the jargs->dst assigned is
+    // garbage, hence the PixelBits used to query the appropriate column at row
+    // one. We then proceed to run along the column, until we reach
+    // cargs->dstRect.h because the dimensions have been swapped back.
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     const uint32 stride = cargs->dst.Width() * fmt.SPP;
-    float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
+    float* dst = reinterpret_cast< float* >( cargs->dst.PixelBits( jargs->line, 1 ) );
 
-    for( int y = 1; y < cargs->dstRect.w; ++y ) {
-        for( uint8 j = 0; j < fmt.SPP; ++j )
+    for( int y = 1; y < cargs->dstRect.h; ++y ) {
+        for( uint8 j = 0; j < fmt.SPP; ++j ) {
+            auto jojo = dst - stride + j;
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
+        }
         dst += stride;
     }
 }
@@ -70,32 +79,33 @@ InvokeBuildPremultSATXPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
-    const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
+    const FFormatMetrics& src_fmt = cargs->src.FormatMetrics();
+    const FFormatMetrics& dst_fmt = cargs->dst.FormatMetrics();
     const T* ULIS_RESTRICT src = reinterpret_cast< const T* >( jargs->src );
     float*   ULIS_RESTRICT dst = reinterpret_cast< float* >( jargs->dst );
     float max = static_cast< float >( MaxType< T >() );
 
     {
-        float alpha = static_cast< float >( src[fmt.AID] );
-        dst[fmt.AID] = alpha;
-        for( uint8 j = 0; j < fmt.NCC; ++j ) {
-            uint8 r = fmt.IDT[j];
+        float alpha = static_cast< float >( src[src_fmt.AID] );
+        dst[src_fmt.AID] = alpha;
+        for( uint8 j = 0; j < src_fmt.NCC; ++j ) {
+            uint8 r = src_fmt.IDT[j];
             dst[r] = static_cast< float >( src[r] * alpha / max );
         }
     }
 
-    src += fmt.SPP;
-    dst += fmt.SPP;
+    src += src_fmt.SPP;
+    dst += dst_fmt.SPP;
 
-    for( uint32 x = 1; x < jargs->size; ++x ) {
-        float alpha = static_cast< float >( src[fmt.AID] );
-        dst[fmt.AID] = alpha + *( dst - fmt.SPP + fmt.AID );
-        for( uint8 j = 0; j < fmt.NCC; ++j ) {
-            uint8 r = fmt.IDT[j];
-            dst[r] = static_cast< float >( src[r] * alpha / max + *( dst - fmt.SPP + r ) );
+    for( int x = 1; x < cargs->srcRect.w; ++x ) {
+        float alpha = static_cast< float >( src[src_fmt.AID] );
+        dst[src_fmt.AID] = alpha + *( dst - src_fmt.SPP + src_fmt.AID );
+        for( uint8 j = 0; j < src_fmt.NCC; ++j ) {
+            uint8 r = src_fmt.IDT[j];
+            dst[r] = static_cast< float >( src[r] * alpha / max + *( dst - src_fmt.SPP + r ) );
         }
-        src += fmt.SPP;
-        dst += fmt.SPP;
+        src += src_fmt.SPP;
+        dst += dst_fmt.SPP;
     }
 }
 
@@ -106,13 +116,22 @@ InvokeBuildPremultSATYPassMT_MEM_Generic(
     , const FDualBufferCommandArgs* cargs
 )
 {
+    // Warning, explanation of dirty SAT trick:
+    // we trick the scheduler into scheduling columns by swapping width and
+    // height before scheduling the command so we have the right amount of
+    // tasks, jobs, and workers assigned, but the jargs->dst assigned is
+    // garbage, hence the PixelBits used to query the appropriate column at row
+    // one. We then proceed to run along the column, until we reach
+    // cargs->dstRect.h because the dimensions have been swapped back.
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     const uint32 stride = cargs->dst.Width() * fmt.SPP;
-    float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
+    float* dst = reinterpret_cast< float* >( cargs->dst.PixelBits( jargs->line, 1 ) );
 
     for( int y = 1; y < cargs->dstRect.h; ++y ) {
-        for( uint8 j = 0; j < fmt.SPP; ++j )
+        for( uint8 j = 0; j < fmt.SPP; ++j ) {
+            auto jojo = dst - stride + j;
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
+        }
         dst += stride;
     }
 }

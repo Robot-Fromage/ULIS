@@ -57,6 +57,20 @@ FContext::BuildSummedAreaTable(
         )
     );
 
+    // Dirty tricks for SAT:
+    // The scheduler always tries to dispatch scanlines as rows, but here we actually want to process columns for the Y pass
+    // So we swap width and height on fake images that share the same bits but do not own them, so that the right number of jobs are created.
+    // The resulting jobs will have to adjust the base dst ptr anyway in the invocation Y pass.
+    FBlock* fakeSourceRotated = new FBlock( const_cast< uint8* >( iSource.Bits() ), iSource.Height(), iSource.Width(), iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    FBlock* fakeDestinationRotated = new FBlock( const_cast< uint8* >( iDestination.Bits() ), iDestination.Height(), iDestination.Width(), iDestination.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    FEvent ypass_event(
+        FOnEventComplete(
+            [fakeSourceRotated, fakeDestinationRotated]( const FRectI& ) {
+                delete  fakeSourceRotated;
+                delete  fakeDestinationRotated;
+            }
+        )
+    );
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleBuildSATYPass
@@ -71,11 +85,14 @@ FContext::BuildSummedAreaTable(
             , false
             , 1
             , &xpass_event
-            , iEvent
+            , &ypass_event
             , iDestination.Rect()
         )
     );
-
+    // Reset fake rotation to avoid ambiguous rect work
+    fakeSourceRotated->LoadFromData( fakeSourceRotated->Bits(), iSource.Width(), iSource.Height(), iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    fakeDestinationRotated->LoadFromData( fakeDestinationRotated->Bits(), iDestination.Width(), iDestination.Height(), iDestination.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    Dummy_OP( 1, &ypass_event, iEvent );
     return  ULIS_NO_ERROR;
 }
 
@@ -113,6 +130,20 @@ FContext::BuildPremultipliedSummedAreaTable(
         )
     );
 
+    // Dirty tricks for SAT:
+    // The scheduler always tries to dispatch scanlines as rows, but here we actually want to process columns for the Y pass
+    // So we swap width and height on fake images that share the same bits but do not own them, so that the right number of jobs are created.
+    // The resulting jobs will have to adjust the base dst ptr anyway in the invocation Y pass.
+    FBlock* fakeSourceRotated = new FBlock( const_cast< uint8* >( iSource.Bits() ), iSource.Height(), iSource.Width(), iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    FBlock* fakeDestinationRotated = new FBlock( const_cast< uint8* >( iDestination.Bits() ), iDestination.Height(), iDestination.Width(), iDestination.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    FEvent ypass_event(
+        FOnEventComplete(
+            [fakeSourceRotated, fakeDestinationRotated]( const FRectI& ) {
+                delete  fakeSourceRotated;
+                delete  fakeDestinationRotated;
+            }
+        )
+    );
     mCommandQueue.d->Push(
         new FCommand(
               mContextualDispatchTable->mScheduleBuildPremultipliedSATYPass
@@ -127,11 +158,14 @@ FContext::BuildPremultipliedSummedAreaTable(
             , false
             , 1
             , &xpass_event
-            , iEvent
+            , &ypass_event
             , iDestination.Rect()
         )
     );
-
+    // Reset fake rotation to avoid ambiguous rect work
+    fakeSourceRotated->LoadFromData( fakeSourceRotated->Bits(), iSource.Width(), iSource.Height(), iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    fakeDestinationRotated->LoadFromData( fakeDestinationRotated->Bits(), iDestination.Width(), iDestination.Height(), iDestination.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData() );
+    Dummy_OP( 1, &ypass_event, iEvent );
     return  ULIS_NO_ERROR;
 }
 

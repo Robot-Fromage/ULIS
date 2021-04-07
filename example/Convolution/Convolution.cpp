@@ -76,7 +76,7 @@ main( int argc, char *argv[] ) {
     ctx.Finish();
 
     FBlock SAT( test.Width(), test.Height(), ctx.SummedAreaTableMetrics( test ) );
-    ctx.BuildSummedAreaTable( test, SAT, FSchedulePolicy::MultiScanlines );
+    ctx.BuildPremultipliedSummedAreaTable( test, SAT, FSchedulePolicy::MultiScanlines );
     ctx.Finish();
     for( int y = 0; y < SAT.Height(); ++y ) {
         for( int x = 0; x < SAT.Width(); ++x ) {
