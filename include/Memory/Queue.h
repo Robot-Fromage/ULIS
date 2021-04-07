@@ -39,13 +39,13 @@ public:
         : tSuperClass()
     {}
 
-    /*! Copy constructor, explicitely removed. */
+    /*! Copy constructor, explicitly removed. */
     TQueue< T >( const TQueue< T >& iOther ) = delete;
 
-    /*! Copy Assignment Operator, explicitely removed. */
+    /*! Copy Assignment Operator, explicitly removed. */
     TQueue< T >& operator=( const TQueue< T >& iOther ) = delete;
 
-    /*! Move Assignment Operator, explicitely removed. */
+    /*! Move Assignment Operator, explicitly removed. */
     TQueue< T >& operator=( TQueue< T >&& iOther ) = delete;
 
     /*!

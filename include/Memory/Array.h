@@ -56,13 +56,13 @@ public:
         }
     }
 
-    /*! Copy constructor, explicitely removed. */
+    /*! Copy constructor, explicitly removed. */
     TArray< T >( const TArray< T >& iOther ) = delete;
 
-    /*! Copy Assignment Operator, explicitely removed. */
+    /*! Copy Assignment Operator, explicitly removed. */
     TArray< T >& operator=( const TArray< T >& iOther ) = delete;
 
-    /*! Move Assignment Operator, explicitely removed. */
+    /*! Move Assignment Operator, explicitly removed. */
     TArray< T >& operator=( TArray< T >&& iOther ) = delete;
 
     /*!
@@ -315,10 +315,10 @@ public:
         EmplaceBack, emplace a new element at the end of the buffer, possibly
         reallocating the underlying storage if the capacity has been reached.
     */
-    template< class... Args >
+    template< class ... Args >
     void EmplaceBack( Args&& ... args ) {
         CheckGrowBulk();
-        new  ( mBulk + ( mSize++ ) )  T( std::forward< Args >(args)... );
+        new  ( mBulk + ( mSize++ ) )  T( std::forward< Args >( args ) ... );
     }
 
     /*!
@@ -349,12 +349,12 @@ public:
         Emplace, emplace a new element at pos in the buffer, possibly
         reallocating the underlying storage if the capacity has been reached.
     */
-    template< class... Args >
-    void Emplace( uint64 iPos,  Args&& ... args ) {
+    template< class ... Args >
+    void Emplace( uint64 iPos, Args&& ... args ) {
         ULIS_ASSERT( iPos < mSize, "Bad Index" );
         CheckGrowBulk();
         memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
-        new  ( mBulk + iPos )  T( std::forward< Args >(args)... );
+        new  ( mBulk + iPos )  T( std::forward< Args >(args) ... );
         mSize++;
     }
 
@@ -379,14 +379,13 @@ public:
         ULIS_ASSERT( iPos + iCount <= mSize, "Bad arguments" );
         for( uint64 i = iPos; i < iPos + iCount; ++i )
             mBulk[i].~T();
-
         memmove( mBulk + iPos, mBulk + iPos + iCount, mSize - ( iPos + iCount ) );
         mSize -= iCount;
     }
 
 private:
     /*!
-        CleanupBulk explicitely calls destructors on elements to be removed, then
+        CleanupBulk explicitly calls destructors on elements to be removed, then
         deallocates the underlying bulk buffer and sets mBulk to nullptr.
     */
     void CleanupBulk() {
@@ -402,7 +401,7 @@ private:
     }
 
     /*!
-        Realloc bulk explicitely resize the bulk and performs a copy of what was
+        Realloc bulk explicitly resize the bulk and performs a copy of what was
         previously there if any.
     */
     void ReallocBulk( uint64 iCapacity ) {
@@ -416,7 +415,7 @@ private:
             // Free the old bulk.
             XFree( mBulk );
         }
-        // Swap the old bulk and the new bulk
+        // Point on the new allocation
         mBulk = new_bulk;
         // Save new capacity.
         mCapacity = iCapacity;

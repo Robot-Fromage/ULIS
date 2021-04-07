@@ -48,7 +48,7 @@ public:
             , mValue( std::forward< U >( iValue ) )
         {}
 
-        template< class... Args >
+        template< class ... Args >
         TNode( TNode< U >* iNext, Args&& ... args )
             : mNext( iNext )
             , mValue( std::forward< Args >(args)... )
@@ -83,13 +83,13 @@ public:
         , mSize( 0 )
     {}
 
-    /*! Copy constructor, explicitely removed. */
+    /*! Copy constructor, explicitly removed. */
     TForwardList< T >( const TForwardList< T >& iOther ) = delete;
 
-    /*! Copy Assignment Operator, explicitely removed. */
+    /*! Copy Assignment Operator, explicitly removed. */
     TForwardList< T >& operator=( const TForwardList< T >& iOther ) = delete;
 
-    /*! Move Assignment Operator, explicitely removed. */
+    /*! Move Assignment Operator, explicitly removed. */
     TForwardList< T >& operator=( TForwardList< T >&& iOther ) = delete;
 
     /*!
@@ -284,7 +284,7 @@ public:
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         tNode* node = mFront;
-        for( uint64 i = 0; i < mSize; ++i )
+        for( uint64 i = 0; i < iIndex; ++i )
             node = node->mNext;
         return  node->mValue;
     }
@@ -300,7 +300,7 @@ public:
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         tNode* node = mFront;
-        for( uint64 i = 0; i < mSize; ++i )
+        for( uint64 i = 0; i < iIndex; ++i )
             node = node->mNext;
         return  node->mValue;
     }
@@ -314,7 +314,7 @@ public:
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         tNode* node = mFront;
-        for( uint64 i = 0; i < mSize; ++i )
+        for( uint64 i = 0; i < iIndex; ++i )
             node = node->mNext;
         return  node->mValue;
     }
@@ -328,7 +328,7 @@ public:
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         tNode* node = mFront;
-        for( uint64 i = 0; i < mSize; ++i )
+        for( uint64 i = 0; i < iIndex; ++i )
             node = node->mNext;
         return  node->mValue;
     }
