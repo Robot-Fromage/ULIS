@@ -73,10 +73,10 @@ public:
 
     // Named Functions
     /*! Return a pointer to the base storage. */
-    ULIS_MATRIX_FUNC T* Bits();
+    ULIS_MATRIX_FUNC T* Data();
 
     /*! Return a pointer to the base storage. */
-    ULIS_MATRIX_FUNC const T* Bits() const;
+    ULIS_MATRIX_FUNC const T* Data() const;
 
     /*! Obtain the inverse of the matrix. */
     ULIS_MATRIX_FUNC TMatrixN< T, P, N > Inverse() const;
@@ -252,7 +252,7 @@ PartialPivotingLUSolve_imp(
 */
 template< typename T, typename P, uint8 N >
 TMatrixN< T, P, N >
-PartialPivotingLUInvert_imp( 
+PartialPivotingLUInvert_imp(
       const TMatrixN< T, P, N >& iMat
     , const TVectorN< int, float, N + 1 >& iPermut
 )
@@ -391,14 +391,14 @@ ULIS_MATRIX_FUNC TMatrixN< T, P, N >::TMatrixN( const TMatrixN< U, Q, M >& iOthe
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 T*
-TMatrixN< T, P, N >::Bits() {
+TMatrixN< T, P, N >::Data() {
     return  &(m[0].m[0]);
 }
 
 template< typename T, typename P, uint8 N >
 ULIS_MATRIX_FUNC
 const T*
-TMatrixN< T, P, N >::Bits() const {
+TMatrixN< T, P, N >::Data() const {
     return  &(m[0].m[0]);
 }
 

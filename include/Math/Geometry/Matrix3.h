@@ -76,10 +76,10 @@ public:
 
     // Named Functions
     /*! Return a pointer to the base storage. */
-    ULIS_MATRIX_FUNC T* Bits();
+    ULIS_MATRIX_FUNC T* Data();
 
     /*! Return a pointer to the base storage. */
-    ULIS_MATRIX_FUNC const T* Bits() const;
+    ULIS_MATRIX_FUNC const T* Data() const;
 
     /*! Obtain the inverse of the matrix. */
     ULIS_MATRIX_FUNC TMatrix3 Inverse() const;
@@ -250,14 +250,14 @@ ULIS_MATRIX_FUNC TMatrix3< T >::TMatrix3( const TMatrix3< U >& iOther )
 template< typename T >
 ULIS_MATRIX_FUNC
 T*
-TMatrix3< T >::Bits() {
+TMatrix3< T >::Data() {
     return  &(mCols[0][0]);
 }
 
 template< typename T >
 ULIS_MATRIX_FUNC
 const T*
-TMatrix3< T >::Bits() const {
+TMatrix3< T >::Data() const {
     return  &(mCols[0][0]);
 }
 
@@ -467,15 +467,15 @@ TMatrix3< T >::MakeHomography( const TVector2< T > iSrc[], const TVector2< T > i
     Mat8 inverse = mat.Inverse();
     Vec8 res = inverse * vec;
     return  TMatrix3< T >(
-          static_cast< float >( res[0] )
-        , static_cast< float >( res[1] )
-        , static_cast< float >( res[2] )
-        , static_cast< float >( res[3] )
-        , static_cast< float >( res[4] )
-        , static_cast< float >( res[5] )
-        , static_cast< float >( res[6] )
-        , static_cast< float >( res[7] )
-        , static_cast< float >( 1 )
+          static_cast< T >( res[0] )
+        , static_cast< T >( res[1] )
+        , static_cast< T >( res[2] )
+        , static_cast< T >( res[3] )
+        , static_cast< T >( res[4] )
+        , static_cast< T >( res[5] )
+        , static_cast< T >( res[6] )
+        , static_cast< T >( res[7] )
+        , static_cast< T >( 1 )
     );
 }
 

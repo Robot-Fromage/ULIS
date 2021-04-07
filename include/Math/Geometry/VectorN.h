@@ -54,10 +54,10 @@ public:
 
     // Named Functions
     /*! Return a pointer to the base storage. */
-    ULIS_VECTOR_FUNC T* Bits();
+    ULIS_VECTOR_FUNC T* Data();
 
     /*! Return a pointer to the base storage. */
-    ULIS_VECTOR_FUNC const T* Bits() const;
+    ULIS_VECTOR_FUNC const T* Data() const;
 
     /*! Return the horizontal sum of the vector. */
     ULIS_VECTOR_FUNC tComputation Sum() const;
@@ -159,10 +159,12 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( T iValue )
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( std::initializer_list< T > iValues )
 {
-    for( int i = 0; i < static_cast< int >( iValues.size() ); ++i )
+    const uint8 min = FMath::Min( N, static_cast< uint8 >( iValues.size() ) );
+
+    for( int i = 0; i < min; ++i )
         m[i] = *( iValues.begin() + i );
 
-    for( int i = static_cast< int >( iValues.size() ); i < N; ++i )
+    for( int i = min; i < N; ++i )
         m[i] = static_cast< T >( 0 );
 }
 
@@ -174,12 +176,14 @@ template< typename U, typename Q, uint8 M >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOther )
 {
     const uint8 min = FMath::Min( N, M );
-    const uint8 max = FMath::Max( N, M );
 
+    // Copy values from iOther up to the miniumum size of both vectors.
     for( uint8 i = 0; i < min; ++i )
         m[i] = static_cast< T >( iOther.m[i] );
 
-    for( uint8 i = min; i < max; ++i )
+    // Fill the remaining elements with zero,
+    // If the vector we are constructing is the biggest.
+    for( uint8 i = min; i < N; ++i )
         m[i] = static_cast< T >( 0 );
 }
 
@@ -189,14 +193,14 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOthe
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
 T*
-TVectorN< T, P, N >::Bits() {
+TVectorN< T, P, N >::Data() {
     return  &m[0];
 }
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC
 const T*
-TVectorN< T, P, N >::Bits() const {
+TVectorN< T, P, N >::Data() const {
     return  &m[0];
 }
 

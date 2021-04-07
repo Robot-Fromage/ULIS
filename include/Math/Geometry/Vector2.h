@@ -90,7 +90,7 @@ struct TVector2
     ULIS_VECTOR_FUNC T DotProduct( const TVector2& iOther ) const;
 
     /*! Normalize this vector. */
-    ULIS_VECTOR_FUNC const TVector2& Normalize();
+    ULIS_VECTOR_FUNC TVector2& Normalize();
 
     /*! Return the normalized version of this vector. */
     ULIS_VECTOR_FUNC TVector2 Normalized() const;
@@ -136,16 +136,16 @@ struct TVector2
 
     // Unary Operators with vector
     /*! Add the input to this vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator+=(const TVector2& iOther );
+    ULIS_VECTOR_FUNC TVector2& operator+=( const TVector2& iOther );
 
     /*! Substract the input to this vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator-=(const TVector2& iOther );
+    ULIS_VECTOR_FUNC TVector2& operator-=( const TVector2& iOther );
 
     /*! Multiply this vector by the input vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator*=(const TVector2& iOther );
+    ULIS_VECTOR_FUNC TVector2& operator*=( const TVector2& iOther );
 
     /*! Divide this vector by the input vector and return a reference to this vector. */
-    ULIS_VECTOR_FUNC TVector2& operator/=(const TVector2& iOther );
+    ULIS_VECTOR_FUNC TVector2& operator/=( const TVector2& iOther );
 
 
 
@@ -222,7 +222,7 @@ ULIS_VECTOR_FUNC T TVector2< T >::DotProduct( const TVector2& iOther ) const {
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC const TVector2< T >& TVector2< T >::Normalize() {
+ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::Normalize() {
     T distance = Distance();
     ULIS_ASSERT( distance != 0, "Division by zero" );
     x /= distance;

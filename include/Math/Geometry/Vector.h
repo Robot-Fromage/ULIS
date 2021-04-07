@@ -18,7 +18,6 @@
 #include "Math/Geometry/VectorSwizzle.h"
 
 ULIS_NAMESPACE_BEGIN
-
 // Conversion constructors for vectors 2
 template< typename T >
 ULIS_VECTOR_FUNC
@@ -75,6 +74,7 @@ ULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2
 ULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3
 ULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4
 
+// Template instanciations exports
 template struct ULIS_API TVector2< float >;
 template struct ULIS_API TVector2< int >;
 template struct ULIS_API TVector3< float >;
