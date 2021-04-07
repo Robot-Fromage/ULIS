@@ -59,7 +59,7 @@ SCanvas::SCanvas( QWidget* iParent, FULISLoader& iHandle )
     mLabel->setPixmap( *mPixmap );
 
     mTimer = new QTimer();
-    mTimer->setInterval( 1000.0 / 24.0 );
+    mTimer->setInterval( 1000.0 / 60.0 );
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
     setFocusPolicy( Qt::FocusPolicy::StrongFocus );
@@ -212,19 +212,19 @@ SCanvas::Update()
             break;
         case kCircleAndres:
             if (mRasterMode == eRasterMode::kAA)
-                ctx.DrawCircleAndresAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleAndresAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
-                ctx.DrawCircleAndresSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleAndresSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else
-                ctx.DrawCircleAndres(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleAndres(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
         case kCircleBresenham:
             if (mRasterMode == eRasterMode::kAA)
-                ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
-                ctx.DrawCircleBresenhamSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleBresenhamSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else
-                ctx.DrawCircleBresenham(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleBresenham(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
         case kArcAndres:
             dist = FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y());
@@ -250,13 +250,13 @@ SCanvas::Update()
             break;
         case kEllipse:
             if (mRasterMode == eRasterMode::kAA)
-                ctx.DrawEllipseAA( *mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs( mPoints[0].x() - mPoints[1].x() ), FMath::Abs(mPoints[0].y() - mPoints[1].y() ), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawEllipseAA( *mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs( mPoints[0].x() - mPoints[1].x() ), FMath::Abs(mPoints[0].y() - mPoints[1].y() ), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
-                ctx.DrawEllipseSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs(mPoints[0].x() - mPoints[1].x()), FMath::Abs(mPoints[0].y() - mPoints[1].y()), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawEllipseSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs(mPoints[0].x() - mPoints[1].x()), FMath::Abs(mPoints[0].y() - mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else
-                ctx.DrawEllipse( *mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs( mPoints[0].x() - mPoints[1].x() ), FMath::Abs(mPoints[0].y() - mPoints[1].y() ), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawEllipse( *mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs( mPoints[0].x() - mPoints[1].x() ), FMath::Abs(mPoints[0].y() - mPoints[1].y() ), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
-            //ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), 500, FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            //ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), 500, FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
         case kRotatedEllipse:
             if (mRasterMode == eRasterMode::kAA)
                 ;
@@ -265,9 +265,9 @@ SCanvas::Update()
             else
                 ;
             break;
-            //ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), 500, FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            //ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), 500, FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
         case kRectangle:
-            ctx.DrawRectangle(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()) - (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FVec2I(mPoints[0].x(), mPoints[0].y()) + (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            ctx.DrawRectangle(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()) - (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FVec2I(mPoints[0].x(), mPoints[0].y()) + (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
         case kPolygon:
             if (mRasterMode == eRasterMode::kAA)
                 ;
@@ -284,7 +284,7 @@ SCanvas::Update()
             else
                 ctx.DrawQuadraticBezier(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), FVec2I(mPoints[2].x(), mPoints[2].y()), 0.5, FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
-            //ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), 500, FColor::Black, false, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            //ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), 500, FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
         default:
             std::cout << "" << std::endl;
     }

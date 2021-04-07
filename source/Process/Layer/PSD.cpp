@@ -1354,36 +1354,36 @@ void FPSDOperations::lerp24BitsInto32Bits(uint32* ioSrc,uint32 length)
 
 eBlendMode FPSDOperations::GetBlendingModeFromPSD(char iBlendModeKey[5])
 {
-    if(strcmp(iBlendModeKey,"norm") == 0) { return eBlendMode::Blend_Normal; }
-    if(strcmp(iBlendModeKey,"diss") == 0) { return eBlendMode::Blend_Dissolve; }
-    if(strcmp(iBlendModeKey,"dark") == 0) { return eBlendMode::Blend_Darken; }
-    if(strcmp(iBlendModeKey,"mul ") == 0) { return eBlendMode::Blend_Multiply; }
-    if(strcmp(iBlendModeKey,"idiv") == 0) { return eBlendMode::Blend_ColorBurn; }
-    if(strcmp(iBlendModeKey,"lbrn") == 0) { return eBlendMode::Blend_LinearBurn; }
-    if(strcmp(iBlendModeKey,"dkCl") == 0) { return eBlendMode::Blend_DarkerColor; }
-    if(strcmp(iBlendModeKey,"lite") == 0) { return eBlendMode::Blend_Lighten; }
-    if(strcmp(iBlendModeKey,"scrn") == 0) { return eBlendMode::Blend_Screen; }
-    if(strcmp(iBlendModeKey,"div ") == 0) { return eBlendMode::Blend_ColorDodge; }
-    if(strcmp(iBlendModeKey,"lddg") == 0) { return eBlendMode::Blend_LinearDodge; }
-    if(strcmp(iBlendModeKey,"lgCl") == 0) { return eBlendMode::Blend_LighterColor; }
-    if(strcmp(iBlendModeKey,"over") == 0) { return eBlendMode::Blend_Overlay; }
-    if(strcmp(iBlendModeKey,"sLit") == 0) { return eBlendMode::Blend_SoftLight; }
-    if(strcmp(iBlendModeKey,"hLit") == 0) { return eBlendMode::Blend_HardLight; }
-    if(strcmp(iBlendModeKey,"vLit") == 0) { return eBlendMode::Blend_VividLight; }
-    if(strcmp(iBlendModeKey,"lLit") == 0) { return eBlendMode::Blend_LinearLight; }
-    if(strcmp(iBlendModeKey,"pLit") == 0) { return eBlendMode::Blend_PinLight; }
-    if(strcmp(iBlendModeKey,"hMix") == 0) { return eBlendMode::Blend_HardMix; }
-    if(strcmp(iBlendModeKey,"diff") == 0) { return eBlendMode::Blend_Difference; }
-    if(strcmp(iBlendModeKey,"smud") == 0) { return eBlendMode::Blend_Exclusion; }
-    if(strcmp(iBlendModeKey,"fsub") == 0) { return eBlendMode::Blend_Substract; }
-    if(strcmp(iBlendModeKey,"fdiv") == 0) { return eBlendMode::Blend_Divide; }
-    if(strcmp(iBlendModeKey,"hue ") == 0) { return eBlendMode::Blend_Hue; }
-    if(strcmp(iBlendModeKey,"sat ") == 0) { return eBlendMode::Blend_Saturation; }
-    if(strcmp(iBlendModeKey,"colr") == 0) { return eBlendMode::Blend_Color; }
-    if(strcmp(iBlendModeKey,"lum ") == 0) { return eBlendMode::Blend_Luminosity; }
+    if( strcmp( iBlendModeKey, "norm" ) == 0 ) { return eBlendMode::Blend_Normal; }
+    if( strcmp( iBlendModeKey, "diss" ) == 0 ) { return eBlendMode::Blend_Dissolve; }
+    if( strcmp( iBlendModeKey, "dark" ) == 0 ) { return eBlendMode::Blend_Darken; }
+    if( strcmp( iBlendModeKey, "mul " ) == 0 ) { return eBlendMode::Blend_Multiply; }
+    if( strcmp( iBlendModeKey, "idiv" ) == 0 ) { return eBlendMode::Blend_ColorBurn; }
+    if( strcmp( iBlendModeKey, "lbrn" ) == 0 ) { return eBlendMode::Blend_LinearBurn; }
+    if( strcmp( iBlendModeKey, "dkCl" ) == 0 ) { return eBlendMode::Blend_DarkerColor; }
+    if( strcmp( iBlendModeKey, "lite" ) == 0 ) { return eBlendMode::Blend_Lighten; }
+    if( strcmp( iBlendModeKey, "scrn" ) == 0 ) { return eBlendMode::Blend_Screen; }
+    if( strcmp( iBlendModeKey, "div " ) == 0 ) { return eBlendMode::Blend_ColorDodge; }
+    if( strcmp( iBlendModeKey, "lddg" ) == 0 ) { return eBlendMode::Blend_LinearDodge; }
+    if( strcmp( iBlendModeKey, "lgCl" ) == 0 ) { return eBlendMode::Blend_LighterColor; }
+    if( strcmp( iBlendModeKey, "over" ) == 0 ) { return eBlendMode::Blend_Overlay; }
+    if( strcmp( iBlendModeKey, "sLit" ) == 0 ) { return eBlendMode::Blend_SoftLight; }
+    if( strcmp( iBlendModeKey, "hLit" ) == 0 ) { return eBlendMode::Blend_HardLight; }
+    if( strcmp( iBlendModeKey, "vLit" ) == 0 ) { return eBlendMode::Blend_VividLight; }
+    if( strcmp( iBlendModeKey, "lLit" ) == 0 ) { return eBlendMode::Blend_LinearLight; }
+    if( strcmp( iBlendModeKey, "pLit" ) == 0 ) { return eBlendMode::Blend_PinLight; }
+    if( strcmp( iBlendModeKey, "hMix" ) == 0 ) { return eBlendMode::Blend_HardMix; }
+    if( strcmp( iBlendModeKey, "diff" ) == 0 ) { return eBlendMode::Blend_Difference; }
+    if( strcmp( iBlendModeKey, "smud" ) == 0 ) { return eBlendMode::Blend_Exclusion; }
+    if( strcmp( iBlendModeKey, "fsub" ) == 0 ) { return eBlendMode::Blend_Substract; }
+    if( strcmp( iBlendModeKey, "fdiv" ) == 0 ) { return eBlendMode::Blend_Divide; }
+    if( strcmp( iBlendModeKey, "hue " ) == 0 ) { return eBlendMode::Blend_Hue; }
+    if( strcmp( iBlendModeKey, "sat " ) == 0 ) { return eBlendMode::Blend_Saturation; }
+    if( strcmp( iBlendModeKey, "colr" ) == 0 ) { return eBlendMode::Blend_Color; }
+    if( strcmp( iBlendModeKey, "lum " ) == 0 ) { return eBlendMode::Blend_Luminosity; }
 
     //unknown blending mode, we return the normal one by default
-    return eBlendMode::Blend_Normal;
+    return  eBlendMode::Blend_Normal;
 }
 
 uint16 FPSDOperations::GetChannelsNumber()
@@ -1472,7 +1472,6 @@ bool FPSDOperations::Import()
         return false;
 
     GenerateLayerStackFromLayerStackData();
-    
     return true;
 }
 
