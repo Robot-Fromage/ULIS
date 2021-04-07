@@ -68,7 +68,7 @@ InvokeAccumulativeSamplingYPassMT_MEM(
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     float* dst = reinterpret_cast< float* >( jargs->dst ) + fmt.SPP;
 
-    const uint32 len = jargs->size / fmt.BPP;
+    const uint32 len = static_cast< uint32 >( jargs->size / fmt.BPP );
     for( uint32 y = 1; y < len; ++y ) {
         for( uint8 j = 0; j < fmt.SPP; ++j )
             dst[j] = static_cast< float >( dst[j] + *( dst - fmt.SPP + j ) );

@@ -37,7 +37,7 @@ InvokeBuildSATXPassMT_MEM_Generic(
     src += src_fmt.SPP;
     dst += dst_fmt.SPP;
 
-    for( uint32 x = 1; x < cargs->srcRect.w; ++x ) {
+    for( int x = 1; x < cargs->srcRect.w; ++x ) {
         for( uint8 j = 0; j < src_fmt.SPP; ++j )
             dst[j] = static_cast< float >( src[j] + *( dst - dst_fmt.SPP + j ) );
         src += src_fmt.SPP;
@@ -56,7 +56,7 @@ InvokeBuildSATYPassMT_MEM_Generic(
     const uint32 stride = cargs->dst.Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
 
-    for( uint32 y = 1; y < cargs->dstRect.w; ++y ) {
+    for( int y = 1; y < cargs->dstRect.w; ++y ) {
         for( uint8 j = 0; j < fmt.SPP; ++j )
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
         dst += stride;
@@ -110,7 +110,7 @@ InvokeBuildPremultSATYPassMT_MEM_Generic(
     const uint32 stride = cargs->dst.Width() * fmt.SPP;
     float* dst = reinterpret_cast< float* >( jargs->dst ) + stride;
 
-    for( uint32 y = 1; y < cargs->dstRect.h; ++y ) {
+    for( int y = 1; y < cargs->dstRect.h; ++y ) {
         for( uint8 j = 0; j < fmt.SPP; ++j )
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
         dst += stride;
