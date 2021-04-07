@@ -36,6 +36,7 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/DetectGit.cmake )
 
 # Functions
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/AddExampleModule.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/AddTestModule.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/SubdirList.cmake )
 
 # Project
@@ -57,10 +58,11 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/Main.cmake )
 include(${CMAKE_CURRENT_SOURCE_DIR}/binding/Python/CMakeLists.txt)
 
 # Test & Example
-include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindQt.cmake )
 if( ${ULIS_BUILD_TESTS} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
 endif()
+
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindQt.cmake )
 
 if( ${ULIS_BUILD_EXAMPLES} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/example/CMakeLists.txt)
