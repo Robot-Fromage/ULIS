@@ -269,6 +269,12 @@ namespace FMath
         }
     }
 
+    template< typename T >
+    static ULIS_FORCEINLINE double Dist( T x1, T y1, T x2, T y2 )
+    {
+        return Sqrt( std::pow( x2 - x1, 2 ) + std::pow( y2 - y1, 2 ) );
+    }
+
 } // namespace FMath
 
 ULIS_NAMESPACE_END

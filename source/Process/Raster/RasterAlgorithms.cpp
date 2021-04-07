@@ -2835,6 +2835,9 @@ void DrawEllipse(         FBlock&                  iBlock
                         , const bool               iFilled
                         , const FRectI&            iClippingRect )
 {
+    if( iA <= 0 || iB <= 0 )
+        return;
+
     FRectI clippingRect = iClippingRect;
     clippingRect.w--;
     clippingRect.h--;
@@ -3349,6 +3352,9 @@ void DrawRotatedEllipse(        FBlock&                  iBlock
                               , const bool               iFilled
                               , const FRectI&            iClippingRect )
 {
+    if (iA <= 0 || iB <= 0)
+        return;
+
     if(iRotationDegrees % 180 == 0)
     {
         DrawEllipse(iBlock,iCenter,iA,iB,iColor,iFilled,iClippingRect); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated

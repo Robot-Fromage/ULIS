@@ -8781,6 +8781,9 @@ static void DrawEllipseAA( FBlock&                  iBlock
                          , const bool               iFilled
                          , const FRectI&            iClippingRect )
 {
+    if (iA <= 0 || iB <= 0)
+        return;
+
     FRectI clippingRect = iClippingRect;
     clippingRect.w--;
     clippingRect.h--;
@@ -9483,6 +9486,9 @@ static void DrawEllipseSP( FBlock&                  iBlock
                          , const bool               iFilled
                          , const FRectI&            iClippingRect )
 {
+    if (iA <= 0 || iB <= 0)
+        return;
+
     FRectI clippingRect = iClippingRect;
     clippingRect.w--;
     clippingRect.h--;
@@ -10210,6 +10216,9 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
                                 , const bool               iFilled
                                 , const FRectI&            iClippingRect )
 {
+    if (iA <= 0 || iB <= 0)
+        return;
+
     if(iRotationDegrees % 180 == 0)
     {
         DrawEllipseAA<T>(iBlock,iCenter,iA,iB,iColor,iFilled,iClippingRect); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
@@ -10375,6 +10384,9 @@ static void DrawRotatedEllipseSP( FBlock&                  iBlock
                                 , const bool               iFilled
                                 , const FRectI&            iClippingRect )
 {
+    if (iA <= 0 || iB <= 0)
+        return;
+
     if(iRotationDegrees % 180 == 0)
     {
         DrawEllipseSP<T>(iBlock,iCenter,iA,iB,iColor,iFilled,iClippingRect); //Don't bother to use the rotated ellipse algorithm if the ellipse is not rotated
