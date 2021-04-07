@@ -177,7 +177,9 @@ FContext::XLoadPSDFromDisk(
     FLayerRoot* currentRoot = &iStack;
 
     Dummy_OP( iNumWait, iWaitList, nullptr );
-    FEvent eventConvert;
+
+    TArray< FEvent > eventConvert;
+    eventConvert.Reserve( op.GetLayersInfo().Size() );
     const int64 max = static_cast< int64 >( op.GetLayersInfo().Size() ) - 1;
     for( int64 i = max; i >= 0; i-- )
     {
@@ -208,7 +210,13 @@ FContext::XLoadPSDFromDisk(
 
             FRectI dstRect = FRectI( left, top, srcblock->Width(), srcblock->Height() );
 
-            FEvent eventClear;
+            FEvent eventClear(
+                FOnEventComplete(
+                    [srcblock]( const FRectI& ) {
+                        auto dummy = 0;
+                    }
+                )
+            );
             Clear(
                   *layerBlock
                 , layerBlock->Rect()
@@ -218,11 +226,13 @@ FContext::XLoadPSDFromDisk(
                 , &eventClear
             );
 
-            eventConvert = FEvent(
-                FOnEventComplete(
-                    [srcblock]( const FRectI& ) {
-                        delete  srcblock;
-                    }
+            eventConvert.PushBack(
+                FEvent(
+                    FOnEventComplete(
+                        [srcblock]( const FRectI& ) {
+                            delete  srcblock;
+                        }
+                    )
                 )
             );
             ConvertFormat(
@@ -233,7 +243,7 @@ FContext::XLoadPSDFromDisk(
                 , FSchedulePolicy::MultiScanlines
                 , 1
                 , &eventClear
-                , &eventConvert
+                , &eventConvert.Back()
             );
 
             float opacity = float( op.GetLayersInfo()[i].mOpacity / 255.0f );
@@ -292,7 +302,7 @@ FContext::XLoadPSDFromDisk(
             currentRoot = currentRoot->Parent();
         }
     }
-    Dummy_OP( 1, &eventConvert, iEvent );
+    Dummy_OP( eventConvert.Size(), eventConvert.Data(), iEvent );
     return  ULIS_NO_ERROR;
 }
 

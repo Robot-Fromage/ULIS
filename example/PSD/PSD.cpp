@@ -44,9 +44,9 @@ main( int argc, char *argv[] ) {
 
     FLayerImage* layerImage = dynamic_cast< FLayerImage* >( layerStack.Layers()[0] );
 
-    /*FBlock blockCanvas(layerStack.Width(), layerStack.Height(), layerStack.Format());
+    FBlock blockCanvas(layerStack.Width(), layerStack.Height(), layerStack.Format());
     ctx.Flatten( layerStack, blockCanvas );
-    ctx.Finish();*/
+    ctx.Finish();
 
     FBlock blockCanvasConverted(layerStack.Width(), layerStack.Height(), Format_RGBA8);
     ctx.ConvertFormat(layerImage->Block(), blockCanvasConverted );
