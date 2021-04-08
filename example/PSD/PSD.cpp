@@ -39,8 +39,11 @@ main( int argc, char *argv[] ) {
 
     auto startTime = std::chrono::steady_clock::now();
 
-    ctx.XLoadPSDFromDisk( layerStack, "C:/Users/PRAXINOS/Documents/work/psdTests/RGBA32bits.psd" );
-    ctx.Finish();
+    while( true )
+    {
+        ctx.XLoadPSDFromDisk( layerStack, "C:/Users/PRAXINOS/Documents/work/psdTests/RGBA32bits.psd" );
+        ctx.Finish();
+    }
 
     FLayerImage* layerImage = dynamic_cast< FLayerImage* >( layerStack.Layers()[0] );
 

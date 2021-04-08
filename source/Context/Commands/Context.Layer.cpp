@@ -210,13 +210,7 @@ FContext::XLoadPSDFromDisk(
 
             FRectI dstRect = FRectI( left, top, srcblock->Width(), srcblock->Height() );
 
-            FEvent eventClear(
-                FOnEventComplete(
-                    [srcblock]( const FRectI& ) {
-                        auto dummy = 0;
-                    }
-                )
-            );
+            FEvent eventClear;
             Clear(
                   *layerBlock
                 , layerBlock->Rect()
