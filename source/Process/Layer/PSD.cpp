@@ -61,9 +61,116 @@ FPSDOperations::FPSDOperations(const std::string& iFilename, FLayerStack& iStack
     , mLayerStack( iStack )
     , mLayersInfo()
 {
-     std::streamsize size = mFileHandle.tellg();
      mFileHandle.seekg(0,std::ios::beg);
 }
+
+//static 
+void FPSDOperations::GetContextFormatFromFile( const std::string& iFilename, bool *oFileExists, eFormat *oFormat)
+{
+    std::ifstream fileHandle = std::ifstream( iFilename.c_str(), std::ios::in | std::ios::binary );
+    
+    if (!oFileExists || !oFormat)
+        return;
+
+    if( fileHandle.tellg() == -1 )
+    {
+        *oFileExists = false;
+        return;
+    }
+
+    fileHandle.seekg( 22, std::ios::cur );
+
+    uint16 bitDepth;
+    uint16 colorMode;
+
+    if (!fileHandle.read((char*)&bitDepth, 2))
+    {
+        *oFileExists = false;
+        return;
+    }
+    FMath::ByteSwap(&bitDepth, 2);
+
+    if (!fileHandle.read((char*)&colorMode, 2))
+    {
+        *oFileExists = false;
+        return;
+    }
+    FMath::ByteSwap(&colorMode, 2);
+
+    *oFileExists = true;
+
+    GetContextFormatFromBitDepthColorMode( bitDepth, colorMode, oFormat );
+}
+
+void FPSDOperations::GetContextFormatFromBitDepthColorMode( uint16 bitDepth, uint16 colorMode, eFormat *oFormat )
+{
+    if (bitDepth == 32)
+    {
+        switch (colorMode)
+        {
+            case 1: //GrayScale
+                *oFormat = Format_AGF;
+                break;
+            case 3: //RGB
+                *oFormat = Format_ARGBF;
+                break;
+            case 4: //CMYK
+                *oFormat = Format_ACMYKF;
+                break;
+            case 9: //LAB
+                *oFormat = Format_ALabF;
+                break;
+            default: //ERROR
+                return;
+        }
+    }
+    else if (bitDepth == 16)
+    {
+        switch (colorMode)
+        {
+            case 1: //GrayScale
+                *oFormat = Format_AG16;
+                break;
+            case 3: //RGB
+                *oFormat = Format_ARGB16;
+                break;
+            case 4: //CMYK
+                *oFormat = Format_ACMYK16;
+                break;
+            case 9: //LAB
+                *oFormat = Format_ALab16;
+                break;
+            default: //ERROR
+                return;
+        }
+    }
+    else if (bitDepth == 8)
+    {
+        switch (colorMode)
+        {
+            case 1: //GrayScale
+                *oFormat = Format_AG8;
+                break;
+            case 3: //RGB
+                *oFormat = Format_ARGB8;
+                break;
+            case 4: //CMYK
+                *oFormat = Format_ACMYK8;
+                break;
+            case 9: //LAB
+                *oFormat = Format_ALab8;
+                break;
+            default: //ERROR
+                return;
+        }
+    }
+    else
+    {
+        std::cout << "Error: we don't handle this bit depth, import failed" << std::endl;
+        return;
+    }
+}
+
 
 bool FPSDOperations::ReadFileHeader()
 {    
@@ -768,6 +875,8 @@ bool FPSDOperations::ReadLayerStackData32()
     return true;
 }
 
+
+
 bool FPSDOperations::SetLayerStackFormatAndSize()
 {
     if( mLayersInfo.Size() == 0 )
@@ -1470,7 +1579,7 @@ bool FPSDOperations::Import()
     if ( !SetLayersFormat() )
         return false;
 
-    if( !SetLayerStackFormatAndSize() )
+    if (!SetLayerStackFormatAndSize())
         return false;
 
     GenerateLayerStackFromLayerStackData();

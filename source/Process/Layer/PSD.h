@@ -59,6 +59,11 @@ public:
     ~FPSDOperations();
     FPSDOperations( const std::string& iFilename, FLayerStack& iStack );
 
+public:
+    // Static utility functions
+    static void GetContextFormatFromFile( const std::string& iFilename, bool *oFileExists, eFormat *oFormat );
+    static void GetContextFormatFromBitDepthColorMode( uint16 bitDepth, uint16 ColorMode, eFormat *oFormat );
+
 private:
     /** The header of the file, with basic info about the image and verification that it's indeed a psd file */
     bool ReadFileHeader();

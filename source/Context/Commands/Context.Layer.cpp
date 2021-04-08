@@ -156,6 +156,18 @@ FContext::RenderLayerText(
     return  ULIS_NO_ERROR;
 }
 
+
+// static
+void
+FContext::LoadPSDFromDiskMetrics(
+      const std::string& iPath
+    , bool *oFileExists
+    , eFormat *oFormat
+)
+{
+    FPSDOperations::GetContextFormatFromFile( iPath, oFileExists, oFormat );
+}
+
 ulError
 FContext::XLoadPSDFromDisk(
       FLayerStack& iStack
@@ -273,20 +285,18 @@ FContext::XLoadPSDFromDisk(
             bool isVisible = !( op.GetLayersInfo()[i].mFlags & 0x02 );
             eBlendMode blendMode = op.GetBlendingModeFromPSD( op.GetLayersInfo()[i].mBlendModeKey );
 
-            FLayerFolder* layerFolder = nullptr; 
-
-            currentRoot->AddLayer(
-                new FLayerFolder(
-                      layerName
-                    , op.GetImageWidth()
-                    , op.GetImageHeight()
-                    , layerStackFormat
-                    , blendMode
-                    , isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal
-                    , opacity
-                    , currentRoot
-                )
+            FLayerFolder* layerFolder = new FLayerFolder(
+                layerName
+                , op.GetImageWidth()
+                , op.GetImageHeight()
+                , layerStackFormat
+                , blendMode
+                , isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal
+                , opacity
+                , currentRoot
             );
+
+            currentRoot->AddLayer( layerFolder );
 
             currentRoot = layerFolder;
         }

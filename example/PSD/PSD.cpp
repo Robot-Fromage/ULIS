@@ -27,20 +27,26 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_AVX );
-    FHardwareMetrics hw;
-    FSchedulePolicy policy_sync_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    FSchedulePolicy policy_sync_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
-    FSchedulePolicy policy_sync_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
-    FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
-    FLayerStack layerStack( 1, 1, fmt );
+
+    std::string path = "C:/Users/Galendil/Desktop/cmyk8bits.psd"; //"C:/Users/PRAXINOS/Documents/work/psdTests/RGBA32bits.psd" )
+    bool fileExist = false;
+
+    eFormat fmt = Format_RGBA8; //Changed next line to the right format
+    FContext::LoadPSDFromDiskMetrics( path, &fileExist, &fmt );
+
+    FContext ctx(queue, fmt, PerformanceIntent_AVX);
+    FHardwareMetrics hw;
+    FSchedulePolicy policy_sync_cache_efficient(ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize());
+    FSchedulePolicy policy_sync_mono_chunk(ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1);
+    FSchedulePolicy policy_sync_multi_scanlines(ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines);
+    FSchedulePolicy policy_sync_mono_scanlines(ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines);
+
+    FLayerStack layerStack(1, 1, fmt);
 
     auto startTime = std::chrono::steady_clock::now();
 
-    //ctx.XLoadPSDFromDisk( layerStack, "C:/Users/PRAXINOS/Documents/work/psdTests/RGBA32bits.psd" );
-    ctx.XLoadPSDFromDisk(layerStack, "C:/Users/Galendil/Desktop/LAB8bits.psd");
+    ctx.XLoadPSDFromDisk(layerStack, path);
     ctx.Finish();
 
     FBlock blockCanvas(layerStack.Width(), layerStack.Height(), layerStack.Format());

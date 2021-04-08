@@ -142,6 +142,17 @@ public:
     );
 
     /*!
+        Collect metrics before a XLoadPSDFromDisk call
+    */
+    static
+    void
+    LoadPSDFromDiskMetrics(
+        const std::string& iPath
+        , bool *oFileExists
+        , eFormat *oFormat
+    );
+
+    /*!
         Perform a load of a PSD file in a layer stack
     */
     ulError
