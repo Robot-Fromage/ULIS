@@ -202,11 +202,11 @@ FContext::XLoadPSDFromDisk(
             FBlock* layerBlock = new FBlock( op.GetImageWidth(), op.GetImageHeight(), layerStackFormat );
 
             if( op.GetBitDepth() == 32 )
-                srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst32, w, h, fmt );
+                srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst32, w, h, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData(&OnCleanup_FreeMemory) );
             else if( op.GetBitDepth() == 16 )
-                srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst16, w, h, fmt );
+                srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst16, w, h, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData(&OnCleanup_FreeMemory) );
             else if( op.GetBitDepth() == 8 )
-                srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst, w, h, fmt );
+                srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst, w, h, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData(&OnCleanup_FreeMemory) );
 
             FRectI dstRect = FRectI( left, top, srcblock->Width(), srcblock->Height() );
 
@@ -296,7 +296,7 @@ FContext::XLoadPSDFromDisk(
             currentRoot = currentRoot->Parent();
         }
     }
-    Dummy_OP( eventConvert.Size(), eventConvert.Data(), iEvent );
+    Dummy_OP( uint32(eventConvert.Size()), eventConvert.Data(), iEvent );
     return  ULIS_NO_ERROR;
 }
 

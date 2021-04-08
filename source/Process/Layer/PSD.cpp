@@ -23,25 +23,27 @@ FPSDOperations::~FPSDOperations()
 {
     mFileHandle.close();
     
+    // The destruction of imageDst and layers are made with FOnCleanupData in XLoadPSDFromDisk(), since they can be used longer that the lifetime of FPSDOperations
+
     if( mImageDst )
-        delete [] mImageDst;
+        mImageDst = nullptr;
 
     if( mImageDst16 )
-        delete [] mImageDst16;
+        mImageDst16 = nullptr;
 
     if(mImageDst32)
-        delete[] mImageDst32;
+        mImageDst32 = nullptr;
 
     for( int i = 0; i < mLayersInfo.Size(); i++)
     {
         if( mLayersInfo[i].mLayerImageDst )
-            delete [] mLayersInfo[i].mLayerImageDst;
+            mLayersInfo[i].mLayerImageDst = nullptr;
 
         if( mLayersInfo[i].mLayerImageDst16 )
-            delete [] mLayersInfo[i].mLayerImageDst16;
+            mLayersInfo[i].mLayerImageDst16 = nullptr;
 
         if(mLayersInfo[i].mLayerImageDst32)
-            delete[] mLayersInfo[i].mLayerImageDst32;
+            mLayersInfo[i].mLayerImageDst32 = nullptr;
     }
 }
 
