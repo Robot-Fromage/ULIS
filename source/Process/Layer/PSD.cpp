@@ -104,6 +104,13 @@ void FPSDOperations::GetContextFormatFromFile( const std::string& iFilename, boo
 
 void FPSDOperations::GetContextFormatFromBitDepthColorMode( uint16 bitDepth, uint16 colorMode, eFormat *oFormat )
 {
+    //Special case: bitmap
+    if( colorMode == 0 && bitDepth == 1)
+    {
+        *oFormat = Format_G8;
+        return;
+    }
+
     if (bitDepth == 32)
     {
         switch (colorMode)
@@ -476,7 +483,7 @@ bool FPSDOperations::ReadAdditionalLayerInfoSignature()
     if(!mFileHandle.read((char*)psdValidator,4))
         return false;
 
-    ULIS_ASSERT( strcmp(psdValidator, "8BIM") == 0 || strcmp(psdValidator, "8B64") == 0, "No additionnal layer info Signature" );
+    //ULIS_ASSERT( strcmp(psdValidator, "8BIM") == 0 || strcmp(psdValidator, "8B64") == 0, "No additionnal layer info Signature" );
 
     return true;
 }
@@ -854,11 +861,12 @@ bool FPSDOperations::ReadLayerStackData32()
 
 bool FPSDOperations::SetLayerStackFormatAndSize()
 {
-    if( mLayersInfo.Size() == 0 )
-        return false; // TODO Bitmap ?
-
     eFormat formatStack = Format_RGBA8;
-    GetContextFormatFromBitDepthColorMode( mBitDepth, mColorMode, &formatStack);
+    GetContextFormatFromBitDepthColorMode(mBitDepth, mColorMode, &formatStack);
+
+    if( mLayersInfo.Size() == 0 && formatStack == Format_RGBA8 ) //We have 0 layer in case of bitmap format, but GetContextFormatFromBitDepthColorMode is supposed to change formatStack to G8 in this case. So if it's not G8, then we have a problem
+        return false;
+
     mLayerStack.Reset(mImageWidth, mImageHeight, formatStack);
 
     return true;
@@ -867,8 +875,12 @@ bool FPSDOperations::SetLayerStackFormatAndSize()
 
 bool FPSDOperations::SetLayersFormat()
 {
+    //Special case: bitmap
+    if( mColorMode == 0 && mBitDepth == 1 )
+        return true;
+
     if( mLayersInfo.Size() == 0 )
-        return false; // TODO Bitmap ?
+        return false;
 
     for( int i = 0; i < mLayersInfo.Size(); i++ )
     {
@@ -1024,30 +1036,26 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
         uint32 size =  mImageWidth * mImageHeight;
         mImageDst = new uint8[size];
 
-        mLayerStack.Reset( mImageHeight, mImageWidth, eFormat::Format_G8);
-
         if(compressionType == 0) // uncompressed
         {
-            uint8* planar = new uint8[(mImageWidth * mImageHeight) / 8 + 1];
-            CopyUncompressed(mImageDst,size);
-            //PlanarByteConvertBitMapToBGRA8( planar, mImageDst, (mImageWidth * mImageHeight) / 8 + 1 );
+            uint32 sizeBitmap = ( mImageWidth * mImageHeight ) / 8 + 1;
+            uint8* planar = new uint8[sizeBitmap];
+            CopyUncompressed( planar, sizeBitmap );
+            PlanarByteConvertBitMapToG8( planar, mImageDst, sizeBitmap );
             delete[] planar;
         } 
         else if(compressionType == 1) //RLE
         {
             uint32 sizeBitmap = (mImageWidth * mImageHeight) / 8 + 1;
             uint8* planar = new uint8[sizeBitmap];
-            mFileHandle.seekg(mImageHeight * 2, std::ios::cur);
-            DecodeAndCopyRLE(mImageDst,sizeBitmap);
-            //PlanarByteConvertBitMapToBGRA8(planar,mImageDst,sizeBitmap);
+            mFileHandle.seekg( mImageHeight * 2, std::ios::cur ); 
+            DecodeAndCopyRLE( planar, sizeBitmap );
+            PlanarByteConvertBitMapToG8( planar, mImageDst, sizeBitmap );
             delete[] planar;
         }
         FBlock* srcblock = new FBlock( mImageDst, mImageWidth, mImageHeight, eFormat::Format_G8);
 
-        //TODO Convert
         mLayerStack.AddLayer( new FLayerImage(srcblock, FString("Layer1"), mImageWidth, mImageHeight, eFormat::Format_G8, eBlendMode::Blend_Normal, eAlphaMode::Alpha_Normal, 1.f, &mLayerStack ) );
-
-        delete srcblock;
     }
     //-----------------------------------------------------------
 
@@ -1260,6 +1268,19 @@ void FPSDOperations::PlanarByteConvertBitMapToBGRA8(uint8* src,uint8* dst,uint32
             dst[i*8*4 + j*4 + 2] = dst[i*8*4 + j*4];
             dst[i*8*4 + j*4 + 3] = 255;
 
+            src[i] <<= 1;
+        }
+    }
+}
+
+void FPSDOperations::PlanarByteConvertBitMapToG8(uint8* src, uint8* dst, uint32 length)
+{
+    unsigned int mask = 1U << 7;
+    for( uint32 i = 0; i < length; i++ )
+    {
+        for(int j = 0; j < 8; j++)
+        {
+            dst[i*8 + j] = ((src[i] & mask) ? 0 : 1) * 255;
             src[i] <<= 1;
         }
     }

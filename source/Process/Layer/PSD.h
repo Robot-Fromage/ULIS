@@ -108,8 +108,9 @@ private:
     void UnpredictZip16(uint8* dst,uint32 length, uint32 numColumns, uint32 rowSize);
     void UnpredictZip32(uint8* src, uint8* dst, uint32 length,uint32 numColumns, uint32 numRows, uint32 rowSize);
 
-    //Size of dst should be 8(bits) * 3(channels) = 24 times size of src
     void PlanarByteConvertBitMapToBGRA8(uint8* src,uint8* dst,uint32 length);
+    void PlanarByteConvertBitMapToG8(uint8* src, uint8* dst, uint32 length);
+
 
     void PlanarByteConvertOrdered(uint8* src,uint8* dst,uint32 length, uint8 numChannels, uint8 channelsOrder[]);
     void PlanarByteConvertOrdered(uint16* src,uint16* dst,uint32 length,uint8 numChannels,uint8 channelsOrder[]);
