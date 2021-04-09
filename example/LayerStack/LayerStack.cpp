@@ -34,6 +34,11 @@ main( int argc, char *argv[] ) {
     uint16 h = 1024;
     FBlock canvas( w, h, fmt );
     FLayerStack layerStack( w, h, fmt );
+    layerStack [
+          ( *( new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack ) ) )
+          + new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack )
+    ];
+
     FLayerFolder* folder0 = new FLayerFolder( "folder0", w, h, fmt, Blend_Dissolve, Alpha_Normal, 0.9f, &layerStack );
     FLayerImage* image0 = new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack );
     FLayerImage* image1 = new FLayerImage( "image1", w, h, fmt, Blend_Normal, Alpha_Normal, 0.5f, &layerStack );

@@ -48,6 +48,7 @@ public:
     void SetVisible( bool iValue );
     FLayerRoot* Parent();
     const FLayerRoot* Parent() const;
+    void SetParent( FLayerRoot* iParent );
 
 private:
     FString mName;

@@ -125,7 +125,8 @@ public:
 
     ulError
     RenderLayerFolder(
-          FLayerFolder& iStack
+          FLayerFolder& iFolder
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr

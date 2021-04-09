@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/Layer.h"
+#include "Layer/LayerRoot.h"
 
 ULIS_NAMESPACE_BEGIN
 ILayer::~ILayer()
@@ -83,6 +84,12 @@ const FLayerRoot*
 ILayer::Parent() const
 {
     return  mParent;
+}
+
+void
+ILayer::SetParent( FLayerRoot* iParent )
+{
+    mParent = iParent;
 }
 
 ULIS_NAMESPACE_END

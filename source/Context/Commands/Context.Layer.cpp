@@ -134,13 +134,66 @@ FContext::Flatten(
 
 ulError
 FContext::RenderLayerFolder(
-      FLayerFolder& iStack
+      FLayerFolder& iFolder
+    , const FRectI& iRect
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
     , const FEvent* iWaitList
     , FEvent* iEvent
 )
 {
+    // Sanitize geometry
+    const FRectI src_rect = iRect.Sanitized();
+    const FRectI dst_rect = iFolder.Block().Rect();
+    const FRectI dst_roi = src_rect & dst_rect;
+
+    const uint64 size = iFolder.Layers().Size();
+    const int64 max = static_cast< int64 >( size ) - 1;
+    TArray< FEvent > events( 1 );
+    events.Reserve( size );
+    ulError err = Clear( iFolder.Block(), dst_roi, iPolicy, iNumWait, iWaitList, size ? &( events.Front() ) : iEvent );
+    ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render preprocess clear of folder block", err );
+
+    for( int64 i = max; i >= 0; --i ) {
+        eLayerType type = iFolder.Layers()[i]->Type();
+        FLayerImage* layer = nullptr;
+        int num_wait = 1;
+        switch( type ) {
+            case Layer_Image: {
+                layer = dynamic_cast< FLayerImage* >( iFolder.Layers()[i] );
+                break;
+            }
+            case Layer_Folder: {
+                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Layers()[i] );
+                layer = dynamic_cast< FLayerImage* >( folder );
+                events.PushBack();
+                err = RenderLayerFolder( *folder, dst_roi, iPolicy, 0, nullptr, &events.Back() );
+                ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render subfolder", err );
+                num_wait = 2;
+                break;
+            }
+        }
+
+        if( layer )
+        {
+            events.PushBack();
+            err = Blend(
+                  layer->Block()
+                , iFolder.Block()
+                , dst_roi
+                , dst_roi.Position()
+                , layer->BlendMode()
+                , layer->AlphaMode()
+                , layer->Opacity()
+                , iPolicy
+                , num_wait
+                , &events[ events.Size() - 1 - num_wait ]
+                , i ? &events.Back() : iEvent
+            );
+            ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process blend in dst block", err );
+        }
+    }
+
     return  ULIS_NO_ERROR;
 }
 

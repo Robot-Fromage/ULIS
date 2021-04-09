@@ -46,13 +46,17 @@ FLayerRoot::Layers() const
     return  mLayers;
 }
 
-void
+FLayerRoot&
 FLayerRoot::AddLayer( ILayer* iLayer, uint64 iIndex )
 {
+    iLayer->SetParent( this );
+
     if( iIndex >= mLayers.Size() )
         mLayers.PushBack( iLayer );
     else
         mLayers.Insert( iIndex, iLayer );
+
+    return *this;
 }
 
 void
