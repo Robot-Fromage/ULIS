@@ -59,8 +59,14 @@ FLayerRoot::AddLayer( ILayer* iLayer, uint64 iIndex )
     return *this;
 }
 
+FLayerRoot&
+FLayerRoot::AddLayer( ILayer& iLayer, uint64 iIndex )
+{
+    return  AddLayer( &iLayer, iIndex );
+}
+
 void
-FLayerRoot::RemoveLayer( int iIndex )
+FLayerRoot::DeleteLayer( int iIndex )
 {
     delete mLayers[ iIndex ];
     mLayers.Erase( iIndex, 1 );

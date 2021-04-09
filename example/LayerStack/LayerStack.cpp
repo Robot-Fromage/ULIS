@@ -30,15 +30,14 @@ main( int argc, char *argv[] ) {
     FSchedulePolicy policy_sync_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
     FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
+    FFontEngine fontEngine;
+    FFont font( fontEngine, "Segoe UI", "Bold" );
+
     uint16 w = 1024;
     uint16 h = 1024;
     FBlock canvas( w, h, fmt );
     FLayerStack layerStack( w, h, fmt );
-    layerStack [
-          ( *( new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack ) ) )
-          + new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack )
-    ];
-
+    FLayerText* text0 = new FLayerText( "Text0", w, h, fmt, font, Blend_Dissolve, Alpha_Normal, 0.5f, L"TEXT", 16, FMat3F::MakeTranslationMatrix( 50, 50 ), FColor::Black, true, &layerStack );
     FLayerFolder* folder0 = new FLayerFolder( "folder0", w, h, fmt, Blend_Dissolve, Alpha_Normal, 0.9f, &layerStack );
     FLayerImage* image0 = new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack );
     FLayerImage* image1 = new FLayerImage( "image1", w, h, fmt, Blend_Normal, Alpha_Normal, 0.5f, &layerStack );
@@ -53,6 +52,7 @@ main( int argc, char *argv[] ) {
     FLayerImage* image13 = new FLayerImage( "image13", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
 
     //FLayerFolder* folder00 = new FLayerFolder( "folder00", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, folder0 );
+    layerStack.AddLayer( text0 );
     layerStack.AddLayer( image0 );
     layerStack.AddLayer( image1 );
         layerStack.AddLayer( folder0 );

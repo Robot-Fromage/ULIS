@@ -37,7 +37,6 @@ FLayerImage::FLayerImage(
     , mBlendMode( iBlendMode )
     , mAlphaMode( iAlphaMode )
     , mOpacity( iOpacity )
-    , bIsCacheValid( false )
 {
 }
 
@@ -61,7 +60,6 @@ FLayerImage::FLayerImage(
     , mBlendMode( iBlendMode )
     , mAlphaMode( iAlphaMode )
     , mOpacity( iOpacity )
-    , bIsCacheValid( false )
 {
 }
 
@@ -129,24 +127,6 @@ void
 FLayerImage::SetOpacity( ufloat iValue )
 {
     mOpacity = iValue;
-}
-
-bool
-FLayerImage::IsCacheValid() const
-{
-    return  bIsCacheValid;
-}
-
-void
-FLayerImage::InvalidateCache()
-{
-    bIsCacheValid = false;
-}
-
-void
-FLayerImage::ValidateCache()
-{
-    bIsCacheValid = true;
 }
 
 ULIS_NAMESPACE_END

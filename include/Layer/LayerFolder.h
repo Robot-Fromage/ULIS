@@ -31,10 +31,10 @@ public:
         , uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
-        , eBlendMode iBlendMode
-        , eAlphaMode iAlphaMode
-        , ufloat iOpacity
-        , FLayerRoot* iParent
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , FLayerRoot* iParent = nullptr
     );
 
     FLayerFolder(
@@ -43,10 +43,10 @@ public:
         , uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
-        , eBlendMode iBlendMode
-        , eAlphaMode iAlphaMode
-        , ufloat iOpacity
-        , FLayerRoot* iParent
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , FLayerRoot* iParent = nullptr
     );
 
     FLayerFolder( const FLayerFolder& ) = delete;

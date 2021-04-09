@@ -25,7 +25,7 @@ class ULIS_API FLayerRoot
 {
 protected:
     virtual ~FLayerRoot() override;
-    FLayerRoot( const FString& iName, FLayerRoot* iParent );
+    FLayerRoot( const FString& iName, FLayerRoot* iParent = nullptr );
 
     FLayerRoot( const FLayerRoot& ) = delete;
     FLayerRoot& operator=( const FLayerRoot& ) = delete;
@@ -35,7 +35,8 @@ public:
     TArray< ILayer* >& Layers();
     const TArray< ILayer* >& Layers() const;
     FLayerRoot& AddLayer( ILayer* iLayer, uint64 iIndex = ULIS_UINT64_MAX );
-    void RemoveLayer( int iIndex );
+    FLayerRoot& AddLayer( ILayer& iLayer, uint64 iIndex = ULIS_UINT64_MAX );
+    void DeleteLayer( int iIndex );
     void Reset();
 
 private:

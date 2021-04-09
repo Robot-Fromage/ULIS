@@ -35,16 +35,16 @@ public:
         , uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
-        , eBlendMode iBlendMode
-        , eAlphaMode iAlphaMode
-        , ufloat iOpacity
-        , const std::wstring& iText
         , const FFont& iFont
-        , uint32 iFontSize
-        , const FMat3F& iTransform
-        , const ISample& iColor
-        , bool iAA
-        , FLayerRoot* iParent
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , const std::wstring& iText = L""
+        , uint32 iFontSize = 12
+        , const FMat3F& iTransform = FMat3F()
+        , const ISample& iColor = FColor::Black
+        , bool iAA = true
+        , FLayerRoot* iParent = nullptr
     );
 
     FLayerText(
@@ -53,16 +53,16 @@ public:
         , uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
-        , eBlendMode iBlendMode
-        , eAlphaMode iAlphaMode
-        , ufloat iOpacity
-        , const std::wstring& iText
         , const FFont& iFont
-        , uint32 iFontSize
-        , const FMat3F& iTransform
-        , const ISample& iColor
-        , bool iAA
-        , FLayerRoot* iParent
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , const std::wstring& iText = L""
+        , uint32 iFontSize = 12
+        , const FMat3F& iTransform = FMat3F()
+        , const ISample& iColor = FColor::Black
+        , bool iAA = true
+        , FLayerRoot* iParent = nullptr
     );
 
     FLayerText( const FLayerText& ) = delete;

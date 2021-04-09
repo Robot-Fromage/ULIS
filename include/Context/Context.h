@@ -135,7 +135,7 @@ public:
 
     ulError
     RenderLayerText(
-          FLayerText& iStack
+          FLayerText& iText
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr

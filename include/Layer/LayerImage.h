@@ -28,10 +28,10 @@ public:
         , uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
-        , eBlendMode iBlendMode
-        , eAlphaMode iAlphaMode
-        , ufloat iOpacity
-        , FLayerRoot* iParent
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , FLayerRoot* iParent = nullptr
     );
 
     FLayerImage(
@@ -40,10 +40,10 @@ public:
         , uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat
-        , eBlendMode iBlendMode
-        , eAlphaMode iAlphaMode
-        , ufloat iOpacity
-        , FLayerRoot* iParent
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , FLayerRoot* iParent = nullptr
     );
 
     FLayerImage( const FLayerImage& ) = delete;
@@ -61,16 +61,13 @@ public:
     void SetBlendMode( eBlendMode iValue );
     void SetAlphaMode( eAlphaMode iValue );
     void SetOpacity( ufloat iValue );
-    bool IsCacheValid() const;
-    void InvalidateCache();
-    void ValidateCache();
+
 private:
     bool mAlphaLock;
     FBlock* mBlock;
     eBlendMode mBlendMode;
     eAlphaMode mAlphaMode;
     ufloat mOpacity;
-    bool bIsCacheValid;
 };
 
 ULIS_NAMESPACE_END

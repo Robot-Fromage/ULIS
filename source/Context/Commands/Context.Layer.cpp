@@ -55,81 +55,63 @@ FContext::Flatten(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    // Bake and push multiple subcommands in recursive local lambda.
-    //          L1  L2  L3
-    //  • root <-
-    //  |-0             ]
-    //  |-1           ev]
-    //  |-• 2       ] ev]
-    //  | |-3       ]   ]
-    //  | |-• a ]   ]   ]
-    //  | | |-b ]   ]   ]
-    //  | | |-c ]   ]   ]
-    //  | | |-d ]   ]   ]
-    //  |-5             ]
-    //  |-• 6   ]       ]
-    //  | |-7   ]       ]
-    //  | |-8   ]       ]
+    const uint64 size = iStack.Layers().Size();
+    const int64 max = static_cast< int64 >( size ) - 1;
+    TArray< FEvent > events( 1 );
+    events.Reserve( size );
+    ulError err = Clear( oDestination, dst_roi, iPolicy, iNumWait, iWaitList, size ? &(events.Front()) : iEvent );
+    ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten preprocess clear of dst block", err );
 
-    // Function object declared first
-    std::function< ulError( FLayerRoot&, FBlock& oDst, uint32 iNumWait, const FEvent* iWaitList, FEvent* oEvent ) > sched;
-
-    // Recursive lambda definition
-    sched =
-        [ &sched, iPolicy, src_roi, dst_roi, iPosition, this ]
-        ( FLayerRoot& iFolder, FBlock& oDst, uint32 iNumWait, const FEvent* iWaitList, FEvent* oEvent ) -> ulError
-    {
-        const uint64 size = iFolder.Layers().Size();
-        const int64 max = static_cast< int64 >( size ) - 1;
-        TArray< FEvent > events( 1 );
-        events.Reserve( size );
-        ulError err = Clear( oDst, dst_roi, iPolicy, iNumWait, iWaitList, size ? &(events.Front()) : oEvent );
-        ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten preprocess clear of dst block", err );
-
-        for( int64 i = max; i >= 0; --i ) {
-            eLayerType type = iFolder.Layers()[i]->Type();
-            FLayerImage* layer = nullptr;
-            int num_wait = 1;
-            switch( type ) {
-                case Layer_Image: {
-                    layer = dynamic_cast< FLayerImage* >( iFolder.Layers()[i] );
-                    break;
-                }
-                case Layer_Folder: {
-                    FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Layers()[i] );
-                    layer = dynamic_cast< FLayerImage* >( folder );
-                    events.PushBack();
-                    sched( dynamic_cast< FLayerRoot& >( *folder ), folder->Block(), 0, nullptr, &events.Back() );
-                    num_wait = 2;
-                    break;
-                }
+    for( int64 i = max; i >= 0; --i ) {
+        eLayerType type = iStack.Layers()[i]->Type();
+        FLayerImage* layer = nullptr;
+        int num_wait = 1;
+        switch( type ) {
+            case Layer_Image: {
+                layer = dynamic_cast< FLayerImage* >( iStack.Layers()[i] );
+                break;
             }
-
-            if( layer )
-            {
+            case Layer_Folder: {
+                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iStack.Layers()[i] );
+                layer = dynamic_cast< FLayerImage* >( folder );
                 events.PushBack();
-                err = Blend(
-                      layer->Block()
-                    , oDst
-                    , src_roi
-                    , iPosition
-                    , layer->BlendMode()
-                    , layer->AlphaMode()
-                    , layer->Opacity()
-                    , iPolicy
-                    , num_wait
-                    , &events[ events.Size() - 1 - num_wait ]
-                    , i ? &events.Back() : oEvent
-                );
-                ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process blend in dst block", err );
+                err = RenderLayerFolder( *folder, dst_roi, iPolicy, 0, nullptr, &events.Back() );
+                ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process render of folder block", err );
+                num_wait = 2;
+                break;
+            }
+            case Layer_Text: {
+                FLayerText* text = dynamic_cast< FLayerText* >( iStack.Layers()[i] );
+                layer = dynamic_cast< FLayerImage* >( text );
+                events.PushBack();
+                err = RenderLayerText( *text, iPolicy, 0, nullptr, &events.Back() );
+                ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render subfolder", err );
+                num_wait = 2;
+                break;
             }
         }
 
-        return  ULIS_NO_ERROR;
-    };
+        if( layer )
+        {
+            events.PushBack();
+            err = Blend(
+                    layer->Block()
+                , oDestination
+                , src_roi
+                , iPosition
+                , layer->BlendMode()
+                , layer->AlphaMode()
+                , layer->Opacity()
+                , iPolicy
+                , num_wait
+                , &events[ events.Size() - 1 - num_wait ]
+                , i ? &events.Back() : iEvent
+            );
+            ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process blend in dst block", err );
+        }
+    }
 
-    // Call recursive lambda sched.
-    return  sched( iStack, oDestination, iNumWait, iWaitList, iEvent );
+    return  ULIS_NO_ERROR;
 }
 
 ulError
@@ -172,6 +154,15 @@ FContext::RenderLayerFolder(
                 num_wait = 2;
                 break;
             }
+            case Layer_Text: {
+                FLayerText* text = dynamic_cast< FLayerText* >( iFolder.Layers()[i] );
+                layer = dynamic_cast< FLayerImage* >( text );
+                events.PushBack();
+                err = RenderLayerText( *text, iPolicy, 0, nullptr, &events.Back() );
+                ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render subfolder", err );
+                num_wait = 2;
+                break;
+            }
         }
 
         if( layer )
@@ -199,13 +190,42 @@ FContext::RenderLayerFolder(
 
 ulError
 FContext::RenderLayerText(
-      FLayerText& iStack
+      FLayerText& iText
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
     , const FEvent* iWaitList
     , FEvent* iEvent
 )
 {
+    const bool bAA = iText.AA();
+    if( bAA ) {
+        RasterTextAA(
+              iText.Block()
+            , iText.Text()
+            , iText.Font()
+            , iText.FontSize()
+            , iText.Transform()
+            , iText.Color()
+            , iPolicy
+            , iNumWait
+            , iWaitList
+            , iEvent
+        );
+    } else {
+        RasterText(
+              iText.Block()
+            , iText.Text()
+            , iText.Font()
+            , iText.FontSize()
+            , iText.Transform()
+            , iText.Color()
+            , iPolicy
+            , iNumWait
+            , iWaitList
+            , iEvent
+        );
+    }
+
     return  ULIS_NO_ERROR;
 }
 
