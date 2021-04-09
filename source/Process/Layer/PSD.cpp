@@ -166,7 +166,7 @@ void FPSDOperations::GetContextFormatFromBitDepthColorMode( uint16 bitDepth, uin
     }
     else
     {
-        std::cout << "Error: we don't handle this bit depth, import failed" << std::endl;
+        ULIS_ASSERT( false, "Error: we don't handle this bit depth, format unknown");
         return;
     }
 }
@@ -181,11 +181,7 @@ bool FPSDOperations::ReadFileHeader()
     if(!mFileHandle.read(psdValidator,4))
         return false;
 
-    if( strcmp(psdValidator, "8BPS") != 0 )
-    {
-        std::cout << "This is likely not a PSD file, import failed" << std::endl;
-        return false;
-    }
+    ULIS_ASSERT( strcmp(psdValidator, "8BPS") == 0, "This is likely not a PSD file, import failed" )
 
     //---
     
@@ -194,11 +190,7 @@ bool FPSDOperations::ReadFileHeader()
         return false;
 
     FMath::ByteSwap(&versionNumber,2);
-    if( versionNumber != 1 )
-    {
-        std::cout << "Unknown psd file version, import failed" << std::endl;
-        return false;
-    }
+    ULIS_ASSERT( versionNumber == 1, "Unknown psd file version, import failed" )
 
     //---
 
@@ -286,11 +278,7 @@ bool FPSDOperations::ReadLayerInfo()
 
     uint32 position = uint32(mFileHandle.tellg());
 
-    if( mBitDepth >= 16 && layerInfoSize != 0) 
-    {
-        std::cout << "Shouldn't have any info for 16+ bit depth, import failed" << std::endl;
-        return false;
-    }
+    ULIS_ASSERT( mBitDepth < 16 || layerInfoSize == 0, "Shouldn't have any info for 16+ bit depth, import failed" );
 
     if(layerInfoSize != 0)
         if (!ReadLayers())
@@ -361,11 +349,8 @@ bool FPSDOperations::ReadLayers()
         char psdValidator[5] = {0}; // 4 characters + null termination
         if(!mFileHandle.read((char*)psdValidator,4))
             return false;
-        if(strcmp(psdValidator,"8BIM") != 0)
-        {
-            std::cout << "This is likely not a PSD file, import failed" << std::endl;
-            return false;
-        }
+
+        ULIS_ASSERT( strcmp(psdValidator, "8BIM") == 0, "This is likely not a PSD file, import failed" )
 
         if(!mFileHandle.read((char*) mLayersInfo[currLayer].mBlendModeKey, 4))
             return false;
@@ -491,11 +476,7 @@ bool FPSDOperations::ReadAdditionalLayerInfoSignature()
     if(!mFileHandle.read((char*)psdValidator,4))
         return false;
 
-    if(strcmp(psdValidator,"8BIM") != 0 && strcmp(psdValidator,"8B64") != 0)
-    {
-        std::cout << "No additionnal layer info Signature" << std::endl;
-        return false;
-    }
+    ULIS_ASSERT( strcmp(psdValidator, "8BIM") == 0 || strcmp(psdValidator, "8B64") == 0, "No additionnal layer info Signature" );
 
     return true;
 }
@@ -503,11 +484,8 @@ bool FPSDOperations::ReadAdditionalLayerInfoSignature()
 bool FPSDOperations::ReadAdditionalLayerInfo(uint32 sectionEnd)
 {
     uint32 position = uint32(mFileHandle.tellg());
-    if( position > sectionEnd ) 
-    {
-        std::cout << "Error while loading data: out of bounds" << std::endl;
-        return false;
-    }
+
+    ULIS_ASSERT( position <= sectionEnd, "Error while loading data: out of bounds" );
 
     while( position < sectionEnd ) 
     {
@@ -651,8 +629,7 @@ bool FPSDOperations::ReadLayerStackData()
             }
             else
             {
-                std::cout << "Unknown or unsupported Compression, import failed" << std::endl;
-                return false;
+                ULIS_ASSERT( false, "Unknown or unsupported Compression, import failed" );
             }
 
             if(mColorMode == 4 && j != 0)//CMYK, we negate everything but the alpha
@@ -745,8 +722,7 @@ bool FPSDOperations::ReadLayerStackData16()
             }
             else
             {
-                std::cout << "Unknown or unsupported Compression, import failed" << std::endl;
-                return false;
+                ULIS_ASSERT( false, "Unknown or unsupported Compression, import failed" )
             }
 
             if(mColorMode == 4 && j != 0)//CMYK, we negate everything but the alpha
@@ -841,8 +817,7 @@ bool FPSDOperations::ReadLayerStackData32()
             } 
             else
             {
-                std::cout << "Unknown or unsupported Compression, import failed" << std::endl;
-                return false;
+                ULIS_ASSERT( false, "Unknown or unsupported Compression, import failed" )
             }
 
             if(mColorMode == 4 && mLayersInfo[i].mID[j] != -1)//CMYK, we negate everything but the alpha
@@ -882,95 +857,9 @@ bool FPSDOperations::SetLayerStackFormatAndSize()
     if( mLayersInfo.Size() == 0 )
         return false; // TODO Bitmap ?
 
-    if (mBitDepth == 32)
-    {
-        switch (mColorMode)
-        {
-            case 1: //GrayScale
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_AGF );
-                break;
-            }
-            case 3: //RGB
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGBF );
-                break;
-            }
-            case 4: //CMYK
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYKF );
-                break;
-            }
-            case 9: //LAB
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALabF );
-                break;
-            }
-            default: //ERROR
-                return false;
-        }
-    }
-    else if (mBitDepth == 16)
-    {
-        switch (mColorMode)
-        {
-            case 1: //GrayScale
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG16 );
-                break;
-            }
-            case 3: //RGB
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB16 );
-                break;
-            }
-            case 4: //CMYK
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK16 );
-                break;
-            }
-            case 9: //LAB
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab16 );
-                break;
-            }
-            default: //ERROR
-                return false;
-        }
-    }
-    else if (mBitDepth == 8)
-    {
-        switch (mColorMode)
-        {
-            case 1: //GrayScale
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_AG8 );
-                break;
-            }
-            case 3: //RGB
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ARGB8 );
-                break;
-            }
-            case 4: //CMYK
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ACMYK8 );
-                break;
-            }
-            case 9: //LAB
-            {
-                mLayerStack.Reset( mImageWidth, mImageHeight, Format_ALab8 );
-                break;
-            }
-            default: //ERROR
-                return false;
-        }
-    }
-    else
-    {
-        std::cout << "Error: we don't handle this bit depth, import failed" << std::endl;
-        return false;
-    }
+    eFormat formatStack = Format_RGBA8;
+    GetContextFormatFromBitDepthColorMode( mBitDepth, mColorMode, &formatStack);
+    mLayerStack.Reset(mImageWidth, mImageHeight, formatStack);
 
     return true;
 }
@@ -1105,8 +994,7 @@ bool FPSDOperations::SetLayersFormat()
         }
         else
         {
-            std::cout << "Error: we don't handle this bit depth, import failed" << std::endl;
-            return false;
+            ULIS_ASSERT( false, "Error: we don't handle this bit depth, import failed" )
         }
     }
     return true;
@@ -1572,8 +1460,7 @@ bool FPSDOperations::Import()
     }
     else if( mBitDepth != 1 )
     {
-        std::cout << "Unsupported bit depth, Import failed" << std::endl;
-        return false;
+        ULIS_ASSERT( false, "Unsupported bit depth, Import failed" );
     }
 
     if ( !SetLayersFormat() )

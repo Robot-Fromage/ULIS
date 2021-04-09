@@ -29,7 +29,7 @@ main( int argc, char *argv[] ) {
     FCommandQueue queue( pool );
 
 
-    std::string path = "C:/Users/Galendil/Desktop/cmyk8bits.psd"; //"C:/Users/PRAXINOS/Documents/work/psdTests/RGBA32bits.psd" )
+    std::string path = "C:/Users/Galendil/Desktop/LAB16bits.psd"; //"C:/Users/PRAXINOS/Documents/work/psdTests/RGBA32bits.psd" )
     bool fileExist = false;
 
     eFormat fmt = Format_RGBA8; //Changed next line to the right format
