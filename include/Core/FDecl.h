@@ -29,6 +29,7 @@ class   FFontRegistry;
 class   FFontStyleEntry;
 struct  FFormatMetrics;
 class   FGradient;
+class   FSanitizedGradient;
 class   FHardwareMetrics;
 class   FKernel;
 class   FLayerImage;

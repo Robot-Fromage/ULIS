@@ -15,6 +15,7 @@
 #include "Image/Pixel.h"
 #include "Image/Sample.h"
 #include "Image/Block.h"
+#include "Image/Gradient.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
@@ -162,6 +163,25 @@ public:
         , const std::string& iPath
         , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+/////////////////////////////////////////////////////
+// Gradient
+    /*!
+        Perform a load of a PSD file in a layer stack
+    */
+    ulError
+    RasterGradient(
+          FBlock& iBlock
+        , const FVec2I& iStart
+        , const FVec2I& iEnd
+        , const FSanitizedGradient& iGradient
+        , eGradientType iType = eGradientType::Gradient_Linear
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
