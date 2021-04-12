@@ -383,6 +383,21 @@ public:
         mSize -= iCount;
     }
 
+    /*!
+        Erase first found element, if found in the array.
+        Behaviour is undefined if the array is empty.
+        Does nothing if such element is not in the array.
+    */
+    void Erase( const T& iElement ) {
+        ULIS_ASSERT( mSize, "Bad arguments" );
+        for( uint64 i = 0; i < mSize; ++i ) {
+            if( mBulk[i] == iElement ) {
+                Erase( i );
+                return;
+            }
+        }
+    }
+
 private:
     /*!
         CleanupBulk explicitly calls destructors on elements to be removed, then
