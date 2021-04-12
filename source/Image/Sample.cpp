@@ -25,7 +25,7 @@ MixFormat_imp( const ISample& iA, const ISample& iB, eFormat iFormat, ufloat iLe
     ufloat t = FMath::Clamp( iLerpParameter, 0.f, 1.f );
     ufloat u = 1.f - t;
     FColor res( iFormat );
-    FFormatMetrics fmt( iFormat );
+    const FFormatMetrics& fmt = res.FormatMetrics();
     for( uint8 i = 0; i < fmt.SPP; ++i )
         res.SetChannelT< T >( i, static_cast< T >( u * iA.ChannelT< T >( i ) + t * iB.ChannelT< T >( i ) ) );
     return  res;

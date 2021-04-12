@@ -110,8 +110,8 @@ FSanitizedGradient::FSanitizedGradient( const FGradient& iGradient )
     for( uint64 i = 0; i < maxColor; ++i ) {
         const FColorStep& prev = mColorSteps[i];
         const FColorStep& next = mColorSteps[i+1];
-        const uint8 indPrev = prev.Param() * 100;
-        const uint8 indNext = next.Param() * 100;
+        const uint8 indPrev = uint8( prev.Param() * range );
+        const uint8 indNext = uint8( next.Param() * range );
         for( uint8 i = indPrev; i < indNext; ++i )
             mIndexLUTColor[i] = indPrev;
     }
@@ -121,8 +121,8 @@ FSanitizedGradient::FSanitizedGradient( const FGradient& iGradient )
     for( uint64 i = 0; i < maxAlpha - 1; ++i ) {
         const FAlphaStep& prev = mAlphaSteps[i];
         const FAlphaStep& next = mAlphaSteps[i+1];
-        const uint8 indPrev = prev.Param() * 100;
-        const uint8 indNext = next.Param() * 100;
+        const uint8 indPrev = uint8( prev.Param() * range );
+        const uint8 indNext = uint8( next.Param() * range );
         for( uint8 i = indPrev; i < indNext; ++i )
             mIndexLUTAlpha[i] = indPrev;
     }
@@ -136,6 +136,26 @@ FSanitizedGradient::ColorSteps() const {
 const TArray< FAlphaStep >&
 FSanitizedGradient::AlphaSteps() const {
     return  mAlphaSteps;
+}
+
+const uint8*
+FSanitizedGradient::IndexLUTColor() const {
+    return  mIndexLUTColor;
+}
+
+const uint8*
+FSanitizedGradient::IndexLUTAlpha() const {
+    return  mIndexLUTAlpha;
+}
+
+uint8
+FSanitizedGradient::FastColorIndexAtParameter( ufloat iParam ) const {
+    return  mIndexLUTColor[ uint8( FMath::Clamp( iParam, 0.f, 1.f ) * ( range - 1 ) ) ];
+}
+
+uint8
+FSanitizedGradient::FastAlphaIndexAtParameter( ufloat iParam ) const {
+    return  mIndexLUTAlpha[ uint8( FMath::Clamp( iParam, 0.f, 1.f ) * ( range - 1 ) ) ];
 }
 
 /////////////////////////////////////////////////////

@@ -69,6 +69,10 @@ public:
         return  mParam < iOther.mParam;
     }
 
+    bool operator==( const TGradientStep< T >& iOther ) {
+        return  mParam == iOther.mParam && mValue == iOther.mValue;
+    }
+
 private:
     ufloat mParam;   ///< The gradient step param.
     T mValue;  ///< The gradient step value.
@@ -117,11 +121,32 @@ public:
     /*! Getter for gradient alpha steps. */
     const TArray< FAlphaStep >& AlphaSteps() const;
 
+    /*! Getter for gradient index lut color. */
+    const uint8* IndexLUTColor() const;
+
+    /*! Getter for gradient index lut alpha. */
+    const uint8* IndexLUTAlpha() const;
+
+    /*!
+        Retrieve index of a color step in the array given an input parameter,
+        using fast LUT retrieval.
+    */
+    uint8 FastColorIndexAtParameter( ufloat iParam ) const;
+
+    /*!
+        Retrieve index of a alpha step in the array given an input parameter,
+        using fast LUT retrieval.
+    */
+    uint8 FastAlphaIndexAtParameter( ufloat iParam ) const;
+
+public:
+    static constexpr uint8 range = 100;
+
 private:
     TArray< FColorStep > mColorSteps; ///< The gradient color steps.
     TArray< FAlphaStep > mAlphaSteps; ///< The gradient alpha steps.
-    uint8 mIndexLUTColor[100]; ///< The gradient color index LUT.
-    uint8 mIndexLUTAlpha[100]; ///< The gradient color index LUT.
+    uint8 mIndexLUTColor[range]; ///< The gradient color index LUT.
+    uint8 mIndexLUTAlpha[range]; ///< The gradient color index LUT.
 };
 
 /////////////////////////////////////////////////////
