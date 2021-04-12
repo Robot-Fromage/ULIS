@@ -49,24 +49,6 @@ FContext::RasterGradient(
     if( roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    switch( iType ) {
-        case Gradient_Linear: {
-            break;
-        }
-        case Gradient_Radial: {
-            break;
-        }
-        case Gradient_Angular: {
-            break;
-        }
-        case Gradient_Reflected: {
-            break;
-        }
-        case Gradient_Diamond: {
-            break;
-        }
-    }
-
     return  ULIS_NO_ERROR;
 }
 

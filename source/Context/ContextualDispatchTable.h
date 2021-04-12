@@ -118,6 +118,18 @@ public:
     }
 #endif // ULIS_FEATURE_TRANSFORM_ENABLED
 
+    ULIS_FORCEINLINE fpCommandScheduler QueryScheduleRasterGradient( eGradientType iGradientType ) const
+    {
+        switch( iGradientType ) {
+            case Gradient_Linear:       return  mScheduleRasterGradientLinear;
+            case Gradient_Radial:       return  mScheduleRasterGradientRadial;
+            case Gradient_Angular:      return  mScheduleRasterGradientAngular;
+            case Gradient_Reflected:    return  mScheduleRasterGradientReflected;
+            case Gradient_Diamond:      return  mScheduleRasterGradientDiamond;
+            default: return  nullptr;
+        }
+    }
+
 private:
     const FHardwareMetrics mHardwareMetrics;
     const eFormat mFormat;
@@ -239,6 +251,12 @@ private:
     const fpCommandScheduler mScheduleDrawQuadraticBezier;
     const fpCommandScheduler mScheduleDrawQuadraticBezierAA;
     const fpCommandScheduler mScheduleDrawQuadraticBezierSP;
+
+    const fpCommandScheduler mScheduleRasterGradientLinear;
+    const fpCommandScheduler mScheduleRasterGradientRadial;
+    const fpCommandScheduler mScheduleRasterGradientAngular;
+    const fpCommandScheduler mScheduleRasterGradientReflected;
+    const fpCommandScheduler mScheduleRasterGradientDiamond;
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;

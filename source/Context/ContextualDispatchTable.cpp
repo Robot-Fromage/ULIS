@@ -29,6 +29,7 @@
 #include "Process/Raster/RasterInvocations.h"
 #include "Process/Analysis/AccumulativeSampling.h"
 #include "Process/Analysis/AnalyzeSmallestVisibleRect.h"
+#include "Process/Gradient/Gradient.h"
 
 
 ULIS_NAMESPACE_BEGIN
@@ -152,6 +153,11 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleDrawQuadraticBezierAA(           TDispatcher< FDispatchedDrawQuadraticBezierAAInvocationSchedulerSelector            >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleDrawQuadraticBezierSP(           TDispatcher< FDispatchedDrawQuadraticBezierSPInvocationSchedulerSelector            >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
+        , mScheduleRasterGradientLinear(            TDispatcher< FDispatchedGradientLinearInvocationSchedulerSelector                   >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleRasterGradientRadial(            TDispatcher< FDispatchedGradientRadialInvocationSchedulerSelector                   >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleRasterGradientAngular(           TDispatcher< FDispatchedGradientAngularInvocationSchedulerSelector                  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleRasterGradientReflected(         TDispatcher< FDispatchedGradientReflectedInvocationSchedulerSelector                >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleRasterGradientDiamond(           TDispatcher< FDispatchedGradientDiamondInvocationSchedulerSelector                  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

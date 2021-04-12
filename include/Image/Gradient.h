@@ -21,14 +21,6 @@
 #include "Memory/Array.h"
 
 ULIS_NAMESPACE_BEGIN
-enum eGradientType {
-      Gradient_Linear
-    , Gradient_Radial
-    , Gradient_Angular
-    , Gradient_Reflected
-    , Gradient_Diamond
-};
-
 /////////////////////////////////////////////////////
 /// @class      TGradientStep
 /// @brief      The TGradientStep class provides a mean of storing a gradient step.

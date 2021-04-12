@@ -667,6 +667,24 @@ static const char* kwImageFormat[] = {
 };
 
 /////////////////////////////////////////////////////
+// eGradientType
+enum eGradientType {
+      Gradient_Linear
+    , Gradient_Radial
+    , Gradient_Angular
+    , Gradient_Reflected
+    , Gradient_Diamond
+};
+
+static const char* kwGradientType[] = {
+      "Linear"
+    , "Radial"
+    , "Angular"
+    , "Reflected"
+    , "Diamond"
+};
+
+/////////////////////////////////////////////////////
 // ulError reports
 #define ULIS_NO_ERROR                       0
 #define ULIS_WARNING_NO_OP                  -1000
