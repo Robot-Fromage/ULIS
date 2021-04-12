@@ -504,8 +504,8 @@ protected:
     uint16 mHeight; ///< Height of the block.
     uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.
     uint64 mBytesTotal; ///< Cached number of bytes for the whole buffer.
-    FOnInvalidBlock mOnInvalid; ///< The callback for when the block is destroyed.
-    FOnCleanupData mOnCleanup; ///< The callback for when the block is dirty.
+    FOnInvalidBlock mOnInvalid; ///< The callback for when the block is dirty.
+    FOnCleanupData mOnCleanup; ///< The callback for when the block is destroyed.
 };
 
 ULIS_NAMESPACE_END
