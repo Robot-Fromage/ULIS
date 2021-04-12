@@ -22,40 +22,107 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FGradientStep
-/// @brief      The FGradientStep class provides a mean of storing a gradient
-///             step.
-class ULIS_API FGradientStep final
+/// @class      TGradientStep
+/// @brief      The TGradientStep class provides a mean of storing a gradient step.
+template< typename T >
+class ULIS_API TGradientStep final
 {
 public:
     /*! Destroy the gradient step. */
-    ~FGradientStep();
+    ~TGradientStep()
+    {}
 
     /*! Construct gradient step. */
-    FGradientStep();
+    TGradientStep()
+        : mParam( 0.f )
+        , mValue()
+    {}
 
     /*! Construct gradient step. */
-    FGradientStep( const FColor& iColor, ufloat iStep );
+    TGradientStep( ufloat iParam, const T& iValue )
+        : mParam( FMath::Clamp( iParam, 0.f, 1.f ) )
+        , mValue( iValue )
+    {}
 
 public:
     /*! Set the step. */
-    void Step( ufloat iValue );
+    void Param( ufloat iParam ) {
+        mParam = FMath::Clamp( iParam, 0.f, 1.f );
+    }
 
     /*! Get the step. */
-    ufloat Step() const;
+    ufloat Param() const {
+        return  mParam;
+    }
 
-    /*! Get the color, editable. */
-    FColor& Color();
+    /*! Get the value, editable. */
+    T& Value() {
+        return  mValue;
+    }
 
-    /*! Get the color. */
-    const FColor& Color() const;
+    /*! Get the value. */
+    const T& Value() const {
+        return  mValue;
+    }
+
+    bool operator<( const TGradientStep< T >& iOther ) {
+        return  mParam < iOther.mParam;
+    }
 
 private:
-    ufloat mStep;   ///< The gradient step value.
-    FColor mColor;  ///< The gradient step color.
+    ufloat mParam;   ///< The gradient step param.
+    T mValue;  ///< The gradient step value.
 };
 
-template class ULIS_API TArray< FGradientStep >;
+typedef TGradientStep< FColor > FColorStep;
+typedef TGradientStep< ufloat > FAlphaStep;
+template class ULIS_API TGradientStep< FColor >;
+template class ULIS_API TGradientStep< ufloat >;
+typedef std::shared_ptr< FColorStep > FSharedColorStep;
+typedef std::shared_ptr< FAlphaStep > FSharedAlphaStep;
+template class ULIS_API std::shared_ptr< FColorStep >;
+template class ULIS_API std::shared_ptr< FAlphaStep >;
+template class ULIS_API TArray< FSharedColorStep >;
+template class ULIS_API TArray< FSharedAlphaStep >;
+template class ULIS_API TArray< FColorStep >;
+template class ULIS_API TArray< FAlphaStep >;
+
+/////////////////////////////////////////////////////
+/// @class      FSanitizedGradient
+/// @brief      The FSanitizedGradient class provides a mean of storing
+///             gradients in various formats, with constraints the help
+///             in rasterizing them more efficiently than their non-Sanitized
+///             counterparts, which are meant for modification and editing.
+/// @details    FSanitizedGradient can have a single or no color.
+///             Steps are in [0;1]. Interpolation is linear in the preferred
+///             format.
+class ULIS_API FSanitizedGradient final
+    : public IHasFormat
+    , public IHasColorSpace
+{
+public:
+    /*! Destroy the gradient. */
+    ~FSanitizedGradient();
+
+    /*! Construct sanitized gradient from regular gradient */
+    FSanitizedGradient( const FGradient& iGradient );
+
+    FSanitizedGradient( const FSanitizedGradient& ) = delete;
+    FSanitizedGradient& operator=( const FSanitizedGradient& ) = delete;
+
+public:
+    /*! Getter for gradient color steps. */
+    const TArray< FColorStep >& ColorSteps() const;
+
+    /*! Getter for gradient alpha steps. */
+    const TArray< FAlphaStep >& AlphaSteps() const;
+
+private:
+    TArray< FColorStep > mColorSteps; ///< The gradient color steps.
+    TArray< FAlphaStep > mAlphaSteps; ///< The gradient alpha steps.
+    uint8 mIndexLUTColor[100]; ///< The gradient color index LUT.
+    uint8 mIndexLUTAlpha[100]; ///< The gradient color index LUT.
+};
 
 /////////////////////////////////////////////////////
 /// @class      FGradient
@@ -65,6 +132,8 @@ template class ULIS_API TArray< FGradientStep >;
 ///             Steps are in [0;1]. Interpolation is linear in the preferred
 ///             format.
 class ULIS_API FGradient final
+    : public IHasFormat
+    , public IHasColorSpace
 {
 public:
     /*! Destroy the gradient. */
@@ -80,8 +149,17 @@ public:
     FGradient& operator=( const FGradient& ) = delete;
 
 public:
-    /*! Getter for gradient steps. */
-    const TArray< FGradientStep >& Steps() const;
+    /*! Getter for gradient color steps. */
+    TArray< FSharedColorStep >& ColorSteps();
+
+    /*! Getter for gradient color steps. */
+    const TArray< FSharedColorStep >& ColorSteps() const;
+
+    /*! Getter for gradient alpha steps. */
+    TArray< FSharedAlphaStep >& AlphaSteps();
+
+    /*! Getter for gradient alpha steps. */
+    const TArray< FSharedAlphaStep >& AlphaSteps() const;
 
     /*! Reset the gradient, keep the same format. */
     void Reset();
@@ -92,25 +170,14 @@ public:
     /*! Change the preferred interpolation format. */
     void ReinterpretInterpolationFormat( eFormat iFormat );
 
-    /*! Add a step to the gradient, value is clamped in [0;1]. Return the index.*/
-    uint64 AddStep( ufloat iStep, const ISample& iValue );
-
-    /*! Erase a step in the gradient from index. */
-    void EraseStep( uint64 iIndex );
-
-    /*! Getter for num steps */
-    uint64 NumSteps() const;
-
     /*!
-    Compute linearly interpolated color at step.
-    This method is convenient and abstracts away a lot of stuff, but it is also
-    quite inefficient if called in a performance critical loop.
+    Sanitize sort values in both steps containers in case they were changed / moved.
     */
-    FColor ColorAtStep( ufloat iStep ) const;
+    void Sort();
 
 private:
-    TArray< FGradientStep > mSteps; ///< The gradient steps.
-    eFormat mFormat; ///< The gradient prefered interpolation format.
+    TArray< FSharedColorStep > mColorSteps; ///< The gradient color steps.
+    TArray< FSharedAlphaStep > mAlphaSteps; ///< The gradient alpha steps.
 };
 
 ULIS_NAMESPACE_END

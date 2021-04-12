@@ -11,49 +11,131 @@
 */
 #pragma once
 #include "Image/Gradient.h"
+#include "Memory/ContainerAlgorithms.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FGradientStep
-FGradientStep::~FGradientStep()
-{
+// FSanitizedGradient
+FSanitizedGradient::~FSanitizedGradient() {
 }
 
-FGradientStep::FGradientStep()
-    : mStep( 0.f )
-    , mColor()
+FSanitizedGradient::FSanitizedGradient( const FGradient& iGradient )
+    : IHasFormat( iGradient.Format() )
+    , IHasColorSpace( iGradient.ColorSpace() )
 {
+    // Save sizes as we will use them many times
+    const uint64 inColorSize = iGradient.ColorSteps().Size();
+    const uint64 inAlphaSize = iGradient.AlphaSteps().Size();
+
+    // Reserve to avoid multiple reallocations, and + 2 for extra first and last
+    // guards at params 0.f and 1.f in case they are missing.
+    mColorSteps.Reserve( inColorSize + 2 );
+    mAlphaSteps.Reserve( inAlphaSize + 2 );
+
+    // Copy colors
+    for( uint64 i = 0; i < inColorSize; ++i )
+        mColorSteps.PushBack( *iGradient.ColorSteps()[i] );
+
+    // Copy alpha
+    for( uint64 i = 0; i < inAlphaSize; ++i )
+        mAlphaSteps.PushBack( *iGradient.AlphaSteps()[i] );
+
+    // Make sure they are sorted by parameters in case the input gradient wasn't
+    // sanitized or sorted.
+    FContainerAlgorithms::BubbleSort( mColorSteps );
+    FContainerAlgorithms::BubbleSort( mAlphaSteps );
+
+    // Sanitize the color formats in case they weren't in the appropriate one.
+    for( uint64 i = 0; i < mColorSteps.Size(); ++i ) {
+        FColor& temp = mColorSteps[i].Value();
+        temp = temp.ToFormat( Format() );
+    }
+
+    // Make sure there are at least the two end colors if the input gradient was empty,
+    // that gives us a sanitized black to white gradient
+    if( inColorSize == 0 ) {
+        mColorSteps.PushBack( FColorStep( 0.f, FColor::Black.ToFormat( Format() ) ) );
+        mColorSteps.PushBack( FColorStep( 1.f, FColor::White.ToFormat( Format() ) ) );
+    }
+
+    // Make sure there are at least the two end alphas if the input gradient was empty,
+    // that gives us a sanitized fully transparent gradient
+    if( inAlphaSize == 0 ) {
+        mAlphaSteps.PushBack( FAlphaStep( 0.f, 0.f ) );
+        mAlphaSteps.PushBack( FAlphaStep( 1.f, 0.f ) );
+    }
+
+    // Sanitize first color step, if missing at 0.f we duplicate the first one
+    // to the very beginning.
+    if( mColorSteps.Front().Param() > 0.f )
+        mColorSteps.Insert( 0, FColorStep( 0.f, mColorSteps.Front().Value() ) );
+
+    // Sanitize last color step, if missing at 1.f we duplicate the last one
+    // to the very end.
+    if( mColorSteps.Back().Param() < 1.f )
+        mColorSteps.PushBack( FColorStep( 1.f, mColorSteps.Back().Value() ) );
+
+    // Sanitize first alpha step, if missing at 0.f we duplicate the first one
+    // to the very beginning.
+    if( mAlphaSteps.Front().Param() > 0.f )
+        mAlphaSteps.Insert( 0, FAlphaStep( 0.f, mAlphaSteps.Front().Value() ) );
+
+    // Sanitize last alpha step, if missing at 1.f we duplicate the last one
+    // to the very end.
+    if( mAlphaSteps.Back().Param() < 1.f )
+        mAlphaSteps.PushBack( FAlphaStep( 1.f, mAlphaSteps.Back().Value() ) );
+
+    // Erase duplicate color first entries, keep only the latest one.
+    while( mColorSteps[1].Param() == 0.f )
+        mColorSteps.Erase( 0 );
+
+    // Erase duplicate color  last entries, keep only the first one
+    while( mColorSteps[ mColorSteps.Size() - 2 ].Param() == 1.f )
+        mColorSteps.PopBack();
+
+    // Erase duplicate alpha first entries, keep only the latest one.
+    while( mAlphaSteps[1].Param() == 0.f )
+        mAlphaSteps.Erase( 0 );
+
+    // Erase duplicate alpha  last entries, keep only the first one
+    while( mAlphaSteps[ mAlphaSteps.Size() - 2 ].Param() == 1.f )
+        mAlphaSteps.PopBack();
+
+    // Sanitize TArrays to occupy minimal memory.
+    mColorSteps.Shrink();
+    mAlphaSteps.Shrink();
+
+    // Build color index LUT
+    const uint64 maxColor = mColorSteps.Size() - 1;
+    for( uint64 i = 0; i < maxColor; ++i ) {
+        const FColorStep& prev = mColorSteps[i];
+        const FColorStep& next = mColorSteps[i+1];
+        const uint8 indPrev = prev.Param() * 100;
+        const uint8 indNext = next.Param() * 100;
+        for( uint8 i = indPrev; i < indNext; ++i )
+            mIndexLUTColor[i] = indPrev;
+    }
+
+    // Build alpha index LUT
+    const uint64 maxAlpha = mAlphaSteps.Size() - 1;
+    for( uint64 i = 0; i < maxAlpha - 1; ++i ) {
+        const FAlphaStep& prev = mAlphaSteps[i];
+        const FAlphaStep& next = mAlphaSteps[i+1];
+        const uint8 indPrev = prev.Param() * 100;
+        const uint8 indNext = next.Param() * 100;
+        for( uint8 i = indPrev; i < indNext; ++i )
+            mIndexLUTAlpha[i] = indPrev;
+    }
 }
 
-FGradientStep::FGradientStep( const FColor& iColor, ufloat iStep )
-    : mStep( iStep )
-    , mColor( iColor )
-{
+const TArray< FColorStep >&
+FSanitizedGradient::ColorSteps() const {
+    return  mColorSteps;
 }
 
-void
-FGradientStep::Step( ufloat iValue )
-{
-    ULIS_ASSERT( iValue >= 0.f && iValue <= 1.f, "Error bad clamping" );
-    mStep = iValue;
-}
-
-ufloat
-FGradientStep::Step() const
-{
-    return  mStep;
-}
-
-FColor&
-FGradientStep::Color()
-{
-    return  mColor;
-}
-
-const
-FColor& FGradientStep::Color() const
-{
-    return  mColor;
+const TArray< FAlphaStep >&
+FSanitizedGradient::AlphaSteps() const {
+    return  mAlphaSteps;
 }
 
 /////////////////////////////////////////////////////
@@ -63,83 +145,67 @@ FGradient::~FGradient()
 }
 
 FGradient::FGradient( eFormat iFormat )
-    : mFormat( iFormat )
+    : IHasFormat( iFormat )
+    , IHasColorSpace()
 {
-    mSteps.PushBack( FGradientStep( FColor::GreyAF( 1.f ).ToFormat( mFormat ), 0.f ) );
-    mSteps.PushBack( FGradientStep( FColor::GreyAF( 0.f ).ToFormat( mFormat ), 1.f ) );
 }
 
-const TArray< FGradientStep >&
-FGradient::Steps() const
+TArray< FSharedColorStep >&
+FGradient::ColorSteps()
 {
-    return  mSteps;
+    return  mColorSteps;
+}
+
+const TArray< FSharedColorStep >&
+FGradient::ColorSteps() const
+{
+    return  mColorSteps;
+}
+
+TArray< FSharedAlphaStep >&
+FGradient::AlphaSteps()
+{
+    return  mAlphaSteps;
+}
+
+const TArray< FSharedAlphaStep >&
+FGradient::AlphaSteps() const
+{
+    return  mAlphaSteps;
 }
 
 void
 FGradient::Reset()
 {
-    mSteps.Clear();
-    mSteps.PushBack( FGradientStep( FColor::GreyAF( 1.f ).ToFormat( mFormat ), 0.f ) );
-    mSteps.PushBack( FGradientStep( FColor::GreyAF( 0.f ).ToFormat( mFormat ), 1.f ) );
+    mColorSteps.Clear();
+    mAlphaSteps.Clear();
 }
 
 void
 FGradient::Reset( eFormat iFormat )
 {
-    mFormat = iFormat;
+    ReinterpretFormat( iFormat );
     Reset();
 }
 
 void
 FGradient::ReinterpretInterpolationFormat( eFormat iFormat )
 {
-    mFormat = iFormat;
-    for( uint64 i = 0; i < mSteps.Size(); ++i )
-        mSteps[i].Color().ToFormat( mFormat );
-}
-
-uint64
-FGradient::AddStep( ufloat iStep, const ISample& iValue )
-{
-    ufloat step = FMath::Clamp( iStep, std::numeric_limits< float >::min(), 1.f );
-    uint64 index = 0;
-    for( uint64 i = 0; i < mSteps.Size(); ++i ) {
-        if( mSteps[i].Step() >= step ) {
-            index = i;
-            break;
-        }
+    ReinterpretFormat( iFormat );
+    for( uint64 i = 0; i < mColorSteps.Size(); ++i ) {
+        FColor& temp = mColorSteps[i]->Value();
+        temp = temp.ToFormat( Format() );
     }
-    mSteps.Insert( index, FGradientStep( iValue.ToFormat( mFormat ), step ) );
-    return  index;
 }
 
 void
-FGradient::EraseStep( uint64 iIndex )
+FGradient::Sort()
 {
-    mSteps.Erase( iIndex );
-}
-
-uint64
-FGradient::NumSteps() const
-{
-    return  mSteps.Size();
-}
-
-FColor
-FGradient::ColorAtStep( ufloat iStep ) const
-{
-    ufloat step = FMath::Clamp( iStep, std::numeric_limits< float >::min(), 1.f );
-    uint64 upper = 0;
-    for( uint64 i = 0; i < mSteps.Size(); ++i ) {
-        if( mSteps[i].Step() >= step ) {
-            upper = i;
-            break;
-        }
-    }
-    uint64 lower = upper - 1;
-    ufloat delta = mSteps[ upper ].Step() - mSteps[ lower ].Step();
-    ufloat t = step / delta;
-    return  FColor::MixFormat( mSteps[ lower ].Color(), mSteps[ upper ].Color(), mFormat, t );
+    mColorSteps.Shrink();
+    mAlphaSteps.Shrink();
+    FContainerAlgorithms::BubbleSort( mColorSteps );
+    FContainerAlgorithms::BubbleSort( mAlphaSteps );
+    ReinterpretInterpolationFormat( Format() );
 }
 
 ULIS_NAMESPACE_END
