@@ -19,8 +19,8 @@ ULIS_NAMESPACE_BEGIN
 FSanitizedGradient::~FSanitizedGradient() {
 }
 
-FSanitizedGradient::FSanitizedGradient( const FGradient& iGradient )
-    : IHasFormat( iGradient.Format() )
+FSanitizedGradient::FSanitizedGradient( eFormat iFormat, const FGradient& iGradient )
+    : IHasFormat( iFormat )
     , IHasColorSpace( iGradient.ColorSpace() )
 {
     // Save sizes as we will use them many times
@@ -148,6 +148,15 @@ FSanitizedGradient::IndexLUTAlpha() const {
     return  mIndexLUTAlpha;
 }
 
+void
+FSanitizedGradient::ReinterpretInterpolationFormat( eFormat iFormat ) {
+    ReinterpretFormat( iFormat );
+    for( uint64 i = 0; i < mColorSteps.Size(); ++i ) {
+        FColor& temp = mColorSteps[i].Value();
+        temp = temp.ToFormat( Format() );
+    }
+}
+
 uint8
 FSanitizedGradient::FastColorIndexAtParameter( ufloat iParam ) const {
     return  mIndexLUTColor[ uint8( FMath::Clamp( iParam, 0.f, 1.f ) * ( range - 1 ) ) ];
@@ -216,6 +225,16 @@ FGradient::ReinterpretInterpolationFormat( eFormat iFormat )
         FColor& temp = mColorSteps[i]->Value();
         temp = temp.ToFormat( Format() );
     }
+}
+
+FSanitizedGradient
+FGradient::Sanitized() const {
+    return  FSanitizedGradient( Format(), *this );
+}
+
+FSanitizedGradient
+FGradient::Sanitized( eFormat iFormat ) const {
+    return  FSanitizedGradient( iFormat, *this );
 }
 
 void

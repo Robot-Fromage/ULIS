@@ -117,7 +117,7 @@ public:
     ~FSanitizedGradient();
 
     /*! Construct sanitized gradient from regular gradient */
-    FSanitizedGradient( const FGradient& iGradient );
+    FSanitizedGradient( eFormat iFormat, const FGradient& iGradient );
 
     FSanitizedGradient( const FSanitizedGradient& ) = delete;
     FSanitizedGradient& operator=( const FSanitizedGradient& ) = delete;
@@ -134,6 +134,9 @@ public:
 
     /*! Getter for gradient index lut alpha. */
     const uint8* IndexLUTAlpha() const;
+
+    /*! Change the preferred interpolation format. */
+    void ReinterpretInterpolationFormat( eFormat iFormat );
 
     /*!
         Retrieve index of a color step in the array given an input parameter,
@@ -204,9 +207,19 @@ public:
     void ReinterpretInterpolationFormat( eFormat iFormat );
 
     /*!
-    Sanitize sort values in both steps containers in case they were changed / moved.
+        Sort values in both steps containers in case they were changed / moved.
     */
     void Sort();
+
+    /*!
+        Return the sanitized version of this gradient.
+    */
+    FSanitizedGradient Sanitized() const;
+
+    /*!
+        Return the sanitized version of this gradient in the specified format.
+    */
+    FSanitizedGradient Sanitized( eFormat iFormat ) const;
 
 private:
     TArray< FSharedColorStep > mColorSteps; ///< The gradient color steps.
