@@ -53,6 +53,7 @@ public:
 
     uint8* ULIS_RESTRICT dst;
     int64 size;
+    uint32 line;
 };
 
 /////////////////////////////////////////////////////
@@ -73,6 +74,7 @@ BuildSimpleBufferJob_Scanlines(
     const int64 size                = iCargs->dstRect.w * fmt.BPP;
     oJargs.dst                      = dst + ( iCargs->dstRect.y + iIndex ) * bps;
     oJargs.size                     = size;
+    oJargs.line                     = static_cast< uint32 >( iIndex );
 }
 
 static
@@ -90,6 +92,7 @@ BuildSimpleBufferJob_Chunks(
     const int64 btt                 = static_cast< int64 >( iCargs->dst.BytesTotal() );
     oJargs.dst                      = dst + iOffset;
     oJargs.size                     = FMath::Min( iOffset + iSize, btt ) - iOffset;
+    oJargs.line                     = ULIS_UINT16_MAX; // N/A for chunks
 }
 
 template<

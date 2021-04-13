@@ -177,8 +177,8 @@ public:
     ulError
     RasterGradient(
           FBlock& iBlock
-        , const FVec2I& iStart
-        , const FVec2I& iEnd
+        , const FVec2F& iStart
+        , const FVec2F& iEnd
         , const FSanitizedGradient& iGradient
         , eGradientType iType = eGradientType::Gradient_Linear
         , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )

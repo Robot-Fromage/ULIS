@@ -15,7 +15,7 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FConvolutionKernel
+/// @class      FKernel
 /// @brief      The FKernel class provides a mean of storing and manipulating convolution kernels
 /// @details    The kernel is actually a block in Gray floating point format.
 ///             kernel data lives on CPU, kernel can also be used as matrix.

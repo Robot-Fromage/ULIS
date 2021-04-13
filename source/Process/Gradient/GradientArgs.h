@@ -34,8 +34,8 @@ public:
     FGradientCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
-        , const FVec2I& iStart
-        , const FVec2I& iEnd
+        , const FVec2F& iStart
+        , const FVec2F& iEnd
         , const FSanitizedGradient& iGradient
         , eGradientType iType
     )
@@ -46,8 +46,8 @@ public:
         , type( iType )
     {}
 
-    const FVec2I start;
-    const FVec2I end;
+    const FVec2F start;
+    const FVec2F end;
     const FSanitizedGradient& gradient;
     const eGradientType type;
 };

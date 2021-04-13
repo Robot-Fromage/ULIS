@@ -38,7 +38,7 @@ FSanitizedGradient::FSanitizedGradient( eFormat iFormat, const FGradient& iGradi
 
     // Copy alpha
     for( uint64 i = 0; i < inAlphaSize; ++i )
-        mAlphaSteps.PushBack( *iGradient.AlphaSteps()[i] );
+        mAlphaSteps.PushBack( FAlphaStep( iGradient.AlphaSteps()[i]->Param(), FMath::Clamp( iGradient.AlphaSteps()[i]->Value(), 0.f, 1.f ) ) );
 
     // Make sure they are sorted by parameters in case the input gradient wasn't
     // sanitized or sorted.
@@ -118,7 +118,7 @@ FSanitizedGradient::FSanitizedGradient( eFormat iFormat, const FGradient& iGradi
 
     // Build alpha index LUT
     const uint64 maxAlpha = mAlphaSteps.Size() - 1;
-    for( uint64 i = 0; i < maxAlpha - 1; ++i ) {
+    for( uint64 i = 0; i < maxAlpha; ++i ) {
         const FAlphaStep& prev = mAlphaSteps[i];
         const FAlphaStep& next = mAlphaSteps[i+1];
         const uint8 indPrev = uint8( prev.Param() * range );

@@ -44,6 +44,10 @@ public:
         , mValue( iValue )
     {}
 
+    static
+    std::shared_ptr< TGradientStep< T > > MakeShared( ufloat iParam, const T& iValue ) {
+        return  std::make_shared< TGradientStep< T > >( iParam, iValue );
+    }
 public:
     /*! Set the step. */
     void Param( ufloat iParam ) {

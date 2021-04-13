@@ -51,17 +51,10 @@ main( int argc, char *argv[] ) {
           }
     ).Normalized();
 
-    FKernel edge = FKernel(
-          FVec2I( 3, 3 )
-        , {
-              -1, -1, -1
-            , -1, +8, -1
-            , -1, -1, -1
-          }
-    );
-
-    //ctx.ConvolvePremult( blockSource, blockCanvas, edge, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MultiScanlines );
-    //ctx.Finish();
+    FKernel edgeKernel( FVec2I( 10 ), 1.f );
+    edgeKernel.Normalize();
+    ctx.ConvolvePremult( blockSource, blockCanvas, edgeKernel, blockSource.Rect(), FVec2I(), Resampling_Bilinear, Border_Transparent, FColor::Transparent, FSchedulePolicy::MultiScanlines );
+    ctx.Finish();
 
     FRectI rect;
     ctx.AnalyzeSmallestVisibleRect( blockSource, &rect, blockSource.Rect(), FSchedulePolicy::MultiScanlines );

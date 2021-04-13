@@ -27,8 +27,8 @@ ULIS_NAMESPACE_BEGIN
 ulError
 FContext::RasterGradient(
       FBlock& iBlock
-    , const FVec2I& iStart
-    , const FVec2I& iEnd
+    , const FVec2F& iStart
+    , const FVec2F& iEnd
     , const FSanitizedGradient& iGradient
     , eGradientType iType
     , const FRectI& iRect
