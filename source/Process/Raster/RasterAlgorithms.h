@@ -372,9 +372,11 @@ void DrawLineAA(      FBlock&     iBlock
         int dx = p1.x - p0.x;
         int dy = p1.y - p0.y;
         int yStep = 1;
+        int limit = clippingRect.h;
 
-        if( dy < 0)
+        if( dy < 0 )
         {
+            limit = clippingRect.y;
             yStep = -1;
             dy = -dy;
         }
@@ -384,15 +386,18 @@ void DrawLineAA(      FBlock&     iBlock
         int slopeDifferential = 2 * dy - dx;
         int y = p0.y;
 
-        for( int x = p0.x; x <= p1.x; x++)
+        for( int x = p0.x; x <= p1.x; x++ )
         {
             float alphaTop = float(1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
 
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             iBlock.SetPixel( x, y, val );
 
-            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop)) );
-            iBlock.SetPixel( x, y + yStep, val );
+            if( y != limit )
+            {
+                val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop)) );
+                iBlock.SetPixel( x, y + yStep, val );
+            }
 
             if( slopeDifferential >= dx )
             {
@@ -414,9 +419,11 @@ void DrawLineAA(      FBlock&     iBlock
         int dx = p1.x - p0.x;
         int dy = p1.y - p0.y;
         int xStep = 1;
+        int limit = clippingRect.w;
 
         if( dx < 0)
         {
+            limit = clippingRect.x;
             xStep = -1;
             dx = -dx;
         }
@@ -426,15 +433,18 @@ void DrawLineAA(      FBlock&     iBlock
         int slopeDifferential = 2 * dx - dy;
         int x = p0.x;
 
-        for( int y = p0.y; y <= p1.y; y++)
+        for( int y = p0.y; y <= p1.y; y++ )
         {
             float alphaTop = float(1 - FMath::Abs( ( float( slopeDifferential - errMax ) / float( errMin - errMax ) ) - 0.5 ) ); //Interpolation of slopedifferential between errMin and errMax
 
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             iBlock.SetPixel( x, y, val );
 
-            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
-            iBlock.SetPixel( x + xStep, y, val );
+            if( x != limit )
+            {
+                val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+                iBlock.SetPixel( x + xStep, y, val );
+            }
 
             if( slopeDifferential >= dy )
             {
@@ -569,9 +579,11 @@ void DrawLineSP(      FBlock&     iBlock
         float dx = p1.x - p0.x;
         float dy = p1.y - p0.y;
         int yStep = 1;
+        int limit = clippingRect.h;
 
         if( dy < 0)
         {
+            limit = clippingRect.y;
             yStep = -1;
             dy = -dy;
         }
@@ -595,8 +607,11 @@ void DrawLineSP(      FBlock&     iBlock
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             iBlock.SetPixel( int(x), int(y), val );
 
-            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop)) );
-            iBlock.SetPixel( int(x), int(y + yStep), val );
+            if( int(y) != limit )
+            {
+                val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop)) );
+                iBlock.SetPixel( int(x), int(y + yStep), val );
+            }
 
             slopeDifferential+=(2 * dy);
         }
@@ -613,9 +628,11 @@ void DrawLineSP(      FBlock&     iBlock
         float dx = p1.x - p0.x;
         float dy = p1.y - p0.y;
         int xStep = 1;
+        int limit = clippingRect.w;
 
         if( dx < 0)
         {
+            limit = clippingRect.x;
             xStep = -1;
             dx = -dx;
         }
@@ -639,9 +656,11 @@ void DrawLineSP(      FBlock&     iBlock
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
             iBlock.SetPixel( int(x), int(y), val );
 
-            val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
-            iBlock.SetPixel( int(x + xStep), int(y), val );
-
+            if( int(x) != limit )
+            {
+                val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+                iBlock.SetPixel( int(x + xStep), int(y), val );
+            }
 
             slopeDifferential+=(2 * dx);
         }
@@ -1154,7 +1173,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
     int drawRectOctant7 = rectOctant7Clipped == rectOctant7 ? 1 : rectOctant7Clipped.Area() != 0 ? 2 : 0;
     int drawRectOctant8 = rectOctant8Clipped == rectOctant8 ? 1 : rectOctant8Clipped.Area() != 0 ? 2 : 0;
     
-    
+
     //Drawing ------
     FColor val = iColor;
     T maxAlpha = val.AlphaT<T>();
@@ -1167,8 +1186,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if (diff < (2 * (iRadius - y)) )
+            {
+                diff += (2 * y - 1);
+                y--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
 
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1183,11 +1208,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1262,8 +1282,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         }*/
         
         //Right and bottom clip
-        while (xx <= limitX && yy <= limitY )
+        while (xx < limitX && yy < limitY )
         {
+            if (diff < (2 * (iRadius - y)))
+            {
+                diff += (2 * y - 1);
+                y--; yy++;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
 
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1279,11 +1305,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 diff -= ( 2 * x + 1 );
                 x++; xx++;
             }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy++;
-            }
             else
             {
                 diff += (2 * ( y - x - 1 ) );
@@ -1296,14 +1317,20 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
     //Octant 2 ------
     x = 0;
     y = iRadius;
-    if( drawRectOctant2 == 1)
+    if( drawRectOctant2 == 1 )
     {
         int diff = iRadius - 1;
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if (diff < (2 * (iRadius - y)))
+            {
+                diff += (2 * y - 1);
+                y--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1318,11 +1345,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1367,6 +1389,12 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         //Top and left clip
         while (xx >= limitX && yy >= limitY )
         {
+            if (diff < (2 * (iRadius - y)) && xx != limitX )
+            {
+                diff += (2 * y - 1);
+                y--; xx--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1381,11 +1409,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy--;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx--;
             }
             else
             {
@@ -1405,8 +1428,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1421,11 +1450,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1468,8 +1492,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Top and left clip
-        while (xx >= limitX && yy <= limitY )
+        while (xx > limitX && yy < limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; xx--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1484,11 +1514,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx--;
             }
             else
             {
@@ -1508,8 +1533,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1524,11 +1555,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1571,8 +1597,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx <= limitX && yy >= limitY )
+        while (xx < limitX && yy > limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; yy--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1588,11 +1620,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 diff -= ( 2 * x + 1 );
                 x++; xx++;
             }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy--;
-            }
             else
             {
                 diff += (2 * ( y - x - 1 ) );
@@ -1605,14 +1632,20 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
     //Octant 5 ------
     x = 0;
     y = iRadius;
-    if( drawRectOctant5 == 1)
+    if( drawRectOctant5 == 1 )
     {
         int diff = iRadius - 1;
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1627,11 +1660,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1674,8 +1702,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx >= limitX && yy >= limitY )
+        while (xx > limitX && yy > limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; yy--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1691,11 +1725,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
                 diff -= ( 2 * x + 1 );
                 x++; xx--;
             }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy--;
-            }
             else
             {
                 diff += (2 * ( y - x - 1 ) );
@@ -1709,14 +1738,19 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
     //Octant 6 ------
     x = 0;
     y = iRadius;
-    if( drawRectOctant6 == 1)
+    if( drawRectOctant6 == 1 )
     {
         int diff = iRadius - 1;
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1731,11 +1765,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1778,8 +1807,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx <= limitX && yy <= limitY )
+        while (xx < limitX && yy < limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; xx++;
+            }
+         
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1794,11 +1829,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx++;
             }
             else
             {
@@ -1819,8 +1849,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+            
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1835,11 +1871,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1882,8 +1913,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx <= limitX && yy >= limitY )
+        while (xx < limitX && yy > limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; xx++;
+            }
+            
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1898,11 +1935,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy--;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx++;
             }
             else
             {
@@ -1923,8 +1955,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -1939,11 +1977,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -1986,8 +2019,14 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx >= limitX && yy <= limitY )
+        while (xx > limitX && yy < limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; yy++;
+            }
+            
             float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
             
             val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
@@ -2002,11 +2041,6 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
             {
                 diff -= ( 2 * x + 1 );
                 x++; xx--;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy++;
             }
             else
             {
