@@ -80,12 +80,11 @@ InvokeGradientLinearMT_MEM_Generic(
         // From u above, remove the unknown u, we now have a single unknown.
         // ( p0.x - src.x + dir.x * t ) / orth.x = ( p0.y - src.y + dir.y * t ) / orth.y
         // ( p0.x - src.x + dir.x * t ) * orth.y = ( p0.y - src.y + dir.y * t ) * orth.x
-        // p0.x * orth.y - src.x * orth.y + dir.x * orth.y * t = p0.y * orth.x - src.y * orth.x + dir.y * orth.x * t
-        // dir.x * orth.y * t - dir.y * orth.x * t = p0.x * orth.y - src.x * orth.y - p0.y * orth.x + src.y * orth.x
-        // t * ( dir.x * orth.y - dir.y * orth.x ) = p0.x * orth.y - src.x * orth.y - p0.y * orth.x + src.y * orth.x
-        // t = ( p0.x * orth.y - src.x * orth.y - p0.y * orth.x + src.y * orth.x ) / ( dir.x * orth.y - dir.y * orth.x )
-        // t = ( orth.y * ( p0.x - src.x ) + orth.x * ( src.y - p0.y ) ) / ( dir.x * orth.y - dir.y * orth.x )
-        t = -( orth.y * ( p0.x - src.x ) + orth.x * ( src.y - p0.y ) ) / ( dir.x * orth.y - dir.y * orth.x );
+        // ( p0.x - src.x ) * orth.y + dir.x * orth.y * t = ( p0.y - src.y ) * orth.x + dir.y * orth.x * t
+        // dir.x * orth.y * t - dir.y * orth.x * t = ( p0.y - src.y ) * orth.x - ( p0.x - src.x ) * orth.y
+        // t * ( dir.x * orth.y - dir.y * orth.x ) = ( p0.y - src.y ) * orth.x - ( p0.x - src.x ) * orth.y
+        // t = ( ( p0.y - src.y ) * orth.x - ( p0.x - src.x ) * orth.y ) / ( dir.x * orth.y - dir.y * orth.x )
+        t = ( ( p0.y - src.y ) * orth.x - ( p0.x - src.x ) * orth.y ) / ( dir.x * orth.y - dir.y * orth.x );
         // const float dither = ( float( rand() ) - float( rand()) ) / RAND_MAX;
         const ufloat param = FMath::Clamp( t / length, 0.f, 1.f );
         const uint8 index = static_cast< uint8 >( param * ( FSanitizedGradient::range - 1 ) );
