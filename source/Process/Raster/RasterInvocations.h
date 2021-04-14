@@ -15,7 +15,17 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
-#include "Process/Raster/RasterAlgorithms.h"
+
+#include "Process/Raster/RasterArcAndres.h"
+#include "Process/Raster/RasterArcBresenham.h"
+#include "Process/Raster/RasterCircleAndres.h"
+#include "Process/Raster/RasterCircleBresenham.h"
+#include "Process/Raster/RasterEllipse.h"
+#include "Process/Raster/RasterLine.h"
+#include "Process/Raster/RasterPolygon.h"
+#include "Process/Raster/RasterQuadraticBezier.h"
+#include "Process/Raster/RasterRectangle.h"
+#include "Process/Raster/RasterRotatedEllipse.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
