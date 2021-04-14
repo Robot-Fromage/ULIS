@@ -21,4 +21,4 @@ if [ -f CMakeCache.txt ]; then
 fi
 
 ## Rebuild Project
-cmake -G "Xcode" ../../ULIS3
+cmake -G "Xcode" -DULIS_BUILD_SHARED=ON -DULIS_BUILD_TESTS=ON ../../ULIS
