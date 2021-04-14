@@ -65,7 +65,6 @@ InvokeBuildSATYPassMT_MEM_Generic(
 
     for( int y = 1; y < cargs->dstRect.h; ++y ) {
         for( uint8 j = 0; j < fmt.SPP; ++j ) {
-            auto jojo = dst - stride + j;
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
         }
         dst += stride;
@@ -129,7 +128,6 @@ InvokeBuildPremultSATYPassMT_MEM_Generic(
 
     for( int y = 1; y < cargs->dstRect.h; ++y ) {
         for( uint8 j = 0; j < fmt.SPP; ++j ) {
-            auto jojo = dst - stride + j;
             dst[j] = static_cast< float >( dst[j] + *( dst - stride + j ) );
         }
         dst += stride;

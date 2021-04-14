@@ -9,14 +9,34 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <cstdint>
-#include <iostream>
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
+#include <ULIS>
+using namespace ::ULIS;
 
 int
 main() {
+    FThreadPool pool;
+    FCommandQueue queue( pool );
+    eFormat fmt = Format_RGBA8;
+    FContext ctx( queue, fmt );
+
+    FBlock canvas( 800, 600, fmt );
+    FBlock disk( 40, 40, fmt );
+
+    ctx.Fill( canvas, canvas.Rect(), FColor::Red, FSchedulePolicy::CacheEfficient );
+    ctx.Clear( disk, disk.Rect(), FSchedulePolicy::CacheEfficient );
+    ctx.Finish();
+
+    ctx.DrawCircleBresenhamAA( disk, disk.Rect().Size() / 2, disk.Width() / 2 - 2, FColor::Blue, true, disk.Rect(), FSchedulePolicy::MonoChunk );
+    ctx.Finish();
+
+    for( int i = 0; i < 15; ++i ) {
+        ctx.Blend( disk, canvas, disk.Rect(), ( canvas.Rect().Size() / 2 - disk.Rect().Size() / 2 ) + i * 5, Blend_Normal, Alpha_Normal, 1.f, FSchedulePolicy::MultiScanlines );
+        ctx.Finish();
+    }
+
+    ctx.SaveBlockToDisk( canvas, "C:/Users/PRAXINOS/Documents/work/Output/out.png", FileFormat_png, 100, FSchedulePolicy::MonoChunk );
+    ctx.Finish();
+
     return  0;
 }
 

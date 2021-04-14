@@ -82,18 +82,24 @@ private:
     T mValue;  ///< The gradient step value.
 };
 
+
 typedef TGradientStep< FColor > FColorStep;
 typedef TGradientStep< ufloat > FAlphaStep;
 template class ULIS_API TGradientStep< FColor >;
 template class ULIS_API TGradientStep< ufloat >;
-typedef std::shared_ptr< FColorStep > FSharedColorStep;
-typedef std::shared_ptr< FAlphaStep > FSharedAlphaStep;
-template class ULIS_API std::shared_ptr< FColorStep >;
-template class ULIS_API std::shared_ptr< FAlphaStep >;
+ULIS_NAMESPACE_END
+
+typedef std::shared_ptr< ULIS::FColorStep > FSharedColorStep;
+typedef std::shared_ptr< ULIS::FAlphaStep > FSharedAlphaStep;
+template class ULIS_API std::shared_ptr< ULIS::FColorStep >;
+template class ULIS_API std::shared_ptr< ULIS::FAlphaStep >;
+
+ULIS_NAMESPACE_BEGIN
 template class ULIS_API TArray< FSharedColorStep >;
 template class ULIS_API TArray< FSharedAlphaStep >;
 template class ULIS_API TArray< FColorStep >;
 template class ULIS_API TArray< FAlphaStep >;
+
 
 /////////////////////////////////////////////////////
 /// @class      FSanitizedGradient

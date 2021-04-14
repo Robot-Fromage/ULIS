@@ -141,7 +141,7 @@ BuildBlendJob_Scanlines(
     uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
     const uint32 src_bps                     = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
     const uint32 dst_bps                     = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
-    const int64 size                        = iCargs->dstRect.w * fmt.BPP;
+    // const int64 size                        = iCargs->dstRect.w * fmt.BPP;
     const uint32 src_decal_y                = iCargs->shift.y + iCargs->srcRect.y;
     const uint32 src_decal_x                = ( iCargs->shift.x + iCargs->srcRect.x ) * iCargs->src.BytesPerPixel();
     const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;

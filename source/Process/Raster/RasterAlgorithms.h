@@ -131,7 +131,7 @@ static const bool InternalCropLineToRectangle(FVec2I& ioP0,FVec2I& ioP1,const FR
     return accept;
 }
 
-static const float InternalGetPixelBaseAlphaFromCoord( FVec2F& iPt )
+static const float InternalGetPixelBaseAlphaFromCoord( const FVec2F& iPt )
 {
     float xDec = iPt.x - int( iPt.x );
     float xAlpha = 0.f;
