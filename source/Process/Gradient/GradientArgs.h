@@ -37,18 +37,21 @@ public:
         , const FVec2F& iStart
         , const FVec2F& iEnd
         , const FSanitizedGradient& iGradient
+        , ufloat iDithering
         , eGradientType iType
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
         , start( iStart )
         , end( iEnd )
         , gradient( iGradient )
+        , dithering( iDithering )
         , type( iType )
     {}
 
     const FVec2F start;
     const FVec2F end;
     const FSanitizedGradient& gradient;
+    const ufloat dithering;
     const eGradientType type;
 };
 

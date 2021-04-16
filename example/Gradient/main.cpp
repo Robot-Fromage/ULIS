@@ -31,6 +31,8 @@ main( int argc, char *argv[] ) {
     FBlock canvas( 800, 600, fmt );
     FGradient gradient( fmt );
     gradient.ColorSteps().PushBack( FColorStep::MakeShared( 0.f, FColor::Red ) );
+    gradient.ColorSteps().PushBack( FColorStep::MakeShared( 0.5f, FColor::Yellow ) );
+    gradient.ColorSteps().PushBack( FColorStep::MakeShared( 0.51f, FColor::Green ) );
     gradient.ColorSteps().PushBack( FColorStep::MakeShared( 1.f, FColor::Blue ) );
     gradient.AlphaSteps().PushBack( FAlphaStep::MakeShared( 0.f, 1.f ) );
     gradient.AlphaSteps().PushBack( FAlphaStep::MakeShared( 1.f, 1.f ) );
@@ -38,11 +40,12 @@ main( int argc, char *argv[] ) {
     ctx.RasterGradient(
           canvas
         , FVec2I( 0, 0 )
-        , FVec2I( canvas.Rect().Size() )
+        , FVec2I( canvas.Rect().Size().x, 0 )
         , grad
+        , 1.f / 255.f
         , Gradient_Linear
         , canvas.Rect()
-        , FSchedulePolicy::MultiScanlines
+        , FSchedulePolicy::MonoScanlines
         , 0
         , nullptr
         , nullptr

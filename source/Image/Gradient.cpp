@@ -112,8 +112,8 @@ FSanitizedGradient::FSanitizedGradient( eFormat iFormat, const FGradient& iGradi
         const FColorStep& next = mColorSteps[i+1];
         const uint8 indPrev = uint8( prev.Param() * range );
         const uint8 indNext = uint8( next.Param() * range );
-        for( uint8 i = indPrev; i < indNext; ++i )
-            mIndexLUTColor[i] = indPrev;
+        for( uint8 j = indPrev; j < indNext; ++j )
+            mIndexLUTColor[j] = i;
     }
 
     // Build alpha index LUT
@@ -123,8 +123,8 @@ FSanitizedGradient::FSanitizedGradient( eFormat iFormat, const FGradient& iGradi
         const FAlphaStep& next = mAlphaSteps[i+1];
         const uint8 indPrev = uint8( prev.Param() * range );
         const uint8 indNext = uint8( next.Param() * range );
-        for( uint8 i = indPrev; i < indNext; ++i )
-            mIndexLUTAlpha[i] = indPrev;
+        for( uint8 j = indPrev; j < indNext; ++j )
+            mIndexLUTAlpha[j] = i;
     }
 }
 

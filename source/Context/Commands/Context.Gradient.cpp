@@ -30,6 +30,7 @@ FContext::RasterGradient(
     , const FVec2F& iStart
     , const FVec2F& iEnd
     , const FSanitizedGradient& iGradient
+    , float iDithering
     , eGradientType iType
     , const FRectI& iRect
     , const FSchedulePolicy& iPolicy
@@ -60,6 +61,7 @@ FContext::RasterGradient(
                 , iStart
                 , iEnd
                 , iGradient
+                , iDithering
                 , iType
             )
             , iPolicy

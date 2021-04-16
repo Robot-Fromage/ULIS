@@ -172,7 +172,10 @@ public:
 /////////////////////////////////////////////////////
 // Gradient
     /*!
-        Perform a load of a PSD file in a layer stack
+        Raster a linear gradient on the destination block.
+        The iDithering parameter is a normal param clamped beetween 0 and 1.
+        0: 0%
+        1: 100%
     */
     ulError
     RasterGradient(
@@ -180,6 +183,7 @@ public:
         , const FVec2F& iStart
         , const FVec2F& iEnd
         , const FSanitizedGradient& iGradient
+        , float iDithering = 0.f
         , eGradientType iType = eGradientType::Gradient_Linear
         , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()

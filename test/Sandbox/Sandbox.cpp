@@ -17,7 +17,7 @@ main() {
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt );
+    FContext ctx( queue, fmt, PerformanceIntent_MEM );
 
     FBlock canvas( 800, 600, fmt );
     FBlock disk( 40, 40, fmt );
@@ -26,13 +26,11 @@ main() {
     ctx.Clear( disk, disk.Rect(), FSchedulePolicy::CacheEfficient );
     ctx.Finish();
 
-    ctx.DrawCircleBresenhamAA( disk, disk.Rect().Size() / 2, disk.Width() / 2 - 2, FColor::Blue, true, disk.Rect(), FSchedulePolicy::MonoChunk );
+    ctx.DrawCircleBresenham( disk, disk.Rect().Size() / 2, disk.Width() / 2 - 2, FColor::Blue, true, disk.Rect(), FSchedulePolicy::MonoChunk );
     ctx.Finish();
 
-    for( int i = 0; i < 15; ++i ) {
-        ctx.Blend( disk, canvas, disk.Rect(), ( canvas.Rect().Size() / 2 - disk.Rect().Size() / 2 ) + i * 5, Blend_Normal, Alpha_Normal, 1.f, FSchedulePolicy::MultiScanlines );
-        ctx.Finish();
-    }
+    ctx.BlendAA( disk, canvas, disk.Rect(), FVec2F( canvas.Rect().Size() / 2 - disk.Rect().Size() / 2 ) + FVec2F( 0.01f ), Blend_Normal, Alpha_Normal, 1.f, FSchedulePolicy::MultiScanlines );
+    ctx.BlendAA( disk, canvas, disk.Rect(), FVec2F( canvas.Rect().Size() / 2 - disk.Rect().Size() / 2 ) + FVec2F( 10.01f ), Blend_Normal, Alpha_Normal, 1.f, FSchedulePolicy::MultiScanlines );
 
     ctx.SaveBlockToDisk( canvas, "C:/Users/PRAXINOS/Documents/work/Output/out.png", FileFormat_png, 100, FSchedulePolicy::MonoChunk );
     ctx.Finish();

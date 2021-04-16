@@ -54,6 +54,10 @@ InvokeGradientLinearMT_MEM_Generic(
     const int x1 = cargs->dstRect.x;
     const int x2 = cargs->dstRect.w + x1;
 
+    // RNG
+    const int32 seedy = cargs->dstRect.y + jargs->line + 1;
+    uint32 localPRNGSeed = ( 8253729 % seedy ) * 5323 + ( 2396403 % ( seedy + 64578 ) * seedy );
+
     // Main scanline process loop
     for( int x = x1; x < x2; ++x ) {
         // Retrieve source point ( integer coordinates, top left corner of pixel ).
@@ -85,9 +89,16 @@ InvokeGradientLinearMT_MEM_Generic(
         // t * ( dir.x * orth.y - dir.y * orth.x ) = ( p0.y - src.y ) * orth.x - ( p0.x - src.x ) * orth.y
         // t = ( ( p0.y - src.y ) * orth.x - ( p0.x - src.x ) * orth.y ) / ( dir.x * orth.y - dir.y * orth.x )
         t = ( ( p0.y - src.y ) * orth.x - ( p0.x - src.x ) * orth.y ) / ( dir.x * orth.y - dir.y * orth.x );
-        // const float dither = ( float( rand() ) - float( rand()) ) / RAND_MAX;
-        const ufloat param = FMath::Clamp( t / length, 0.f, 1.f );
-        const uint8 index = static_cast< uint8 >( param * ( FSanitizedGradient::range - 1 ) );
+
+        localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
+        const ufloat toss1 = ( localPRNGSeed % 65537 ) / 65537.f;
+        localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
+        const ufloat toss2 = ( localPRNGSeed % 65537 ) / 65537.f;
+
+        const float dither = ( toss1 - toss2 );
+        const ufloat param = FMath::Clamp( ( t + dither * cargs->dithering * MaxType< T >() ) / length, 0.f, 1.f );
+        uint8 index = static_cast< uint8 >( param * FSanitizedGradient::range );
+        if( index >= FSanitizedGradient::range ) index = FSanitizedGradient::range - 1;
         prevColorStep = &( colorSteps[ indexLutColor[ index ] ] );
         nextColorStep = &( colorSteps[ indexLutColor[ index ] + 1 ] );
         prevAlphaStep = &( alphaSteps[ indexLutAlpha[ index ] ] );
