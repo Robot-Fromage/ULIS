@@ -43,7 +43,7 @@ main( int argc, char *argv[] ) {
         , FVec2I( canvas.Rect().Size().x, 0 )
         , grad
         , 2.f / 255.f
-        , Gradient_Reflected
+        , Gradient_Radial
         , canvas.Rect()
         , FSchedulePolicy::MultiScanlines
         , 0

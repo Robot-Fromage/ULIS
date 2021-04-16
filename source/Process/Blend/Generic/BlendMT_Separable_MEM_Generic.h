@@ -69,6 +69,7 @@ InvokeBlendMT_Separable_MEM_Generic_Subpixel(
         #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
         ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
         #undef ACTION
+        alpha_result += FMath::kEpsilonf;
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             const uint8 r = fmt.IDT[j];
@@ -81,6 +82,7 @@ InvokeBlendMT_Separable_MEM_Generic_Subpixel(
         }
 
         if( fmt.HEA ) FLOAT2TYPE( bdp, fmt.AID, alpha_result );
+        uint8 eozoz = bdp[ fmt.AID ];
         src += fmt.BPP;
         bdp += fmt.BPP;
     }
