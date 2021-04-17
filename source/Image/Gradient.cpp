@@ -61,8 +61,8 @@ FSanitizedGradient::FSanitizedGradient( eFormat iFormat, const FGradient& iGradi
     // Make sure there are at least the two end alphas if the input gradient was empty,
     // that gives us a sanitized fully transparent gradient
     if( inAlphaSize == 0 ) {
-        mAlphaSteps.PushBack( FAlphaStep( 0.f, 0.f ) );
-        mAlphaSteps.PushBack( FAlphaStep( 1.f, 0.f ) );
+        mAlphaSteps.PushBack( FAlphaStep( 0.f, 1.f ) );
+        mAlphaSteps.PushBack( FAlphaStep( 1.f, 1.f ) );
     }
 
     // Sanitize first color step, if missing at 0.f we duplicate the first one
@@ -225,6 +225,18 @@ FGradient::ReinterpretInterpolationFormat( eFormat iFormat )
         FColor& temp = mColorSteps[i]->Value();
         temp = temp.ToFormat( Format() );
     }
+}
+
+void
+FGradient::AddColorStep( ufloat iParam, const ISample& iColor )
+{
+    mColorSteps.PushBack( FColorStep::MakeShared( iParam, iColor ) );
+}
+
+void
+FGradient::AddAlphaStep( ufloat iParam, ufloat iAlpha )
+{
+    mAlphaSteps.PushBack( FAlphaStep::MakeShared( iParam, iAlpha ) );
 }
 
 FSanitizedGradient

@@ -208,6 +208,12 @@ public:
     /*! Change the preferred interpolation format. */
     void ReinterpretInterpolationFormat( eFormat iFormat );
 
+    /*! Add color step. */
+    void AddColorStep( ufloat iParam, const ISample& iColor );
+
+    /*! Add alpha step. */
+    void AddAlphaStep( ufloat iParam, ufloat iAlpha );
+
     /*!
         Sort values in both steps containers in case they were changed / moved.
     */
