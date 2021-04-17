@@ -35,13 +35,15 @@ main( int argc, char *argv[] ) {
     gradient.AlphaSteps().PushBack( FAlphaStep::MakeShared( 0.f, 1.f ) );
     gradient.AlphaSteps().PushBack( FAlphaStep::MakeShared( 1.f, 1.f ) );
     FSanitizedGradient grad = gradient.Sanitized( fmt );
+    FVec2I src( canvas.Rect().Size() / 2 );
+    FVec2I dst( src + 100 );
     ctx.RasterGradient(
           canvas
-        , FVec2I( canvas.Rect().Size() / 2 )
-        , FVec2I( canvas.Rect().Size().x, 0 )
+        , src
+        , dst
         , grad
-        , 0.f
-        , Gradient_Angular
+        , 1.f / 255
+        , Gradient_Diamond
         , canvas.Rect()
         , FSchedulePolicy::MonoScanlines
         , 0
