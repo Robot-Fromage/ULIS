@@ -44,9 +44,9 @@ InvokeResizeMT_Bilinear_MEM_Generic(
         const int   top     = static_cast< int >( floor( point_in_src.y ) );
         const int   right   = left + 1;
         const int   bot     = top + 1;
-        const float tx      = point_in_src.x - left;
+        const float tx      = point_in_src.x - left + 0.5f;
         const float ux      = 1.f - tx;
-        const float ty      = point_in_src.y - top;
+        const float ty      = point_in_src.y - top + 0.5f;
         const float uy      = 1.f - ty;
 
         #define TEMP( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, cargs->src.PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }

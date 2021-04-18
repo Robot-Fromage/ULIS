@@ -35,11 +35,11 @@ main( int argc, char *argv[] ) {
     FSanitizedGradient grad = gradient.Sanitized( fmt );
     FVec2I p0( 0 );
     FVec2I p1( canvas.Rect().Size() );
-    ctx.RasterGradient( canvas, p0, p1, grad, 4.f / 255.f, Gradient_Reflected );
+    ctx.RasterGradient( canvas, p0, p1, grad, 100, Gradient_Reflected );
     ctx.Finish();
 
     FBlock mipMap;
-    ctx.XBuildMipMap( canvas, mipMap );
+    ctx.XBuildMipMap( canvas, mipMap, -1, canvas.Rect(), Resampling_Bicubic );
     ctx.Finish();
 
     QApplication    app( argc, argv );

@@ -49,8 +49,8 @@ InvokeResizeMT_Bicubic_MEM_Generic(
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const int   src_x   = static_cast< int >( floor( point_in_src.x ) );
         const int   src_y   = static_cast< int >( floor( point_in_src.y ) );
-        const float tx      = point_in_src.x - src_x;
-        const float ty      = point_in_src.y - src_y;
+        const float tx      = point_in_src.x - src_x + 0.5f;
+        const float ty      = point_in_src.y - src_y + 0.5f;
 
         #define GETPIXEL( _C, _X, _Y ) if( _X >= minx && _Y >= miny && _X < maxx && _Y < maxy ) { memcpy( _C, cargs->src.PixelBits( _X, _Y ), fmt.BPP ); } else { memset( _C, 0, fmt.BPP ); }
         GETPIXEL( p00, src_x - 1, src_y - 1 );  GETPIXEL( p01, src_x - 1, src_y + 0 );  GETPIXEL( p02, src_x - 1, src_y + 1 );  GETPIXEL( p03, src_x - 1, src_y + 2 );

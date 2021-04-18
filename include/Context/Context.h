@@ -958,6 +958,7 @@ public:
         , FBlock& iDestination
         , int iMaxMipLevel = -1
         , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr

@@ -640,6 +640,7 @@ FContext::XBuildMipMap(
     , FBlock& iDestination
     , int iMaxMipLevel
     , const FRectI& iSourceRect
+    , eResamplingMethod iResamplingMethod
     , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
     , const FEvent* iWaitList
@@ -651,6 +652,9 @@ FContext::XBuildMipMap(
     const FRectI src_rect = iSource.Rect();
     const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
     const FRectI dst_roi = MipMapMetrics( src_roi );
+
+    if( iResamplingMethod == Resampling_Area )
+        iResamplingMethod = Resampling_Bilinear;
 
     // Check no-op
     if( dst_roi.Area() <= 0 )
@@ -675,7 +679,7 @@ FContext::XBuildMipMap(
             , iDestination
             , src_roi
             , mipsRects[i]
-            , Resampling_Bilinear
+            , iResamplingMethod
             , Border_Transparent
             , FColor::Transparent
             , nullptr

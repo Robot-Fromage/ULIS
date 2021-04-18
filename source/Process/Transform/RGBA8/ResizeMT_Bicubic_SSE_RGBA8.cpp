@@ -46,8 +46,8 @@ InvokeResizeMT_Bicubic_SSE_RGBA8(
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const int   src_x   = static_cast< int >( floor( point_in_src.x ) );
         const int   src_y   = static_cast< int >( floor( point_in_src.y ) );
-        const Vec4f tx      = point_in_src.x - src_x;
-        const Vec4f ty      = point_in_src.y - src_y;
+        const Vec4f tx      = point_in_src.x - src_x + 0.5f;
+        const Vec4f ty      = point_in_src.y - src_y + 0.5f;
 
         #define LOAD( X )   _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( reinterpret_cast< const __m128i* >( X ) ) ) )
         #define GETPIXEL( _C, _X, _Y )                                                                                                                      \
