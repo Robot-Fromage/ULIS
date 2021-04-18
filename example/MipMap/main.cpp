@@ -30,16 +30,20 @@ main( int argc, char *argv[] ) {
 
     FBlock canvas( 1024, 1024, fmt );
     FGradient gradient( fmt );
-    gradient.AddColorStep( 0.f, FColor::Blue );
-    gradient.AddColorStep( 1.f, FColor::Red );
+    gradient.AddColorStep( 0.f, FColor::Black );
+    gradient.AddColorStep( 1.f, FColor::White );
     FSanitizedGradient grad = gradient.Sanitized( fmt );
-    FVec2I p0( 0 );
+    FVec2I p0( canvas.Rect().Size() / 2 );
     FVec2I p1( canvas.Rect().Size() );
-    ctx.RasterGradient( canvas, p0, p1, grad, 100, Gradient_Reflected );
+    ctx.RasterGradient( canvas, p0, p1, grad, 100, Gradient_Radial);
+    //ctx.Clear( canvas );
+    ctx.Finish();
+
+    //ctx.DrawCircleAndresAA( canvas, p0, 500, FColor::Black, true );
     ctx.Finish();
 
     FBlock mipMap;
-    ctx.XBuildMipMap( canvas, mipMap, -1, canvas.Rect(), Resampling_Bicubic );
+    ctx.XBuildMipMap( canvas, mipMap, -1, canvas.Rect(), Resampling_Bilinear );
     ctx.Finish();
 
     QApplication    app( argc, argv );

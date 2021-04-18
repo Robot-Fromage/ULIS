@@ -337,11 +337,6 @@ FContext::Resize(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iDestination.Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
@@ -666,18 +661,18 @@ FContext::XBuildMipMap(
     TArray< FRectI > mipsRects;
     MipRectsMetrics( src_roi, iMaxMipLevel, &mipsRects );
 
-    TArray< FEvent > events( iMaxMipLevel + 3 );
+    TArray< FEvent > events( iMaxMipLevel + 2 );
     XAllocateBlockData( iDestination, dst_roi.w, dst_roi.h, iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, iNumWait, iWaitList, &events[0] );
     // Only load fake geometry to avoid return on hollow block.
     iDestination.LoadFromData( nullptr, dst_roi.w, dst_roi.h, iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
-    Clear( iDestination, FRectI( src_roi.w, mipsRects[1].h, dst_roi.w - src_roi.w, dst_roi.h - mipsRects[1].h ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[0], &events[1] );
-    Copy( iSource, iDestination, src_roi, FVec2I( 0 ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[1], &events[2] );
+    //Clear( iDestination, FRectI( src_roi.w, mipsRects[1].h, dst_roi.w - src_roi.w, dst_roi.h - mipsRects[1].h ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[0], &events[1] );
+    Copy( iSource, iDestination, src_roi, FVec2I( 0 ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[0], &events[1] );
 
     for( int i = 1; i <= iMaxMipLevel; ++i ) {
         ulError err = Resize(
-              iSource
+              i == 1 ? iSource : iDestination
             , iDestination
-            , src_roi
+            , mipsRects[i - 1]
             , mipsRects[i]
             , iResamplingMethod
             , Border_Transparent
@@ -685,8 +680,8 @@ FContext::XBuildMipMap(
             , nullptr
             , FSchedulePolicy::AsyncMultiScanlines
             , 1
+            , &events[i]
             , &events[i+1]
-            , &events[i+2]
         );
         ULIS_ASSERT( !err, "Error during mip computation level " << i );
     }
