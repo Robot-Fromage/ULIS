@@ -870,7 +870,7 @@ public:
         same size.
     */
     static
-    eFormat BezierDisplacmentFieldMetrics( const FBlock& iSource );
+    eFormat BezierDisplacementFieldMetrics( const FBlock& iSource );
 
     /*!
         Get metrics before building a bezier displacement mask, this will give
@@ -878,7 +878,7 @@ public:
         same size.
     */
     static
-    eFormat BezierDisplacmentMaskMetrics( const FBlock& iSource );
+    eFormat BezierDisplacementMaskMetrics( const FBlock& iSource );
 
     /*!
         Perform a bezier transform operation using iSource as input. The result
@@ -916,6 +916,42 @@ public:
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Get metrics before building a mip map.
+    */
+    static
+    FRectI MipMapMetrics( const FRectI& iSource );
+
+    /*!
+        Get metrics for a mip level.
+    */
+    static
+    FRectI MipLevelMetrics( const FRectI& iSource, uint8 iLevel );
+
+    /*!
+        Get metrics for a mip level.
+    */
+    static
+    uint8 MaxMipLevelMetrics( const FRectI& iSource );
+
+    /*!
+        Perform a build mip map by chaining halving bilinear resizes.
+
+        \sa MipMapMetrics()
+        \sa MipLevelMetrics()
+    */
+    ulError
+    XBuildMipMap(
+          const FBlock& iSource
+        , const FBlock& iDestination
+        , int iMaxMipLevel = -1
+        , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr

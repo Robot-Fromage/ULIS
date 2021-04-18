@@ -481,14 +481,14 @@ FContext::TransformBezierMetrics(
 
 //static
 eFormat
-FContext::BezierDisplacmentFieldMetrics( const FBlock& iSource )
+FContext::BezierDisplacementFieldMetrics( const FBlock& iSource )
 {
     return  eFormat::Format_GAF;
 }
 
 //static
 eFormat
-FContext::BezierDisplacmentMaskMetrics( const FBlock& iSource )
+FContext::BezierDisplacementMaskMetrics( const FBlock& iSource )
 {
     return  eFormat::Format_G8;
 }
@@ -564,6 +564,64 @@ FContext::XProcessBezierDisplacementField(
         )
     );
 
+    return  ULIS_NO_ERROR;
+}
+
+//static
+FRectI
+FContext::MipMapMetrics(
+    const FRectI& iSource
+)
+{
+    const FRectI src_rect = iSource.Sanitized();
+    return  FRectI( 0, 0, static_cast< int >( iSource.w * 1.5f ), iSource.h );
+}
+
+//static
+FRectI
+FContext::MipLevelMetrics( const FRectI& iSource, uint8 iLevel )
+{
+    const FRectI src_rect = iSource.Sanitized();
+    const FRectI total = MipMapMetrics( src_rect );
+
+    if( iLevel == 0 )
+        return  src_rect;
+
+    FVec2I pos = src_rect.Position();
+    FVec2I size = src_rect.Size();
+    FVec2I botright = pos + size;
+    FRectI result = FRectI::FromPositionAndSize( FVec2I( botright.x, 0 ), size / 2 );
+
+    for( int i = 2; i <= iLevel; ++i ) {
+        pos = result.Position();
+        size = result.Size();
+        botright = pos + size;
+        result = FRectI::FromPositionAndSize( FVec2I( pos.x, botright.y ), size / 2 );
+    }
+
+    return  result;
+}
+
+//static
+uint8
+FContext::MaxMipLevelMetrics( const FRectI& iSource )
+{
+    FRectI rect = iSource.Sanitized();
+    return  static_cast< uint8 >( log2f( static_cast< float >( rect.w ) ) );
+}
+
+ulError
+FContext::XBuildMipMap(
+      const FBlock& iSource
+    , const FBlock& iDestination
+    , int iMaxMipLevel
+    , const FRectI& iSourceRect
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
     return  ULIS_NO_ERROR;
 }
 
