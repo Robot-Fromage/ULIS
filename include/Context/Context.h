@@ -938,6 +938,12 @@ public:
         Get metrics for a mip level.
     */
     static
+    void MipRectsMetrics( const FRectI& iSource, uint8 iMaxLevel, TArray< FRectI >* oArray );
+
+    /*!
+        Get metrics for a mip level.
+    */
+    static
     uint8 MaxMipLevelMetrics( const FRectI& iSource );
 
     /*!
@@ -949,7 +955,7 @@ public:
     ulError
     XBuildMipMap(
           const FBlock& iSource
-        , const FBlock& iDestination
+        , FBlock& iDestination
         , int iMaxMipLevel = -1
         , const FRectI& iSourceRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()

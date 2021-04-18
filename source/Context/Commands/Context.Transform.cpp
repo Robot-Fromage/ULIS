@@ -603,6 +603,30 @@ FContext::MipLevelMetrics( const FRectI& iSource, uint8 iLevel )
 }
 
 //static
+void
+FContext::MipRectsMetrics( const FRectI& iSource, uint8 iMaxLevel, TArray< FRectI >* oArray )
+{
+    ULIS_ASSERT( oArray, "Bad input" );
+    oArray->Clear();
+    const FRectI rect = iSource.Sanitized();
+    oArray->Reserve( iMaxLevel + 1 );
+    oArray->PushBack( rect );
+    FVec2I pos = rect.Position();
+    FVec2I size = rect.Size();
+    FVec2I botright = pos + size;
+    FRectI result = FRectI::FromPositionAndSize( FVec2I( botright.x, 0 ), size / 2 );
+    oArray->PushBack( result );
+
+    for( int i = 2; i <= iMaxLevel; ++i ) {
+        pos = result.Position();
+        size = result.Size();
+        botright = pos + size;
+        result = FRectI::FromPositionAndSize( FVec2I( pos.x, botright.y ), size / 2 );
+        oArray->PushBack( result );
+    }
+}
+
+//static
 uint8
 FContext::MaxMipLevelMetrics( const FRectI& iSource )
 {
@@ -613,7 +637,7 @@ FContext::MaxMipLevelMetrics( const FRectI& iSource )
 ulError
 FContext::XBuildMipMap(
       const FBlock& iSource
-    , const FBlock& iDestination
+    , FBlock& iDestination
     , int iMaxMipLevel
     , const FRectI& iSourceRect
     , const FSchedulePolicy& iPolicy
@@ -622,6 +646,47 @@ FContext::XBuildMipMap(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT( iSource.Format() == Format(), "Bad format" );
+    // Sanitize geometry
+    const FRectI src_rect = iSource.Rect();
+    const FRectI dst_rect = iDestination.Rect();
+    const FRectI src_roi = iSourceRect.Sanitized() & src_rect;
+    const FRectI dst_roi = MipMapMetrics( iSourceRect );
+
+    // Check no-op
+    if( dst_roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    if( iMaxMipLevel == -1 )
+        iMaxMipLevel = MaxMipLevelMetrics( src_roi );
+
+    TArray< FRectI > mipsRects;
+    MipRectsMetrics( src_roi, iMaxMipLevel, &mipsRects );
+
+    TArray< FEvent > events( iMaxMipLevel + 2 );
+    XAllocateBlockData( iDestination, dst_roi.w, dst_roi.h, iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, iNumWait, iWaitList, &events[0] );
+    // Only load fake geometry to avoid return on hollow block.
+    iDestination.LoadFromData( nullptr, dst_roi.w, dst_roi.h, Format_G8, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
+    Clear( iDestination, dst_roi, FSchedulePolicy::AsyncCacheEfficient, 1, &events[0], &events[1] );
+
+    for( int i = 1; i <= iMaxMipLevel; ++i ) {
+        ulError err = Resize(
+              iSource
+            , iDestination
+            , src_roi
+            , mipsRects[i]
+            , Resampling_Bilinear
+            , Border_Transparent
+            , FColor::Transparent
+            , nullptr
+            , FSchedulePolicy::AsyncMultiScanlines
+            , 1
+            , &events[i]
+            , &events[i+1]
+        );
+        ULIS_ASSERT( !err, "Error during mip computation level " << i );
+    }
+
     return  ULIS_NO_ERROR;
 }
 
