@@ -666,7 +666,7 @@ FContext::XBuildMipMap(
     XAllocateBlockData( iDestination, dst_roi.w, dst_roi.h, iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, iNumWait, iWaitList, &events[0] );
     // Only load fake geometry to avoid return on hollow block.
     iDestination.LoadFromData( nullptr, dst_roi.w, dst_roi.h, iSource.Format(), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
-    Clear( iDestination, FRectI( src_roi.w, 0, dst_roi.w - src_roi.w, dst_roi.h ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[0], &events[1] );
+    Clear( iDestination, FRectI( src_roi.w, mipsRects[1].h, dst_roi.w - src_roi.w, dst_roi.h - mipsRects[1].h ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[0], &events[1] );
     Copy( iSource, iDestination, src_roi, FVec2I( 0 ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[1], &events[2] );
 
     for( int i = 1; i <= iMaxMipLevel; ++i ) {
