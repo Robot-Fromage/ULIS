@@ -22,15 +22,69 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FNoiseCommandArgs
-class FNoiseCommandArgs final
+class FBrownianNoiseCommandArgs final
     : public FSimpleBufferCommandArgs
 {
 public:
-    ~FNoiseCommandArgs() override
+    ~FBrownianNoiseCommandArgs() override
     {
     }
 
-    FNoiseCommandArgs(
+    FBrownianNoiseCommandArgs(
+          FBlock& iBlock
+        , const FRectI& iRect
+    )
+        : FSimpleBufferCommandArgs( iBlock, iRect )
+    {}
+};
+
+/////////////////////////////////////////////////////
+// FValueNoiseCommandArgs
+class FValueNoiseCommandArgs final
+    : public FSimpleBufferCommandArgs
+{
+public:
+    ~FValueNoiseCommandArgs() override
+    {
+    }
+
+    FValueNoiseCommandArgs(
+          FBlock& iBlock
+        , const FRectI& iRect
+    )
+        : FSimpleBufferCommandArgs( iBlock, iRect )
+    {}
+};
+
+/////////////////////////////////////////////////////
+// FVoronoiNoiseCommandArgs
+class FVoronoiNoiseCommandArgs final
+    : public FSimpleBufferCommandArgs
+{
+public:
+    ~FVoronoiNoiseCommandArgs() override
+    {
+    }
+
+    FVoronoiNoiseCommandArgs(
+          FBlock& iBlock
+        , const FRectI& iRect
+    )
+        : FSimpleBufferCommandArgs( iBlock, iRect )
+    {}
+};
+
+/////////////////////////////////////////////////////
+// FWhiteNoiseCommandArgs
+class FWhiteNoiseCommandArgs final
+    : public FSimpleBufferCommandArgs
+{
+public:
+    ~FWhiteNoiseCommandArgs() override
+    {
+    }
+
+    FWhiteNoiseCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
     )

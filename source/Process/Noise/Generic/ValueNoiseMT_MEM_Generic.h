@@ -20,7 +20,7 @@ template< typename T >
 void
 InvokeValueNoiseMT_MEM_Generic(
       const FSimpleBufferJobArgs* jargs
-    , const FNoiseCommandArgs* cargs
+    , const FValueNoiseCommandArgs* cargs
 )
 {
     // Gather basic data for image traversal
@@ -28,6 +28,6 @@ InvokeValueNoiseMT_MEM_Generic(
     T* ULIS_RESTRICT dst = reinterpret_cast< T* >( jargs->dst );
 }
 
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleValueNoiseMT_MEM_Generic, FSimpleBufferJobArgs, FNoiseCommandArgs, &InvokeValueNoiseMT_MEM_Generic< T > )
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleValueNoiseMT_MEM_Generic, FSimpleBufferJobArgs, FValueNoiseCommandArgs, &InvokeValueNoiseMT_MEM_Generic< T > )
 ULIS_NAMESPACE_END
 
