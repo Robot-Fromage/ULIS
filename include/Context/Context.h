@@ -1490,10 +1490,9 @@ public:
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
-    
-/////////////////////////////////////////////////////
-// Raster
 
+    /////////////////////////////////////////////////////
+// Raster
     /*!
         Draws a line between iP0 and iP1
     */
@@ -1979,6 +1978,74 @@ public:
         , const float iWeight
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+/////////////////////////////////////////////////////
+// FX Noise
+    /*! Render white noise */
+    ulError
+    WhiteNoise(
+          FBlock& iBlock
+        , int iSeed = -1
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*! Render walue noise */
+    ulError
+    ValueNoise(
+          FBlock& iBlock
+        , float iFreq
+        , int iSeed = -1
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*! Render walue noise */
+    ulError
+    BrownianNoise(
+          FBlock& iBlock
+        , float iFrequency = 0.22f
+        , float iFrequencyMult = 1.8f
+        , float iAmplitudeMult = 0.35f
+        , uint8 iNumLayers = 5
+        , int iSeed = -1
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*! Render walue noise */
+    ulError
+    VoronoiNoise(
+          FBlock& iBlock
+        , uint32 iCount
+        , int iSeed = -1
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*! Render walue noise */
+    ulError
+    Clouds(
+          FBlock& iBlock
+        , int iSeed = -1
+        , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
