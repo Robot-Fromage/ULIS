@@ -68,9 +68,15 @@ main( int argc, char *argv[] ) {
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt );
+    FFontEngine fontEngine;
+    FFont arial( fontEngine, "Arial", "Black" );
 
     FBlock canvas( 1024, 1024, fmt );
     FRectI src( 16, 0, 16, 16 );
+
+    // Gather start time to output the time it took to perform the blend composition
+    auto startTime = std::chrono::steady_clock::now();
+
     {
         ctx.Clear( canvas );
         ctx.Finish();
@@ -129,7 +135,7 @@ main( int argc, char *argv[] ) {
         gradient0.AddColorStep( 1.f, FColor::Red );
         FSanitizedGradient grad0 = gradient0.Sanitized( fmt );
         FVec2I p0( 0, 16 );
-        FVec2I p1( 0, 80 );
+        FVec2I p1( 0, 64 );
         ctx.RasterGradient( canvas, p0, p1, grad0, 0.f, Gradient_Linear, FRectI( 0, 16, 32, 64 ), FSchedulePolicy::MonoChunk );
 
         FGradient gradient1( fmt );
@@ -175,9 +181,55 @@ main( int argc, char *argv[] ) {
         ctx.Finish();
     }
 
+    {
+        FMat3F mat0 = FMat3F::MakeRotationMatrix( FMath::kPIf / 2.f ) * FMat3F::MakeScaleMatrix( 0.5f, 0.5f );
+        FMat3F mat1 = FMat3F::MakeRotationMatrix( FMath::kPIf / 4.f ) * FMat3F::MakeScaleMatrix( 0.25f, 0.25f );
+        ctx.TransformAffineTiled( canvas, canvas, FRectI( 128, 128, 256, 256 ), FRectI( 615, 288, 1024, 144 ), mat0, Resampling_NearestNeighbour );
+        ctx.TransformAffineTiled( canvas, canvas, FRectI( 0, 0, 50, 50 ),  FRectI( 0, 432, 1024, 144 ), mat1, Resampling_Bilinear );
+        ctx.Finish();
+    }
+
+    {
+        ctx.Swap( canvas, 0, 2, FRectI( 16, 16, 16, 64 ), FSchedulePolicy::MonoChunk );
+        ctx.Finish();
+    }
+
+    {
+        ctx.RasterTextAA( canvas, L"Hello ULIS", arial, 15, FMat3F::MakeTranslationMatrix( 20, 20 ), FColor::White );
+        ctx.Finish();
+    }
+
+    {
+        ctx.Blend( canvas, canvas, FRectI::Auto, FVec2I(0), Blend_AngleCorrected, Alpha_Normal, 0.5f );
+        ctx.Finish();
+        ctx.Blend( canvas, canvas, FRectI::Auto, FVec2I(0), Blend_AngleCorrected, Alpha_Normal, 0.5f );
+        ctx.Finish();
+        ctx.Blend( canvas, canvas, FRectI::Auto, FVec2I(0), Blend_AngleCorrected, Alpha_Normal, 0.5f );
+        ctx.Finish();
+        ctx.Blend( canvas, canvas, FRectI::Auto, FVec2I(0), Blend_AngleCorrected, Alpha_Normal, 0.5f );
+        ctx.Finish();
+    }
+
+    {
+        FBlock mip;
+        ctx.XBuildMipMap( canvas, mip, -1, FRectI( 0, 0, 1024, 576 ), Resampling_Bilinear );
+        ctx.Finish();
+        float scale = float( mip.Width() ) / 1024;
+        ctx.Resize( mip, canvas, FRectI::Auto, FRectF( 0, 576, 1024, 576 * scale ), Resampling_Bilinear );
+        ctx.Finish();
+    }
+
     FBlock proxy( 1024, 1024, Format_RGBA8 );
     ctx.ConvertFormat( canvas, proxy );
     ctx.Finish();
+
+    // Before displaying the window, gather the end time and delta to output the time it took to process all ULIS operations.
+    // We are not interested in the time it took Qt to create the window.
+    auto endTime = std::chrono::steady_clock::now();
+    auto delta   = std::chrono::duration_cast< std::chrono::milliseconds >( endTime - startTime ).count();
+
+    // Print out the result time.
+    std::cout << "ULIS All: Composition took " << delta << "ms." << std::endl;
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();

@@ -802,7 +802,7 @@ public:
           const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FRectF& iDestinationRect = FRectF( 0.f, 0.f, float( ULIS_UINT16_MAX ), float( ULIS_UINT16_MAX ) )
+        , const FRectF& iDestinationRect = FRectF::Auto
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )

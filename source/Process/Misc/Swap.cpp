@@ -24,9 +24,9 @@ InvokeSwapMT_MEM( const FSimpleBufferJobArgs* jargs, const FSwapCommandArgs* car
     uint8* dst = jargs->dst;
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     uint8* tmp = new uint8[ fmt.BPC ];
-    const uint8 c1 = cargs->channel1;
-    const uint8 c2 = cargs->channel2;
-    for( uint32 i = 0; i < jargs->size; ++i ) {
+    const uint8 c1 = cargs->channel1 * fmt.BPC;
+    const uint8 c2 = cargs->channel2 * fmt.BPC;
+    for( uint32 i = 0; i < jargs->size; i+= fmt.BPP ) {
         memcpy( tmp, dst + c1, fmt.BPC );
         memcpy( dst + c1, dst + c2, fmt.BPC );
         memcpy( dst + c2, tmp, fmt.BPC );
