@@ -61,14 +61,15 @@ static const eFormat eDocumentFormaMatchingTable[] = {
     , Format_LabA32
     , Format_LabAF
     , Format_ALab8
+    , Format_GA16
 };
 
 int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_SSE );
+    eFormat fmt = Format_RGBA16;
+    FContext ctx( queue, fmt, PerformanceIntent_MEM );
 
     FBlock canvas( 1024, 1024, fmt );
     FRectI src( 16, 0, 16, 16 );
@@ -138,7 +139,7 @@ main( int argc, char *argv[] ) {
         FSanitizedGradient grad1 = gradient1.Sanitized( fmt );
         FVec2I p2( 848, 40 );
         FVec2I p3( 1024, 0 );
-        ctx.RasterGradient( canvas, p2, p3, grad1, 1.f / 255.f, Gradient_Angular, FRectI( 672, 0, 352, 80 ) );
+        ctx.RasterGradient( canvas, p2, p3, grad1, 0.f, Gradient_Angular, FRectI( 672, 0, 352, 80 ) );
         ctx.Finish();
     }
 
@@ -147,16 +148,48 @@ main( int argc, char *argv[] ) {
         ctx.Finish();
         ctx.BlendColor( FColor::Black, canvas, FRectI( 0, 144, 1024, 144 ), Blend_Multiply, Alpha_Normal, 0.5f );
         ctx.Finish();
+        /*
         ctx.Convolve( canvas, canvas, FKernel::GaussianBlur, FRectI( 0, 0, 20, 144 ), FVec2I( 0, 280 ) );
+        ctx.Finish();
+        */
+    }
+
+    {
+        ctx.Clouds( canvas, -1, FRectI( 0, 288, 205, 144 ), FSchedulePolicy::MultiScanlines, 0, 0, 0 );
+        ctx.ValueNoise( canvas, 1.f, -1, FRectI( 205, 288, 205, 144 ), FSchedulePolicy::MultiScanlines, 0, 0, 0 );
+        ctx.BrownianNoise( canvas, 0.22f, 1.8f, 0.35f, 10, -1, FRectI( 410, 288, 205, 144 ), FSchedulePolicy::MultiScanlines, 0, 0, 0 );
         ctx.Finish();
     }
 
+    {
+        FBlock overlay( 500, 288, fmt );
+        FGradient gradient0( fmt );
+        gradient0.AddColorStep( 0.f, FColor::RGB( 0, 127, 255 ) );
+        gradient0.AddColorStep( 0.5f, FColor::RGB( 255, 127, 0 ) );
+        gradient0.AddColorStep( 1.f, FColor::RGB( 0, 127, 255 ) );
+        gradient0.AddAlphaStep( 0.f, 0.f );
+        gradient0.AddAlphaStep( 0.33f, 0.33f );
+        gradient0.AddAlphaStep( 0.5f, 0.8f );
+        gradient0.AddAlphaStep( 1.f, 0.f );
+        FSanitizedGradient grad0 = gradient0.Sanitized( fmt );
+        FVec2I p0( 500, 144 );
+        FVec2I p1( 0, 0 );
+        ctx.RasterGradient( overlay, p0, p1, grad0, 0.f, Gradient_Radial );
+        ctx.Finish();
+        ctx.Blend( overlay, canvas, overlay.Rect(), FVec2I( 1024 - 500, 0 ), Blend_BayerDither8x8, Alpha_Normal, 0.9f );
+        ctx.Finish();
+    }
+
+    FBlock proxy( 1024, 1024, Format_RGBA8 );
+    ctx.ConvertFormat( canvas, proxy );
+    ctx.Finish();
+
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( canvas.Bits()
-                                        , canvas.Width()
-                                        , canvas.Height()
-                                        , canvas.BytesPerScanLine()
+    QImage*         image   = new QImage( proxy.Bits()
+                                        , proxy.Width()
+                                        , proxy.Height()
+                                        , proxy.BytesPerScanLine()
                                         , QImage::Format_RGBA8888 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );

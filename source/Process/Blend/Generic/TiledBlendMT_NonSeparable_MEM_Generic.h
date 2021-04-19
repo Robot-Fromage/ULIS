@@ -32,7 +32,7 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
     FRGBF src_conv;
     FRGBF bdp_conv;
     FRGBF res_conv;
-    uint8* result = new uint8[ fmt.SPP ];
+    uint8* result = new uint8[ fmt.BPP ];
 
     // Query dispatched method
     FFormatMetrics rgbfFormatMetrics( eFormat::Format_RGBF );
