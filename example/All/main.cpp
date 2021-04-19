@@ -219,6 +219,31 @@ main( int argc, char *argv[] ) {
         ctx.Finish();
     }
 
+    {
+        FBlock noise( 1024, 1024, fmt );
+        ctx.WhiteNoise( noise );
+        ctx.Finish();
+        ctx.Blend( noise, canvas, FRectI::Auto, FVec2I(0), Blend_Normal, Alpha_Normal, 0.25f );
+        ctx.Finish();
+    }
+
+    {
+        FMat3F mat0 = FMat3F::MakeRotationMatrix( FMath::kPIf / 5.f ) * FMat3F::MakeScaleMatrix( 0.2f, 0.2f );
+        ctx.TransformAffineTiled( canvas, canvas, FRectI( 0, 0, 1024, 576 ), FRectI( 0, 620, 512, 1024 ), mat0, Resampling_Bilinear );
+        ctx.Finish();
+        ctx.Blend( canvas, canvas, FRectI( 0, 0, 1024, 576 ), FVec2I( 0, 1024 - 576 + 200), Blend_Behind, Alpha_Normal, 1.f );
+        ctx.Finish();
+    }
+
+    {
+        FBlock clouds( 1024, 1024, fmt );
+        ctx.Clouds( clouds );
+        ctx.Finish();
+        ctx.Blend( clouds, canvas, FRectI::Auto, FVec2I( 0 ), Blend_BayerDither8x8, Alpha_Normal, 0.2f );
+        ctx.Finish();
+    }
+
+
     FBlock proxy( 1024, 1024, Format_RGBA8 );
     ctx.ConvertFormat( canvas, proxy );
     ctx.Finish();

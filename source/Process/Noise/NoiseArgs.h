@@ -114,9 +114,13 @@ public:
     FWhiteNoiseCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
+        , int iSeed
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
+        , seed( iSeed )
     {}
+
+    int seed;
 };
 
 ULIS_NAMESPACE_END
