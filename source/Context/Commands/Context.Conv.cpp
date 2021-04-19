@@ -35,12 +35,6 @@ FContext::ConvertFormat(
         , FEvent* iEvent
 )
 {
-    ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-
     // In case of same format, we can optimize by using the faster Copy version,
     // since no conversion is actually involved.
     if( iSource.Format() == iDestination.Format() ) {

@@ -42,12 +42,7 @@ FContext::Convolve(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -103,12 +98,7 @@ FContext::ConvolvePremult(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -164,12 +154,7 @@ FContext::MorphologicalProcess(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );

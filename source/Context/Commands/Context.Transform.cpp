@@ -39,12 +39,7 @@ FContext::TransformAffine(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -104,12 +99,7 @@ FContext::TransformAffineTiled(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -168,12 +158,7 @@ FContext::TransformPerspective(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -234,12 +219,7 @@ FContext::TransformBezier(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -337,7 +317,7 @@ FContext::Resize(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iDestination.Format()
+          iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -642,7 +622,11 @@ FContext::XBuildMipMap(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT( iSource.Format() == Format(), "Bad format" );
+    ULIS_ASSERT_RETURN_ERROR(
+          iSource.Format() == Format()
+        , "Formats mismatch."
+        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+    );
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
     const FRectI src_roi = iSourceRect.Sanitized() & src_rect;

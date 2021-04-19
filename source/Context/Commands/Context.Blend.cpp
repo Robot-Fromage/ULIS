@@ -57,12 +57,7 @@ FContext::Blend(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iBackdrop
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iBackdrop.Format()
+          iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -128,12 +123,7 @@ FContext::BlendAA(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iBackdrop
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iBackdrop.Format()
+          iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -207,12 +197,7 @@ FContext::AlphaBlend(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iBackdrop
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iBackdrop.Format()
+          iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -276,12 +261,7 @@ FContext::AlphaBlendAA(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iBackdrop
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iBackdrop.Format()
+          iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
@@ -358,12 +338,7 @@ FContext::BlendTiled(
 )
 {
     ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iBackdrop
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-    ULIS_ASSERT_RETURN_ERROR(
-          iSource.Format() == iBackdrop.Format()
+          iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
         , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
