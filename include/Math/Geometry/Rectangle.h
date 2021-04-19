@@ -39,6 +39,8 @@ struct TRectangle
     /*! The height of the rectangle. */
     T h;
 
+    static const TRectangle Auto;
+
     /*! Default constructor, initializes values to zero. */
     TRectangle< T >()
         : x( 0 )
@@ -167,7 +169,7 @@ struct TRectangle
 
         if( inter == *this ) {
             oResult->PushBack( TRectangle< T >() );
-            return
+            return;
         }
 
         T x1  = x;
@@ -294,6 +296,9 @@ struct TRectangle
         return  TVector2< T >( w, h );
     }
 };
+
+template< typename T >
+const TRectangle< T > TRectangle< T >::Auto = TRectangle< T >( 0, 0, std::numeric_limits< T >::max(), std::numeric_limits< T >::max() );
 
 ULIS_NAMESPACE_END
 
