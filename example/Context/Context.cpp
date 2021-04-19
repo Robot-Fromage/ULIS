@@ -24,7 +24,7 @@ main( int argc, char *argv[] ) {
 
     FEvent eventBlendTile;
     FSchedulePolicy policy;
-    ctx.Blend( test, canvas, test.Rect(), FVec2I( 0, 0 ),  Blend_Normal, Alpha_Normal, 1.f, policy, 0, 0, &eventBlendTile );
+    ctx.Blend( test, canvas, test.Rect(), FVec2I( 0 ),  Blend_Normal, Alpha_Normal, 1.f, policy, 0, 0, &eventBlendTile );
     ctx.Blend( test, canvas, test.Rect(), FVec2F( 64, 0 ), Blend_Normal, Alpha_Normal, 1.f, policy, 1, &eventBlendTile, 0 );
     ctx.Finish();
 

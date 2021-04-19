@@ -141,7 +141,7 @@ FContext::LoadProxyFromDisk(
         ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within subcommand" );
 
         FEvent maincommand_event( FOnEventComplete( []( const FRectI&, void* iUserData ){ delete  reinterpret_cast< FBlock* >( iUserData ); }, src_hollow ) );
-        err = ConvertFormat( *src_hollow, ioBlock, ioBlock.Rect(), FVec2I( 0, 0 ), iPolicy, 1, &subcommand_event, &maincommand_event );
+        err = ConvertFormat( *src_hollow, ioBlock, ioBlock.Rect(), FVec2I( 0 ), iPolicy, 1, &subcommand_event, &maincommand_event );
         ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within maincommand" );
 
         err = Dummy_OP( 1, &maincommand_event, iEvent );
@@ -184,7 +184,7 @@ FContext::SaveProxyToDisk(
         FBlock* conv = new FBlock( iBlock.Width(), iBlock.Height(), conv_format );
 
         FEvent subcommand_event;
-        ulError err = ConvertFormat( iBlock, *conv, iBlock.Rect(), FVec2I( 0, 0 ), iPolicy, iNumWait, iWaitList, &subcommand_event );
+        ulError err = ConvertFormat( iBlock, *conv, iBlock.Rect(), FVec2I( 0 ), iPolicy, iNumWait, iWaitList, &subcommand_event );
         ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within subcommand" );
 
         // Lambda with no captures can be used as function pointers. The TCallback and reinterpret_cast are used as a primitive capture instead.
@@ -211,7 +211,7 @@ FContext::LoadBlockFromDiskMetrics(
 )
 {
     *oFileExists = false;
-    *oSize = FVec2I( 0, 0 );
+    *oSize = FVec2I( 0 );
     *oFormat = eFormat::Format_RGBA8;
 
     // Does the file exist ?

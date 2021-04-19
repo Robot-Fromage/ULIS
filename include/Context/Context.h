@@ -117,8 +117,8 @@ public:
           FLayerStack& iStack
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -128,7 +128,7 @@ public:
     RenderLayerFolder(
           FLayerFolder& iFolder
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -162,8 +162,8 @@ public:
           FLayerStack& iStack
         , const std::string& iPath
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -186,7 +186,7 @@ public:
         , float iDithering = 0.f
         , eGradientType iType = eGradientType::Gradient_Linear
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -217,11 +217,11 @@ public:
           const FBlock& iSource
         , FBlock& iBackdrop
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FVec2I& iPosition = FVec2I( 0 )
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -258,7 +258,7 @@ public:
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -288,9 +288,9 @@ public:
           const FBlock& iSource
         , FBlock& iBackdrop
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FVec2I& iPosition = FVec2I( 0 )
         , ufloat iOpacity = 1.0f
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -326,7 +326,7 @@ public:
         , const FRectI& iSourceRect = FRectI::Auto
         , const FVec2F& iPosition = FVec2F( 0.f, 0.f )
         , ufloat iOpacity = 1.0f
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -357,11 +357,11 @@ public:
         , FBlock& iBackdrop
         , const FRectI& iSourceRect = FRectI::Auto
         , const FRectI& iBackdropRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FVec2I& iPosition = FVec2I( 0 )
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -387,7 +387,7 @@ public:
         , eBlendMode iBlendingMode = Blend_Normal
         , eAlphaMode iAlphaMode = Alpha_Normal
         , ufloat iOpacity = 1.0f
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -412,7 +412,7 @@ public:
     Clear(
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -441,8 +441,8 @@ public:
           const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -471,8 +471,8 @@ public:
           const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -498,7 +498,7 @@ public:
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -523,7 +523,7 @@ public:
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -560,7 +560,7 @@ public:
         , uint32 iFontSize = 12
         , const FMat3F& iTransform = FMat3F()
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -595,7 +595,7 @@ public:
         , uint32 iFontSize = 12
         , const FMat3F& iTransform = FMat3F()
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -650,7 +650,7 @@ public:
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -689,7 +689,7 @@ public:
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -728,7 +728,7 @@ public:
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -770,7 +770,7 @@ public:
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -807,7 +807,7 @@ public:
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
         , const FBlock* iOptionalSummedAreaTable = nullptr
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -916,7 +916,7 @@ public:
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -959,7 +959,7 @@ public:
         , int iMaxMipLevel = -1
         , const FRectI& iSourceRect = FRectI::Auto
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -988,7 +988,7 @@ public:
     XLoadBlockFromDisk(
           FBlock& ioBlock
         , const std::string& iPath
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1018,7 +1018,7 @@ public:
         , const std::string& iPath
         , eFileFormat iFileFormat = eFileFormat::FileFormat_png
         , int iQuality = 100
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1128,8 +1128,8 @@ public:
         , uint8 iDestinationExtractMask
         , bool iUseRawMask = false
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1147,7 +1147,7 @@ public:
           std::function< void( const FBlock&, const uint8* ) > iInvocation
         , const FBlock& iSource
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1164,7 +1164,7 @@ public:
           std::function< void( FBlock&, uint8* ) > iInvocation
         , FBlock& iDestination
         , const FRectI& iDestinationRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1183,8 +1183,8 @@ public:
         , const FBlock& iSource
         , FBlock& iDestination
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1200,7 +1200,7 @@ public:
     sRGBToLinear(
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1216,7 +1216,7 @@ public:
     LinearTosRGB(
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1232,7 +1232,7 @@ public:
     Premultiply(
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1248,7 +1248,7 @@ public:
     Unpremultiply(
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1266,7 +1266,7 @@ public:
     SanitizeZeroAlpha(
           FBlock& iBlock
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1283,7 +1283,7 @@ public:
         , uint8 iChannel1
         , uint8 iChannel2
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1312,7 +1312,7 @@ public:
         , const FColorSpace* iColorSpace = nullptr
         , const FOnInvalidBlock& iOnInvalid = FOnInvalidBlock()
         , const FOnCleanupData& iOnCleanup = FOnCleanupData( &OnCleanup_FreeMemory )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1332,7 +1332,7 @@ public:
     ulError
     XDeallocateBlockData(
           FBlock& iBlock
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1351,7 +1351,7 @@ public:
     BuildSummedAreaTable(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1369,7 +1369,7 @@ public:
     BuildPremultipliedSummedAreaTable(
           const FBlock& iSource
         , FBlock& iDestination
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1402,7 +1402,7 @@ public:
           const FBlock& iBlock
         , FRectI* oRect
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1421,7 +1421,7 @@ public:
           const FBlock& iBlock
         , FColor* oColor
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1439,11 +1439,11 @@ public:
         , FBlock& iDestination
         , const FKernel& iKernel
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FVec2I& iPosition = FVec2I( 0 )
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1461,11 +1461,11 @@ public:
         , FBlock& iDestination
         , const FKernel& iKernel
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FVec2I& iPosition = FVec2I( 0 )
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1481,11 +1481,11 @@ public:
         , FBlock iDestination
         , const FStructuringElement& iKernel
         , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0, 0 )
+        , const FVec2I& iPosition = FVec2I( 0 )
         , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
         , eBorderMode iBorderMode = eBorderMode::Border_Transparent
         , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1503,7 +1503,7 @@ public:
         , const FVec2I& iP1
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1519,7 +1519,7 @@ public:
         , const FVec2I& iP1
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1535,7 +1535,7 @@ public:
         , const FVec2F& iP1
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1552,7 +1552,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1569,7 +1569,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1586,7 +1586,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1603,7 +1603,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1620,7 +1620,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1637,7 +1637,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1655,7 +1655,7 @@ public:
         , const int iEndDegree
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1673,7 +1673,7 @@ public:
         , const int iEndDegree
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1691,7 +1691,7 @@ public:
         , const int iEndDegree
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1709,7 +1709,7 @@ public:
         , const int iEndDegree
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1727,7 +1727,7 @@ public:
         , const int iEndDegree
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1745,7 +1745,7 @@ public:
         , const int iEndDegree
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1763,7 +1763,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1781,7 +1781,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1799,7 +1799,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1818,7 +1818,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1837,7 +1837,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1856,7 +1856,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1873,7 +1873,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1889,7 +1889,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1905,7 +1905,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1922,7 +1922,7 @@ public:
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const bool iFilled = false
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1940,7 +1940,7 @@ public:
         , const float iWeight
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1959,7 +1959,7 @@ public:
         , const float iWeight
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1978,7 +1978,7 @@ public:
         , const float iWeight
         , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -1992,7 +1992,7 @@ public:
           FBlock& iBlock
         , int iSeed = -1
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -2005,7 +2005,7 @@ public:
         , float iFreq = 1.f
         , int iSeed = -1
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -2021,7 +2021,7 @@ public:
         , uint8 iNumLayers = 5
         , int iSeed = -1
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -2034,7 +2034,7 @@ public:
         , uint32 iCount
         , int iSeed = -1
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
@@ -2046,7 +2046,7 @@ public:
           FBlock& iBlock
         , int iSeed = -1
         , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr

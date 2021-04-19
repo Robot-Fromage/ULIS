@@ -460,7 +460,7 @@ FContext::BlendColor(
                 , iBlendingMode
                 , iAlphaMode
                 , FMath::Clamp( iOpacity, 0.f, 1.f )
-                , FVec2I( 0, 0 )
+                , FVec2I( 0 )
                 , dst_roi.Size()
                 , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
                 , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
