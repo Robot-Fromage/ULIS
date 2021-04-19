@@ -71,9 +71,16 @@ public:
     FValueNoiseCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
+        , int iSeed
+        , float iFrequency
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
+        , noise( iSeed )
+        , frequency( iFrequency )
     {}
+
+    FValueNoise noise;
+    float frequency;
 };
 
 /////////////////////////////////////////////////////

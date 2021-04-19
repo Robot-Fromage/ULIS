@@ -26,6 +26,28 @@ InvokeValueNoiseMT_MEM_Generic(
     // Gather basic data for image traversal
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     T* ULIS_RESTRICT dst = reinterpret_cast< T* >( jargs->dst );
+
+    // Gather x y
+    const int y = jargs->line;
+    const int x1 = cargs->dstRect.x;
+    const int x2 = cargs->dstRect.w + x1;
+
+    // Main scanline process loop
+    for( int x = x1; x < x2; ++x ) {
+        FVec2F vec = FVec2F( x, y ) * cargs->frequency;
+        float floatvalue = cargs->noise.eval( vec );
+        T value = ConvType< float, T >( floatvalue );
+
+        for( uint8 i = 0; i < fmt.NCC; ++i ) {
+            const uint8 r = fmt.IDT[i];
+            dst[r] = value;
+        }
+
+        if( fmt.HEA )
+            dst[fmt.AID] = MaxType< T >();
+
+        dst += fmt.SPP;
+    }
 }
 
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleValueNoiseMT_MEM_Generic, FSimpleBufferJobArgs, FValueNoiseCommandArgs, &InvokeValueNoiseMT_MEM_Generic< T > )

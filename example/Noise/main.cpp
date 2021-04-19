@@ -31,6 +31,8 @@ main( int argc, char *argv[] ) {
     FBlock canvas( 1024, 1024, fmt );
     ctx.Clouds( canvas, -1, canvas.Rect(), FSchedulePolicy::MultiScanlines, 0, 0, 0 );
     ctx.Finish();
+    ctx.ValueNoise( canvas, 1.f, -1, FRectI( 0, 0, 512, 512 ), FSchedulePolicy::MultiScanlines, 0, 0, 0 );
+    ctx.Finish();
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
