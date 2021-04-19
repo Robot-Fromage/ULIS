@@ -50,7 +50,6 @@ FContext::RasterGradient(
     if( roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(

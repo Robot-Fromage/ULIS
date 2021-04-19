@@ -23,6 +23,7 @@
 #include "Process/Misc/Premult.h"
 #include "Process/Misc/Sanitize.h"
 #include "Process/Misc/Swap.h"
+#include "Process/Noise/Noise.h"
 #include "Process/SAT/SAT.h"
 #include "Process/Convolution/Convolution.h"
 #include "Process/Convolution/Morpho.h"
@@ -158,6 +159,11 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( const FHardwareMet
         , mScheduleRasterGradientAngular(           TDispatcher< FDispatchedGradientAngularInvocationSchedulerSelector                  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleRasterGradientReflected(         TDispatcher< FDispatchedGradientReflectedInvocationSchedulerSelector                >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
         , mScheduleRasterGradientDiamond(           TDispatcher< FDispatchedGradientDiamondInvocationSchedulerSelector                  >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+
+        , mScheduleBrownianNoise(                   TDispatcher< FDispatchedBrownianNoiseInvocationSchedulerSelector                    >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleValueNoise(                      TDispatcher< FDispatchedValueNoiseInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleVoronoiNoise(                    TDispatcher< FDispatchedVoronoiNoiseInvocationSchedulerSelector                     >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
+        , mScheduleWhiteNoise(                      TDispatcher< FDispatchedWhiteNoiseInvocationSchedulerSelector                       >::Query( iHardwareMetrics, iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

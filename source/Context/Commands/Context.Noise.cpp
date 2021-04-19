@@ -21,6 +21,7 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 #include "Scheduling/SimpleBufferArgs.h"
+#include <ctime>
 
 ULIS_NAMESPACE_BEGIN
 ulError
@@ -67,6 +68,51 @@ FContext::BrownianNoise(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT_RETURN_ERROR( iBlock.Format() == Format(), "Bad format", ULIS_ERROR_FORMATS_MISMATCH )
+
+    // Sanitize geometry
+    const FRectI rect = iBlock.Rect();
+    const FRectI roi = iRect.Sanitized() & rect;
+
+    // Check no-op
+    if( roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    int seed = iSeed < 0 ? time( NULL ) : iSeed;
+    float amplitudeMax = 0;
+    {
+        float amplitude = 1.0f;
+        for( int i = 0; i < iNumLayers; ++i )
+        {
+            amplitudeMax += amplitude;
+            amplitude *= iAmplitudeMult;
+        }
+    }
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleBrownianNoise
+            , new FBrownianNoiseCommandArgs(
+                  iBlock
+                , roi
+                , seed
+                , iFrequency
+                , iFrequencyMult
+                , iAmplitudeMult
+                , iNumLayers
+                , amplitudeMax
+            )
+            , iPolicy
+            , false
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , roi
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 
@@ -96,7 +142,7 @@ FContext::Clouds(
     , FEvent* iEvent
 )
 {
-    return  ULIS_NO_ERROR;
+    return  BrownianNoise( iBlock, 0.02f, 2.f, 0.5f, 5, iSeed, iRect, iPolicy, iNumWait, iWaitList, iEvent );
 }
 
 ULIS_NAMESPACE_END

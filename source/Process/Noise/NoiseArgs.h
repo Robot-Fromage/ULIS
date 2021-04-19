@@ -15,6 +15,7 @@
 #include "Scheduling/Dispatcher.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include "Process/Noise/Func/NoiseFunc.h"
 #include "Image/Block.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
@@ -33,9 +34,28 @@ public:
     FBrownianNoiseCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
+        , int iSeed
+        , float iFrequency
+        , float iFrequencyMult
+        , float iAmplitudeMult
+        , uint8 iNumLayers
+        , float iAmplitudeMax
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
+        , noise( iSeed )
+        , frequency( iFrequency )
+        , frequencyMult( iFrequencyMult )
+        , amplitudeMult( iAmplitudeMult )
+        , numLayers( iNumLayers )
+        , amplitudeMax( iAmplitudeMax )
     {}
+
+    FValueNoise noise;
+    float frequency;
+    float frequencyMult;
+    float amplitudeMult;
+    uint8 numLayers;
+    float amplitudeMax;
 };
 
 /////////////////////////////////////////////////////

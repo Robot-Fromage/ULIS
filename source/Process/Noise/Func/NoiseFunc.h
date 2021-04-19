@@ -27,13 +27,13 @@ ULIS_NAMESPACE_BEGIN
 template<typename T = float>
 inline T lerp(const T &lo, const T &hi, const T &t)
 {
-    return lo * (1 - t) + hi * t;
+    return lo * ( 1 - t ) + hi * t;
 }
 
 inline
 float smoothstep(const float &t)
 {
-    return t * t * (3 - 2 * t);
+    return t * t * ( 3 - 2 * t );
 }
 
 class FValueNoise

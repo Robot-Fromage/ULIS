@@ -26,6 +26,38 @@ InvokeBrownianNoiseMT_MEM_Generic(
     // Gather basic data for image traversal
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
     T* ULIS_RESTRICT dst = reinterpret_cast< T* >( jargs->dst );
+
+    // Gather x y
+    const int y = jargs->line;
+    const int x1 = cargs->dstRect.x;
+    const int x2 = cargs->dstRect.w + x1;
+
+    // Main scanline process loop
+    for( int x = x1; x < x2; ++x ) {
+        FVec2F pointNoise = FVec2F( x, y ) * cargs->frequency;
+        float amplitude = 1.f;
+        float floatvalue = 0.f; // ?
+
+        for( uint8 i = 0; i < cargs->numLayers; ++i )
+        {
+            floatvalue  += cargs->noise.eval( pointNoise ) * amplitude;
+            pointNoise  *= cargs->frequencyMult;
+            amplitude   *= cargs->amplitudeMult;
+        }
+
+        floatvalue /= cargs->amplitudeMax;
+        T value = ConvType< float, T >( floatvalue );
+
+        for( uint8 i = 0; i < fmt.NCC; ++i ) {
+            const uint8 r = fmt.IDT[i];
+            dst[r] = value;
+        }
+
+        if( fmt.HEA )
+            dst[fmt.AID] = MaxType< T >();
+
+        dst += fmt.SPP;
+    }
 }
 
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleBrownianNoiseMT_MEM_Generic, FSimpleBufferJobArgs, FBrownianNoiseCommandArgs, &InvokeBrownianNoiseMT_MEM_Generic< T > )
