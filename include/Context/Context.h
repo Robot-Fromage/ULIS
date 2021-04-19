@@ -2002,7 +2002,7 @@ public:
     ulError
     ValueNoise(
           FBlock& iBlock
-        , float iFreq
+        , float iFreq = 1.f
         , int iSeed = -1
         , const FRectI& iRect = FRectI( 0, 0, ULIS_UINT16_MAX, ULIS_UINT16_MAX )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
