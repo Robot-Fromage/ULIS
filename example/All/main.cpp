@@ -68,7 +68,7 @@ main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt );
+    FContext ctx( queue, fmt, PerformanceIntent_SSE );
 
     FBlock canvas( 1024, 1024, fmt );
     FRectI src( 16, 0, 16, 16 );
