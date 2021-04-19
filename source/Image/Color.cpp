@@ -63,18 +63,18 @@ struct TColorInitializer< uint16 > {
     }
 };
 
-template<>
-struct TColorInitializer< uint32 > {
-    template< typename U >
-    static
-    ULIS_FORCEINLINE
-    void
-    Run( FColor* oColor, const std::initializer_list< U > iValues ) {
-        ULIS_ASSERT( iValues.size() <= oColor->SamplesPerPixel(), "Bad input values" );
-        for( int i = 0; i < iValues.size(); ++i )
-            oColor->SetChannel32( i, ConvType< U, uint32 >( *( iValues.begin() + i ) ) );
-    }
-};
+//DISABLED:UINT32template<>
+//DISABLED:UINT32struct TColorInitializer< uint32 > {
+//DISABLED:UINT32    template< typename U >
+//DISABLED:UINT32    static
+//DISABLED:UINT32    ULIS_FORCEINLINE
+//DISABLED:UINT32    void
+//DISABLED:UINT32    Run( FColor* oColor, const std::initializer_list< U > iValues ) {
+//DISABLED:UINT32        ULIS_ASSERT( iValues.size() <= oColor->SamplesPerPixel(), "Bad input values" );
+//DISABLED:UINT32        for( int i = 0; i < iValues.size(); ++i )
+//DISABLED:UINT32            oColor->SetChannel32( i, ConvType< U, uint32 >( *( iValues.begin() + i ) ) );
+//DISABLED:UINT32    }
+//DISABLED:UINT32};
 
 template<>
 struct TColorInitializer< ufloat > {
@@ -207,11 +207,11 @@ FColor::GreyA16( uint16 iGrey, uint16 iA )
 }
 
 //static
-FColor
-FColor::GreyA32( uint32 iGrey, uint32 iA )
-{
-    return  FColor( eFormat::Format_GA32, { iGrey, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::GreyA32( uint32 iGrey, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_GA32, { iGrey, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -242,11 +242,11 @@ FColor::RGBA16( uint16 iR, uint16 iG, uint16 iB, uint16 iA )
 }
 
 //static
-FColor
-FColor::RGBA32( uint32 iR, uint32 iG, uint32 iB, uint32 iA )
-{
-    return  FColor( eFormat::Format_RGBA32, { iR, iG, iB, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::RGBA32( uint32 iR, uint32 iG, uint32 iB, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_RGBA32, { iR, iG, iB, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -277,11 +277,11 @@ FColor::HSVA16( uint16 iH, uint16 iS, uint16 iV, uint16 iA )
 }
 
 //static
-FColor
-FColor::HSVA32( uint32 iH, uint32 iS, uint32 iV, uint32 iA )
-{
-    return  FColor( eFormat::Format_HSVA32, { iH, iS, iV, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::HSVA32( uint32 iH, uint32 iS, uint32 iV, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_HSVA32, { iH, iS, iV, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -312,11 +312,11 @@ FColor::HSLA16( uint16 iH, uint16 iS, uint16 iL, uint16 iA )
 }
 
 //static
-FColor
-FColor::HSLA32( uint32 iH, uint32 iS, uint32 iL, uint32 iA )
-{
-    return  FColor( eFormat::Format_HSLA32, { iH, iS, iL, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::HSLA32( uint32 iH, uint32 iS, uint32 iL, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_HSLA32, { iH, iS, iL, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -347,11 +347,11 @@ FColor::CMYA16( uint16 iC, uint16 iM, uint16 iY, uint16 iA )
 }
 
 //static
-FColor
-FColor::CMYA32( uint32 iC, uint32 iM, uint32 iY, uint32 iA )
-{
-    return  FColor( eFormat::Format_CMYA32, { iC, iM, iY, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::CMYA32( uint32 iC, uint32 iM, uint32 iY, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_CMYA32, { iC, iM, iY, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -382,11 +382,11 @@ FColor::CMYKA16( uint16 iC, uint16 iM, uint16 iY, uint16 iK, uint16 iA )
 }
 
 //static
-FColor
-FColor::CMYKA32( uint32 iC, uint32 iM, uint32 iY, uint32 iK, uint32 iA )
-{
-    return  FColor( eFormat::Format_CMYKA32, { iC, iM, iY, iK, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::CMYKA32( uint32 iC, uint32 iM, uint32 iY, uint32 iK, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_CMYKA32, { iC, iM, iY, iK, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -417,11 +417,11 @@ FColor::YUVA16( uint16 iY, uint16 iU, uint16 iV, uint16 iA )
 }
 
 //static
-FColor
-FColor::YUVA32( uint32 iY, uint32 iU, uint32 iV, uint32 iA )
-{
-    return  FColor( eFormat::Format_YUVA32, { iY, iU, iV, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::YUVA32( uint32 iY, uint32 iU, uint32 iV, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_YUVA32, { iY, iU, iV, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -452,11 +452,11 @@ FColor::LabA16( uint16 iL, uint16 ia, uint16 ib, uint16 iA )
 }
 
 //static
-FColor
-FColor::LabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
-{
-    return  FColor( eFormat::Format_LabA32, { iL, ia, ib, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::LabA32( uint32 iL, uint32 ia, uint32 ib, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_LabA32, { iL, ia, ib, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -487,11 +487,11 @@ FColor::XYZA16( uint16 iX, uint16 iY, uint16 iZ, uint16 iA )
 }
 
 //static
-FColor
-FColor::XYZA32( uint32 iX, uint32 iY, uint32 iZ, uint32 iA )
-{
-    return  FColor( eFormat::Format_XYZA32, { iX, iY, iZ, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::XYZA32( uint32 iX, uint32 iY, uint32 iZ, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_XYZA32, { iX, iY, iZ, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -522,11 +522,11 @@ FColor::YxyA16( uint16 iY, uint16 ix, uint16 iy, uint16 iA )
 }
 
 //static
-FColor
-FColor::YxyA32( uint32 iY, uint32 ix, uint32 iy, uint32 iA )
-{
-    return  FColor( eFormat::Format_YxyA32, { iY, ix, iy, iA } );
-}
+//DISABLED:UINT32FColor
+//DISABLED:UINT32FColor::YxyA32( uint32 iY, uint32 ix, uint32 iy, uint32 iA )
+//DISABLED:UINT32{
+//DISABLED:UINT32    return  FColor( eFormat::Format_YxyA32, { iY, ix, iy, iA } );
+//DISABLED:UINT32}
 
 //static
 FColor
@@ -545,7 +545,7 @@ FColor::YxyAF( ufloat iY, ufloat ix, ufloat iy, ufloat iA )
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< int >, const FColorSpace* );
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint8 >, const FColorSpace* );
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint16 >, const FColorSpace* );
-template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
+//DISABLED:UINT32template ULIS_API FColor::FColor( eFormat, std::initializer_list< uint32 >, const FColorSpace* );
 template ULIS_API FColor::FColor( eFormat, std::initializer_list< ufloat >, const FColorSpace* );
 //DISABLED:DOUBLEtemplate ULIS_API FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 

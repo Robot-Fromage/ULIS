@@ -126,11 +126,11 @@ public:
     Obtain the value at the redirected channel index as uint32. It is undefined
     behaviour to call this if the format is not of type uint32.
     */
-    ULIS_FORCEINLINE uint32 Channel32( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_uint32, "Bad type" );
-        return  reinterpret_cast< uint32* >( mSignal )[ RedirectedIndex( iIndex ) ];
-    }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Channel32( uint8 iIndex ) const {
+    //DISABLED:UINT32    ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
+    //DISABLED:UINT32    ULIS_ASSERT( Type() == Type_uint32, "Bad type" );
+    //DISABLED:UINT32    return  reinterpret_cast< uint32* >( mSignal )[ RedirectedIndex( iIndex ) ];
+    //DISABLED:UINT32}
 
     /*!
     Obtain the value at the redirected channel index as ufloat. It is undefined
@@ -183,15 +183,15 @@ public:
         reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
     }
 
-    /*!
-    Set the value at the redirected channel index as uint32. It is undefined
-    behaviour to call this if the format is not of type uint32.
-    */
-    ULIS_FORCEINLINE void SetChannel32( uint8 iIndex, uint32 iValue ) {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_uint32, "Bad type" );
-        reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
-    }
+    //DISABLED:UINT32/*!
+    //DISABLED:UINT32Set the value at the redirected channel index as uint32. It is undefined
+    //DISABLED:UINT32behaviour to call this if the format is not of type uint32.
+    //DISABLED:UINT32*/
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetChannel32( uint8 iIndex, uint32 iValue ) {
+    //DISABLED:UINT32    ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
+    //DISABLED:UINT32    ULIS_ASSERT( Type() == Type_uint32, "Bad type" );
+    //DISABLED:UINT32    reinterpret_cast< uint16* >( mSignal )[ RedirectedIndex( iIndex ) ] = iValue;
+    //DISABLED:UINT32}
 
     /*!
     Set the value at the redirected channel index as ufloat. It is undefined
@@ -216,26 +216,26 @@ public:
     template< typename T > ULIS_FORCEINLINE T AlphaT() const { return  HasAlpha() ? ChannelT< T >( NumColorChannels() ) : MaxType< T >(); }
     ULIS_FORCEINLINE uint8  Alpha8()    const { return  HasAlpha() ? Channel8( NumColorChannels() )   : MaxType< uint8 >();   }
     ULIS_FORCEINLINE uint16 Alpha16()   const { return  HasAlpha() ? Channel16( NumColorChannels() )  : MaxType< uint16 >();  }
-    ULIS_FORCEINLINE uint32 Alpha32()   const { return  HasAlpha() ? Channel32( NumColorChannels() )  : MaxType< uint32 >();  }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Alpha32()   const { return  HasAlpha() ? Channel32( NumColorChannels() )  : MaxType< uint32 >();  }
     ULIS_FORCEINLINE float  AlphaF()    const { return  HasAlpha() ? ChannelF( NumColorChannels() )   : MaxType< ufloat >();  }
     //DISABLED:DOUBLEULIS_FORCEINLINE double    AlphaD()    const { return  HasAlpha() ? ChannelD( NumColorChannels() )   : MaxType< udouble >(); }
     template< typename T > ULIS_FORCEINLINE T AT() const { return  AlphaT< T >(); }
     ULIS_FORCEINLINE uint8  A8()        const { return  Alpha8();       }
     ULIS_FORCEINLINE uint16 A16()       const { return  Alpha16();      }
-    ULIS_FORCEINLINE uint32 A32()       const { return  Alpha32();      }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 A32()       const { return  Alpha32();      }
     ULIS_FORCEINLINE float  AF()        const { return  AlphaF();       }
     //DISABLED:DOUBLEULIS_FORCEINLINE double    AD()        const { return  AlphaD();   }
 
     template< typename T > ULIS_FORCEINLINE void SetAlphaT( T iValue ) { if( HasAlpha() ) SetChannelT< T >(  NumColorChannels(), iValue ); }
     ULIS_FORCEINLINE void SetAlpha8(   uint8 iValue )   { if( HasAlpha() ) SetChannel8(  NumColorChannels(), iValue ); }
     ULIS_FORCEINLINE void SetAlpha16(  uint16 iValue )  { if( HasAlpha() ) SetChannel16( NumColorChannels(), iValue ); }
-    ULIS_FORCEINLINE void SetAlpha32(  uint32 iValue )  { if( HasAlpha() ) SetChannel32( NumColorChannels(), iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetAlpha32(  uint32 iValue )  { if( HasAlpha() ) SetChannel32( NumColorChannels(), iValue ); }
     ULIS_FORCEINLINE void SetAlphaF(   float iValue )   { if( HasAlpha() ) SetChannelF(  NumColorChannels(), iValue ); }
     //DISABLED:DOUBLEULIS_FORCEINLINE void SetAlphaD(   double iValue ) { if( HasAlpha() ) SetChannelD(  NumColorChannels(), iValue ); }
     template< typename T > ULIS_FORCEINLINE void SetAT( T iValue ) { SetAlphaT< T >( iValue ); }
     ULIS_FORCEINLINE void SetA8(       uint8 iValue )  { SetAlpha8(  iValue ); }
     ULIS_FORCEINLINE void SetA16(      uint16 iValue ) { SetAlpha16( iValue ); }
-    ULIS_FORCEINLINE void SetA32(      uint32 iValue ) { SetAlpha32( iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetA32(      uint32 iValue ) { SetAlpha32( iValue ); }
     ULIS_FORCEINLINE void SetAF(       float iValue )  { SetAlphaF(  iValue ); }
     //DISABLED:DOUBLEULIS_FORCEINLINE void SetAD(       double iValue ) { SetAlphaD(  iValue ); }
 
@@ -295,33 +295,33 @@ public:
     ULIS_FORCEINLINE uint16 x16()          const { return  Channel16( 1 ); }
     ULIS_FORCEINLINE uint16 y16()          const { return  Channel16( 2 ); }
 
-    ULIS_FORCEINLINE uint32 Grey32()       const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 Red32()        const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 Green32()      const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 Blue32()       const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 R32()          const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 G32()          const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 B32()          const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 Hue32()        const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 Saturation32() const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 Lightness32()  const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 Value32()      const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 Cyan32()       const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 Magenta32()    const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 Yellow32()     const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 Key32()        const { return  Channel32( 3 ); }
-    ULIS_FORCEINLINE uint32 Luma32()       const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 U32()          const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 V32()          const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 K32()          const { return  Channel32( 3 ); }
-    ULIS_FORCEINLINE uint32 X32()          const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 Y32()          const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 Z32()          const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 L32()          const { return  Channel32( 0 ); }
-    ULIS_FORCEINLINE uint32 a32()          const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 b32()          const { return  Channel32( 2 ); }
-    ULIS_FORCEINLINE uint32 x32()          const { return  Channel32( 1 ); }
-    ULIS_FORCEINLINE uint32 y32()          const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Grey32()       const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Red32()        const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Green32()      const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Blue32()       const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 R32()          const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 G32()          const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 B32()          const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Hue32()        const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Saturation32() const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Lightness32()  const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Value32()      const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Cyan32()       const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Magenta32()    const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Yellow32()     const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Key32()        const { return  Channel32( 3 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Luma32()       const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 U32()          const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 V32()          const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 K32()          const { return  Channel32( 3 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 X32()          const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Y32()          const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 Z32()          const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 L32()          const { return  Channel32( 0 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 a32()          const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 b32()          const { return  Channel32( 2 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 x32()          const { return  Channel32( 1 ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE uint32 y32()          const { return  Channel32( 2 ); }
 
     ULIS_FORCEINLINE float GreyF()         const { return  ChannelF( 0 ); }
     ULIS_FORCEINLINE float RedF()          const { return  ChannelF( 0 ); }
@@ -435,33 +435,33 @@ public:
     ULIS_FORCEINLINE void Setx16(          uint16 iValue ) { SetChannel16( 1, iValue ); }
     ULIS_FORCEINLINE void Sety16(          uint16 iValue ) { SetChannel16( 2, iValue ); }
 
-    ULIS_FORCEINLINE void SetGrey32(       uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void SetRed32(        uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void SetGreen32(      uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void SetBlue32(       uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void SetR32(          uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void SetG32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void SetB32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void SetHue32(        uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void SetSaturation32( uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void SetLightness32(  uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void SetValue32(      uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void SetCyan32(       uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void SetMagenta32(    uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void SetYellow32(     uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void SetKey32(        uint32 iValue ) { SetChannel32( 3, iValue ); }
-    ULIS_FORCEINLINE void SetLuma32(       uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void SetU32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void SetV32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void SetK32(          uint32 iValue ) { SetChannel32( 3, iValue ); }
-    ULIS_FORCEINLINE void SetX32(          uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void SetY32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void SetZ32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void SetL32(          uint32 iValue ) { SetChannel32( 0, iValue ); }
-    ULIS_FORCEINLINE void Seta32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void Setb32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
-    ULIS_FORCEINLINE void Setx32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
-    ULIS_FORCEINLINE void Sety32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetGrey32(       uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetRed32(        uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetGreen32(      uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetBlue32(       uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetR32(          uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetG32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetB32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetHue32(        uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetSaturation32( uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetLightness32(  uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetValue32(      uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetCyan32(       uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetMagenta32(    uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetYellow32(     uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetKey32(        uint32 iValue ) { SetChannel32( 3, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetLuma32(       uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetU32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetV32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetK32(          uint32 iValue ) { SetChannel32( 3, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetX32(          uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetY32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetZ32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void SetL32(          uint32 iValue ) { SetChannel32( 0, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void Seta32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void Setb32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void Setx32(          uint32 iValue ) { SetChannel32( 1, iValue ); }
+    //DISABLED:UINT32ULIS_FORCEINLINE void Sety32(          uint32 iValue ) { SetChannel32( 2, iValue ); }
 
     ULIS_FORCEINLINE void SetGreyF(        ufloat iValue ) { SetChannelF( 0, iValue ); }
     ULIS_FORCEINLINE void SetRedF(         ufloat iValue ) { SetChannelF( 0, iValue ); }

@@ -45,8 +45,8 @@ typedef  int64      ulError;    ///< Used for errors reports defined below in th
 // Type codes
 #define ULIS_TYPE_UINT8    0x0
 #define ULIS_TYPE_UINT16   0x1
-#define ULIS_TYPE_UINT32   0x2
-#define ULIS_TYPE_UFLOAT   0x3
+#define ULIS_TYPE_UFLOAT   0x2
+//DISABLED:UINT32#define ULIS_TYPE_UINT32   0x3
 //DISABLED:DOUBLE#define ULIS_TYPE_UDOUBLE  0x4
 
 /////////////////////////////////////////////////////
@@ -54,8 +54,8 @@ typedef  int64      ulError;    ///< Used for errors reports defined below in th
 enum eType {
       Type_uint8     = ULIS_TYPE_UINT8
     , Type_uint16    = ULIS_TYPE_UINT16
-    , Type_uint32    = ULIS_TYPE_UINT32
     , Type_ufloat    = ULIS_TYPE_UFLOAT
+    //DISABLED:UINT32, Type_uint32    = ULIS_TYPE_UINT32
     //DISABLED:DOUBLE, TYPE_UDOUBLE   = ULIS_TYPE_UDOUBLE
 };
 
@@ -64,7 +64,7 @@ enum eType {
 template< typename T >  ULIS_FORCEINLINE   eType   eTypeFromT(void)        { return  Type_uint8;   }
 template<> constexpr    ULIS_FORCEINLINE   eType   eTypeFromT< uint8 >()   { return  Type_uint8;   }
 template<> constexpr    ULIS_FORCEINLINE   eType   eTypeFromT< uint16 >()  { return  Type_uint16;  }
-template<> constexpr    ULIS_FORCEINLINE   eType   eTypeFromT< uint32 >()  { return  Type_uint32;  }
+//DISABLED:UINT32template<> constexpr    ULIS_FORCEINLINE   eType   eTypeFromT< uint32 >()  { return  Type_uint32;  }
 template<> constexpr    ULIS_FORCEINLINE   eType   eTypeFromT< ufloat >()  { return  Type_ufloat;  }
 //DISABLED:DOUBLEtemplate<> constexpr    ULIS_FORCEINLINE   eType   eTypeFromT< udouble >() { return  TYPE_UDOUBLE; }
 
@@ -81,22 +81,22 @@ template<> constexpr uint16     ULIS_FORCEINLINE ConvType< uint8,  uint16  >( ui
 template<> constexpr uint32     ULIS_FORCEINLINE ConvType< uint8,  uint32  >( uint8 iValue  )  { return iValue * 0x1010101;                                                         }
 template<> constexpr ufloat     ULIS_FORCEINLINE ConvType< uint8,  ufloat  >( uint8 iValue  )  { return iValue / (ufloat)0xFF;                                                      }
 template<> constexpr udouble    ULIS_FORCEINLINE ConvType< uint8,  udouble >( uint8 iValue  )  { return iValue / (udouble)0xFF;                                                     }
-//template<> constexpr uint8      ULIS_FORCEINLINE ConvType< uint16, uint8   >( uint16 iValue )  { return ( iValue + 1 + ( iValue>>8 ) ) >> 8;                                        }
+//template<> constexpr uint8      ULIS_FORCEINLINE ConvType< uint16, uint8   >( uint16 iValue )  { return ( iValue + 1 + ( iValue>>8 ) ) >> 8;                                      }
 template<> constexpr uint8      ULIS_FORCEINLINE ConvType< uint16, uint8   >( uint16 iValue )  { return iValue >> 8;                                                                }
 template<> constexpr uint32     ULIS_FORCEINLINE ConvType< uint16, uint32  >( uint16 iValue )  { return iValue * 0x10001;                                                           }
 template<> constexpr ufloat     ULIS_FORCEINLINE ConvType< uint16, ufloat  >( uint16 iValue )  { return iValue / (ufloat)0xFFFF;                                                    }
 template<> constexpr udouble    ULIS_FORCEINLINE ConvType< uint16, udouble >( uint16 iValue )  { return iValue / (udouble)0xFFFF;                                                   }
 template<> constexpr uint8      ULIS_FORCEINLINE ConvType< uint32, uint8   >( uint32 iValue )  { return iValue >> 24;                                                               }
-//template<> constexpr uint16     ULIS_FORCEINLINE ConvType< uint32, uint16  >( uint32 iValue )  { return ( iValue + 1 + ( iValue>>16 ) ) >> 16;                                      }
+//template<> constexpr uint16     ULIS_FORCEINLINE ConvType< uint32, uint16  >( uint32 iValue )  { return ( iValue + 1 + ( iValue>>16 ) ) >> 16;                                    }
 template<> constexpr uint16     ULIS_FORCEINLINE ConvType< uint32, uint16  >( uint32 iValue )  { return iValue >> 16;                                                               }
 template<> constexpr ufloat     ULIS_FORCEINLINE ConvType< uint32, ufloat  >( uint32 iValue )  { return iValue / (ufloat)0xFFFFFFFF;                                                }
 template<> constexpr udouble    ULIS_FORCEINLINE ConvType< uint32, udouble >( uint32 iValue )  { return iValue / (udouble)0xFFFFFFFF;                                               }
 template<> constexpr uint8      ULIS_FORCEINLINE ConvType< ufloat,  uint8  >( ufloat iValue  ) { return uint8(  iValue * 0xFF       );                                              }
 template<> constexpr uint16     ULIS_FORCEINLINE ConvType< ufloat,  uint16 >( ufloat iValue  ) { return uint16( iValue * 0xFFFF     );                                              }
-template<> constexpr uint32     ULIS_FORCEINLINE ConvType< ufloat,  uint32 >( ufloat iValue  ) { return uint32( iValue * 0xFFFFFFFF );                                              }
+template<> constexpr uint32     ULIS_FORCEINLINE ConvType< ufloat,  uint32 >( ufloat iValue  ) { return ConvType< uint16, uint32 >( ConvType< float, uint16 >( iValue ) );          }
 template<> constexpr uint8      ULIS_FORCEINLINE ConvType< udouble, uint8  >( udouble iValue ) { return uint8(  iValue * 0xFF       );                                              }
 template<> constexpr uint16     ULIS_FORCEINLINE ConvType< udouble, uint16 >( udouble iValue ) { return uint16( iValue * 0xFFFF     );                                              }
-template<> constexpr uint32     ULIS_FORCEINLINE ConvType< udouble, uint32 >( udouble iValue ) { return uint32( iValue * 0xFFFFFFFF );                                              }
+template<> constexpr uint32     ULIS_FORCEINLINE ConvType< udouble, uint32 >( udouble iValue ) { return ConvType< uint16, uint32 >( ConvType< udouble, uint16 >( iValue ) );        }
 template<> constexpr uint8      ULIS_FORCEINLINE ConvType< int,  uint8     >( int iValue  )    { return _clamp( iValue, 0, (int)UINT8_MAX );                                        }
 template<> constexpr uint16     ULIS_FORCEINLINE ConvType< int,  uint16    >( int iValue  )    { return ConvType< uint8, uint16 >(  (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) );   }
 template<> constexpr uint32     ULIS_FORCEINLINE ConvType< int,  uint32    >( int iValue  )    { return ConvType< uint8, uint32 >(  (uint8)_clamp( iValue, 0, (int)UINT8_MAX ) );   }
@@ -141,8 +141,8 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 #define ULIS_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )      \
     X( uint8,   _E0, _E1, _E2, _E3 )                        \
     X( uint16,  _E0, _E1, _E2, _E3 )                        \
-    X( uint32,  _E0, _E1, _E2, _E3 )                        \
-    X( ufloat,  _E0, _E1, _E2, _E3 )                        //DISABLED:DOUBLE\
+    X( ufloat,  _E0, _E1, _E2, _E3 )                        //DISABLED:UINT32\
+    X( uint32,  _E0, _E1, _E2, _E3 )                        //DISABLED:DOUBLE\
     X( udouble, _E0, _E1, _E2, _E3 )
 
 /////////////////////////////////////////////////////
@@ -150,8 +150,8 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 #define ULIS_FOR_ALL_TYPES_ID_DO( X, _E0, _E1, _E2, _E3 )   \
     X( Type_uint8,      _E0, uint8, _E2, _E3 )              \
     X( Type_uint16,     _E0, uint16, _E2, _E3 )             \
-    X( Type_uint32,     _E0, uint32, _E2, _E3 )             \
-    X( Type_ufloat,     _E0, ufloat, _E2, _E3 )             //DISABLED:DOUBLE\
+    X( Type_ufloat,     _E0, ufloat, _E2, _E3 )             //DISABLED:UINT32\
+    X( Type_uint32,     _E0, uint32, _E2, _E3 )             //DISABLED:DOUBLE\
     X( TYPE_UDOUBLE,    _E0, udouble, _E2, _E3 )
 
 /////////////////////////////////////////////////////
@@ -159,20 +159,20 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 #define ULIS_FOR_ALL_TYPES_COMBINATIONS_DO( X, _E0, _E1 )   \
     X( uint8,   uint8   , _E0, _E1 )                        \
     X( uint8,   uint16  , _E0, _E1 )                        \
-    X( uint8,   uint32  , _E0, _E1 )                        \
     X( uint8,   ufloat  , _E0, _E1 )                        \
     X( uint16,  uint8   , _E0, _E1 )                        \
     X( uint16,  uint16  , _E0, _E1 )                        \
-    X( uint16,  uint32  , _E0, _E1 )                        \
     X( uint16,  ufloat  , _E0, _E1 )                        \
+    X( ufloat,  uint8   , _E0, _E1 )                        \
+    X( ufloat,  uint16  , _E0, _E1 )                        \
+    X( ufloat,  ufloat  , _E0, _E1 )                           //DISABLED:DOUBLE\
+    X( uint8,   uint32  , _E0, _E1 )                        \
+    X( uint16,  uint32  , _E0, _E1 )                        \
     X( uint32,  uint8   , _E0, _E1 )                        \
     X( uint32,  uint16  , _E0, _E1 )                        \
     X( uint32,  uint32  , _E0, _E1 )                        \
     X( uint32,  ufloat  , _E0, _E1 )                        \
-    X( ufloat,  uint8   , _E0, _E1 )                        \
-    X( ufloat,  uint16  , _E0, _E1 )                        \
     X( ufloat,  uint32  , _E0, _E1 )                        \
-    X( ufloat,  ufloat  , _E0, _E1 )                           //DISABLED:DOUBLE\
     X( uint8,   udouble  )                          \
     X( uint16,  udouble )                           \
     X( uint32,  udouble )                           \

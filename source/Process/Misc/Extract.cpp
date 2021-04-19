@@ -69,28 +69,28 @@ fpExtract QueryDispatchedExtractInvocation( eType iSrcType, eType iDstType ) {
         case Type_uint8: switch( iDstType ) {
                 case Type_uint8:    return  InvokeExtractInto< uint8, uint8  >;
                 case Type_uint16:   return  InvokeExtractInto< uint8, uint16 >;
-                case Type_uint32:   return  InvokeExtractInto< uint8, uint32 >;
+                //DISABLED:UINT32case Type_uint32:   return  InvokeExtractInto< uint8, uint32 >;
                 case Type_ufloat:   return  InvokeExtractInto< uint8, ufloat >;
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint8, udouble      >;
         }
         case Type_uint16: switch( iDstType ) {
                 case Type_uint8:    return  InvokeExtractInto< uint16, uint8  >;
                 case Type_uint16:   return  InvokeExtractInto< uint16, uint16 >;
-                case Type_uint32:   return  InvokeExtractInto< uint16, uint32 >;
+                //DISABLED:UINT32case Type_uint32:   return  InvokeExtractInto< uint16, uint32 >;
                 case Type_ufloat:   return  InvokeExtractInto< uint16, ufloat >;
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint16, udouble     >;
         }
-        case Type_uint32: switch( iDstType ) {
-                case Type_uint8:    return  InvokeExtractInto< uint32, uint8  >;
-                case Type_uint16:   return  InvokeExtractInto< uint32, uint16 >;
-                case Type_uint32:   return  InvokeExtractInto< uint32, uint32 >;
-                case Type_ufloat:   return  InvokeExtractInto< uint32, ufloat >;
-                //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint32, udouble     >;
-        }
+        //DISABLED:UINT32case Type_uint32: switch( iDstType ) {
+        //DISABLED:UINT32        case Type_uint8:    return  InvokeExtractInto< uint32, uint8  >;
+        //DISABLED:UINT32        case Type_uint16:   return  InvokeExtractInto< uint32, uint16 >;
+        //DISABLED:UINT32        case Type_uint32:   return  InvokeExtractInto< uint32, uint32 >;
+        //DISABLED:UINT32        case Type_ufloat:   return  InvokeExtractInto< uint32, ufloat >;
+        //DISABLED:UINT32        //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint32, udouble     >;
+        //DISABLED:UINT32}
         case Type_ufloat: switch( iDstType ) {
                 case Type_uint8:    return  InvokeExtractInto< ufloat, uint8  >;
                 case Type_uint16:   return  InvokeExtractInto< ufloat, uint16 >;
-                case Type_uint32:   return  InvokeExtractInto< ufloat, uint32 >;
+                //DISABLED:UINT32case Type_uint32:   return  InvokeExtractInto< ufloat, uint32 >;
                 case Type_ufloat:   return  InvokeExtractInto< ufloat, ufloat >;
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< ufloat, udouble     >;
         }

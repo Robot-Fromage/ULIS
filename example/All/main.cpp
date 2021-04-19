@@ -52,13 +52,11 @@ static const char* kwDocumentFormat[] = {
 static const eFormat eDocumentFormaMatchingTable[] = {
       Format_RGBA8
     , Format_RGBA16
-    , Format_RGBA32
     , Format_RGBAF
     , Format_ABGR8
     , Format_BGRA16
     , Format_HSVAF
     , Format_CMYKA16
-    , Format_LabA32
     , Format_LabAF
     , Format_ALab8
     , Format_GA16
@@ -68,8 +66,8 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat fmt = Format_RGBA16;
-    FContext ctx( queue, fmt, PerformanceIntent_MEM );
+    eFormat fmt = Format_RGBA8;
+    FContext ctx( queue, fmt );
 
     FBlock canvas( 1024, 1024, fmt );
     FRectI src( 16, 0, 16, 16 );
@@ -89,6 +87,7 @@ main( int argc, char *argv[] ) {
     {
         for( int i = 0; i < NumBlendModes; ++ i ) {
             ctx.Blend( canvas, canvas, src, FVec2I( ( i + 2 ) * 16, 0 ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, FSchedulePolicy::MonoChunk );
+            ctx.Finish();
             ctx.Flush();
         }
         ctx.Fence();
@@ -131,7 +130,7 @@ main( int argc, char *argv[] ) {
         FSanitizedGradient grad0 = gradient0.Sanitized( fmt );
         FVec2I p0( 0, 16 );
         FVec2I p1( 0, 80 );
-        ctx.RasterGradient( canvas, p0, p1, grad0, 4.f / 255.f, Gradient_Linear, FRectI( 0, 16, 32, 64 ) );
+        ctx.RasterGradient( canvas, p0, p1, grad0, 0.f, Gradient_Linear, FRectI( 0, 16, 32, 64 ), FSchedulePolicy::MonoChunk );
 
         FGradient gradient1( fmt );
         gradient1.AddColorStep( 0.f, FColor::RGB( 0, 0, 21 ) );
@@ -148,10 +147,6 @@ main( int argc, char *argv[] ) {
         ctx.Finish();
         ctx.BlendColor( FColor::Black, canvas, FRectI( 0, 144, 1024, 144 ), Blend_Multiply, Alpha_Normal, 0.5f );
         ctx.Finish();
-        /*
-        ctx.Convolve( canvas, canvas, FKernel::GaussianBlur, FRectI( 0, 0, 20, 144 ), FVec2I( 0, 280 ) );
-        ctx.Finish();
-        */
     }
 
     {
