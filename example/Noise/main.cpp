@@ -28,8 +28,8 @@ main( int argc, char *argv[] ) {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt );
 
-    FBlock canvas( 400, 400, fmt );
-    ctx.Clouds( canvas, -1, canvas.Rect(), FSchedulePolicy::MonoChunk, 0, 0, 0 );
+    FBlock canvas( 1024, 1024, fmt );
+    ctx.Clouds( canvas, -1, canvas.Rect(), FSchedulePolicy::MultiScanlines, 0, 0, 0 );
     ctx.Finish();
 
     QApplication    app( argc, argv );

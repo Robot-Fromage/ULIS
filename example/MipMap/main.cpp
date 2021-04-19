@@ -29,17 +29,20 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, fmt );
 
     FBlock canvas( 1024, 1024, fmt );
-    FGradient gradient( fmt );
-    gradient.AddColorStep( 0.f, FColor::Black );
-    gradient.AddColorStep( 1.f, FColor::White );
-    FSanitizedGradient grad = gradient.Sanitized( fmt );
+    FBlock square( 16, 16, fmt );
     FVec2I p0( canvas.Rect().Size() / 2 );
     FVec2I p1( canvas.Rect().Size() );
-    //ctx.RasterGradient( canvas, p0, p1, grad, 100, Gradient_Radial);
     ctx.Clear( canvas );
-    ctx.Finish();
-
+    ctx.Flush();
+    ctx.Fill( square, FRectI( 0, 0, 8, 8 ), FColor::RGB( 150, 220, 255 ) );
+    ctx.Fill( square, FRectI( 8, 8, 8, 8 ), FColor::RGB( 150, 220, 255 ) );
+    ctx.Fill( square, FRectI( 0, 8, 8, 8 ), FColor::White );
+    ctx.Fill( square, FRectI( 8, 0, 8, 8 ), FColor::White );
+    ctx.Flush();
+    ctx.Fence();
     ctx.DrawCircleAndresAA( canvas, p0, 500, FColor::Black, true );
+    ctx.Finish();
+    ctx.BlendTiled( square, canvas, square.Rect(), canvas.Rect(), FVec2I( 0 ), Blend_Behind, Alpha_Normal, 1.f, FSchedulePolicy::MultiScanlines );
     ctx.Finish();
 
     FBlock mipMap;
