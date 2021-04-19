@@ -35,15 +35,15 @@ main( int argc, char *argv[] ) {
     FSanitizedGradient grad = gradient.Sanitized( fmt );
     FVec2I p0( canvas.Rect().Size() / 2 );
     FVec2I p1( canvas.Rect().Size() );
-    ctx.RasterGradient( canvas, p0, p1, grad, 100, Gradient_Radial);
-    //ctx.Clear( canvas );
+    //ctx.RasterGradient( canvas, p0, p1, grad, 100, Gradient_Radial);
+    ctx.Clear( canvas );
     ctx.Finish();
 
-    //ctx.DrawCircleAndresAA( canvas, p0, 500, FColor::Black, true );
+    ctx.DrawCircleAndresAA( canvas, p0, 500, FColor::Black, true );
     ctx.Finish();
 
     FBlock mipMap;
-    ctx.XBuildMipMap( canvas, mipMap, -1, canvas.Rect(), Resampling_Bilinear );
+    ctx.XBuildMipMap( canvas, mipMap, -1, canvas.Rect(), Resampling_Bicubic );
     ctx.Finish();
 
     QApplication    app( argc, argv );
