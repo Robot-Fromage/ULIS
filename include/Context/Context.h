@@ -1510,7 +1510,7 @@ public:
     );
 
     /*!
-    Draws a line between iP0 and iP1, AA version
+        Draws a line between iP0 and iP1, AA version
     */
     ulError
     DrawLineAA(
@@ -1526,7 +1526,7 @@ public:
     );
 
     /*!
-    Draws a line between iP0 and iP1, SP version
+        Draws a line between iP0 and iP1, SP version
     */
     ulError
     DrawLineSP(
@@ -1542,7 +1542,7 @@ public:
     );
 
     /*!
-    Draws a circle with Andres algorithm. Nice for multiple concentric drawings.
+        Draws a circle with Andres algorithm. Nice for multiple concentric drawings.
     */
     ulError
     DrawCircleAndres(
@@ -1559,7 +1559,7 @@ public:
     );
 
     /*!
-    Draws a circle with Andres algorithm. Nice for multiple concentric drawings. AA version
+        Draws a circle with Andres algorithm. Nice for multiple concentric drawings. AA version
     */
     ulError
     DrawCircleAndresAA(
@@ -1576,7 +1576,7 @@ public:
     );
 
     /*!
-    Draws a circle with Andres algorithm. Nice for multiple concentric drawings. SP version
+        Draws a circle with Andres algorithm. Nice for multiple concentric drawings. SP version
     */
     ulError
     DrawCircleAndresSP(
@@ -1593,7 +1593,7 @@ public:
     );
 
     /*!
-    Draws a circle with Bresenham algorithm. Nice for drawing a single circle.
+        Draws a circle with Bresenham algorithm. Nice for drawing a single circle.
     */
     ulError
     DrawCircleBresenham(
@@ -1610,7 +1610,7 @@ public:
     );
 
     /*!
-    Draws a circle with Bresenham algorithm. Nice for drawing a single circle. AA version
+        Draws a circle with Bresenham algorithm. Nice for drawing a single circle. AA version
     */
     ulError
     DrawCircleBresenhamAA(
@@ -1627,7 +1627,7 @@ public:
     );
 
     /*!
-    Draws a circle with Bresenham algorithm. Nice for drawing a single circle. SP version
+        Draws a circle with Bresenham algorithm. Nice for drawing a single circle. SP version
     */
     ulError
     DrawCircleBresenhamSP(
@@ -1644,7 +1644,7 @@ public:
     );
 
     /*!
-    Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings.
+        Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings.
     */
     ulError
     DrawArcAndres(
@@ -1662,7 +1662,7 @@ public:
     );
 
     /*!
-    Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings. AA version
+        Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings. AA version
     */
     ulError
     DrawArcAndresAA(
@@ -1680,7 +1680,7 @@ public:
     );
 
     /*!
-    Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings. SP version
+        Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings. SP version
     */
     ulError
     DrawArcAndresSP(
@@ -1698,7 +1698,7 @@ public:
     );
 
     /*!
-    Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle.
+        Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle.
     */
     ulError
     DrawArcBresenham(
@@ -1716,7 +1716,7 @@ public:
     );
 
     /*!
-    Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle. AA version
+        Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle. AA version
     */
     ulError
     DrawArcBresenhamAA(
@@ -1734,7 +1734,7 @@ public:
     );
 
     /*!
-    Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle. SP version
+        Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle. SP version
     */
     ulError
     DrawArcBresenhamSP(
@@ -1752,7 +1752,7 @@ public:
     );
 
     /*!
-    Draws an ellipse
+        Draws an ellipse
     */
     ulError
     DrawEllipse(
@@ -1770,7 +1770,7 @@ public:
     );
 
     /*!
-    Draws an ellipse, AA version
+        Draws an ellipse, AA version
     */
     ulError
     DrawEllipseAA(
@@ -1788,7 +1788,7 @@ public:
     );
 
     /*!
-    Draws an ellipse, AA version
+        Draws an ellipse, AA version
     */
     ulError
     DrawEllipseSP(
@@ -1806,7 +1806,7 @@ public:
     );
 
     /*!
-    Draws a rotated ellipse
+        Draws a rotated ellipse
     */
     ulError
     DrawRotatedEllipse(
@@ -1825,7 +1825,7 @@ public:
     );
 
     /*!
-    Draws a rotated ellipse
+        Draws a rotated ellipse
     */
     ulError
     DrawRotatedEllipseAA(
@@ -1844,7 +1844,7 @@ public:
     );
 
     /*!
-    Draws a rotated ellipse
+        Draws a rotated ellipse
     */
     ulError
     DrawRotatedEllipseSP(
@@ -1863,7 +1863,7 @@ public:
     );
 
     /*!
-    Draws a rectangle
+        Draws a rectangle
     */
     ulError
     DrawRectangle(
@@ -1880,7 +1880,7 @@ public:
     );
 
     /*!
-    Draws a polygon
+        Draws a polygon
     */
     ulError
     DrawPolygon(
@@ -1896,7 +1896,7 @@ public:
     );
 
     /*!
-    Draws a polygon, AA version
+        Draws a polygon, AA version
     */
     ulError
     DrawPolygonAA(
@@ -1913,7 +1913,7 @@ public:
 
 
     /*!
-    Draws a polygon, SP version
+        Draws a polygon, SP version
     */
     ulError
     DrawPolygonSP(
@@ -1929,7 +1929,7 @@ public:
     );
 
     /*!
-    Draws a quadratic bezier
+        Draws a quadratic bezier
     */
     ulError
     DrawQuadraticBezier(
@@ -1948,7 +1948,7 @@ public:
 
 
     /*!
-    Draws a quadratic bezier, AA version
+        Draws a quadratic bezier, AA version
     */
     ulError
     DrawQuadraticBezierAA(
@@ -1967,7 +1967,7 @@ public:
 
 
     /*!
-    Draws a quadratic bezier, AA version
+        Draws a quadratic bezier, AA version
     */
     ulError
     DrawQuadraticBezierSP(
@@ -1986,7 +1986,9 @@ public:
 
 /////////////////////////////////////////////////////
 // FX Noise
-    /*! Render white noise */
+    /*!
+        Render white noise
+    */
     ulError
     WhiteNoise(
           FBlock& iBlock
@@ -1998,7 +2000,9 @@ public:
         , FEvent* iEvent = nullptr
     );
 
-    /*! Render walue noise */
+    /*!
+        Render value noise
+    */
     ulError
     ValueNoise(
           FBlock& iBlock
@@ -2011,7 +2015,9 @@ public:
         , FEvent* iEvent = nullptr
     );
 
-    /*! Render walue noise */
+    /*!
+        Render brownian noise
+    */
     ulError
     BrownianNoise(
           FBlock& iBlock
@@ -2027,7 +2033,9 @@ public:
         , FEvent* iEvent = nullptr
     );
 
-    /*! Render walue noise */
+    /*!
+        Render voronoi noise
+    */
     ulError
     VoronoiNoise(
           FBlock& iBlock
@@ -2040,7 +2048,9 @@ public:
         , FEvent* iEvent = nullptr
     );
 
-    /*! Render walue noise */
+    /*!
+        Render cloud noise, brownian with specific params.
+    */
     ulError
     Clouds(
           FBlock& iBlock
