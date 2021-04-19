@@ -22,6 +22,7 @@
 #include "Scheduling/InternalEvent.h"
 #include "Scheduling/SimpleBufferArgs.h"
 #include <ctime>
+#include <vector>
 
 ULIS_NAMESPACE_BEGIN
 ulError
@@ -191,6 +192,37 @@ FContext::VoronoiNoise(
     , FEvent* iEvent
 )
 {
+    ULIS_ASSERT_RETURN_ERROR( iBlock.Format() == Format(), "Bad format", ULIS_ERROR_FORMATS_MISMATCH )
+
+    // Sanitize geometry
+    const FRectI rect = iBlock.Rect();
+    const FRectI roi = iRect.Sanitized() & rect;
+
+    // Check no-op
+    if( roi.Area() <= 0 )
+        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+
+    int seed = iSeed < 0 ? time( NULL ) : iSeed;
+
+    // Bake and push command
+    mCommandQueue.d->Push(
+        new FCommand(
+              mContextualDispatchTable->mScheduleVoronoiNoise
+            , new FVoronoiNoiseCommandArgs(
+                  iBlock
+                , roi
+                , seed
+            )
+            , iPolicy
+            , false
+            , false
+            , iNumWait
+            , iWaitList
+            , iEvent
+            , roi
+        )
+    );
+
     return  ULIS_NO_ERROR;
 }
 
