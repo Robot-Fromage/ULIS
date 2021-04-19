@@ -12,7 +12,7 @@
 */
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
-//#include "Process/Noise/Noise.h"
+#include "Process/Noise/Noise.h"
 #include "Image/Block.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"

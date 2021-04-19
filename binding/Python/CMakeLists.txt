@@ -29,6 +29,9 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         ${ULIS_PYTHON_INCLUDE_PATH2}
     )
 
+    set_target_properties( PyULIS PROPERTIES OUTPUT_NAME "PyULIS${ULIS_VERSION_MAJOR}" )
+    set_target_properties( PyULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
+
     # For MSVC parse pretty filter names
     foreach(source IN LISTS source_list)
         get_filename_component(source_path "${source}" PATH)
@@ -37,3 +40,4 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
     endforeach()
 
 endif()
+
