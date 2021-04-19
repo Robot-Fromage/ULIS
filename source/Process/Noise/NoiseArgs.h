@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         GradientArgs.h
+* @file         NoiseArgs.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for GradientArgs.
+* @brief        This file provides the declaration for NoiseArgs.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -16,43 +16,26 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Image/Block.h"
-#include "Image/Gradient.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// FGradientCommandArgs
-class FGradientCommandArgs final
+// FNoiseCommandArgs
+class FNoiseCommandArgs final
     : public FSimpleBufferCommandArgs
 {
 public:
-    ~FGradientCommandArgs() override
+    ~FNoiseCommandArgs() override
     {
     }
 
-    FGradientCommandArgs(
+    FNoiseCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
-        , const FVec2F& iStart
-        , const FVec2F& iEnd
-        , const FSanitizedGradient& iGradient
-        , ufloat iDithering
-        , eGradientType iType
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
-        , start( iStart )
-        , end( iEnd )
-        , gradient( iGradient )
-        , dithering( iDithering )
-        , type( iType )
     {}
-
-    const FVec2F start;
-    const FVec2F end;
-    const FSanitizedGradient& gradient;
-    const ufloat dithering;
-    const eGradientType type;
 };
 
 ULIS_NAMESPACE_END
