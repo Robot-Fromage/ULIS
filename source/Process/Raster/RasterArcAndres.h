@@ -13,7 +13,7 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Image/Block.h"
-#include "RasterUtils.h"
+#include "Process/Raster/RasterUtils.h"
 
 ULIS_NAMESPACE_BEGIN
 

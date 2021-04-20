@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 
-#include "RasterRotatedEllipse.h"
+#include "Process/Raster/RasterRotatedEllipse.h"
 
 ULIS_NAMESPACE_BEGIN
 

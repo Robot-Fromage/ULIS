@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 
-#include "RasterQuadraticBezier.h"
+#include "Process/Raster/RasterQuadraticBezier.h"
 
 ULIS_NAMESPACE_BEGIN
 

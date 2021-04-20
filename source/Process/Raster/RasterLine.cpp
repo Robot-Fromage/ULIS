@@ -9,9 +9,7 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-
-#include "RasterLine.h"
-#include "RasterUtils.h"
+#include "Process/Raster/RasterLine.h"
 
 ULIS_NAMESPACE_BEGIN
 

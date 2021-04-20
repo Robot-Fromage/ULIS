@@ -14,10 +14,10 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Image/Block.h"
 #include <map>
-#include "RasterEllipse.h"
-#include "RasterLine.h"
-#include "RasterQuadraticBezier.h"
-#include "RasterUtils.h"
+#include "Process/Raster/RasterEllipse.h"
+#include "Process/Raster/RasterLine.h"
+#include "Process/Raster/RasterQuadraticBezier.h"
+#include "Process/Raster/RasterUtils.h"
 
 ULIS_NAMESPACE_BEGIN
 

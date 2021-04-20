@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 
-#include "RasterCircleBresenham.h"
+#include "Process/Raster/RasterCircleBresenham.h"
 
 ULIS_NAMESPACE_BEGIN
 

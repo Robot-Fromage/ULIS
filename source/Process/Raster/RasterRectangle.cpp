@@ -10,8 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 
-#include "RasterRectangle.h"
-#include "RasterLine.h"
+#include "Process/Raster/RasterRectangle.h"
+#include "Process/Raster/RasterLine.h"
 
 ULIS_NAMESPACE_BEGIN
 
