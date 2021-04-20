@@ -10,8 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 
-#include "RasterEllipse.h"
-#include "RasterLine.h"
+#include "Process/Raster/RasterEllipse.h"
+#include "Process/Raster/RasterLine.h"
 
 ULIS_NAMESPACE_BEGIN
 
