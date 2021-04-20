@@ -667,7 +667,7 @@ FContext::XBuildMipMap(
             , &events[i]
             , &events[i+1]
         );
-        ULIS_ASSERT( !err, "Error during mip computation level " << i );
+        ULIS_ASSERT( !( err > 0 ), "Error during mip computation level " << i );
     }
 
     return  ULIS_NO_ERROR;

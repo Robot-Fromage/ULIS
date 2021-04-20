@@ -45,12 +45,6 @@ FContext::Extract(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
     const FRectI dst_rect = iDestination.Rect();
@@ -216,12 +210,6 @@ FContext::FilterInto(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT_RETURN_ERROR(
-          &iSource != &iDestination
-        , "Source and Backdrop are the same block."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA )
-    );
-
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
     const FRectI dst_rect = iDestination.Rect();
