@@ -30,7 +30,7 @@ InvokeTiledBlendMT_Separable_SSE_RGBA8(
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
 
-    for( int x = 0; x < cargs->dstRect.w; ++x ) {
+    for( int x = 1; x < cargs->dstRect.w + 1; ++x ) {
         ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
         ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * cargs->opacity;
         ufloat alpha_comp   = AlphaNormalF( alpha_src, alpha_bdp );
@@ -55,7 +55,7 @@ InvokeTiledBlendMT_Separable_SSE_RGBA8(
 
         src += 4;
         bdp += 4;
-        if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
+        if( ( ( x + cargs->shift.x ) % (cargs->srcRect.w ) == 0 ) )
             src = base;
     }
 }

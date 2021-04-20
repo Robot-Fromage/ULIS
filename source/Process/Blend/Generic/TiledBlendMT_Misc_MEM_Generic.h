@@ -35,7 +35,7 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
             int32 seedy = cargs->dstRect.y + jargs->line + 1;
             uint32 localPRNGSeed = ( 8253729 % seedy ) * GetBlendPRNGSeed() + ( 2396403 % ( seedy + 64578 ) * seedy );
 
-            for( int x = 0; x < cargs->dstRect.w; ++x ) {
+            for( int x = 1; x < cargs->dstRect.w + 1; ++x ) {
                 const ufloat alpha_bdp = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
                 const ufloat alpha_src = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
@@ -50,14 +50,14 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 }
                 src += fmt.BPP;
                 bdp += fmt.BPP;
-                if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
+                if( ( ( x + cargs->shift.x ) % (cargs->srcRect.w ) == 0 ) )
                     src = base;
             }
             break;
         }
 
         case Blend_BayerDither8x8: {
-            for( int x = 0; x < cargs->dstRect.w; ++x ) {
+            for( int x = 1; x < cargs->dstRect.w + 1; ++x ) {
                 const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
                 const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
                 const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->dstRect.y + jargs->line ) % 8 ][ ( cargs->dstRect.x + x ) % 8 ];
@@ -71,7 +71,7 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 }
                 src += fmt.BPP;
                 bdp += fmt.BPP;
-                if( ( x + cargs->shift.x ) % cargs->srcRect.w == 0 )
+                if( ( ( x + cargs->shift.x ) % (cargs->srcRect.w ) == 0 ) )
                     src = base;
             }
             break;
