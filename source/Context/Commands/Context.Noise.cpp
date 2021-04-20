@@ -23,6 +23,7 @@
 #include "Scheduling/SimpleBufferArgs.h"
 #include <ctime>
 #include <vector>
+#include <random>
 
 ULIS_NAMESPACE_BEGIN
 ulError
@@ -203,6 +204,20 @@ FContext::VoronoiNoise(
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     int seed = iSeed < 0 ? time( NULL ) : iSeed;
+    std::minstd_rand generator( seed );
+
+    const int fw = FMath::Max( 1, roi.w - 2 );
+    const int fh = FMath::Max( 1, roi.h - 2 );
+    FVec2F pos( roi.x, 0 );
+    std::vector< FVec2F > points( iCount );
+    for( uint32 i = 0; i < iCount; ++i )
+        points[i] = pos + FVec2F( generator() % fw + 1, generator() % fh + 1 );
+
+    float sqrcount = std::sqrt( (float)iCount );
+    float cellsizew = 1 * ( fw / sqrcount );
+    float cellsizeh = 1 * ( fh / sqrcount );
+    float normalisation_factor = std::sqrt( cellsizew * cellsizew + cellsizeh * cellsizeh );
+
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -212,6 +227,8 @@ FContext::VoronoiNoise(
                   iBlock
                 , roi
                 , seed
+                , normalisation_factor
+                , std::move( points )
             )
             , iPolicy
             , false

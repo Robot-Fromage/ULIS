@@ -19,6 +19,7 @@
 #include "Image/Block.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
+#include <vector>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -96,9 +97,19 @@ public:
     FVoronoiNoiseCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
+        , int iSeed
+        , float iNormalisationFactor
+        , std::vector< FVec2F >&& iPoints
     )
         : FSimpleBufferCommandArgs( iBlock, iRect )
+        , seed( iSeed )
+        , normalisationFactor( iNormalisationFactor )
+        , points( std::move( iPoints ) )
     {}
+
+    int seed;
+    float normalisationFactor;
+    std::vector< FVec2F > points;
 };
 
 /////////////////////////////////////////////////////
