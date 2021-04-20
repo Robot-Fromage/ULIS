@@ -243,6 +243,17 @@ main( int argc, char *argv[] ) {
         ctx.Finish();
     }
 
+    {
+        ctx.VoronoiNoise( canvas, 80, -1, FRectI( 128, 128, 256, 256 ) );
+        ctx.Finish();
+    }
+
+    {
+        FKernel blur = FKernel( FVec2I( 16 ), 1.f ).Normalized();
+        ctx.Convolve( canvas, canvas, blur, FRectI( 64, 64, 256, 256 ), FVec2I( 64, 512 ) );
+        ctx.Finish();
+    }
+
     FBlock proxy( 1024, 1024, Format_RGBA8 );
     ctx.ConvertFormat( canvas, proxy );
     ctx.Finish();
