@@ -14,6 +14,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Image/Block.h"
 #include "RasterLine.h"
+#include "RasterUtils.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -25,7 +26,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
                                 , const FRectI&            iClippingRect );
 
 template< typename T >
-static void DrawCircleAndresAA(   FBlock&                  iBlock
+void DrawCircleAndresAA(   FBlock&                  iBlock
                                 , const FVec2I&            iCenter
                                 , const int                iRadius
                                 , const FColor&            iColor
@@ -1002,7 +1003,7 @@ static void DrawCircleAndresAA(   FBlock&                  iBlock
 
 
 template< typename T >
-static void DrawCircleAndresSP(FBlock&                  iBlock
+void DrawCircleAndresSP(FBlock&                  iBlock
                              , const FVec2F&            iCenter
                              , const float              iRadius
                              , const FColor&            iColor

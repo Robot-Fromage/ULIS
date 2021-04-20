@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Image/Block.h"
+#include "RasterUtils.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -25,7 +26,7 @@ void DrawArcBresenham(        FBlock&                   iBlock
                             , const FRectI&             iClippingRect );
 
 template< typename T >
-static void DrawArcBresenhamAA(  FBlock&                   iBlock
+void DrawArcBresenhamAA(  FBlock&                   iBlock
                                , const FVec2I&             iCenter
                                , const int                 iRadius
                                , const int                 iStartDegree

@@ -26,7 +26,7 @@ void DrawArcAndres(           FBlock&                   iBlock
                             , const FRectI&             iClippingRect );
 
 template< typename T >
-static void DrawArcAndresAA(  FBlock&                   iBlock
+void DrawArcAndresAA(  FBlock&                   iBlock
                             , const FVec2I&             iCenter
                             , const int                 iRadius
                             , const int                 iStartDegree
@@ -1130,7 +1130,7 @@ static void DrawArcAndresAA(  FBlock&                   iBlock
 }
 
 template< typename T >
-static void DrawArcAndresSP(  FBlock&                   iBlock
+void DrawArcAndresSP(  FBlock&                   iBlock
                             , const FVec2F&             iCenter
                             , const float               iRadius
                             , const int                 iStartDegree

@@ -23,7 +23,7 @@ void DrawPolygon(        FBlock&                      iBlock
                        , const FRectI&                iClippingRect );
 
 template< typename T >
-static void DrawPolygonAA( FBlock&                      iBlock
+void DrawPolygonAA( FBlock&                      iBlock
                          , const std::vector< FVec2I >& iPoints
                          , const FColor&                iColor
                          , const bool                   iFilled
@@ -115,7 +115,7 @@ static void DrawPolygonAA( FBlock&                      iBlock
 }
 
 template< typename T >
-static void DrawPolygonSP( FBlock&                      iBlock
+void DrawPolygonSP( FBlock&                      iBlock
                          , const std::vector< FVec2F >& iPoints
                          , const FColor&                iColor
                          , const bool                   iFilled

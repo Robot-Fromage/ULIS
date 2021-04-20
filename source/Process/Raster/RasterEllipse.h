@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Image/Block.h"
+#include "RasterUtils.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -25,7 +26,7 @@ void DrawEllipse(         FBlock&                  iBlock
                         , const FRectI&            iClippingRect );
 
 template< typename T >
-static void DrawEllipseAA( FBlock&                  iBlock
+void DrawEllipseAA( FBlock&                  iBlock
                          , const FVec2I&            iCenter
                          , const int                iA
                          , const int                iB
@@ -730,7 +731,7 @@ static void DrawEllipseAA( FBlock&                  iBlock
 }
 
 template< typename T >
-static void DrawEllipseSP( FBlock&                  iBlock
+void DrawEllipseSP( FBlock&                  iBlock
                          , const FVec2F&            iCenter
                          , const float              iA
                          , const float              iB

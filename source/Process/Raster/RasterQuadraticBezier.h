@@ -387,7 +387,7 @@ InternalDrawQuadRationalBezierSegSP(
 }
 
 template< typename T >
-static void DrawQuadraticBezierAA( FBlock&                         iBlock
+void DrawQuadraticBezierAA( FBlock&                         iBlock
                                  , const FVec2I&                   iCtrlPt0
                                  , const FVec2I&                   iCtrlPt1
                                  , const FVec2I&                   iCtrlPt2
@@ -486,7 +486,7 @@ static void DrawQuadraticBezierAA( FBlock&                         iBlock
 }
 
 template< typename T >
-static void DrawQuadraticBezierSP( FBlock&                         iBlock
+void DrawQuadraticBezierSP( FBlock&                         iBlock
                                  , const FVec2F&                   iCtrlPt0
                                  , const FVec2F&                   iCtrlPt1
                                  , const FVec2F&                   iCtrlPt2

@@ -26,7 +26,7 @@ void DrawCircleBresenham(         FBlock&                  iBlock
                                 , const FRectI&            iClippingRect );
 
 template< typename T >
-static void DrawCircleBresenhamAA(    FBlock&                  iBlock
+void DrawCircleBresenhamAA(    FBlock&                  iBlock
                                     , const FVec2I&            iCenter
                                     , const int                iRadius
                                     , const FColor&            iColor
@@ -805,7 +805,7 @@ static void DrawCircleBresenhamAA(    FBlock&                  iBlock
 }
 
 template< typename T >
-static void DrawCircleBresenhamSP(    FBlock&                  iBlock
+void DrawCircleBresenhamSP(    FBlock&                  iBlock
                                     , const FVec2F&            iCenter
                                     , const float              iRadius
                                     , const FColor&            iColor

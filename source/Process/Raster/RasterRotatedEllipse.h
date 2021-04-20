@@ -31,7 +31,7 @@ void DrawRotatedEllipse(        FBlock&                  iBlock
                               , const FRectI&            iClippingRect );
 
 template< typename T >
-static void DrawRotatedEllipseAA( FBlock&                  iBlock
+void DrawRotatedEllipseAA( FBlock&                  iBlock
                                 , const FVec2I&            iCenter
                                 , const int                iA
                                 , const int                iB
@@ -199,7 +199,7 @@ static void DrawRotatedEllipseAA( FBlock&                  iBlock
 }
 
 template< typename T >
-static void DrawRotatedEllipseSP( FBlock&                  iBlock
+void DrawRotatedEllipseSP( FBlock&                  iBlock
                                 , const FVec2F&            iCenter
                                 , const float              iA
                                 , const float              iB
