@@ -87,16 +87,6 @@
     #define ULIS_UNKNOWN_COMPILER
 #endif
 
-#ifdef ULIS_MINGW64
-#pragma message( ULIS_STRINGIFY( __GNUC__ ) )
-#pragma message( "64" )
-#endif
-
-#ifdef ULIS_MINGW32
-#pragma message( ULIS_STRINGIFY( __GNUC__ ) )
-#pragma message( "32" )
-#endif
-
 /////////////////////////////////////////////////////
 // Disable CRT Secure non standard msvc versions of functions such as strcpy_s
 //#ifdef _MSC_VER
