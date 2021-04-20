@@ -16,6 +16,7 @@
 #include <map>
 #include "RasterEllipse.h"
 #include "RasterLine.h"
+#include "RasterQuadraticBezier.h"
 #include "RasterUtils.h"
 
 ULIS_NAMESPACE_BEGIN
