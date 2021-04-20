@@ -19,8 +19,13 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
+#if defined( ULIS_GCC ) || defined( ULIS_MINGW64 )
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
 #include <filesystem>
 namespace fs = std::filesystem;
+#endif
 
 ULIS_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------------
