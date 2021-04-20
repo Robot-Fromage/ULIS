@@ -68,6 +68,18 @@ FContext::Format() const
     return  mContextualDispatchTable->mFormat;
 }
 
+FFontEngine&
+FContext::FontEngine()
+{
+    return  mFontEngine;
+}
+
+const FFontEngine&
+FContext::FontEngine() const
+{
+    return  mFontEngine;
+}
+
 ulError
 FContext::FinishEventNo_OP( FEvent* iEvent, ulError iError )
 {

@@ -81,12 +81,12 @@ main( int argc, char *argv[] ) {
         ctx.Clear( canvas );
         ctx.Finish();
         ctx.Clear( canvas, src, FSchedulePolicy::MonoChunk );
-        ctx.Fill( canvas, FRectI( 16, 0, 8, 8 ), FColor::RGB( 45, 20, 30 ), FSchedulePolicy::MonoChunk );
-        ctx.Fill( canvas, FRectI( 24, 0, 8, 8 ), FColor::RGB( 255, 100, 40 ), FSchedulePolicy::MonoChunk );
-        ctx.Fill( canvas, FRectI( 16, 8, 8, 8 ), FColor::RGB( 75, 120, 35 ), FSchedulePolicy::MonoChunk );
-        ctx.Fill( canvas, FRectI( 24, 8, 8, 8 ), FColor::RGB( 60, 130, 240 ), FSchedulePolicy::MonoChunk );
-        ctx.Fill( canvas, FRectI( 32, 0, canvas.Width(), 16 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy::MultiScanlines );
-        ctx.Fill( canvas, FRectI( 0, 16, canvas.Width(), 64 ), FColor::RGB( 127, 127, 255 ), FSchedulePolicy::MultiScanlines );
+        ctx.Fill( canvas, FColor::RGB( 45, 20, 30 ), FRectI( 16, 0, 8, 8 ), FSchedulePolicy::MonoChunk );
+        ctx.Fill( canvas, FColor::RGB( 255, 100, 40 ), FRectI( 24, 0, 8, 8 ), FSchedulePolicy::MonoChunk );
+        ctx.Fill( canvas, FColor::RGB( 75, 120, 35 ), FRectI( 16, 8, 8, 8 ), FSchedulePolicy::MonoChunk );
+        ctx.Fill( canvas, FColor::RGB( 60, 130, 240 ), FRectI( 24, 8, 8, 8 ), FSchedulePolicy::MonoChunk );
+        ctx.Fill( canvas, FColor::RGB( 127, 127, 255 ), FRectI( 32, 0, canvas.Width(), 16 ), FSchedulePolicy::MultiScanlines );
+        ctx.Fill( canvas, FColor::RGB( 127, 127, 255 ), FRectI( 0, 16, canvas.Width(), 64 ), FSchedulePolicy::MultiScanlines );
         ctx.Finish();
     }
 

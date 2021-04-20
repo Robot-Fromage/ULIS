@@ -34,10 +34,10 @@ main( int argc, char *argv[] ) {
     FVec2I p1( canvas.Rect().Size() );
     ctx.Clear( canvas );
     ctx.Flush();
-    ctx.Fill( square, FRectI( 0, 0, 8, 8 ), FColor::RGB( 150, 220, 255 ) );
-    ctx.Fill( square, FRectI( 8, 8, 8, 8 ), FColor::RGB( 150, 220, 255 ) );
-    ctx.Fill( square, FRectI( 0, 8, 8, 8 ), FColor::White );
-    ctx.Fill( square, FRectI( 8, 0, 8, 8 ), FColor::White );
+    ctx.Fill( square, FColor::RGB( 150, 220, 255 ), FRectI( 0, 0, 8, 8 ) );
+    ctx.Fill( square, FColor::RGB( 150, 220, 255 ), FRectI( 8, 8, 8, 8 ) );
+    ctx.Fill( square, FColor::White, FRectI( 0, 8, 8, 8 ) );
+    ctx.Fill( square, FColor::White, FRectI( 8, 0, 8, 8 ) );
     ctx.Flush();
     ctx.Fence();
     ctx.DrawCircleAndresAA( canvas, p0, 500, FColor::Black, true );

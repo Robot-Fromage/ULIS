@@ -59,7 +59,7 @@ main( int argc, char *argv[] ) {
     int shadeH = 20;
     FBlock blockShade( shadeW, shadeH, fmt );
     FColor black = FColor::RGBA8( 0, 0, 0 );
-    ctx.Fill( blockShade, blockShade.Rect(), black, policy_cache_efficient );
+    ctx.Fill( blockShade, black, blockShade.Rect(), policy_cache_efficient );
     ctx.Flush();
 
     FBlock blockCanvas( w, h, fmt );

@@ -26,8 +26,8 @@ ULIS_NAMESPACE_BEGIN
 ulError
 FContext::Fill(
           FBlock& iBlock
-        , const FRectI& iRect
         , const ISample& iColor
+        , const FRectI& iRect
         , const FSchedulePolicy& iPolicy
         , uint32 iNumWait
         , const FEvent* iWaitList
@@ -79,8 +79,8 @@ FContext::Fill(
 ulError
 FContext::FillPreserveAlpha(
           FBlock& iBlock
-        , const FRectI& iRect
         , const ISample& iColor
+        , const FRectI& iRect
         , const FSchedulePolicy& iPolicy
         , uint32 iNumWait
         , const FEvent* iWaitList

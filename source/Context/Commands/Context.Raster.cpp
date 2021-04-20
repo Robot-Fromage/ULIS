@@ -1131,7 +1131,7 @@ FContext::DrawRectangle(
         const int width = FMath::Max(xmax - xmin,0);
         const int height = FMath::Max(ymax - ymin,0);
         FRectI rect = FRectI( xmin, ymin, width, height );
-        this->Fill( iBlock, rect, color, FSchedulePolicy::CacheEfficient, iNumWait, iWaitList, iEvent );
+        this->Fill( iBlock, color, rect, FSchedulePolicy::CacheEfficient, iNumWait, iWaitList, iEvent );
     }
     else
         // Bake and push command

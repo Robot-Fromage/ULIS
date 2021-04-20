@@ -22,7 +22,7 @@ main() {
     FBlock canvas( 800, 600, fmt );
     FBlock disk( 40, 40, fmt );
 
-    ctx.Fill( canvas, canvas.Rect(), FColor::Red, FSchedulePolicy::CacheEfficient );
+    ctx.Fill( canvas, FColor::Red, canvas.Rect(), FSchedulePolicy::CacheEfficient );
     ctx.Clear( disk, disk.Rect(), FSchedulePolicy::CacheEfficient );
     ctx.Finish();
 

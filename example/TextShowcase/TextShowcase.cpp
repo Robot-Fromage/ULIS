@@ -42,7 +42,7 @@ main( int argc, char *argv[] ) {
     FBlock* blockCanvas = new  FBlock( globalRect.w, globalRect.h, Format_RGBA8 );
     FColor black = FColor::Black;
     FColor white = FColor::White;
-    ctx.Fill( *blockCanvas, blockCanvas->Rect(), white, policy_cache_efficient );
+    ctx.Fill( *blockCanvas, white, blockCanvas->Rect(), policy_cache_efficient );
     ctx.Finish();
 
     int i = 0;

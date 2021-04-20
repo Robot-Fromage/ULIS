@@ -76,25 +76,25 @@ main( int argc, char *argv[] ) {
         FEvent eventClear0;
         FEvent eventFill0;
         ctx.Clear( image0->Block(), image0->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear0 );
-        ctx.Fill( image0->Block(), FRectI( 10, 50, 504, 1004 ), FColor::RGBA8( 0, 255, 255, 100 ), policy_sync_cache_efficient, 1, &eventClear0, &eventFill0 );
+        ctx.Fill( image0->Block(), FColor::RGBA8( 0, 255, 255, 100 ), FRectI( 10, 50, 504, 1004 ), policy_sync_cache_efficient, 1, &eventClear0, &eventFill0 );
         ctx.DrawCircleAndresAA( image0->Block(), image0->Block().Rect().Size() / 2, 128, FColor::RGB( 255, 0, 255 ), true, image0->Block().Rect(), FSchedulePolicy(), 1, &eventFill0, nullptr );
 
         FEvent eventClear1;
         ctx.Clear( image1->Block(), image1->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear1 );
-        ctx.Fill( image1->Block(), FRectI( 500, 500, 800, 800 ), FColor::RGB( 0, 255, 0 ), policy_sync_cache_efficient, 1, &eventClear1 );
+        ctx.Fill( image1->Block(), FColor::RGB( 0, 255, 0 ), FRectI( 500, 500, 800, 800 ), policy_sync_cache_efficient, 1, &eventClear1 );
 
         FEvent eventClear2;
         ctx.Clear( image2->Block(), image2->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear2 );
-        ctx.Fill( image2->Block(), FRectI( 20, 20, 100, 200 ), FColor::RGB( 255, 0, 0 ), policy_sync_cache_efficient, 1, &eventClear2 );
+        ctx.Fill( image2->Block(), FColor::RGB( 255, 0, 0 ), FRectI( 20, 20, 100, 200 ), policy_sync_cache_efficient, 1, &eventClear2 );
 
         FEvent eventClear00;
         ctx.Clear( image00->Block(), image00->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear00 );
-        ctx.Fill( image00->Block(), FRectI( 410, 410, 380, 380 ), FColor::RGB( 0, 0, 0 ), policy_sync_cache_efficient, 1, &eventClear00 );
+        ctx.Fill( image00->Block(), FColor::RGB( 0, 0, 0 ), FRectI( 410, 410, 380, 380 ), policy_sync_cache_efficient, 1, &eventClear00 );
 
         FEvent eventClear01;
         ctx.Clear( image01->Block(), image01->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear01 );
-        ctx.Fill( image01->Block(), FRectI( 400, 400, 400, 400 ), FColor::RGB( 255, 255, 0 ), policy_sync_cache_efficient, 1, &eventClear01 );
-        ctx.Fill( image3->Block(), image3->Block().Rect(), FColor::RGBA8( 0, 0, 0, 100 ), policy_sync_cache_efficient );
+        ctx.Fill( image01->Block(), FColor::RGB( 255, 255, 0 ), FRectI( 400, 400, 400, 400 ), policy_sync_cache_efficient, 1, &eventClear01 );
+        ctx.Fill( image3->Block(), FColor::RGBA8( 0, 0, 0, 100 ), image3->Block().Rect(), policy_sync_cache_efficient );
         ctx.Finish();
     }
 

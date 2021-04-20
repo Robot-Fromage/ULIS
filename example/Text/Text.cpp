@@ -45,7 +45,7 @@ main( int argc, char *argv[] ) {
 
     auto startTime = std::chrono::steady_clock::now();
     // Let's process the block:
-    ctx.Fill( *blockCanvas, blockCanvas->Rect(), backgroundColor );
+    ctx.Fill( *blockCanvas, backgroundColor, blockCanvas->Rect() );
     ctx.Finish();
     ctx.RasterTextAA( *blockCanvas, str1, font, fontSize, transform1, fontColor );
     ctx.Finish();

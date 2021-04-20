@@ -34,10 +34,10 @@ main( int argc, char *argv[] ) {
     FBlock blockCanvas( w, h, Format_RGBA8 );
     ctx.Clear( blockSource, blockSource.Rect(), FSchedulePolicy::CacheEfficient );
     ctx.Flush();
-    ctx.Fill( blockSource, FRectI( 200, 200, 200, 200 ), FColor::Red, FSchedulePolicy::CacheEfficient );
+    ctx.Fill( blockSource, FColor::Red, FRectI( 200, 200, 200, 200 ), FSchedulePolicy::CacheEfficient );
     ctx.Fence();
     ctx.Flush();
-    ctx.Fill( blockSource, FRectI( 300, 300, 100, 100 ), FColor::RGBA8( 0, 0, 255, 255 ), FSchedulePolicy::CacheEfficient );
+    ctx.Fill( blockSource, FColor::RGBA8( 0, 0, 255, 255 ), FRectI( 300, 300, 100, 100 ), FSchedulePolicy::CacheEfficient );
     ctx.Fence();
     ctx.Flush();
     FKernel blur = FKernel(
@@ -65,7 +65,7 @@ main( int argc, char *argv[] ) {
     ctx.Finish();
 
     FBlock test( 5, 5, Format_RGBA8 );
-    ctx.Fill( test, test.Rect(), FColor::Red );
+    ctx.Fill( test, FColor::Red, test.Rect() );
     ctx.Finish();
 
     FBlock SAT( test.Width(), test.Height(), ctx.SummedAreaTableMetrics( test ) );
