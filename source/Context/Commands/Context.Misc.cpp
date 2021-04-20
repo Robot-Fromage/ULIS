@@ -80,8 +80,8 @@ FContext::XCreateTestBlock(
     DrawLine( *paper, FVec2I(), FVec2I(), foreground, FRectI( 0, 0, 1, 1 ), FSchedulePolicy::MonoChunk, 1, &event[Event_FillPaper], &event[Event_DrawDot] );
     DrawLine( *paper, FVec2I( 1, 2 ), FVec2I( 3, 0 ), foreground, FRectI( 1, 0, 3, 3 ), FSchedulePolicy::MonoChunk, 1, &event[Event_FillPaper], &event[Event_DrawLine] );
 
-    BlendTiled( *paper, iDestination, FRectI( 1, 0, 3, 3 ), FRectI( 0, 1, size, size ), FVec2I(), Blend_Normal, Alpha_Normal, 1.f, FSchedulePolicy::AsyncMultiScanlines, Event_DrawLine + 1, &event[0], &event[Event_Tile] );
-    BlendTiled( *paper, iDestination, FRectI( 0, 0, 3, 1 ), FRectI( 0, 0, size, 1 ), FVec2I(), Blend_Normal, Alpha_Normal, 1.f, FSchedulePolicy::AsyncMonoScanlines, Event_DrawLine + 1, &event[0], &event[Event_Strip] );
+    TransformAffineTiled( *paper, iDestination, FRectI( 1, 0, 3, 3 ), FRectI( 0, 1, size, size ), FMat3F(), Resampling_NearestNeighbour, Border_Transparent, FColor::Transparent, FSchedulePolicy::AsyncMultiScanlines, Event_DrawLine + 1, &event[0], &event[Event_Tile] );
+    TransformAffineTiled( *paper, iDestination, FRectI( 0, 0, 3, 1 ), FRectI( 0, 0, size, 1 ), FMat3F(), Resampling_NearestNeighbour, Border_Transparent, FColor::Transparent, FSchedulePolicy::AsyncMonoScanlines, Event_DrawLine + 1, &event[0], &event[Event_Strip] );
 
     Fill( iDestination, background, bgBox, FSchedulePolicy::AsyncMonoChunk, 2, &event[Event_Tile], &event[Event_FillBgBox] );
     RasterTextAA( iDestination, text, *font, 22, mat, foreground, FSchedulePolicy::AsyncMonoChunk, 1, &event[Event_FillBgBox], &event[Event_RasterText] );
