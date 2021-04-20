@@ -20,6 +20,7 @@ const FSchedulePolicy FSchedulePolicy::CacheEfficient( ScheduleTime_Sync, Schedu
 const FSchedulePolicy FSchedulePolicy::AsyncMonoChunk( ScheduleTime_Async, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 const FSchedulePolicy FSchedulePolicy::MonoChunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 const FSchedulePolicy FSchedulePolicy::AsyncMultiScanlines( ScheduleTime_Async, ScheduleRun_Multi, ScheduleMode_Scanlines );
+const FSchedulePolicy FSchedulePolicy::AsyncMonoScanlines( ScheduleTime_Async, ScheduleRun_Mono, ScheduleMode_Scanlines );
 const FSchedulePolicy FSchedulePolicy::MultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
 const FSchedulePolicy FSchedulePolicy::MonoScanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 //

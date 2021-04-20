@@ -86,6 +86,7 @@ public:
     static const FSchedulePolicy AsyncMonoChunk;
     static const FSchedulePolicy MonoChunk;
     static const FSchedulePolicy AsyncMultiScanlines;
+    static const FSchedulePolicy AsyncMonoScanlines;
     static const FSchedulePolicy MultiScanlines;
     static const FSchedulePolicy MonoScanlines;
 
