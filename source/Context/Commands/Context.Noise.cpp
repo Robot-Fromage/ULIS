@@ -47,7 +47,7 @@ FContext::WhiteNoise(
     if( roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    int seed = iSeed < 0 ? time( NULL ) : iSeed;
+    int seed = iSeed < 0 ? static_cast< int >( time( NULL ) ) : iSeed;
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -93,7 +93,7 @@ FContext::ValueNoise(
     if( roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    int seed = iSeed < 0 ? time( NULL ) : iSeed;
+    int seed = iSeed < 0 ? static_cast< int >( time( NULL ) ) : iSeed;
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -143,7 +143,7 @@ FContext::BrownianNoise(
     if( roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    int seed = iSeed < 0 ? time( NULL ) : iSeed;
+    int seed = iSeed < 0 ? static_cast< int >( time( NULL ) ) : iSeed;
     float amplitudeMax = 0;
     {
         float amplitude = 1.0f;
@@ -203,7 +203,7 @@ FContext::VoronoiNoise(
     if( roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    int seed = iSeed < 0 ? time( NULL ) : iSeed;
+    int seed = iSeed < 0 ? static_cast< int >( time( NULL ) ) : iSeed;
     std::minstd_rand generator( seed );
 
     const int fw = FMath::Max( 1, roi.w - 2 );

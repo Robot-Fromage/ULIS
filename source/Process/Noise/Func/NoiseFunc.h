@@ -40,6 +40,8 @@ class FValueNoise
 {
 public:
     FValueNoise( unsigned seed = 2016 )
+        : r{0}
+        , permutationTable{0}
     {
         std::mt19937 gen(seed);
         std::uniform_real_distribution<float> distrFloat;
@@ -63,8 +65,8 @@ public:
 
     float eval( FVec2F &p ) const
     {
-        int xi = std::floor(p.x);
-        int yi = std::floor(p.y);
+        int xi = static_cast< int >( std::floor(p.x) );
+        int yi = static_cast< int >( std::floor(p.y) );
 
         float tx = p.x - xi;
         float ty = p.y - yi;

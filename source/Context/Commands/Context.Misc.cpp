@@ -50,7 +50,7 @@ FContext::XCreateTestBlock(
     const std::wstring text = L"Test";
     FRectI textBox = TextMetrics( text, *font, 23 );
     FVec2I pos = FVec2I( size ) / 2 - textBox.Size() / 2;
-    FMat3F mat = FMat3F::MakeTranslationMatrix( pos.x, pos.y + textBox.h );
+    FMat3F mat = FMat3F::MakeTranslationMatrix( static_cast< float >( pos.x ), static_cast< float >( pos.y ) + textBox.h );
     FRectI bgBox = textBox;
     int pad = 3;
     bgBox.x = pos.x - pad;
@@ -153,10 +153,16 @@ FContext::Extract(
     uint8* destinationStrides = new uint8[ destinationChannelsToExtract.size() ];
     sourceStrides[0] = sourceChannelsToExtract[0];
     destinationStrides[0] = destinationChannelsToExtract[0];
+
+    #pragma warning(push)
+    // Disable warning about potential out of bounds access
+    // I know what i'm doing here and i is valid.
+    #pragma warning(disable : 6386)
     for( size_t i = 1; i < sourceChannelsToExtract.size(); ++i ) {
         sourceStrides[i] = sourceChannelsToExtract[i] - sourceChannelsToExtract[i-1];
         destinationStrides[i] = destinationChannelsToExtract[i] - destinationChannelsToExtract[i-1];
     }
+    #pragma warning(pop)
 
     // Bake and push command
     mCommandQueue.d->Push(

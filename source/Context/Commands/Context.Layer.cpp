@@ -254,8 +254,7 @@ FContext::XLoadPSDFromDisk(
 )
 {
     FPSDOperations op( iPath, iStack );
-    if( !op.Import() )
-        return  ULIS_ERROR_BAD_INPUT_DATA;
+    ULIS_ASSERT_RETURN_ERROR( !op.Import(), "Bad input data", ULIS_ERROR_BAD_INPUT_DATA );
 
     // Genarating layer stack from imported info
     eFormat layerStackFormat = iStack.Format();
@@ -292,8 +291,12 @@ FContext::XLoadPSDFromDisk(
                 srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst16, w, h, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData(&OnCleanup_FreeMemory) );
             else if( op.GetBitDepth() == 8 )
                 srcblock = new FBlock( (uint8*)op.GetLayersInfo()[i].mLayerImageDst, w, h, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData(&OnCleanup_FreeMemory) );
+            else
+                ULIS_ASSERT_RETURN_ERROR( true, "Bad input data", ULIS_ERROR_BAD_INPUT_DATA );
 
-            FRectI dstRect = FRectI( left, top, srcblock->Width(), srcblock->Height() );
+            FRectI dstRect;
+            if( srcblock )
+                dstRect = FRectI( left, top, srcblock->Width(), srcblock->Height() );
 
             FEvent eventClear;
             Clear(
@@ -314,16 +317,18 @@ FContext::XLoadPSDFromDisk(
                     )
                 )
             );
-            ConvertFormat(
-                  *srcblock
-                , *layerBlock
-                , srcblock->Rect()
-                , FVec2I( left, top )
-                , FSchedulePolicy::MultiScanlines
-                , 1
-                , &eventClear
-                , &eventConvert.Back()
-            );
+            if( srcblock ) {
+                ConvertFormat(
+                      *srcblock
+                    , *layerBlock
+                    , srcblock->Rect()
+                    , FVec2I( left, top )
+                    , FSchedulePolicy::MultiScanlines
+                    , 1
+                    , &eventClear
+                    , &eventConvert.Back()
+                );
+            }
 
             float opacity = float( op.GetLayersInfo()[i].mOpacity / 255.0f );
             bool isAlphaLocked = op.GetLayersInfo()[i].mFlags & 0x01;

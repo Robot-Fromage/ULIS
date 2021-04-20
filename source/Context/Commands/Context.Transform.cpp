@@ -652,7 +652,7 @@ FContext::XBuildMipMap(
     //Clear( iDestination, FRectI( src_roi.w, mipsRects[1].h, dst_roi.w - src_roi.w, dst_roi.h - mipsRects[1].h ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[0], &events[1] );
     Copy( iSource, iDestination, src_roi, FVec2I( 0 ), FSchedulePolicy::AsyncMultiScanlines, 1, &events[0], &events[1] );
 
-    for( int i = 1; i <= iMaxMipLevel; ++i ) {
+    for( uint64 i = 1; i <= iMaxMipLevel; ++i ) {
         ulError err = Resize(
               i == 1 ? iSource : iDestination
             , iDestination

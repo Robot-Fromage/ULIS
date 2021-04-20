@@ -70,7 +70,7 @@ public:
         The first object is left in a valid but empty state.
         The second object steals the buffer and the state ( size and capacity ).
     */
-    TArray< T >( TArray< T >&& iOther )
+    TArray< T >( TArray< T >&& iOther ) noexcept
         : mBulk( iOther.mBulk )
         , mCapacity( iOther.mCapacity )
         , mSize( iOther.mSize )

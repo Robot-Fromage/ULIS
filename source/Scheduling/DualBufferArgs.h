@@ -76,11 +76,11 @@ BuildDualBufferJob_Scanlines(
 {
     const FFormatMetrics& src_fmt           = iCargs->src.FormatMetrics();
     const FFormatMetrics& dst_fmt           = iCargs->dst.FormatMetrics();
-    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits() + iCargs->srcRect.x * src_fmt.BPP;
-    uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits() + iCargs->dstRect.x * dst_fmt.BPP;
+    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits() + static_cast< uint64 >( iCargs->srcRect.x ) * src_fmt.BPP;
+    uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits() + static_cast< uint64 >( iCargs->dstRect.x ) * dst_fmt.BPP;
     const int64 src_bps                     = static_cast< int64 >( iCargs->src.BytesPerScanLine() );
     const int64 dst_bps                     = static_cast< int64 >( iCargs->dst.BytesPerScanLine() );
-    const int64 size                        = iCargs->dstRect.w * src_fmt.BPP;
+    const int64 size                        = static_cast< uint64 >( iCargs->dstRect.w ) * src_fmt.BPP;
     oJargs.src                              = src + ( iCargs->srcRect.y + iIndex ) * src_bps;
     oJargs.dst                              = dst + ( iCargs->dstRect.y + iIndex ) * dst_bps;
     oJargs.size                             = size;

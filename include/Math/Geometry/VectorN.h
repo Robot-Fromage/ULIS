@@ -144,6 +144,7 @@ public:
 // Constructors
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN()
+    : m{0}
 {
     for( uint8 i = 0; i < N; ++i )
         m[i] = static_cast< T >( 0 );
@@ -151,6 +152,7 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN()
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( T iValue )
+    : m{0}
 {
     for( uint8 i = 0; i < N; ++i )
         m[i] = iValue;
@@ -158,6 +160,7 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( T iValue )
 
 template< typename T, typename P, uint8 N >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( std::initializer_list< T > iValues )
+    : m{0}
 {
     const uint8 min = FMath::Min( N, static_cast< uint8 >( iValues.size() ) );
 
@@ -174,6 +177,7 @@ ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( std::initializer_list< T > iValu
 template< typename T, typename P, uint8 N >
 template< typename U, typename Q, uint8 M >
 ULIS_VECTOR_FUNC TVectorN< T, P, N >::TVectorN( const TVectorN< U, Q, M >& iOther )
+    : m{0}
 {
     const uint8 min = FMath::Min( N, M );
 

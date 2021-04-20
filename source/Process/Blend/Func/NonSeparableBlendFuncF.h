@@ -78,6 +78,11 @@ static ULIS_FORCEINLINE ufloat SatF( const FRGBF& iC ) {
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------ SetSatF
 static ULIS_FORCEINLINE FRGBF SetSatF( const FRGBF& iC, ufloat iS ) {
+    #pragma warning(push)
+    // Disable warning about potential out of bounds access
+    // I know what i'm doing here and midIndex is valid.
+    #pragma warning(disable : 6386)
+    #pragma warning(disable : 6385)
     uint8 maxIndex = iC.m[0] > iC.m[1] ? ( iC.m[0] > iC.m[2] ? 0 : 2 ) : ( iC.m[1] > iC.m[2] ? 1 : 2 );
     uint8 minIndex = iC.m[0] < iC.m[1] ? ( iC.m[0] < iC.m[2] ? 0 : 2 ) : ( iC.m[1] < iC.m[2] ? 1 : 2 );
     uint8 midIndex = 3 - maxIndex - minIndex;
@@ -99,6 +104,7 @@ static ULIS_FORCEINLINE FRGBF SetSatF( const FRGBF& iC, ufloat iS ) {
     ret.m[minIndex] = Cmin;
     ret.m[midIndex] = Cmid;
     return  ret;
+    #pragma warning(pop)
 }
 
 /////////////////////////////////////////////////////
