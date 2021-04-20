@@ -79,6 +79,10 @@
     #define ULIS_MSVC
 #elif defined(__MINGW64__)
     #define ULIS_MINGW64
+    #define ULIS_MINGW
+#elif defined(__MINGW64__)
+    #define ULIS_MINGW32
+    #define ULIS_MINGW
 #else
     #define ULIS_UNKNOWN_COMPILER
 #endif
