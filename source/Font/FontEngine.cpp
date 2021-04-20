@@ -19,6 +19,7 @@
 #include <cassert>
 #include <algorithm>
 #include <tuple>
+#include <vector>
 
 #ifdef ULIS_WIN
 #include <Windows.h>
