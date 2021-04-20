@@ -104,7 +104,7 @@ public:
         Access component at index.
         The behaviour is undefined if the array has no size.
         The behaviour is undefined if the index is greater than the size.
-        The behaviour is undefined if the underlying buffer is NULL, which
+        The behaviour is undefined if the underlying buffer is nullptr, which
         indicates a corrupted states anyway.
     */
     T& operator[]( uint64 iIndex ) {
@@ -118,7 +118,7 @@ public:
         Access const component at index.
         The behaviour is undefined if the array has no size.
         The behaviour is undefined if the index is greater than the size.
-        The behaviour is undefined if the underlying buffer is NULL, which
+        The behaviour is undefined if the underlying buffer is nullptr, which
         indicates a corrupted states anyway.
     */
     const T& operator[]( uint64 iIndex ) const {
