@@ -65,7 +65,7 @@ InvokeBlendMT_Separable_MEM_Generic_Subpixel(
         const ufloat alpha_src  = res * cargs->opacity;
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
         const ufloat var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-        ufloat alpha_result;
+        ufloat alpha_result = 0.f;
         // Note: +Epsilon because sometimes floating point imprecisions can lead to a alpha_result that should be one, but is instead 0.99999994 or so,
         // leading to a variation of -1 +1 in channels.
         #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = FMath::Min( 1.f, AlphaF< _AM >( iSrc, iBdp ) + FMath::kEpsilonf );
@@ -104,7 +104,7 @@ InvokeBlendMT_Separable_MEM_Generic(
         const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
         const ufloat var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-        ufloat alpha_result;
+        ufloat alpha_result = 0.f;
         #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
         ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
         #undef ACTION

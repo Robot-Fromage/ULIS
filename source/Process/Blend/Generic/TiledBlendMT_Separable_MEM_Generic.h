@@ -34,7 +34,7 @@ InvokeTiledBlendMT_Separable_MEM_Generic(
         const ufloat alpha_bdp  = fmt.HEA ? TYPE2FLOAT( bdp, fmt.AID ) : 1.f;
         const ufloat alpha_comp = AlphaNormalF( alpha_src, alpha_bdp );
         const ufloat var        = alpha_comp == 0.f ? 0.f : alpha_src / alpha_comp;
-        ufloat alpha_result;
+        ufloat alpha_result = 0.f;
         #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
         ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
         #undef ACTION

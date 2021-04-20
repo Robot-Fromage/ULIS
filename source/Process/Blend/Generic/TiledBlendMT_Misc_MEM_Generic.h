@@ -41,7 +41,7 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 localPRNGSeed = 8253729 * localPRNGSeed + 2396403;
                 const ufloat toss = ( localPRNGSeed % 65537 ) / 65537.f;
                 if( toss < alpha_src ) {
-                    ufloat alpha_result;
+                    ufloat alpha_result = 0.f;
                     #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
                     ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, 1.f, alpha_bdp )
                     #undef ACTION
@@ -62,7 +62,7 @@ InvokeTiledBlendMT_Misc_MEM_Generic(
                 const ufloat alpha_src  = fmt.HEA ? TYPE2FLOAT( src, fmt.AID ) * cargs->opacity : cargs->opacity;
                 const ufloat bayerEl    = gBayer8x8Matrix[ ( cargs->dstRect.y + jargs->line ) % 8 ][ ( cargs->dstRect.x + x ) % 8 ];
                 if( alpha_src >= bayerEl ) {
-                    ufloat alpha_result;
+                    ufloat alpha_result = 0.f;
                     #define ACTION( _AM, iTarget, iSrc, iBdp ) iTarget = AlphaF< _AM >( iSrc, iBdp );
                     ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, 1.f, alpha_bdp )
                     #undef ACTION
