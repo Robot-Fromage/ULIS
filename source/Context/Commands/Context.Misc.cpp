@@ -60,6 +60,7 @@ FContext::XCreateTestBlock(
 
     enum eEventName {
           Event_Alloc = 0
+        , Event_Clear
         , Event_FillPaper
         , Event_DrawDot
         , Event_DrawLine
@@ -73,7 +74,7 @@ FContext::XCreateTestBlock(
 
     iDestination.LoadFromData( nullptr, size, size, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
     XAllocateBlockData( iDestination, size, size, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ), FSchedulePolicy::MonoChunk, iNumWait, iWaitList, &event[Event_Alloc] );
-
+    Clear( iDestination, FRectI::Auto, FSchedulePolicy::AsyncCacheEfficient, 1, &event[Event_Alloc], &event[Event_Clear] );
     Fill( *paper, background, FRectI::Auto, FSchedulePolicy::MonoChunk, 0, nullptr, &event[Event_FillPaper] );
 
     DrawLine( *paper, FVec2I(), FVec2I(), foreground, FRectI( 0, 0, 1, 1 ), FSchedulePolicy::MonoChunk, 1, &event[Event_FillPaper], &event[Event_DrawDot] );

@@ -23,7 +23,7 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat fmt = Format_RGBA8;
+    eFormat fmt = Format_RGBAF;
     FContext ctx( queue, fmt );
     FFontEngine fontEngine;
     FFont font( fontEngine, "Segoe UI", "Regular" );
