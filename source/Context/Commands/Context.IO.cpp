@@ -250,7 +250,7 @@ FContext::LoadBlockFromDiskMetrics(
         case Type_ufloat:   depth = 4; floating = true;   break;
     }
 
-    eColorModel model;
+    eColorModel model = CM_RGB;
     bool hea = false;
     uint8 cs = 0;
     switch( numchannels ) {
