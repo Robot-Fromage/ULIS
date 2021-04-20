@@ -250,7 +250,7 @@ main( int argc, char *argv[] ) {
 
     {
         FKernel blur = FKernel( FVec2I( 16 ), 1.f ).Normalized();
-        ctx.Convolve( canvas, canvas, blur, FRectI( 64, 64, 256, 256 ), FVec2I( 64, 512 ) );
+        ctx.ConvolvePremult( canvas, canvas, blur, FRectI( 64, 64, 256, 256 ), FVec2I( 64, 512 ) );
         ctx.Finish();
     }
 

@@ -101,22 +101,26 @@ InvokeConvolutionPremultMT_MEM_Generic(
     const FFormatMetrics& fmt = cargs->src.FormatMetrics();
     T* ULIS_RESTRICT dst = reinterpret_cast< T* >( jargs->dst );
     float* sum = new float[fmt.SPP];
-    const int dx = cargs->kernel.Pivot().x + cargs->srcRect.x;
-    const int dy = cargs->kernel.Pivot().y + cargs->srcRect.y;
     const int maxx = cargs->kernel.Width();
     const int maxy = cargs->kernel.Height();
+    const int dx = cargs->kernel.Pivot().x - maxx;
+    const int dy = cargs->kernel.Pivot().y - maxy;
     FColor transparent( fmt.FMT );
     const T* src = nullptr;
     const int cmin = fmt.AID ? 0 : 1;
     const int cmax = fmt.NCC + cmin;
     const float maxT = static_cast< float >( MaxType< T >() );
 
-    for( int x = 0; x < cargs->dstRect.w; ++x ) {
+    // Gather x y
+    const int y = jargs->line + cargs->srcRect.y;
+    const int x1 = cargs->srcRect.x;
+    const int x2 = cargs->dstRect.w + x1;
+    for( int x = x1; x < x2; ++x ) {
         memset( sum, 0, fmt.SPP * sizeof( float ) );
         for( int i = 0; i < maxx; ++i ) {
             for( int j = 0; j < maxy; ++j ) {
-                int src_x = x + i - dx;
-                int src_y = jargs->line + j - dy;
+                int src_x = x + i + dx;
+                int src_y = y + j + dy;
                 src = cargs->srcRect.HitTest( FVec2I( src_x, src_y ) ) ? reinterpret_cast< const T* >( cargs->src.PixelBits( src_x, src_y ) ) : reinterpret_cast< const T* >( transparent.Bits() );
                 float alpha = maxT;
                 float value = cargs->kernel.At( i, j );
