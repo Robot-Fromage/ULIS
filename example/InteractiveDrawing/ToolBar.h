@@ -94,13 +94,11 @@ static const char* kwDocumentFormat[] = {
 static const eFormat eDocumentFormaMatchingTable[] = {
       Format_RGBA8
     , Format_RGBA16
-    , Format_RGBA32
     , Format_RGBAF
     , Format_ABGR8
     , Format_BGRA16
     , Format_HSVAF
     , Format_CMYKA16
-    , Format_LabA32
     , Format_LabAF
     , Format_ALab8
 };
