@@ -23,7 +23,7 @@ endif()
 
 # GCC
 if( ${ULIS_GCC} )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse2 -msse3 -mssse3 -msse4.1 -mxop -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread -MP" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnosign-compare -msse -msse2 -msse3 -mssse3 -msse4.1 -mxop -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread -MP" )
     # Disable C++ exceptions.
     #string( REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
     #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions" )
@@ -34,7 +34,7 @@ endif()
 
 # MinGW
 if( ${ULIS_MINGW} )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnosign-compare -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W" )
     # Disable C++ exceptions.
     #string( REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
     #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions" )
