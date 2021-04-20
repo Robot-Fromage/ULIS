@@ -243,7 +243,6 @@ main( int argc, char *argv[] ) {
         ctx.Finish();
     }
 
-
     FBlock proxy( 1024, 1024, Format_RGBA8 );
     ctx.ConvertFormat( canvas, proxy );
     ctx.Finish();
