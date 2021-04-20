@@ -332,7 +332,7 @@ FContext::XLoadPSDFromDisk(
 
             float opacity = float( op.GetLayersInfo()[i].mOpacity / 255.0f );
             bool isAlphaLocked = op.GetLayersInfo()[i].mFlags & 0x01;
-            bool isVisible = !( op.GetLayersInfo()[i].mFlags & 0x02 );
+            //bool isVisible = !( op.GetLayersInfo()[i].mFlags & 0x02 );
             eBlendMode blendMode = op.GetBlendingModeFromPSD( op.GetLayersInfo()[i].mBlendModeKey );
 
             currentRoot->AddLayer(
@@ -360,7 +360,7 @@ FContext::XLoadPSDFromDisk(
             const FString layerName( op.GetLayersInfo()[i].mName );
             float opacity = float( op.GetLayersInfo()[i].mOpacity / 255.0f );
             bool isAlphaLocked = op.GetLayersInfo()[i].mFlags & 0x01;
-            bool isVisible = !( op.GetLayersInfo()[i].mFlags & 0x02 );
+            //bool isVisible = !( op.GetLayersInfo()[i].mFlags & 0x02 );
             eBlendMode blendMode = op.GetBlendingModeFromPSD( op.GetLayersInfo()[i].mBlendModeKey );
 
             FLayerFolder* layerFolder = new FLayerFolder(

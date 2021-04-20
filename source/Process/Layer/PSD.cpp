@@ -55,10 +55,10 @@ FPSDOperations::FPSDOperations(const std::string& iFilename, FLayerStack& iStack
     , mBitDepth( 0 )
     , mColorMode( 0 )
     , mImageStart( 0 )
+    , mLayerStack( iStack )
     , mImageDst(nullptr)
     , mImageDst16( nullptr )
     , mImageDst32( nullptr )
-    , mLayerStack( iStack )
     , mLayersInfo()
 {
      mFileHandle.seekg(0,std::ios::beg);
@@ -431,7 +431,7 @@ bool FPSDOperations::ReadLayers()
         mLayersInfo[currLayer].mExtraRead  += mLayersInfo[currLayer].mNameSize + 4 - mLayersInfo[currLayer].mNameSize % 4;
 
         if(mLayersInfo[currLayer].mName[0] == 0)
-            strcpy(mLayersInfo[currLayer].mName,"background");
+            strcpy_s(mLayersInfo[currLayer].mName,"background");
 
         position = uint32(mFileHandle.tellg());
 
@@ -713,7 +713,7 @@ bool FPSDOperations::ReadLayerStackData16()
                 if(!mFileHandle.read( srcData, srcSize ))
                     return false;
 
-                int zResult = uncompress( (uint8*)channelContents[j], &dstSize, (uint8*)srcData, srcSize );
+                /*int zResult = */uncompress( (uint8*)channelContents[j], &dstSize, (uint8*)srcData, srcSize );
 
                 if( cp == 3 )
                     UnpredictZip16( (uint8*)channelContents[j], channelSize * sizeof( uint16 ), lr - ll, (lr - ll) * sizeof( uint16) );
@@ -807,7 +807,7 @@ bool FPSDOperations::ReadLayerStackData32()
                 if(!mFileHandle.read(srcData,srcSize))
                     return false;
 
-                int zResult = uncompress((uint8*)dstData,&dstSize,(uint8*)srcData,srcSize);
+                /*int zResult = */uncompress((uint8*)dstData,&dstSize,(uint8*)srcData,srcSize);
 
                 if(cp == 3)
                     UnpredictZip32((uint8*)dstData, (uint8*)channelContents[j], channelSize * sizeof(uint32),lr - ll, lb - lt, (lr - ll) * sizeof(uint32));

@@ -28,8 +28,8 @@ InvokeVoronoiNoiseMT_MEM_Generic(
     T* ULIS_RESTRICT dst = reinterpret_cast< T* >( jargs->dst );
 
     // RNG
-    const int32 seedy = cargs->dstRect.y + jargs->line + 1;
-    uint32 localPRNGSeed = ( cargs->seed % seedy ) * 5323 + ( 2396403 % ( seedy + 64578 ) * seedy );
+    //const int32 seedy = cargs->dstRect.y + jargs->line + 1;
+    //uint32 localPRNGSeed = ( cargs->seed % seedy ) * 5323 + ( 2396403 % ( seedy + 64578 ) * seedy );
 
     // Gather x y
     const int y = jargs->line;

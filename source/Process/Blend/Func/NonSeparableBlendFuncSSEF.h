@@ -177,8 +177,8 @@ ULIS_FORCEINLINE Vec4f BlendWhiteoutSSEF( Vec4f iCs, Vec4f iCb ) {
 ULIS_FORCEINLINE Vec4f BlendAngleCorrectedSSEF( Vec4f iCs, Vec4f iCb ) {
     iCs = iCs * 2.f - 1.f;
     iCb = iCb * 2.f - 1.f;
-    auto csxy = permute4< 0, 1, V_DC, V_DC >( iCs );
-    auto cbxy = permute4< 0, 1, V_DC, V_DC >( iCb );
+    //auto csxy = permute4< 0, 1, V_DC, V_DC >( iCs );
+    //auto cbxy = permute4< 0, 1, V_DC, V_DC >( iCb );
     float csz = iCs[2];
     auto tmp = iCs + iCb;
     tmp.insert( 2, csz );

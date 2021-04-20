@@ -31,6 +31,10 @@ FLayerFolder::FLayerFolder(
           iName
         , iParent
     )
+    , FLayerRoot(
+          iName
+        , iParent
+    )
     , FLayerImage(
           iName
         , iWidth
@@ -39,10 +43,6 @@ FLayerFolder::FLayerFolder(
         , iBlendMode
         , iAlphaMode
         , iOpacity
-        , iParent
-    )
-    , FLayerRoot(
-          iName
         , iParent
     )
 {
@@ -63,6 +63,10 @@ FLayerFolder::FLayerFolder(
           iName
         , iParent
     )
+    , FLayerRoot(
+          iName
+        , iParent
+    )
     , FLayerImage(
           iBlock
         , iName
@@ -72,10 +76,6 @@ FLayerFolder::FLayerFolder(
         , iBlendMode
         , iAlphaMode
         , iOpacity
-        , iParent
-    )
-    , FLayerRoot(
-          iName
         , iParent
     )
 {

@@ -153,7 +153,8 @@ InvokeRasterTextMono_MEM_Generic(
     ULIS_ASSERT( !error, "Error setting face size" );
     FT_GlyphSlot slot = face->glyph;
     FT_Vector pen { 0, 0 };
-    int height = cargs->dst.Height();
+    // Old baseline hack
+    //int height = cargs->dst.Height();
     const wchar_t* str = cargs->text.c_str();
     const size_t len = static_cast< size_t >( cargs->text.size() );
     for( int n = 0; n < len; ++n ) {
@@ -182,7 +183,8 @@ InvokeRasterTextAAMono_MEM_Generic(
     ULIS_ASSERT( !error, "Error setting face size" );
     FT_GlyphSlot slot = face->glyph;
     FT_Vector pen { 0, 0 };
-    int height = cargs->dst.Height();
+    // Old baseline hack
+    //int height = cargs->dst.Height();
     const wchar_t* str = cargs->text.c_str();
     const size_t len = static_cast< size_t >( cargs->text.size() );
     for( int n = 0; n < len; ++n ) {

@@ -548,7 +548,6 @@ FContext::MipMapMetrics(
     const FRectI& iSource
 )
 {
-    const FRectI src_rect = iSource.Sanitized();
     return  FRectI( 0, 0, static_cast< int >( iSource.w * 1.5f ), iSource.h );
 }
 
@@ -557,7 +556,7 @@ FRectI
 FContext::MipLevelMetrics( const FRectI& iSource, uint8 iLevel )
 {
     const FRectI src_rect = iSource.Sanitized();
-    const FRectI total = MipMapMetrics( src_rect );
+    //const FRectI total = MipMapMetrics( src_rect );
 
     if( iLevel == 0 )
         return  src_rect;

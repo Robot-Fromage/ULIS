@@ -242,7 +242,7 @@ void
 FKernel::Rotate90CW() {
     FKernel ret( FVec2I( mHeight, mWidth ) );
     const int w = Height() - 1;
-    const int h = Width() - 1;
+    //const int h = Width() - 1;
     for( uint32 x = 0; x < mHeight; ++x )
         for( uint32 y = 0; y < mWidth; ++y )
             ret.SetAt( x, y, At( y, w - x ) );
@@ -252,7 +252,7 @@ FKernel::Rotate90CW() {
 void
 FKernel::Rotate90CCW() {
     FKernel ret( FVec2I( mHeight, mWidth ) );
-    const int w = Height() - 1;
+    //const int w = Height() - 1;
     const int h = Width() - 1;
     for( uint32 x = 0; x < mHeight; ++x )
         for( uint32 y = 0; y < mWidth; ++y )

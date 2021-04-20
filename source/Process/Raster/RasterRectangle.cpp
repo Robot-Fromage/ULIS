@@ -35,8 +35,8 @@ void DrawRectangle(        FBlock&                        iBlock
     const int ymin = FMath::Min3(iTopLeft.y,iBottomRight.y,clippingRect.y + clippingRect.h);
     const int xmax = FMath::Max3(iTopLeft.x,iBottomRight.x,clippingRect.x);
     const int ymax = FMath::Max3(iTopLeft.y,iBottomRight.y,clippingRect.y);
-    const int width = FMath::Max(xmax - xmin,0);
-    const int height = FMath::Max(ymax - ymin,0);
+    //const int width = FMath::Max(xmax - xmin,0);
+    //const int height = FMath::Max(ymax - ymin,0);
     /*if(iFilled)
     {
         const FRectI rect = FRectI(xmin,ymin,width,height);

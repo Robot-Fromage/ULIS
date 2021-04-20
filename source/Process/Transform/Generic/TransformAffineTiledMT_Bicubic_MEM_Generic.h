@@ -42,10 +42,10 @@ InvokeTransformAffineTiledMT_Bicubic_MEM_Generic(
     float* hh2 = new float[ fmt.SPP * 4 ];
     float* hh3 = new float[ fmt.SPP * 4 ];
 
-    const int minx = cargs->srcRect.x;
-    const int miny = cargs->srcRect.y;
-    const int maxx = minx + cargs->srcRect.w;
-    const int maxy = miny + cargs->srcRect.h;
+    //const int minx = cargs->srcRect.x;
+    //const int miny = cargs->srcRect.y;
+    //const int maxx = minx + cargs->srcRect.w;
+    //const int maxy = miny + cargs->srcRect.h;
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const int   src_x   = static_cast< int >( floor( point_in_src.x ) );
         const int   src_y   = static_cast< int >( floor( point_in_src.y ) );

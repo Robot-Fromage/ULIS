@@ -23,7 +23,7 @@ InvokeResizeMT_Area_SSE_RGBA8(
 )
 {
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
-    const FFormatMetrics& sat_fmt = cargs->optionalSAT->FormatMetrics();
+    //const FFormatMetrics& sat_fmt = cargs->optionalSAT->FormatMetrics();
     uint8* ULIS_RESTRICT dst = jargs->dst;
 
     FVec2F point_in_dst( cargs->dstRect.x, cargs->dstRect.y + jargs->line );

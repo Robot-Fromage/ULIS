@@ -37,7 +37,7 @@ InvokeAlphaBlendMT_Separable_MEM_Generic_Subpixel(
     const bool notFirstLine = jargs->line > 0;
     const bool onLeftBorder = cargs->dstRect.x == 0;
     const bool hasLeftData  = cargs->srcRect.x + cargs->shift.x > 0;
-    const bool hasTopData   = cargs->srcRect.y + cargs->shift.y > 0;
+    //const bool hasTopData   = cargs->srcRect.y + cargs->shift.y > 0;
 
     ufloat m11, m01, m10, m00, vv0, vv1, res;
     m11 = ( notLastLine && onLeftBorder && hasLeftData )    ? TYPE2FLOAT( src - fmt.BPP,                    fmt.AID ) : 0.f;

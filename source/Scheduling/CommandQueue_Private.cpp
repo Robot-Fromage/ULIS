@@ -26,8 +26,8 @@ FCommandQueue_Private::~FCommandQueue_Private()
 }
 
 FCommandQueue_Private::FCommandQueue_Private( FThreadPool& iPool )
-    : mQueue( tQueue() )
-    , mPool( iPool )
+    : mPool( iPool )
+    , mQueue( tQueue() )
 {
 }
 

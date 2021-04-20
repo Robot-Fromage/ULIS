@@ -37,7 +37,7 @@ Premultiply_imp( ISample& iSample )
 {
     const FFormatMetrics& fmt = iSample.FormatMetrics();
     ufloat alpha = static_cast< float >( iSample.AlphaT< T >() );
-    ufloat maxtype = static_cast< float >( MaxType< T >() );
+    //ufloat maxtype = static_cast< float >( MaxType< T >() );
     for( uint8 i = 0; i < fmt.NCC; ++i )
         iSample.SetChannelT< T >( i, static_cast< T >( ( iSample.ChannelT< T >( i ) * alpha ) / MaxType< T >() ) );
 }
@@ -48,7 +48,7 @@ Unpremultiply_imp( ISample& iSample )
 {
     const FFormatMetrics& fmt = iSample.FormatMetrics();
     ufloat alpha = static_cast< float >( iSample.AlphaT< T >() );
-    ufloat maxtype = static_cast< float >( MaxType< T >() );
+    //ufloat maxtype = static_cast< float >( MaxType< T >() );
 
     if( alpha == 0.f ){
         for( uint8 i = 0; i < fmt.NCC; ++i )

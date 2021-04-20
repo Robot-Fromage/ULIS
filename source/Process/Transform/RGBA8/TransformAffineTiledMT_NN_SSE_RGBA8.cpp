@@ -29,10 +29,10 @@ InvokeTransformAffineTiledMT_NN_SSE_RGBA8(
     FVec2F point_in_src( cargs->inverseMatrix * point_in_dst );
     FVec2F src_dx( cargs->inverseMatrix * FVec3F( 1.f, 0.f, 0.f ) );
 
-    const int minx = cargs->srcRect.x;
-    const int miny = cargs->srcRect.y;
-    const int maxx = minx + cargs->srcRect.w;
-    const int maxy = miny + cargs->srcRect.h;
+    //const int minx = cargs->srcRect.x;
+    //const int miny = cargs->srcRect.y;
+    //const int maxx = minx + cargs->srcRect.w;
+    //const int maxy = miny + cargs->srcRect.h;
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         int src_x = FMath::PyModulo( static_cast< int >( point_in_src.x ), cargs->srcRect.w );
         int src_y = FMath::PyModulo( static_cast< int >( point_in_src.y ), cargs->srcRect.h );

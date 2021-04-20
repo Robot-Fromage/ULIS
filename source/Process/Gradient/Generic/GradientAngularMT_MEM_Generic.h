@@ -42,7 +42,6 @@ InvokeGradientAngularMT_MEM_Generic(
     // Gather geometric data for gradient parameter computation
     const FVec2F p0 = cargs->start;
     const FVec2F p1 = cargs->end;
-    const FVec2F delta = p1 - p0;
     const float angle = atan2f( p0.y - p1.y, p0.x - p1.x );
     const float pi2 = FMath::kPIf * 2;
     // Gather x y

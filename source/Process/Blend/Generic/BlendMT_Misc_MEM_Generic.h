@@ -38,7 +38,7 @@ InvokeBlendMT_Misc_MEM_Generic_Subpixel(
     const bool notFirstLine = jargs->line > 0;
     const bool onLeftBorder = cargs->dstRect.x == 0;
     const bool hasLeftData  = cargs->srcRect.x + cargs->shift.x > 0;
-    const bool hasTopData   = cargs->srcRect.y + cargs->shift.y > 0;
+    //const bool hasTopData   = cargs->srcRect.y + cargs->shift.y > 0;
 
     switch( cargs->blendingMode ) {
         case Blend_Dissolve: {

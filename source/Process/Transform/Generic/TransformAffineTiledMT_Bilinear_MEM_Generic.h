@@ -35,10 +35,10 @@ InvokeTransformAffineTiledMT_Bilinear_MEM_Generic(
     uint8* hh0 = new uint8[ fmt.BPP * 2 ];
     uint8* hh1 = hh0 + fmt.BPP;
 
-    const int minx = cargs->srcRect.x;
-    const int miny = cargs->srcRect.y;
-    const int maxx = minx + cargs->srcRect.w;
-    const int maxy = miny + cargs->srcRect.h;
+    //const int minx = cargs->srcRect.x;
+    //const int miny = cargs->srcRect.y;
+    //const int maxx = minx + cargs->srcRect.w;
+    //const int maxy = miny + cargs->srcRect.h;
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const float modx = FMath::PyModulo( point_in_src.x, static_cast< float >( cargs->srcRect.w ) );
         const float mody = FMath::PyModulo( point_in_src.y, static_cast< float >( cargs->srcRect.h ) );

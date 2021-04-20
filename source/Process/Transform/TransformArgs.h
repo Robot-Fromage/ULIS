@@ -219,11 +219,11 @@ BuildTransformJob_Scanlines(
 )
 {
     const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
-    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+    //const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
     uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
-    const uint32 src_bps                    = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
+    //const uint32 src_bps                    = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
     const uint32 dst_bps                    = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
-    const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
+    //const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
     const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
     oJargs.src                              = nullptr;
     oJargs.dst                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;
@@ -255,11 +255,11 @@ BuildResizeJob_Scanlines(
 )
 {
     const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
-    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+    //const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
     uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
-    const uint32 src_bps                    = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
+    //const uint32 src_bps                    = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
     const uint32 dst_bps                    = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
-    const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
+    //const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
     const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
     oJargs.src                              = nullptr;
     oJargs.dst                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;
@@ -292,11 +292,11 @@ BuildBezierJob_Scanlines(
 )
 {
     const FFormatMetrics& fmt               = iCargs->src.FormatMetrics();
-    const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
+    //const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
     uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
-    const uint32 src_bps                    = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
+    //const uint32 src_bps                    = static_cast< uint32 >( iCargs->src.BytesPerScanLine() );
     const uint32 dst_bps                    = static_cast< uint32 >( iCargs->dst.BytesPerScanLine() );
-    const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
+    //const uint32 src_decal_x                = iCargs->srcRect.x * iCargs->src.BytesPerPixel();
     const uint32 bdp_decal_x                = iCargs->dstRect.x * fmt.BPP;
     oJargs.src                              = nullptr;
     oJargs.dst                              = dst + ( ( iCargs->dstRect.y + iIndex ) * dst_bps ) + bdp_decal_x;

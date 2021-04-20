@@ -33,7 +33,7 @@ InvokeWhiteNoiseMT_MEM_Generic(
     uint32 localPRNGSeed = ( cargs->seed % seedy ) * 5323 + ( 2396403 % ( seedy + 64578 ) * seedy );
 
     // Gather x y
-    const int y = jargs->line;
+    // const int y = jargs->line;
     const int x1 = cargs->dstRect.x;
     const int x2 = cargs->dstRect.w + x1;
 

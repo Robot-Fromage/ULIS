@@ -12,7 +12,7 @@ cmake_minimum_required( VERSION 3.11.0 )
 
 # Clang
 if( ${ULIS_CLANG} )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -mavx2 -mfma -Wno-comment -Wno-unused-function -Wno-missing-braces -Wno-switch" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -v -msse4.2 -mavx2 -mfma -Wno-comment -Wno-unused-function -Wno-missing-braces -Wno-switch -MP" )
     # Disable C++ exceptions.
     #string( REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
     #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions" )
@@ -23,7 +23,7 @@ endif()
 
 # GCC
 if( ${ULIS_GCC} )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse2 -msse3 -mssse3 -msse4.1 -mxop -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse2 -msse3 -mssse3 -msse4.1 -mxop -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W -pthread -MP" )
     # Disable C++ exceptions.
     #string( REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
     #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions" )

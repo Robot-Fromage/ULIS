@@ -43,7 +43,7 @@ FContext::RasterText(
 {
     // Sanitize geometry
     const FRectI rect = iBlock.Rect();
-    const FRectI roi = TextMetrics( iText, iFont, iFontSize, iTransform );
+    const FRectI roi = TextMetrics( iText, iFont, iFontSize, iTransform ) & rect;
 
     // Check no-op
     if( roi.Area() <= 0 )
@@ -101,7 +101,7 @@ FContext::RasterTextAA(
 {
     // Sanitize geometry
     const FRectI rect = iBlock.Rect();
-    const FRectI roi = TextMetrics( iText, iFont, iFontSize, iTransform );
+    const FRectI roi = TextMetrics( iText, iFont, iFontSize, iTransform ) & rect;
 
     // Check no-op
     if( roi.Area() <= 0 )

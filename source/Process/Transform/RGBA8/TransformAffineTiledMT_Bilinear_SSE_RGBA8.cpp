@@ -34,10 +34,10 @@ InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8(
 
     Vec4f c00, c10, c11, c01, hh0, hh1, res, alp;
 
-    const int minx = cargs->srcRect.x;
-    const int miny = cargs->srcRect.y;
-    const int maxx = minx + cargs->srcRect.w;
-    const int maxy = miny + cargs->srcRect.h;
+    //const int minx = cargs->srcRect.x;
+    //const int miny = cargs->srcRect.y;
+    //const int maxx = minx + cargs->srcRect.w;
+    //const int maxy = miny + cargs->srcRect.h;
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         const float modx = FMath::PyModulo( point_in_src.x, static_cast< float >( cargs->srcRect.w ) );
         const float mody = FMath::PyModulo( point_in_src.y, static_cast< float >( cargs->srcRect.h ) );

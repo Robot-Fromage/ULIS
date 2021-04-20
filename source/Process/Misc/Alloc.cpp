@@ -48,7 +48,7 @@ InvokeDealloc(
     auto h = block.Height();
     auto fmt = block.Format();
     auto cs = block.ColorSpace();
-    cargs->dst.LoadFromData( nullptr, w, h, fmt, nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
+    cargs->dst.LoadFromData( nullptr, w, h, fmt, cs, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );
 }
 
 /////////////////////////////////////////////////////
