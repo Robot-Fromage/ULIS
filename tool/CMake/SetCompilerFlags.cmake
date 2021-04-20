@@ -34,7 +34,7 @@ endif()
 
 # MinGW
 if( ${ULIS_MINGW} )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-compare -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs -Wno-sign-compare -msse -msse4.2 -mavx -mavx2 -mfma -fabi-version=0 -W" )
     # Disable C++ exceptions.
     string( REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions" )

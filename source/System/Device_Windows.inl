@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+#include "Core/Core.h"
 #include "System/Device.h"
 #include "System/DeviceHelpers.h"
 
@@ -23,8 +24,8 @@
 
 ULIS_NAMESPACE_BEGIN
 
-#ifdef ULIS_MINGW
-#pragma message( "MINGW hack _XCR_XFEATURE_ENABLED_MASK 0" )
+#if defined( ULIS_MINGW ) || defined( ULIS_GCC )
+#pragma message( "MINGW _XCR_XFEATURE_ENABLED_MASK hack" )
 #define _XCR_XFEATURE_ENABLED_MASK 0
 #endif
 

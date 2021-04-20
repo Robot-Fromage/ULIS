@@ -25,7 +25,7 @@
 
 #include <stb_image.h>
 
-#if ( defined( ULIS_GCC ) || defined( ULIS_MINGW64 ) ) && __GNUC__ < 8
+#if ( defined( ULIS_GCC ) || defined( ULIS_MINGW ) ) && __GNUC__ < 8
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #else

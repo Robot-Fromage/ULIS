@@ -73,18 +73,28 @@
 // Detect Compiler
 #if defined(__clang__)
     #define ULIS_CLANG
-#elif defined(__GNUC__) || defined(__GNUG__)
-    #define ULIS_GCC
 #elif defined(_MSC_VER)
     #define ULIS_MSVC
 #elif defined(__MINGW64__)
     #define ULIS_MINGW64
     #define ULIS_MINGW
-#elif defined(__MINGW64__)
+#elif defined(__MINGW32__)
     #define ULIS_MINGW32
     #define ULIS_MINGW
+#elif defined(__GNUC__) || defined(__GNUG__)
+    #define ULIS_GCC
 #else
     #define ULIS_UNKNOWN_COMPILER
+#endif
+
+#ifdef ULIS_MINGW64
+#pragma message( ULIS_STRINGIFY( __GNUC__ ) )
+#pragma message( "64" )
+#endif
+
+#ifdef ULIS_MINGW32
+#pragma message( ULIS_STRINGIFY( __GNUC__ ) )
+#pragma message( "32" )
 #endif
 
 /////////////////////////////////////////////////////
