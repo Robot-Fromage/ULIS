@@ -20,6 +20,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "System/Device.h"
+#include "Font/FontEngine.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
@@ -98,6 +99,16 @@ public:
         Getter for the context format
     */
     eFormat Format() const;
+
+    /*!
+        Getter for the context font engine
+    */
+    FFontEngine& FontEngine();
+
+    /*!
+        Getter for the context font engine
+    */
+    const FFontEngine& FontEngine() const;
 
 public:
     /*!
@@ -496,8 +507,8 @@ public:
     ulError
     Fill(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI::Auto
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iRect = FRectI::Auto
         , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -521,8 +532,8 @@ public:
     ulError
     FillPreserveAlpha(
           FBlock& iBlock
-        , const FRectI& iRect = FRectI::Auto
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iRect = FRectI::Auto
         , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
@@ -1111,6 +1122,18 @@ public:
 
 /////////////////////////////////////////////////////
 // Misc
+    /*!
+        Create a simple small 64x64 block for testing purposes, in the context format.
+    */
+    ulError
+    XCreateTestBlock(
+          FBlock& iDestination
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
     /*!
         Perform an extract operation from the input source into the destination.
         The result of the extract is that channels specified by the input masks
@@ -2065,6 +2088,7 @@ public:
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;
+    FFontEngine mFontEngine;
 };
 
 ULIS_NAMESPACE_END
