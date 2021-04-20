@@ -19,8 +19,13 @@
 #include <string>
 #include <stdlib.h>
 #include <thread>
+#include <immintrin.h>
 
 ULIS_NAMESPACE_BEGIN
+
+#ifndef _XCR_XFEATURE_ENABLED_MASK
+#define _XCR_XFEATURE_ENABLED_MASK 0
+#endif
 
 namespace detail {
 
