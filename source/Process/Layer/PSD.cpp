@@ -15,7 +15,7 @@
 #include "Math/Math.h"
 #include "zlib.h"
 
-#if defined( ULIS_GCC ) || defined( ULIS_MINGW64 )
+#if ( defined( ULIS_GCC ) || defined( ULIS_MINGW ) ) && __GNUC__ < 8
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #else
