@@ -48,8 +48,7 @@ BOOL IsWow64()
 {
     BOOL bIsWow64 = FALSE;
 
-    LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
-        GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
+    LPFN_ISWOW64PROCESS fnIsWow64Process = reinterpret_cast< LPFN_ISWOW64PROCESS >( GetProcAddress( GetModuleHandle( TEXT( "kernel32" ) ), "IsWow64Process" ) );
 
     if( NULL != fnIsWow64Process )
     {

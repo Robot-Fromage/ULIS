@@ -38,10 +38,10 @@ FFormatMetrics::FFormatMetrics( eFormat iFMT )
     IDT = new uint8[ SPP ];
     uint8 msp = SPP - 1;
     switch( RSC ) {
-        case 1:  for( int i = 0; i < SPP; ++i ) IDT[i] = ( msp - i );                                   AID = 0;   break;
-        case 2:  for( int i = 0; i < SPP; ++i ) IDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                   AID = 0;   break;
-        case 3:  for( int i = 0; i < SPP; ++i ) IDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1;   AID = msp; break;
-        default: for( int i = 0; i < SPP; ++i ) IDT[i] = i;                                             AID = msp; break;
+        case 1:  for( uint8 i = 0; i < SPP; ++i ) IDT[i] = ( msp - i );                                 AID = 0;    break;
+        case 2:  for( uint8 i = 0; i < SPP; ++i ) IDT[i] = ( i + 1 ) > msp ? 0 : i + 1;                 AID = 0;    break;
+        case 3:  for( uint8 i = 0; i < SPP; ++i ) IDT[i] = ( msp - i ) - 1 < 0 ? msp : ( msp - i ) - 1; AID = msp;  break;
+        default: for( uint8 i = 0; i < SPP; ++i ) IDT[i] = i;                                           AID = msp;  break;
     }
 }
 

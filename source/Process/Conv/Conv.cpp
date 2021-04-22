@@ -300,6 +300,7 @@ fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFor
                 //DISABLED:UINT32case Type_uint32:   return  QueryDispatchedConvertFormatInvocation_SelectModel< uint8, uint32   >( iSrcFormat, iDstFormat );
                 case Type_ufloat:   return  QueryDispatchedConvertFormatInvocation_SelectModel< uint8, ufloat   >( iSrcFormat, iDstFormat );
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  QueryDispatchedConvertFormatInvocation_SelectModel< uint8, udouble     >( iSrcFormat, iDstFormat );
+                default: return  nullptr;
         }
         case Type_uint16: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
                 case Type_uint8:    return  QueryDispatchedConvertFormatInvocation_SelectModel< uint16, uint8   >( iSrcFormat, iDstFormat );
@@ -307,6 +308,7 @@ fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFor
                 //DISABLED:UINT32case Type_uint32:   return  QueryDispatchedConvertFormatInvocation_SelectModel< uint16, uint32  >( iSrcFormat, iDstFormat );
                 case Type_ufloat:   return  QueryDispatchedConvertFormatInvocation_SelectModel< uint16, ufloat  >( iSrcFormat, iDstFormat );
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  QueryDispatchedConvertFormatInvocation_SelectModel< uint16, udouble    >( iSrcFormat, iDstFormat );
+                default: return  nullptr;
         }
         //DISABLED:UINT32case Type_uint32: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
         //DISABLED:UINT32        case Type_uint8:    return  QueryDispatchedConvertFormatInvocation_SelectModel< uint32, uint8   >( iSrcFormat, iDstFormat );
@@ -321,6 +323,7 @@ fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFor
                 //DISABLED:UINT32case Type_uint32:   return  QueryDispatchedConvertFormatInvocation_SelectModel< ufloat, uint32  >( iSrcFormat, iDstFormat );
                 case Type_ufloat:   return  QueryDispatchedConvertFormatInvocation_SelectModel< ufloat, ufloat  >( iSrcFormat, iDstFormat );
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  QueryDispatchedConvertFormatInvocation_SelectModel< ufloat, udouble    >( iSrcFormat, iDstFormat );
+                default: return  nullptr;
         }
         //DISABLED:DOUBLEcase TYPE_UDOUBLE: switch( static_cast< eType >( ULIS_R_TYPE( iDstFormat ) ) ) {
         //DISABLED:DOUBLE        case Type_uint8:    return  QueryDispatchedConvertFormatInvocation_SelectModel< udouble, uint8     >( iSrcFormat, iDstFormat );
@@ -328,6 +331,9 @@ fpConvertFormat QueryDispatchedConvertFormatInvocation( eFormat iSrcFormat, eFor
         //DISABLED:DOUBLE        case Type_uint32:   return  QueryDispatchedConvertFormatInvocation_SelectModel< udouble, uint32    >( iSrcFormat, iDstFormat );
         //DISABLED:DOUBLE        case Type_ufloat:   return  QueryDispatchedConvertFormatInvocation_SelectModel< udouble, ufloat    >( iSrcFormat, iDstFormat );
         //DISABLED:DOUBLE        case TYPE_UDOUBLE:  return  QueryDispatchedConvertFormatInvocation_SelectModel< udouble, udouble   >( iSrcFormat, iDstFormat ); }
+        default: {
+            return  nullptr;
+        }
     }
 
     return  nullptr;

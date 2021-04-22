@@ -72,6 +72,7 @@ fpExtract QueryDispatchedExtractInvocation( eType iSrcType, eType iDstType ) {
                 //DISABLED:UINT32case Type_uint32:   return  InvokeExtractInto< uint8, uint32 >;
                 case Type_ufloat:   return  InvokeExtractInto< uint8, ufloat >;
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint8, udouble      >;
+                default: return  nullptr;
         }
         case Type_uint16: switch( iDstType ) {
                 case Type_uint8:    return  InvokeExtractInto< uint16, uint8  >;
@@ -79,6 +80,7 @@ fpExtract QueryDispatchedExtractInvocation( eType iSrcType, eType iDstType ) {
                 //DISABLED:UINT32case Type_uint32:   return  InvokeExtractInto< uint16, uint32 >;
                 case Type_ufloat:   return  InvokeExtractInto< uint16, ufloat >;
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< uint16, udouble     >;
+                default: return  nullptr;
         }
         //DISABLED:UINT32case Type_uint32: switch( iDstType ) {
         //DISABLED:UINT32        case Type_uint8:    return  InvokeExtractInto< uint32, uint8  >;
@@ -93,6 +95,7 @@ fpExtract QueryDispatchedExtractInvocation( eType iSrcType, eType iDstType ) {
                 //DISABLED:UINT32case Type_uint32:   return  InvokeExtractInto< ufloat, uint32 >;
                 case Type_ufloat:   return  InvokeExtractInto< ufloat, ufloat >;
                 //DISABLED:DOUBLEcase TYPE_UDOUBLE:  return  InvokeExtractInto< ufloat, udouble     >;
+                default: return  nullptr;
         }
         //case TYPE_UDOUBLE: switch( iDstType ) {
         //        case Type_uint8:    return  InvokeExtractInto< udouble, uint8      >;
@@ -100,6 +103,7 @@ fpExtract QueryDispatchedExtractInvocation( eType iSrcType, eType iDstType ) {
         //        case Type_uint32:   return  InvokeExtractInto< udouble, uint32     >;
         //        case Type_ufloat:   return  InvokeExtractInto< udouble, ufloat     >;
         //        case TYPE_UDOUBLE:  return  InvokeExtractInto< udouble, udouble    >; }
+        default: return  nullptr;
     }
 
     return  nullptr;
