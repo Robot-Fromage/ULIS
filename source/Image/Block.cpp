@@ -286,6 +286,16 @@ FBlock::SetPixel( uint16 iX, uint16 iY, const ISample& iSample )
 }
 
 void
+FBlock::SetPixelSafe(uint16 iX, uint16 iY, const ISample& iSample)
+{
+    if( iX < 0 || iY < 0 || iX >= mWidth || iY >= mHeight )
+        return;
+
+    FPixel pixel = Pixel(iX, iY);
+    ISample::ConvertFormat(iSample, pixel);
+}
+
+void
 FBlock::OnInvalid( const FOnInvalidBlock& iOnInvalid )
 {
     mOnInvalid = iOnInvalid;

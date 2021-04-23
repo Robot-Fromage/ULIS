@@ -99,10 +99,10 @@ void DrawEllipseAA( FBlock&                  iBlock
     int fb2 = 4 * b2;
     int x = 0;
     int y = iB;
-    int sigma = 2*b2+a2*(1-2*iB);
+    int sigma = 2*b2+a2*(-2*iB);
 
     int errMax = 0;
-    int errMin =  2 * (2*b2+a2*(1-2*iB));
+    int errMin =  2 * (2*b2+a2*(-2*iB));
 
     //0° is on top and we turn clockwise
     //Octant 1 ------
@@ -113,7 +113,6 @@ void DrawEllipseAA( FBlock&                  iBlock
             float alphaTop = 1 - FMath::Abs((float(sigma - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
-
             int step = sigma <= 0 ? 1 : -1;
 
             iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0 to 45 degrees
@@ -130,7 +129,8 @@ void DrawEllipseAA( FBlock&                  iBlock
             sigma += b2*(4 * x + 6);
             x++;
         }
-    } else if(drawRectOctant1 == 2)
+    } 
+    else if(drawRectOctant1 == 2)
     {
         int xx = rectOctant1.x;
         int yy = rectOctant1.y;
@@ -175,8 +175,8 @@ void DrawEllipseAA( FBlock&                  iBlock
     //Octant 2 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
-    errMin =  2 * (2*a2+b2*(1-2*iA));
+    sigma = 2*a2+b2*(-2*iA);
+    errMin =  2 * (2*a2+b2*(-2*iA));
     if(drawRectOctant2 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -247,8 +247,8 @@ void DrawEllipseAA( FBlock&                  iBlock
     //Octant 3 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
-    errMin =  2 * (2*a2+b2*(1-2*iA));
+    sigma = 2*a2+b2*(-2*iA);
+    errMin =  2 * (2*a2+b2*(-2*iA));
     if(drawRectOctant3 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -319,8 +319,8 @@ void DrawEllipseAA( FBlock&                  iBlock
     //Octant 4 ------
     x = 0;
     y = iB;
-    sigma = 2*b2+a2*(1-2*iB);
-    errMin =  2 * (2*b2+a2*(1-2*iB));
+    sigma = 2*b2+a2*(-2*iB);
+    errMin =  2 * (2*b2+a2*(-2*iB));
     if(drawRectOctant4 == 1)
     {
         while(b2 * x <= a2 * y)
@@ -390,8 +390,8 @@ void DrawEllipseAA( FBlock&                  iBlock
     //Octant 5 ------
     x = 0;
     y = iB;
-    sigma = 2*b2+a2*(1-2*iB);
-    errMin =  2 * (2*b2+a2*(1-2*iB));
+    sigma = 2*b2+a2*(-2*iB);
+    errMin =  2 * (2*b2+a2*(-2*iB));
     if(drawRectOctant5 == 1)
     {
         while(b2 * x <= a2 * y)
@@ -461,8 +461,8 @@ void DrawEllipseAA( FBlock&                  iBlock
     //Octant 6 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
-    errMin =  2 * (2*a2+b2*(1-2*iA));
+    sigma = 2*a2+b2*(-2*iA);
+    errMin =  2 * (2*a2+b2*(-2*iA));
     if(drawRectOctant6 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -532,8 +532,8 @@ void DrawEllipseAA( FBlock&                  iBlock
     //Octant 7 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
-    errMin =  2 * (2*a2+b2*(1-2*iA));
+    sigma = 2*a2+b2*(-2*iA);
+    errMin =  2 * (2*a2+b2*(-2*iA));
     if(drawRectOctant7 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -603,8 +603,8 @@ void DrawEllipseAA( FBlock&                  iBlock
     //Octant 8 ------
     x = 0;
     y = iB;
-    sigma = 2*b2+a2*(1-2*iB);
-    errMin =  2 * (2*b2+a2*(1-2*iB));
+    sigma = 2*b2+a2*(-2*iB);
+    errMin =  2 * (2*b2+a2*(-2*iB));
     if(drawRectOctant8 == 1)
     {
         while(b2 * x <= a2 * y)
@@ -677,7 +677,7 @@ void DrawEllipseAA( FBlock&                  iBlock
     {
         x = 0;
         y = iB;
-        sigma = 2*b2+a2*(1-2*iB);
+        sigma = 2*b2+a2*(-2*iB);
 
         while(b2 * x <= a2 * y)
         {
@@ -704,7 +704,7 @@ void DrawEllipseAA( FBlock&                  iBlock
 
         x = iA;
         y = 0;
-        sigma = 2*a2+b2*(1-2*iA);
+        sigma = 2*a2+b2*(-2*iA);
 
         while(a2 * y <= b2 * x)
         {
@@ -806,7 +806,7 @@ void DrawEllipseSP( FBlock&                  iBlock
     float y = iB;
 
     float errMax = 0;
-    float errMin =  2 * (2*b2+a2*(1-2*iB));
+    float errMin =  2 * (2*b2+a2*(-2*iB));
     float sigma = errMin * InternalGetPixelBaseAlphaFromCoord(point0);
 
     //0° is on top and we turn clockwise
@@ -955,7 +955,7 @@ void DrawEllipseSP( FBlock&                  iBlock
     //Octant 3 ------
     x = iA;
     y = 0;
-    errMin =  2 * (2*a2+b2*(1-2*iA));
+    errMin =  2 * (2*a2+b2*(-2*iA));
     sigma = errMin * InternalGetPixelBaseAlphaFromCoord(point90);
 
     if(drawRectOctant3 == 1)
@@ -1029,7 +1029,7 @@ void DrawEllipseSP( FBlock&                  iBlock
     //Octant 4 ------
     x = 0;
     y = iB;
-    errMin =  2 * (2*b2+a2*(1-2*iB));
+    errMin =  2 * (2*b2+a2*(-2*iB));
     sigma = errMin * InternalGetPixelBaseAlphaFromCoord(point180);
 
     if(drawRectOctant4 == 1)
@@ -1102,7 +1102,7 @@ void DrawEllipseSP( FBlock&                  iBlock
     //Octant 5 ------
     x = 0;
     y = iB;
-    errMin =  2 * (2*b2+a2*(1-2*iB));
+    errMin =  2 * (2*b2+a2*(-2*iB));
     sigma = errMin * InternalGetPixelBaseAlphaFromCoord(point180);
 
     if(drawRectOctant5 == 1)
@@ -1175,7 +1175,7 @@ void DrawEllipseSP( FBlock&                  iBlock
     //Octant 6 ------
     x = iA;
     y = 0;
-    errMin =  2 * (2*a2+b2*(1-2*iA));
+    errMin =  2 * (2*a2+b2*(-2*iA));
     sigma = errMin * InternalGetPixelBaseAlphaFromCoord(point270);
 
     if(drawRectOctant6 == 1)
@@ -1248,7 +1248,7 @@ void DrawEllipseSP( FBlock&                  iBlock
     //Octant 7 ------
     x = iA;
     y = 0;
-    errMin =  2 * (2*a2+b2*(1-2*iA));
+    errMin =  2 * (2*a2+b2*(-2*iA));
     sigma = errMin * InternalGetPixelBaseAlphaFromCoord(point180);
 
     if(drawRectOctant7 == 1)
@@ -1321,7 +1321,7 @@ void DrawEllipseSP( FBlock&                  iBlock
     //Octant 8 ------
     x = 0;
     y = iB;
-    errMin =  2 * (2*b2+a2*(1-2*iB));
+    errMin =  2 * (2*b2+a2*(-2*iB));
     sigma = errMin * InternalGetPixelBaseAlphaFromCoord(point0);
 
     if(drawRectOctant8 == 1)
@@ -1424,7 +1424,7 @@ void DrawEllipseSP( FBlock&                  iBlock
 
         x = iA;
         y = 0;
-        sigma = 2*a2+b2*(1-2*iA);
+        sigma = 2*a2+b2*(-2*iA);
 
         while(a2 * y <= b2 * x)
         {

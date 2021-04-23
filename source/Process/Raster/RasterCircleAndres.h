@@ -18,21 +18,26 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawCircleAndres(            FBlock&                  iBlock
-                                , const FVec2I&            iCenter
-                                , const int                iRadius
-                                , const FColor&            iColor
-                                , const bool               iFilled
-                                , const FRectI&            iClippingRect );
+void DrawCircleAndres(            
+      FBlock& iBlock
+    , const FVec2I& iCenter
+    , const int iRadius
+    , const FColor& iColor
+    , const bool iFilled
+    , const FRectI& iClippingRect );
 
 template< typename T >
-void DrawCircleAndresAA(   FBlock&                  iBlock
-                                , const FVec2I&            iCenter
-                                , const int                iRadius
-                                , const FColor&            iColor
-                                , const bool               iFilled
-                                , const FRectI&            iClippingRect )
+void DrawCircleAndresAA(   
+      FBlock& iBlock
+    , const FVec2I& iCenter
+    , const int iRadius
+    , const FColor& iColor
+    , const bool iFilled
+    , const FRectI& iClippingRect )
 {
+    if( iRadius <= 1 )
+        return; 
+
     //Clipping -----
     int x = 0;
     int y = iRadius; //We start from the top of the circle for the first octant
@@ -97,7 +102,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y > x)
+        while (y >= x)
         {
             if (diff < (2 * (iRadius - y)) )
             {
@@ -127,6 +132,23 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+        
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
     }
     else if( drawRectOctant1 == 2 )
     {
@@ -160,40 +182,8 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
             }
         }
         
-        // Base for drawing the aliased part of the circle on the sides on the clipping rect
-        /*if( xx == rectOctant1Clipped.x || yy == rectOctant1Clipped.y ) //We draw only the bottom line of AA until we draw the next y
-        {
-            while ( 1 )
-            {
-                float alphaTop = FMath::Abs( ( float( diff - errMax ) / float( errMin - errMax ) ) ); //Interpolation of slopedifferential between errMin and errMax
-                
-                val.SetAlphaT<T>( MaxAlpha * alphaTop );
-                
-                iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
-                
-                if( diff >= ( 2 * x ) )
-                {
-                    diff -= ( 2 * x + 1 );
-                    x++; xx++;
-                }
-                else if ( diff < ( 2 * ( iRadius - y ) ) )
-                {
-                    diff += ( 2 * y - 1 );
-                    y--; yy++;
-                    break;
-                }
-                else
-                {
-                    diff += (2 * ( y - x - 1 ) );
-                    y--; yy++;
-                    x++; xx++;
-                    break;
-                }
-            }
-        }*/
-        
         //Right and bottom clip
-        while (xx < limitX && yy < limitY )
+        while (xx <= limitX && yy <= limitY )
         {
             if (diff < (2 * (iRadius - y)))
             {
@@ -223,6 +213,23 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++; xx++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y - y - 1, val ); // 0° to 45°
     }
     
     //Octant 2 ------
@@ -403,7 +410,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Top and left clip
-        while (xx > limitX && yy < limitY )
+        while (xx >= limitX && yy <= limitY )
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -444,7 +451,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y > x)
+        while (y >= x)
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -474,6 +481,24 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+        
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+
+        val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
+
     }
     else if( drawRectOctant4 == 2 )
     {
@@ -508,7 +533,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx < limitX && yy > limitY )
+        while (xx <= limitX && yy >= limitY )
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -538,6 +563,23 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++; xx++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+
+        val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x + x, iCenter.y + y + 1, val ); // 180° to 135°
     }
     
     //Octant 5 ------
@@ -549,7 +591,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y > x)
+        while (y >= x)
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -579,6 +621,23 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++;
             }
         }
+
+        //Last special case to handle manually
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+        
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+
+        val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
     }
     else if( drawRectOctant5 == 2 )
     {
@@ -613,7 +672,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx > limitX && yy > limitY )
+        while (xx >= limitX && yy >= limitY )
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -643,6 +702,23 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++; xx--;
             }
         }
+
+        //Last special case to handle manually
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+
+        val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y + y + 1, val ); // 180° to 225°
     }
     
     
@@ -718,7 +794,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx < limitX && yy < limitY )
+        while (xx <= limitX && yy <= limitY )
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -824,7 +900,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx < limitX && yy > limitY )
+        while (xx <= limitX && yy >= limitY )
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -866,7 +942,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         int errMax = 2 * (iRadius - 1);
         int errMin = 0;
         
-        while (y > x)
+        while (y >= x)
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -896,6 +972,22 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++;
             }
         }
+        //Last special case to handle manually
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+        
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+
+        val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
     }
     else if( drawRectOctant8 == 2 )
     {
@@ -930,7 +1022,7 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
         }
         
         //Bottom and left clip
-        while (xx > limitX && yy < limitY )
+        while (xx >= limitX && yy <= limitY )
         {
             if ( diff < ( 2 * ( iRadius - y ) ) )
             {
@@ -960,6 +1052,23 @@ void DrawCircleAndresAA(   FBlock&                  iBlock
                 x++; xx--;
             }
         }
+
+        //Last special case to handle manually
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        float alphaTop = FMath::Abs((float(diff - errMax) / float(errMin - errMax))); //Interpolation of slopedifferential between errMin and errMax
+
+        val.SetAlphaT<T>( T(maxAlpha * alphaTop) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
+
+        val.SetAlphaT<T>( T(maxAlpha * (1 - alphaTop )) );
+
+        iBlock.SetPixelSafe( iCenter.x - x, iCenter.y - y - 1, val ); // 0° to 315°
     }
 
     //Filled
@@ -1010,6 +1119,9 @@ void DrawCircleAndresSP(FBlock&                  iBlock
                              , const bool               iFilled
                              , const FRectI&            iClippingRect)
 {
+    if( iRadius <= 1 )
+        return;
+
     //Clipping -----
     float x = 0.f;
     float y = iRadius; //We start from the top of the circle for the first octant

@@ -244,9 +244,9 @@ InternalDrawQuadRationalBezierSegSP(
 
     if (cur != 0.0 && w > 0.0)
     {
-        if (sx*sx + sy*sy > xx*xx + yy*yy)
+        if (sx*sx + sy * sy > xx*xx + yy * yy)
         {
-            x2 = x0; x0 -= dx; y2 = y0; y0 -= dy; cur = -cur;
+            x2 = x0; x0 -= (int)dx; y2 = y0; y0 -= (int)dy; cur = -cur;
         }
         xx = 2.0*(4.0*w*sx*xx + dx * dx);
         yy = 2.0*(4.0*w*sy*yy + dy * dy);
@@ -267,13 +267,13 @@ InternalDrawQuadRationalBezierSegSP(
             cur = -(w + 1.0) / 2.0;
             w = sqrt(w);
             xy = 1.0 / (w + 1.0);
-            sx = floor((x0 + 2.0*w*x1 + x2)*xy / 2.0 + 0.5);
-            sy = floor((y0 + 2.0*w*y1 + y2)*xy / 2.0 + 0.5);
-            dx = floor((w*x1 + x0)*xy /*+ 0.5 ?*/);
-            dy = floor((y1*w + y0)*xy /*+ 0.5 ?*/);
+            sx = (x0 + 2.0*w*x1 + x2)*xy / 2.0 + 0.5;
+            sy = (y0 + 2.0*w*y1 + y2)*xy / 2.0 + 0.5;
+            dx = (w*x1 + x0)*xy + 0.5;
+            dy = (y1*w + y0)*xy + 0.5;
             InternalDrawQuadRationalBezierSegSP<T>(iBlock, x0, y0, dx, dy, sx, sy, cur, iColor, iClippingRect, iStoragePoints);
-            dx = floor((w*x1 + x2)*xy /*+ 0.5 ?*/);
-            dy = floor((y1*w + y2)*xy /*+ 0.5 ?*/);
+            dx = (w*x1 + x2)*xy + 0.5;
+            dy = (y1*w + y2)*xy + 0.5;
             InternalDrawQuadRationalBezierSegSP<T>(iBlock, sx, sy, dx, dy, x2, y2, cur, iColor, iClippingRect, iStoragePoints);
             return;
         }
@@ -305,7 +305,7 @@ InternalDrawQuadRationalBezierSegSP(
                 if (x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h))
                 {
                     val.SetAlphaT<T>(alphaTop);
-                    iBlock.SetPixel(int(x0), int(y0), val);
+                    iBlock.SetPixel(int(round(x0)), int(round(y0)), val);
                 }
 
                 if (iStoragePoints && errorRatio >= 0)
@@ -316,7 +316,7 @@ InternalDrawQuadRationalBezierSegSP(
 
             if (f)
             {
-                if (y0 == y2)
+                if (int(y0) == int(y2))
                     return;
                 if ((dx - err) < ed)
                 {
@@ -326,7 +326,7 @@ InternalDrawQuadRationalBezierSegSP(
                     if (x0 > clippingRect.x && x0 < (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h))
                     {
                         val.SetAlphaT<T>(T(maxAlpha * alpha));
-                        iBlock.SetPixel(int(x0 + sx), int(y0), val);
+                        iBlock.SetPixel(int(round(x0 + sx)), int(round(y0)), val);
                     }
 
                     if (iStoragePoints && errorRatio <= 0)
@@ -338,7 +338,7 @@ InternalDrawQuadRationalBezierSegSP(
 
             if (2 * err + dx > 0)
             {
-                if (x0 == x2)
+                if (int(x0) == int(x2))
                     return;
                 if ((err - dy) < ed)
                 {
@@ -348,7 +348,7 @@ InternalDrawQuadRationalBezierSegSP(
                     if (x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 > clippingRect.y && y0 < (clippingRect.y + clippingRect.h))
                     {
                         val.SetAlphaT<T>(T(maxAlpha * alpha));
-                        iBlock.SetPixel(int(x0), int(y0 + sy), val);
+                        iBlock.SetPixel(int(round(x0)), int(round(y0 + sy)), val);
                     }
 
                     if (iStoragePoints && errorRatio >= 0)
@@ -508,14 +508,14 @@ void DrawQuadraticBezierSP( FBlock&                         iBlock
 
     float weight = iWeight;
 
-    if(weight < 0) //Can't draw a bezier curve with a weight < 0
+    if (weight < 0) //Can't draw a bezier curve with a weight < 0
         return;
 
-    if(dx * (pt2.x - pt1.x) > 0)
+    if (dx * (pt2.x - pt1.x) > 0)
     {
-        if(dy * (pt2.y - pt1.y) > 0)
+        if (dy * (pt2.y - pt1.y) > 0)
         {
-            if(FMath::Abs(dx * y) > FMath::Abs(dy * x))
+            if (FMath::Abs(dx * y) > FMath::Abs(dy * x))
             {
                 pt0.x = pt2.x;
                 pt2.x = float(dx + pt1.x);
@@ -523,15 +523,15 @@ void DrawQuadraticBezierSP( FBlock&                         iBlock
                 pt2.y = float(dy + pt1.y);
             }
         }
-        if(pt0.x == pt2.x || weight == 1.0)
+        if (int(pt0.x) == int(pt2.x) || weight == 1.0)
         {
             dt = (pt0.x - pt1.x) / (double)x;
-        } 
+        }
         else
         {
-            dq = std::sqrt(4.0 * weight * weight * (pt0.x - pt1.x) * (pt2.x - pt1.x) + (pt2.x - pt0.x) * (pt2.x - pt0.x));
+            dq = std::sqrt(4.0 * weight * weight * (pt0.x - pt1.x) * (pt2.x - pt1.x) + (pt2.x - pt0.x) * (long)(pt2.x - pt0.x));
 
-            if(pt1.x < pt0.x)
+            if (pt1.x < pt0.x)
                 dq = -dq;
 
             dt = (2.0 * weight * (pt0.x - pt1.x) - pt0.x + pt2.x + dq) / (2.0 * (1.0 - weight) * (pt2.x - pt0.x));
@@ -542,27 +542,27 @@ void DrawQuadraticBezierSP( FBlock&                         iBlock
         dWeight = dt * (weight - 1.0) + 1.0;
         dWeight *= (dWeight * dq);
         weight = float(((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq));
-        x = dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) );
-        y = dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) );
+        x = std::floor(dx + 0.5);
+        y = std::floor(dy + 0.5);
         dy = (dx - pt0.x) * (pt1.y - pt0.y) / (pt1.x - pt0.x) + pt0.y;
-        InternalDrawQuadRationalBezierSegSP<T>(iBlock,pt0.x,pt0.y,x,dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) ),x,y,dWeight,iColor,iClippingRect);
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock, pt0.x, pt0.y, x, std::floor(dy + 0.5), x, y, float(dWeight), iColor, iClippingRect);
         dy = (dx - pt2.x) * (pt1.y - pt2.y) / (pt1.x - pt2.x) + pt2.y;
-        pt1.y = float(dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) ));
+        pt1.y = float(std::floor(dy + 0.5));
         pt0.x = pt1.x = float(x);
         pt0.y = float(y);
     }
 
-    if((pt0.y - pt1.y) * (long)(pt2.y - pt1.y) > 0)
+    if ((pt0.y - pt1.y) * (long)(pt2.y - pt1.y) > 0)
     {
-        if(pt0.y == pt2.y || iWeight == 1.0)
+        if (pt0.y == pt2.y || iWeight == 1.0)
         {
             dt = (pt0.y - pt1.y) / (pt0.y - 2.0 * pt1.y + pt2.y);
-        } 
+        }
         else
         {
             dq = std::sqrt(4.0 * weight * weight * (pt0.y - pt1.y) * (pt2.y - pt1.y) + (pt2.y - pt0.y) * (long)(pt2.y - pt0.y));
 
-            if(pt1.y < pt0.y)
+            if (pt1.y < pt0.y)
                 dq = -dq;
 
             dt = (2.0 * weight * (pt0.y - pt1.y) - pt0.y + pt2.y + dq) / (2.0 * (1.0 - weight) * (pt2.y - pt0.y));
@@ -573,17 +573,17 @@ void DrawQuadraticBezierSP( FBlock&                         iBlock
         dWeight = dt * (weight - 1.0) + 1.0;
         dWeight *= (dWeight * dq);
         weight = float(((1.0 - dt) * (weight - 1.0) + 1.0) * std::sqrt(dq));
-        x = dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) );
-        y = dy + InternalGetPixelBaseAlphaFromCoord( FVec2F(0.5, dy) );
+        x = std::floor(dx + 0.5);
+        y = std::floor(dy + 0.5);
         dx = (pt1.x - pt0.x) * (dy - pt0.y) / (pt1.y - pt0.y) + pt0.x;
-        InternalDrawQuadRationalBezierSegSP<T>(iBlock,pt0.x,pt0.y,dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) ),y,x,y,float(dWeight),iColor,iClippingRect);
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock, pt0.x, pt0.y, std::floor(dx + 0.5), y, x, y, float(dWeight), iColor, iClippingRect);
 
         dx = (pt1.x - pt2.x) * (dy - pt2.y) / (pt1.y - pt2.y) + pt2.x;
-        pt1.x = float(dx + InternalGetPixelBaseAlphaFromCoord( FVec2F(dx, 0.5) ));
+        pt1.x = float(std::floor(dx + 0.5));
         pt0.x = float(x);
         pt0.y = pt1.y = float(y);
     }
-    InternalDrawQuadRationalBezierSegSP<T>(iBlock,pt0.x,pt0.y,pt1.x,pt1.y,pt2.x,pt2.y,weight * weight,iColor,iClippingRect);
+    InternalDrawQuadRationalBezierSegSP<T>(iBlock, pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, weight * weight, iColor, iClippingRect);
 }
 
 ULIS_NAMESPACE_END

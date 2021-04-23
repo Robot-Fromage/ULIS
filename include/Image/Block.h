@@ -447,6 +447,23 @@ public:
     void SetPixel( uint16 iX, uint16 iY, const ISample& iSample );
 
     /*!
+    Set the pixel at the given coordinates from input ISample.
+    The sample will be converted to the appropriate format.
+    This function is here for convenience but is not recommended to used for
+    intensive raster tasks, as it does not provide any kind of optimizations.
+
+    \safe version that checks if the pixel set is in the block bounds.
+    Slow but useful in some cases. The usage of this function usually 
+    means that optimization is possible where it is used.
+
+    \sa Color()
+    \sa PixelBits()
+    \sa ISample
+    */
+    void SetPixelSafe(uint16 iX, uint16 iY, const ISample& iSample);
+
+
+    /*!
     Set a new invalid callback that will be called on dirty.
 
     \sa OnCleanup()

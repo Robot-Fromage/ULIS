@@ -15,13 +15,15 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawEllipse(         FBlock&                  iBlock
-                        , const FVec2I&            iCenter
-                        , const int                iA
-                        , const int                iB
-                        , const FColor&            iColor
-                        , const bool               iFilled
-                        , const FRectI&            iClippingRect )
+void DrawEllipse(         
+      FBlock& iBlock
+    , const FVec2I& iCenter
+    , const int iA
+    , const int iB
+    , const FColor& iColor
+    , const bool iFilled
+    , const FRectI& iClippingRect
+)
 {
     if( iA <= 0 || iB <= 0 )
         return;
@@ -36,8 +38,8 @@ void DrawEllipse(         FBlock&                  iBlock
     }
 
     float angleTo45 = std::atan(- float(iB) / float(iA));
-    int shift45x = int(FMath::Abs(std::cos(angleTo45) * iA) + 1);
-    int shift45y = int(FMath::Abs(std::sin(angleTo45) * iB) + 1);
+    int shift45x = int(FMath::Abs(std::cos(angleTo45) * iA));
+    int shift45y = int(FMath::Abs(std::sin(angleTo45) * iB));
 
     FVec2I point0 = FVec2I(iCenter.x,iCenter.y - iB);
     FVec2I point45 = FVec2I(iCenter.x + shift45x,iCenter.y - shift45y);
@@ -85,7 +87,7 @@ void DrawEllipse(         FBlock&                  iBlock
     int fb2 = 4 * b2;
     int x = 0;
     int y = iB;
-    int sigma = 2*b2+a2*(1-2*iB);
+    int sigma = 2*b2+a2*(-2*iB);
 
     //0° is on top and we turn clockwise
     //Octant 1 ------
@@ -103,9 +105,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += b2*(4 * x + 6);
             x++;
         }
-
-
-    } else if(drawRectOctant1 == 2)
+    } 
+    else if(drawRectOctant1 == 2)
     {
         int xx = rectOctant1.x;
         int yy = rectOctant1.y;
@@ -140,7 +141,7 @@ void DrawEllipse(         FBlock&                  iBlock
     //Octant 2 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
+    sigma = 2*a2+b2*(-2*iA);
     if(drawRectOctant2 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -155,7 +156,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += a2*(4 * y + 6);
             y++;
         }
-    } else if(drawRectOctant2 == 2)
+    } 
+    else if(drawRectOctant2 == 2)
     {
         int xx = rectOctant2.x + rectOctant2.w;
         int yy = rectOctant2.y + rectOctant2.h;
@@ -190,7 +192,7 @@ void DrawEllipse(         FBlock&                  iBlock
     //Octant 3 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
+    sigma = 2*a2+b2*(-2*iA);
     if(drawRectOctant3 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -205,7 +207,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += a2*(4 * y + 6);
             y++;
         }
-    } else if(drawRectOctant3 == 2)
+    } 
+    else if(drawRectOctant3 == 2)
     {
         int xx = rectOctant3.x + rectOctant3.w;
         int yy = rectOctant3.y;
@@ -240,7 +243,7 @@ void DrawEllipse(         FBlock&                  iBlock
     //Octant 4 ------
     x = 0;
     y = iB;
-    sigma = 2*b2+a2*(1-2*iB);
+    sigma = 2*b2+a2*(-2*iB);
     if(drawRectOctant4 == 1)
     {
         while(b2 * x <= a2 * y)
@@ -255,7 +258,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += b2*(4 * x + 6);
             x++;
         }
-    } else if(drawRectOctant4 == 2)
+    } 
+    else if(drawRectOctant4 == 2)
     {
         int xx = rectOctant4.x;
         int yy = rectOctant4.y + rectOctant4.h;
@@ -290,7 +294,7 @@ void DrawEllipse(         FBlock&                  iBlock
     //Octant 5 ------
     x = 0;
     y = iB;
-    sigma = 2*b2+a2*(1-2*iB);
+    sigma = 2*b2+a2*(-2*iB);
     if(drawRectOctant5 == 1)
     {
         while(b2 * x <= a2 * y)
@@ -305,7 +309,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += b2*(4 * x + 6);
             x++;
         }
-    } else if(drawRectOctant5 == 2)
+    }
+    else if(drawRectOctant5 == 2)
     {
         int xx = rectOctant5.x + rectOctant5.w;
         int yy = rectOctant5.y + rectOctant5.h;
@@ -340,7 +345,7 @@ void DrawEllipse(         FBlock&                  iBlock
     //Octant 6 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
+    sigma = 2*a2+b2*(-2*iA);
     if(drawRectOctant6 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -355,7 +360,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += a2*(4 * y + 6);
             y++;
         }
-    } else if(drawRectOctant6 == 2)
+    } 
+    else if(drawRectOctant6 == 2)
     {
         int xx = rectOctant6.x;
         int yy = rectOctant6.y;
@@ -390,7 +396,7 @@ void DrawEllipse(         FBlock&                  iBlock
     //Octant 7 ------
     x = iA;
     y = 0;
-    sigma = 2*a2+b2*(1-2*iA);
+    sigma = 2*a2+b2*(-2*iA);
     if(drawRectOctant7 == 1)
     {
         while(a2 * y <= b2 * x)
@@ -405,7 +411,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += a2*(4 * y + 6);
             y++;
         }
-    } else if(drawRectOctant7 == 2)
+    }
+    else if(drawRectOctant7 == 2)
     {
         int xx = rectOctant7.x;
         int yy = rectOctant7.y + rectOctant7.h;
@@ -441,7 +448,7 @@ void DrawEllipse(         FBlock&                  iBlock
     //Octant 8 ------
     x = 0;
     y = iB;
-    sigma = 2*b2+a2*(1-2*iB);
+    sigma = 2*b2+a2*(-2*iB);
     if(drawRectOctant8 == 1)
     {
         while(b2 * x <= a2 * y)
@@ -456,7 +463,8 @@ void DrawEllipse(         FBlock&                  iBlock
             sigma += b2*(4 * x + 6);
             x++;
         }
-    } else if(drawRectOctant8 == 2)
+    } 
+    else if(drawRectOctant8 == 2)
     {
         int xx = rectOctant8.x + rectOctant8.w;
         int yy = rectOctant8.y;
@@ -494,7 +502,7 @@ void DrawEllipse(         FBlock&                  iBlock
     {
         x = 0;
         y = iB;
-        sigma = 2*b2+a2*(1-2*iB);
+        sigma = 2*b2+a2*(-2*iB);
 
         while(b2 * x <= a2 * y)
         {
@@ -512,7 +520,7 @@ void DrawEllipse(         FBlock&                  iBlock
 
         x = iA;
         y = 0;
-        sigma = 2*a2+b2*(1-2*iA);
+        sigma = 2*a2+b2*(-2*iA);
 
         while(a2 * y <= b2 * x)
         {
