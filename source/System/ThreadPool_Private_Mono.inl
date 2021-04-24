@@ -30,7 +30,7 @@ FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
         const FCommand* cmd = ioCommands.Front();
         ioCommands.Pop();
 
-        ULIS_ASSERT( cmd->ReadyForScheduling, "Bad queue state, waiting on events that are not scheduled will hang forever." );
+        ULIS_ASSERT( cmd->ReadyForScheduling(), "Bad queue state, waiting on events that are not scheduled will hang forever." );
 
         if( cmd->ReadyForProcessing() )
         {

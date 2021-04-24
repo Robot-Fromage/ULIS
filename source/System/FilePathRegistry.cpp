@@ -16,6 +16,9 @@
 #include <cstring>
 #include <cassert>
 #include <algorithm>
+#include <vector>
+#include <string>
+#include <tuple>
 
 #if ( defined( ULIS_GCC ) || defined( ULIS_MINGW ) ) && __GNUC__ < 8
 #include <experimental/filesystem>

@@ -14,7 +14,7 @@ std::vector< std::string >      g_sampleImagesNames;
 std::vector< ::ULIS::FBlock* >  g_sampleImages;
 ::ULIS::FThreadPool*            g_threadPool;
 ::ULIS::FCommandQueue*          g_queue;
-constexpr ::ULIS::eFormat       g_format = ::ULIS::eFormat::Format_RGBA8
+::ULIS::eFormat                 g_format = ::ULIS::Format_RGBA8;
 ::ULIS::FContext*               g_ctx;
 
 void main_loop( void* );
@@ -225,8 +225,8 @@ void InitULIS() {
     sampleImageRegistry.AddLookupPath( "resources/img/" );
     sampleImageRegistry.AddFilter( ".png" );
     sampleImageRegistry.Parse();
-    for( auto it : sampleImageRegistry.GetMap() ) {
-        g_sampleImages.push_back( new FBlock() );
+    for( auto it : sampleImageRegistry.Records() ) {
+        g_sampleImages.push_back( new ::ULIS::FBlock() );
         g_ctx->XLoadBlockFromDisk( *( g_sampleImages.back() ), it.second );
         g_sampleImagesNames.push_back( it.first );
     }
@@ -279,14 +279,14 @@ void BuildGUI() {
 
     {
         ::ULIS::FBlock result( 160, 160, g_format );
-        ctx->Copy( *( g_sampleImages[ base_item_current_idx ] ), result );
-        ctx->Finish();
+        g_ctx->Copy( *( g_sampleImages[ base_item_current_idx ] ), result );
+        g_ctx->Finish();
 
-        ctx->Blend( *( g_sampleImages[ over_item_current_idx ] ), result );
-        ctx->Finish();
+        g_ctx->Blend( *( g_sampleImages[ over_item_current_idx ] ), result );
+        g_ctx->Finish();
 
         glBindTexture( GL_TEXTURE_2D, g_texture );
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 160, 160, GL_RGBA, GL_UNSIGNED_BYTE, result.DataPtr() );
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 160, 160, GL_RGBA, GL_UNSIGNED_BYTE, result.Bits() );
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
