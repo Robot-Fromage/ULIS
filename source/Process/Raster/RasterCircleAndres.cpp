@@ -79,21 +79,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     //Octant 1 ------
     if( drawRectOctant1 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+
             iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -102,6 +103,15 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val); // 0° to 45°
     }
     else if( drawRectOctant1 == 2 )
     {
@@ -110,7 +120,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant1Clipped.w + rectOctant1Clipped.x;
         int limitY = rectOctant1Clipped.h + rectOctant1Clipped.y;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and top clip
         while ( xx < rectOctant1Clipped.x || yy < rectOctant1Clipped.y )
@@ -136,17 +146,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Right and bottom clip
         while (xx <= limitX && yy <= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; yy++;
+            }
+
             iBlock.SetPixel( iCenter.x + x, iCenter.y - y, val ); // 0° to 45°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; xx++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy++;
             }
             else
             {
@@ -155,6 +166,14 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++; xx++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val); // 0° to 45°
     }
     
     
@@ -163,21 +182,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     y = iRadius;
     if( drawRectOctant2 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+
             iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -194,7 +214,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant2Clipped.x;
         int limitY = rectOctant2Clipped.y;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Right and bottom clip
         while ( xx > rectOctant2Clipped.x + rectOctant2Clipped.w || yy > rectOctant2Clipped.y + rectOctant2Clipped.h )
@@ -220,17 +240,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Top and left clip
         while (xx >= limitX && yy >= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; xx--;
+            }
+
             iBlock.SetPixel( iCenter.x + y, iCenter.y - x, val ); // 90° to 45°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy--;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx--;
             }
             else
             {
@@ -247,21 +268,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     y = iRadius;
     if( drawRectOctant3 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+
             iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -278,7 +300,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant3Clipped.x;
         int limitY = rectOctant3Clipped.y + rectOctant3Clipped.h;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Right and top clip
         while ( xx > rectOctant3Clipped.x + rectOctant3Clipped.w || yy < rectOctant3Clipped.y )
@@ -304,17 +326,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Bottom and left clip
         while (xx >= limitX && yy <= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; xx--;
+            }
+            
             iBlock.SetPixel( iCenter.x + y, iCenter.y + x, val ); // 90° to 135°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx--;
             }
             else
             {
@@ -331,21 +354,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     y = iRadius;
     if( drawRectOctant4 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+            
             iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -354,6 +378,15 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val); // 180° to 135°
     }
     else if( drawRectOctant4 == 2 )
     {
@@ -362,7 +395,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant4Clipped.x + rectOctant4Clipped.w;
         int limitY = rectOctant4Clipped.y;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while ( xx < rectOctant4Clipped.x || yy > rectOctant4Clipped.y + rectOctant4Clipped.h )
@@ -388,17 +421,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Bottom and left clip
         while (xx <= limitX && yy >= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; yy--;
+            }
+            
             iBlock.SetPixel( iCenter.x + x, iCenter.y + y, val ); // 180° to 135°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; xx++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy--;
             }
             else
             {
@@ -407,6 +441,14 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++; xx++;
             }
         }
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val); // 180° to 135°
     }
     
     
@@ -415,21 +457,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     y = iRadius;
     if( drawRectOctant5 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+            
             iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -438,6 +481,15 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++;
             }
         }
+
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val); // 180° to 225°
     }
     else if( drawRectOctant5 == 2 )
     {
@@ -446,7 +498,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant5Clipped.x;
         int limitY = rectOctant5Clipped.y;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while ( xx > rectOctant5Clipped.x + rectOctant5Clipped.w || yy > rectOctant5Clipped.y + rectOctant5Clipped.h )
@@ -472,17 +524,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Bottom and left clip
         while (xx >= limitX && yy >= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; yy--;
+            }
+            
             iBlock.SetPixel( iCenter.x - x, iCenter.y + y, val ); // 180° to 225°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; xx--;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy--;
             }
             else
             {
@@ -491,6 +544,14 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++; xx--;
             }
         }
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val); // 180° to 225°
     }
     
     
@@ -499,21 +560,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     y = iRadius;
     if( drawRectOctant6 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+            
             iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -530,7 +592,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant6Clipped.x + rectOctant6Clipped.w;
         int limitY = rectOctant6Clipped.y + rectOctant6Clipped.h;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while ( xx < rectOctant6Clipped.x || yy < rectOctant6Clipped.y )
@@ -556,17 +618,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Bottom and left clip
         while (xx <= limitX && yy <= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; xx++;
+            }
+            
             iBlock.SetPixel( iCenter.x - y, iCenter.y + x, val );  // 270° to 225°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx++;
             }
             else
             {
@@ -583,21 +646,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     y = iRadius;
     if( drawRectOctant7 == 1 )
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+            
             iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -614,7 +678,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant7Clipped.x + rectOctant7Clipped.w;
         int limitY = rectOctant7Clipped.y;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while ( xx < rectOctant7Clipped.x || yy > rectOctant7Clipped.y + rectOctant7Clipped.h )
@@ -640,17 +704,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Bottom and left clip
         while (xx <= limitX && yy >= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; xx++;
+            }
+            
             iBlock.SetPixel( iCenter.x - y, iCenter.y - x, val ); // 270° to 315°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; yy--;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; xx++;
             }
             else
             {
@@ -667,21 +732,22 @@ void DrawCircleAndres(            FBlock&                  iBlock
     y = iRadius;
     if( drawRectOctant8 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while (y >= x)
+        while (y > x)
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--;
+            }
+            
             iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--;
             }
             else
             {
@@ -690,6 +756,14 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++;
             }
         }
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val); // 0° to 315°
     }
     else if( drawRectOctant8 == 2 )
     {
@@ -698,7 +772,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
         int limitX = rectOctant8Clipped.x;
         int limitY = rectOctant8Clipped.y + rectOctant8Clipped.h;
         
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while ( xx > rectOctant8Clipped.x + rectOctant8Clipped.w || yy < rectOctant8Clipped.y )
@@ -724,17 +798,18 @@ void DrawCircleAndres(            FBlock&                  iBlock
         //Bottom and left clip
         while (xx >= limitX && yy <= limitY )
         {
+            if ( diff < ( 2 * ( iRadius - y ) ) )
+            {
+                diff += ( 2 * y - 1 );
+                y--; yy++;
+            }
+            
             iBlock.SetPixel( iCenter.x - x, iCenter.y - y, val ); // 0° to 315°
             
             if( diff >= ( 2 * x ) )
             {
                 diff -= ( 2 * x + 1 );
                 x++; xx--;
-            }
-            else if ( diff < ( 2 * ( iRadius - y ) ) )
-            {
-                diff += ( 2 * y - 1 );
-                y--; yy++;
             }
             else
             {
@@ -743,6 +818,14 @@ void DrawCircleAndres(            FBlock&                  iBlock
                 x++; xx--;
             }
         }
+        //Last special case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val); // 0° to 315°
     }
     
     //Fill
@@ -751,7 +834,7 @@ void DrawCircleAndres(            FBlock&                  iBlock
     {
         x = 0;
         y = iRadius;
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         while (y >= x)
         {
