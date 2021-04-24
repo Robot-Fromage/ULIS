@@ -46,7 +46,7 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/DetectCompiler.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/SetCompilerFlags.cmake )
 
 # Library Dependencies
-include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindZlib.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindZLib.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindFreetype2.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindLCMS2.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindOpenGL.cmake )
