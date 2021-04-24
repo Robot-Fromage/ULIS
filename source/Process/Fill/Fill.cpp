@@ -10,7 +10,9 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Process/Fill/Fill.h"
-#include <vectorclass.h>
+#if defined( ULIS_COMPILETIME_SSE_SUPPORT ) || defined( ULIS_COMPILETIME_AVX_SUPPORT )
+#include <immintrin.h>
+#endif // ULIS_COMPILETIME_SSE_SUPPORT || ULIS_COMPILETIME_AVX_SUPPORT
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -76,6 +78,7 @@ InvokeFillMT_MEM(
 
 /////////////////////////////////////////////////////
 // Schedulers
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
 void
 ScheduleFillMT_AVX(
       FCommand* iCommand
@@ -96,7 +99,9 @@ ScheduleFillMT_AVX(
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous, iForceMonoChunk, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     }
 }
+#endif // ULIS_COMPILETIME_AVX_SUPPORT
 
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 void
 ScheduleFillMT_SSE(
       FCommand* iCommand
@@ -114,6 +119,7 @@ ScheduleFillMT_SSE(
         ScheduleSimpleBufferJobs< FSimpleBufferJobArgs, FFillCommandArgs, &InvokeFillMT_MEM >( iCommand, iPolicy, iContiguous, iForceMonoChunk, BuildSimpleBufferJob_Scanlines, BuildSimpleBufferJob_Chunks );
     }
 }
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
 void
 ScheduleFillMT_MEM(

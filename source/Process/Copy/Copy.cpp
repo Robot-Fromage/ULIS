@@ -13,7 +13,9 @@
 #include "Image/Block.h"
 #include "Scheduling/DualBufferArgs.h"
 #include "Scheduling/RangeBasedPolicyScheduler.h"
-#include <vectorclass.h>
+#if defined( ULIS_COMPILETIME_SSE_SUPPORT ) || defined( ULIS_COMPILETIME_AVX_SUPPORT )
+#include <immintrin.h>
+#endif // ULIS_COMPILETIME_SSE_SUPPORT || ULIS_COMPILETIME_AVX_SUPPORT
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -75,8 +77,14 @@ void InvokeCopyMT_MEM(
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_AVX, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_AVX )
+#endif // ULIS_COMPILETIME_AVX_SUPPORT
+
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_SSE, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_SSE )
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
+
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_DUAL( ScheduleCopyMT_MEM, FDualBufferJobArgs, FDualBufferCommandArgs, &InvokeCopyMT_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedCopyInvocationSchedulerSelector )
 

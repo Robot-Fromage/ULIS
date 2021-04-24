@@ -13,7 +13,9 @@
 #include "Image/Block.h"
 #include "Scheduling/RangeBasedPolicyScheduler.h"
 #include "Scheduling/SimpleBufferArgs.h"
-#include <vectorclass.h>
+#if defined( ULIS_COMPILETIME_SSE_SUPPORT ) || defined( ULIS_COMPILETIME_AVX_SUPPORT )
+#include <immintrin.h>
+#endif // ULIS_COMPILETIME_SSE_SUPPORT || ULIS_COMPILETIME_AVX_SUPPORT
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -72,8 +74,14 @@ InvokeClearMT_MEM(
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleClearMT_AVX, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_AVX )
+#endif // ULIS_COMPILETIME_AVX_SUPPORT
+
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleClearMT_SSE, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_SSE )
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
+
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleClearMT_MEM, FSimpleBufferJobArgs, FSimpleBufferCommandArgs, &InvokeClearMT_MEM )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedClearInvocationSchedulerSelector )
 
