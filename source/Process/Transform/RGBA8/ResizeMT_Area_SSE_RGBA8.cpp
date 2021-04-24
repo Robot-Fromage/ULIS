@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Core/Core.h"
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include "Process/Transform/RGBA8/ResizeMT_Area_SSE_RGBA8.h"
 #include "Process/Transform/TransformHelpers.h"
 #include "Image/Block.h"
@@ -98,4 +99,5 @@ InvokeResizeMT_Area_SSE_RGBA8(
 ULIS_DEFINE_RESIZE_COMMAND_SPECIALIZATION( ResizeMT_Area_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 

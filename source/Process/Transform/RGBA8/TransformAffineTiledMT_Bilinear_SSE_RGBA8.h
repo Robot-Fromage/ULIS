@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include "Process/Transform/TransformArgs.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -23,4 +24,5 @@ InvokeTransformAffineTiledMT_Bilinear_SSE_RGBA8(
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleTransformAffineTiledMT_Bilinear_SSE_RGBA8 );
 
 ULIS_NAMESPACE_END
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 

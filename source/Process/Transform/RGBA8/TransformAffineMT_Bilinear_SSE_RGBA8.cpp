@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Core/Core.h"
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include "Process/Transform/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.h"
 #include "Process/Transform/TransformHelpers.h"
 #include "Image/Block.h"
@@ -85,4 +86,5 @@ InvokeTransformAffineMT_Bilinear_SSE_RGBA8(
 ULIS_DEFINE_TRANSFORM_COMMAND_SPECIALIZATION( TransformAffineMT_Bilinear_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
