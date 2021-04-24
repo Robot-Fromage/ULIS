@@ -24,22 +24,6 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-// Helper for Redundant operations
-namespace detail {
-Vec4i
-BuildRGBA8IndexTable( uint8 iRS )
-{
-    Vec4i result;
-    switch( iRS ) {
-        case 1:  for( int i = 0; i < 4; ++i ) result.insert( i, ( 3 - i )                             ); return  result;
-        case 2:  for( int i = 0; i < 4; ++i ) result.insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); return  result;
-        case 3:  for( int i = 0; i < 4; ++i ) result.insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); return  result;
-        default: for( int i = 0; i < 4; ++i ) result.insert( i, i                                     ); return  result;
-    }
-}
-} // namespace detail
-
-/////////////////////////////////////////////////////
 // Entry points
 ulError
 FContext::Blend(
@@ -91,7 +75,6 @@ FContext::Blend(
                 , dst_roi.Size()
                 , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
                 , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
-                , detail::BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
                 , iSource.BytesPerScanLine()
             )
             , iPolicy
@@ -167,7 +150,6 @@ FContext::BlendAA(
                 , FVec2I( coverageX, coverageY )
                 , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
                 , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
-                , detail::BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
                 , iSource.BytesPerScanLine()
             )
             , iPolicy
@@ -231,7 +213,6 @@ FContext::AlphaBlend(
                 , dst_roi.Size()
                 , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
                 , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
-                , detail::BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
                 , iSource.BytesPerScanLine()
             )
             , iPolicy
@@ -305,7 +286,6 @@ FContext::AlphaBlendAA(
                 , FVec2I( coverageX, coverageY )
                 , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
                 , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
-                , detail::BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
                 , iSource.BytesPerScanLine()
             )
             , iPolicy
@@ -377,7 +357,6 @@ FContext::BlendTiled(
                 , dst_roi.Size()
                 , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
                 , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
-                , detail::BuildRGBA8IndexTable( iSource.FormatMetrics().RSC )
                 , iSource.BytesPerScanLine()
                 , true
             )
@@ -439,7 +418,6 @@ FContext::BlendColor(
                 , dst_roi.Size()
                 , mContextualDispatchTable->mArgConvForwardBlendNonSeparable
                 , mContextualDispatchTable->mArgConvBackwardBlendNonSeparable
-                , detail::BuildRGBA8IndexTable( color->FormatMetrics().RSC )
                 , color->BytesPerScanLine()
                 , true
                 , color

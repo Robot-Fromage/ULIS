@@ -21,6 +21,6 @@ endif()
 # Folders
 set_target_properties( zlib         PROPERTIES FOLDER ULIS/3rdparty )
 set_target_properties( zlibstatic   PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( minigzip     PROPERTIES FOLDER ULIS/3rdparty )
-set_target_properties( example      PROPERTIES FOLDER ULIS/3rdparty )
+#set_target_properties( minigzip     PROPERTIES FOLDER ULIS/3rdparty )
+#set_target_properties( example      PROPERTIES FOLDER ULIS/3rdparty )
 

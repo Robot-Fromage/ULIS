@@ -9,6 +9,8 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include "Core/Core.h"
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include "Process/Blend/Func/AlphaFuncF.h"
 #include "Process/Blend/Func/AlphaFuncSSEF.h"
 #include "Process/Blend/Func/NonSeparableBlendFuncSSEF.h"
@@ -28,7 +30,7 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
     const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
-
+    Vec4i idt = BuildRGBA8IndexTable( fmt.RSC );
     const bool notLastLine  = jargs->line < uint32( cargs->backdropCoverage.y );
     const bool notFirstLine = jargs->line > 0;
     const bool onLeftBorder = cargs->dstRect.x == 0;
@@ -64,7 +66,7 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
         smpch_m11 = ( notLastCol && notLastLine )                     ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src                   ) ) ) ) ) / 255.f : 0.f;
         smpch_m10 = ( notLastCol && notFirstLine )  ? Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src - cargs->src_bps  ) ) ) ) ) / 255.f : 0.f;
         smpch_vv1 = ( smpch_m10 * alpha_m10 ) * TY + ( smpch_m11 * alpha_m11 )  * UY;
-        smpch_smp = lookup4( cargs->idt, select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * TX + smpch_vv1 * UX ) / alpha_smp ) );
+        smpch_smp = lookup4( idt, select( alpha_smp == 0.f, 0.f, ( smpch_vv0 * TX + smpch_vv1 * UX ) / alpha_smp ) );
 
         Vec4f alpha_bdp     = *( bdp + fmt.AID ) / 255.f;
         Vec4f alpha_src     = alpha_smp * cargs->opacity;
@@ -76,7 +78,7 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
         ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
         #undef ACTION
 
-        Vec4f bdp_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
+        Vec4f bdp_chan = lookup4( idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
         smpch_smp.insert( 3, 0.f );
         bdp_chan.insert( 3, 0.f );
         Vec4f res_chan;
@@ -84,7 +86,7 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8_Subpixel(
         ULIS_SWITCH_FOR_ALL_DO( cargs->blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
-        res_chan = lookup4( cargs->idt, res_chan );
+        res_chan = lookup4( idt, res_chan );
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
@@ -104,7 +106,7 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8(
     const FFormatMetrics&       fmt = cargs->src.FormatMetrics();
     const uint8* ULIS_RESTRICT  src = jargs->src;
     uint8*       ULIS_RESTRICT  bdp = jargs->bdp;
-
+    Vec4i idt = BuildRGBA8IndexTable( fmt.RSC );
     for( int x = 0; x < cargs->dstRect.w; ++x ) {
         ufloat alpha_bdp    = bdp[fmt.AID] / 255.f;
         ufloat alpha_src    = ( src[fmt.AID] / 255.f ) * cargs->opacity;
@@ -115,8 +117,8 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8(
         ULIS_SWITCH_FOR_ALL_DO( cargs->alphaMode, ULIS_FOR_ALL_AM_DO, ACTION, alpha_result, alpha_src, alpha_bdp )
         #undef ACTION
 
-        Vec4f src_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
-        Vec4f bdp_chan = lookup4( cargs->idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
+        Vec4f src_chan = lookup4( idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( src ) ) ) ) ) / 255.f );
+        Vec4f bdp_chan = lookup4( idt, Vec4f( _mm_cvtepi32_ps( _mm_cvtepu8_epi32( _mm_loadu_si128( (const __m128i*)( bdp ) ) ) ) ) / 255.f );
         src_chan.insert( 3, 0.f );
         bdp_chan.insert( 3, 0.f );
         Vec4f res_chan;
@@ -124,7 +126,7 @@ InvokeBlendMT_NonSeparable_SSE_RGBA8(
         ULIS_SWITCH_FOR_ALL_DO( cargs->blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
 
-        res_chan = lookup4( cargs->idt, res_chan );
+        res_chan = lookup4( idt, res_chan );
         auto _pack = _mm_cvtps_epi32( res_chan );
         _pack = _mm_packus_epi32( _pack, _pack );
         _pack = _mm_packus_epi16( _pack, _pack );
@@ -139,4 +141,5 @@ ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( BlendMT_NonSeparable_SSE_RGBA8_Subpixe
 ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( BlendMT_NonSeparable_SSE_RGBA8 )
 
 ULIS_NAMESPACE_END
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 

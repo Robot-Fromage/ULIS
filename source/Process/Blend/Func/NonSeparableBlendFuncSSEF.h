@@ -15,6 +15,21 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
+// Layout
+ULIS_FORCEINLINE
+Vec4i
+BuildRGBA8IndexTable( uint8 iRS )
+{
+    Vec4i result;
+    switch( iRS ) {
+        case 1:  for( int i = 0; i < 4; ++i ) result.insert( i, ( 3 - i )                             ); return  result;
+        case 2:  for( int i = 0; i < 4; ++i ) result.insert( i, ( i + 1 ) > 3 ? 0 : i + 1             ); return  result;
+        case 3:  for( int i = 0; i < 4; ++i ) result.insert( i, ( 3 - i ) - 1 < 0 ? 3 : ( 3 - i ) - 1 ); return  result;
+        default: for( int i = 0; i < 4; ++i ) result.insert( i, i                                     ); return  result;
+    }
+}
+
+/////////////////////////////////////////////////////
 // Compositing
 ULIS_FORCEINLINE Vec4f ComposeNonSeparableSSEF( Vec4f iCs, Vec4f iCb, Vec4f iAb, Vec4f iVar, Vec4f iCr ) {
     return ( 1.f - iVar ) * iCb + iVar * ( ( 1.f - iAb ) * iCs + iAb * iCr );

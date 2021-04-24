@@ -17,7 +17,6 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/DualBufferArgs.h"
-#include <vectorclass.h>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -46,7 +45,6 @@ public:
         , const FVec2I& iBackdropCoverage
         , const fpConvertFormat iFwd
         , const fpConvertFormat iBkd
-        , const Vec4i iIDT
         , const uint32 iSrcBps
         , bool iTiled = false
         , const FBlock* iColor = nullptr
@@ -66,7 +64,6 @@ public:
         , backdropCoverage( iBackdropCoverage )
         , fwd( iFwd )
         , bkd( iBkd )
-        , idt( iIDT )
         , src_bps( iSrcBps )
         , tiled( iTiled )
         , color( iColor )
@@ -81,7 +78,6 @@ public:
     const FVec2I backdropCoverage;
     const fpConvertFormat fwd;
     const fpConvertFormat bkd;
-    const Vec4i idt;
     const uint32 src_bps;
     bool tiled;
     const FBlock* const color;

@@ -9,6 +9,8 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include "Core/Core.h"
+#ifdef ULIS_COMPILETIME_AVX_SUPPORT
 #include "Process/Blend/RGBA8/AlphaBlendMT_AVX_RGBA8.h"
 #include "Process/Blend/Func/AlphaFuncAVX.h"
 #include "Process/Blend/Func/SeparableBlendFuncAVXF.h"
@@ -191,4 +193,5 @@ ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( AlphaBlendMT_Separable_AVX_RGBA8_Subpi
 ULIS_DEFINE_BLEND_COMMAND_SPECIALIZATION( AlphaBlendMT_Separable_AVX_RGBA8 )
 
 ULIS_NAMESPACE_END
+#endif ULIS_COMPILETIME_AVX_SUPPORT
 

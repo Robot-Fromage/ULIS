@@ -5,16 +5,17 @@
 #include <emscripten.h>
 #include <SDL.h>
 #include <SDL_opengles2.h>
-#include <ULIS3>
+#include <ULIS>
 
 SDL_Window*     g_Window    = NULL;
 SDL_GLContext   g_GLContext = NULL;
 
 std::vector< std::string >      g_sampleImagesNames;
-std::vector< ::ul3::FBlock* >   g_sampleImages;
-::ul3::FThreadPool*             g_threadPool;
-::ul3::FHostDeviceInfo          g_host = ::ul3::FHostDeviceInfo::Detect();
-#define COMPATIBLE_IMAGE_FORMAT ULIS3_FORMAT_RGBA8
+std::vector< ::ULIS::FBlock* >  g_sampleImages;
+::ULIS::FThreadPool*            g_threadPool;
+::ULIS::FCommandQueue*          g_queue;
+constexpr ::ULIS::eFormat       g_format = ::ULIS::eFormat::Format_RGBA8
+::ULIS::FContext*               g_ctx;
 
 void main_loop( void* );
 void InitStyle();
@@ -77,7 +78,7 @@ int main( int, char** ) {
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    g_Window = SDL_CreateWindow("ULIS3 Web Demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 342, 328, window_flags);
+    g_Window = SDL_CreateWindow("ULIS Web Demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 342, 328, window_flags);
     g_GLContext = SDL_GL_CreateContext(g_Window);
     if (!g_GLContext) {
         fprintf(stderr, "Failed to initialize WebGL context!\n");
@@ -216,16 +217,20 @@ void InitStyle() {
 }
 
 void InitULIS() {
-    ::ul3::FFilePathRegistry        sampleImageRegistry;
-
-    g_threadPool = ::ul3::XCreateThreadPool();
+    g_threadPool = new ::ULIS::FThreadPool();
+    g_queue = new ::ULIS::FCommandQueue( *g_threadPool );
+    g_ctx = new ::ULIS::FContext( *g_queue, g_format );
+    
+    ::ULIS::FFilePathRegistry sampleImageRegistry;
     sampleImageRegistry.AddLookupPath( "resources/img/" );
     sampleImageRegistry.AddFilter( ".png" );
     sampleImageRegistry.Parse();
     for( auto it : sampleImageRegistry.GetMap() ) {
-        g_sampleImages.push_back( ::ul3::XLoadFromFile( g_threadPool, ULIS3_BLOCKING, 0, g_host, ULIS3_NOCB, it.second, COMPATIBLE_IMAGE_FORMAT ) );
+        g_sampleImages.push_back( new FBlock() );
+        g_ctx->XLoadBlockFromDisk( *( g_sampleImages.back() ), it.second );
         g_sampleImagesNames.push_back( it.first );
     }
+    g_ctx->Finish();
 }
 
 void BuildGUI() {
@@ -262,10 +267,10 @@ void BuildGUI() {
     }
 
     static int bm_item_current = 0;
-    ImGui::Combo( "Blend Mode", &bm_item_current, ::ul3::kwBlendingMode, ::ul3::NUM_BLENDING_MODES );
+    ImGui::Combo( "Blend Mode", &bm_item_current, ::ULIS::kwBlendMode, ::ULIS::eBlendMode::NumBlendModes );
 
     static int am_item_current = 0;
-    ImGui::Combo( "Alpha Mode", &am_item_current, ::ul3::kwAlphaMode, ::ul3::NUM_ALPHA_MODES );
+    ImGui::Combo( "Alpha Mode", &am_item_current, ::ULIS::kwAlphaMode, ::ULIS::eAlphaMode::NumAlphaModes );
 
     static float opacity = 0.5f;
     ImGui::SliderFloat( "Opacity", &opacity, 0.0f, 1.0f, "%.3f" );
@@ -273,9 +278,12 @@ void BuildGUI() {
     ImGui::Image((void*)(intptr_t)g_texture, ImVec2( g_width, g_height ));
 
     {
-        ::ul3::FBlock result( 160, 160, COMPATIBLE_IMAGE_FORMAT );
-        ::ul3::Copy( g_threadPool, ULIS3_NONBLOCKING, 0, g_host, ULIS3_NOCB, g_sampleImages[ base_item_current_idx ], &result, ::ul3::FRect( 0, 0, 160, 160 ), ::ul3::FVec2I( 0, 0 ) );
-        ::ul3::Blend( g_threadPool, ULIS3_NONBLOCKING, 0, g_host, ULIS3_NOCB, g_sampleImages[ over_item_current_idx ], &result, ::ul3::FRect( 0, 0, 160, 160 ), ::ul3::FVec2F( 0, 0 ), ULIS3_NOAA, static_cast< ::ul3::eBlendingMode >( bm_item_current ), static_cast< ::ul3::eAlphaMode >( am_item_current ), opacity );
+        ::ULIS::FBlock result( 160, 160, g_format );
+        ctx->Copy( *( g_sampleImages[ base_item_current_idx ] ), result );
+        ctx->Finish();
+
+        ctx->Blend( *( g_sampleImages[ over_item_current_idx ] ), result );
+        ctx->Finish();
 
         glBindTexture( GL_TEXTURE_2D, g_texture );
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 160, 160, GL_RGBA, GL_UNSIGNED_BYTE, result.DataPtr() );

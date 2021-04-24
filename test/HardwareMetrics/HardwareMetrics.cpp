@@ -54,6 +54,7 @@ int main( int argc, char *argv[] ) {
     std::cout << "MAX WORKERS       : " << hw.MaxWorkers()      << std::endl;
     std::cout << "L1 CACHE          : " << hw.L1CacheSize()     << std::endl;
     std::cout << "L1 CACHE LINE     : " << hw.L1CacheLineSize() << std::endl;
+    std::cout << std::endl << ::ULIS::FullLibraryInformationString().Data() << std::endl;
     return  0;
 }
 

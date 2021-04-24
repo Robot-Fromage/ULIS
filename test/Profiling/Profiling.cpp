@@ -19,8 +19,6 @@ int main( int argc, char *argv[] ) {
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_Max );
-    FHardwareMetrics hw;
-    FSchedulePolicy policy_cache_efficient( ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
     int size = 128;
     uint32 repeat = 500;
     FBlock src( size, size, fmt );

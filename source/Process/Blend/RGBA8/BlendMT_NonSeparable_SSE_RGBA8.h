@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#ifdef ULIS_COMPILETIME_SSE_SUPPORT
 #include "Process/Blend/BlendArgs.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -31,4 +32,5 @@ ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleBlendMT_NonSeparable_SSE_RGBA8_Subpixel 
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleBlendMT_NonSeparable_SSE_RGBA8 );
 
 ULIS_NAMESPACE_END
+#endif // ULIS_COMPILETIME_SSE_SUPPORT
 
