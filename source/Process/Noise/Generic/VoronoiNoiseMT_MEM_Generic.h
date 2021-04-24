@@ -39,7 +39,7 @@ InvokeVoronoiNoiseMT_MEM_Generic(
     // Main scanline process loop
     for( int x = x1; x < x2; ++x ) {
         int closest_index = 0;
-        float max_distance_squared = static_cast< float >( INT_MAX );
+        float max_distance_squared = static_cast< float >( ULIS_INT_MAX );
         for( int i = 0; i < cargs->points.size(); ++i )
         {
             float current_distance_squared = ( FVec2F( x, y ) - cargs->points[i] ).DistanceSquared();

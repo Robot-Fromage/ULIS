@@ -44,8 +44,8 @@ void DrawPolygonAA( FBlock&                      iBlock
     {
         int maxX = 0;
         int maxY = 0;
-        int minX = INT_MAX;
-        int minY = INT_MAX;
+        int minX = ULIS_INT_MAX;
+        int minY = ULIS_INT_MAX;
 
         //Initialization of useful variables
         for(int i = 0; i < iPoints.size(); i++)
@@ -136,8 +136,8 @@ void DrawPolygonSP( FBlock&                      iBlock
     {
         int maxX = 0;
         int maxY = 0;
-        int minX = INT_MAX;
-        int minY = INT_MAX;
+        int minX = ULIS_INT_MAX;
+        int minY = ULIS_INT_MAX;
 
         //Initialization of useful variables
         for(int i = 0; i < iPoints.size(); i++)
