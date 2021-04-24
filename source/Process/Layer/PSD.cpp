@@ -436,7 +436,7 @@ bool FPSDOperations::ReadLayers()
         mLayersInfo[currLayer].mExtraRead  += mLayersInfo[currLayer].mNameSize + 4 - mLayersInfo[currLayer].mNameSize % 4;
 
         if(mLayersInfo[currLayer].mName[0] == 0)
-            strcpy_s(mLayersInfo[currLayer].mName,"background");
+            strcpy( mLayersInfo[currLayer].mName,"background" );
 
         position = uint32(mFileHandle.tellg());
 

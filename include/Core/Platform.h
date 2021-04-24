@@ -10,6 +10,14 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+/////////////////////////////////////////////////////
+// Disable CRT Secure non standard msvc versions of functions such as strcpy_s
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+/////////////////////////////////////////////////////
+// For ASSERT logs
 #include <iostream>
 
 /////////////////////////////////////////////////////
@@ -86,12 +94,6 @@
 #else
     #define ULIS_UNKNOWN_COMPILER
 #endif
-
-/////////////////////////////////////////////////////
-// Disable CRT Secure non standard msvc versions of functions such as strcpy_s
-//#ifdef _MSC_VER
-//#define _CRT_SECURE_NO_WARNINGS
-//#endif
 
 /////////////////////////////////////////////////////
 // Detect Platform
