@@ -217,6 +217,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
     py::class_< FFormatMetrics >( m, "FFormatMetrics" )
         .def( py::init< eFormat >(), "format"_a )
+        .def( py::init< const FFormatMetrics& >(), "other"_a )
         .def( "ReinterpretedType", &FFormatMetrics::ReinterpretedType )
         .def_readonly( "IDT", &FFormatMetrics::IDT )
         .def_readonly( "FMT", &FFormatMetrics::FMT )
@@ -262,6 +263,27 @@ PYBIND11_MODULE( pyULIS4, m ) {
                 return  FOnCleanupData( &OnCleanup_FreeMemory );
             }
         );
+
+    py::class_< FVec2I >( m, "FVec2I" )
+        .def( py::init<>() )
+        .def( py::init< int >(), "value"_a )
+        .def( py::init< int, int >(), "x"_a, "y"_a )
+        .def( py::init< const FVec2I& >(), "vec"_a )
+        .def( py::init< const FVec3I& >(), "vec"_a )
+        .def( py::init< const FVec4I& >(), "vec"_a )
+        .def( py::init< const FVec2F& >(), "vec"_a )
+        .def( py::init< const FVec3F& >(), "vec"_a )
+        .def( py::init< const FVec4F& >(), "vec"_a )
+        .def( "Distance", &FVec2I::Distance )
+        .def( "DistanceSquared", &FVec2I::DistanceSquared )
+        .def( "ManhattanDistance", &FVec2I::ManhattanDistance )
+        .def( "DotProduct", &FVec2I::DotProduct )
+        .def( "Normalize", &FVec2I::Normalize )
+        .def( "Normalized", &FVec2I::Normalized )
+        .def( "DecimalPart", &FVec2I::DecimalPart )
+        // operators
+        .def_readwrite( "x", &FVec2I::x )
+        .def_readwrite( "y", &FVec2I::y );
 
     py::class_< FBlock >( m, "FBlock" )
         .def(

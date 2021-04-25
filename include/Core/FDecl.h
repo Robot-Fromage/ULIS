@@ -64,6 +64,7 @@ template< typename T > struct   TVector3;
 typedef TVector3< int >         FVec3I;
 typedef TVector3< float >       FVec3F;
 template< typename T > struct   TVector4;
+typedef TVector4< int >         FVec4I;
 typedef TVector4< float >       FVec4F;
 template< typename T > struct   TRectangle;
 typedef TRectangle< int >       FRectI;
