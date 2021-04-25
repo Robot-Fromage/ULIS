@@ -58,13 +58,15 @@ class ULIS_API ISample
     , public IHasColorSpace
 {
 protected:
-    /*! Destructor. */
-    ~ISample();
-
     /*! Construct a ISample interface in a derived class */
     ISample( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace = nullptr );
 
 public:
+    /*! Destructor. */
+    ~ISample();
+
+    ULIS_DECLARE_FAKE_FACTORY( ISample )
+
     /*! Comparison strict equal operator */
     bool operator==( const ISample& iOther ) const;
 

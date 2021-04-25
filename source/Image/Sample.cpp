@@ -61,15 +61,17 @@ Unpremultiply_imp( ISample& iSample )
 
 } // namespace detail
 
-ISample::~ISample()
-{}
-
 ISample::ISample( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
     , mSignal( iData )
 {
 }
+
+ISample::~ISample()
+{}
+
+ULIS_DEFINE_FAKE_FACTORY( ISample, nullptr, Format_RGBA8, nullptr )
 
 bool
 ISample::operator==( const  ISample& iOther )  const {

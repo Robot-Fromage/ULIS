@@ -331,3 +331,9 @@ namespace ULIS_NAMESPACE_NAME {}
 // Disable REGISTER Keyword for LCMS2
 #define CMS_NO_REGISTER_KEYWORD
 
+/////////////////////////////////////////////////////
+// For python binding, fake factory create
+#define ULIS_FAKE_FACTORY_NAME __do_not_call__
+#define ULIS_DECLARE_FAKE_FACTORY( iType ) static iType __do_not_call__();
+#define ULIS_DEFINE_FAKE_FACTORY( iType, ... ) iType iType :: __do_not_call__() { return  iType ( __VA_ARGS__ ); }
+
