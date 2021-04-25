@@ -272,3 +272,4 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "onCleanup"_a = FOnCleanupData( &OnCleanup_FreeMemory )
         );
 }
+
