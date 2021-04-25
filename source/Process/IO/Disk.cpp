@@ -65,14 +65,14 @@ InvokeLoadFromFile_MEM(
 
     ULIS_ASSERT( data, "Error bad input file" );
 
-    eColorModel model = CM_RGB;
+    eColorModel model = ColorModel_RGB;
     bool hea = true;
     uint8 cs = 0;
     switch( channels ) {
-        case 1: model = CM_GREY;    hea = false;    cs = ULIS_sGrey;    break;
-        case 2: model = CM_GREY;    hea = true;     cs = ULIS_sGrey;    break;
-        case 3: model = CM_RGB;     hea = false;    cs = ULIS_sRGB;     break;
-        case 4: model = CM_RGB;     hea = true;     cs = ULIS_sRGB;     break;
+        case 1: model = ColorModel_GREY;    hea = false;    cs = ULIS_sGrey;    break;
+        case 2: model = ColorModel_GREY;    hea = true;     cs = ULIS_sGrey;    break;
+        case 3: model = ColorModel_RGB;     hea = false;    cs = ULIS_sRGB;     break;
+        case 4: model = ColorModel_RGB;     hea = true;     cs = ULIS_sRGB;     break;
     }
     int color_channels = channels - hea;
 

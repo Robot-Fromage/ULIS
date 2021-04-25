@@ -186,17 +186,17 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 
 /////////////////////////////////////////////////////
 // Model codes
-#define ULIS_CM_ANY    0
-#define ULIS_CM_GREY   1
-#define ULIS_CM_RGB    2
-#define ULIS_CM_HSV    3
-#define ULIS_CM_HSL    4
-#define ULIS_CM_CMY    5
-#define ULIS_CM_CMYK   6
-#define ULIS_CM_YUV    7
-#define ULIS_CM_Lab    8
-#define ULIS_CM_XYZ    9
-#define ULIS_CM_Yxy    10
+#define ULIS_ColorModel_ANY    0
+#define ULIS_ColorModel_GREY   1
+#define ULIS_ColorModel_RGB    2
+#define ULIS_ColorModel_HSV    3
+#define ULIS_ColorModel_HSL    4
+#define ULIS_ColorModel_CMY    5
+#define ULIS_ColorModel_CMYK   6
+#define ULIS_ColorModel_YUV    7
+#define ULIS_ColorModel_Lab    8
+#define ULIS_ColorModel_XYZ    9
+#define ULIS_ColorModel_Yxy    10
 
 /////////////////////////////////////////////////////
 // Profile codes
@@ -225,16 +225,16 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 /////////////////////////////////////////////////////
 // Model enum
 enum eColorModel {
-      CM_GREY   = ULIS_CM_GREY
-    , CM_RGB    = ULIS_CM_RGB
-    , CM_HSV    = ULIS_CM_HSV
-    , CM_HSL    = ULIS_CM_HSL
-    , CM_CMY    = ULIS_CM_CMY
-    , CM_CMYK   = ULIS_CM_CMYK
-    , CM_YUV    = ULIS_CM_YUV
-    , CM_Lab    = ULIS_CM_Lab
-    , CM_XYZ    = ULIS_CM_XYZ
-    , CM_Yxy    = ULIS_CM_Yxy
+      ColorModel_GREY   = ULIS_ColorModel_GREY
+    , ColorModel_RGB    = ULIS_ColorModel_RGB
+    , ColorModel_HSV    = ULIS_ColorModel_HSV
+    , ColorModel_HSL    = ULIS_ColorModel_HSL
+    , ColorModel_CMY    = ULIS_ColorModel_CMY
+    , ColorModel_CMYK   = ULIS_ColorModel_CMYK
+    , ColorModel_YUV    = ULIS_ColorModel_YUV
+    , ColorModel_Lab    = ULIS_ColorModel_Lab
+    , ColorModel_XYZ    = ULIS_ColorModel_XYZ
+    , ColorModel_Yxy    = ULIS_ColorModel_Yxy
 };
 
 

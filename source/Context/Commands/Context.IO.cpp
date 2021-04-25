@@ -87,9 +87,9 @@ FContext::SaveBlockToDisk(
     eColorModel model = iBlock.Model();
 
     bool layout_valid = ULIS_R_RS( format ) == 0;
-    bool model_valid = model == CM_GREY || model == CM_RGB;
+    bool model_valid = model == ColorModel_GREY || model == ColorModel_RGB;
     bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
-                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
+                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == ColorModel_RGB );
 
     if( !( layout_valid && model_valid && type_valid ) )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_FILE_FORMAT );
@@ -177,14 +177,14 @@ FContext::SaveProxyToDisk(
     bool hasAlpha = iBlock.HasAlpha();
 
     bool layout_valid = ULIS_R_RS( format ) == 0;
-    bool model_valid = model == CM_GREY || model == CM_RGB;
+    bool model_valid = model == ColorModel_GREY || model == ColorModel_RGB;
     bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
-                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
+                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == ColorModel_RGB );
 
     if( !( layout_valid && model_valid && type_valid ) ) {
         eFormat conv_format = static_cast< eFormat >( 0 );
         if( iFileFormat == FileFormat_hdr ) conv_format = eFormat::Format_RGBF;
-        else if( model == CM_GREY )         conv_format = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( hasAlpha ) );
+        else if( model == ColorModel_GREY )         conv_format = static_cast< eFormat >( eFormat::Format_G8   | ULIS_W_ALPHA( hasAlpha ) );
         else                                conv_format = static_cast< eFormat >( eFormat::Format_RGB8 | ULIS_W_ALPHA( hasAlpha ) );
         FBlock* conv = new FBlock( iBlock.Width(), iBlock.Height(), conv_format );
 
@@ -250,14 +250,14 @@ FContext::LoadBlockFromDiskMetrics(
         case Type_ufloat:   depth = 4; floating = true;   break;
     }
 
-    eColorModel model = CM_RGB;
+    eColorModel model = ColorModel_RGB;
     bool hea = false;
     uint8 cs = 0;
     switch( numchannels ) {
-        case 1: model = CM_GREY;    hea = false;    cs = ULIS_sGrey;    break;
-        case 2: model = CM_GREY;    hea = true;     cs = ULIS_sGrey;    break;
-        case 3: model = CM_RGB;     hea = false;    cs = ULIS_sRGB;     break;
-        case 4: model = CM_RGB;     hea = true;     cs = ULIS_sRGB;     break;
+        case 1: model = ColorModel_GREY;    hea = false;    cs = ULIS_sGrey;    break;
+        case 2: model = ColorModel_GREY;    hea = true;     cs = ULIS_sGrey;    break;
+        case 3: model = ColorModel_RGB;     hea = false;    cs = ULIS_sRGB;     break;
+        case 4: model = ColorModel_RGB;     hea = true;     cs = ULIS_sRGB;     break;
     }
     int color_channels = numchannels - hea;
 
@@ -289,9 +289,9 @@ FContext::SaveBlockToDiskMetrics( const FBlock& iBlock, eFileFormat iFileFormat,
     eColorModel model = iBlock.Model();
 
     bool layout_valid = ULIS_R_RS( format ) == 0;
-    bool model_valid = model == CM_GREY || model == CM_RGB;
+    bool model_valid = model == ColorModel_GREY || model == ColorModel_RGB;
     bool type_valid = ( iFileFormat != FileFormat_hdr && type == Type_uint8 ) ||
-                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == CM_RGB );
+                      ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == ColorModel_RGB );
 
     if( ( layout_valid && model_valid && type_valid ) )
         *oCanSaveWithoutProxy = true;
