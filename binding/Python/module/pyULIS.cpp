@@ -11,6 +11,7 @@
 */
 #include <ULIS>
 #include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 using namespace ::ULIS;
 using namespace pybind11::literals;
 namespace py = pybind11;
@@ -299,6 +300,35 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // Vec Utils
+    #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )            .def( ULIS_STRINGIFY( E0 ## E1 ), & CLASS :: E0 ## E1 )
+    #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )        .def( ULIS_STRINGIFY( E0 ## E1 ## E2 ), & CLASS :: E0 ## E1 ## E2 )
+    #define PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTION( CLASS, E0, E1, E2, E3 )    .def( ULIS_STRINGIFY( E0 ## E1 ## E2 ## E3 ), & CLASS :: E0 ## E1 ## E2 ## E3 )
+    #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS ) ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS ) ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS ) ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS ) ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS ) ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS ) ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS ) ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS ) ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS ) ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTION )
+    #define PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( CLASS )   \
+    PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )       \
+    PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )       \
+    PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )
+    #define PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3( CLASS )   \
+    PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )       \
+    PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )       \
+    PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )
+    #define PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4( CLASS )   \
+    PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )       \
+    PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )       \
+    PYULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )
+
+
+
+    /////////
     // FVec2I
     py::class_< FVec2I >( m, "FVec2I" )
         .def( py::init<>() )
@@ -317,10 +347,230 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Normalize", &FVec2I::Normalize )
         .def( "Normalized", &FVec2I::Normalized )
         .def( "DecimalPart", &FVec2I::DecimalPart )
-        // operators
+        .def( py::self += int() )
+        .def( py::self -= int() )
+        .def( py::self *= int() )
+        .def( py::self /= int() )
+        .def( py::self += py::self )
+        .def( py::self -= py::self )
+        .def( py::self *= py::self )
+        .def( py::self /= py::self )
+        .def( py::self + int() )
+        .def( py::self - int() )
+        .def( py::self * int() )
+        .def( py::self / int() )
+        .def( py::self + py::self )
+        .def( py::self - py::self )
+        .def( py::self * py::self )
+        .def( py::self / py::self )
+        PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( FVec2I )
         .def_readwrite( "x", &FVec2I::x )
         .def_readwrite( "y", &FVec2I::y );
 
+
+
+    /////////
+    // FVec3I
+    py::class_< FVec3I >( m, "FVec3I" )
+        .def( py::init<>() )
+        .def( py::init< int >(), "value"_a )
+        .def( py::init< int, int, int >(), "x"_a, "y"_a, "z"_a = 0 )
+        .def( py::init< const FVec2I&, int >(), "vec"_a, "z"_a = 0 )
+        .def( py::init< const FVec3I& >(), "vec"_a )
+        .def( py::init< const FVec4I& >(), "vec"_a )
+        .def( py::init< const FVec2F&, float >(), "vec"_a, "z"_a = 0.f )
+        .def( py::init< const FVec3F& >(), "vec"_a )
+        .def( py::init< const FVec4F& >(), "vec"_a )
+        .def( "Distance", &FVec3I::Distance )
+        .def( "DistanceSquared", &FVec3I::DistanceSquared )
+        .def( "ManhattanDistance", &FVec3I::ManhattanDistance )
+        .def( "DotProduct", &FVec3I::DotProduct )
+        .def( "Normalize", &FVec3I::Normalize )
+        .def( "Normalized", &FVec3I::Normalized )
+        .def( py::self += int() )
+        .def( py::self -= int() )
+        .def( py::self *= int() )
+        .def( py::self /= int() )
+        .def( py::self += py::self )
+        .def( py::self -= py::self )
+        .def( py::self *= py::self )
+        .def( py::self /= py::self )
+        .def( py::self + int() )
+        .def( py::self - int() )
+        .def( py::self * int() )
+        .def( py::self / int() )
+        .def( py::self + py::self )
+        .def( py::self - py::self )
+        .def( py::self * py::self )
+        .def( py::self / py::self )
+        PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3( FVec3I )
+        .def_readwrite( "x", &FVec3I::x )
+        .def_readwrite( "y", &FVec3I::y )
+        .def_readwrite( "z", &FVec3I::z );
+
+
+
+    /////////
+    // FVec3I
+    py::class_< FVec4I >( m, "FVec4I" )
+        .def( py::init<>() )
+        .def( py::init< int >(), "value"_a )
+        .def( py::init< int, int, int, int >(), "x"_a, "y"_a, "z"_a = 0, "w"_a = 0 )
+        .def( py::init< const FVec2I&, int, int >(), "vec"_a, "z"_a = 0, "w"_a = 0 )
+        .def( py::init< const FVec3I&, int >(), "vec"_a, "w"_a = 0 )
+        .def( py::init< const FVec4I& >(), "vec"_a )
+        .def( py::init< const FVec2F&, float, float >(), "vec"_a, "z"_a = 0.f, "w"_a = 0.f )
+        .def( py::init< const FVec3F&, float >(), "vec"_a, "w"_a = 0 )
+        .def( py::init< const FVec4F& >(), "vec"_a )
+        .def( "Distance", &FVec4I::Distance )
+        .def( "DistanceSquared", &FVec4I::DistanceSquared )
+        .def( "ManhattanDistance", &FVec4I::ManhattanDistance )
+        .def( "DotProduct", &FVec4I::DotProduct )
+        .def( "Normalize", &FVec4I::Normalize )
+        .def( "Normalized", &FVec4I::Normalized )
+        .def( py::self += int() )
+        .def( py::self -= int() )
+        .def( py::self *= int() )
+        .def( py::self /= int() )
+        .def( py::self += py::self )
+        .def( py::self -= py::self )
+        .def( py::self *= py::self )
+        .def( py::self /= py::self )
+        .def( py::self + int() )
+        .def( py::self - int() )
+        .def( py::self * int() )
+        .def( py::self / int() )
+        .def( py::self + py::self )
+        .def( py::self - py::self )
+        .def( py::self * py::self )
+        .def( py::self / py::self )
+        PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4( FVec4I )
+        .def_readwrite( "x", &FVec4I::x )
+        .def_readwrite( "y", &FVec4I::y )
+        .def_readwrite( "z", &FVec4I::z )
+        .def_readwrite( "w", &FVec4I::w );
+
+    /////////
+    // FVec2F
+    py::class_< FVec2F >( m, "FVec2F" )
+        .def( py::init<>() )
+        .def( py::init< float >(), "value"_a )
+        .def( py::init< float, float >(), "x"_a, "y"_a )
+        .def( py::init< const FVec2F& >(), "vec"_a )
+        .def( py::init< const FVec3F& >(), "vec"_a )
+        .def( py::init< const FVec4F& >(), "vec"_a )
+        .def( py::init< const FVec2I& >(), "vec"_a )
+        .def( py::init< const FVec3I& >(), "vec"_a )
+        .def( py::init< const FVec4I& >(), "vec"_a )
+        .def( "Distance", &FVec2F::Distance )
+        .def( "DistanceSquared", &FVec2F::DistanceSquared )
+        .def( "ManhattanDistance", &FVec2F::ManhattanDistance )
+        .def( "DotProduct", &FVec2F::DotProduct )
+        .def( "Normalize", &FVec2F::Normalize )
+        .def( "Normalized", &FVec2F::Normalized )
+        .def( "DecimalPart", &FVec2F::DecimalPart )
+        .def( py::self += float() )
+        .def( py::self -= float() )
+        .def( py::self *= float() )
+        .def( py::self /= float() )
+        .def( py::self += py::self )
+        .def( py::self -= py::self )
+        .def( py::self *= py::self )
+        .def( py::self /= py::self )
+        .def( py::self + float() )
+        .def( py::self - float() )
+        .def( py::self * float() )
+        .def( py::self / float() )
+        .def( py::self + py::self )
+        .def( py::self - py::self )
+        .def( py::self * py::self )
+        .def( py::self / py::self )
+        PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( FVec2F )
+        .def_readwrite( "x", &FVec2F::x )
+        .def_readwrite( "y", &FVec2F::y );
+
+
+
+    /////////
+    // FVec3F
+    py::class_< FVec3F >( m, "FVec3F" )
+        .def( py::init<>() )
+        .def( py::init< float >(), "value"_a )
+        .def( py::init< float, float, float >(), "x"_a, "y"_a, "z"_a = 0 )
+        .def( py::init< const FVec2F&, float >(), "vec"_a, "z"_a = 0 )
+        .def( py::init< const FVec3F& >(), "vec"_a )
+        .def( py::init< const FVec4F& >(), "vec"_a )
+        .def( py::init< const FVec2I&, int >(), "vec"_a, "z"_a = 0.f )
+        .def( py::init< const FVec3I& >(), "vec"_a )
+        .def( py::init< const FVec4I& >(), "vec"_a )
+        .def( "Distance", &FVec3F::Distance )
+        .def( "DistanceSquared", &FVec3F::DistanceSquared )
+        .def( "ManhattanDistance", &FVec3F::ManhattanDistance )
+        .def( "DotProduct", &FVec3F::DotProduct )
+        .def( "Normalize", &FVec3F::Normalize )
+        .def( "Normalized", &FVec3F::Normalized )
+        .def( py::self += float() )
+        .def( py::self -= float() )
+        .def( py::self *= float() )
+        .def( py::self /= float() )
+        .def( py::self += py::self )
+        .def( py::self -= py::self )
+        .def( py::self *= py::self )
+        .def( py::self /= py::self )
+        .def( py::self + float() )
+        .def( py::self - float() )
+        .def( py::self * float() )
+        .def( py::self / float() )
+        .def( py::self + py::self )
+        .def( py::self - py::self )
+        .def( py::self * py::self )
+        .def( py::self / py::self )
+        PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3( FVec3F )
+        .def_readwrite( "x", &FVec3F::x )
+        .def_readwrite( "y", &FVec3F::y )
+        .def_readwrite( "z", &FVec3F::z );
+
+
+
+    /////////
+    // FVec3F
+    py::class_< FVec4F >( m, "FVec4F" )
+        .def( py::init<>() )
+        .def( py::init< float >(), "value"_a )
+        .def( py::init< float, float, float, float >(), "x"_a, "y"_a, "z"_a = 0, "w"_a = 0 )
+        .def( py::init< const FVec2F&, float, float >(), "vec"_a, "z"_a = 0, "w"_a = 0 )
+        .def( py::init< const FVec3F&, float >(), "vec"_a, "w"_a = 0 )
+        .def( py::init< const FVec4F& >(), "vec"_a )
+        .def( py::init< const FVec2I&, int, int >(), "vec"_a, "z"_a = 0.f, "w"_a = 0.f )
+        .def( py::init< const FVec3I&, int >(), "vec"_a, "w"_a = 0 )
+        .def( py::init< const FVec4I& >(), "vec"_a )
+        .def( "Distance", &FVec4F::Distance )
+        .def( "DistanceSquared", &FVec4F::DistanceSquared )
+        .def( "ManhattanDistance", &FVec4F::ManhattanDistance )
+        .def( "DotProduct", &FVec4F::DotProduct )
+        .def( "Normalize", &FVec4F::Normalize )
+        .def( "Normalized", &FVec4F::Normalized )
+        .def( py::self += float() )
+        .def( py::self -= float() )
+        .def( py::self *= float() )
+        .def( py::self /= float() )
+        .def( py::self += py::self )
+        .def( py::self -= py::self )
+        .def( py::self *= py::self )
+        .def( py::self /= py::self )
+        .def( py::self + float() )
+        .def( py::self - float() )
+        .def( py::self * float() )
+        .def( py::self / float() )
+        .def( py::self + py::self )
+        .def( py::self - py::self )
+        .def( py::self * py::self )
+        .def( py::self / py::self )
+        PYULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4( FVec4F )
+        .def_readwrite( "x", &FVec4F::x )
+        .def_readwrite( "y", &FVec4F::y )
+        .def_readwrite( "z", &FVec4F::z )
+        .def_readwrite( "w", &FVec4F::w );
 
 
     /////////

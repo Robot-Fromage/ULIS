@@ -179,7 +179,7 @@ ULIS_VECTOR_FUNC TVector4< T >::TVector4( T iX, T iY, T iZ, T iW )
     : x( iX )
     , y( iY )
     , z( iZ )
-    , w( iZ )
+    , w( iW )
 {}
 
 
