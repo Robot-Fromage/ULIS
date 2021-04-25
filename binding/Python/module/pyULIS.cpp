@@ -591,10 +591,40 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def_readwrite( "w", &FVec4F::w );
 
 
+    /////////
+    // IHasFormat
+    py::class_< IHasFormat >( m, "IHasFormat" )
+        .def( "FormatMetrics", &IHasFormat::FormatMetrics )
+        .def( "IndexTable", &IHasFormat::IndexTable )
+        .def( "Format", &IHasFormat::Format )
+        .def( "Type", &IHasFormat::Type )
+        .def( "Model", &IHasFormat::Model )
+        .def( "BytesPerSample", &IHasFormat::BytesPerSample )
+        .def( "NumColorChannels", &IHasFormat::NumColorChannels )
+        .def( "HasAlpha", &IHasFormat::HasAlpha )
+        .def( "SamplesPerPixel", &IHasFormat::SamplesPerPixel )
+        .def( "BytesPerPixel", &IHasFormat::BytesPerPixel )
+        .def( "AlphaIndex", &IHasFormat::AlphaIndex )
+        .def( "Reversed", &IHasFormat::Reversed )
+        .def( "Swapped", &IHasFormat::Swapped )
+        .def( "Premultiplied", &IHasFormat::Premultiplied )
+        .def( "Linear", &IHasFormat::Linear )
+        .def( "DefaultProfileCode", &IHasFormat::DefaultProfileCode )
+        .def( "RedirectedIndex", &IHasFormat::RedirectedIndex );
+
+
+
+    /////////
+    // IHasFormat
+    py::class_< IHasColorSpace >( m, "IHasColorSpace" )
+        .def( "AssignColorSpace", &IHasColorSpace::AssignColorSpace )
+        .def( "ColorSpace", &IHasColorSpace::ColorSpace );
+
+
 
     /////////
     // ISample
-    py::class_< ISample >( m, "ISample" )
+    py::class_< ISample, IHasFormat, IHasColorSpace >( m, "ISample" )
         .def( py::self == py::self )
         .def( py::self != py::self )
         .def( "Bits", static_cast< uint8* ( ISample::* )() >( &ISample::Bits ) )
@@ -792,7 +822,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
     /////////
     // FBlock
-    py::class_< FBlock >( m, "FBlock" )
+    py::class_< FBlock, IHasFormat, IHasColorSpace >( m, "FBlock" )
         .def(
             py::init<
               ULIS::uint16

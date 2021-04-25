@@ -89,16 +89,16 @@ struct ULIS_API FFormatMetrics
 class ULIS_API IHasFormat
 {
 protected:
-    /*! Destructor. */
-    ~IHasFormat()
-    {}
-
     /*! Constructor from eFormat. */
     IHasFormat( eFormat iFormat )
         : mFormatMetrics( iFormat )
     {}
 
 public:
+    /*! Destructor. */
+    ~IHasFormat()
+    {}
+
     /*! Return the underlying FFormatMetrics struct. */
     ULIS_FORCEINLINE const FFormatMetrics& FormatMetrics() const {
         return  mFormatMetrics;

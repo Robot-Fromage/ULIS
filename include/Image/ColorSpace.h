@@ -27,16 +27,16 @@ public:
 class ULIS_API IHasColorSpace
 {
 protected:
-    /*! Destructor, the colorspace lifetime is not managed */
-    ~IHasColorSpace()
-    {}
-
     /*! Construct a IHasColorSpace interface in a derived class */
     IHasColorSpace( const FColorSpace* iColorSpace = nullptr )
         : mColorSpace( iColorSpace )
     {}
 
 public:
+    /*! Destructor, the colorspace lifetime is not managed */
+    ~IHasColorSpace()
+    {}
+
     /*!
     Assign a new optional color-space.
 
