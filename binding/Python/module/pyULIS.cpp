@@ -270,6 +270,26 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "colorspace"_a = nullptr
             , "onInvalid"_a = FOnInvalidBlock()
             , "onCleanup"_a = FOnCleanupData( &OnCleanup_FreeMemory )
-        );
+        )
+        .def( "Area", &FBlock::Area )
+        .def( "Bits", static_cast< uint8* ( FBlock::* )() >( &FBlock::Bits ) )
+        .def( "BytesPerScanLine", &FBlock::BytesPerScanLine )
+        .def( "BytesTotal", &FBlock::BytesTotal )
+        .def( "Color", &FBlock::Color )
+        .def( "Dirty", static_cast< void ( FBlock::* )( bool ) const >( &FBlock::Dirty), "call"_a = true )
+        .def( "Dirty", static_cast< void ( FBlock::* )( const FRectI&, bool ) const >( &FBlock::Dirty), "rect"_a, "call"_a = true )
+        .def( "Height", &FBlock::Height )
+        .def( "IsHollow", &FBlock::IsHollow )
+        .def( "OnCleanup", &FBlock::OnCleanup, "callback"_a )
+        .def( "OnInvalid", &FBlock::OnInvalid, "callback"_a )
+        .def( "Pixel", static_cast< FPixel ( FBlock::* )( uint16, uint16 ) >( &FBlock::Pixel ) )
+        .def( "PixelBits", static_cast< uint8* ( FBlock::* )( uint16, uint16 ) >( &FBlock::PixelBits ) )
+        .def( "ReallocInternalData", &FBlock::ReallocInternalData )
+        .def( "Rect", &FBlock::Rect )
+        .def( "Sample", &FBlock::Sample )
+        .def( "SampleSubpixel", &FBlock::SampleSubpixel )
+        .def( "ScanlineBits", static_cast< uint8* ( FBlock::* )( uint16 ) >( &FBlock::ScanlineBits ) )
+        .def( "SetPixel", &FBlock::SetPixel )
+        .def( "Width", &FBlock::Width );
 }
 
