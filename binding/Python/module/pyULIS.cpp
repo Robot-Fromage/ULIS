@@ -15,9 +15,17 @@ using namespace ::ULIS;
 using namespace pybind11::literals;
 namespace py = pybind11;
 
+
+
+/////////
+// pyULIS4
 PYBIND11_MODULE( pyULIS4, m ) {
     m.doc() = "pyULIS4 module, a python binding for ULIS.";
 
+
+
+    /////////
+    // eColorModel
     py::enum_< eColorModel >( m, "eColorModel", py::arithmetic() )
         .value( "ColorModel_GREY",  eColorModel::ColorModel_GREY    )
         .value( "ColorModel_RGB",   eColorModel::ColorModel_RGB     )
@@ -30,11 +38,19 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .value( "ColorModel_XYZ",   eColorModel::ColorModel_XYZ     )
         .value( "ColorModel_Yxy",   eColorModel::ColorModel_Yxy     );
 
+
+
+    /////////
+    // eType
     py::enum_< eType >( m, "eType", py::arithmetic() )
         .value( "Type_uint8",   eType::Type_uint8   )
         .value( "Type_uint16",  eType::Type_uint16  )
         .value( "Type_ufloat",  eType::Type_ufloat  );
 
+
+
+    /////////
+    // eFormat
     py::enum_< eFormat >( m, "eFormat", py::arithmetic() )
         .value( "Format_G8",        eFormat::Format_G8      )
         .value( "Format_GA8",       eFormat::Format_GA8     )
@@ -215,6 +231,10 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .value( "Format_yxYAF",     eFormat::Format_yxYAF   )
         .export_values();
 
+
+
+    /////////
+    // FFormatMetrics
     py::class_< FFormatMetrics >( m, "FFormatMetrics" )
         .def( py::init< eFormat >(), "format"_a )
         .def( py::init< const FFormatMetrics& >(), "other"_a )
@@ -243,15 +263,27 @@ PYBIND11_MODULE( pyULIS4, m ) {
             }
         );
 
+
+
+    /////////
+    // FColorSpace
     py::class_< FColorSpace >( m, "FColorSpace" )
         .def( py::init<>() );
 
+
+
+    /////////
+    // FOnInvalidBlock
     py::class_< FOnInvalidBlock >( m, "FOnInvalidBlock" )
         .def( py::init<>() )
         .def( py::init< FOnInvalidBlock::tFptr, void* >(), "fptr"_a, "info"_a = nullptr )
         .def( "ExecuteIfBound", &FOnInvalidBlock::ExecuteIfBound )
         .def( "Execute", &FOnInvalidBlock::Execute );
 
+
+
+    /////////
+    // FOnCleanupData
     py::class_< FOnCleanupData >( m, "FOnCleanupData" )
         .def( py::init<>() )
         .def( py::init< FOnCleanupData::tFptr, void* >(), "fptr"_a, "info"_a = nullptr )
@@ -264,6 +296,10 @@ PYBIND11_MODULE( pyULIS4, m ) {
             }
         );
 
+
+
+    /////////
+    // FVec2I
     py::class_< FVec2I >( m, "FVec2I" )
         .def( py::init<>() )
         .def( py::init< int >(), "value"_a )
@@ -285,6 +321,10 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def_readwrite( "x", &FVec2I::x )
         .def_readwrite( "y", &FVec2I::y );
 
+
+
+    /////////
+    // FBlock
     py::class_< FBlock >( m, "FBlock" )
         .def(
             py::init<
