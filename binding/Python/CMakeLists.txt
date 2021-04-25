@@ -27,7 +27,7 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
     target_link_libraries(
         pyULIS
         ULIS
-        ${ULIS_PYTHON_DEB_LIB}
+        ${ULIS_PYTHON_REL_LIB}
     )
 
     target_include_directories(
