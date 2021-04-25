@@ -18,7 +18,7 @@ namespace py = pybind11;
 PYBIND11_MODULE( pyULIS4, m ) {
     m.doc() = "pyULIS4 module, a python binding for ULIS.";
 
-    py::enum_< eColorModel >( m, "eColorModel" )
+    py::enum_< eColorModel >( m, "eColorModel", py::arithmetic() )
         .value( "ColorModel_GREY",  eColorModel::ColorModel_GREY    )
         .value( "ColorModel_RGB",   eColorModel::ColorModel_RGB     )
         .value( "ColorModel_HSV",   eColorModel::ColorModel_HSV     )
@@ -30,7 +30,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .value( "ColorModel_XYZ",   eColorModel::ColorModel_XYZ     )
         .value( "ColorModel_Yxy",   eColorModel::ColorModel_Yxy     );
 
-    py::enum_< eType >( m, "eType" )
+    py::enum_< eType >( m, "eType", py::arithmetic() )
         .value( "Type_uint8",   eType::Type_uint8   )
         .value( "Type_uint16",  eType::Type_uint16  )
         .value( "Type_ufloat",  eType::Type_ufloat  );

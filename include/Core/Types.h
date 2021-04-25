@@ -52,7 +52,7 @@ typedef  int64      ulError;    ///< Used for errors reports defined below in th
 
 /////////////////////////////////////////////////////
 // Type enum
-enum eType {
+enum eType : uint8 {
       Type_uint8     = ULIS_TYPE_UINT8
     , Type_uint16    = ULIS_TYPE_UINT16
     , Type_ufloat    = ULIS_TYPE_UFLOAT
