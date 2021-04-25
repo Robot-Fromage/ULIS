@@ -821,6 +821,71 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // FColor
+    py::class_< FColor, ISample >( m, "FColor" )
+        .def( py::init<>() )
+        .def( py::init< eFormat, const FColorSpace* >(), "format"_a, "colorspace"_a = nullptr )
+        .def( py::init< const uint8*, eFormat, const FColorSpace* >(), "data"_a, "format"_a, "colorspace"_a = nullptr )
+        .def( py::init< const FPixel& >(), "pixel_a" )
+        .def( py::init< const FColor& >(), "color_a" )
+        .def( py::init< const ISample& >(), "sample_a" )
+        .def_static( "RGB", &FColor::RGB )
+        .def_static( "CMYA16", &FColor::CMYA16 )
+        .def_static( "CMYA8", &FColor::CMYA8 )
+        .def_static( "CMYAF", &FColor::CMYAF )
+        .def_static( "CMYKA16", &FColor::CMYKA16 )
+        .def_static( "CMYKA8", &FColor::CMYKA8 )
+        .def_static( "CMYKAF", &FColor::CMYKAF )
+        .def_static( "GreyA16", &FColor::GreyA16 )
+        .def_static( "GreyA8", &FColor::GreyA8 )
+        .def_static( "GreyAF", &FColor::GreyAF )
+        .def_static( "HSLA16", &FColor::HSLA16 )
+        .def_static( "HSLA8", &FColor::HSLA8 )
+        .def_static( "HSLAF", &FColor::HSLAF )
+        .def_static( "HSVA16", &FColor::HSVA16 )
+        .def_static( "HSVA8", &FColor::HSVA8 )
+        .def_static( "HSVAF", &FColor::HSVAF )
+        .def_static( "LabA16", &FColor::LabA16 )
+        .def_static( "LabA8", &FColor::LabA8 )
+        .def_static( "LabAF", &FColor::LabAF )
+        .def_static( "RGB", &FColor::RGB )
+        .def_static( "RGBA16", &FColor::RGBA16 )
+        .def_static( "RGBA8", &FColor::RGBA8 )
+        .def_static( "RGBAF", &FColor::RGBAF )
+        .def_static( "XYZA16", &FColor::XYZA16 )
+        .def_static( "XYZA8", &FColor::XYZA8 )
+        .def_static( "XYZAF", &FColor::XYZAF )
+        .def_static( "YUVA16", &FColor::YUVA16 )
+        .def_static( "YUVA8", &FColor::YUVA8 )
+        .def_static( "YUVAF", &FColor::YUVAF )
+        .def_static( "YxyA16", &FColor::YxyA16 )
+        .def_static( "YxyA8", &FColor::YxyA8 )
+        .def_static( "YxyAF", &FColor::YxyAF )
+        .def_readonly_static( "Black", &FColor::Black )
+        .def_readonly_static( "White", &FColor::White )
+        .def_readonly_static( "Red", &FColor::Red )
+        .def_readonly_static( "Green", &FColor::Green )
+        .def_readonly_static( "Blue", &FColor::Blue )
+        .def_readonly_static( "Yellow", &FColor::Yellow )
+        .def_readonly_static( "Magenta", &FColor::Magenta )
+        .def_readonly_static( "Cyan", &FColor::Cyan )
+        .def_readonly_static( "Transparent", &FColor::Transparent );
+
+
+
+    /////////
+    // FPixel
+    py::class_< FPixel, ISample >( m, "FPixel" )
+        .def( py::init< uint8*, eFormat, const FColorSpace* >(), "data"_a, "format"_a, "colorspace"_a = nullptr )
+        .def( py::init< const FPixel& >(), "pixel"_a )
+        .def( py::init< const FColor& >(), "color"_a )
+        .def( "SetPointer", &FPixel::SetPointer )
+        .def( "Next", &FPixel::Next )
+        .def( "Prev", &FPixel::Prev );
+
+
+
+    /////////
     // FBlock
     py::class_< FBlock, IHasFormat, IHasColorSpace >( m, "FBlock" )
         .def(
@@ -863,21 +928,38 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Bits", static_cast< uint8* ( FBlock::* )() >( &FBlock::Bits ) )
         .def( "BytesPerScanLine", &FBlock::BytesPerScanLine )
         .def( "BytesTotal", &FBlock::BytesTotal )
-        .def( "Color", &FBlock::Color )
+        .def( "Color", &FBlock::Color, "x"_a, "y"_a )
         .def( "Dirty", static_cast< void ( FBlock::* )( bool ) const >( &FBlock::Dirty), "call"_a = true )
         .def( "Dirty", static_cast< void ( FBlock::* )( const FRectI&, bool ) const >( &FBlock::Dirty ), "rect"_a, "call"_a = true )
         .def( "Height", &FBlock::Height )
         .def( "IsHollow", &FBlock::IsHollow )
         .def( "OnCleanup", &FBlock::OnCleanup, "callback"_a )
         .def( "OnInvalid", &FBlock::OnInvalid, "callback"_a )
-        .def( "Pixel", static_cast< FPixel ( FBlock::* )( uint16, uint16 ) >( &FBlock::Pixel ) )
-        .def( "PixelBits", static_cast< uint8* ( FBlock::* )( uint16, uint16 ) >( &FBlock::PixelBits ) )
-        .def( "ReallocInternalData", &FBlock::ReallocInternalData )
+        .def( "Pixel", static_cast< FPixel ( FBlock::* )( uint16, uint16 ) >( &FBlock::Pixel ), "x"_a, "y"_a )
+        .def( "PixelBits", static_cast< uint8* ( FBlock::* )( uint16, uint16 ) >( &FBlock::PixelBits ), "x"_a, "y"_a )
         .def( "Rect", &FBlock::Rect )
-        .def( "Sample", &FBlock::Sample )
-        .def( "SampleSubpixel", &FBlock::SampleSubpixel )
-        .def( "ScanlineBits", static_cast< uint8* ( FBlock::* )( uint16 ) >( &FBlock::ScanlineBits ) )
-        .def( "SetPixel", &FBlock::SetPixel )
+        .def( "LoadFromData"
+            , &FBlock::LoadFromData
+            , "data"_a
+            , "width"_a
+            , "height"_a
+            , "format"_a
+            , "colorspace"_a = nullptr
+            , "onInvalid"_a = FOnInvalidBlock()
+            , "onCleanup"_a = FOnCleanupData( &OnCleanup_FreeMemory ) )
+        .def( "ReallocInternalData"
+            , &FBlock::ReallocInternalData
+            , "width"_a
+            , "height"_a
+            , "format"_a
+            , "colorspace"_a = nullptr
+            , "onInvalid"_a = FOnInvalidBlock()
+            , "onCleanup"_a = FOnCleanupData( &OnCleanup_FreeMemory ) )
+        .def( "Rect", &FBlock::Rect )
+        .def( "Sample", &FBlock::Sample, "x"_a, "y"_a, "border_mode"_a, "border_color"_a )
+        .def( "SampleSubpixel", &FBlock::SampleSubpixel, "x"_a, "y"_a, "border_mode"_a, "border_color"_a, "compensate_black_drifting"_a )
+        .def( "ScanlineBits", static_cast< uint8* ( FBlock::* )( uint16 ) >( &FBlock::ScanlineBits ), "row"_a )
+        .def( "SetPixel", &FBlock::SetPixel, "x"_a, "y"_a, "sample"_a )
         .def( "Width", &FBlock::Width );
 }
 
