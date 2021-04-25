@@ -1,4 +1,14 @@
-cmake_minimum_required( VERSION 3.13.2 )
+# IDDN FR.001.250001.004.S.X.2019.000.00000
+# ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+#
+#   ULIS
+#__________________
+# @file         CMakeLists.txt
+# @author       Clement Berthaud
+# @brief        Project generation for python binding.
+# @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+# @license      Please refer to LICENSE.md
+cmake_minimum_required(VERSION 3.11.0)
 
 if( ${ULIS_BUILD_PYTHON_MODULE} )
     file(
@@ -6,36 +16,37 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         source_list
         RELATIVE
         "${CMAKE_CURRENT_SOURCE_DIR}"
-        "binding/Python/CPython-module/*"
+        "binding/Python/module/*"
     )
 
-    add_library( PyULIS SHARED ${source_list} )
-    set_target_properties( PyULIS PROPERTIES SUFFIX ".pyd" )
-    set_target_properties( PyULIS PROPERTIES FOLDER ULIS )
-    target_compile_definitions( PyULIS PRIVATE PyULIS_BUILD_SHARED )
+    add_library( pyULIS SHARED ${source_list} )
+    set_target_properties( pyULIS PROPERTIES SUFFIX ".pyd" )
+    set_target_properties( pyULIS PROPERTIES FOLDER ULIS )
+    target_compile_definitions( pyULIS PRIVATE pyULIS_BUILD_SHARED )
 
     target_link_libraries(
-        PyULIS
+        pyULIS
         ULIS
-        optimized   ${ULIS_PYTHON_REL_LIB}
-        debug       ${ULIS_PYTHON_DEB_LIB}
+        ${ULIS_PYTHON_DEB_LIB}
     )
 
     target_include_directories(
-        PyULIS
+        pyULIS
         PUBLIC
-        "python/CPython-module/"
+        "python/module/"
         ${ULIS_PYTHON_INCLUDE_PATH1}
         ${ULIS_PYTHON_INCLUDE_PATH2}
+        ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/pybind11-2.6.2/include/
     )
 
-    set_target_properties( PyULIS PROPERTIES OUTPUT_NAME "PyULIS${ULIS_VERSION_MAJOR}" )
-    set_target_properties( PyULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
+    set_target_properties( pyULIS PROPERTIES OUTPUT_NAME "pyULIS${ULIS_VERSION_MAJOR}" )
+    set_target_properties( pyULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
 
     # For MSVC parse pretty filter names
     foreach(source IN LISTS source_list)
         get_filename_component(source_path "${source}" PATH)
-        string(REPLACE "/" "\\" source_path_msvc "${source_path}")
+        string( REPLACE "/" "\\" source_path_msvc "${source_path}" )
+        string( REPLACE "binding/Python/module" "" source_path_msvc "${source_path}" )
         source_group("${source_path_msvc}" FILES "${source}")
     endforeach()
 
