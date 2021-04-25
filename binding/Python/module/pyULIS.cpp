@@ -840,6 +840,25 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "onInvalid"_a = FOnInvalidBlock()
             , "onCleanup"_a = FOnCleanupData( &OnCleanup_FreeMemory )
         )
+        .def(
+            py::init<
+              uint8*
+            , ULIS::uint16
+            , ULIS::uint16
+            , eFormat
+            , const FColorSpace*
+            , const FOnInvalidBlock&
+            , const FOnCleanupData&
+            >
+            ()
+            , "data"_a = nullptr
+            , "width"_a = 0
+            , "height"_a = 0
+            , "format"_a = eFormat::Format_RGBA8
+            , "colorspace"_a = nullptr
+            , "onInvalid"_a = FOnInvalidBlock()
+            , "onCleanup"_a = FOnCleanupData( &OnCleanup_FreeMemory )
+        )
         .def( "Area", &FBlock::Area )
         .def( "Bits", static_cast< uint8* ( FBlock::* )() >( &FBlock::Bits ) )
         .def( "BytesPerScanLine", &FBlock::BytesPerScanLine )
