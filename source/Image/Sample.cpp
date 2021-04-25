@@ -71,7 +71,7 @@ ISample::ISample( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace 
 ISample::~ISample()
 {}
 
-ULIS_DEFINE_FAKE_FACTORY( ISample, nullptr, Format_RGBA8, nullptr )
+//ULIS_DEFINE_FAKE_FACTORY( ISample, nullptr, Format_RGBA8, nullptr )
 
 bool
 ISample::operator==( const  ISample& iOther )  const {

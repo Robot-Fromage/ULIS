@@ -595,7 +595,6 @@ PYBIND11_MODULE( pyULIS4, m ) {
     /////////
     // ISample
     py::class_< ISample >( m, "ISample" )
-        .def( py::init( &ISample:: ULIS_FAKE_FACTORY_NAME ) )
         .def( py::self == py::self )
         .def( py::self != py::self )
         .def( "Bits", static_cast< uint8* ( ISample::* )() >( &ISample::Bits ) )

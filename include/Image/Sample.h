@@ -65,7 +65,7 @@ public:
     /*! Destructor. */
     ~ISample();
 
-    ULIS_DECLARE_FAKE_FACTORY( ISample )
+    //ULIS_DECLARE_FAKE_FACTORY( ISample )
 
     /*! Comparison strict equal operator */
     bool operator==( const ISample& iOther ) const;
