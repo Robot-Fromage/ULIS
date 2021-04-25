@@ -16,7 +16,7 @@ using namespace pybind11::literals;
 namespace py = pybind11;
 
 PYBIND11_MODULE( pyULIS4, m ) {
-    m.doc() = "pyULIS module, a python binding for ULIS.";
+    m.doc() = "pyULIS4 module, a python binding for ULIS.";
 
     py::enum_< eColorModel >( m, "eColorModel" )
         .value( "ColorModel_GREY",  eColorModel::ColorModel_GREY    )
@@ -218,24 +218,29 @@ PYBIND11_MODULE( pyULIS4, m ) {
     py::class_< FFormatMetrics >( m, "FFormatMetrics" )
         .def( py::init< eFormat >(), "format"_a )
         .def( "ReinterpretedType", &FFormatMetrics::ReinterpretedType )
-        .def_readwrite( "IDT", &FFormatMetrics::IDT )
-        .def_readwrite( "FMT", &FFormatMetrics::FMT )
-        .def_readwrite( "TP", &FFormatMetrics::TP )
-        .def_readwrite( "CM", &FFormatMetrics::CM )
-        .def_readwrite( "BPC", &FFormatMetrics::BPC )
-        .def_readwrite( "NCC", &FFormatMetrics::NCC )
-        .def_readwrite( "HEA", &FFormatMetrics::HEA )
-        .def_readwrite( "RSC", &FFormatMetrics::RSC )
-        .def_readwrite( "SPP", &FFormatMetrics::SPP )
-        .def_readwrite( "BPP", &FFormatMetrics::BPP )
-        .def_readwrite( "AID", &FFormatMetrics::AID )
-        .def_readwrite( "REV", &FFormatMetrics::REV )
-        .def_readwrite( "SWA", &FFormatMetrics::SWA )
-        .def_readwrite( "PRE", &FFormatMetrics::PRE )
-        .def_readwrite( "LIN", &FFormatMetrics::LIN )
-        .def_readwrite( "PRO", &FFormatMetrics::PRO )
-        .def_readwrite( "PLA", &FFormatMetrics::PLA )
-        .def( "RedirectedIndex", []( const FFormatMetrics& self, int index ) { return  self.IDT[ index ]; } );
+        .def_readonly( "IDT", &FFormatMetrics::IDT )
+        .def_readonly( "FMT", &FFormatMetrics::FMT )
+        .def_readonly( "TP", &FFormatMetrics::TP )
+        .def_readonly( "CM", &FFormatMetrics::CM )
+        .def_readonly( "BPC", &FFormatMetrics::BPC )
+        .def_readonly( "NCC", &FFormatMetrics::NCC )
+        .def_readonly( "HEA", &FFormatMetrics::HEA )
+        .def_readonly( "RSC", &FFormatMetrics::RSC )
+        .def_readonly( "SPP", &FFormatMetrics::SPP )
+        .def_readonly( "BPP", &FFormatMetrics::BPP )
+        .def_readonly( "AID", &FFormatMetrics::AID )
+        .def_readonly( "REV", &FFormatMetrics::REV )
+        .def_readonly( "SWA", &FFormatMetrics::SWA )
+        .def_readonly( "PRE", &FFormatMetrics::PRE )
+        .def_readonly( "LIN", &FFormatMetrics::LIN )
+        .def_readonly( "PRO", &FFormatMetrics::PRO )
+        .def_readonly( "PLA", &FFormatMetrics::PLA )
+        .def(
+              "RedirectedIndex"
+            , []( const FFormatMetrics& self, int index ) {
+                return  self.IDT[ index ];
+            }
+        );
 
     py::class_< FColorSpace >( m, "FColorSpace" )
         .def( py::init<>() );
@@ -251,7 +256,12 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( py::init< FOnCleanupData::tFptr, void* >(), "fptr"_a, "info"_a = nullptr )
         .def( "ExecuteIfBound", &FOnCleanupData::ExecuteIfBound )
         .def( "Execute", &FOnCleanupData::Execute )
-        .def_static( "OnCleanupFreeMemory", []() { return  FOnCleanupData( &OnCleanup_FreeMemory ); } );
+        .def_static(
+              "OnCleanupFreeMemory"
+            , []() {
+                return  FOnCleanupData( &OnCleanup_FreeMemory );
+            }
+        );
 
     py::class_< FBlock >( m, "FBlock" )
         .def(
@@ -277,7 +287,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "BytesTotal", &FBlock::BytesTotal )
         .def( "Color", &FBlock::Color )
         .def( "Dirty", static_cast< void ( FBlock::* )( bool ) const >( &FBlock::Dirty), "call"_a = true )
-        .def( "Dirty", static_cast< void ( FBlock::* )( const FRectI&, bool ) const >( &FBlock::Dirty), "rect"_a, "call"_a = true )
+        .def( "Dirty", static_cast< void ( FBlock::* )( const FRectI&, bool ) const >( &FBlock::Dirty ), "rect"_a, "call"_a = true )
         .def( "Height", &FBlock::Height )
         .def( "IsHollow", &FBlock::IsHollow )
         .def( "OnCleanup", &FBlock::OnCleanup, "callback"_a )
