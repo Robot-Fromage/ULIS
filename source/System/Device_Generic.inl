@@ -13,12 +13,14 @@
 #include "System/Device.h"
 #include "System/DeviceHelpers.h"
 
+#pragma message( "GENERIC DEVICE ACTIVATED" )
+
 ULIS_NAMESPACE_BEGIN
 
 FHardwareMetrics::FHardwareMetrics()
     : bField( 0 )
     , mMaxWorkers( 1 )
-    , mL1CacheSize( 65536 )
+    , mL1CacheSize( 32768 )
     , mL1CacheLineSize( 64 )
 {
     bField =

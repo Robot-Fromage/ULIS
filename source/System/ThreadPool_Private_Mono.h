@@ -17,6 +17,8 @@
 #include "Scheduling/Job.h"
 #include "Scheduling/Command.h"
 
+#pragma message( "MONO THREAD POOL ACTIVATED" )
+
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FThreadPool_Private

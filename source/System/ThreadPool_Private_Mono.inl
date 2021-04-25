@@ -34,9 +34,11 @@ FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 
         if( cmd->ReadyForProcessing() )
         {
+            const_cast< FCommand* >( cmd )->ProcessAsyncScheduling();
             FSharedInternalEvent evt = cmd->Event();
             const TArray< const FJob* >& jobs = cmd->Jobs();
-            for( uint64 i = 0; i < jobs.Size(); ++i ) {
+            const uint64 size = jobs.Size();
+            for( uint64 i = 0; i < size; ++i ) {
                 jobs[i]->Execute();
                 evt->NotifyOneJobFinished();
             }

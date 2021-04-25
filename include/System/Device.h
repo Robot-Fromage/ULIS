@@ -78,6 +78,7 @@ public:
     uint32 MaxWorkers() const;
     uint64 L1CacheSize() const;
     uint64 L1CacheLineSize() const;
+    uint64 Field() const;
 
 private:
     uint64 bField;

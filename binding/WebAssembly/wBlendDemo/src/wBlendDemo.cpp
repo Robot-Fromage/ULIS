@@ -2,6 +2,7 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
+#include <iostream>
 #include <emscripten.h>
 #include <SDL.h>
 #include <SDL_opengles2.h>
@@ -226,8 +227,12 @@ void InitULIS() {
     sampleImageRegistry.AddFilter( ".png" );
     sampleImageRegistry.Parse();
     for( auto it : sampleImageRegistry.Records() ) {
-        g_sampleImages.push_back( new ::ULIS::FBlock() );
-        g_ctx->XLoadBlockFromDisk( *( g_sampleImages.back() ), it.second );
+        g_sampleImages.push_back( new ::ULIS::FBlock( 160, 160, g_format ) );
+        ::ULIS::FBlock* temp = new ::ULIS::FBlock();
+        g_ctx->XLoadBlockFromDisk( *temp, it.second, ULIS::FSchedulePolicy::MonoChunk );
+        g_ctx->Finish();
+        g_ctx->ConvertFormat( *temp, *( g_sampleImages.back() ), temp->Rect(), ULIS::FVec2I( 0 ), ULIS::FSchedulePolicy::MultiScanlines );
+        g_ctx->Finish();
         g_sampleImagesNames.push_back( it.first );
     }
     g_ctx->Finish();
@@ -252,7 +257,7 @@ void BuildGUI() {
         ImGui::EndCombo();
     }
 
-    static int base_item_current_idx = 4;
+    static int base_item_current_idx = 1;
     const char* base_combo_label = g_sampleImagesNames[ base_item_current_idx ].c_str();
     if( ImGui::BeginCombo( "Base", base_combo_label, flags ) ) {
         for( int n = 0; n < g_sampleImages.size(); n++ ) {
@@ -279,10 +284,10 @@ void BuildGUI() {
 
     {
         ::ULIS::FBlock result( 160, 160, g_format );
-        g_ctx->Copy( *( g_sampleImages[ base_item_current_idx ] ), result );
+        g_ctx->Copy( *( g_sampleImages[ base_item_current_idx ] ), result, result.Rect(), ::ULIS::FVec2I( 0 ), ::ULIS::FSchedulePolicy::MonoScanlines );
         g_ctx->Finish();
 
-        g_ctx->Blend( *( g_sampleImages[ over_item_current_idx ] ), result );
+        g_ctx->Blend( *( g_sampleImages[ over_item_current_idx ] ), result, g_sampleImages[ over_item_current_idx ]->Rect(), ::ULIS::FVec2I( 0 ), static_cast< ::ULIS::eBlendMode >( bm_item_current ), static_cast< ::ULIS::eAlphaMode >( am_item_current ), opacity, ::ULIS::FSchedulePolicy::MultiScanlines );
         g_ctx->Finish();
 
         glBindTexture( GL_TEXTURE_2D, g_texture );

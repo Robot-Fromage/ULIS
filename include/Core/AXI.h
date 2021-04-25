@@ -68,6 +68,9 @@ ULIS_API bool CompiledWithAVX2();
 /*! Retrieve wether the library was compiled with SSE42 support */
 ULIS_API bool CompiledWithSSE42();
 
+/*! Retrieve wether the library was compiled with MT support */
+ULIS_API bool CompiledWithMT();
+
 /*! Retrieve the full library identification string */
 ULIS_API FString FullLibraryInformationString();
 

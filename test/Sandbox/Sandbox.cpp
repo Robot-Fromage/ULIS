@@ -19,7 +19,6 @@ main() {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_MEM );
 
-        /*
     FBlock canvas( 800, 600, fmt );
     FBlock disk( 40, 40, fmt );
 
@@ -38,7 +37,6 @@ main() {
 
     ctx.SaveBlockToDisk( canvas, "C:/Users/PRAXINOS/Documents/work/Output/out.png", FileFormat_png, 100, FSchedulePolicy::MonoChunk );
     ctx.Finish();
-    */
 
     return  0;
 }

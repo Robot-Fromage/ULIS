@@ -78,7 +78,9 @@ CompilationTimeStampString()
 FString
 CompilerNameString()
 {
-#if defined( ULIS_CLANG )
+#if defined( ULIS_EMSCRIPTEN )
+    return  FString( "EMSCRIPTEN" );
+#elif defined( ULIS_CLANG )
     return  FString( "CLANG" );
 #elif defined( ULIS_GCC )
     return  FString( "GCC" );
@@ -86,8 +88,6 @@ CompilerNameString()
     return  FString( "MSVC" );
 #elif defined( ULIS_MINGW64 )
     return  FString( "MINGW64" );
-#elif defined( ULIS_EMSCRIPTEN )
-    return  FString( "EMSCRIPTEN" );
 #else
     return  FString( "UNKNOWN" );
 #endif
@@ -160,18 +160,28 @@ FString CommitAbbreviatedHash()
     return  FString( ULIS_GIT_COMMIT_ABBREVIATED_HASH_STR );
 }
 
+bool
+CompiledWithMT() {
+#ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
+    return  true;
+#else
+    return  false;
+#endif
+}
+
 FString
 FullLibraryInformationString()
 {
     FString on( "on" );
     FString off( "off" );
     FString sse = CompiledWithSSE42() ? on : off;
-    FString avx = CompiledWithAVX2() ?  on : off;
+    FString avx = CompiledWithAVX2() ? on : off;
+    FString mt = CompiledWithMT() ? on : off;
     // 4.0.0 (Aug 15 2020, 15:12:04) [MSVC v.1916 x64] {Release}
     return  ConfigurationString() + " " + VersionString() + " "
             + "(" + BranchName() + ":" + CommitAbbreviatedHash() + ", " + CompilationTimeStampString() + ") "
             + "[" + CompilerInformationString() + " x64] "
-            + "{SSE4.2:" + sse + ", AVX2:" + avx + "};";
+            + "{SSE4.2:" + sse + ", AVX2:" + avx + ", MT: " + mt + "};";
 }
 
 ULIS_NAMESPACE_END

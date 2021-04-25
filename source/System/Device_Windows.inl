@@ -139,7 +139,7 @@ void cache_info( uint8 iLevel, uint64 *oCacheSize, uint64* oLineSize ) {
 FHardwareMetrics::FHardwareMetrics()
     : bField( 0 )
     , mMaxWorkers( std::thread::hardware_concurrency() )
-    , mL1CacheSize( 65536 )
+    , mL1CacheSize( 32768 )
     , mL1CacheLineSize( 64 )
 {
     detail::cache_info( 1, &mL1CacheSize, &mL1CacheLineSize );

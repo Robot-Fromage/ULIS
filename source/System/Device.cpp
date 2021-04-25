@@ -63,5 +63,6 @@ bool    FHardwareMetrics::HasHardwareAVX512_VBMI() const {   return  ULIS_R_HW_A
 uint32  FHardwareMetrics::MaxWorkers() const {               return  mMaxWorkers; }
 uint64  FHardwareMetrics::L1CacheSize() const {              return  mL1CacheSize; }
 uint64  FHardwareMetrics::L1CacheLineSize() const {          return  mL1CacheLineSize; }
+uint64  FHardwareMetrics::Field() const {                    return  bField; }
 ULIS_NAMESPACE_END
 
