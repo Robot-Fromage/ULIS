@@ -27,7 +27,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
     /////////
     // eColorModel
-    py::enum_< eColorModel >( m, "eColorModel", py::arithmetic() )
+    py::enum_< eColorModel >( m, "eColorModel" )
         .value( "ColorModel_GREY",  eColorModel::ColorModel_GREY    )
         .value( "ColorModel_RGB",   eColorModel::ColorModel_RGB     )
         .value( "ColorModel_HSV",   eColorModel::ColorModel_HSV     )
@@ -37,16 +37,18 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .value( "ColorModel_YUV",   eColorModel::ColorModel_YUV     )
         .value( "ColorModel_Lab",   eColorModel::ColorModel_Lab     )
         .value( "ColorModel_XYZ",   eColorModel::ColorModel_XYZ     )
-        .value( "ColorModel_Yxy",   eColorModel::ColorModel_Yxy     );
+        .value( "ColorModel_Yxy",   eColorModel::ColorModel_Yxy     )
+        .export_values();
 
 
 
     /////////
     // eType
-    py::enum_< eType >( m, "eType", py::arithmetic() )
+    py::enum_< eType >( m, "eType" )
         .value( "Type_uint8",   eType::Type_uint8   )
         .value( "Type_uint16",  eType::Type_uint16  )
-        .value( "Type_ufloat",  eType::Type_ufloat  );
+        .value( "Type_ufloat",  eType::Type_ufloat  )
+        .export_values();
 
 
 
@@ -234,6 +236,191 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
 
+    /////////
+    // eBorderMode
+    py::enum_< eBorderMode >( m, "eBorderMode" )
+        .value( "Border_Transparent",   eBorderMode::Border_Transparent )
+        .value( "Border_Constant",      eBorderMode::Border_Constant    )
+        .value( "Border_Extend",        eBorderMode::Border_Extend      )
+        .value( "Border_Wrap",          eBorderMode::Border_Wrap        )
+        .export_values();
+
+
+
+    /////////
+    // eBlendMode
+    py::enum_< eBlendMode >( m, "eBlendMode" )
+        .value( "Blend_Normal",             eBlendMode::Blend_Normal            )
+        .value( "Blend_Top",                eBlendMode::Blend_Top               )
+        .value( "Blend_Back",               eBlendMode::Blend_Back              )
+        .value( "Blend_Behind",             eBlendMode::Blend_Behind            )
+        .value( "Blend_Dissolve",           eBlendMode::Blend_Dissolve          )
+        .value( "Blend_BayerDither8x8",     eBlendMode::Blend_BayerDither8x8    )
+        .value( "Blend_Darken",             eBlendMode::Blend_Darken            )
+        .value( "Blend_Multiply",           eBlendMode::Blend_Multiply          )
+        .value( "Blend_ColorBurn",          eBlendMode::Blend_ColorBurn         )
+        .value( "Blend_LinearBurn",         eBlendMode::Blend_LinearBurn        )
+        .value( "Blend_DarkerColor",        eBlendMode::Blend_DarkerColor       )
+        .value( "Blend_Lighten",            eBlendMode::Blend_Lighten           )
+        .value( "Blend_Screen",             eBlendMode::Blend_Screen            )
+        .value( "Blend_ColorDodge",         eBlendMode::Blend_ColorDodge        )
+        .value( "Blend_LinearDodge",        eBlendMode::Blend_LinearDodge       )
+        .value( "Blend_LighterColor",       eBlendMode::Blend_LighterColor      )
+        .value( "Blend_Overlay",            eBlendMode::Blend_Overlay           )
+        .value( "Blend_SoftLight",          eBlendMode::Blend_SoftLight         )
+        .value( "Blend_HardLight",          eBlendMode::Blend_HardLight         )
+        .value( "Blend_VividLight",         eBlendMode::Blend_VividLight        )
+        .value( "Blend_LinearLight",        eBlendMode::Blend_LinearLight       )
+        .value( "Blend_PinLight",           eBlendMode::Blend_PinLight          )
+        .value( "Blend_HardMix",            eBlendMode::Blend_HardMix           )
+        .value( "Blend_Phoenix",            eBlendMode::Blend_Phoenix           )
+        .value( "Blend_Reflect",            eBlendMode::Blend_Reflect           )
+        .value( "Blend_Glow",               eBlendMode::Blend_Glow              )
+        .value( "Blend_Difference",         eBlendMode::Blend_Difference        )
+        .value( "Blend_Exclusion",          eBlendMode::Blend_Exclusion         )
+        .value( "Blend_Add",                eBlendMode::Blend_Add               )
+        .value( "Blend_Substract",          eBlendMode::Blend_Substract         )
+        .value( "Blend_Divide",             eBlendMode::Blend_Divide            )
+        .value( "Blend_Average",            eBlendMode::Blend_Average           )
+        .value( "Blend_Negation",           eBlendMode::Blend_Negation          )
+        .value( "Blend_Hue",                eBlendMode::Blend_Hue               )
+        .value( "Blend_Saturation",         eBlendMode::Blend_Saturation        )
+        .value( "Blend_Color",              eBlendMode::Blend_Color             )
+        .value( "Blend_Luminosity",         eBlendMode::Blend_Luminosity        )
+        .value( "Blend_PartialDerivative",  eBlendMode::Blend_PartialDerivative )
+        .value( "Blend_Whiteout",           eBlendMode::Blend_Whiteout          )
+        .value( "Blend_AngleCorrected",     eBlendMode::Blend_AngleCorrected    )
+        .value( "NumBlendModes",            eBlendMode::NumBlendModes           )
+        .export_values();
+
+
+
+    /////////
+    // eAlphaMode
+    py::enum_< eAlphaMode >( m, "eAlphaMode" )
+        .value( "Alpha_Normal",     eAlphaMode::Alpha_Normal    )
+        .value( "Alpha_Erase",      eAlphaMode::Alpha_Erase     )
+        .value( "Alpha_Top",        eAlphaMode::Alpha_Top       )
+        .value( "Alpha_Back",       eAlphaMode::Alpha_Back      )
+        .value( "Alpha_Sub",        eAlphaMode::Alpha_Sub       )
+        .value( "Alpha_Add",        eAlphaMode::Alpha_Add       )
+        .value( "Alpha_Mul",        eAlphaMode::Alpha_Mul       )
+        .value( "Alpha_Min",        eAlphaMode::Alpha_Min       )
+        .value( "Alpha_Max",        eAlphaMode::Alpha_Max       )
+        .value( "NumAlphaModes",    eAlphaMode::NumAlphaModes   )
+        .export_values();
+
+
+
+    /////////
+    // eBlendQualifier
+    py::enum_< eBlendQualifier >( m, "eBlendQualifier" )
+        .value( "BlendQualifier_Separable",     eBlendQualifier::BlendQualifier_Separable       )
+        .value( "BlendQualifier_NonSeparable",  eBlendQualifier::BlendQualifier_NonSeparable    )
+        .value( "BlendQualifier_Misc",          eBlendQualifier::BlendQualifier_Misc            )
+        .export_values();
+
+
+    /*
+
+
+/////////////////////////////////////////////////////
+// eResamplingMethod
+enum eResamplingMethod
+{
+      Resampling_NearestNeighbour
+    , Resampling_Bilinear
+    , Resampling_Bicubic
+    , Resampling_Area
+};
+
+
+/////////////////////////////////////////////////////
+// eMipsLayout
+enum eMipsLayout
+{
+      MipsLayout_Standard
+    , MipsLayout_MipsOnly
+};
+
+/////////////////////////////////////////////////////
+// eImageFormat
+enum eFileFormat {
+      FileFormat_png
+    , FileFormat_bmp
+    , FileFormat_tga
+    , FileFormat_jpg
+    , FileFormat_hdr
+};
+
+
+/////////////////////////////////////////////////////
+// eGradientType
+enum eGradientType {
+      Gradient_Linear
+    , Gradient_Radial
+    , Gradient_Angular
+    , Gradient_Reflected
+    , Gradient_Diamond
+};
+
+
+enum eMorphologicalElementValue {
+      MpE_Zero  = 0
+    , MpE_One   = 1
+    , MpE_Any   = 2
+};
+
+enum eLayerType
+{
+      Layer_Invalid
+    , Layer_Root
+    , Layer_Image
+    , Layer_Folder
+    , Layer_Text
+    , Layer_Vector
+    , Layer_FX
+    , Layer_Mask
+};
+
+
+/////////////////////////////////////////////////////
+// eEventStatus
+enum eEventStatus : uint8
+{
+      EventStatus_Idle
+    , EventStatus_Queued
+    , EventStatus_Finished
+};
+
+enum eScheduleTimePolicy : uint8 {
+      ScheduleTime_Sync = 0
+    , ScheduleTime_Async = 1
+};
+
+enum eScheduleRunPolicy : uint8 {
+      ScheduleRun_Mono  = 0
+    , ScheduleRun_Multi = 1
+};
+
+enum eScheduleModePolicy : uint8 {
+      ScheduleMode_Scanlines = 0
+    , ScheduleMode_Chunks = 1
+};
+
+enum eScheduleParameterPolicy : uint8 {
+      ScheduleParameter_Count = 0
+    , ScheduleParameter_Length = 1
+};
+
+
+enum ePerformanceIntent : uint32 {
+      PerformanceIntent_MEM   = 0b0000
+    , PerformanceIntent_SSE   = 0b0001
+    , PerformanceIntent_AVX   = 0b0010
+    , PerformanceIntent_Max   = 0b1111
+};
+    */
     /////////
     // FFormatMetrics
     py::class_< FFormatMetrics >( m, "FFormatMetrics" )
@@ -459,6 +646,8 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def_readwrite( "z", &FVec4I::z )
         .def_readwrite( "w", &FVec4I::w );
 
+
+
     /////////
     // FVec2F
     py::class_< FVec2F >( m, "FVec2F" )
@@ -589,6 +778,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def_readwrite( "y", &FVec4F::y )
         .def_readwrite( "z", &FVec4F::z )
         .def_readwrite( "w", &FVec4F::w );
+
 
 
     /////////
