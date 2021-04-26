@@ -18,21 +18,26 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawCircleBresenham(         FBlock&                  iBlock
-                                , const FVec2I&            iCenter
-                                , const int                iRadius
-                                , const FColor&            iColor
-                                , const bool               iFilled
-                                , const FRectI&            iClippingRect );
+void DrawCircleBresenham(       
+      FBlock& iBlock
+    , const FVec2I& iCenter
+    , const int iRadius
+    , const FColor& iColor
+    , const bool iFilled
+    , const FRectI& iClippingRect);
 
 template< typename T >
-void DrawCircleBresenhamAA(    FBlock&                  iBlock
-                                    , const FVec2I&            iCenter
-                                    , const int                iRadius
-                                    , const FColor&            iColor
-                                    , const bool               iFilled
-                                    , const FRectI&            iClippingRect )
+void DrawCircleBresenhamAA(    
+     FBlock& iBlock
+     , const FVec2I& iCenter
+     , const int iRadius
+     , const FColor& iColor
+     , const bool iFilled
+     , const FRectI& iClippingRect )
 {
+    if (iRadius <= 1)
+        return;
+    
     //Clipping -----
     int x = 0;
     int y = iRadius;
@@ -97,7 +102,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -121,7 +126,24 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant1 == 2)
+
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if( alphaTop < 0.f )
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + x,iCenter.y - y - 1,val); // 0° to 45°
+
+    } 
+    else if(drawRectOctant1 == 2)
     {
         int xx = rectOctant1.x;
         int yy = rectOctant1.y;
@@ -183,7 +205,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -207,7 +229,22 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant2 == 2)
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if( alphaTop < 0.f )
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + y + 1,iCenter.y - x,val); // 90° to 45°
+    } 
+    else if(drawRectOctant2 == 2)
     {
         int xx = rectOctant2.x + rectOctant2.w;
         int yy = rectOctant2.y + rectOctant2.h;
@@ -269,7 +306,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -293,7 +330,23 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant3 == 2)
+
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val); // 90° to 135°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + y + 1, iCenter.y + x, val); // 90° to 135°
+    } 
+    else if(drawRectOctant3 == 2)
     {
         int xx = rectOctant3.x + rectOctant3.w;
         int yy = rectOctant3.y;
@@ -355,7 +408,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -379,7 +432,22 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant4 == 2)
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if( alphaTop < 0.f )
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + x,iCenter.y + y + 1,val); // 180° to 135°
+    } 
+    else if(drawRectOctant4 == 2)
     {
         int xx = rectOctant4.x;
         int yy = rectOctant4.y + rectOctant4.h;
@@ -441,7 +509,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -465,7 +533,22 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant5 == 2)
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if( alphaTop < 0.f )
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - x,iCenter.y + y + 1,val); // 180° to 225°
+    } 
+    else if(drawRectOctant5 == 2)
     {
         int xx = rectOctant5.x + rectOctant5.w;
         int yy = rectOctant5.y + rectOctant5.h;
@@ -527,7 +610,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -551,7 +634,22 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant6 == 2)
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val); // 270° to 225°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - y - 1, iCenter.y + x, val); // 270° to 225°
+    } 
+    else if(drawRectOctant6 == 2)
     {
         int xx = rectOctant6.x;
         int yy = rectOctant6.y;
@@ -613,7 +711,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -637,7 +735,22 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant7 == 2)
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val); // 270° to 315°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - y - 1, iCenter.y - x, val); // 270° to 315°
+    } 
+    else if(drawRectOctant7 == 2)
     {
         int xx = rectOctant7.x;
         int yy = rectOctant7.y + rectOctant7.h;
@@ -699,7 +812,7 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
         int errMax = 2 * (4 * iRadius - 5);
         int errMin = 0;
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -723,7 +836,22 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant8 == 2)
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if( alphaTop < 0.f )
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - x,iCenter.y - y - 1,val); // 0° to 315°
+    } 
+    else if(drawRectOctant8 == 2)
     {
         int xx = rectOctant8.x + rectOctant8.w;
         int yy = rectOctant8.y;
@@ -805,12 +933,13 @@ void DrawCircleBresenhamAA(    FBlock&                  iBlock
 }
 
 template< typename T >
-void DrawCircleBresenhamSP(    FBlock&                  iBlock
-                                    , const FVec2F&            iCenter
-                                    , const float              iRadius
-                                    , const FColor&            iColor
-                                    , const bool               iFilled
-                                    , const FRectI&            iClippingRect )
+void DrawCircleBresenhamSP(    
+       FBlock& iBlock
+     , const FVec2F& iCenter
+     , const float iRadius
+     , const FColor& iColor
+     , const bool iFilled
+     , const FRectI& iClippingRect )
 {
     //Clipping -----
     float x = 0;
@@ -876,7 +1005,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float errMin = 0;
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point0);
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -963,7 +1092,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float errMin = 0;
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point90);
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1050,7 +1179,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float errMin = 0;
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point90);
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1137,7 +1266,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float errMin = 0;
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point180);
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1225,7 +1354,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float errMin = 0;
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point180);
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1313,7 +1442,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float errMin = 0;
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point270);
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1400,7 +1529,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float errMin = 0;
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point270);
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1489,7 +1618,7 @@ void DrawCircleBresenhamSP(    FBlock&                  iBlock
         float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point0);
 
 
-        while(y >= x)
+        while(y > x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )

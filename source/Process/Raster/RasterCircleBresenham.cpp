@@ -14,12 +14,13 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawCircleBresenham(        FBlock&                  iBlock
-                                ,const FVec2I&            iCenter
-                                ,const int                iRadius
-                                ,const FColor&            iColor
-                                ,const bool               iFilled
-                                ,const FRectI&            iClippingRect)
+void DrawCircleBresenham(       
+      FBlock& iBlock
+    , const FVec2I& iCenter
+    , const int iRadius
+    , const FColor& iColor
+    , const bool iFilled
+    , const FRectI& iClippingRect)
 {
     //Clipping -----
     int x = 0;
@@ -94,7 +95,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant1 == 2)
+    } 
+    else if(drawRectOctant1 == 2)
     {
         int xx = rectOctant1.x;
         int yy = rectOctant1.y;
@@ -148,7 +150,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant2 == 2)
+    } 
+    else if(drawRectOctant2 == 2)
     {
         int xx = rectOctant2.x + rectOctant2.w;
         int yy = rectOctant2.y + rectOctant2.h;
@@ -199,7 +202,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant3 == 2)
+    } 
+    else if(drawRectOctant3 == 2)
     {
         int xx = rectOctant3.x + rectOctant3.w;
         int yy = rectOctant3.y;
@@ -250,7 +254,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant4 == 2)
+    } 
+    else if(drawRectOctant4 == 2)
     {
         int xx = rectOctant4.x;
         int yy = rectOctant4.y + rectOctant4.h;
@@ -301,7 +306,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant5 == 2)
+    } 
+    else if(drawRectOctant5 == 2)
     {
         int xx = rectOctant5.x + rectOctant5.w;
         int yy = rectOctant5.y + rectOctant5.h;
@@ -353,7 +359,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant6 == 2)
+    } 
+    else if(drawRectOctant6 == 2)
     {
         int xx = rectOctant6.x;
         int yy = rectOctant6.y;
@@ -405,7 +412,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant7 == 2)
+    } 
+    else if(drawRectOctant7 == 2)
     {
         int xx = rectOctant7.x;
         int yy = rectOctant7.y + rectOctant7.h;
@@ -456,7 +464,8 @@ void DrawCircleBresenham(        FBlock&                  iBlock
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant8 == 2)
+    } 
+    else if(drawRectOctant8 == 2)
     {
         int xx = rectOctant8.x + rectOctant8.w;
         int yy = rectOctant8.y;

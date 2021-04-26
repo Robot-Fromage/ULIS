@@ -2428,8 +2428,14 @@ void DrawCircleAndresSP(
         y = iRadius;
         float diff = iRadius;
 
-        while (y >= x - 1)
+        while (y >= x)
         {
+            if (diff < (2 * (iRadius - y)))
+            {
+                diff += (2 * y - 1);
+                y--;
+            }
+
             if (diff >= (2 * x))
             {
                 DrawLine(iBlock, FVec2I(round(iCenter.x + x), round(iCenter.y - y)), FVec2I(round(iCenter.x + x), round(iCenter.y + y)), iColor, iClippingRect);
@@ -2439,11 +2445,6 @@ void DrawCircleAndresSP(
 
                 diff -= (2 * x + 1);
                 x++;
-            }
-            else if (diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
             }
             else
             {
@@ -2457,6 +2458,11 @@ void DrawCircleAndresSP(
                 x++;
             }
         }
+
+        DrawLine(iBlock, FVec2I(round(iCenter.x + x), round(iCenter.y - y)), FVec2I(round(iCenter.x + x), round(iCenter.y + y)), iColor, iClippingRect);
+        DrawLine(iBlock, FVec2I(round(iCenter.x - x), round(iCenter.y - y)), FVec2I(round(iCenter.x - x), round(iCenter.y + y)), iColor, iClippingRect);
+        DrawLine(iBlock, FVec2I(round(iCenter.x + y), round(iCenter.y - x)), FVec2I(round(iCenter.x + y), round(iCenter.y + x)), iColor, iClippingRect);
+        DrawLine(iBlock, FVec2I(round(iCenter.x - y), round(iCenter.y - x)), FVec2I(round(iCenter.x - y), round(iCenter.y + x)), iColor, iClippingRect);
     }
 }
 
