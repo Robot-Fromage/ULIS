@@ -48,6 +48,8 @@ PYBIND11_MODULE( pyULIS4, m ) {
     m.def( "CompiledWithMT",                &CompiledWithMT );
     m.def( "FullLibraryInformationString",  [](){ return  std::string( FullLibraryInformationString().Data() ); } );
 
+
+
     /////////
     // eColorModel
     py::enum_< eColorModel >( m, "eColorModel" )
@@ -531,6 +533,30 @@ PYBIND11_MODULE( pyULIS4, m ) {
                 return  FOnCleanupData( &OnCleanup_FreeMemory );
             }
         );
+
+
+
+    /////////
+    // FOnEventComplete
+    py::class_< FOnEventComplete >( m, "FOnEventComplete" )
+        .def( py::init<>() )
+        .def( py::init< FOnEventComplete::tFptr >(), "fptr"_a )
+        // Lambda wrapper to authorize creating an FOnEventComplete from a
+        // python function, wrapped into a secondary lambda.
+        .def(
+            py::init<>(
+                []( py::function func ) {
+                    return  std::make_unique< FOnEventComplete >(
+                        [ func ]( const FRectI& rect ) {
+                            func( rect );
+                        }
+                    );
+                }
+            )
+            , "fptr"_a
+        )
+        .def( "ExecuteIfBound", &FOnEventComplete::ExecuteIfBound )
+        .def( "Execute", &FOnEventComplete::Execute );
 
 
 
