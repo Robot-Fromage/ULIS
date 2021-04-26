@@ -1562,5 +1562,58 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Size", &FStructuringElement::Size )
         .def( "Pivot", &FStructuringElement::Pivot )
         .def( "SetPivot", &FStructuringElement::SetPivot );
+
+
+
+    /////////
+    // FFontStyleEntry
+    py::class_< FFontStyleEntry >( m, "FFontStyleEntry" )
+        .def( py::init< const std::string&, const std::string&, const std::string& >(), "family"_a, "style"_a, "path"_a )
+        .def( "Family", &FFontStyleEntry::Family )
+        .def( "Style", &FFontStyleEntry::Style )
+        .def( "Path", &FFontStyleEntry::Path );
+
+
+
+    /////////
+    // FFontFamilyEntry
+    py::class_< FFontFamilyEntry >( m, "FFontFamilyEntry" )
+        .def( py::init< const std::string& >(), "name"_a )
+        .def( "AddFontStyleKey", &FFontFamilyEntry::AddFontStyleKey )
+        .def( "StyleCount", &FFontFamilyEntry::StyleCount )
+        .def( "Styles", &FFontFamilyEntry::Styles )
+        .def( "Family", &FFontFamilyEntry::Family )
+        .def( "FuzzyFindFontStyleKey", &FFontFamilyEntry::FuzzyFindFontStyleKey );
+
+
+
+    /////////
+    // FFontEngine
+    py::class_< FFontEngine >( m, "FFontEngine" )
+        .def( py::init<>() )
+        .def( "LibraryHandle", &FFontEngine::LibraryHandle )
+        .def( "AddLookupPath", &FFontEngine::AddLookupPath )
+        .def( "AddLookupPaths", &FFontEngine::AddLookupPaths )
+        .def( "Refresh", &FFontEngine::Refresh )
+        .def( "FamilyCount", &FFontEngine::FamilyCount )
+        .def( "Records", &FFontEngine::Records )
+        .def( "LookupPaths", &FFontEngine::LookupPaths )
+        .def( "FuzzyFindFontFamily", &FFontEngine::FuzzyFindFontFamily )
+        .def( "FuzzyFindFontStyle", &FFontEngine::FuzzyFindFontStyle )
+        .def( "FuzzyFindFontPath", &FFontEngine::FuzzyFindFontPath );
+
+
+
+    /////////
+    // FFont
+    py::class_< FFont >( m, "FFont" )
+        .def( py::init< const FFontEngine&, const std::string&, const std::string& >(), "engine"_a, "family"_a, "style"_a )
+        .def( py::init< const FFontEngine&, const FFontStyleEntry* >(), "engine"_a, "entry"_a )
+        .def( py::init< const FFontEngine&, const std::string& >(), "engine"_a, "path"_a )
+        .def( py::init< const FFont& >(), "other"_a )
+        .def( "FontHandle", &FFont::FontHandle )
+        .def( "FontEngine", &FFont::FontEngine )
+        .def( "Family", &FFont::Family )
+        .def( "Style", &FFont::Style );
 }
 
