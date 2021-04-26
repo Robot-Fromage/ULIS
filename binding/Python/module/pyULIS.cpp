@@ -321,106 +321,131 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .export_values();
 
 
-    /*
+
+    /////////
+    // eResamplingMethod
+    py::enum_< eResamplingMethod >( m, "eResamplingMethod" )
+        .value( "Resampling_NearestNeighbour",  eResamplingMethod::Resampling_NearestNeighbour  )
+        .value( "Resampling_Bilinear",          eResamplingMethod::Resampling_Bilinear          )
+        .value( "Resampling_Bicubic",           eResamplingMethod::Resampling_Bicubic           )
+        .value( "Resampling_Area",              eResamplingMethod::Resampling_Area              )
+        .export_values();
 
 
-/////////////////////////////////////////////////////
-// eResamplingMethod
-enum eResamplingMethod
-{
-      Resampling_NearestNeighbour
-    , Resampling_Bilinear
-    , Resampling_Bicubic
-    , Resampling_Area
-};
+
+    /////////
+    // eMipsLayout
+    py::enum_< eMipsLayout >( m, "eMipsLayout" )
+        .value( "MipsLayout_Standard",  eMipsLayout::MipsLayout_Standard    )
+        .value( "MipsLayout_MipsOnly",  eMipsLayout::MipsLayout_MipsOnly    )
+        .export_values();
 
 
-/////////////////////////////////////////////////////
-// eMipsLayout
-enum eMipsLayout
-{
-      MipsLayout_Standard
-    , MipsLayout_MipsOnly
-};
 
-/////////////////////////////////////////////////////
-// eImageFormat
-enum eFileFormat {
-      FileFormat_png
-    , FileFormat_bmp
-    , FileFormat_tga
-    , FileFormat_jpg
-    , FileFormat_hdr
-};
+    /////////
+    // eFileFormat
+    py::enum_< eFileFormat >( m, "eFileFormat" )
+        .value( "FileFormat_png", eFileFormat::FileFormat_png )
+        .value( "FileFormat_bmp", eFileFormat::FileFormat_bmp )
+        .value( "FileFormat_tga", eFileFormat::FileFormat_tga )
+        .value( "FileFormat_jpg", eFileFormat::FileFormat_jpg )
+        .value( "FileFormat_hdr", eFileFormat::FileFormat_hdr )
+        .export_values();
 
 
-/////////////////////////////////////////////////////
-// eGradientType
-enum eGradientType {
-      Gradient_Linear
-    , Gradient_Radial
-    , Gradient_Angular
-    , Gradient_Reflected
-    , Gradient_Diamond
-};
+
+    /////////
+    // eGradientType
+    py::enum_< eGradientType >( m, "eGradientType" )
+        .value( "Gradient_Linear",      eGradientType::Gradient_Linear      )
+        .value( "Gradient_Radial",      eGradientType::Gradient_Radial      )
+        .value( "Gradient_Angular",     eGradientType::Gradient_Angular     )
+        .value( "Gradient_Reflected",   eGradientType::Gradient_Reflected   )
+        .value( "Gradient_Diamond",     eGradientType::Gradient_Diamond     )
+        .export_values();
 
 
-enum eMorphologicalElementValue {
-      MpE_Zero  = 0
-    , MpE_One   = 1
-    , MpE_Any   = 2
-};
 
-enum eLayerType
-{
-      Layer_Invalid
-    , Layer_Root
-    , Layer_Image
-    , Layer_Folder
-    , Layer_Text
-    , Layer_Vector
-    , Layer_FX
-    , Layer_Mask
-};
+    /////////
+    // eMorphologicalElementValue
+    py::enum_< eMorphologicalElementValue >( m, "eMorphologicalElementValue" )
+        .value( "MpE_Zero",     eMorphologicalElementValue::MpE_Zero    )
+        .value( "MpE_One",      eMorphologicalElementValue::MpE_One     )
+        .value( "MpE_Any",      eMorphologicalElementValue::MpE_Any     )
+        .export_values();
 
 
-/////////////////////////////////////////////////////
-// eEventStatus
-enum eEventStatus : uint8
-{
-      EventStatus_Idle
-    , EventStatus_Queued
-    , EventStatus_Finished
-};
 
-enum eScheduleTimePolicy : uint8 {
-      ScheduleTime_Sync = 0
-    , ScheduleTime_Async = 1
-};
-
-enum eScheduleRunPolicy : uint8 {
-      ScheduleRun_Mono  = 0
-    , ScheduleRun_Multi = 1
-};
-
-enum eScheduleModePolicy : uint8 {
-      ScheduleMode_Scanlines = 0
-    , ScheduleMode_Chunks = 1
-};
-
-enum eScheduleParameterPolicy : uint8 {
-      ScheduleParameter_Count = 0
-    , ScheduleParameter_Length = 1
-};
+    /////////
+    // eLayerType
+    py::enum_< eLayerType >( m, "eLayerType" )
+        .value( "Layer_Invalid",    eLayerType::Layer_Invalid   )
+        .value( "Layer_Root",       eLayerType::Layer_Root      )
+        .value( "Layer_Image",      eLayerType::Layer_Image     )
+        .value( "Layer_Folder",     eLayerType::Layer_Folder    )
+        .value( "Layer_Text",       eLayerType::Layer_Text      )
+        .value( "Layer_Vector",     eLayerType::Layer_Vector    )
+        .value( "Layer_FX",         eLayerType::Layer_FX        )
+        .value( "Layer_Mask",       eLayerType::Layer_Mask      )
+        .export_values();
 
 
-enum ePerformanceIntent : uint32 {
-      PerformanceIntent_MEM   = 0b0000
-    , PerformanceIntent_SSE   = 0b0001
-    , PerformanceIntent_AVX   = 0b0010
-    , PerformanceIntent_Max   = 0b1111
-};
-    */
+
+    /////////
+    // eEventStatus
+    py::enum_< eEventStatus >( m, "eEventStatus" )
+        .value( "EventStatus_Idle",     eEventStatus::EventStatus_Idle      )
+        .value( "EventStatus_Queued",   eEventStatus::EventStatus_Queued    )
+        .value( "EventStatus_Finished", eEventStatus::EventStatus_Finished  )
+        .export_values();
+
+
+
+    /////////
+    // eScheduleTimePolicy
+    py::enum_< eScheduleTimePolicy >( m, "eScheduleTimePolicy" )
+        .value( "ScheduleTime_Sync",    eScheduleTimePolicy::ScheduleTime_Sync  )
+        .value( "ScheduleTime_Async",   eScheduleTimePolicy::ScheduleTime_Async )
+        .export_values();
+
+
+
+    /////////
+    // eScheduleRunPolicy
+    py::enum_< eScheduleRunPolicy >( m, "eScheduleRunPolicy" )
+        .value( "ScheduleRun_Mono",     eScheduleRunPolicy::ScheduleRun_Mono    )
+        .value( "ScheduleRun_Multi",    eScheduleRunPolicy::ScheduleRun_Multi   )
+        .export_values();
+
+
+    /////////
+    // eScheduleModePolicy
+    py::enum_< eScheduleModePolicy >( m, "eScheduleModePolicy" )
+        .value( "ScheduleMode_Scanlines",   eScheduleModePolicy::ScheduleMode_Scanlines )
+        .value( "ScheduleMode_Chunks",      eScheduleModePolicy::ScheduleMode_Chunks    )
+        .export_values();
+
+
+
+    /////////
+    // eScheduleParameterPolicy
+    py::enum_< eScheduleParameterPolicy >( m, "eScheduleParameterPolicy" )
+        .value( "ScheduleParameter_Count",  eScheduleParameterPolicy::ScheduleParameter_Count   )
+        .value( "ScheduleParameter_Length", eScheduleParameterPolicy::ScheduleParameter_Length  )
+        .export_values();
+
+
+    /////////
+    // ePerformanceIntent
+    py::enum_< ePerformanceIntent >( m, "ePerformanceIntent" )
+        .value( "PerformanceIntent_MEM", ePerformanceIntent::PerformanceIntent_MEM )
+        .value( "PerformanceIntent_SSE", ePerformanceIntent::PerformanceIntent_SSE )
+        .value( "PerformanceIntent_AVX", ePerformanceIntent::PerformanceIntent_AVX )
+        .value( "PerformanceIntent_Max", ePerformanceIntent::PerformanceIntent_Max )
+        .export_values();
+
+
+
     /////////
     // FFormatMetrics
     py::class_< FFormatMetrics >( m, "FFormatMetrics" )
