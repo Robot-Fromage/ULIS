@@ -107,8 +107,8 @@ FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
     bStop = false;
 
     uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
+    mWorkers.clear();
     mWorkers.reserve( max );
-    mWorkers.shrink_to_fit();
     for( uint32 i = 0; i < max; ++i )
         mWorkers.emplace_back( std::bind( &FThreadPool_Private::WorkProcess, this ) );
 }
