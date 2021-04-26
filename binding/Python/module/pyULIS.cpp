@@ -12,6 +12,11 @@
 #include <ULIS>
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
+#include <pybind11/complex.h>
+#include <pybind11/complex.h>
+#include <pybind11/functional.h>
+#include <pybind11/chrono.h>
 using namespace ::ULIS;
 using namespace pybind11::literals;
 namespace py = pybind11;
@@ -1487,5 +1492,75 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "ScanlineBits", static_cast< uint8* ( FBlock::* )( uint16 ) >( &FBlock::ScanlineBits ), "row"_a )
         .def( "SetPixel", &FBlock::SetPixel, "x"_a, "y"_a, "sample"_a )
         .def( "Width", &FBlock::Width );
+
+
+
+    /////////
+    // FKernel
+    py::class_< FKernel, FBlock >( m, "FKernel" )
+        .def( py::init< const FVec2I&, float >(), "size"_a, "value"_a = 0.f )
+        .def( py::init< const FKernel& >(), "other"_a )
+        .def( "At", static_cast< float ( FKernel::* )( int, int ) const >( &FKernel::At ) )
+        .def( "At", static_cast< float ( FKernel::* )( const FVec2I& ) const >( &FKernel::At ) )
+        .def( "SetAt", static_cast< void ( FKernel::* )( int, int, float ) >( &FKernel::SetAt ) )
+        .def( "SetAt", static_cast< void ( FKernel::* )( const FVec2I&, float ) >( &FKernel::SetAt ) )
+        .def( "Clear", &FKernel::Clear )
+        .def( "Fill", &FKernel::Fill )
+        .def( "SetZeroes", &FKernel::SetZeroes )
+        .def( "SetOnes", &FKernel::SetOnes )
+        .def( "Sum", &FKernel::Sum )
+        .def( "Add", &FKernel::Add )
+        .def( "Mul", &FKernel::Mul )
+        .def( "Normalize", &FKernel::Normalize )
+        .def( "IsNormalized", &FKernel::IsNormalized )
+        .def( "FlipX", &FKernel::FlipX )
+        .def( "FlipY", &FKernel::FlipY )
+        .def( "Rotate90CW", &FKernel::Rotate90CW )
+        .def( "Rotate90CCW", &FKernel::Rotate90CCW )
+        .def( "Rotate180", &FKernel::Rotate180 )
+        .def( "Normalized", &FKernel::Normalized )
+        .def( "FlippedX", &FKernel::FlippedX )
+        .def( "FlippedY", &FKernel::FlippedY )
+        .def( "Rotated90CW", &FKernel::Rotated90CW )
+        .def( "Rotated90CCW", &FKernel::Rotated90CCW )
+        .def( "Rotated180", &FKernel::Rotated180 )
+        .def( "Size", &FKernel::Size )
+        .def( "Pivot", &FKernel::Pivot )
+        .def( "SetPivot", &FKernel::SetPivot )
+        .def_readonly_static( "Identity",       &FKernel::Identity      )
+        .def_readonly_static( "Edge4",          &FKernel::Edge4         )
+        .def_readonly_static( "Edge8",          &FKernel::Edge8         )
+        .def_readonly_static( "Sharpen",        &FKernel::Sharpen       )
+        .def_readonly_static( "BoxBlur",        &FKernel::BoxBlur       )
+        .def_readonly_static( "GaussianBlur",   &FKernel::GaussianBlur  )
+        .def_readonly_static( "UnsharpMask",    &FKernel::UnsharpMask   );
+
+
+    /////////
+    // FStructuringElement
+    py::class_< FStructuringElement, FBlock >( m, "FStructuringElement" )
+        .def( py::init< const FVec2I&, eMorphologicalElementValue >(), "size"_a, "value"_a = 0.f )
+        .def( py::init< const FStructuringElement& >(), "other"_a )
+        .def( "At", static_cast< eMorphologicalElementValue ( FStructuringElement::* )( int, int ) const >( &FStructuringElement::At ) )
+        .def( "At", static_cast< eMorphologicalElementValue ( FStructuringElement::* )( const FVec2I& ) const >( &FStructuringElement::At ) )
+        .def( "SetAt", static_cast< void ( FStructuringElement::* )( int, int, eMorphologicalElementValue ) >( &FStructuringElement::SetAt ) )
+        .def( "SetAt", static_cast< void ( FStructuringElement::* )( const FVec2I&, eMorphologicalElementValue ) >( &FStructuringElement::SetAt ) )
+        .def( "Clear", &FStructuringElement::Clear )
+        .def( "Fill", &FStructuringElement::Fill )
+        .def( "SetZeroes", &FStructuringElement::SetZeroes )
+        .def( "SetOnes", &FStructuringElement::SetOnes )
+        .def( "FlipX", &FStructuringElement::FlipX )
+        .def( "FlipY", &FStructuringElement::FlipY )
+        .def( "Rotate90CW", &FStructuringElement::Rotate90CW )
+        .def( "Rotate90CCW", &FStructuringElement::Rotate90CCW )
+        .def( "Rotate180", &FStructuringElement::Rotate180 )
+        .def( "FlippedX", &FStructuringElement::FlippedX )
+        .def( "FlippedY", &FStructuringElement::FlippedY )
+        .def( "Rotated90CW", &FStructuringElement::Rotated90CW )
+        .def( "Rotated90CCW", &FStructuringElement::Rotated90CCW )
+        .def( "Rotated180", &FStructuringElement::Rotated180 )
+        .def( "Size", &FStructuringElement::Size )
+        .def( "Pivot", &FStructuringElement::Pivot )
+        .def( "SetPivot", &FStructuringElement::SetPivot );
 }
 
