@@ -26,6 +26,29 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // AXI
+    m.def( "VersionString",                 [](){ return  std::string( VersionString().Data() ); } );
+    m.def( "VersionMajorString",            [](){ return  std::string( VersionMajorString().Data() ); } );
+    m.def( "VersionMinorString",            [](){ return  std::string( VersionMinorString().Data() ); } );
+    m.def( "VersionPatchString",            [](){ return  std::string( VersionPatchString().Data() ); } );
+    m.def( "VersionMajor",                  &VersionMajor );
+    m.def( "VersionMinor",                  &VersionMinor );
+    m.def( "VersionPatch",                  &VersionPatch );
+    m.def( "ConfigurationString",           [](){ return  std::string( ConfigurationString().Data() ); } );
+    m.def( "CompilationTimeStampString",    [](){ return  std::string( CompilationTimeStampString().Data() ); } );
+    m.def( "CompilerNameString",            [](){ return  std::string( CompilerNameString().Data() ); } );
+    m.def( "CompilerVersionString",         [](){ return  std::string( CompilerVersionString().Data() ); } );
+    m.def( "CompilerInformationString",     [](){ return  std::string( CompilerInformationString().Data() ); } );
+    m.def( "BranchName",                    [](){ return  std::string( BranchName().Data() ); } );
+    m.def( "CommitHash",                    [](){ return  std::string( CommitHash().Data() ); } );
+    m.def( "CommitAbbreviatedHash",         [](){ return  std::string( CommitAbbreviatedHash().Data() ); } );
+    m.def( "CompiledFor64Bit",              &CompiledFor64Bit );
+    m.def( "CompiledWithAVX2",              &CompiledWithAVX2 );
+    m.def( "CompiledWithSSE42",             &CompiledWithSSE42 );
+    m.def( "CompiledWithMT",                &CompiledWithMT );
+    m.def( "FullLibraryInformationString",  [](){ return  std::string( FullLibraryInformationString().Data() ); } );
+
+    /////////
     // eColorModel
     py::enum_< eColorModel >( m, "eColorModel" )
         .value( "ColorModel_GREY",  eColorModel::ColorModel_GREY    )
