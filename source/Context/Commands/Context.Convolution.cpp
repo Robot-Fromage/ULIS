@@ -140,7 +140,7 @@ FContext::ConvolvePremult(
 ulError
 FContext::MorphologicalProcess(
       const FBlock& iSource
-    , FBlock iDestination
+    , FBlock& iDestination
     , const FStructuringElement& iKernel
     , const FRectI& iSourceRect
     , const FVec2I& iPosition

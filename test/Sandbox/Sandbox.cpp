@@ -12,8 +12,52 @@
 #include <ULIS>
 using namespace ::ULIS;
 
+using pyBuffer_Event = TArray< FEvent >;
+
+/////////
+// Context Utils
+template< typename T >
+auto ctxTypeAdapter( T v ) {
+    return  v;
+}
+
+template<>
+auto ctxTypeAdapter< std::wstring >( std::wstring v ) {
+    return  FWString( v.c_str() );
+}
+
+template< typename ... Ts, typename F >
+auto ctxCallAdapter( F fptr ) {
+    return  [fptr]( Ts ... args, pyBuffer_Event& iWaitList, FEvent* iEvent ) {
+        fptr( ctxTypeAdapter( args ) ..., iWaitList.Size(), iWaitList.Data(), iEvent );
+    };
+}
+
+// Just a dummy command
+int test_command(
+      const FBlock* iSource
+    , FBlock* iDestination
+    , const FWString& iStr
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    auto dummy = 0;
+    return  0;
+}
+
+// Invocation of command
+void test_adapter() {
+    pyBuffer_Event arr( 5 );
+    ctxCallAdapter< const FBlock*, FBlock*, const std::wstring& >( &test_command )( nullptr, nullptr, L"test", arr, nullptr );
+}
+
 int
 main() {
+
+    test_adapter();
+
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;

@@ -1501,7 +1501,7 @@ public:
     ulError
     MorphologicalProcess(
           const FBlock& iSource
-        , FBlock iDestination
+        , FBlock& iDestination
         , const FStructuringElement& iKernel
         , const FRectI& iSourceRect = FRectI::Auto
         , const FVec2I& iPosition = FVec2I( 0 )
