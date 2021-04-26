@@ -808,7 +808,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
-    // FVec3I
+    // FVec4I
     py::class_< FVec4I >( m, "FVec4I" )
         .def( py::init<>() )
         .def( py::init< int >(), "value"_a )
@@ -941,7 +941,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
-    // FVec3F
+    // FVec4F
     py::class_< FVec4F >( m, "FVec4F" )
         .def( py::init<>() )
         .def( py::init< float >(), "value"_a )
@@ -982,6 +982,63 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def_readwrite( "y", &FVec4F::y )
         .def_readwrite( "z", &FVec4F::z )
         .def_readwrite( "w", &FVec4F::w );
+
+
+
+    /////////
+    // FVec4F
+    py::class_< FMat3F >( m, "FMat3F" )
+        .def( py::init<>() )
+        .def( py::init< float >(), "value"_a )
+        .def(
+            py::init<
+                  float, float, float
+                , float, float, float
+                , float, float, float
+            >
+            ()
+            , "m00"_a, "m01"_a, "m02"_a
+            , "m10"_a, "m11"_a, "m02"_a
+            , "m20"_a, "m21"_a, "m02"_a
+        )
+        .def( py::init< const FVec3F&, const FVec3F&, const FVec3F& >(), "col0"_a, "col1"_a, "col2"_a )
+        .def( py::init< const FMat3F& >(), "other"_a )
+        .def( "Data", static_cast< float* ( FMat3F::* )() >( &FMat3F::Data ) )
+        .def( "Inverse", &FMat3F::Inverse )
+        .def( "Transpose", &FMat3F::Transpose )
+        .def( "Determinant", &FMat3F::Determinant )
+        .def( "Decompose", &FMat3F::Decompose )
+        .def( "ApplyHomography", &FMat3F::ApplyHomography )
+        .def( "MakeRotationMatrix", &FMat3F::MakeRotationMatrix )
+        .def( "MakeScaleMatrix", &FMat3F::MakeScaleMatrix )
+        .def( "MakeSkewMatrix", &FMat3F::MakeSkewMatrix )
+        .def( "MakeTranslationMatrix", &FMat3F::MakeTranslationMatrix )
+        .def( "MakeHomography", &FMat3F::MakeHomography )
+        .def( py::self == py::self )
+        .def( py::self != py::self )
+        .def( -py::self )
+        .def( py::self += float() )
+        .def( py::self -= float() )
+        .def( py::self *= float() )
+        .def( py::self /= float() )
+        .def( py::self += py::self )
+        .def( py::self -= py::self )
+        .def( py::self *= py::self )
+        .def( py::self /= py::self )
+        .def( py::self + float() )
+        .def( py::self - float() )
+        .def( py::self * float() )
+        .def( py::self / float() )
+        .def( float() + py::self )
+        .def( float() - py::self )
+        .def( float() * py::self )
+        .def( float() / py::self )
+        .def( py::self + py::self )
+        .def( py::self - py::self )
+        .def( py::self * py::self )
+        .def( py::self / py::self )
+        .def( py::self * FVec3F() )
+        .def( FVec3F() * py::self );
 
 
 
