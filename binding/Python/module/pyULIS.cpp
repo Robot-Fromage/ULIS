@@ -26,6 +26,19 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // ulError codes
+    m.attr( "NO_ERROR"                      ) = ULIS_NO_ERROR;
+    m.attr( "WARNING_NO_OP"                 ) = ULIS_WARNING_NO_OP;
+    m.attr( "WARNING_NO_OP_GEOMETRY"        ) = ULIS_WARNING_NO_OP_GEOMETRY;
+    m.attr( "WARNING_NO_OP_BAD_FILE_FORMAT" ) = ULIS_WARNING_NO_OP_BAD_FILE_FORMAT;
+    m.attr( "WARNING_NO_OP_BAD_INPUT_DATA"  ) = ULIS_WARNING_NO_OP_BAD_INPUT_DATA;
+    m.attr( "ERROR_FORMATS_MISMATCH"        ) = ULIS_ERROR_FORMATS_MISMATCH;
+    m.attr( "ERROR_CONCURRENT_DATA"         ) = ULIS_ERROR_CONCURRENT_DATA;
+    m.attr( "ERROR_BAD_INPUT_DATA"          ) = ULIS_ERROR_BAD_INPUT_DATA;
+
+
+
+    /////////
     // AXI
     m.def( "VersionString",                 [](){ return  std::string( VersionString().Data() ); } );
     m.def( "VersionMajorString",            [](){ return  std::string( VersionMajorString().Data() ); } );
