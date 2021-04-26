@@ -116,10 +116,10 @@ public:
 
     // Boolean operators
     /*! Equality operator. */
-    ULIS_MATRIX_FUNC bool operator==( const TMatrix3& iOther );
+    ULIS_MATRIX_FUNC bool operator==( const TMatrix3& iOther )  const;
 
     /*! Inequality operator. */
-    ULIS_MATRIX_FUNC bool operator!=( const TMatrix3& iOther );
+    ULIS_MATRIX_FUNC bool operator!=( const TMatrix3& iOther )  const;
 
 
 
@@ -483,14 +483,14 @@ TMatrix3< T >::MakeHomography( const TVector2< T > iSrc[], const TVector2< T > i
 
 // Boolean operators
 template< typename T >
-ULIS_MATRIX_FUNC bool TMatrix3< T >::operator==( const TMatrix3< T >& iOther ) {
+ULIS_MATRIX_FUNC bool TMatrix3< T >::operator==( const TMatrix3< T >& iOther ) const {
     return  mCols[0] == iOther.mCols[0]
         &&  mCols[1] == iOther.mCols[1]
         &&  mCols[2] == iOther.mCols[2];
 }
 
 template< typename T >
-ULIS_MATRIX_FUNC bool TMatrix3< T >::operator!=( const TMatrix3< T >& iOther ) {
+ULIS_MATRIX_FUNC bool TMatrix3< T >::operator!=( const TMatrix3< T >& iOther ) const {
     return  !( *this == iOther );
 }
 
