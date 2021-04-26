@@ -9,6 +9,7 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include <iostream>
 #include <ULIS>
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
@@ -23,20 +24,15 @@ namespace py = pybind11;
 
 /////////
 // Context Utils
-template< typename T >
-auto ctxTypeAdapter( T v ) {
-    return  v;
-}
-
-template<>
-auto ctxTypeAdapter< std::wstring >( std::wstring v ) {
-    return  FWString( v.c_str() );
-}
-
 template< typename ... Ts, typename F >
 auto ctxCallAdapter( F fptr ) {
-    return  [fptr]( Ts ... args, TArray< FEvent >& iWaitList, FEvent* iEvent ) {
-        fptr( ctxTypeAdapter( args ) ..., iWaitList.Size(), iWaitList.Data(), iEvent );
+    return  [fptr]( FContext* ctx, Ts ... args, py::list iWaitList, FEvent* iEvent ) {
+        TArray< FEvent > arr;
+        arr.Reserve( iWaitList.size() );
+        /*for( auto it = iWaitList ) {
+            arr.PushBack( FEvent( it ) );
+        }*/
+        (ctx->*fptr)( args ..., static_cast< uint32 >( arr.Size() ), arr.Data(), iEvent );
     };
 }
 
@@ -581,7 +577,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def(
             py::init<>(
                 []( py::function func ) {
-                    return  std::make_unique< FOnEventComplete >(
+                    return  FOnEventComplete(
                         [ func ]( const FRectI& rect ) {
                             func( rect );
                         }
@@ -1104,7 +1100,8 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "TransformedPerspective", &FRectI::TransformedPerspective )
         .def( "Shift", &FRectI::Shift )
         .def( "Position", &FRectI::Position )
-        .def( "Size", &FRectI::Size );
+        .def( "Size", &FRectI::Size )
+        .def_readonly_static( "Auto", &FRectI::Auto );
 
 
 
@@ -1135,7 +1132,8 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "TransformedPerspective", &FRectF::TransformedPerspective )
         .def( "Shift", &FRectF::Shift )
         .def( "Position", &FRectF::Position )
-        .def( "Size", &FRectF::Size );
+        .def( "Size", &FRectF::Size )
+        .def_readonly_static( "Auto", &FRectF::Auto );  
 
 
 
@@ -1638,7 +1636,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
     /////////
     // FContext
     py::class_< FContext >( m, "FContext" )
-        .def( py::init< FCommandQueue&, eFormat, ePerformanceIntent >(), "queue"_a, "format"_a, "intent"_a )
+        .def( py::init< FCommandQueue&, eFormat, ePerformanceIntent >(), "queue"_a, "format"_a, "intent"_a = ePerformanceIntent::PerformanceIntent_Max )
         .def( "Flush", &FContext::Flush )
         .def( "Finish", &FContext::Finish )
         .def( "Fence", &FContext::Fence )
@@ -1646,6 +1644,22 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Format", &FContext::Format )
         .def( "FontEngine", static_cast< FFontEngine& ( FContext::* )() >( &FContext::FontEngine ) )
         .def( "FinishEventNo_OP", &FContext::FinishEventNo_OP )
-        .def( "Dummy_OP", &FContext::Dummy_OP );
+        .def( "Dummy_OP", &FContext::Dummy_OP )
+        .def(
+              "Clear"
+            , ctxCallAdapter<
+                  FBlock&
+                , const FRectI&
+                , const FSchedulePolicy&
+            >
+            (
+                &FContext::Clear
+            )
+            , "block"_a
+            , "rect"_a = FRectI::Auto
+            , "policy"_a = FSchedulePolicy::CacheEfficient
+            , "waitList"_a = py::list()
+            , "event"_a = nullptr
+        );
 }
 
