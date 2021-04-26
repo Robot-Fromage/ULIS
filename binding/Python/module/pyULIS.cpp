@@ -1615,5 +1615,20 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "FontEngine", &FFont::FontEngine )
         .def( "Family", &FFont::Family )
         .def( "Style", &FFont::Style );
+
+
+
+    /////////
+    // FContext
+    py::class_< FContext >( m, "FContext" )
+        .def( py::init< FCommandQueue&, eFormat, ePerformanceIntent >(), "queue"_a, "format"_a, "intent"_a )
+        .def( "Flush", &FContext::Flush )
+        .def( "Finish", &FContext::Finish )
+        .def( "Fence", &FContext::Fence )
+        .def( "Wait", &FContext::Wait )
+        .def( "Format", &FContext::Format )
+        .def( "FontEngine", static_cast< FFontEngine& ( FContext::* )() >( &FContext::FontEngine ) )
+        .def( "FinishEventNo_OP", &FContext::FinishEventNo_OP )
+        .def( "Dummy_OP", &FContext::Dummy_OP );
 }
 
