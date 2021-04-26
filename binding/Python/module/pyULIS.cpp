@@ -643,6 +643,54 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // FHardwareMetrics
+    py::class_< FHardwareMetrics >( m, "FHardwareMetrics" )
+        .def( py::init<>() )
+        .def( "IsHardwareAMD",          &FHardwareMetrics::IsHardwareAMD            )
+        .def( "IsHardwareIntel",        &FHardwareMetrics::IsHardwareIntel          )
+        .def( "IsOSx64",                &FHardwareMetrics::IsOSx64                  )
+        .def( "HasOSAVX",               &FHardwareMetrics::HasOSAVX                 )
+        .def( "HasOSAVX512",            &FHardwareMetrics::HasOSAVX512              )
+        .def( "HasHardwarex64",         &FHardwareMetrics::HasHardwarex64           )
+        .def( "HasHardwareMMX",         &FHardwareMetrics::HasHardwareMMX           )
+        .def( "HasHardwareABM",         &FHardwareMetrics::HasHardwareABM           )
+        .def( "HasHardwareRDRAND",      &FHardwareMetrics::HasHardwareRDRAND        )
+        .def( "HasHardwareBMI1",        &FHardwareMetrics::HasHardwareBMI1          )
+        .def( "HasHardwareBMI2",        &FHardwareMetrics::HasHardwareBMI2          )
+        .def( "HasHardwareADX",         &FHardwareMetrics::HasHardwareADX           )
+        .def( "HasHardwarePREFETCHWT1", &FHardwareMetrics::HasHardwarePREFETCHWT1   )
+        .def( "HasHardwareMPX",         &FHardwareMetrics::HasHardwareMPX           )
+        .def( "HasHardwareSSE",         &FHardwareMetrics::HasHardwareSSE           )
+        .def( "HasHardwareSSE2",        &FHardwareMetrics::HasHardwareSSE2          )
+        .def( "HasHardwareSSE3",        &FHardwareMetrics::HasHardwareSSE3          )
+        .def( "HasHardwareSSSE3",       &FHardwareMetrics::HasHardwareSSSE3         )
+        .def( "HasHardwareSSE41",       &FHardwareMetrics::HasHardwareSSE41         )
+        .def( "HasHardwareSSE42",       &FHardwareMetrics::HasHardwareSSE42         )
+        .def( "HasHardwareSSE4a",       &FHardwareMetrics::HasHardwareSSE4a         )
+        .def( "HasHardwareAES",         &FHardwareMetrics::HasHardwareAES           )
+        .def( "HasHardwareSHA",         &FHardwareMetrics::HasHardwareSHA           )
+        .def( "HasHardwareAVX",         &FHardwareMetrics::HasHardwareAVX           )
+        .def( "HasHardwareXOP",         &FHardwareMetrics::HasHardwareXOP           )
+        .def( "HasHardwareFMA3",        &FHardwareMetrics::HasHardwareFMA3          )
+        .def( "HasHardwareFMA4",        &FHardwareMetrics::HasHardwareFMA4          )
+        .def( "HasHardwareAVX2",        &FHardwareMetrics::HasHardwareAVX2          )
+        .def( "HasHardwareAVX512_F",    &FHardwareMetrics::HasHardwareAVX512_F      )
+        .def( "HasHardwareAVX512_PF",   &FHardwareMetrics::HasHardwareAVX512_PF     )
+        .def( "HasHardwareAVX512_ER",   &FHardwareMetrics::HasHardwareAVX512_ER     )
+        .def( "HasHardwareAVX512_CD",   &FHardwareMetrics::HasHardwareAVX512_CD     )
+        .def( "HasHardwareAVX512_VL",   &FHardwareMetrics::HasHardwareAVX512_VL     )
+        .def( "HasHardwareAVX512_BW",   &FHardwareMetrics::HasHardwareAVX512_BW     )
+        .def( "HasHardwareAVX512_DQ",   &FHardwareMetrics::HasHardwareAVX512_DQ     )
+        .def( "HasHardwareAVX512_IFMA", &FHardwareMetrics::HasHardwareAVX512_IFMA   )
+        .def( "HasHardwareAVX512_VBMI", &FHardwareMetrics::HasHardwareAVX512_VBMI   )
+        .def( "MaxWorkers",             &FHardwareMetrics::MaxWorkers               )
+        .def( "L1CacheSize",            &FHardwareMetrics::L1CacheSize              )
+        .def( "L1CacheLineSize",        &FHardwareMetrics::L1CacheLineSize          )
+        .def( "Field",                  &FHardwareMetrics::Field                    );
+
+
+
+    /////////
     // Vec Utils
     #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )            .def( ULIS_STRINGIFY( E0 ## E1 ), & CLASS :: E0 ## E1 )
     #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )        .def( ULIS_STRINGIFY( E0 ## E1 ## E2 ), & CLASS :: E0 ## E1 ## E2 )
