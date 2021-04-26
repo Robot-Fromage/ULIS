@@ -561,6 +561,16 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // FEvent
+    py::class_< FEvent >( m, "FEvent" )
+        .def( py::init<>() )
+        .def( py::init< const FOnEventComplete& >(), "onComplete"_a = FOnEventComplete() )
+        .def( "Status", &FEvent::Status )
+        .def( "Wait", &FEvent::Wait );
+
+
+
+    /////////
     // Vec Utils
     #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )            .def( ULIS_STRINGIFY( E0 ## E1 ), & CLASS :: E0 ## E1 )
     #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )        .def( ULIS_STRINGIFY( E0 ## E1 ## E2 ), & CLASS :: E0 ## E1 ## E2 )
