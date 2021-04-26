@@ -1056,6 +1056,68 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // FRectI
+    py::class_< FRectI >( m, "FRectI" )
+        .def( py::init<>() )
+        .def( py::init< int, int, int, int >(), "x"_a, "y"_a, "w"_a, "h"_a )
+        .def_static( "FromXYWH", &FRectI::FromXYWH )
+        .def_static( "FromMinMax", &FRectI::FromMinMax )
+        .def_static( "FromPositionAndSize", &FRectI::FromPositionAndSize )
+        .def( "HitTest", &FRectI::HitTest )
+        .def( "HitTest", &FRectI::InVerticalRange )
+        .def( "HitTest", &FRectI::InHorizontalRange )
+        .def( py::self & py::self )
+        .def( py::self | py::self )
+        .def( py::self - py::self )
+        .def( "Exclusion", &FRectI::Exclusion )
+        .def( "UnionLeaveEmpty", &FRectI::UnionLeaveEmpty )
+        .def( py::self == py::self )
+        .def( py::self != py::self )
+        .def( "Area", &FRectI::Area )
+        .def( "Sanitize", &FRectI::Sanitize )
+        .def( "Sanitized", &FRectI::Sanitized )
+        .def( "TransformAffine", &FRectI::TransformAffine )
+        .def( "TransformPerspective", &FRectI::TransformPerspective )
+        .def( "TransformedAffine", &FRectI::TransformedAffine )
+        .def( "TransformedPerspective", &FRectI::TransformedPerspective )
+        .def( "Shift", &FRectI::Shift )
+        .def( "Position", &FRectI::Position )
+        .def( "Size", &FRectI::Size );
+
+
+
+    /////////
+    // FRectF
+    py::class_< FRectF >( m, "FRectF" )
+        .def( py::init<>() )
+        .def( py::init< float, float, float, float >(), "x"_a, "y"_a, "w"_a, "h"_a )
+        .def_static( "FromXYWH", &FRectF::FromXYWH )
+        .def_static( "FromMinMax", &FRectF::FromMinMax )
+        .def_static( "FromPositionAndSize", &FRectF::FromPositionAndSize )
+        .def( "HitTest", &FRectF::HitTest )
+        .def( "HitTest", &FRectF::InVerticalRange )
+        .def( "HitTest", &FRectF::InHorizontalRange )
+        .def( py::self & py::self )
+        .def( py::self | py::self )
+        .def( py::self - py::self )
+        .def( "Exclusion", &FRectF::Exclusion )
+        .def( "UnionLeaveEmpty", &FRectF::UnionLeaveEmpty )
+        .def( py::self == py::self )
+        .def( py::self != py::self )
+        .def( "Area", &FRectF::Area )
+        .def( "Sanitize", &FRectF::Sanitize )
+        .def( "Sanitized", &FRectF::Sanitized )
+        .def( "TransformAffine", &FRectF::TransformAffine )
+        .def( "TransformPerspective", &FRectF::TransformPerspective )
+        .def( "TransformedAffine", &FRectF::TransformedAffine )
+        .def( "TransformedPerspective", &FRectF::TransformedPerspective )
+        .def( "Shift", &FRectF::Shift )
+        .def( "Position", &FRectF::Position )
+        .def( "Size", &FRectF::Size );
+
+
+
+    /////////
     // IHasFormat
     py::class_< IHasFormat >( m, "IHasFormat" )
         .def( "FormatMetrics", &IHasFormat::FormatMetrics )
