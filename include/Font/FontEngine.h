@@ -25,7 +25,7 @@ class ULIS_API FFontStyleEntry
 public:
     // Construction / Destruction
     ~FFontStyleEntry();
-    FFontStyleEntry( const std::string& iFamily, const std::string& iStyle, const std::string& iFont );
+    FFontStyleEntry( const std::string& iFamily, const std::string& iStyle, const std::string& iPath );
 
 public:
     // Public API
