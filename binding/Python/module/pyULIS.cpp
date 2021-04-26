@@ -571,6 +571,44 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // FFilePathRegistry
+    py::class_< FFilePathRegistry >( m, "FFilePathRegistry" )
+        .def( py::init<>() )
+        .def( "LookupPaths", &FFilePathRegistry::LookupPaths )
+        .def( "Filters", &FFilePathRegistry::Filters )
+        .def( "Records", &FFilePathRegistry::Records )
+        .def( "AddLookupPath", &FFilePathRegistry::AddLookupPath )
+        .def( "AddLookupPaths", &FFilePathRegistry::AddLookupPaths )
+        .def( "AddFilter", &FFilePathRegistry::AddFilter )
+        .def( "AddFilters", &FFilePathRegistry::AddFilters )
+        .def( "Parse", &FFilePathRegistry::Parse )
+        .def( "FilePathForExactMatchingName", &FFilePathRegistry::FilePathForExactMatchingName )
+        .def( "FilePathForClosestMatchingName", &FFilePathRegistry::FilePathForClosestMatchingName );
+
+
+
+    /////////
+    // FThreadPool
+    py::class_< FThreadPool >( m, "FThreadPool" )
+        .def( py::init< uint32 >(), "workers"_a = FThreadPool::MaxWorkers() )
+        .def( "WaitForCompletion", &FThreadPool::WaitForCompletion )
+        .def( "SetNumWorkers", &FThreadPool::SetNumWorkers )
+        .def( "GetNumWorkers", &FThreadPool::GetNumWorkers )
+        .def_static( "MaxWorkers", &FThreadPool::MaxWorkers );
+
+
+
+    /////////
+    // FCommandQueue
+    py::class_< FCommandQueue >( m, "FCommandQueue" )
+        .def( py::init< FThreadPool& >(), "pool"_a )
+        .def( "Flush", &FCommandQueue::Flush )
+        .def( "Finish", &FCommandQueue::Finish )
+        .def( "Fence", &FCommandQueue::Fence );
+
+
+
+    /////////
     // Vec Utils
     #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )            .def( ULIS_STRINGIFY( E0 ## E1 ), & CLASS :: E0 ## E1 )
     #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )        .def( ULIS_STRINGIFY( E0 ## E1 ## E2 ), & CLASS :: E0 ## E1 ## E2 )

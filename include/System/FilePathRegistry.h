@@ -29,7 +29,7 @@ class ULIS_API FFilePathRegistry
 
 public:
     // Construction / Destruction
-    virtual ~FFilePathRegistry();
+    ~FFilePathRegistry();
     FFilePathRegistry();
 
 public:
