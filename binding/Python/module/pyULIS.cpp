@@ -609,6 +609,40 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // FSchedulePolicy
+    py::class_< FSchedulePolicy >( m, "FSchedulePolicy" )
+        .def(
+            py::init<
+                  eScheduleTimePolicy
+                , eScheduleRunPolicy
+                , eScheduleModePolicy
+                , eScheduleParameterPolicy
+                , ULIS::int64
+            >
+            ()
+            , "time"_a  = eScheduleTimePolicy::ScheduleTime_Sync
+            , "run"_a   = eScheduleRunPolicy::ScheduleRun_Multi
+            , "mode"_a  = eScheduleModePolicy::ScheduleMode_Scanlines
+            , "param"_a = eScheduleParameterPolicy::ScheduleParameter_Count
+            , "value"_a = -1
+        )
+        .def( "TimePolicy", &FSchedulePolicy::TimePolicy )
+        .def( "RunPolicy", &FSchedulePolicy::RunPolicy )
+        .def( "ModePolicy", &FSchedulePolicy::ModePolicy )
+        .def( "ParameterPolicy", &FSchedulePolicy::ParameterPolicy )
+        .def( "Value", &FSchedulePolicy::Value )
+        .def_readonly_static( "AsyncCacheEfficient",    &FSchedulePolicy::AsyncCacheEfficient   )
+        .def_readonly_static( "CacheEfficient",         &FSchedulePolicy::CacheEfficient        )
+        .def_readonly_static( "AsyncMonoChunk",         &FSchedulePolicy::AsyncMonoChunk        )
+        .def_readonly_static( "MonoChunk",              &FSchedulePolicy::MonoChunk             )
+        .def_readonly_static( "AsyncMultiScanlines",    &FSchedulePolicy::AsyncMultiScanlines   )
+        .def_readonly_static( "AsyncMonoScanlines",     &FSchedulePolicy::AsyncMonoScanlines    )
+        .def_readonly_static( "MultiScanlines",         &FSchedulePolicy::MultiScanlines        )
+        .def_readonly_static( "MonoScanlines",          &FSchedulePolicy::MonoScanlines         );
+
+
+
+    /////////
     // Vec Utils
     #define PYULIS_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )            .def( ULIS_STRINGIFY( E0 ## E1 ), & CLASS :: E0 ## E1 )
     #define PYULIS_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )        .def( ULIS_STRINGIFY( E0 ## E1 ## E2 ), & CLASS :: E0 ## E1 ## E2 )
