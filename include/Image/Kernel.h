@@ -40,9 +40,9 @@ public:
     // Public API
     void  Set( std::initializer_list< float > iNums );
     float At( int iX, int iY ) const;
-    float At( FVec2I iPoint ) const;
+    float At( const FVec2I& iPoint ) const;
     void SetAt( int iX, int iY, float iValue );
-    void SetAt( FVec2I iPoint, float iValue );
+    void SetAt( const FVec2I& iPoint, float iValue );
     void Clear();
     void Fill( float iValue );
     void SetZeroes();

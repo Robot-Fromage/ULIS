@@ -98,7 +98,7 @@ FStructuringElement::At( int iX, int iY ) const {
 }
 
 eMorphologicalElementValue
-FStructuringElement::At( FVec2I iPoint ) const {
+FStructuringElement::At( const FVec2I& iPoint ) const {
     return  static_cast< eMorphologicalElementValue >( *PixelBits( iPoint.x, iPoint.y ) );
 }
 
@@ -108,7 +108,7 @@ FStructuringElement::SetAt( int iX, int iY, eMorphologicalElementValue iValue ) 
 }
 
 void
-FStructuringElement::SetAt( FVec2I iPoint, eMorphologicalElementValue iValue ) {
+FStructuringElement::SetAt( const FVec2I& iPoint, eMorphologicalElementValue iValue ) {
     *PixelBits( iPoint.x, iPoint.y ) = static_cast< uint8 >( iValue );
 }
 

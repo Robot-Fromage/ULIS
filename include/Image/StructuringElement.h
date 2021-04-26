@@ -45,9 +45,9 @@ public:
     // Public API
     void  Set( std::initializer_list< eMorphologicalElementValue > iNums );
     eMorphologicalElementValue At( int iX, int iY ) const;
-    eMorphologicalElementValue At( FVec2I iPoint ) const;
+    eMorphologicalElementValue At( const FVec2I& iPoint ) const;
     void SetAt( int iX, int iY, eMorphologicalElementValue iValue );
-    void SetAt( FVec2I iPoint, eMorphologicalElementValue iValue );
+    void SetAt( const FVec2I& iPoint, eMorphologicalElementValue iValue );
     void Clear();
     void Fill( eMorphologicalElementValue iValue );
     void SetZeroes();

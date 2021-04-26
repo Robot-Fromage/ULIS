@@ -146,7 +146,7 @@ FKernel::At( int iX, int iY ) const {
 }
 
 float
-FKernel::At( FVec2I iPoint ) const {
+FKernel::At( const FVec2I& iPoint ) const {
     return  *reinterpret_cast< const float* >( PixelBits( iPoint.x, iPoint.y ) );
 }
 
@@ -156,7 +156,7 @@ FKernel::SetAt( int iX, int iY, float iValue ) {
 }
 
 void
-FKernel::SetAt( FVec2I iPoint, float iValue ) {
+FKernel::SetAt( const FVec2I& iPoint, float iValue ) {
     *reinterpret_cast< float* >( PixelBits( iPoint.x, iPoint.y ) ) = iValue;
 }
 
