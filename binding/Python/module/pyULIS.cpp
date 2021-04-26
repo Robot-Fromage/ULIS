@@ -22,6 +22,25 @@ using namespace pybind11::literals;
 namespace py = pybind11;
 
 
+/////////
+// Context Utils
+template< typename T >
+auto ctxTypeAdapter( T v ) {
+    return  v;
+}
+
+template< typename ... Ts, typename F >
+auto ctxCallAdapter( F fptr ) {
+    return  [fptr]( Ts ... args ) { fptr( ctxTypeAdapter( args ) ... ); };
+}
+
+int test_command( int, float, float, const std::string& ) {
+    return  0;
+}
+
+void test_adapter() {
+    ctxCallAdapter< int, float, float, const std::string& >( &test_command )( 0, 5.f, 2.f, "ok" );
+}
 
 /////////
 // pyULIS4
