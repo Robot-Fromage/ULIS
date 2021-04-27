@@ -9,6 +9,10 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#pragma warning(push)
+#pragma warning(disable : 4530 ) // Exception
+#pragma warning(disable : 4244 ) // Conversion
+#pragma warning(disable : 4180 ) // Qualifiers ignored
 #include <iostream>
 #include <ULIS>
 #include <pybind11/pybind11.h>
@@ -1642,27 +1646,6 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
-    // FLayerStack
-    py::class_< FLayerStack >( m, "FLayerStack" )
-        .def( py::init<  ULIS::uint16, ULIS::uint16, eFormat, const FColorSpace* >(), "width"_a, "height"_a, "format"_a = eFormat::Format_RGBA8, "colorspace"_a = nullptr )
-        .def( "Area", &FLayerStack::Area )
-        .def( "CheckSanity", &FLayerStack::CheckSanity )
-        .def( "Height", &FLayerStack::Height )
-        .def( "Rect", &FLayerStack::Rect )
-        .def( "Reset", &FLayerStack::Reset )
-        .def( "Root", static_cast< FLayerRoot& ( FLayerStack::* )() >( &FLayerStack::Root ) )
-        .def( "Width", &FLayerStack::Width );
-
-
-
-    /////////
-    // FLayerFolder
-    py::class_< FLayerFolder >( m, "FLayerFolder" )
-        .def( py::init< const FString&, ULIS::uint16, ULIS::uint16, eFormat, eBlendMode, eAlphaMode, ufloat, FLayerRoot* >()
-            , "name"_a, "width"_a, "height"_a, "format"_a, "blendMode"_a = eBlendMode::Blend_Normal, "alphaMode"_a = eAlphaMode::Alpha_Normal, "opacity"_a = 1.f, "parent"_a = nullptr );
-
-
-    /////////
     // FContext
     py::class_< FContext >( m, "FContext" )
         .def( py::init< FCommandQueue&, eFormat, ePerformanceIntent >(), "queue"_a, "format"_a, "intent"_a = ePerformanceIntent::PerformanceIntent_Max )
@@ -1676,8 +1659,13 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Dummy_OP", &FContext::Dummy_OP )
         .def( "AccumulateSample", ctxCallAdapter< const FBlock&, FColor*, const FRectI&, const FSchedulePolicy& >( &FContext::AccumulateSample )
             , "block"_a, "color"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "AlphaBlend", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2I&, ufloat, const FSchedulePolicy& >( &FContext::AlphaBlend )
+            , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "AlphaBlendAA", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2F&, ufloat, const FSchedulePolicy& >( &FContext::AlphaBlendAA )
+            , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Clear", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::Clear )
             , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr );
 
 }
+#pragma warning(pop)
 
