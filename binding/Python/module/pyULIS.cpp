@@ -10,6 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma warning(push)
+// pragma warning disable is bad, except when i don't give a shit about
+// 3rdparty warnings that prevent me from seeing actually interesting mistakes.
 #pragma warning(disable : 4530 ) // Exception
 #pragma warning(disable : 4244 ) // Conversion
 #pragma warning(disable : 4180 ) // Qualifiers ignored
