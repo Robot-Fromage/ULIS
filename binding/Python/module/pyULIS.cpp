@@ -580,6 +580,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( py::init< FOnEventComplete::tFptr >(), "fptr"_a )
         // Lambda wrapper to authorize creating an FOnEventComplete from a
         // python function, wrapped into a secondary lambda.
+        // Don't care about GIL ( global interpreter lock ) for now.
         .def(
             py::init<>(
                 []( py::function func ) {
@@ -1665,9 +1666,24 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "AlphaBlendAA", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2F&, ufloat, const FSchedulePolicy& >( &FContext::AlphaBlendAA )
             , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "AnalyzeSmallestVisibleRect", ctxCallAdapter< const FBlock&, FRectI*, const FRectI&, const FSchedulePolicy& >( &FContext::AnalyzeSmallestVisibleRect )
+            , "block"_a, "result"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def_static( "BezierDisplacementFieldMetrics", &FContext::BezierDisplacementFieldMetrics )
+        .def_static( "BezierDisplacementMaskMetrics", &FContext::BezierDisplacementMaskMetrics )
+        .def( "Blend", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2I&, eBlendMode, eAlphaMode, ufloat, const FSchedulePolicy& >( &FContext::Blend )
+            , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "blendMode"_a = eBlendMode::Blend_Normal, "alphaMode"_a = eAlphaMode::Alpha_Normal, "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "BlendAA", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2F&, eBlendMode, eAlphaMode, ufloat, const FSchedulePolicy& >( &FContext::BlendAA )
+            , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2F( 0 ), "blendMode"_a = eBlendMode::Blend_Normal, "alphaMode"_a = eAlphaMode::Alpha_Normal, "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "BlendColor", ctxCallAdapter< const ISample&, FBlock&, const FRectI&, eBlendMode, eAlphaMode, ufloat, const FSchedulePolicy& >( &FContext::BlendColor )
+            , "color"_a, "dst"_a, "rect"_a = FRectI::Auto, "blendMode"_a = eBlendMode::Blend_Normal, "alphaMode"_a = eAlphaMode::Alpha_Normal, "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "BlendTiled", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FRectI&, const FVec2I&, eBlendMode, eAlphaMode, ufloat, const FSchedulePolicy& >( &FContext::BlendTiled )
+            , "src"_a, "dst"_a, "srcRect"_a = FRectI::Auto, "srcRect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "blendMode"_a = eBlendMode::Blend_Normal, "alphaMode"_a = eAlphaMode::Alpha_Normal, "opacity"_a = 1.f, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "BrownianNoise", ctxCallAdapter< FBlock&, float, float, float, ULIS::uint8, int, const FRectI&, const FSchedulePolicy& >( &FContext::BrownianNoise )
+            , "block"_a, "frequency"_a = 0.22f, "frequencyMult"_a = 1.8f, "amplitudeMult"_a = 0.35f, "numLayers"_a = 5, "seed"_a = -1, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "BuildSummedAreaTable", ctxCallAdapter< const FBlock&, FBlock&, const FSchedulePolicy& >( &FContext::BuildSummedAreaTable )
+            , "src"_a, "dst"_a, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Clear", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::Clear )
             , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr );
-
 }
 #pragma warning(pop)
 
