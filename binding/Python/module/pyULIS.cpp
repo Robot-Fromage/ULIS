@@ -1566,6 +1566,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def_readonly_static( "UnsharpMask",    &FKernel::UnsharpMask   );
 
 
+
     /////////
     // FStructuringElement
     py::class_< FStructuringElement, FBlock >( m, "FStructuringElement" )
@@ -1683,7 +1684,18 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "BuildSummedAreaTable", ctxCallAdapter< const FBlock&, FBlock&, const FSchedulePolicy& >( &FContext::BuildSummedAreaTable )
             , "src"_a, "dst"_a, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Clear", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::Clear )
-            , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr );
+            , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "Clouds", ctxCallAdapter< FBlock&, int, const FRectI&, const FSchedulePolicy& >( &FContext::Clouds )
+            , "block"_a, "seed"_a = -1, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "ConvertFormat", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2I&, const FSchedulePolicy& >( &FContext::ConvertFormat )
+            , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "Convolve", ctxCallAdapter< const FBlock&, FBlock&, const FKernel&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample&, const FSchedulePolicy& >( &FContext::Convolve )
+            , "src"_a, "dst"_a, "kernel"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "resamplingMethod"_a = eResamplingMethod::Resampling_Bilinear, "borderMode"_a = eBorderMode::Border_Transparent, "borderValue"_a = FColor::Transparent, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "ConvolvePremult", ctxCallAdapter< const FBlock&, FBlock&, const FKernel&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample&, const FSchedulePolicy& >( &FContext::ConvolvePremult )
+            , "src"_a, "dst"_a, "kernel"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "resamplingMethod"_a = eResamplingMethod::Resampling_Bilinear, "borderMode"_a = eBorderMode::Border_Transparent, "borderValue"_a = FColor::Transparent, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "Copy", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2I&, const FSchedulePolicy& >( &FContext::Copy )
+            , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        ;
 }
 #pragma warning(pop)
 
