@@ -848,7 +848,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( py::init< const FVec3I&, int >(), "vec"_a, "w"_a = 0 )
         .def( py::init< const FVec4I& >(), "vec"_a )
         .def( py::init< const FVec2F&, float, float >(), "vec"_a, "z"_a = 0.f, "w"_a = 0.f )
-        .def( py::init< const FVec3F&, float >(), "vec"_a, "w"_a = 0 )
+        .def( py::init< const FVec3F&, float >(), "vec"_a, "w"_a = 0.f )
         .def( py::init< const FVec4F& >(), "vec"_a )
         .def( "Distance", &FVec4I::Distance )
         .def( "DistanceSquared", &FVec4I::DistanceSquared )
@@ -932,11 +932,11 @@ PYBIND11_MODULE( pyULIS4, m ) {
     py::class_< FVec3F >( m, "FVec3F" )
         .def( py::init<>() )
         .def( py::init< float >(), "value"_a )
-        .def( py::init< float, float, float >(), "x"_a, "y"_a, "z"_a = 0 )
-        .def( py::init< const FVec2F&, float >(), "vec"_a, "z"_a = 0 )
+        .def( py::init< float, float, float >(), "x"_a, "y"_a, "z"_a = 0.f )
+        .def( py::init< const FVec2F&, float >(), "vec"_a, "z"_a = 0.f )
         .def( py::init< const FVec3F& >(), "vec"_a )
         .def( py::init< const FVec4F& >(), "vec"_a )
-        .def( py::init< const FVec2I&, int >(), "vec"_a, "z"_a = 0.f )
+        .def( py::init< const FVec2I&, int >(), "vec"_a, "z"_a = 0 )
         .def( py::init< const FVec3I& >(), "vec"_a )
         .def( py::init< const FVec4I& >(), "vec"_a )
         .def( "Distance", &FVec3F::Distance )
@@ -976,11 +976,11 @@ PYBIND11_MODULE( pyULIS4, m ) {
     py::class_< FVec4F >( m, "FVec4F" )
         .def( py::init<>() )
         .def( py::init< float >(), "value"_a )
-        .def( py::init< float, float, float, float >(), "x"_a, "y"_a, "z"_a = 0, "w"_a = 0 )
-        .def( py::init< const FVec2F&, float, float >(), "vec"_a, "z"_a = 0, "w"_a = 0 )
-        .def( py::init< const FVec3F&, float >(), "vec"_a, "w"_a = 0 )
+        .def( py::init< float, float, float, float >(), "x"_a, "y"_a, "z"_a = 0.f, "w"_a = 0.f )
+        .def( py::init< const FVec2F&, float, float >(), "vec"_a, "z"_a = 0.f, "w"_a = 0.f )
+        .def( py::init< const FVec3F&, float >(), "vec"_a, "w"_a = 0.f )
         .def( py::init< const FVec4F& >(), "vec"_a )
-        .def( py::init< const FVec2I&, int, int >(), "vec"_a, "z"_a = 0.f, "w"_a = 0.f )
+        .def( py::init< const FVec2I&, int, int >(), "vec"_a, "z"_a = 0, "w"_a = 0 )
         .def( py::init< const FVec3I&, int >(), "vec"_a, "w"_a = 0 )
         .def( py::init< const FVec4I& >(), "vec"_a )
         .def( "Distance", &FVec4F::Distance )
@@ -1101,7 +1101,11 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Shift", &FRectI::Shift )
         .def( "Position", &FRectI::Position )
         .def( "Size", &FRectI::Size )
-        .def_readonly_static( "Auto", &FRectI::Auto );
+        .def_readonly_static( "Auto", &FRectI::Auto )
+        .def_readwrite( "x", &FRectI::x )
+        .def_readwrite( "y", &FRectI::y )
+        .def_readwrite( "h", &FRectI::h )
+        .def_readwrite( "w", &FRectI::w );
 
 
 
@@ -1133,7 +1137,11 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Shift", &FRectF::Shift )
         .def( "Position", &FRectF::Position )
         .def( "Size", &FRectF::Size )
-        .def_readonly_static( "Auto", &FRectF::Auto );  
+        .def_readonly_static( "Auto", &FRectF::Auto )
+        .def_readwrite( "x", &FRectF::x )
+        .def_readwrite( "y", &FRectF::y )
+        .def_readwrite( "h", &FRectF::h )
+        .def_readwrite( "w", &FRectF::w );
 
 
 
@@ -1634,6 +1642,27 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
+    // FLayerStack
+    py::class_< FLayerStack >( m, "FLayerStack" )
+        .def( py::init<  ULIS::uint16, ULIS::uint16, eFormat, const FColorSpace* >(), "width"_a, "height"_a, "format"_a = eFormat::Format_RGBA8, "colorspace"_a = nullptr )
+        .def( "Area", &FLayerStack::Area )
+        .def( "CheckSanity", &FLayerStack::CheckSanity )
+        .def( "Height", &FLayerStack::Height )
+        .def( "Rect", &FLayerStack::Rect )
+        .def( "Reset", &FLayerStack::Reset )
+        .def( "Root", static_cast< FLayerRoot& ( FLayerStack::* )() >( &FLayerStack::Root ) )
+        .def( "Width", &FLayerStack::Width );
+
+
+
+    /////////
+    // FLayerFolder
+    py::class_< FLayerFolder >( m, "FLayerFolder" )
+        .def( py::init< const FString&, ULIS::uint16, ULIS::uint16, eFormat, eBlendMode, eAlphaMode, ufloat, FLayerRoot* >()
+            , "name"_a, "width"_a, "height"_a, "format"_a, "blendMode"_a = eBlendMode::Blend_Normal, "alphaMode"_a = eAlphaMode::Alpha_Normal, "opacity"_a = 1.f, "parent"_a = nullptr );
+
+
+    /////////
     // FContext
     py::class_< FContext >( m, "FContext" )
         .def( py::init< FCommandQueue&, eFormat, ePerformanceIntent >(), "queue"_a, "format"_a, "intent"_a = ePerformanceIntent::PerformanceIntent_Max )
@@ -1645,7 +1674,10 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "FontEngine", static_cast< FFontEngine& ( FContext::* )() >( &FContext::FontEngine ) )
         .def( "FinishEventNo_OP", &FContext::FinishEventNo_OP )
         .def( "Dummy_OP", &FContext::Dummy_OP )
+        .def( "AccumulateSample", ctxCallAdapter< const FBlock&, FColor*, const FRectI&, const FSchedulePolicy& >( &FContext::AccumulateSample )
+            , "block"_a, "color"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Clear", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::Clear )
             , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr );
+
 }
 
