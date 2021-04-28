@@ -124,6 +124,9 @@ float
 InternalGetPixelBaseAlphaFromCoord( const FVec2F& iPt )
 {
     float xDec = iPt.x - int( iPt.x );
+    if( xDec < 0.f )
+        xDec+=1.f;
+
     float xAlpha = 0.f;
 
     if( xDec <= 0.5f )
@@ -133,6 +136,8 @@ InternalGetPixelBaseAlphaFromCoord( const FVec2F& iPt )
 
     float yDec = iPt.y - int(iPt.y);
     float yAlpha = 0.f;
+    if( yDec < 0.f )
+        yDec+=1.f;
 
     if(yDec <= 0.5f)
         yAlpha = yDec + (0.5f - yDec) / 2;
