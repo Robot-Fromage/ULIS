@@ -1648,6 +1648,45 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Family", &FFont::Family )
         .def( "Style", &FFont::Style );
 
+    /////////
+    // FColorStep
+    py::class_< FColorStep >( m, "FColorStep" )
+        .def( py::init<>() )
+        .def( py::init< ufloat, const FColor& >() )
+        .def_static( "MakeShared", &FColorStep::MakeShared )
+        .def( "Param", static_cast< void ( FColorStep::* )( ufloat ) >( &FColorStep::Param ) )
+        .def( "Param", static_cast< ufloat ( FColorStep::* )() const >( &FColorStep::Param ) )
+        .def( "Value", static_cast< FColor& ( FColorStep::* )() >( &FColorStep::Value ) );
+
+
+
+    /////////
+    // FGradient
+    py::class_< FGradient >( m, "FGradient" )
+        .def( py::init< eFormat >() )
+        .def( "ColorSteps", static_cast< TArray< FSharedColorStep >& ( FGradient::* )() >( &FGradient::ColorSteps ) )
+        .def( "AlphaSteps", static_cast< TArray< FSharedAlphaStep >& ( FGradient::* )() >( &FGradient::AlphaSteps ) )
+        .def( "Reset", static_cast< void ( FGradient::* )() >( &FGradient::Reset ) )
+        .def( "Reset", static_cast< void ( FGradient::* )( eFormat ) >( &FGradient::Reset ) )
+        .def( "ReinterpretInterpolationFormat", &FGradient::ReinterpretInterpolationFormat )
+        .def( "AddColorStep", &FGradient::AddColorStep )
+        .def( "AddAlphaStep", &FGradient::AddAlphaStep )
+        .def( "Sort", &FGradient::Sort );
+
+
+
+    /////////
+    // FSanitizedGradient
+    py::class_< FSanitizedGradient >( m, "FSanitizedGradient" )
+        .def( py::init< eFormat, const FGradient& >() )
+        .def( "ColorSteps", &FSanitizedGradient::ColorSteps )
+        .def( "AlphaSteps", &FSanitizedGradient::AlphaSteps )
+        .def( "IndexLUTColor", &FSanitizedGradient::IndexLUTColor )
+        .def( "IndexLUTAlpha", &FSanitizedGradient::IndexLUTAlpha )
+        .def( "ReinterpretInterpolationFormat", &FSanitizedGradient::ReinterpretInterpolationFormat )
+        .def( "FastColorIndexAtParameter", &FSanitizedGradient::FastColorIndexAtParameter )
+        .def( "FastAlphaIndexAtParameter", &FSanitizedGradient::FastAlphaIndexAtParameter );
+
 
 
     /////////
@@ -1768,7 +1807,10 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def_static( "MipLevelMetrics", &FContext::MipLevelMetrics )
         .def_static( "MipMapMetrics", &FContext::MipMapMetrics )
         .def_static( "MipRectsMetrics", &FContext::MipRectsMetrics )
-        
+        .def( "MorphologicalProcess", ctxCallAdapter< const FBlock&, FBlock&, const FStructuringElement&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample&, const FSchedulePolicy& >( &FContext::MorphologicalProcess )
+            , "src"_a, "dst"_a, "kernel"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "resamplingMethod"_a = eResamplingMethod::Resampling_Bilinear, "borderMode"_a = eBorderMode::Border_Transparent, "borderValue"_a = FColor::Transparent, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "Premultiply", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::Premultiply )
+            , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
         ;
 
 }
