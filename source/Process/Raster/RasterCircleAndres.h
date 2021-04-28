@@ -2426,7 +2426,7 @@ void DrawCircleAndresSP(
     {
         x = 0;
         y = iRadius;
-        float diff = iRadius;
+        float diff = 2 * iRadius * InternalGetPixelBaseAlphaFromCoord(point0);
 
         while (y >= x)
         {
