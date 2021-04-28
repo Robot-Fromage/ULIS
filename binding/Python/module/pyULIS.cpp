@@ -35,9 +35,8 @@ auto ctxCallAdapter( F fptr ) {
     return  [fptr]( FContext* ctx, Ts ... args, py::list iWaitList, FEvent* iEvent ) {
         TArray< FEvent > arr;
         arr.Reserve( iWaitList.size() );
-        /*for( auto it = iWaitList ) {
-            arr.PushBack( FEvent( it ) );
-        }*/
+        for( auto it = iWaitList.begin(); it != iWaitList.end(); ++it )
+            arr.PushBack( (*it).cast< FEvent >() );
         (ctx->*fptr)( args ..., static_cast< uint32 >( arr.Size() ), arr.Data(), iEvent );
     };
 }
