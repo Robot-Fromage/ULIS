@@ -1823,6 +1823,12 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "SaveBlockToDisk", ctxCallAdapter< const FBlock&, const std::string&, eFileFormat, int, const FSchedulePolicy& >( &FContext::SaveBlockToDisk )
             , "block"_a, "path"_a, "format"_a = eFileFormat::FileFormat_png, "quality"_a = 100, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "sRGBToLinear", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::sRGBToLinear )
+            , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def_static( "SummedAreaTableMetrics", &FContext::SummedAreaTableMetrics )
+        .def( "Swap", ctxCallAdapter< FBlock&, ULIS::uint8, ULIS::uint8, const FRectI&, const FVec2I&, const FSchedulePolicy& >( &FContext::Swap )
+            , "block"_a, "c0"_a, "c1"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def_static( "TextMetrics", &FContext::TextMetrics )
         ;
 
 }
