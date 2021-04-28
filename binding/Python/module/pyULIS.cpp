@@ -1811,6 +1811,18 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "src"_a, "dst"_a, "kernel"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "resamplingMethod"_a = eResamplingMethod::Resampling_Bilinear, "borderMode"_a = eBorderMode::Border_Transparent, "borderValue"_a = FColor::Transparent, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Premultiply", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::Premultiply )
             , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "RasterGradient", ctxCallAdapter< FBlock&, const FVec2F&, const FVec2F&, const FSanitizedGradient&, float, eGradientType, const FRectI&, const FSchedulePolicy >( &FContext::RasterGradient )
+            , "block"_a, "start"_a, "end"_a, "gradient"_a, "dithering"_a = 0.f, "gradientType"_a = eGradientType::Gradient_Linear, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "RasterText", ctxCallAdapter< FBlock&, const std::wstring&, const FFont&, ULIS::uint32, const FMat3F&, const ISample&, const FSchedulePolicy& >( &FContext::RasterText )
+            , "block"_a, "text"_a, "font"_a, "fontSize"_a = 12, "transform"_a = FMat3F(), "color"_a = FColor::Black, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "RasterTextAA", ctxCallAdapter< FBlock&, const std::wstring&, const FFont&, ULIS::uint32, const FMat3F&, const ISample&, const FSchedulePolicy& >( &FContext::RasterTextAA )
+            , "block"_a, "text"_a, "font"_a, "fontSize"_a = 12, "transform"_a = FMat3F(), "color"_a = FColor::Black, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "Resize", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FRectF&, eResamplingMethod, eBorderMode, const ISample&, const FBlock*, const FSchedulePolicy& >( &FContext::Resize )
+            , "src"_a, "dst"_a, "srcRect"_a = FRectI::Auto, "dstRect"_a = FRectF::Auto, "resamplingMethod"_a = eResamplingMethod::Resampling_Bilinear, "borderMode"_a = eBorderMode::Border_Transparent, "borderValue"_a = FColor::Black, "sat"_a = nullptr, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "SanitizeZeroAlpha", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::SanitizeZeroAlpha )
+            , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "SaveBlockToDisk", ctxCallAdapter< const FBlock&, const std::string&, eFileFormat, int, const FSchedulePolicy& >( &FContext::SaveBlockToDisk )
+            , "block"_a, "path"_a, "format"_a = eFileFormat::FileFormat_png, "quality"_a = 100, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         ;
 
 }
