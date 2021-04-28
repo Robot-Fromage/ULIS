@@ -54,8 +54,6 @@ class   FWString;
 class   IHasColorSpace;
 class   IHasFormat;
 class   ISample;
-class   ITiledBlock;
-class   ITilePool;
 template< typename T > class    TArray;
 template< typename T > struct   TVector2;
 typedef TVector2< int >         FVec2I;

@@ -31,7 +31,7 @@ ULIS_NAMESPACE_BEGIN
 /// TTilePool
 template< uint8 _MICRO
         , uint8 _MACRO >
-class TTilePool : public ITilePool
+class TTilePool
 {
     typedef  TTiledBlock< _MICRO, _MACRO > tTiledBlock;
 
@@ -58,8 +58,8 @@ public:
     uint64 NumDirtyHashedTilesCurrentlyInUse();
     uint64 NumCorrectlyHashedTilesCurrentlyInUse();
     uint64 NumRegisteredTiledBlocks();
-    ITiledBlock* CreateNewTiledBlock();
-    void RequestTiledBlockDeletion( ITiledBlock* iBlock );
+    tTiledBlock* CreateNewTiledBlock();
+    void RequestTiledBlockDeletion( tTiledBlock* iBlock );
     void SetRAMUsageCapTarget( uint64 iValue );
     void SetSWAPUsageCapTarget( uint64 iValue );
 

@@ -11,9 +11,8 @@
 */
 #pragma once
 #include "System/Device.h"
-#include "Clear/Clear.h"
 #include "Image/Block.h"
-#include "Image/Sparse/Tile.h"
+#include "Sparse/Tile.h"
 #include <algorithm>
 
 ULIS_NAMESPACE_BEGIN
@@ -97,18 +96,17 @@ template< uint8 _MICRO, uint8 _MACRO > uint64 TTilePool< _MICRO, _MACRO >::NumRe
     return  mRegisteredTiledBlocks.size();
 }
 
-template< uint8 _MICRO, uint8 _MACRO > ITiledBlock* TTilePool< _MICRO, _MACRO >::CreateNewTiledBlock() {
+template< uint8 _MICRO, uint8 _MACRO > TTilePool< _MICRO, _MACRO >::tTiledBlock* TTilePool< _MICRO, _MACRO >::CreateNewTiledBlock() {
     const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
     tTiledBlock* block = new tTiledBlock( this );
     mRegisteredTiledBlocks.emplace_back( block );
     return  block;
 }
 
-template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( ITiledBlock* iBlock ) {
+template< uint8 _MICRO, uint8 _MACRO > void TTilePool< _MICRO, _MACRO >::RequestTiledBlockDeletion( tTiledBlock* iBlock ) {
     const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
-    tTiledBlock* block = dynamic_cast< tTiledBlock* >( iBlock );
-    ULIS_ASSERT( block, "Bad TiledBlock Deletion Request, this tiledblock is not the right type !" );
-    auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), block );
+    ULIS_ASSERT( iBlock, "Bad TiledBlock Deletion Request, this tiledblock is not the right type !" );
+    auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
     ULIS_ASSERT( it != mRegisteredTiledBlocks.end(), "Bad TiledBlock Deletion Request, this tiledblock is not in this pool or has already been deleted !" );
     if( it != mRegisteredTiledBlocks.end() ) {
         mRegisteredTiledBlocks.erase( it );

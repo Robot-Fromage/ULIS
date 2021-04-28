@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Canvas.h"
+#include "ULISLoader.h"
 #include <QApplication>
 
 #include <cstdlib>
@@ -18,7 +19,8 @@ int
 main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     QApplication app( argc, argv );
-    SCanvas* canvas = new SCanvas();
+    FULISLoader handle;
+    SCanvas* canvas = new SCanvas( handle );
     canvas->show();
     int exit_code = app.exec();
     delete  canvas;

@@ -20,8 +20,8 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// TTiledBlock
-template< uint8 _MICRO, uint8 _MACRO > const FVec2I64 TTiledBlock< _MICRO, _MACRO >::modLeaf = FVec2I64( static_cast< int64 >( micro_chunk_size_as_pixels ) );
-template< uint8 _MICRO, uint8 _MACRO > const FVec2I64 TTiledBlock< _MICRO, _MACRO >::modRoot = FVec2I64( static_cast< int64 >( macro_chunk_size_as_pixels ) );
+template< uint8 _MICRO, uint8 _MACRO > const FVec2I TTiledBlock< _MICRO, _MACRO >::modLeaf = FVec2I( static_cast< int64 >( micro_chunk_size_as_pixels ) );
+template< uint8 _MICRO, uint8 _MACRO > const FVec2I TTiledBlock< _MICRO, _MACRO >::modRoot = FVec2I( static_cast< int64 >( macro_chunk_size_as_pixels ) );
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
 template< uint8 _MICRO, uint8 _MACRO > TTiledBlock< _MICRO, _MACRO >::~TTiledBlock() {
@@ -67,7 +67,7 @@ TTiledBlock< _MICRO, _MACRO >::IsValidPixelCoordRange( int64 iValue )  const {
 
 template< uint8 _MICRO, uint8 _MACRO >
 FVec2I32
-TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const {
+TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromPixelCoordinates( const FVec2I& iPos ) const {
     ULIS_ASSERT( IsValidPixelCoordRange( iPos.x ) && IsValidPixelCoordRange( iPos.y ), "Bad coordinates" );
     int32 X = static_cast< int32 >( FMath::RoundToNegativeInfinity( iPos.x / static_cast< float >( macro_chunk_size_as_pixels ) ) );
     int32 Y = static_cast< int32 >( FMath::RoundToNegativeInfinity( iPos.y / static_cast< float >( macro_chunk_size_as_pixels ) ) );
@@ -76,11 +76,11 @@ TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromPixelCoordinates( const FVec2
 
 
 template< uint8 _MICRO, uint8 _MACRO >
-FVec2I64
+FVec2I
 TTiledBlock< _MICRO, _MACRO >::PixelCoordinatesFromChunkCoordinates( const FVec2I32& iPos ) const {
     int64 X = static_cast< int64 >( iPos.x * static_cast< int64 >( macro_chunk_size_as_pixels ) );
     int64 Y = static_cast< int64 >( iPos.y * static_cast< int64 >( macro_chunk_size_as_pixels ) );
-    return  FVec2I64( X, Y );
+    return  FVec2I( X, Y );
 }
 
 
@@ -93,7 +93,7 @@ TTiledBlock< _MICRO, _MACRO >::KeyFromChunkCoordinates( const FVec2I32& iPos ) c
 
 template< uint8 _MICRO, uint8 _MACRO >
 uint64
-TTiledBlock< _MICRO, _MACRO >::KeyFromPixelCoordinates( const FVec2I64& iPos ) const {
+TTiledBlock< _MICRO, _MACRO >::KeyFromPixelCoordinates( const FVec2I& iPos ) const {
     FVec2I32 pos = ChunkCoordinatesFromPixelCoordinates( iPos );
     return  KeyFromChunkCoordinates( pos );
 }
@@ -109,7 +109,7 @@ TTiledBlock< _MICRO, _MACRO >::ChunkCoordinatesFromKey( uint64 iKey ) const {
 
 
 template< uint8 _MICRO, uint8 _MACRO >
-FVec2I64
+FVec2I
 TTiledBlock< _MICRO, _MACRO >::PixelCoordinatesFromKey( uint64 iKey ) const {
     FVec2I32 pos = ChunkCoordinatesFromKey( iKey );
     return  PixelCoordinatesFromChunkCoordinates( pos );
@@ -189,7 +189,7 @@ TTiledBlock< _MICRO, _MACRO >::RecomputeRoughLeafGeometry() {
 //-------------------------------------------------------------------------- Private API
 template< uint8 _MICRO, uint8 _MACRO >
 typename TTiledBlock< _MICRO, _MACRO >::tRootChunk*
-TTiledBlock< _MICRO, _MACRO >::CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( const FVec2I64& iPos ) {
+TTiledBlock< _MICRO, _MACRO >::CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( const FVec2I& iPos ) {
     return  CreateRootEntryAtChunkSectorIfNotExistAndReturnPtr( ChunkCoordinatesFromPixelCoordinates( iPos ) );
 }
 
@@ -210,7 +210,7 @@ TTiledBlock< _MICRO, _MACRO >::CreateRootEntryAtChunkSectorIfNotExistAndReturnPt
 
 template< uint8 _MICRO, uint8 _MACRO >
 typename TTiledBlock< _MICRO, _MACRO >::tRootChunk*
-TTiledBlock< _MICRO, _MACRO >::QueryRootEntryAtPixelSector( const FVec2I64& iPos ) const {
+TTiledBlock< _MICRO, _MACRO >::QueryRootEntryAtPixelSector( const FVec2I& iPos ) const {
     return  QueryRootEntryAtChunkSector( ChunkCoordinatesFromPixelCoordinates( iPos ) );
 }
 
@@ -231,11 +231,11 @@ TTiledBlock< _MICRO, _MACRO >::QueryRootEntryAtChunkSector( const FVec2I32& iPos
 //----------------------------------------------------------------------------- Tile API
 template< uint8 _MICRO, uint8 _MACRO >
 const FBlock*
-TTiledBlock< _MICRO, _MACRO >::QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const {
-    static FVec2I64 modLeaf( static_cast< int64 >( micro_chunk_size_as_pixels ) );
-    static FVec2I64 modRoot( static_cast< int64 >( macro_chunk_size_as_pixels ) );
+TTiledBlock< _MICRO, _MACRO >::QueryConstBlockAtPixelCoordinates( FVec2I iPos, FVec2I* oLocalCoords ) const {
+    static FVec2I modLeaf( static_cast< int64 >( micro_chunk_size_as_pixels ) );
+    static FVec2I modRoot( static_cast< int64 >( macro_chunk_size_as_pixels ) );
     *oLocalCoords = FMath::PyModulo( iPos, modLeaf );
-    FVec2I64 pixelCoordsInRoot = FMath::PyModulo( iPos, modRoot );
+    FVec2I pixelCoordsInRoot = FMath::PyModulo( iPos, modRoot );
     tRootChunk* root = QueryRootEntryAtPixelSector( iPos );
     return  root ? mTilePool->EmptyTile() : root->QueryConstBlockAtPixelCoordinates( mTilePool, pixelCoordsInRoot );
 }
@@ -243,14 +243,14 @@ TTiledBlock< _MICRO, _MACRO >::QueryConstBlockAtPixelCoordinates( FVec2I64 iPos,
 
 template< uint8 _MICRO, uint8 _MACRO >
 FTileElement**
-TTiledBlock< _MICRO, _MACRO >::QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords  ) {
+TTiledBlock< _MICRO, _MACRO >::QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I iPos, FVec2I* oLocalCoords  ) {
     *oLocalCoords = FMath::PyModulo( iPos, modLeaf );
     return  CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( iPos )->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( mTilePool, FMath::PyModulo( iPos, modRoot ) );
 }
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
-TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) {
+TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I& iPos, float iScale ) {
     for( auto& it : mSparseMap ) {
         auto pos = PixelCoordinatesFromKey( it.first );
         pos.x = static_cast< int64 >( pos.x * iScale );
@@ -261,7 +261,7 @@ TTiledBlock< _MICRO, _MACRO >::DrawDebugWireframe( FBlock* iDst, const FVec2I64&
 
 template< uint8 _MICRO, uint8 _MACRO >
 void
-TTiledBlock< _MICRO, _MACRO >::DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) {
+TTiledBlock< _MICRO, _MACRO >::DrawDebugTileContent( FBlock* iDst, const FVec2I& iPos ) {
     for( auto& it : mSparseMap ) {
         auto pos = PixelCoordinatesFromKey( it.first );
         it.second->DrawDebugTileContent( iDst, iPos + pos );

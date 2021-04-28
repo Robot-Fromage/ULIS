@@ -27,17 +27,17 @@ ULIS_NAMESPACE_BEGIN
 //----------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------- eScale
 enum eMicro {
-    MICRO_32  = 5,
-    MICRO_64  = 6,
-    MICRO_128 = 7,
-    MICRO_256 = 8,
+    Micro_32  = 5,
+    Micro_64  = 6,
+    Micro_128 = 7,
+    Micro_256 = 8,
 };
 
 enum eMacro {
-    MACRO_4   = 2,
-    MACRO_8   = 3,
-    MACRO_16  = 4,
-    MACRO_32  = 5,
+    Macro_256   = 2,
+    Macro_512   = 3,
+    Macro_1024  = 4,
+    Macro_2048  = 5,
 };
 
 
@@ -61,12 +61,12 @@ public:
     virtual size_t NumRootEntries() const override;
     virtual void GatherRootEntries( std::vector< tRootChunk* >* oVector );
     virtual bool IsValidPixelCoordRange( int64 iValue ) const override;
-    virtual FVec2I32 ChunkCoordinatesFromPixelCoordinates( const FVec2I64& iPos ) const override;
-    virtual FVec2I64 PixelCoordinatesFromChunkCoordinates( const FVec2I32& iPos ) const override;
+    virtual FVec2I32 ChunkCoordinatesFromPixelCoordinates( const FVec2I& iPos ) const override;
+    virtual FVec2I PixelCoordinatesFromChunkCoordinates( const FVec2I32& iPos ) const override;
     virtual uint64 KeyFromChunkCoordinates( const FVec2I32& iPos ) const override;
-    virtual uint64 KeyFromPixelCoordinates( const FVec2I64& iPos ) const override;
+    virtual uint64 KeyFromPixelCoordinates( const FVec2I& iPos ) const override;
     virtual FVec2I32 ChunkCoordinatesFromKey( uint64 iKey ) const override;
-    virtual FVec2I64 PixelCoordinatesFromKey( uint64 iKey ) const override;
+    virtual FVec2I PixelCoordinatesFromKey( uint64 iKey ) const override;
 
 public:
     // Block API
@@ -78,17 +78,17 @@ public:
 
 private:
     // Private API
-    tRootChunk* CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( const FVec2I64& iPos );
+    tRootChunk* CreateRootEntryAtPixelSectorIfNotExistAndReturnPtr( const FVec2I& iPos );
     tRootChunk* CreateRootEntryAtChunkSectorIfNotExistAndReturnPtr( const FVec2I32& iPos );
-    tRootChunk* QueryRootEntryAtPixelSector( const FVec2I64& iPos ) const;
+    tRootChunk* QueryRootEntryAtPixelSector( const FVec2I& iPos ) const;
     tRootChunk* QueryRootEntryAtChunkSector( const FVec2I32& iPos ) const;
 
 public:
     // Tile API
-    virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) const override;
-    virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I64 iPos, FVec2I64* oLocalCoords ) override;
-    virtual void DrawDebugWireframe( FBlock* iDst, const FVec2I64& iPos, float iScale ) override;
-    virtual void DrawDebugTileContent( FBlock* iDst, const FVec2I64& iPos ) override;
+    virtual const FBlock* QueryConstBlockAtPixelCoordinates( FVec2I iPos, FVec2I* oLocalCoords ) const override;
+    virtual FTileElement** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( FVec2I iPos, FVec2I* oLocalCoords ) override;
+    virtual void DrawDebugWireframe( FBlock* iDst, const FVec2I& iPos, float iScale ) override;
+    virtual void DrawDebugTileContent( FBlock* iDst, const FVec2I& iPos ) override;
     virtual void Clear() override;
     virtual void SanitizeNow() override;
     const tMap& GetSparseMap() const;
@@ -110,8 +110,8 @@ private:
     static constexpr int32 macro_chunk_max_coord = std::numeric_limits< int32 >::max();
     static constexpr int64 pixel_min_coord = static_cast< int64 >( macro_chunk_min_coord ) * static_cast< int64 >( macro_chunk_size_as_micro_chunks );
     static constexpr int64 pixel_max_coord = static_cast< int64 >( macro_chunk_max_coord ) * static_cast< int64 >( macro_chunk_size_as_micro_chunks );
-    static const FVec2I64 modLeaf;
-    static const FVec2I64 modRoot;
+    static const FVec2I modLeaf;
+    static const FVec2I modRoot;
 };
 
 ULIS_NAMESPACE_END

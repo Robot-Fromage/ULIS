@@ -28,35 +28,34 @@ int O2Mo( int iMo ) {
 
 SCanvas::~SCanvas() {
     delete  mTimer;
+    mTilePool->RequestTiledBlockDeletion( mTiledBlock );
     delete  mTilePool;
     delete  mImage;
     delete  mPixmap;
     delete  mLabel;
-    delete  mCanvas;
-    XDeleteThreadPool( mPool );
 }
 
 
-SCanvas::SCanvas()
-    : mHost(        FHardwareMetrics::Detect()           )
-    , mPool(        XCreateThreadPool()                 )
-    , mCanvas(      nullptr                             )
-    , mFontEngine(                                      )
-    , mFontReg(     mFontEngine                         )
-    , mFont(        mFontReg, "Courrier New", "Bold"    )
-    , mTilePool(    nullptr                             )
-    , mImage(       nullptr                             )
-    , mPixmap(      nullptr                             )
-    , mLabel(       nullptr                             )
-    , mTimer(       nullptr                             )
+SCanvas::SCanvas( FULISLoader& iHandle )
+    : mHandle( iHandle )
+    , mCanvas( FBlock( 320, 600, mHandle.Format() ) )
+    , mFont( mHandle.FontEngine(), "Courrier New", "Bold" )
+    , mTilePool( nullptr )
+    , mImage( nullptr )
+    , mPixmap( nullptr )
+    , mLabel( nullptr )
+    , mTimer( nullptr )
 {
-    uint32 perfIntent = ULIS_PERF_MT | ULIS_PERF_SSE42 | ULIS_PERF_AVX2;
+    FContext& ctx = mHandle.Context();
 
-    mCanvas = new  FBlock( 320, 600, ULIS_FORMAT_RGBA8 );
+    mRAMUSAGEBLOCK1 = new FBlock( 300, 100, mHandle.Format() );
+    mRAMUSAGEBLOCK2 = new FBlock( 300, 100, mHandle.Format() );
+    mRAMUSAGESWAPBUFFER = mRAMUSAGEBLOCK1;
+    ctx.Fill( *mRAMUSAGEBLOCK1, FColor::GreyA8( 15 ) );
+    ctx.Clear( mCanvas );
+    ctx.Finish();
 
-    Clear( mPool, ULIS_BLOCKING, perfIntent, mHost, ULIS_NOCB, mCanvas, mCanvas->Rect() );
-
-    mImage  = new QImage( mCanvas->Bits(), mCanvas->Width(), mCanvas->Height(), mCanvas->BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
+    mImage  = new QImage( mCanvas.Bits(), mCanvas.Width(), mCanvas.Height(), mCanvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
     mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
     mLabel  = new QLabel( this );
     mLabel->setPixmap( *mPixmap );
@@ -67,14 +66,9 @@ SCanvas::SCanvas()
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 
-    uint64 maxRAM   = Mo2O( 100 );
-    mTilePool   = ITilePool::XCreateTilePool( ULIS_FORMAT_RGBA8, nullptr, eMicro::MICRO_128, eMacro::MACRO_16 );
+    //uint64 maxRAM = Mo2O( 100 );
+    mTilePool = new TTilePool< Micro_64, Macro_1024 >( mHandle.Format(), nullptr );
     mTiledBlock = mTilePool->CreateNewTiledBlock();
-
-    mRAMUSAGEBLOCK1 = new FBlock( 300, 100, ULIS_FORMAT_RGBA8 );
-    mRAMUSAGEBLOCK2 = new FBlock( 300, 100, ULIS_FORMAT_RGBA8 );
-    mRAMUSAGESWAPBUFFER = mRAMUSAGEBLOCK1;
-    Fill( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mRAMUSAGEBLOCK1, FColor( ULIS_FORMAT_G8, { 15 } ), mRAMUSAGEBLOCK1->Rect() );
 }
 
 void
@@ -83,15 +77,15 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
         int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
         int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
         float scale = 1.f;
-        FVec2I64 ref( 10, 80+HH+10 );
-        FVec2I64 pos( event->x(), event->y() );
+        FVec2I ref( 10, 80+HH+10 );
+        FVec2I pos( event->x(), event->y() );
         int size = 10;
         for( int i = -size; i < size; ++i ) {
             for( int j = -size; j < size; ++j ) {
-                FVec2I64 res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
+                FVec2I res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
                 if( res.x >= 0 && res.x < 256 && res.y >= 0 && res.y < 256 ) {
                     FTileElement** tileptr = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
-                    DrawDotNoAA( (*tileptr)->mBlock, FColor( ULIS_FORMAT_G8, {0} ), FVec2I( res.x, res.y ) );
+                    (*tileptr)->mBlock->SetPixel( res.x, res.y, FColor::Black );
                 }
             }
         }
@@ -107,15 +101,15 @@ SCanvas::mouseMoveEvent( QMouseEvent* event ) {
         int HH = ( mRAMUSAGESWAPBUFFER->Height() - 1 );
         int WW = ( mRAMUSAGESWAPBUFFER->Width() - 1 );
         float scale = 1.f;
-        FVec2I64 ref( 10, 80+HH+10 );
-        FVec2I64 pos( event->x(), event->y() );
+        FVec2I ref( 10, 80+HH+10 );
+        FVec2I pos( event->x(), event->y() );
         int size = 16;
         for( int i = -size; i < size; ++i ) {
             for( int j = -size; j < size; ++j ) {
-                FVec2I64 res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
+                FVec2I res( ( pos.x - ref.x + i ) / scale, ( pos.y - ref.y + j ) / scale );
                 if( res.x >= 0 && res.x < 256 && res.y >= 0 && res.y < 256 ) {
                     FTileElement** tileptr = mTiledBlock->QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( res, &res );
-                    DrawDotNoAA( (*tileptr)->mBlock, FColor( ULIS_FORMAT_GA8, {0,0} ), FVec2I( res.x, res.y ) );
+                    (*tileptr)->mBlock->SetPixel( res.x, res.y, FColor::Transparent );
                 }
             }
         }
@@ -195,8 +189,8 @@ SCanvas::tickEvent() {
 
     Clear( mPool, ULIS_BLOCKING, ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, mCanvas, FRectI( 10, 80+HH+10, 256, 256 ) );
 
-    mTiledBlock->DrawDebugTileContent(  mCanvas, FVec2I64( 10, 80+HH+10 ) );
-    mTiledBlock->DrawDebugWireframe(    mCanvas, FVec2I64( 10, 80+HH+10 ), 1.f );
+    mTiledBlock->DrawDebugTileContent(  mCanvas, FVec2I( 10, 80+HH+10 ) );
+    mTiledBlock->DrawDebugWireframe(    mCanvas, FVec2I( 10, 80+HH+10 ), 1.f );
 
     FBlock* shade = new FBlock( 256, 256, ULIS_FORMAT_RGBA8 );
     Fill( mPool, ULIS_BLOCKING,  ULIS_PERF_SSE42 | ULIS_PERF_AVX2, mHost, ULIS_NOCB, shade, FColor( ULIS_FORMAT_G8, { 0 } ), shade->Rect() );

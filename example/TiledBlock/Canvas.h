@@ -9,6 +9,7 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include "ULISLoader.h"
 #include <ULIS>
 #include <QWidget>
 
@@ -17,7 +18,7 @@ class QLabel;
 class QPixmap;
 class QTimer;
 
-using namespace ::ul3;
+using namespace ::ULIS;
 
 class SCanvas : public QWidget
 {
@@ -25,7 +26,7 @@ class SCanvas : public QWidget
 
 public:
     ~SCanvas();
-    SCanvas();
+    SCanvas( FULISLoader& iHandle );
 
 protected:
     virtual void mouseMoveEvent( QMouseEvent* event ) override;
@@ -35,22 +36,20 @@ private:
     Q_SLOT void tickEvent();
 
 private:
-    FHardwareMetrics                     mHost;
-    FThreadPool*                        mPool;
-    FBlock*                             mCanvas;
-    FBlock*                             mRAMUSAGEBLOCK1;
-    FBlock*                             mRAMUSAGEBLOCK2;
-    FBlock*                             mRAMUSAGESWAPBUFFER;
-    FFontEngine                         mFontEngine;
-    FFontRegistry                       mFontReg;
-    FFont                               mFont;
+    FULISLoader& mHandle;
+    FBlock mCanvas;
+    FFont mFont;
+    FBlock* mRAMUSAGEBLOCK1;
+    FBlock* mRAMUSAGEBLOCK2;
+    FBlock* mRAMUSAGESWAPBUFFER;
 
-    ITilePool*                          mTilePool;
-    ITiledBlock*                        mTiledBlock;
+    // 1, 5
+    TTilePool< Micro_64, Macro_1024 >* mTilePool;
+    TTiledBlock< Micro_64, Macro_1024 >* mTiledBlock;
 
-    QImage*                     mImage;
-    QPixmap*                    mPixmap;
-    QLabel*                     mLabel;
-    QTimer*                     mTimer;
+    QImage* mImage;
+    QPixmap* mPixmap;
+    QLabel* mLabel;
+    QTimer* mTimer;
 };
 
