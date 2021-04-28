@@ -14,7 +14,8 @@
 #include "System/DeviceHelpers.h"
 
 #include <cpuid.h>
-#include <intrin.h>
+// Check: maybe <intrin.h> for other versions of AppleCLANG ?
+#include <immintrin.h>
 #include <stdint.h>
 #include <string>
 #include <stdlib.h>
