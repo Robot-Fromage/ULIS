@@ -479,6 +479,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .export_values();
 
 
+
     /////////
     // eScheduleModePolicy
     py::enum_< eScheduleModePolicy >( m, "eScheduleModePolicy" )
@@ -494,6 +495,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .value( "ScheduleParameter_Count",  eScheduleParameterPolicy::ScheduleParameter_Count   )
         .value( "ScheduleParameter_Length", eScheduleParameterPolicy::ScheduleParameter_Length  )
         .export_values();
+
 
 
     /////////
@@ -1751,6 +1753,8 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "DrawRotatedEllipseSP", ctxCallAdapter< FBlock&, const FVec2F&, const float, const float, const int, const FColor&, const bool, const FRectI&, const FSchedulePolicy& >( &FContext::DrawRotatedEllipseAA )
             , "block"_a, "center"_a, "a"_a, "b"_a, "rotationDegree"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Dummy_OP", ctxCallAdapter<>( &FContext::Dummy_OP ), "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "Extract", ctxCallAdapter< const FBlock&, FBlock&, ULIS::uint8, ULIS::uint8, bool, const FRectI&, const FVec2I&, const FSchedulePolicy& >( &FContext::Extract )
+            , "src"_a, "dst"_a, "srcMask"_a, "dstMask"_a, "rawMask"_a = false, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         ;
 
 }
