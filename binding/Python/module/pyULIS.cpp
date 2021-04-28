@@ -1707,7 +1707,20 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "DrawArcBresenhamSP", ctxCallAdapter< FBlock&, const FVec2F&, const int, const int, const int, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawArcBresenhamSP )
             , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawCircleAndres", ctxCallAdapter< FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI&, const FSchedulePolicy& >( &FContext::DrawCircleAndres )
+            , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawCircleAndresAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI&, const FSchedulePolicy& >( &FContext::DrawCircleAndresAA )
+            , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawCircleAndresSP", ctxCallAdapter< FBlock&, const FVec2F&, const int, const FColor&, const bool,  const FRectI&, const FSchedulePolicy& >( &FContext::DrawCircleAndresSP )
+            , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawCircleBresenham", ctxCallAdapter< FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI&, const FSchedulePolicy& >( &FContext::DrawCircleBresenham )
+            , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawCircleBresenhamAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI&, const FSchedulePolicy& >( &FContext::DrawCircleBresenhamAA )
+            , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawCircleBresenhamSP", ctxCallAdapter< FBlock&, const FVec2F&, const int, const FColor&, const bool,  const FRectI&, const FSchedulePolicy& >( &FContext::DrawCircleBresenhamSP )
+            , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         ;
+
 }
 #pragma warning(pop)
 
