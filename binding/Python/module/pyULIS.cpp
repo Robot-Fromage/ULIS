@@ -1756,9 +1756,19 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Extract", ctxCallAdapter< const FBlock&, FBlock&, ULIS::uint8, ULIS::uint8, bool, const FRectI&, const FVec2I&, const FSchedulePolicy& >( &FContext::Extract )
             , "src"_a, "dst"_a, "srcMask"_a, "dstMask"_a, "rawMask"_a = false, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Fill", ctxCallAdapter< FBlock&, const ISample&, const FRectI&, const FSchedulePolicy& >( &FContext::Fill )
-            , "block"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+            , "block"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "FillPreserveAlpha", ctxCallAdapter< FBlock&, const ISample&, const FRectI&, const FSchedulePolicy& >( &FContext::FillPreserveAlpha )
-            , "block"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
+            , "block"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "FinishEventNo_OP", &FContext::FinishEventNo_OP )
+        .def( "LinearTosRGB", ctxCallAdapter< FBlock&, const FRectI&, const FSchedulePolicy& >( &FContext::LinearTosRGB )
+            , "block"_a, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def_static( "LoadBlockFromDiskMetrics", &FContext::LoadBlockFromDiskMetrics )
+        .def_static( "LoadPSDFromDiskMetrics", &FContext::LoadPSDFromDiskMetrics )
+        .def_static( "MaxMipLevelMetrics", &FContext::MaxMipLevelMetrics )
+        .def_static( "MipLevelMetrics", &FContext::MipLevelMetrics )
+        .def_static( "MipMapMetrics", &FContext::MipMapMetrics )
+        .def_static( "MipRectsMetrics", &FContext::MipRectsMetrics )
+        
         ;
 
 }
