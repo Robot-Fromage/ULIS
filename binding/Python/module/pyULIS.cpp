@@ -1723,8 +1723,14 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "block"_a, "center"_a, "a"_a, "b"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "DrawEllipseAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const FColor&, const bool, const FRectI&, const FSchedulePolicy& >( &FContext::DrawEllipseAA )
             , "block"_a, "center"_a, "a"_a, "b"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
-        .def( "DrawEllipseAA", ctxCallAdapter< FBlock&, const FVec2F&, const float, const float, const FColor&, const bool, const FRectI&, const FSchedulePolicy& >( &FContext::DrawEllipseAA )
+        .def( "DrawEllipseSP", ctxCallAdapter< FBlock&, const FVec2F&, const float, const float, const FColor&, const bool, const FRectI&, const FSchedulePolicy& >( &FContext::DrawEllipseSP )
             , "block"_a, "center"_a, "a"_a, "b"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawLine", ctxCallAdapter< FBlock&, const FVec2I&, const FVec2I&, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawLine )
+            , "block"_a, "p0"_a, "p1"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawLineAA", ctxCallAdapter< FBlock&, const FVec2I&, const FVec2I&, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawLineAA )
+            , "block"_a, "p0"_a, "p1"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawLineSP", ctxCallAdapter< FBlock&, const FVec2F&, const FVec2F&, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawLineSP )
+            , "block"_a, "p0"_a, "p1"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         ;
 
 }
