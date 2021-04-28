@@ -1695,6 +1695,18 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "src"_a, "dst"_a, "kernel"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "resamplingMethod"_a = eResamplingMethod::Resampling_Bilinear, "borderMode"_a = eBorderMode::Border_Transparent, "borderValue"_a = FColor::Transparent, "policy"_a = FSchedulePolicy::MultiScanlines, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "Copy", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2I&, const FSchedulePolicy& >( &FContext::Copy )
             , "src"_a, "dst"_a, "rect"_a = FRectI::Auto, "pos"_a = FVec2I( 0 ), "policy"_a = FSchedulePolicy::CacheEfficient, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawArcAndres", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawArcAndres )
+            , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawArcAndresAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawArcAndresAA )
+            , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawArcAndresSP", ctxCallAdapter< FBlock&, const FVec2F&, const int, const int, const int, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawArcAndresSP )
+            , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawArcBresenham", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawArcBresenham )
+            , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawArcBresenhamAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawArcBresenhamAA )
+            , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawArcBresenhamSP", ctxCallAdapter< FBlock&, const FVec2F&, const int, const int, const int, const FColor&, const FRectI&, const FSchedulePolicy& >( &FContext::DrawArcBresenhamSP )
+            , "block"_a, "center"_a, "radius"_a, "startDegree"_a, "endDegree"_a, "color"_a = FColor::Black, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         ;
 }
 #pragma warning(pop)
