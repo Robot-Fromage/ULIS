@@ -50,7 +50,6 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindZLib.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindFreetype2.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindLCMS2.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindOpenGL.cmake )
-include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindStaticMath.cmake )
 
 # Library
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/Main.cmake )
