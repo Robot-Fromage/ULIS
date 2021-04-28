@@ -44,9 +44,7 @@ template< uint8 _MICRO, uint8 _MACRO, uint8 _LOCAL > class TQuadtreeChunk;
 
 /////////////////////////////////////////////////////
 /// TAbstractChunk
-template< uint8 _MICRO
-        , uint8 _MACRO
-        , uint8 _LOCAL >
+template< uint8 _MICRO, uint8 _MACRO, uint8 _LOCAL >
 class  TAbstractChunk
 {
     typedef  TAbstractChunk< _MICRO, _MACRO, _LOCAL >   tSelf;
