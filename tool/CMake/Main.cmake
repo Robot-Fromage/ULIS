@@ -51,10 +51,11 @@ target_include_directories(
     "include/"
     PRIVATE
     #${OpenCL_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/static_math/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/freetype2/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/zlib/
     ${PROJECT_BINARY_DIR}/3rdparty/build_zlib/
     "source/"

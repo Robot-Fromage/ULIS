@@ -14,21 +14,16 @@
 #include "Image/Block.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Copy/Copy.h"
 #include "System/Device.h"
-#include "Draw/Draw.h"
-#include "Draw/Sparse/DrawSparse.h"
-#include "Image/Sparse/TiledBlock_Private.h"
-#include "Image/Sparse/TilePool_Private.h"
+#include "Sparse/TiledBlock.h"
+#include "Sparse/TilePool.h"
 #include <static_math/static_math.h>
 
 ULIS_NAMESPACE_BEGIN
 template< uint8 _MICRO, uint8 _MACRO > class TTilePool;
-
 static const FColor default_wireframe_debug_color  = FColor::RGBA8( 40, 80, 220 );
 static const FColor dirty_wireframe_debug_color    = FColor::RGBA8( 255, 0, 0 );
 static const FColor correct_wireframe_debug_color  = FColor::RGBA8( 0, 255, 0 );
-static const FHardwareMetrics debug_host = FHardwareMetrics::Detect();
 /////////////////////////////////////////////////////
 // Enums
 //----------------------------------------------------------------------------------------------
