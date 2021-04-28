@@ -1719,6 +1719,12 @@ PYBIND11_MODULE( pyULIS4, m ) {
             , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         .def( "DrawCircleBresenhamSP", ctxCallAdapter< FBlock&, const FVec2F&, const int, const FColor&, const bool,  const FRectI&, const FSchedulePolicy& >( &FContext::DrawCircleBresenhamSP )
             , "block"_a, "center"_a, "radius"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawEllipse", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const FColor&, const bool, const FRectI&, const FSchedulePolicy& >( &FContext::DrawEllipse )
+            , "block"_a, "center"_a, "a"_a, "b"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawEllipseAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const FColor&, const bool, const FRectI&, const FSchedulePolicy& >( &FContext::DrawEllipseAA )
+            , "block"_a, "center"_a, "a"_a, "b"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
+        .def( "DrawEllipseAA", ctxCallAdapter< FBlock&, const FVec2F&, const float, const float, const FColor&, const bool, const FRectI&, const FSchedulePolicy& >( &FContext::DrawEllipseAA )
+            , "block"_a, "center"_a, "a"_a, "b"_a, "color"_a = FColor::Black, "filled"_a = false, "rect"_a = FRectI::Auto, "policy"_a = FSchedulePolicy::MonoChunk, "waitList"_a = py::list(), "event"_a = nullptr )
         ;
 
 }
