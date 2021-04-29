@@ -942,8 +942,8 @@ void DrawCircleBresenhamSP(
      , const FRectI& iClippingRect )
 {
     //Clipping -----
-    float x = 0;
-    float y = iRadius;
+    int x = 0;
+    int y = iRadius;
 
     FRectI clippingRect = iClippingRect;
     clippingRect.w--;
@@ -1003,9 +1003,9 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point0);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point0);
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1039,7 +1039,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point0);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point0);
 
         while(xx < rectOctant1Clipped.x || yy < rectOctant1Clipped.y)
         {
@@ -1090,9 +1090,9 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point90);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point90);
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1126,7 +1126,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point90);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point90);
 
         while(xx > rectOctant2Clipped.x + rectOctant2Clipped.w || yy > rectOctant2Clipped.y + rectOctant2Clipped.h)
         {
@@ -1177,9 +1177,9 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point90);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point90);
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1213,7 +1213,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point90);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point90);
 
         while(xx > rectOctant3Clipped.x + rectOctant3Clipped.w || yy < rectOctant3Clipped.y)
         {
@@ -1231,7 +1231,7 @@ void DrawCircleBresenhamSP(
             diff = diff + 8 * x + 4;
         }
 
-        while(xx >= limitX && yy <= limitY)
+        while(xx > limitX && yy < limitY)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1264,9 +1264,9 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point180);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point180);
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1300,7 +1300,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point180);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point180);
 
 
         while(xx < rectOctant4Clipped.x || yy > rectOctant4Clipped.y + rectOctant4Clipped.h)
@@ -1319,7 +1319,7 @@ void DrawCircleBresenhamSP(
             diff = diff + 8 * x + 4;
         }
 
-        while(xx <= limitX && yy >= limitY)
+        while(xx < limitX && yy > limitY)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1352,9 +1352,9 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point180);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point180);
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1388,7 +1388,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point180);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point180);
 
 
         while(xx > rectOctant5Clipped.x + rectOctant5Clipped.w || yy > rectOctant5Clipped.y + rectOctant5Clipped.h)
@@ -1407,7 +1407,7 @@ void DrawCircleBresenhamSP(
             diff = diff + 8 * x + 4;
         }
 
-        while(xx >= limitX && yy >= limitY)
+        while(xx > limitX && yy > limitY)
         {
             float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if(alphaTop < 0.f)
@@ -1440,9 +1440,9 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point270);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point270);
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1466,7 +1466,8 @@ void DrawCircleBresenhamSP(
             x++;
             diff = diff + 8 * x + 4;
         }
-    } else if(drawRectOctant6 == 2)
+    } 
+    else if(drawRectOctant6 == 2)
     {
         int xx = rectOctant6.x;
         int yy = rectOctant6.y;
@@ -1475,7 +1476,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point270);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point270);
 
 
         while(xx < rectOctant6Clipped.x || yy < rectOctant6Clipped.y)
@@ -1494,7 +1495,7 @@ void DrawCircleBresenhamSP(
             diff = diff + 8 * x + 4;
         }
 
-        while(xx <= limitX && yy <= limitY)
+        while(xx < limitX && yy < limitY)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1527,9 +1528,9 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point270);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point270);
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1563,7 +1564,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point270);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point270);
 
 
         while(xx < rectOctant7Clipped.x || yy > rectOctant7Clipped.y + rectOctant7Clipped.h)
@@ -1582,7 +1583,7 @@ void DrawCircleBresenhamSP(
             diff = diff + 8 * x + 4;
         }
 
-        while(xx <= limitX && yy >= limitY)
+        while(xx < limitX && yy > limitY)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1615,10 +1616,10 @@ void DrawCircleBresenhamSP(
     {
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point0);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point0);
 
 
-        while(y > x)
+        while(y >= x)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )
@@ -1652,7 +1653,7 @@ void DrawCircleBresenhamSP(
 
         float errMax = 2 * (4 * iRadius - 5);
         float errMin = 0;
-        float diff = errMax * InternalGetPixelBaseAlphaFromCoord(point0);
+        float diff = (5 - 4 * iRadius) * InternalGetPixelBaseAlphaFromCoord(point0);
 
         while(xx > rectOctant8Clipped.x + rectOctant8Clipped.w || yy < rectOctant8Clipped.y)
         {
@@ -1670,7 +1671,7 @@ void DrawCircleBresenhamSP(
             diff = diff + 8 * x + 4;
         }
 
-        while(xx >= limitX && yy <= limitY)
+        while(xx > limitX && yy < limitY)
         {
             float alphaTop = ((diff - errMax) / (errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
             if( alphaTop < 0.f )

@@ -214,7 +214,7 @@ SCanvas::Update()
             if (mRasterMode == eRasterMode::kAA)
                 ctx.DrawCircleAndresAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
-                ctx.DrawCircleAndresSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleAndresSP(*mTemp, FVec2F(mPoints[0].x(), mPoints[0].y()), FMath::Dist(float(mPoints[0].x() + 0.15), float(mPoints[0].y() + 0.06), float(mPoints[1].x()), float(mPoints[1].y())), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else
                 ctx.DrawCircleAndres(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
@@ -222,7 +222,7 @@ SCanvas::Update()
             if (mRasterMode == eRasterMode::kAA)
                 ctx.DrawCircleBresenhamAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
-                ctx.DrawCircleBresenhamSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+                ctx.DrawCircleBresenhamSP(*mTemp, FVec2F(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else
                 ctx.DrawCircleBresenham(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
