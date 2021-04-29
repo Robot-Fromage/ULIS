@@ -50,9 +50,6 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindOpenGL.cmake )
 # Library
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/Main.cmake )
 
-# Python
-include(${CMAKE_CURRENT_SOURCE_DIR}/binding/Python/CMakeLists.txt)
-
 # Test & Example
 if( ${ULIS_BUILD_TESTS} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt)
@@ -63,6 +60,9 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindQt.cmake )
 if( ${ULIS_BUILD_EXAMPLES} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/example/CMakeLists.txt)
 endif()
+
+# Python
+include(${CMAKE_CURRENT_SOURCE_DIR}/binding/Python/CMakeLists.txt)
 
 # Install
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/Install.cmake )

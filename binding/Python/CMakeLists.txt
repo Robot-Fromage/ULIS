@@ -11,6 +11,7 @@
 cmake_minimum_required(VERSION 3.11.0)
 
 if( ${ULIS_BUILD_PYTHON_MODULE} )
+    # pyULIS module
     file(
         GLOB_RECURSE
         source_list
@@ -27,6 +28,7 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
     add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/pybind11-2.6.2 )
     target_link_libraries(
         pyULIS
+        PUBLIC
         ULIS
         pybind11::module
     )
@@ -35,9 +37,6 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         pyULIS
         PUBLIC
         "python/module/"
-        #${ULIS_PYTHON_INCLUDE_PATH1}
-        #${ULIS_PYTHON_INCLUDE_PATH2}
-        #${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/pybind11-2.6.2/include/
     )
 
     set_target_properties( pyULIS PROPERTIES OUTPUT_NAME "pyULIS${ULIS_VERSION_MAJOR}" )
@@ -48,6 +47,46 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         get_filename_component(source_path "${source}" PATH)
         string( REPLACE "/" "\\" source_path_msvc "${source_path}" )
         string( REPLACE "binding/Python/module" "" source_path_msvc "${source_path}" )
+        source_group("${source_path_msvc}" FILES "${source}")
+    endforeach()
+
+
+
+
+
+    # pyULIS interactive
+    file(
+        GLOB_RECURSE
+        source_list
+        RELATIVE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "binding/Python/interactive/*"
+    )
+
+    add_executable( pyULIS_Interactive ${source_list} )
+    set_target_properties( pyULIS_Interactive PROPERTIES FOLDER ULIS )
+
+    target_link_libraries(
+        pyULIS_Interactive
+        PUBLIC
+        pyULIS
+        pybind11::embed
+        Qt5::Core
+        Qt5::Widgets
+        Qt5::Gui
+    )
+
+    target_include_directories(
+        pyULIS_Interactive
+        PUBLIC
+        "python/interactive/"
+    )
+
+    # For MSVC parse pretty filter names
+    foreach(source IN LISTS source_list)
+        get_filename_component(source_path "${source}" PATH)
+        string( REPLACE "/" "\\" source_path_msvc "${source_path}" )
+        string( REPLACE "binding/Python/interactive" "" source_path_msvc "${source_path}" )
         source_group("${source_path_msvc}" FILES "${source}")
     endforeach()
 
