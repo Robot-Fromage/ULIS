@@ -15,7 +15,11 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Dispatch
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionMaxInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionMinInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionPremultInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionPremultMaxInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedConvolutionPremultMinInvocationSchedulerSelector )
 
 ULIS_NAMESPACE_END
 

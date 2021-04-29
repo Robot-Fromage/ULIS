@@ -1454,10 +1454,50 @@ public:
 // Convolution
     /*!
         Perform a convolution operation with iSource as input. The result is
-        written in iDestination.
+        written in iDestination. Convolve operator is average by default here.
     */
     ulError
     Convolve(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FKernel& iKernel
+        , const FRectI& iSourceRect = FRectI::Auto
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a convolution operation with iSource as input. The result is
+        written in iDestination. Convolve operator is max by default here.
+    */
+    ulError
+    ConvolveMax(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FKernel& iKernel
+        , const FRectI& iSourceRect = FRectI::Auto
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a convolution operation with iSource as input. The result is
+        written in iDestination. Convolve operator is max by default here.
+    */
+    ulError
+    ConvolveMin(
           const FBlock& iSource
         , FBlock& iDestination
         , const FKernel& iKernel
@@ -1480,6 +1520,50 @@ public:
     */
     ulError
     ConvolvePremult(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FKernel& iKernel
+        , const FRectI& iSourceRect = FRectI::Auto
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a convolution operation with iSource as input. The result is
+        written in iDestination. This version of Convolve performs an on-the fly
+        premultiplication, suitable for unpremultiplied formats without having
+        to make a conversion first. Use when you have only on convolution to do.
+    */
+    ulError
+    ConvolvePremultMax(
+          const FBlock& iSource
+        , FBlock& iDestination
+        , const FKernel& iKernel
+        , const FRectI& iSourceRect = FRectI::Auto
+        , const FVec2I& iPosition = FVec2I( 0 )
+        , eResamplingMethod iResamplingMethod = eResamplingMethod::Resampling_Bilinear
+        , eBorderMode iBorderMode = eBorderMode::Border_Transparent
+        , const ISample& iBorderValue = FColor::RGBA8( 0, 0, 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a convolution operation with iSource as input. The result is
+        written in iDestination. This version of Convolve performs an on-the fly
+        premultiplication, suitable for unpremultiplied formats without having
+        to make a conversion first. Use when you have only on convolution to do.
+    */
+    ulError
+    ConvolvePremultMin(
           const FBlock& iSource
         , FBlock& iDestination
         , const FKernel& iKernel
