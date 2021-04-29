@@ -25,7 +25,6 @@ SCanvas::~SCanvas() {
     delete  mLabel;
 }
 
-
 SCanvas::SCanvas( FULISLoader& iHandle )
     : QWidget( nullptr )
     , mHandle( iHandle )
@@ -53,10 +52,13 @@ SCanvas::SCanvas( FULISLoader& iHandle )
     mTimer->start();
 
     py::module_ pyULIS4 = py::module_::import("pyULIS4");
-    py::exec(R"(
+    py::exec( R"(
         from pyULIS4 import *
         canvas = FBlock( 800, 600, Format_RGBA8 )
-    )");
+    )" );
+
+    py::module_ main = py::module_::import("__main__");
+    main.add_object( "canvas2", py::cast( &mCanvas ), true );
 
     // Sample backward / forward
     // py::object obj = py::cast( &mCanvas );
@@ -83,7 +85,7 @@ SCanvas::tickEvent() {
 
     auto message = "Hello world from python embed !"_s;
     py::exec(R"(
-        print( "block from py", canvas.Width() )
+        print( "block from py", canvas2.Width() )
     )");
 
     py::module_ main = py::module_::import("__main__");
