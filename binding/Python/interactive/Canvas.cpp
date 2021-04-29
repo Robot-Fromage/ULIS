@@ -51,6 +51,19 @@ SCanvas::SCanvas( FULISLoader& iHandle )
     mTimer->setInterval( 1000.0 / 24.0 );
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
+
+    py::module_ pyULIS4 = py::module_::import("pyULIS4");
+    py::exec(R"(
+        from pyULIS4 import *
+        canvas = FBlock( 800, 600, Format_RGBA8 )
+    )");
+
+    // Sample backward / forward
+    // py::object obj = py::cast( &mCanvas );
+    //FBlock* canvas = pyCanvas.cast< FBlock* >();
+    //std::cout << canvas->Format();
+    //std::cout << canvas->Rect().w;
+    //auto dummy = 0;
 }
 
 void
@@ -66,11 +79,17 @@ SCanvas::tickEvent() {
     FContext& ctx = mHandle.Context();
     ctx.Clear( mCanvas );
     ctx.Finish();
-
-    py::scoped_interpreter guard{};
+    //py::object pyCanvas = pyULIS4.attr( "FBlock" )( 800, 600, Format_RGBA8 );
 
     auto message = "Hello world from python embed !"_s;
-    py::print(message);
+    py::exec(R"(
+        print( "block from py", canvas.Width() )
+    )");
 
+    py::module_ main = py::module_::import("__main__");
+    py::object canvas_attr = main.attr( "canvas" );
+    FBlock* canvas = canvas_attr.cast< FBlock* >();
+    std::cout << "block from cpp" << canvas->Width() << std::endl;
+    auto dummy = 0;
 }
 

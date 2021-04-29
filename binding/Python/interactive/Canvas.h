@@ -47,5 +47,6 @@ private:
     QPixmap* mPixmap;
     QLabel* mLabel;
     QTimer* mTimer;
+    py::scoped_interpreter mGuard;
 };
 
