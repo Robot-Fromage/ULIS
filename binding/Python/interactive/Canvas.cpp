@@ -66,5 +66,11 @@ SCanvas::tickEvent() {
     FContext& ctx = mHandle.Context();
     ctx.Clear( mCanvas );
     ctx.Finish();
+
+    py::scoped_interpreter guard{};
+
+    auto message = "Hello world from python embed !"_s;
+    py::print(message);
+
 }
 

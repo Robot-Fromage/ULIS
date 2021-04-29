@@ -11,6 +11,11 @@
 */
 #include "ULISLoader.h"
 #include <ULIS>
+
+#include <pybind11/embed.h>
+namespace py = pybind11;
+using namespace py::literals;
+
 #include <QWidget>
 
 class QImage;
