@@ -127,7 +127,9 @@ FContext::BlendAA(
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
-    const FVec2F subpixelComponent = iPosition.DecimalPart();
+    FVec2F subpixelComponent = iPosition.DecimalPart();
+    if( xmin < 0 ) subpixelComponent.x = 1.f - subpixelComponent.x;
+    if( ymin < 0 ) subpixelComponent.y = 1.f - subpixelComponent.y;
     const FVec2I shift = dst_roi.Position() - dst_aim.Position();
     const int coverageX = src_roi.w - ( src_roi.x + shift.x ) >= dst_roi.w ? dst_roi.w : static_cast< int >( dst_roi.w - ceil( subpixelComponent.x ) );
     const int coverageY = src_roi.h - ( src_roi.y + shift.y ) >= dst_roi.h ? dst_roi.h : static_cast< int >( dst_roi.h - ceil( subpixelComponent.y ) );
