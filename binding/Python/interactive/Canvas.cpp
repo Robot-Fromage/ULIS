@@ -84,9 +84,14 @@ SCanvas::tickEvent() {
     //py::object pyCanvas = pyULIS4.attr( "FBlock" )( 800, 600, Format_RGBA8 );
 
     auto message = "Hello world from python embed !"_s;
-    py::exec(R"(
-        print( "block from py", canvas2.Width() )
-    )");
+
+    try {
+        py::exec(R"(
+            print( "block from py", canvas2.Width() )
+        )");
+    } catch( const std::exception& ) {
+        std::cout << "error" << std::endl;
+    }
 
     py::module_ main = py::module_::import("__main__");
     py::object canvas_attr = main.attr( "canvas" );
