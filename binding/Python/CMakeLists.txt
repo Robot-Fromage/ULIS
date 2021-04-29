@@ -24,19 +24,20 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
     set_target_properties( pyULIS PROPERTIES FOLDER ULIS )
     target_compile_definitions( pyULIS PRIVATE pyULIS_BUILD_SHARED )
 
+    add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/pybind11-2.6.2 )
     target_link_libraries(
         pyULIS
         ULIS
-        ${ULIS_PYTHON_REL_LIB}
+        pybind11::module
     )
 
     target_include_directories(
         pyULIS
         PUBLIC
         "python/module/"
-        ${ULIS_PYTHON_INCLUDE_PATH1}
-        ${ULIS_PYTHON_INCLUDE_PATH2}
-        ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/pybind11-2.6.2/include/
+        #${ULIS_PYTHON_INCLUDE_PATH1}
+        #${ULIS_PYTHON_INCLUDE_PATH2}
+        #${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/pybind11-2.6.2/include/
     )
 
     set_target_properties( pyULIS PROPERTIES OUTPUT_NAME "pyULIS${ULIS_VERSION_MAJOR}" )

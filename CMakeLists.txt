@@ -22,10 +22,6 @@ option( ULIS_BUILD_TESTS            "Build the library test modules"            
 option( ULIS_BUILD_EXAMPLES         "Build the library example modules"                 OFF )
 SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries"            )
 SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package"                )
-SET( ULIS_PYTHON_REL_LIB            "" CACHE STRING "Indicates the path to python release static library"   )
-SET( ULIS_PYTHON_DEB_LIB            "" CACHE STRING "Indicates the path to python debug static library"     )
-SET( ULIS_PYTHON_INCLUDE_PATH1      "" CACHE STRING "Indicates the path to python include path"             )
-SET( ULIS_PYTHON_INCLUDE_PATH2      "" CACHE STRING "Indicates extra path to python include path"           )
 
 # Setup
 message( "Starting environnement setup before generation." )
