@@ -1,11 +1,13 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.Tab.h
-* @author   Clement Berthaud
-* @brief    This file provides the declaration for the RTab class.
+* @file         Tab.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
 #pragma once
 #include <QColor>
@@ -15,10 +17,10 @@
 #include <QWidget>
 
 //--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Rivet Forward Declarations
-namespace  Rivet { class  RCustomButton; }
-namespace  Rivet { class  RTab; }
-namespace  Rivet { class  RTabArea; }
+//----------------------------------------------------------- Forward Declarations
+class  FCustomButton;
+class  FTab;
+class  FTabArea;
 
 
 //--------------------------------------------------------------------------------------
@@ -30,25 +32,24 @@ class  QPropertyAnimation;
 class  QPushButton;
 
 
-namespace  Rivet {
 /// @brief      Callback function OnTabDroppedOutCB
-/// @param      iSelf    The RTab object for which the callback is called.
-/// @param      iSrc     The RTabArea where the RTab was lifted from.
+/// @param      iSelf    The FTab object for which the callback is called.
+/// @param      iSrc     The FTabArea where the FTab was lifted from.
 /// @return     void
-typedef void (*OnTabDroppedOutCB)( RTab* iSelf, RTabArea* iSrc );
+typedef void (*OnTabDroppedOutCB)( FTab* iSelf, FTabArea* iSrc );
 
 /////////////////////////////////////////////////////
-/// @class      RTab
-/// @brief      The RTab class provides a Tab widget.
-/// @details    It handles drag & drop events along with RTabArea and the Docking Manager.
-class  RTab
+/// @class      FTab
+/// @brief      The FTab class provides a Tab widget.
+/// @details    It handles drag & drop events along with FTabArea and the Docking Manager.
+class  FTab
     : public QWidget
 {
     Q_OBJECT
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Typedefs
-    typedef  RTab       tSelf;
+    typedef  FTab       tSelf;
     typedef  QWidget    tSuperClass;
 
 
@@ -72,8 +73,8 @@ enum class eTabShape
 public:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-    virtual  ~RTab();
-    RTab( QWidget* iParent = nullptr );
+    virtual  ~FTab();
+    FTab( QWidget* iParent = nullptr );
 
 
 public:
@@ -195,10 +196,10 @@ public slots:
 signals:
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------ Docking Interface Signals
-    void  Lifted( RTab* );
-    void  Dropped( RTab* );
-    void  Selected( RTab* );
-    void  CloseClicked( RTab* );
+    void  Lifted( FTab* );
+    void  Dropped( FTab* );
+    void  Selected( FTab* );
+    void  CloseClicked( FTab* );
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                                PRIVATE DATA                                    ////
@@ -207,7 +208,7 @@ private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------- Private Data Members
     QLabel*                     mTitleLabel;
-    RCustomButton*              mCloseButton;
+    FCustomButton*              mCloseButton;
     QWidget*                    mInvisibleBackgroundRect;
     QString                     mTitleText;
     QPoint                      mDragShift;
@@ -235,7 +236,4 @@ private:
     QWidget*                    mLinkWidget;
 
 };
-
-
-} // namespace  Rivet
 

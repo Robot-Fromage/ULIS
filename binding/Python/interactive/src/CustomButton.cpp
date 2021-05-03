@@ -1,19 +1,18 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.CustomButton.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definition for the RCustomButton class.
+* @file         CustomButton.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/Rivet.CustomButton.h"
+#include "CustomButton.h"
 #include <QPainter>
 #include <QMouseEvent>
 
-namespace  Rivet {
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------- Default Values Defines
 #define  DEFAULT_BG_COLOR                   QColor( 0, 0, 0, 0 )
 #define  DEFAULT_HOVER_BG_COLOR             QColor( 255, 255, 255, 127 )
 #define  DEFAULT_PRESSED_BG_COLOR           QColor( 0, 0, 0, 127 )
@@ -23,15 +22,11 @@ namespace  Rivet {
 #define  DEFAULT_SIZE                       7
 #define  DEFAULT_BACKGROUND                 eButtonBackgroundShape::kSquare
 
-
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Construction / Destruction
-RCustomButton::~RCustomButton()
+FCustomButton::~FCustomButton()
 {
 }
 
-
-RCustomButton::RCustomButton( QWidget* iParent )
+FCustomButton::FCustomButton( QWidget* iParent )
     : tSuperClass(              iParent                             )
     , mHovered(                 false                               )
     , mPressed(                 false                               )
@@ -49,165 +44,138 @@ RCustomButton::RCustomButton( QWidget* iParent )
 {
 }
 
-
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------- Public Style Setup Accessors
 void
-RCustomButton::SetBackgroundColor( const  QColor&  iColor )
+FCustomButton::SetBackgroundColor( const  QColor&  iColor )
 {
     mBgColor = iColor;
     repaint();
 }
 
-
 void
-RCustomButton::SetHoveredBackgroundColor( const  QColor&  iColor )
+FCustomButton::SetHoveredBackgroundColor( const  QColor&  iColor )
 {
     mHoveredBgColor = iColor;
     repaint();
 }
 
-
 void
-RCustomButton::SetPressedBackgroundColor( const  QColor&  iColor )
+FCustomButton::SetPressedBackgroundColor( const  QColor&  iColor )
 {
     mPressedBgColor = iColor;
     mPressedHoveredBgColor = iColor;
     repaint();
 }
 
-
 const  QColor&
-RCustomButton::GetBackgroundColor()  const
+FCustomButton::GetBackgroundColor()  const
 {
     return  mBgColor;
 }
 
-
 const  QColor&
-RCustomButton::GetHoveredBackgroundColor()  const
+FCustomButton::GetHoveredBackgroundColor()  const
 {
     return  mHoveredBgColor;
 }
 
-
 const  QColor&
-RCustomButton::GetPressedBackgroundColor()  const
+FCustomButton::GetPressedBackgroundColor()  const
 {
     return  mPressedBgColor;
 }
 
-
 void
-RCustomButton::SetColor( const  QColor&  iColor )
+FCustomButton::SetColor( const  QColor&  iColor )
 {
     mColor = iColor;
     repaint();
 }
 
-
 void
-RCustomButton::SetHoveredColor( const  QColor&  iColor )
+FCustomButton::SetHoveredColor( const  QColor&  iColor )
 {
     mHoveredColor = iColor;
     repaint();
 }
 
-
 void
-RCustomButton::SetPressedColor( const  QColor&  iColor )
+FCustomButton::SetPressedColor( const  QColor&  iColor )
 {
     mPressedColor = iColor;
     mPressedHoveredColor = iColor;
     repaint();
 }
 
-
 const  QColor&
-RCustomButton::GetColor()  const
+FCustomButton::GetColor()  const
 {
     return  mColor;
 }
 
-
 const  QColor&
-RCustomButton::GetHoveredColor()  const
+FCustomButton::GetHoveredColor()  const
 {
     return  mHoveredColor;
 }
 
-
 const  QColor&
-RCustomButton::GetPressedColor()  const
+FCustomButton::GetPressedColor()  const
 {
     return  mPressedColor;
 }
 
-
 void
-RCustomButton::SetIconShape( const  eButtonIconShape&  iShape )
+FCustomButton::SetIconShape( const  eButtonIconShape&  iShape )
 {
     mIconShape = iShape;
     repaint();
 }
 
-
-const  RCustomButton::eButtonIconShape&
-RCustomButton::GetShape()  const
+const  FCustomButton::eButtonIconShape&
+FCustomButton::GetShape()  const
 {
     return  mIconShape;
 }
 
-
 void
-RCustomButton::SetBackgroundShape( const  eButtonBackgroundShape&  iShape )
+FCustomButton::SetBackgroundShape( const  eButtonBackgroundShape&  iShape )
 {
     mBackgroundShape = iShape;
 }
 
-
-const  RCustomButton::eButtonBackgroundShape&
-RCustomButton::GetBackgroundShape()  const
+const  FCustomButton::eButtonBackgroundShape&
+FCustomButton::GetBackgroundShape()  const
 {
     return  mBackgroundShape;
 }
 
-
 void
-RCustomButton::SetIconSize( int iSize )
+FCustomButton::SetIconSize( int iSize )
 {
     mIconSize = iSize;
     repaint();
 }
 
-
 int
-RCustomButton::GetIconSize()  const
+FCustomButton::GetIconSize()  const
 {
     return  mIconSize;
 }
 
-
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------- Public State Accessors
 bool
-RCustomButton::IsHovered()
+FCustomButton::IsHovered()
 {
     return  mPressed;
 }
 
-
 bool
-RCustomButton::IsPressed()
+FCustomButton::IsPressed()
 {
     return  mHovered;
 }
 
-
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------- Protected Qt event overrides
 void
-RCustomButton::enterEvent( QEvent* event )
+FCustomButton::enterEvent( QEvent* event )
 {
     tSuperClass::enterEvent( event );
 
@@ -215,9 +183,8 @@ RCustomButton::enterEvent( QEvent* event )
     repaint();
 }
 
-
 void
-RCustomButton::leaveEvent( QEvent* event )
+FCustomButton::leaveEvent( QEvent* event )
 {
     tSuperClass::leaveEvent( event );
 
@@ -225,9 +192,8 @@ RCustomButton::leaveEvent( QEvent* event )
     repaint();
 }
 
-
 void
-RCustomButton::mousePressEvent( QMouseEvent* event )
+FCustomButton::mousePressEvent( QMouseEvent* event )
 {
     tSuperClass::mousePressEvent( event );
 
@@ -238,9 +204,8 @@ RCustomButton::mousePressEvent( QMouseEvent* event )
     }
 }
 
-
 void
-RCustomButton::mouseReleaseEvent( QMouseEvent* event )
+FCustomButton::mouseReleaseEvent( QMouseEvent* event )
 {
     tSuperClass::mouseReleaseEvent( event );
 
@@ -248,16 +213,14 @@ RCustomButton::mouseReleaseEvent( QMouseEvent* event )
     repaint();
 }
 
-
 void
-RCustomButton::mouseDoubleClickEvent( QMouseEvent* event )
+FCustomButton::mouseDoubleClickEvent( QMouseEvent* event )
 {
     emit  DoubleClicked();
 }
 
-
 void
-RCustomButton::paintEvent( QPaintEvent* event )
+FCustomButton::paintEvent( QPaintEvent* event )
 {
     /*
     // [DEPRECATED] Apply style sheet drawing on this before all
@@ -410,7 +373,4 @@ RCustomButton::paintEvent( QPaintEvent* event )
         }
     }
 }
-
-
-} // namespace  Rivet
 

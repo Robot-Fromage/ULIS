@@ -74,6 +74,7 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         Qt5::Core
         Qt5::Gui
         Qt5::WebEngine
+        Qt5::WebEngineWidgets
         Qt5::Widgets
         Qt5::WinExtras
         ${OPENGL_gl_LIBRARY}

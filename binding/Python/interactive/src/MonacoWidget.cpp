@@ -1,25 +1,20 @@
-/*************************************************************************
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* Rivet.MonacoWidget.cpp
-* 4-10-2018 13:06 GMT+1
-* Clement Berthaud - Layl
-* Please refer to LICENSE.TXT
+* @file         MonacoWidget.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-
-#include  "Rivet/Rivet.MonacoWidget.h"
-
-
+#include  "MonacoWidget.h"
 #include <QWebEngineView>
 #include <QWebEnginePage>
 
-
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------- Default values & Utilities defines
-
-
 #define  DEFAULT_BACKGROUND_COLOR  QColor( 20, 20, 20 )
 #define  WEB_CONTEXT    mEmbeddedBrowser->page()
 
@@ -31,14 +26,8 @@
 #define  MONACO_HEADER  "file://"
 #define  MONACO_SCRIPT  "/monaco-editor/browser-script-editor/index.html"
 
-
-namespace  Rivet
-{
-
-
 static QString monaco_prefix    = "/resources";
 static QString monaco_path      = MONACO_HEADER + monaco_prefix + MONACO_SCRIPT;
-
 
 void
 SetMonacoPrefix( const  QString&  iPrefix )
@@ -89,10 +78,10 @@ MonacoWidget::MonacoWidget( QWidget* iParent ) :
 void
 MonacoWidget::Layout()
 {
-    if( !Rivet_ASyncJS_IsReady )  return;
+    if( !ASyncJS_IsReady )  return;
 
     QVariant unused;
-    Rivet_ASyncJS_Run( WEB_CONTEXT, "editor.layout();", unused )
+    ASyncJS_Run( WEB_CONTEXT, "editor.layout();", unused )
     return;
 }
 
@@ -100,10 +89,10 @@ MonacoWidget::Layout()
 QString
 MonacoWidget::GetText()
 {
-    if( !Rivet_ASyncJS_IsReady )  return  QString();
+    if( !ASyncJS_IsReady )  return  QString();
 
     QVariant result;
-    Rivet_ASyncJS_Run( WEB_CONTEXT, "editor.getValue();", result )
+    ASyncJS_Run( WEB_CONTEXT, "editor.getValue();", result )
     return  result.toString();
 }
 
@@ -111,7 +100,7 @@ MonacoWidget::GetText()
 void
 MonacoWidget::SetText( const  QString&  iStr )
 {
-    if( !Rivet_ASyncJS_IsReady )  return;
+    if( !ASyncJS_IsReady )  return;
 
     QString ct = iStr;
     // Escape quotes
@@ -124,7 +113,7 @@ MonacoWidget::SetText( const  QString&  iStr )
     auto param = QString( "[%1]" ).arg( list.join( "," ) );
 
     QVariant unused;
-    Rivet_ASyncJS_Run( WEB_CONTEXT, "setText( "+param+" );", unused )
+    ASyncJS_Run( WEB_CONTEXT, "setText( "+param+" );", unused )
     return;
 }
 
@@ -146,10 +135,10 @@ MonacoWidget::AppendText( const  QString&  iStr )
 QString
 MonacoWidget::GetLanguage()
 {
-    if( !Rivet_ASyncJS_IsReady )  return  QString();
+    if( !ASyncJS_IsReady )  return  QString();
 
     QVariant result;
-    Rivet_ASyncJS_Run( WEB_CONTEXT, "monaco.editor.getModels()[0].getModeId();", result )
+    ASyncJS_Run( WEB_CONTEXT, "monaco.editor.getModels()[0].getModeId();", result )
     return  result.toString();
 }
 
@@ -157,10 +146,10 @@ MonacoWidget::GetLanguage()
 void
 MonacoWidget::SetLanguage( const  QString&  iStr )
 {
-    if( !Rivet_ASyncJS_IsReady )  return;
+    if( !ASyncJS_IsReady )  return;
 
     QVariant unused;
-    Rivet_ASyncJS_Run( WEB_CONTEXT, "monaco.editor.setModelLanguage(monaco.editor.getModels()[0],'"+iStr+"');", unused )
+    ASyncJS_Run( WEB_CONTEXT, "monaco.editor.setModelLanguage(monaco.editor.getModels()[0],'"+iStr+"');", unused )
     return;
 }
 
@@ -209,7 +198,7 @@ MonacoWidget::Compose()
 void
 MonacoWidget::Destroy()
 {
-    emit  Rivet_ASyncJS_UnlockSignal_Name();
+    emit  ASyncJS_UnlockSignal_Name();
 
     delete  mEmbeddedBrowser;
 }
@@ -219,8 +208,5 @@ MonacoWidget::Destroy()
 //------------------------------------------------------------------- Async JS Framework
 
 
-Rivet_ASyncJS_Impl( MonacoWidget )
-
-
-} // namespace  Rivet
+ASyncJS_Impl( MonacoWidget )
 

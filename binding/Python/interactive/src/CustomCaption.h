@@ -1,25 +1,19 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.CustomCaption.h
-* @author   Clement Berthaud
-* @brief    This file provides the declaration for the RCustomCaption class.
+* @file         CustomCaption.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
 #pragma once
 #include <QObject>
 #include <QWidget>
 
-namespace  Rivet {
-/////////////////////////////////////////////////////
-/// @class      RCustomCaption
-/// @brief      The RCustomCaption class provides a base framework for custom caption widgets.
-/// @details    RCustomCaption must have a HitEmptySpace method, override this for custom behaviours.
-///             The default implementation returns false if it hits any of the child widgets.
-///             Children can be set externally.
-///             Parent Custom window will listen to the signals.
-class  RCustomCaption
+class  FCustomCaption
     : public QWidget
 {
     Q_OBJECT
@@ -27,22 +21,22 @@ class  RCustomCaption
 private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Typedefs
-    typedef  RCustomCaption     tSelf;
+    typedef  FCustomCaption     tSelf;
     typedef  QWidget            tSuperClass;
 
 public:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-    /// @fn         virtual  ~RCustomCaption()
+    /// @fn         virtual  ~FCustomCaption()
     /// @brief      Default Destructor.
     /// @details    virtual, does nothing.
-    virtual  ~RCustomCaption();
+    virtual  ~FCustomCaption();
 
 
-    /// @fn         RCustomCaption( QWidget *parent = nullptr )
+    /// @fn         FCustomCaption( QWidget *parent = nullptr )
     /// @brief      Default Constructor.
     /// @details    Init member data with default values.
-    RCustomCaption( QWidget* iParent = nullptr );
+    FCustomCaption( QWidget* iParent = nullptr );
 
 
 public:
@@ -80,7 +74,4 @@ signals:
 
 
 };
-
-
-} // namespace  Rivet
 

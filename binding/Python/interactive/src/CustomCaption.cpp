@@ -1,24 +1,25 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.CustomCaption.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definition for the RCustomCaption class.
+* @file         CustomCaption.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/Rivet.CustomCaption.h"
+#include "CustomCaption.h"
 #include <QtWinExtras> // for native event
 
-namespace  Rivet {
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-RCustomCaption::~RCustomCaption()
+FCustomCaption::~FCustomCaption()
 {
 }
 
 
-RCustomCaption::RCustomCaption( QWidget* iParent )
+FCustomCaption::FCustomCaption( QWidget* iParent )
     : tSuperClass( iParent )
 {
 }
@@ -27,7 +28,7 @@ RCustomCaption::RCustomCaption( QWidget* iParent )
 //--------------------------------------------------------------------------------------
 //----------------------------------------- Custom NC Handling implementation in caption
 bool
-RCustomCaption::HitEmptySpace( long iX, long iY )
+FCustomCaption::HitEmptySpace( long iX, long iY )
 {
     QPoint local = mapFromParent( QPoint( iX, iY ) );
 
@@ -50,7 +51,7 @@ RCustomCaption::HitEmptySpace( long iX, long iY )
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------- Protected Qt event overrides
 bool
-RCustomCaption::nativeEvent( const  QByteArray& eventType, void* message, long* result )
+FCustomCaption::nativeEvent( const  QByteArray& eventType, void* message, long* result )
 {
     // Cast to WINAPI standards
     MSG*    wmsg    = reinterpret_cast< MSG* >( message );
@@ -79,25 +80,22 @@ RCustomCaption::nativeEvent( const  QByteArray& eventType, void* message, long* 
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------- Public Qt Slots
 void
-RCustomCaption::ProcessCloseClicked()
+FCustomCaption::ProcessCloseClicked()
 {
     emit  CloseClicked();
 }
 
 
 void
-RCustomCaption::ProcessMaximizeClicked()
+FCustomCaption::ProcessMaximizeClicked()
 {
     emit  MaximizeClicked();
 }
 
 
 void
-RCustomCaption::ProcessMinimizeClicked()
+FCustomCaption::ProcessMinimizeClicked()
 {
     emit  MinimizeClicked();
 }
-
-
-} // namespace  Rivet
 

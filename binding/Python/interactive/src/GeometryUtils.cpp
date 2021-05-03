@@ -1,17 +1,17 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.__private__.GeometryUtils.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definitions for some QT Geometry utilities.
+* @file         GeometryUtils.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/__private__/Rivet.__private__.GeometryUtils.h"
+#include "GeometryUtils.h"
 #include <QWidget>
 
-namespace  Rivet {
-namespace  __private__ {
 QRect
 MapRectToGlobal( QWidget* iFrom, const  QRect&  iRect )
 {
@@ -45,8 +45,4 @@ SizeFromPoint( const  QPoint&  iFrom )
 {
     return  QSize( iFrom.x(), iFrom.y() );
 }
-
-
-} // namespace  __private__
-} // namespace  Rivet
 

@@ -1,27 +1,19 @@
-/*************************************************************************
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* Rivet.TabArea.cpp
-* 24-10-2018 19:13 GMT+1
-* Clement Berthaud - Layl
-* Please refer to LICENSE.TXT
+* @file         TabArea.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-
-#include "Rivet/Rivet.TabArea.h"
-
-
-#include "Rivet/Rivet.CustomButton.h"
-
-
-#include "Rivet/__private__/Rivet.__private__.GeometryUtils.h"
-#include "Rivet/__private__/Rivet.__private__.DockingManager.h"
-
-
+#include "TabArea.h"
+#include "CustomButton.h"
+#include "GeometryUtils.h"
+#include "DockingManager.h"
 #include <assert.h>
-
-
 #include <QApplication>
 #include <QEvent>
 #include <QEasingCurve>
@@ -35,18 +27,13 @@
 #include <QWheelEvent>
 #include <QStackedWidget>
 
-
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------- Default Values Defines
-
-
 #define DEFAULT_TAB_WIDTH           200
 #define DEFAULT_MAXIMUM_TAB_WIDTH   200
 #define DEFAULT_MINIMUM_TAB_WIDTH   100
 #define DEFAULT_WHEEL_TIME          50
 #define DEFAULT_NAV_TIME            200
 #define DEFAULT_ENSURE_TIME         250
-#define DEFAULT_TABS_STYLE          RTab::eTabShape::kBezier
+#define DEFAULT_TABS_STYLE          FTab::eTabShape::kBezier
 
 
 #define DEFAULT_NAV_WORK_FPS        60
@@ -101,7 +88,7 @@ _NextDefaultColor()
 struct FTabOrderingPair
 {
     QRect  mGeometry;
-    ::Rivet::RTab*    mTab;
+    FTab*    mTab;
 };
 
 
@@ -117,7 +104,7 @@ SortBasic( const  FTabOrderingPair& iA, const  FTabOrderingPair& iB )
 
 static
 bool
-SortBasicTabs( ::Rivet::RTab* iA, ::Rivet::RTab* iB )
+SortBasicTabs( FTab* iA, FTab* iB )
 {
     int termA = iA->TargetGeometry().x(); // semantic comparision element for A
     int termB = iB->TargetGeometry().x(); // semantic comparision element for B
@@ -126,16 +113,12 @@ SortBasicTabs( ::Rivet::RTab* iA, ::Rivet::RTab* iB )
 
 static
 bool
-SortBasicGeo( ::Rivet::RTab* iA, ::Rivet::RTab* iB )
+SortBasicGeo( FTab* iA, FTab* iB )
 {
     int termA = iA->geometry().x(); // semantic comparision element for A
     int termB = iB->geometry().x(); // semantic comparision element for B
     return termA < termB;
 }
-
-
-namespace  Rivet
-{
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -145,16 +128,16 @@ namespace  Rivet
 //----------------------------------------------------------- Construction / Destruction
 
 
-RTabArea::~RTabArea()
+FTabArea::~FTabArea()
 {
     Unregister();
     Destroy();
 }
 
 
-RTabArea::RTabArea( QWidget* iParent ) :
+FTabArea::FTabArea( QWidget* iParent ) :
     tSuperClass( iParent ),
-    mDomesticTabs( QVector< RTab* >() ),
+    mDomesticTabs( QVector< FTab* >() ),
 
     mScrollArea(            NULL ),
     mScrollWidgetWrapper(   NULL ),
@@ -207,7 +190,7 @@ RTabArea::RTabArea( QWidget* iParent ) :
 
 
 bool
-RTabArea::HitEmptySpace( long iX, long iY )
+FTabArea::HitEmptySpace( long iX, long iY )
 {
     // Window
     //  Caption                             we receive iX iY expressed in parent coord sys
@@ -222,7 +205,7 @@ RTabArea::HitEmptySpace( long iX, long iY )
     QPoint scrollAreaLocal(              mScrollArea->mapFromParent( local )            );
     QPoint scrollWrapperLocal(  mScrollWidgetWrapper->mapFromParent( scrollAreaLocal )  );
 
-    QList< RTab *> list = mScrollWidgetWrapper->findChildren< RTab* >();
+    QList< FTab *> list = mScrollWidgetWrapper->findChildren< FTab* >();
     for(QWidget *w : list)
         if( w->geometry().contains( scrollWrapperLocal ) )
             return  false;
@@ -239,7 +222,7 @@ RTabArea::HitEmptySpace( long iX, long iY )
 
 
 void
-RTabArea::ManualAddNewTab( RTab* iTab )
+FTabArea::ManualAddNewTab( FTab* iTab )
 {
     // Set tab parent to the wrapper.
     iTab->setParent( mScrollWidgetWrapper );
@@ -251,9 +234,9 @@ RTabArea::ManualAddNewTab( RTab* iTab )
     iTab->SetAnimatedMovement( QPoint( ( NTabs() - 1 ) * ( GetTabWidth() - mOverlap ), 0 ) );
 
     // Setup lifted connection
-    QObject::connect( iTab, SIGNAL( Lifted( RTab* ) ), this, SLOT( DomesticTabLifted( RTab* ) ) );
-    QObject::connect( iTab, SIGNAL( Selected( RTab* ) ), this, SLOT( DomesticTabSelected( RTab* ) ) );
-    QObject::connect( iTab, SIGNAL( CloseClicked( RTab* ) ), this, SLOT( CloseTab( RTab* ) ) );
+    QObject::connect( iTab, SIGNAL( Lifted( FTab* ) ), this, SLOT( DomesticTabLifted( FTab* ) ) );
+    QObject::connect( iTab, SIGNAL( Selected( FTab* ) ), this, SLOT( DomesticTabSelected( FTab* ) ) );
+    QObject::connect( iTab, SIGNAL( CloseClicked( FTab* ) ), this, SLOT( CloseTab( FTab* ) ) );
     // This is generally required for a dynamically created widget to show properly
 
     iTab->SetClosable( mTabsClosable );
@@ -274,17 +257,17 @@ RTabArea::ManualAddNewTab( RTab* iTab )
 
 
 void
-RTabArea::DockHere( RTab* iTab )
+FTabArea::DockHere( FTab* iTab )
 {
     // Remove previous Hooks
     SetNoCandidateTab();
     iTab->removeEventFilter(this );
-    QObject::disconnect( iTab, SIGNAL( Dropped( RTab* ) ), this, SLOT( DomesticTabDropped(RTab*) ) );
-    QObject::disconnect( iTab, SIGNAL( Dropped( RTab* ) ), this, SLOT( ForeignTabDropped(RTab*) ) );
+    QObject::disconnect( iTab, SIGNAL( Dropped( FTab* ) ), this, SLOT( DomesticTabDropped(FTab*) ) );
+    QObject::disconnect( iTab, SIGNAL( Dropped( FTab* ) ), this, SLOT( ForeignTabDropped(FTab*) ) );
     // Install lift signal
-    QObject::connect( iTab, SIGNAL( Lifted( RTab* ) ), this, SLOT( DomesticTabLifted( RTab* ) ) );
-    QObject::connect( iTab, SIGNAL( Selected( RTab* ) ), this, SLOT( DomesticTabSelected( RTab* ) ) );
-    QObject::connect( iTab, SIGNAL( CloseClicked( RTab* ) ), this, SLOT( CloseTab( RTab* ) ) );
+    QObject::connect( iTab, SIGNAL( Lifted( FTab* ) ), this, SLOT( DomesticTabLifted( FTab* ) ) );
+    QObject::connect( iTab, SIGNAL( Selected( FTab* ) ), this, SLOT( DomesticTabSelected( FTab* ) ) );
+    QObject::connect( iTab, SIGNAL( CloseClicked( FTab* ) ), this, SLOT( CloseTab( FTab* ) ) );
 
     mDomesticTabs.append( iTab );
     iTab->setParent( mScrollWidgetWrapper );
@@ -309,7 +292,7 @@ RTabArea::DockHere( RTab* iTab )
 
 
 void
-RTabArea::SetCurrentTab( RTab* iTab )
+FTabArea::SetCurrentTab( FTab* iTab )
 {
     if( iTab )
     {
@@ -347,7 +330,7 @@ RTabArea::SetCurrentTab( RTab* iTab )
 
 
 int
-RTabArea::NTabs()  const
+FTabArea::NTabs()  const
 {
     return  mDomesticTabs.count();
 }
@@ -355,7 +338,7 @@ RTabArea::NTabs()  const
 
 
 void
-RTabArea::SetCandidateTab( RTab* iTab )
+FTabArea::SetCandidateTab( FTab* iTab )
 {
     if( iTab == mCandidateTab )
         return;
@@ -370,7 +353,7 @@ RTabArea::SetCandidateTab( RTab* iTab )
 
 
 void
-RTabArea::SetNoCandidateTab()
+FTabArea::SetNoCandidateTab()
 {
     SetCandidateTab( NULL );
     mProcessCandidateTimer->stop();
@@ -378,14 +361,14 @@ RTabArea::SetNoCandidateTab()
 
 
 void
-RTabArea::SetLinkedStack( QStackedWidget* iStack )
+FTabArea::SetLinkedStack( QStackedWidget* iStack )
 {
     mLinkedStack = iStack;
 }
 
 
 QStackedWidget*
-RTabArea::GetLinkedStack()  const
+FTabArea::GetLinkedStack()  const
 {
     return  mLinkedStack;
 }
@@ -396,7 +379,7 @@ RTabArea::GetLinkedStack()  const
 
 
 void
-RTabArea::Reorder()
+FTabArea::Reorder()
 {
     // Do sort
     qSort( mDomesticTabs.begin(), mDomesticTabs.end(), SortBasicGeo );
@@ -428,7 +411,7 @@ RTabArea::Reorder()
 
 
 void
-RTabArea::Recompose()
+FTabArea::Recompose()
 {
     Compose();
 }
@@ -438,7 +421,7 @@ RTabArea::Recompose()
 
 
 void
-RTabArea::SetOverlap( int iValue )
+FTabArea::SetOverlap( int iValue )
 {
     mOverlap = iValue;
     Compose();
@@ -447,7 +430,7 @@ RTabArea::SetOverlap( int iValue )
 
 
 void
-RTabArea::SetMaximumTabWidth( int iWidth )
+FTabArea::SetMaximumTabWidth( int iWidth )
 {
     mMaximumTabWidth = iWidth;
     Compose();
@@ -456,7 +439,7 @@ RTabArea::SetMaximumTabWidth( int iWidth )
 
 
 void
-RTabArea::SetMinimumTabWidth( int iWidth )
+FTabArea::SetMinimumTabWidth( int iWidth )
 {
     mMinimumTabWidth = iWidth;
     Compose();
@@ -465,110 +448,110 @@ RTabArea::SetMinimumTabWidth( int iWidth )
 
 
 void
-RTabArea::SetTabsShapeStyle( RTab::eTabShape iValue )
+FTabArea::SetTabsShapeStyle( FTab::eTabShape iValue )
 {
     mTabsShapeStyle = iValue;
-    for ( RTab* t : mDomesticTabs )
+    for ( FTab* t : mDomesticTabs )
         t->SetTabShape( iValue );
 }
 
 
 void
-RTabArea::SetTabsClosable( bool iValue )
+FTabArea::SetTabsClosable( bool iValue )
 {
     mTabsClosable = iValue;
-    for ( RTab* t : mDomesticTabs )
+    for ( FTab* t : mDomesticTabs )
         t->SetClosable( iValue );
 }
 
 
 void
-RTabArea::SetTabsLiftable( bool iValue )
+FTabArea::SetTabsLiftable( bool iValue )
 {
     mTabsLiftable = iValue;
-    for ( RTab* t : mDomesticTabs )
+    for ( FTab* t : mDomesticTabs )
         t->SetLiftable( iValue );
 }
 
 
 
 void
-RTabArea::SetOnAreaBecomesEmptyCB( OnAreaBecomesEmptyCB iOnAreaBecomesEmptyCB )
+FTabArea::SetOnAreaBecomesEmptyCB( OnAreaBecomesEmptyCB iOnAreaBecomesEmptyCB )
 {
     mOnAreaBecomesEmptyCB = iOnAreaBecomesEmptyCB;
 }
 
 
 void
-RTabArea::SetOnTabDroppedOutCB( OnTabDroppedOutCB iOnTabDroppedOutCB )
+FTabArea::SetOnTabDroppedOutCB( OnTabDroppedOutCB iOnTabDroppedOutCB )
 {
     mOnTabDroppedOutCB = iOnTabDroppedOutCB;
 }
 
 
 int
-RTabArea::GetOverlap()  const
+FTabArea::GetOverlap()  const
 {
     return  mOverlap;
 }
 
 
 int
-RTabArea::GetMaximumTabWidth()  const
+FTabArea::GetMaximumTabWidth()  const
 {
     return  mMaximumTabWidth;
 }
 
 
 int
-RTabArea::GetMinimumTabWidth()  const
+FTabArea::GetMinimumTabWidth()  const
 {
     return  mMinimumTabWidth;
 }
 
 
 int
-RTabArea::GetTabWidth()  const
+FTabArea::GetTabWidth()  const
 {
     return  mTabWidth;
 }
 
-RTab::eTabShape
-RTabArea::GetTabsShapeStyle()  const
+FTab::eTabShape
+FTabArea::GetTabsShapeStyle()  const
 {
     return  mTabsShapeStyle;
 }
 
 
 bool
-RTabArea::GetTabsClosable()  const
+FTabArea::GetTabsClosable()  const
 {
     return  mTabsClosable;
 }
 
 
 bool
-RTabArea::GetTabsLiftable()  const
+FTabArea::GetTabsLiftable()  const
 {
     return  mTabsLiftable;
 }
 
 
 OnAreaBecomesEmptyCB
-RTabArea::GetOnAreaBecomesEmptyCB()  const
+FTabArea::GetOnAreaBecomesEmptyCB()  const
 {
     return  mOnAreaBecomesEmptyCB;
 }
 
 
 OnTabDroppedOutCB
-RTabArea::GetOnTabDroppedOutCB()  const
+FTabArea::GetOnTabDroppedOutCB()  const
 {
     return  mOnTabDroppedOutCB;
 }
 
 void
-RTabArea::SetBlackControls()
+FTabArea::SetBlackControls()
 {
     QColor black = Qt::black;
     mLeftButton->SetColor( black );
@@ -582,7 +565,7 @@ RTabArea::SetBlackControls()
 
 
 void
-RTabArea::SetWhiteControls()
+FTabArea::SetWhiteControls()
 {
     QColor white = Qt::white;
     mLeftButton->SetColor( white );
@@ -596,7 +579,7 @@ RTabArea::SetWhiteControls()
 
 
 void
-RTabArea::EnableBlurEffectControls( bool iValue )
+FTabArea::EnableBlurEffectControls( bool iValue )
 {
     mLeftDropShadowEffect->setEnabled( iValue );
     mRightDropShadowEffect->setEnabled( iValue );
@@ -608,14 +591,14 @@ RTabArea::EnableBlurEffectControls( bool iValue )
 
 
 void
-RTabArea::SetTag( const  QString&  iTag )
+FTabArea::SetTag( const  QString&  iTag )
 {
     mTag = iTag;
 }
 
 
 const  QString&
-RTabArea::GetTag()  const
+FTabArea::GetTag()  const
 {
     return  mTag;
 }
@@ -628,20 +611,20 @@ RTabArea::GetTag()  const
 
 
 void
-RTabArea::SetTabWidth( int iWidth )
+FTabArea::SetTabWidth( int iWidth )
 {
     // Avoid recursive calls in reorder.
     mTabWidth = iWidth;
     mTabWidth = mTabWidth > mMaximumTabWidth ? mMaximumTabWidth : mTabWidth;
     mTabWidth = mTabWidth < mMinimumTabWidth ? mMinimumTabWidth : mTabWidth;
 
-    for ( RTab* t : mDomesticTabs )
+    for ( FTab* t : mDomesticTabs )
         t->resize( mTabWidth, height() );
 }
 
 
 int
-RTabArea::ComputeSmartWidthWithOverlap()  const
+FTabArea::ComputeSmartWidthWithOverlap()  const
 {
     // N Tabs
     int n = NTabs();
@@ -657,7 +640,7 @@ RTabArea::ComputeSmartWidthWithOverlap()  const
 
 
 void
-RTabArea::RecomputeCurrentTabOnImminentChange()
+FTabArea::RecomputeCurrentTabOnImminentChange()
 {
     int indexOfCurrent = mDomesticTabs.indexOf( mCurrentTab );
 
@@ -682,7 +665,7 @@ RTabArea::RecomputeCurrentTabOnImminentChange()
 
 
 void
-RTabArea::TakeActionOnEmpty()
+FTabArea::TakeActionOnEmpty()
 {
     // The dropped tab was the last in this area
     bool last       = mDomesticTabs.count() == 0;
@@ -701,7 +684,7 @@ RTabArea::TakeActionOnEmpty()
 
 
 void
-RTabArea::resizeEvent( QResizeEvent *event )
+FTabArea::resizeEvent( QResizeEvent *event )
 {
     tSuperClass::resizeEvent(event);
     Compose();
@@ -709,7 +692,7 @@ RTabArea::resizeEvent( QResizeEvent *event )
 
 
 void
-RTabArea::wheelEvent( QWheelEvent* event )
+FTabArea::wheelEvent( QWheelEvent* event )
 {
     tSuperClass::wheelEvent( event );
 
@@ -730,12 +713,12 @@ RTabArea::wheelEvent( QWheelEvent* event )
 
 
 void
-RTabArea::Init()
+FTabArea::Init()
 {
     if( !mScrollArea )              mScrollArea             = new  QScrollArea( this );
     if( !mScrollWidgetWrapper )     mScrollWidgetWrapper    = new  QWidget( this );
-    if( !mLeftButton )              mLeftButton             = new  RCustomButton( this );
-    if( !mRightButton )             mRightButton            = new  RCustomButton( this );
+    if( !mLeftButton )              mLeftButton             = new  FCustomButton( this );
+    if( !mRightButton )             mRightButton            = new  FCustomButton( this );
     if( !mLeftDropShadowEffect )    mLeftDropShadowEffect   = new  QGraphicsDropShadowEffect( this );
     if( !mRightDropShadowEffect )   mRightDropShadowEffect  = new  QGraphicsDropShadowEffect( this );
     if( !mNavTimerLeft )            mNavTimerLeft           = new  QTimer( this );
@@ -745,7 +728,7 @@ RTabArea::Init()
 
 
 void
-RTabArea::Build()
+FTabArea::Build()
 {
     mScrollArea->verticalScrollBar()->setEnabled( false );
     mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -770,8 +753,8 @@ RTabArea::Build()
                     "QScrollArea > QWidget > QWidget { background: transparent; border: none; }"
                     "QScrollArea > QWidget > QScrollBar { background: palette(base); border: none; }" );
 
-    mRightButton->SetIconShape( RCustomButton::eButtonIconShape::kRightArrow );
-    mLeftButton->SetIconShape( RCustomButton::eButtonIconShape::kLeftArrow );
+    mRightButton->SetIconShape( FCustomButton::eButtonIconShape::kRightArrow );
+    mLeftButton->SetIconShape( FCustomButton::eButtonIconShape::kLeftArrow );
 
     // Temporary debug stylesheet should move to a qss separate file.
     /*
@@ -811,7 +794,7 @@ RTabArea::Build()
 
 
 void
-RTabArea::Compose()
+FTabArea::Compose()
 {
     ComposeScrollArea();
     Reorder();
@@ -819,10 +802,10 @@ RTabArea::Compose()
 
 
 void
-RTabArea::Destroy()
+FTabArea::Destroy()
 {
     // Delete all domestic tabs
-    for( RTab* t : mDomesticTabs )
+    for( FTab* t : mDomesticTabs )
         delete  t;
 
     delete  mProcessCandidateTimer;
@@ -851,7 +834,7 @@ RTabArea::Destroy()
 //-------------------- Private GUI Processing Functions specific to tab area with scroll
 
 void
-RTabArea::ComposeScrollArea()
+FTabArea::ComposeScrollArea()
 {
     SetTabWidth( ComputeSmartWidthWithOverlap() );
 
@@ -881,16 +864,16 @@ RTabArea::ComposeScrollArea()
 
 
 void
-RTabArea::Register()
+FTabArea::Register()
 {
-    ::Rivet::DockingManager()->RegisterTabArea( this );
+    DockingManager()->RegisterTabArea( this );
 }
 
 
 void
-RTabArea::Unregister()
+FTabArea::Unregister()
 {
-    ::Rivet::DockingManager()->UnregisterTabArea( this );
+    DockingManager()->UnregisterTabArea( this );
 }
 
 
@@ -947,28 +930,28 @@ TabArea::_NewTab()
 
 
 void
-RTabArea::DomesticTabLifted( RTab* iTab )
+FTabArea::DomesticTabLifted( FTab* iTab )
 {
     assert( mDomesticTabs.contains( iTab ) );
     assert( mCurrentTab == iTab );
     RecomputeCurrentTabOnImminentChange();
 
     // Disconnect this slot
-    QObject::disconnect( iTab, SIGNAL( Lifted( RTab* ) ), this, SLOT( DomesticTabLifted( RTab* ) ) );
-    QObject::disconnect( iTab, SIGNAL( Selected( RTab* ) ), this, SLOT( DomesticTabSelected( RTab* ) ) );
-    QObject::disconnect( iTab, SIGNAL( CloseClicked( RTab* ) ), this, SLOT( CloseTab( RTab* ) ) );
+    QObject::disconnect( iTab, SIGNAL( Lifted( FTab* ) ), this, SLOT( DomesticTabLifted( FTab* ) ) );
+    QObject::disconnect( iTab, SIGNAL( Selected( FTab* ) ), this, SLOT( DomesticTabSelected( FTab* ) ) );
+    QObject::disconnect( iTab, SIGNAL( CloseClicked( FTab* ) ), this, SLOT( CloseTab( FTab* ) ) );
     // Remove iTab from Domestic Tabs ( only one occurence )
     mDomesticTabs.removeAll( iTab );
 
     // Connect iTab Dropped Signal to DomesticTabDropped
-    QObject::connect( iTab, SIGNAL( Dropped( RTab* ) ), this, SLOT( DomesticTabDropped( RTab* ) ) );
+    QObject::connect( iTab, SIGNAL( Dropped( FTab* ) ), this, SLOT( DomesticTabDropped( FTab* ) ) );
 
     DockingManager()->SetLastLiftedFrom( this );
 }
 
 
 void
-RTabArea::DomesticTabDropped( RTab* iTab )
+FTabArea::DomesticTabDropped( FTab* iTab )
 {
     if( DockingManager()->CurrentTargetArea() == this )
         return;
@@ -980,14 +963,14 @@ RTabArea::DomesticTabDropped( RTab* iTab )
 
     Compose();
     SetCurrentTab( mCurrentTab );
-    QObject::disconnect( iTab, SIGNAL( Dropped( RTab* ) ), this, SLOT( DomesticTabDropped( RTab* ) ) );
+    QObject::disconnect( iTab, SIGNAL( Dropped( FTab* ) ), this, SLOT( DomesticTabDropped( FTab* ) ) );
     SetNoCandidateTab();
     TakeActionOnEmpty();
 }
 
 
 void
-RTabArea::ForeignTabDropped( RTab* iTab )
+FTabArea::ForeignTabDropped( FTab* iTab )
 {
     // This is the important part:
     // If we get this message that means the foreign tab is dropped here.
@@ -1013,7 +996,7 @@ RTabArea::ForeignTabDropped( RTab* iTab )
 
 
 void
-RTabArea::NavDelta( int iDelta, int iTimeMS )
+FTabArea::NavDelta( int iDelta, int iTimeMS )
 {
     int currentx = mScrollArea->horizontalScrollBar()->value();
     mScrollArea->horizontalScrollBar()->setValue( currentx + iDelta );
@@ -1021,7 +1004,7 @@ RTabArea::NavDelta( int iDelta, int iTimeMS )
 
 
 void
-RTabArea::NavLeftDoubleClick()
+FTabArea::NavLeftDoubleClick()
 {
     mScroller->stop();
     mScroller->ensureVisible( mDomesticTabs.first()->geometry(), 0, 0, DEFAULT_ENSURE_TIME );
@@ -1029,28 +1012,28 @@ RTabArea::NavLeftDoubleClick()
 
 
 void
-RTabArea::NavLeftDown()
+FTabArea::NavLeftDown()
 {
     mNavTimerLeft->start();
 }
 
 
 void
-RTabArea::NavLeftWork()
+FTabArea::NavLeftWork()
 {
     NavDelta( -10, DEFAULT_NAV_TIME );
 }
 
 
 void
-RTabArea::NavLeftUp()
+FTabArea::NavLeftUp()
 {
     mNavTimerLeft->stop();
 }
 
 
 void
-RTabArea::NavRightDoubleClick()
+FTabArea::NavRightDoubleClick()
 {
     mScroller->stop();
     mScroller->ensureVisible( mDomesticTabs.last()->geometry(), 0, 0, DEFAULT_ENSURE_TIME );
@@ -1058,28 +1041,28 @@ RTabArea::NavRightDoubleClick()
 
 
 void
-RTabArea::NavRightDown()
+FTabArea::NavRightDown()
 {
     mNavTimerRight->start();
 }
 
 
 void
-RTabArea::NavRightWork()
+FTabArea::NavRightWork()
 {
     NavDelta( 10, DEFAULT_NAV_TIME );
 }
 
 
 void
-RTabArea::NavRightUp()
+FTabArea::NavRightUp()
 {
     mNavTimerRight->stop();
 }
 
 
 void
-RTabArea::ProcessCandidateDragHover()
+FTabArea::ProcessCandidateDragHover()
 {
     assert( mCandidateTab );
     assert( mCandidateTab->Dragging() );
@@ -1087,7 +1070,7 @@ RTabArea::ProcessCandidateDragHover()
     QRect tabGeometry = MapRectFromGlobal( mScrollWidgetWrapper, mCandidateTab->geometry() );
 
     QVector< FTabOrderingPair > orderingVector;
-    for( RTab* t : mDomesticTabs )
+    for( FTab* t : mDomesticTabs )
         orderingVector.append( FTabOrderingPair( { t->TargetGeometry(), t } ) );
 
     orderingVector.append( FTabOrderingPair( { tabGeometry, mCandidateTab } ) );
@@ -1119,21 +1102,21 @@ RTabArea::ProcessCandidateDragHover()
 
 
 void
-RTabArea::DomesticTabSelected( RTab* iTab )
+FTabArea::DomesticTabSelected( FTab* iTab )
 {
     SetCurrentTab( iTab );
 }
 
 
 void
-RTabArea::CloseCurrentTab()
+FTabArea::CloseCurrentTab()
 {
     CloseTab( mCurrentTab );
 }
 
 
 void
-RTabArea::SwitchToNextTab()
+FTabArea::SwitchToNextTab()
 {
     if( mDomesticTabs.count() < 2 )
         return;
@@ -1146,7 +1129,7 @@ RTabArea::SwitchToNextTab()
 
 
 void
-RTabArea::CloseTab( RTab* iTab )
+FTabArea::CloseTab( FTab* iTab )
 {
     if( !iTab )
         return;
@@ -1174,7 +1157,4 @@ RTabArea::CloseTab( RTab* iTab )
 
     TakeActionOnEmpty();
 }
-
-
-} // namespace  Rivet
 

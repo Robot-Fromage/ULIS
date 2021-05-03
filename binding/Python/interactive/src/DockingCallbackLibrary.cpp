@@ -1,20 +1,19 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.DockingCallbackLibrary.h
-* @author   Clement Berthaud
-* @brief    This file provides the definitions for the Docking callbacks functions.
+* @file         DockingCallbackLibrary.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/Rivet.DockingCallbackLibrary.h"
-#include "Rivet/Rivet.TabArea.h"
-
-namespace  Rivet {
-
+#include "DockingCallbackLibrary.h"
+#include "TabArea.h"
 
 void
-OnAreaBecomesEmptyCB_CloseTopLevel( RTabArea* iArea )
+OnAreaBecomesEmptyCB_CloseTopLevel( FTabArea* iArea )
 {
     auto tw = iArea->topLevelWidget();
     tw->close();
@@ -23,22 +22,22 @@ OnAreaBecomesEmptyCB_CloseTopLevel( RTabArea* iArea )
 
 
 void
-OnAreaBecomesEmptyCB_DoNothing( RTabArea* iArea )
+OnAreaBecomesEmptyCB_DoNothing( FTabArea* iArea )
 {
 }
 
 
 void
-OnTabDroppedOutCB_RevertBack( RTab* iTab, RTabArea* iSrc )
+OnTabDroppedOutCB_RevertBack( FTab* iTab, FTabArea* iSrc )
 {
     iSrc->DockHere( iTab );
 }
 
 
 void
-OnTabDroppedOutCB_Open( RTab* iTab, RTabArea* iSrc )
+OnTabDroppedOutCB_Open( FTab* iTab, FTabArea* iSrc )
 {
-    auto  w = new  RTabArea();
+    auto  w = new  FTabArea();
 
     w->SetOnAreaBecomesEmptyCB( OnAreaBecomesEmptyCB_CloseTopLevel );
     w->SetOnTabDroppedOutCB( OnTabDroppedOutCB_RevertBack );
@@ -57,7 +56,4 @@ OnTabDroppedOutCB_Open( RTab* iTab, RTabArea* iSrc )
     w->raise();  // for MacOS
     w->activateWindow(); // for Windows
 }
-
-
-} // namespace  Rivet
 

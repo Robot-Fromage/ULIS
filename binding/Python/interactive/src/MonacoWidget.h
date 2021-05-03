@@ -1,27 +1,21 @@
-/*************************************************************************
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* Rivet.MonacoWidget.h
-* 9-9-2018 10:38 GMT+1
-* Clement Berthaud - Layl
-* Please refer to LICENSE.TXT
+* @file         MonacoWidget.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-
 #pragma  once
-
 
 class  QWebEngineView;
 class  QWebEnginePage;
 #include <QWidget>
 
-
-#include  "Rivet/__private__/Rivet.__private__.ASyncJS_PPFramework.h"
-
-
-namespace  Rivet
-{
+#include  "ASyncJS_PPFramework.h"
 
 
 void SetMonacoPrefix( const  QString&  iPrefix );
@@ -70,10 +64,7 @@ private:
 
 private:
     // Async JS Framework
-    Rivet_ASyncJS_Decl
+    ASyncJS_Decl
 
 };
-
-
-} // namespace  Rivet
 

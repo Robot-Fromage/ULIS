@@ -1,20 +1,19 @@
-/*************************************************************************
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* Rivet.Tab.cpp
-* 24-10-2018 19:16 GMT+1
-* Clement Berthaud - Layl
-* Please refer to LICENSE.TXT
+* @file         Tab.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
+#include "Tab.h"
 
-#include "Rivet/Rivet.Tab.h"
 
-
-#include "Rivet/Rivet.CustomButton.h"
-#include "Rivet/__private__/Rivet.__private__.DockingManager.h"
-
+#include "CustomButton.h"
+#include "DockingManager.h"
 
 #include <QEvent>
 #include <QGraphicsDropShadowEffect>
@@ -41,13 +40,12 @@
 #define  DEFAULT_TAB_ANIMATION_DURATION     100
 
 
-namespace  Rivet {
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                                PUBLIC API                                      ////
 ////////////////////////////////////////////////////////////////////////////////////////
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-RTab::~RTab()
+FTab::~FTab()
 {
     StopAnimatedMovement();
     Unregister();
@@ -55,7 +53,7 @@ RTab::~RTab()
 }
 
 
-RTab::RTab( QWidget* iParent )
+FTab::FTab( QWidget* iParent )
     : tSuperClass( iParent )
     , mTitleLabel(              nullptr                     )
     , mCloseButton(             nullptr                     )
@@ -93,7 +91,7 @@ RTab::RTab( QWidget* iParent )
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------- Docking Interface Accessors
 bool
-RTab::Docked()  const
+FTab::Docked()  const
 {
     // If undocked, that means top level, hence parentWidget is nullptr
     return  parentWidget() != nullptr;
@@ -101,21 +99,21 @@ RTab::Docked()  const
 
 
 bool
-RTab::Dragging()  const
+FTab::Dragging()  const
 {
     return  mDragging;
 }
 
 
 const  QPoint&
-RTab::DragShift()  const
+FTab::DragShift()  const
 {
     return  mDragShift;
 }
 
 
 void
-RTab::FinishDrag()
+FTab::FinishDrag()
 {
     // Forbid call if not actually dragging
     if( !mDragging )
@@ -142,7 +140,7 @@ RTab::FinishDrag()
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------ Animation Interface
 void
-RTab::SetAnimatedMovement( const  QPoint& iDest )
+FTab::SetAnimatedMovement( const  QPoint& iDest )
 {
     StopAnimatedMovement();
 
@@ -163,7 +161,7 @@ RTab::SetAnimatedMovement( const  QPoint& iDest )
 
 
 void
-RTab::StopAnimatedMovement()
+FTab::StopAnimatedMovement()
 {
     mAnimationTargetGeometry = geometry();
 
@@ -177,7 +175,7 @@ RTab::StopAnimatedMovement()
 
 
 const  QRect&
-RTab::TargetGeometry()  const
+FTab::TargetGeometry()  const
 {
     return  mAnimationTargetGeometry;
 }
@@ -186,7 +184,7 @@ RTab::TargetGeometry()  const
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------- Tab ColorStyle Interface Accessors
 void
-RTab::SetTitle( const  QString&  iTitle )
+FTab::SetTitle( const  QString&  iTitle )
 {
     // Set Text to member
     mTitleText = iTitle;
@@ -200,7 +198,7 @@ RTab::SetTitle( const  QString&  iTitle )
 
 
 void
-RTab::SetTabShape( eTabShape iTabStyle )
+FTab::SetTabShape( eTabShape iTabStyle )
 {
     mTabShape = iTabStyle;
     repaint();
@@ -208,7 +206,7 @@ RTab::SetTabShape( eTabShape iTabStyle )
 
 
 void
-RTab::SetColor( const  QColor&  iColor )
+FTab::SetColor( const  QColor&  iColor )
 {
     mBaseColor = iColor;
 
@@ -244,42 +242,42 @@ RTab::SetColor( const  QColor&  iColor )
 
 
 QString
-RTab::GetTitle()  const
+FTab::GetTitle()  const
 {
     return  mTitleText;
 }
 
 
 QString
-RTab::GetTitleEllided()  const
+FTab::GetTitleEllided()  const
 {
     return  mTitleLabel->text();
 }
 
 
-RTab::eTabShape
-RTab::GetTabShape()  const
+FTab::eTabShape
+FTab::GetTabShape()  const
 {
     return  mTabShape;
 }
 
 
 const  QColor&
-RTab::GetColor()  const
+FTab::GetColor()  const
 {
     return mBaseColor;
 }
 
 
 void
-RTab::SetFadeColor( const  QColor& iColor )
+FTab::SetFadeColor( const  QColor& iColor )
 {
     mFadeColor = iColor;
 }
 
 
 const  QColor&
-RTab::GetFadeColor()  const
+FTab::GetFadeColor()  const
 {
     return  mFadeColor;
 }
@@ -288,7 +286,7 @@ RTab::GetFadeColor()  const
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------ Tab State accessors
 void
-RTab::SetActive( bool iValue )
+FTab::SetActive( bool iValue )
 {
     mActive = iValue;
     mPressed = false;
@@ -316,21 +314,21 @@ RTab::SetActive( bool iValue )
 
 
 bool
-RTab::IsHovered()  const
+FTab::IsHovered()  const
 {
     return  mHovered;
 }
 
 
 bool
-RTab::IsPressed()  const
+FTab::IsPressed()  const
 {
     return  mPressed;
 }
 
 
 bool
-RTab::IsActive()  const
+FTab::IsActive()  const
 {
     return  mActive;
 }
@@ -339,14 +337,14 @@ RTab::IsActive()  const
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------- Behaviour constraints
 void
-RTab::SetLiftable( bool iValue )
+FTab::SetLiftable( bool iValue )
 {
     mLiftable = iValue;
 }
 
 
 void
-RTab::SetClosable( bool iValue )
+FTab::SetClosable( bool iValue )
 {
     mClosable = iValue;
     mCloseButton->setVisible( mClosable );
@@ -354,14 +352,14 @@ RTab::SetClosable( bool iValue )
 
 
 bool
-RTab::IsLiftable()  const
+FTab::IsLiftable()  const
 {
     return  mLiftable;
 }
 
 
 bool
-RTab::IsClosable()  const
+FTab::IsClosable()  const
 {
     return  mClosable;
 }
@@ -370,14 +368,14 @@ RTab::IsClosable()  const
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------- ID tag Interface
 void
-RTab::SetTag( const  QString&  iTag )
+FTab::SetTag( const  QString&  iTag )
 {
     mTag = iTag;
 }
 
 
 const  QString&
-RTab::GetTag()  const
+FTab::GetTag()  const
 {
     return  mTag;
 }
@@ -386,14 +384,14 @@ RTab::GetTag()  const
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------- Callback API
 void
-RTab::SetOnTabDroppedOutCB( OnTabDroppedOutCB iOnTabDroppedOutCB )
+FTab::SetOnTabDroppedOutCB( OnTabDroppedOutCB iOnTabDroppedOutCB )
 {
     mOnTabDroppedOutCB = iOnTabDroppedOutCB;
 }
 
 
 OnTabDroppedOutCB
-RTab::GetOnTabDroppedOutCB()  const
+FTab::GetOnTabDroppedOutCB()  const
 {
     return  mOnTabDroppedOutCB;
 }
@@ -402,14 +400,14 @@ RTab::GetOnTabDroppedOutCB()  const
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------- Link widget API
 void
-RTab::SetLinkWidget( QWidget* iWidget )
+FTab::SetLinkWidget( QWidget* iWidget )
 {
     mLinkWidget = iWidget;
 }
 
 
 QWidget*
-RTab::GetLinkWidget()  const
+FTab::GetLinkWidget()  const
 {
     return  mLinkWidget;
 }
@@ -421,7 +419,7 @@ RTab::GetLinkWidget()  const
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------ Qt Events overrides
 void
-RTab::resizeEvent( QResizeEvent *event )
+FTab::resizeEvent( QResizeEvent *event )
 {
     // Triggered on resize, most likely while inside a tab area, upon reorder.
     tSuperClass::resizeEvent(event);
@@ -433,7 +431,7 @@ RTab::resizeEvent( QResizeEvent *event )
 
 
 void
-RTab::enterEvent( QEvent* event )
+FTab::enterEvent( QEvent* event )
 {
     tSuperClass::enterEvent( event );
 
@@ -443,7 +441,7 @@ RTab::enterEvent( QEvent* event )
 
 
 void
-RTab::leaveEvent( QEvent* event )
+FTab::leaveEvent( QEvent* event )
 {
     tSuperClass::leaveEvent( event );
 
@@ -453,7 +451,7 @@ RTab::leaveEvent( QEvent* event )
 
 
 void
-RTab::mousePressEvent( QMouseEvent* event )
+FTab::mousePressEvent( QMouseEvent* event )
 {
     // Mouse press triggered when inside tabArea
     // We enable only if left click
@@ -482,7 +480,7 @@ RTab::mousePressEvent( QMouseEvent* event )
 
 
 void
-RTab::mouseMoveEvent( QMouseEvent* event )
+FTab::mouseMoveEvent( QMouseEvent* event )
 {
     // Moving while pressed & dragging tab when docked
     int threshold = 5;
@@ -516,7 +514,7 @@ RTab::mouseMoveEvent( QMouseEvent* event )
 
 
 void
-RTab::mouseReleaseEvent( QMouseEvent* event )
+FTab::mouseReleaseEvent( QMouseEvent* event )
 {
     // Trigger finish drag on release
     FinishDrag();
@@ -526,7 +524,7 @@ RTab::mouseReleaseEvent( QMouseEvent* event )
 
 
 void
-RTab::paintEvent( QPaintEvent* event )
+FTab::paintEvent( QPaintEvent* event )
 {
     QPainter painter(this);
 
@@ -658,7 +656,7 @@ RTab::paintEvent( QPaintEvent* event )
 
 
 void
-RTab::closeEvent( QCloseEvent* event )
+FTab::closeEvent( QCloseEvent* event )
 {
     if( mLinkWidget )
         mLinkWidget->close();
@@ -668,16 +666,16 @@ RTab::closeEvent( QCloseEvent* event )
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------- Private GUI Processing Functions
 void
-RTab::Init()
+FTab::Init()
 {
     if( !mInvisibleBackgroundRect )     mInvisibleBackgroundRect    = new QWidget( this );
     if( !mTitleLabel )                  mTitleLabel                 = new QLabel( this );
-    if( !mCloseButton )                 mCloseButton                = new RCustomButton( this );
+    if( !mCloseButton )                 mCloseButton                = new FCustomButton( this );
 }
 
 
 void
-RTab::Build()
+FTab::Build()
 {
     // Setup tab attributes
     setWindowFlags( Qt::FramelessWindowHint | Qt::SubWindow );
@@ -694,8 +692,8 @@ RTab::Build()
     mTitleLabel->setStyleSheet( "color: rgb( 255, 255, 255 ); background:transparent; border: none;" );
 
     // Setting up close button properties
-    mCloseButton->SetIconShape( RCustomButton::eButtonIconShape::kClose );
-    mCloseButton->SetBackgroundShape( RCustomButton::eButtonBackgroundShape::kDisk );
+    mCloseButton->SetIconShape( FCustomButton::eButtonIconShape::kClose );
+    mCloseButton->SetBackgroundShape( FCustomButton::eButtonBackgroundShape::kDisk );
     mCloseButton->SetHoveredBackgroundColor( QColor( 127, 127, 127, 80 ) );
     mCloseButton->SetPressedBackgroundColor( QColor( 0, 0, 0, 80 ) );
     mCloseButton->SetIconSize( 5 );
@@ -725,7 +723,7 @@ RTab::Build()
 
 
 void
-RTab::Compose()
+FTab::Compose()
 {
     // Composition of the internal geometry
 
@@ -755,7 +753,7 @@ RTab::Compose()
 
 
 void
-RTab::Destroy()
+FTab::Destroy()
 {
     // The order matters
     delete  mTitleDropShadowEffect;
@@ -780,7 +778,7 @@ RTab::Destroy()
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------- Internal Tab Utilities on Compose
 void
-RTab::CheckTitleEllipsis()
+FTab::CheckTitleEllipsis()
 {
     // Reset title to saved text & recheck for ellipsis
     SetTitle( mTitleText );
@@ -790,14 +788,14 @@ RTab::CheckTitleEllipsis()
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------ Docking Manager Registering API
 void
-RTab::Register()
+FTab::Register()
 {
     DockingManager()->RegisterTab( this );
 }
 
 
 void
-RTab::Unregister()
+FTab::Unregister()
 {
     DockingManager()->UnregisterTab( this );
 }
@@ -809,7 +807,7 @@ RTab::Unregister()
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Tab Slots
 void
-RTab::ProcessCloseClicked()
+FTab::ProcessCloseClicked()
 {
     if( Dragging() || !mClosable )
         return;
@@ -819,7 +817,4 @@ RTab::ProcessCloseClicked()
     else
         tSuperClass::close();
 }
-
-
-} // namespace  Rivet
 

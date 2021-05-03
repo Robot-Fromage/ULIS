@@ -1,25 +1,26 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.CustomMainWindow.h
-* @author   Clement Berthaud
-* @brief    This file provides the declaration for the RCustomWindow class.
+* @file         CustomMainWindow.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Rivet/__private__/Rivet.__private__.CustomMainWindowBase.h"
-#include "Rivet/Rivet.CustomCaption.h"
+#include "CustomMainWindowBase.h"
+#include "CustomCaption.h"
 #include <QWidget>
 
-namespace  Rivet {
 /////////////////////////////////////////////////////
-/// @class      RCustomMainWindow
-/// @brief      The RCustomMainWindow class provides a custom window widget.
+/// @class      FCustomMainWindow
+/// @brief      The FCustomMainWindow class provides a custom window widget.
 /// @details    Tertiary level for custom windows.
 ///             Handles Custom events and provides Custom API calls
 ///             Users can derive this class for more customization
-class  RCustomMainWindow
+class  FCustomMainWindow
     : public FCustomMainWindowBase
 {
     Q_OBJECT
@@ -27,31 +28,31 @@ class  RCustomMainWindow
 private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Typedefs
-    typedef  RCustomMainWindow                              tSelf;
-    typedef  FCustomMainWindowBase    tSuperClass;
+    typedef  FCustomMainWindow      tSelf;
+    typedef  FCustomMainWindowBase  tSuperClass;
 
 public:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-    /// @fn         virtual  ~RCustomMainWindow()
+    /// @fn         virtual  ~FCustomMainWindow()
     /// @brief      Default Destructor.
     /// @details    virtual, does nothing.
-    virtual  ~RCustomMainWindow();
+    virtual  ~FCustomMainWindow();
 
 
-    /// @fn         RCustomMainWindow( QWidget* iParent = nullptr )
+    /// @fn         FCustomMainWindow( QWidget* iParent = nullptr )
     /// @brief      Default Constructor.
     /// @details    Init data members.
-    RCustomMainWindow( QWidget* iParent = nullptr );
+    FCustomMainWindow( QWidget* iParent = nullptr );
 
 
 public:
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------- Center Caption API
-    /// @fn         RCustomCaption*  CaptionWidget()  const
+    /// @fn         FCustomCaption*  CaptionWidget()  const
     /// @brief      Getter for custom caption widget
     /// @return     A pointer to the owned member mCaptionWidget, can be null.
-    RCustomCaption*     CaptionWidget()  const;
+    FCustomCaption*     CaptionWidget()  const;
 
 
     /// @fn         QWidget*  CenterWidget()  const
@@ -60,11 +61,11 @@ public:
     QWidget*            CenterWidget()  const;
 
 
-    /// @fn         void  SetCaptionWidget( RCustomCaption* iCaptionWidget )
+    /// @fn         void  SetCaptionWidget( FCustomCaption* iCaptionWidget )
     /// @brief      Setter for the custom caption widget.
-    /// @param      iCaptionWidget      The RCustomCaption* to take ownership over and place in the window.
+    /// @param      iCaptionWidget      The FCustomCaption* to take ownership over and place in the window.
     /// @details    The object takes ownership over the passed parameter. Can be null.
-    void                SetCaptionWidget( RCustomCaption* iCaptionWidget );
+    void                SetCaptionWidget( FCustomCaption* iCaptionWidget );
 
 
     /// @fn         void  SetCenterWidget( QWidget* iCenterWidget )
@@ -132,12 +133,9 @@ private:
 private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------- Private Data Members
-    RCustomCaption* mCaptionWidget; ///< The RCustomCaption widget, owned but set via the accessors, can be null.
+    FCustomCaption* mCaptionWidget; ///< The FCustomCaption widget, owned but set via the accessors, can be null.
     QWidget*        mCenterWidget;  ///< The center QWidget, owned but set via the accessors, can be null.
 
 
 };
-
-
-} // namespace  Rivet
 

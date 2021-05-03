@@ -1,34 +1,25 @@
-/*************************************************************************
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* Rivet.__private__.DockingManager.h
-* 10-9-2018 00:10 GMT+1
-* Clement Berthaud - Layl
-* Please refer to LICENSE.TXT
+* @file         DockingManager.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-
 #pragma once
-
 
 #include <QObject>
 #include <QRegion>
 #include <QVector>
-
 #include <functional>
 
 
 // Forward Declarations
-namespace  Rivet{ class  RTab; }
-namespace  Rivet{ class  RTabArea; }
-
-
-namespace  Rivet
-{
-namespace  __private__
-{
-
+class  FTab;
+class  FTabArea;
 
 class FDockingManager :
     public  QObject
@@ -55,28 +46,28 @@ public:
 ////                                INFO API                                        ////
 ////////////////////////////////////////////////////////////////////////////////////////
 public:
-    RTab*        CurrentDraggingTab()  const;
-    RTabArea*    CurrentTargetArea()  const;
-    void        SetLastLiftedFrom( RTabArea* iValue );
-    RTabArea*    GetLastLiftedFrom()  const;
+    FTab*        CurrentDraggingTab()  const;
+    FTabArea*    CurrentTargetArea()  const;
+    void        SetLastLiftedFrom( FTabArea* iValue );
+    FTabArea*    GetLastLiftedFrom()  const;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                            REGISTER API                                        ////
 ////////////////////////////////////////////////////////////////////////////////////////
 public:
     // Public Register API for Tabs & TabAreas
-    void  RegisterTabArea(      RTabArea* iTabArea );
-    void  UnregisterTabArea(    RTabArea* iTabArea );
-    void  RegisterTab(          RTab* iTab );
-    void  UnregisterTab(        RTab* iTab );
+    void  RegisterTabArea(      FTabArea* iTabArea );
+    void  UnregisterTabArea(    FTabArea* iTabArea );
+    void  RegisterTab(          FTab* iTab );
+    void  UnregisterTab(        FTab* iTab );
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                            PRIVATE SIGNAL SLOTS API                            ////
 ////////////////////////////////////////////////////////////////////////////////////////
 private slots:
     // Docking Interface Slots
-    void  TabLifted( RTab* iTab );
-    void  TabDropped( RTab* iTab );
+    void  TabLifted( FTab* iTab );
+    void  TabDropped( FTab* iTab );
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                                PRIVATE API                                     ////
@@ -88,23 +79,19 @@ protected:
 
 private:
     // Private Connection Interface
-    void  InitConnectionsForTab( RTab* iTab );
-    void  DestroyConnectionsForTab( RTab* iTab );
+    void  InitConnectionsForTab( FTab* iTab );
+    void  DestroyConnectionsForTab( FTab* iTab );
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                                PRIVATE DATA                                    ////
 ////////////////////////////////////////////////////////////////////////////////////////
 private:
     // Private Data Members
-    QVector< RTabArea* >             mTabAreaList;
-    RTab*                            mCurrentDraggingTab;
-    RTabArea*                        mCurrentTargetArea;
-    RTabArea*                        mLastLiftedFrom;
+    QVector< FTabArea* >             mTabAreaList;
+    FTab*                            mCurrentDraggingTab;
+    FTabArea*                        mCurrentTargetArea;
+    FTabArea*                        mLastLiftedFrom;
 };
-
-
-} // namespace  __private__
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                            PUBLIC SINGLETON API                                ////
@@ -112,6 +99,4 @@ private:
 // External Conveniency Singleton Accessor
 FDockingManager*  DockingManager();
 
-
-} // namespace  Rivet
 

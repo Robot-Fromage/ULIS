@@ -13,7 +13,9 @@
 /////////////////////////////////////////////////////
 // Disable CRT Secure non standard msvc versions of functions such as strcpy_s
 #ifdef _MSC_VER
+#ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
+#endif
 #endif
 
 /////////////////////////////////////////////////////

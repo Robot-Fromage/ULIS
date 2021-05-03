@@ -1,16 +1,17 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.DefaultCaption.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definition for the RDefaultCaption class.
+* @file         DefaultCaption.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/Rivet.DefaultCaption.h"
+#include "DefaultCaption.h"
 #include <QPainter>
 
-namespace  Rivet {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------- Default values defines
 #define     DEFAULT_ACTIVE_BACKGROUND_COLOR     QColor( 0, 0, 0, 127 )
@@ -144,18 +145,18 @@ RDefaultCaption::resizeEvent( QResizeEvent *event )
 void
 RDefaultCaption::Init()
 {
-    if( !mCloseButton )     mCloseButton    = new  RCustomButton( this );
-    if( !mMaximizeButton )  mMaximizeButton = new  RCustomButton( this );
-    if( !mMinimizeButton )  mMinimizeButton = new  RCustomButton( this );
+    if( !mCloseButton )     mCloseButton    = new  FCustomButton( this );
+    if( !mMaximizeButton )  mMaximizeButton = new  FCustomButton( this );
+    if( !mMinimizeButton )  mMinimizeButton = new  FCustomButton( this );
 }
 
 
 void
 RDefaultCaption::Build()
 {
-    mCloseButton->SetIconShape( RCustomButton::eButtonIconShape::kClose );
-    mMaximizeButton->SetIconShape( RCustomButton::eButtonIconShape::kMaximize );
-    mMinimizeButton->SetIconShape( RCustomButton::eButtonIconShape::kMinimize );
+    mCloseButton->SetIconShape( FCustomButton::eButtonIconShape::kClose );
+    mMaximizeButton->SetIconShape( FCustomButton::eButtonIconShape::kMaximize );
+    mMinimizeButton->SetIconShape( FCustomButton::eButtonIconShape::kMinimize );
 
     mCloseButton->SetHoveredBackgroundColor( QColor( 230, 20, 35 ) );
 
@@ -198,7 +199,4 @@ RDefaultCaption::Destroy()
     mMaximizeButton = 0;
     mMinimizeButton = 0;
 }
-
-
-} // namespace  Rivet
 

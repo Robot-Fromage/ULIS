@@ -1,19 +1,19 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.__private__.GeometryUtils.h
-* @author   Clement Berthaud
-* @brief    This file provides the definitions for some Win32 utilities.
+* @file         WinExtras.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/__private__/Rivet.__private__.WinExtras.h"
+#include "WinExtras.h"
 #include <cstdlib>
 #include <assert.h>
 #include <VersionHelpers.h>
 
-namespace  Rivet {
-namespace  __private__ {
 // Mirror Enums & Structs for accessing non-documented windows API
 typedef enum {
     ACCENT_DISABLED = 0,
@@ -167,8 +167,4 @@ _load_sys_library( const WCHAR* name)
         return  0;
     }
 }
-
-
-} // namespace  __private__
-} // namespace  Rivet
 

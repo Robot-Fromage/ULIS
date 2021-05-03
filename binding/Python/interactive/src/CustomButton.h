@@ -1,39 +1,28 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.CustomButton.h
-* @author   Clement Berthaud
-* @brief    This file provides the declaration for the RCustomButton class.
+* @file         CustomButton.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
 #pragma once
 #include <QObject>
 #include <QPushButton>
 
-namespace  Rivet {
-/////////////////////////////////////////////////////
-/// @class      RCustomButton
-/// @brief      The RCustomButton class provides a custom window with a vector shape.
-/// @details    No resources are needed for drawing the button.
-///             It handles a limited set of shapes, see \e RCustomButton::eButtonIconShape.
-class  RCustomButton
+class  FCustomButton
     : public  QPushButton
 {
     Q_OBJECT
 
 private:
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------- Typedefs
-    typedef  RCustomButton  tSelf;
+    typedef  FCustomButton  tSelf;
     typedef  QPushButton    tSuperClass;
 
-
 public:
-//--------------------------------------------------------------------------------------
-//------------------------------------------------------------------------- Public Enums
-/// @enum   eButtonIconShape
-/// @brief  Enum for Custom Button Icon Shape
 enum  class  eButtonIconShape
 {
       kNone         ///< None, No shape, this is a valid state.
@@ -44,21 +33,13 @@ enum  class  eButtonIconShape
     , kRightArrow   ///< RightArrow, Triangle shape pointing right for TabArea.
 };
 
-
-/// @enum   eButtonBackgroundShape
-/// @brief  Enum for Custom Button Background Shape
 enum  class  eButtonBackgroundShape
 {
       kSquare       ///< Square, full size square or rectangle background.
     , kDisk         ///< Disk, disk or ellipse shaped background.
 };
 
-
 private:
-//--------------------------------------------------------------------------------------
-//------------------------------------------------------------------------ Private Enums
-/// @enum   eButtonState
-/// @brief  Enum for Custom Button state.
 enum  class  eButtonState
 {
     kNone           = 0,    ///< None, The button is in idle state.
@@ -67,24 +48,11 @@ enum  class  eButtonState
     kPressedHovered = 3,    ///< PressedHovered, The button is in pressed and hovered by the mouse.
 };
 
+public:
+    virtual  ~FCustomButton();
+    FCustomButton( QWidget* iParent = nullptr );
 
 public:
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Construction / Destruction
-    /// @fn         virtual  ~RCustomButton()
-    /// @brief      Default Destructor.
-    /// @details    virtual, does nothing.
-    virtual  ~RCustomButton();
-
-
-    /// @fn         RCustomButton( QWidget *parent = nullptr )
-    /// @brief      Default Constructor.
-    /// @details    Init member data with default values.
-    RCustomButton( QWidget* iParent = nullptr );
-
-public:
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------- Public Style Setup Accessors
     void    SetBackgroundColor( const  QColor&  iColor );
     void    SetHoveredBackgroundColor( const  QColor&  iColor );
     void    SetPressedBackgroundColor( const  QColor&  iColor );
@@ -104,23 +72,15 @@ public:
     void    SetIconSize( int iSize );
     int     GetIconSize()  const;
 
-
 public:
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------- Public State Accessors
     bool IsHovered();
     bool IsPressed();
 
 
 public slots:signals:
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------------------- Public Signals
     void  DoubleClicked();
 
-
 protected:
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------- Protected Qt event overrides
     virtual  void  enterEvent(              QEvent*         event )  override;
     virtual  void  leaveEvent(              QEvent*         event )  override;
     virtual  void  mousePressEvent(         QMouseEvent*    event )  override;
@@ -128,10 +88,7 @@ protected:
     virtual  void  mouseDoubleClickEvent(   QMouseEvent*    event )  override;
     virtual  void  paintEvent(              QPaintEvent*    event )  override;
 
-
 private:
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------------- Private Data Members
     bool                    mHovered;               ///< Boolean flag, wether the button is hovered or not.
     bool                    mPressed;               ///< Boolean flag, wether the button is pressed or not.
     QColor                  mBgColor;               ///< The idle background color.
@@ -145,9 +102,5 @@ private:
     eButtonIconShape        mIconShape;             ///< The icon shape.
     eButtonBackgroundShape  mBackgroundShape;       ///< The background shape.
     int                     mIconSize;              ///< The icon size.
-
 };
-
-
-} // namespace  Rivet
 

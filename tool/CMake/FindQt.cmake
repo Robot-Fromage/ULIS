@@ -21,6 +21,7 @@ if( NOT "${ULIS_QT_CMAKE_PATH}" STREQUAL "" )
         Widgets
         Gui
         WebEngine
+        WebEngineWidgets
         WinExtras
     )
 

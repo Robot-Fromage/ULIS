@@ -1,10 +1,12 @@
-﻿/*
-*   kaze
+﻿// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-* @file         SWindow.h
+* @file         MainEditorWindow.h
 * @author       Clement Berthaud
-* @brief        SWindow class declaration.
-* @copyright    Copyright 2021 Clement Berthaud.
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -15,7 +17,6 @@
 #include <QOpenGLWidget>
 #undef near
 #undef far
-#include <kaze>
 
 class SWindow
     : public QOpenGLWidget
@@ -51,8 +52,6 @@ protected:
 private:
     void Update();
     void Render();
-    uint8_t TracePrimaryRay( const kaze::ray& iRay );
-    uint8_t Traversal( const kaze::ray& iRay, float iTMin, float iTMax, int& oSide );
 
 private:
     GLuint m_tex_id;
@@ -60,8 +59,6 @@ private:
     uint8_t* m_bitmap;
     uint8_t* m_volume;
     QTimer* m_timer;
-    kaze::camera m_camera;
-    kaze::aabb_3d m_box;
     bool m_actions[kMaxActions];
     Qt::Key m_keys[kMaxActions];
 };

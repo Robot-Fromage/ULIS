@@ -1,24 +1,25 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.DefaultCaption.h
-* @author   Clement Berthaud
-* @brief    This file provides the declaration for the RDefaultCaption class.
+* @file         DefaultCaption.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Rivet/Rivet.CustomCaption.h"
-#include "Rivet/Rivet.CustomButton.h"
+#include "CustomCaption.h"
+#include "CustomButton.h"
 #include <QObject>
 
-namespace  Rivet {
 /////////////////////////////////////////////////////
 /// @class      RDefaultCaption
 /// @brief      The RDefaultCaption class provides a default custom caption widget.
 /// @details    It provides window snap / close / minimize / maximize mechanisms and buttons.
 class  RDefaultCaption
-    : public  RCustomCaption
+    : public  FCustomCaption
 {
     Q_OBJECT
 
@@ -26,7 +27,7 @@ private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Typedefs
     typedef  RDefaultCaption    tSelf;
-    typedef  RCustomCaption     tSuperClass;
+    typedef  FCustomCaption     tSuperClass;
 
 
 public:
@@ -97,14 +98,12 @@ protected:
 private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------- Private Data Members
-    RCustomButton*  mCloseButton;       ///< The close button.
-    RCustomButton*  mMaximizeButton;    ///< The maximize button.
-    RCustomButton*  mMinimizeButton;    ///< The minimize button.
+    FCustomButton*  mCloseButton;       ///< The close button.
+    FCustomButton*  mMaximizeButton;    ///< The maximize button.
+    FCustomButton*  mMinimizeButton;    ///< The minimize button.
     QColor  mActiveBackgroundColor;     ///< The active caption color.
     QColor  mInactiveBackgroundColor;   ///< The inactive caption color.
 
 
 };
-
-} // namespace  Rivet
 

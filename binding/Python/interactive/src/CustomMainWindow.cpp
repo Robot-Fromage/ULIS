@@ -1,15 +1,16 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.CustomMainWindow.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definition for the RCustomWindow class.
+* @file         CustomMainWindow.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/Rivet.CustomMainWindow.h"
+#include "CustomMainWindow.h"
 
-namespace  Rivet {
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------- Default values defines
 #define  DEFAULT_MINIMUM_WIDTH 200
@@ -17,13 +18,13 @@ namespace  Rivet {
 
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-RCustomMainWindow::~RCustomMainWindow()
+FCustomMainWindow::~FCustomMainWindow()
 {
     tSelf::Destroy();
 }
 
 
-RCustomMainWindow::RCustomMainWindow( QWidget* iParent )
+FCustomMainWindow::FCustomMainWindow( QWidget* iParent )
     : tSuperClass(      iParent )
     , mCaptionWidget(   nullptr )
     , mCenterWidget(    nullptr )
@@ -36,22 +37,22 @@ RCustomMainWindow::RCustomMainWindow( QWidget* iParent )
 
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------- Center Caption API
-RCustomCaption*
-RCustomMainWindow::CaptionWidget()  const
+FCustomCaption*
+FCustomMainWindow::CaptionWidget()  const
 {
     return  mCaptionWidget;
 }
 
 
 QWidget*
-RCustomMainWindow::CenterWidget()  const
+FCustomMainWindow::CenterWidget()  const
 {
     return  mCenterWidget;
 }
 
 
 void
-RCustomMainWindow::SetCaptionWidget( RCustomCaption* iCaptionWidget )
+FCustomMainWindow::SetCaptionWidget( FCustomCaption* iCaptionWidget )
 {
     if( mCaptionWidget )
     {
@@ -73,7 +74,7 @@ RCustomMainWindow::SetCaptionWidget( RCustomCaption* iCaptionWidget )
 
 
 void
-RCustomMainWindow::SetCenterWidget( QWidget* iCenterWidget )
+FCustomMainWindow::SetCenterWidget( QWidget* iCenterWidget )
 {
     if( mCenterWidget )
     {
@@ -91,7 +92,7 @@ RCustomMainWindow::SetCenterWidget( QWidget* iCenterWidget )
 
 
 void
-RCustomMainWindow::Recompose()
+FCustomMainWindow::Recompose()
 {
     tSelf::Compose();
 }
@@ -100,7 +101,7 @@ RCustomMainWindow::Recompose()
 //--------------------------------------------------------------------------------------
 //--------------------------------- Protected Non-Client OS behaviour handling overrides
 bool
-RCustomMainWindow::NCHitCaption( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
+FCustomMainWindow::NCHitCaption( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
 {
     if( !tSuperClass::NCHitCaption( iRect, iBorderWidth, iX, iY ) )
         return  false;
@@ -116,7 +117,7 @@ RCustomMainWindow::NCHitCaption( const  QRect&  iRect, const  long iBorderWidth,
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------- Protected Qt events override
 void
-RCustomMainWindow::resizeEvent( QResizeEvent*  event )
+FCustomMainWindow::resizeEvent( QResizeEvent*  event )
 {
     // Very important !
     tSuperClass::resizeEvent( event );
@@ -129,13 +130,13 @@ RCustomMainWindow::resizeEvent( QResizeEvent*  event )
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------- Private Qt Slots
 void
-RCustomMainWindow::ProcessCloseClicked()
+FCustomMainWindow::ProcessCloseClicked()
 {
     close();
 }
 
 void
-RCustomMainWindow::ProcessMaximizeClicked()
+FCustomMainWindow::ProcessMaximizeClicked()
 {
     const auto state = windowState();
     if( state & Qt::WindowMaximized )
@@ -150,7 +151,7 @@ RCustomMainWindow::ProcessMaximizeClicked()
 
 
 void
-RCustomMainWindow::ProcessMinimizeClicked()
+FCustomMainWindow::ProcessMinimizeClicked()
 {
     showMinimized();
 }
@@ -159,7 +160,7 @@ RCustomMainWindow::ProcessMinimizeClicked()
 //--------------------------------------------------------------------------------------
 //--------------------------------- Protected Non-Client OS behaviour handling overrides
 void
-RCustomMainWindow::Init()
+FCustomMainWindow::Init()
 {
     mCaptionWidget  = nullptr;
     mCenterWidget   = nullptr;
@@ -167,14 +168,14 @@ RCustomMainWindow::Init()
 
 
 void
-RCustomMainWindow::Build()
+FCustomMainWindow::Build()
 {
     setMinimumWidth( DEFAULT_MINIMUM_WIDTH );
 }
 
 
 void
-RCustomMainWindow::Compose()
+FCustomMainWindow::Compose()
 {
     if( mCaptionWidget )
         mCaptionWidget->setGeometry( CaptionGeometry() );
@@ -185,7 +186,7 @@ RCustomMainWindow::Compose()
 
 
 void
-RCustomMainWindow::Destroy()
+FCustomMainWindow::Destroy()
 {
     if( mCaptionWidget )
     {
@@ -201,7 +202,4 @@ RCustomMainWindow::Destroy()
         mCenterWidget = nullptr;
     }
 }
-
-
-} // namespace  Rivet
 

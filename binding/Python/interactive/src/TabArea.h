@@ -1,25 +1,21 @@
-/*************************************************************************
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* Rivet.TabArea.h
-* 6-10-2018 21:50 GMT+1
-* Clement Berthaud - Layl
-* Please refer to LICENSE.TXT
+* @file         TabArea.h
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-
 #pragma once
-
-
 #include <QWidget>
+#include "Tab.h"
 
 
-#include "Rivet/Rivet.Tab.h"
-
-
-// Rivet Forward declarations
-namespace  Rivet  { class  RCustomButton; }
+// Forward declarations
+class  FCustomButton;
 
 
 // Qt Forward declarations
@@ -29,12 +25,9 @@ class  QScroller;
 class  QTimer;
 class  QStackedWidget;
 
-namespace  Rivet
-{
+typedef void (*OnAreaBecomesEmptyCB)( FTabArea* self );
 
-typedef void (*OnAreaBecomesEmptyCB)( RTabArea* self );
-
-class RTabArea :
+class FTabArea :
     public QWidget
 {
     Q_OBJECT
@@ -46,8 +39,8 @@ class RTabArea :
 ////////////////////////////////////////////////////////////////////////////////////////
 public:
     // Construction / Destruction
-    virtual         ~RTabArea();
-                    RTabArea( QWidget *parent = Q_NULLPTR );
+    virtual         ~FTabArea();
+                    FTabArea( QWidget *parent = Q_NULLPTR );
 
 public:
     // Custom Hit Test Handling implementation in TabArea
@@ -55,11 +48,11 @@ public:
 
 public:
     // Tab Control Interface
-    void            ManualAddNewTab(    RTab* iTab );
-    void            DockHere(           RTab* iTab);
-    void            SetCurrentTab(      RTab* iTab );
+    void            ManualAddNewTab(    FTab* iTab );
+    void            DockHere(           FTab* iTab);
+    void            SetCurrentTab(      FTab* iTab );
     int             NTabs()  const;
-    void            SetCandidateTab( RTab* iTab );
+    void            SetCandidateTab( FTab* iTab );
     void            SetNoCandidateTab();
 
     void            SetLinkedStack( QStackedWidget* iStack );
@@ -75,7 +68,7 @@ public:
     void            SetOverlap( int iValue );
     void            SetMaximumTabWidth( int iWidth );
     void            SetMinimumTabWidth( int iWidth );
-    void            SetTabsShapeStyle( RTab::eTabShape iValue );
+    void            SetTabsShapeStyle( FTab::eTabShape iValue );
     void            SetTabsClosable( bool iValue );
     void            SetTabsLiftable( bool iValue );
 
@@ -86,7 +79,7 @@ public:
     int                 GetMaximumTabWidth()    const;
     int                 GetMinimumTabWidth()    const;
     int                 GetTabWidth()           const;
-    RTab::eTabShape     GetTabsShapeStyle()     const;
+    FTab::eTabShape     GetTabsShapeStyle()     const;
     bool                GetTabsClosable()       const;
     bool                GetTabsLiftable()       const;
 
@@ -144,9 +137,9 @@ public slots:
 
 private slots:
     // Dragging Slots
-    void  DomesticTabLifted(     RTab* iTab );
-    void  DomesticTabDropped(    RTab* iTab );
-    void  ForeignTabDropped(    RTab* iTab );
+    void  DomesticTabLifted(     FTab* iTab );
+    void  DomesticTabDropped(    FTab* iTab );
+    void  ForeignTabDropped(    FTab* iTab );
 
     // Navigation Slots
     void  NavDelta( int iDelta, int iTimeMS );
@@ -164,14 +157,14 @@ private slots:
     void  ProcessCandidateDragHover();
 
     // Tab Control Slots
-    void  DomesticTabSelected(   RTab* iTab );
+    void  DomesticTabSelected(   FTab* iTab );
     void  CloseCurrentTab();
     void  SwitchToNextTab();
-    void  CloseTab( RTab* iTab );
+    void  CloseTab( FTab* iTab );
 
 public slots:signals:
-    void  AreaEmpty( RTabArea* iArea );
-    void  CurrentTabChanged( RTab* iTab );
+    void  AreaEmpty( FTabArea* iArea );
+    void  CurrentTabChanged( FTab* iTab );
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                                PRIVATE DATA                                    ////
@@ -179,14 +172,14 @@ public slots:signals:
 private:
     // Private Data Members
     // Owned Tabs OBjects Data
-    QVector< RTab* >            mDomesticTabs;
+    QVector< FTab* >            mDomesticTabs;
 
     // Scroll Related Widgets Data
     QScrollArea*                mScrollArea;
     QWidget*                    mScrollWidgetWrapper;
     QScroller*                  mScroller;
-    RCustomButton*               mLeftButton;
-    RCustomButton*               mRightButton;
+    FCustomButton*               mLeftButton;
+    FCustomButton*               mRightButton;
 
     // Size data
     int mTabWidth;
@@ -197,13 +190,13 @@ private:
     // Style Data
     QGraphicsDropShadowEffect*  mLeftDropShadowEffect;
     QGraphicsDropShadowEffect*  mRightDropShadowEffect;
-    RTab::eTabShape            mTabsShapeStyle;
+    FTab::eTabShape            mTabsShapeStyle;
     bool                        mTabsClosable;
     bool                        mTabsLiftable;
 
     // State Data
-    RTab*                        mCurrentTab; // Active
-    RTab*                        mCandidateTab; // Dragging
+    FTab*                        mCurrentTab; // Active
+    FTab*                        mCandidateTab; // Dragging
 
     // Nav Data
     QTimer*                     mNavTimerLeft;
@@ -217,7 +210,4 @@ private:
     OnTabDroppedOutCB           mOnTabDroppedOutCB;
     QStackedWidget*             mLinkedStack;
 };
-
-
-} // namespace Rivet
 

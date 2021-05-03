@@ -1,30 +1,25 @@
-/*************************************************************************
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* Rivet.__private__.DockingManager.cpp
-* 3-10-2018 20:38 GMT+1
-* Clement Berthaud - Layl
-* Please refer to LICENSE.TXT
+* @file         DockingManager.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
 
-#include "Rivet/__private__/Rivet.__private__.DockingManager.h"
-
-
-#include "Rivet/Rivet.Tab.h"
-#include "Rivet/Rivet.TabArea.h"
-#include "Rivet/__private__/Rivet.__private__.GeometryUtils.h"
-#include "Rivet/__private__/Rivet.__private__.WinExtras.h"
-
+#include "DockingManager.h"
+#include "Tab.h"
+#include "TabArea.h"
+#include "GeometryUtils.h"
+#include "WinExtras.h"
 #include <QApplication>
 #include <QShortcut>
 #include <QEvent>
 #include <QMouseEvent>
-
-
 #include <assert.h>
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////                                STATIC TOOLS                                    ////
@@ -36,13 +31,13 @@
 struct  FZOrderingPair
 {
     int zOrder;
-    ::Rivet::RTabArea* area;
+    FTabArea* area;
 };
 
 // Struct for ordering and selecting area while dragging
 struct FElligibleArea
 {
-    ::Rivet::RTabArea*  mArea;
+    FTabArea*  mArea;
     QRegion   mRegion;
 };
 
@@ -52,12 +47,6 @@ SortZ( const  FZOrderingPair& iA, const  FZOrderingPair& iB )
 {
     return  iA.zOrder < iB.zOrder;
 }
-
-
-namespace  Rivet
-{
-namespace  __private__
-{
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -105,14 +94,14 @@ FDockingManager::DockingManager()
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-RTab*
+FTab*
 FDockingManager::CurrentDraggingTab()  const
 {
     return  mCurrentDraggingTab;
 }
 
 
-RTabArea*
+FTabArea*
 FDockingManager::CurrentTargetArea()  const
 {
     return  mCurrentTargetArea;
@@ -120,13 +109,13 @@ FDockingManager::CurrentTargetArea()  const
 
 
 void
-FDockingManager::SetLastLiftedFrom( RTabArea* iValue )
+FDockingManager::SetLastLiftedFrom( FTabArea* iValue )
 {
     mLastLiftedFrom = iValue;
 }
 
 
-RTabArea*
+FTabArea*
 FDockingManager::GetLastLiftedFrom()  const
 {
     return  mLastLiftedFrom;
@@ -140,28 +129,28 @@ FDockingManager::GetLastLiftedFrom()  const
 
 
 void
-FDockingManager::RegisterTabArea( RTabArea* iTabArea )
+FDockingManager::RegisterTabArea( FTabArea* iTabArea )
 {
     mTabAreaList.append( iTabArea );
 }
 
 
 void
-FDockingManager::UnregisterTabArea( RTabArea* iTabArea )
+FDockingManager::UnregisterTabArea( FTabArea* iTabArea )
 {
     mTabAreaList.removeAll( iTabArea );
 }
 
 
 void
-FDockingManager::RegisterTab( RTab* iTab )
+FDockingManager::RegisterTab( FTab* iTab )
 {
     InitConnectionsForTab( iTab );
 }
 
 
 void
-FDockingManager::UnregisterTab( RTab* iTab )
+FDockingManager::UnregisterTab( FTab* iTab )
 {
     DestroyConnectionsForTab( iTab );
 }
@@ -175,7 +164,7 @@ FDockingManager::UnregisterTab( RTab* iTab )
 
 
 void
-FDockingManager::TabLifted( RTab* iTab )
+FDockingManager::TabLifted( FTab* iTab )
 {
     // Processing directly after the signal was emitted
 
@@ -192,7 +181,7 @@ FDockingManager::TabLifted( RTab* iTab )
 
 
 void
-FDockingManager::TabDropped( RTab* iTab )
+FDockingManager::TabDropped( FTab* iTab )
 {
     assert( iTab == mCurrentDraggingTab );
     mCurrentDraggingTab->removeEventFilter( this );
@@ -222,7 +211,7 @@ FDockingManager::eventFilter( QObject* obj, QEvent* event )
 {
     // We process only mouse events of the current dragging tab.
     {
-        RTab* tab = dynamic_cast< RTab* >( obj );
+        FTab* tab = dynamic_cast< FTab* >( obj );
 
         if( !tab )
             // return false means process the event normally instead
@@ -271,15 +260,15 @@ FDockingManager::eventFilter( QObject* obj, QEvent* event )
     }
 
     // Selecting target area
-    RTabArea* resultArea = NULL;
+    FTabArea* resultArea = NULL;
 
     QVector< FElligibleArea > elligibleVector;
-    for( RTabArea* area : mTabAreaList )
+    for( FTabArea* area : mTabAreaList )
     {
         // Reset tabAreas hooks before processing the new one
         // This is safe to do even if there is none
         mCurrentDraggingTab->removeEventFilter( area );
-        QObject::disconnect( mCurrentDraggingTab, SIGNAL( Dropped( RTab* ) ), area, SLOT( ForeignTabDropped( RTab* ) ) );
+        QObject::disconnect( mCurrentDraggingTab, SIGNAL( Dropped( FTab* ) ), area, SLOT( ForeignTabDropped( FTab* ) ) );
 
         // Computing global Region for ech tabArea
         /*
@@ -366,11 +355,11 @@ FDockingManager::eventFilter( QObject* obj, QEvent* event )
     if( resultArea )
     {
         mCurrentDraggingTab->installEventFilter( resultArea );
-        QObject::connect( mCurrentDraggingTab, SIGNAL( Dropped( RTab* ) ), resultArea, SLOT( ForeignTabDropped( RTab* ) ) );
+        QObject::connect( mCurrentDraggingTab, SIGNAL( Dropped( FTab* ) ), resultArea, SLOT( ForeignTabDropped( FTab* ) ) );
         resultArea->SetCandidateTab( mCurrentDraggingTab );
     }
 
-    for( RTabArea* area : mTabAreaList )
+    for( FTabArea* area : mTabAreaList )
         if( area != resultArea )
             area->SetCandidateTab( NULL );
 
@@ -383,22 +372,19 @@ FDockingManager::eventFilter( QObject* obj, QEvent* event )
 
 
 void
-FDockingManager::InitConnectionsForTab( RTab* iTab )
+FDockingManager::InitConnectionsForTab( FTab* iTab )
 {
-    QObject::connect( iTab, SIGNAL( Lifted( RTab* ) ), this, SLOT( TabLifted( RTab* ) ) );
-    QObject::connect( iTab, SIGNAL( Dropped( RTab* ) ), this, SLOT( TabDropped( RTab* ) ) );
+    QObject::connect( iTab, SIGNAL( Lifted( FTab* ) ), this, SLOT( TabLifted( FTab* ) ) );
+    QObject::connect( iTab, SIGNAL( Dropped( FTab* ) ), this, SLOT( TabDropped( FTab* ) ) );
 }
 
 
 void
-FDockingManager::DestroyConnectionsForTab( RTab* iTab )
+FDockingManager::DestroyConnectionsForTab( FTab* iTab )
 {
-    QObject::disconnect( iTab, SIGNAL( Lifted( RTab* ) ), this, SLOT( TabLifted( RTab* ) ) );
-    QObject::disconnect( iTab, SIGNAL( Dropped( RTab* ) ), this, SLOT( TabDropped( RTab* ) ) );
+    QObject::disconnect( iTab, SIGNAL( Lifted( FTab* ) ), this, SLOT( TabLifted( FTab* ) ) );
+    QObject::disconnect( iTab, SIGNAL( Dropped( FTab* ) ), this, SLOT( TabDropped( FTab* ) ) );
 }
-
-
-} // namespace  __private__
 
 
 //--------------------------------------------------------------------------------------
@@ -415,6 +401,4 @@ DockingManager()
     return  FDockingManager::DockingManager();
 }
 
-
-} // namespace  Rivet
 
