@@ -20,7 +20,7 @@ namespace  Rivet {
 ///             Handles Custom events and provides Custom API calls
 ///             Users can derive this class for more customization
 class  RCustomMainWindow
-    : public ::Rivet::__private__::RCustomMainWindowBase
+    : public FCustomMainWindowBase
 {
     Q_OBJECT
 
@@ -28,7 +28,7 @@ private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Typedefs
     typedef  RCustomMainWindow                              tSelf;
-    typedef  ::Rivet::__private__::RCustomMainWindowBase    tSuperClass;
+    typedef  FCustomMainWindowBase    tSuperClass;
 
 public:
 //--------------------------------------------------------------------------------------

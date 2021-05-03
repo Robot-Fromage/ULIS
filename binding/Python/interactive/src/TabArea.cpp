@@ -288,7 +288,7 @@ RTabArea::DockHere( RTab* iTab )
 
     mDomesticTabs.append( iTab );
     iTab->setParent( mScrollWidgetWrapper );
-    QRect tabGeometry = ::Rivet::__private__::MapRectFromGlobal( mScrollWidgetWrapper, iTab->geometry() );
+    QRect tabGeometry = MapRectFromGlobal( mScrollWidgetWrapper, iTab->geometry() );
     iTab->setGeometry(tabGeometry);
     iTab->resize( GetTabWidth(), height() );
 
@@ -1084,7 +1084,7 @@ RTabArea::ProcessCandidateDragHover()
     assert( mCandidateTab );
     assert( mCandidateTab->Dragging() );
     // Collect tab geometry from global, expressed in the same frame of ref as other tabs in this area.
-    QRect tabGeometry = ::Rivet::__private__::MapRectFromGlobal( mScrollWidgetWrapper, mCandidateTab->geometry() );
+    QRect tabGeometry = MapRectFromGlobal( mScrollWidgetWrapper, mCandidateTab->geometry() );
 
     QVector< FTabOrderingPair > orderingVector;
     for( RTab* t : mDomesticTabs )

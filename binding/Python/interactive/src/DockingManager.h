@@ -110,7 +110,7 @@ private:
 ////                            PUBLIC SINGLETON API                                ////
 ////////////////////////////////////////////////////////////////////////////////////////
 // External Conveniency Singleton Accessor
-::Rivet::__private__::FDockingManager*  DockingManager();
+FDockingManager*  DockingManager();
 
 
 } // namespace  Rivet

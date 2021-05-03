@@ -1,20 +1,20 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.__private__.CustomMainWindowBase.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definition for the RCustomMainWindowBase class.
+* @file         CustomMainWindowBase.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/__private__/Rivet.__private__.CustomMainWindowBase.h"
+#include "CustomMainWindowBase.h"
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QResizeEvent>
 #include <Windows.h> // For GetSystemMetrics
 
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------- Default values defines
 #define  DEFAULT_CAPTION_HEIGHT 30
 #define  DEFAULT_PADDING_LEFT   0
 #define  DEFAULT_PADDING_TOP    0
@@ -22,16 +22,12 @@
 #define  DEFAULT_PADDING_BOTTOM 0
 #define  DEFAULT_PADDINGS       DEFAULT_PADDING_LEFT, DEFAULT_PADDING_TOP, DEFAULT_PADDING_RIGHT, DEFAULT_PADDING_BOTTOM
 
-namespace  Rivet {
-namespace  __private__ {
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Construction / Destruction
-RCustomMainWindowBase::~RCustomMainWindowBase()
+FCustomMainWindowBase::~FCustomMainWindowBase()
 {
 }
 
 
-RCustomMainWindowBase::RCustomMainWindowBase( QWidget* iParent )
+FCustomMainWindowBase::FCustomMainWindowBase( QWidget* iParent )
     : tSuperClass(              iParent                 )
     , mCaptionHeight(           DEFAULT_CAPTION_HEIGHT  )
     , mPaddings(                DEFAULT_PADDINGS        )
@@ -46,25 +42,20 @@ RCustomMainWindowBase::RCustomMainWindowBase( QWidget* iParent )
     mLatestOldPos = QApplication::desktop()->availableGeometry( this ).topLeft();
 }
 
-
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------- Internal Client Geometry API
 void
-RCustomMainWindowBase::SetCaptionHeight( int iValue )
+FCustomMainWindowBase::SetCaptionHeight( int iValue )
 {
     mCaptionHeight = iValue;
 }
 
-
 int
-RCustomMainWindowBase::GetCaptionHeight()  const
+FCustomMainWindowBase::GetCaptionHeight()  const
 {
     return  mCaptionHeight;
 }
 
-
 QRect
-RCustomMainWindowBase::CaptionGeometry()  const
+FCustomMainWindowBase::CaptionGeometry()  const
 {
     // Get Geometyry & Height of the title caption part, starting from top.
     int x = mOverrideContentsMargins.left();
@@ -72,9 +63,8 @@ RCustomMainWindowBase::CaptionGeometry()  const
     return  QRect( x, y, width() - 2 * x, mCaptionHeight );
 }
 
-
 QRect
-RCustomMainWindowBase::ContentsGeometry()  const
+FCustomMainWindowBase::ContentsGeometry()  const
 {
     // Get Geometry of the contents part.
     int x = mOverrideContentsMargins.left();
@@ -82,11 +72,8 @@ RCustomMainWindowBase::ContentsGeometry()  const
     return  QRect(  x, mCaptionHeight + y, width() - 2 * x, height() - mCaptionHeight - 2 * y );
 }
 
-
-//--------------------------------------------------------------------------------------
-//----------------------------------------------- Custom Sizing behaviour implementation
 void
-RCustomMainWindowBase::Restore()
+FCustomMainWindowBase::Restore()
 {
     // Manual restore implementation
     // First, the Regular way.
@@ -103,25 +90,20 @@ RCustomMainWindowBase::Restore()
     mIsResizing = false;
 }
 
-
 bool
-RCustomMainWindowBase::CheckCustomWindowMaximizedState()  const
+FCustomMainWindowBase::CheckCustomWindowMaximizedState()  const
 {
     return  mMaximized;
 }
 
-
 bool
-RCustomMainWindowBase::CheckCustomWindowResizingState()  const
+FCustomMainWindowBase::CheckCustomWindowResizingState()  const
 {
     return  mIsResizing;
 }
 
-
-//--------------------------------------------------------------------------------------
-//----------------------------------------------- Protected Non-Client OS event handling
 bool
-RCustomMainWindowBase::NCHitCaption( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
+FCustomMainWindowBase::NCHitCaption( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
 {
     // This Transition implementation can be called or overriden in childs of this class.
     // This one allows dragging only if inside caption geometry.
@@ -134,11 +116,8 @@ RCustomMainWindowBase::NCHitCaption( const  QRect&  iRect, const  long iBorderWi
     return  elligible;
 }
 
-
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------- Protected Qt events override
 void
-RCustomMainWindowBase::resizeEvent( QResizeEvent* event )
+FCustomMainWindowBase::resizeEvent( QResizeEvent* event )
 {
     // Patch window behaviour and size on Maximize according to the available geometry
     mIsResizing = true;
@@ -158,9 +137,8 @@ RCustomMainWindowBase::resizeEvent( QResizeEvent* event )
     FixWindowOverlapOnMove();
 }
 
-
 void
-RCustomMainWindowBase::moveEvent( QMoveEvent* event )
+FCustomMainWindowBase::moveEvent( QMoveEvent* event )
 {
     // Patch window behaviour and size on Maximize according to the available geometry
     QRect availableRect = QApplication::desktop()->availableGeometry( this );
@@ -171,9 +149,8 @@ RCustomMainWindowBase::moveEvent( QMoveEvent* event )
     FixWindowOverlapOnMove();
 }
 
-
 void
-RCustomMainWindowBase::changeEvent(QEvent* event)
+FCustomMainWindowBase::changeEvent(QEvent* event)
 {
     // Regular processing anyways
     tSuperClass::changeEvent(event);
@@ -198,11 +175,8 @@ RCustomMainWindowBase::changeEvent(QEvent* event)
     }
 }
 
-
-//--------------------------------------------------------------------------------------
-//---------------------------------------------------- Private Window behaviours patches
 void
-RCustomMainWindowBase::FixWindowOverlapOnMove()
+FCustomMainWindowBase::FixWindowOverlapOnMove()
 {
     // Collect screen & geometry information on move
     QRect availableRect = QApplication::desktop()->availableGeometry( this );
@@ -219,9 +193,8 @@ RCustomMainWindowBase::FixWindowOverlapOnMove()
     }
 }
 
-
 void
-RCustomMainWindowBase::FixWindowOverlapOnResize( const  QSize&  iOldSize )
+FCustomMainWindowBase::FixWindowOverlapOnResize( const  QSize&  iOldSize )
 {
     // Collect screen & geometry information on resize 
     QRect availableRect = QApplication::desktop()->availableGeometry( this );
@@ -235,9 +208,8 @@ RCustomMainWindowBase::FixWindowOverlapOnResize( const  QSize&  iOldSize )
     }
 }
 
-
 void
-RCustomMainWindowBase::AdjustWindowOnMaximize()
+FCustomMainWindowBase::AdjustWindowOnMaximize()
 {
     if( !isMaximized() )
         return;
@@ -258,9 +230,8 @@ RCustomMainWindowBase::AdjustWindowOnMaximize()
     setContentsMargins({x, y, x, y});
 }
 
-
 void
-RCustomMainWindowBase::AdjustWindowOnRestore()
+FCustomMainWindowBase::AdjustWindowOnRestore()
 {
     // When check for maximized from Qt method
     if( isMaximized() )
@@ -278,8 +249,3 @@ RCustomMainWindowBase::AdjustWindowOnRestore()
     // Reset the content margins from Qt method
     setContentsMargins( { 0, 0, 0, 0 } );
 }
-
-
-} // namespace  __private__
-} // namespace  Rivet
-

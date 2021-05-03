@@ -409,10 +409,10 @@ FDockingManager::DestroyConnectionsForTab( RTab* iTab )
 //---------------------------------------------- External Conveniency Singleton Accessor
 
 
-::Rivet::__private__::FDockingManager*
+FDockingManager*
 DockingManager()
 {
-    return  ::Rivet::__private__::FDockingManager::DockingManager();
+    return  FDockingManager::DockingManager();
 }
 
 

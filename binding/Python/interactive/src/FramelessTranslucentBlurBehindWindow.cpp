@@ -1,29 +1,22 @@
-/**
-*
-*   Rivet
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+/*
+*   ULIS
 *__________________
-*
-* @file     Rivet.__private__.AbstractFramelessBlurBehindWindow.cpp
-* @author   Clement Berthaud
-* @brief    This file provides the definition for the IFramelessTranslucentBlurBehindWindow class.
+* @file         FramelessTranslucentBlurBehindWindow.cpp
+* @author       Clement Berthaud
+* @brief        pyULIS_Interactive application for testing pyULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
 */
-#include "Rivet/__private__/Rivet.__private__.AbstractFramelessBlurBehindWindow.h"
-#include "Rivet/__private__/Rivet.__private__.WinExtras.h"
+#include "FramelessTranslucentBlurBehindWindow.h"
+#include "WinExtras.h"
 #include <QtWinExtras>
 
-namespace  Rivet {
-namespace  __private__ {
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------- Default values defines
 #define  DEFAULT_BORDER_WIDTH 8
-
-//--------------------------------------------------------------------------------------
-//-------------------------------------------------------------------- Utilities defines
 #define EXTRACT_X( lp )  ( ( int )( short ) LOWORD( lp ) )
 #define EXTRACT_Y( lp )  ( ( int )( short ) HIWORD( lp ) )
 
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------------- Construction / Destruction
 //virtual
 IFramelessTranslucentBlurBehindWindow::~IFramelessTranslucentBlurBehindWindow()
 {
@@ -31,24 +24,18 @@ IFramelessTranslucentBlurBehindWindow::~IFramelessTranslucentBlurBehindWindow()
 
 
 IFramelessTranslucentBlurBehindWindow::IFramelessTranslucentBlurBehindWindow( QWidget* iParent )
-    : tSuperClass(  iParent                 )
-    , mBorderWidth( DEFAULT_BORDER_WIDTH    )
+    : tSuperClass( iParent )
+    , mBorderWidth( DEFAULT_BORDER_WIDTH )
 {
-    // The functions are called in this order, and this is important.
-    // otherwise some flags are overriden in an unwanted way and init isn't done properly.
     setAttribute( Qt::WA_TranslucentBackground, true );
     InitNativeFrameless();
 }
 
-
-//--------------------------------------------------------------------------------------
-//----------------------------------------------------- Protected Non-Client OS geometry
 int
 IFramelessTranslucentBlurBehindWindow::BorderWidth()  const
 {
     return  mBorderWidth;
 }
-
 
 int
 IFramelessTranslucentBlurBehindWindow::DefaultBorderWidth()  const
@@ -56,13 +43,11 @@ IFramelessTranslucentBlurBehindWindow::DefaultBorderWidth()  const
     return  DEFAULT_BORDER_WIDTH;
 }
 
-
 void
 IFramelessTranslucentBlurBehindWindow::SetBorderWidth( int iValue )
 {
     mBorderWidth = iValue;
 }
-
 
 void
 IFramelessTranslucentBlurBehindWindow::ResetBorderWidth()
@@ -70,25 +55,21 @@ IFramelessTranslucentBlurBehindWindow::ResetBorderWidth()
     SetBorderWidth( DefaultBorderWidth() );
 }
 
-
-//--------------------------------------------------------------------------------------
-//---------------------------------------------------------------------- Public Blur API
 void
 IFramelessTranslucentBlurBehindWindow::EnableBlurBehind()
 {
     // We enable blur in different ways according to windows version
     // That way all windows versions are covered since windows vista, simple enough.
-    ::Rivet::__private__::eWindowsVersion v = ::Rivet::__private__::GetWindowsVersion();
+    eWindowsVersion v = GetWindowsVersion();
 
     // The simple way with DWM access wrapped by Qt WinExtras for windows vista & 7
-    if( v >= ::Rivet::__private__::eWindowsVersion::kWindowsVista && v < ::Rivet::__private__::eWindowsVersion::kWindows8 )
+    if( v >= eWindowsVersion::kWindowsVista && v < eWindowsVersion::kWindows8 )
         QtWin::enableBlurBehindWindow( this );
 
     // The hard hacky way with to undocumented windows API, for windows 8 & 10
-    if( v >= ::Rivet::__private__::eWindowsVersion::kWindows8 )
-        ::Rivet::__private__::EnableGlassForWindow8OrGreater( (HWND)winId() );
+    if( v >= eWindowsVersion::kWindows8 )
+        EnableGlassForWindow8OrGreater( (HWND)winId() );
 }
-
 
 void
 IFramelessTranslucentBlurBehindWindow::DisableBlurBehind()
@@ -102,20 +83,17 @@ IFramelessTranslucentBlurBehindWindow::DisableBlurBehind()
 
     // We enable blur in different ways according to windows version
     // That way all windows versions are covered since windows vista, simple enough.
-    ::Rivet::__private__::eWindowsVersion v = ::Rivet::__private__::GetWindowsVersion();
+    eWindowsVersion v = GetWindowsVersion();
 
     // The simple way with DWM access wrapped by Qt WinExtras for windows vista & 7
-    if( v >= ::Rivet::__private__::eWindowsVersion::kWindowsVista && v < ::Rivet::__private__::eWindowsVersion::kWindows8 )
+    if( v >= eWindowsVersion::kWindowsVista && v < eWindowsVersion::kWindows8 )
         QtWin::disableBlurBehindWindow( this );
 
     // The hard hacky way with to undocumented windows API, for windows 8 & 10
-    if( v >= ::Rivet::__private__::eWindowsVersion::kWindows8 )
-        ::Rivet::__private__::DisableGlassForWindow8OrGreater( (HWND)winId() );
+    if( v >= eWindowsVersion::kWindows8 )
+        DisableGlassForWindow8OrGreater( (HWND)winId() );
 }
 
-
-//--------------------------------------------------------------------------------------
-//------------------------------------------------------------ Private Win32 flags setup
 void
 IFramelessTranslucentBlurBehindWindow::InitNativeFrameless()
 {
@@ -127,9 +105,6 @@ IFramelessTranslucentBlurBehindWindow::InitNativeFrameless()
     ::SetWindowLongPtrW( (HWND)winId(), GWL_STYLE, framelessStyle );
 }
 
-
-//--------------------------------------------------------------------------------------
-//------------------------------------------------- Private Non-Client OS event handling
 void
 IFramelessTranslucentBlurBehindWindow::WM_NCHITTEST_Event_Handler( int iX, int iY, long* oResult )
 {
@@ -179,12 +154,11 @@ IFramelessTranslucentBlurBehindWindow::WM_NCHITTEST_Event_Handler( int iX, int i
 
     // Handle drag move based on hit caption test
     // Note NCHitCaption is generally overriden in children of this class.
-    if(*oResult==0)
+    if( *oResult == 0 )
     {
         if( NCHitCaption( rect, border_width, iX, iY ) )        *oResult = HTCAPTION ;
     }
 }
-
 
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitLeftBorder( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
@@ -192,13 +166,11 @@ IFramelessTranslucentBlurBehindWindow::NCHitLeftBorder( const  QRect&  iRect, co
     return  iX >= iRect.left() && iX < iRect.left() + iBorderWidth;
 }
 
-
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitRightBorder( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
 {
     return  iX < iRect.right() && iX >= iRect.right() - iBorderWidth;
 }
-
 
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitTopBorder( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
@@ -206,13 +178,11 @@ IFramelessTranslucentBlurBehindWindow::NCHitTopBorder( const  QRect&  iRect, con
     return  iY >= iRect.top() && iY < iRect.top() + iBorderWidth;
 }
 
-
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitBottomBorder( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
 {
     return  iY < iRect.bottom()&& iY >= iRect.bottom() - iBorderWidth;
 }
-
 
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitTopLeftCorner( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
@@ -221,14 +191,12 @@ IFramelessTranslucentBlurBehindWindow::NCHitTopLeftCorner( const  QRect&  iRect,
             NCHitLeftBorder( iRect, iBorderWidth, iX, iY );
 }
 
-
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitTopRightCorner( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
 {
     return  NCHitTopBorder( iRect, iBorderWidth, iX, iY ) &&
             NCHitRightBorder( iRect, iBorderWidth, iX, iY );
 }
-
 
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitBotRightCorner( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
@@ -237,7 +205,6 @@ IFramelessTranslucentBlurBehindWindow::NCHitBotRightCorner( const  QRect&  iRect
             NCHitRightBorder( iRect, iBorderWidth, iX, iY );
 }
 
-
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitBotLeftCorner( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
 {
@@ -245,9 +212,6 @@ IFramelessTranslucentBlurBehindWindow::NCHitBotLeftCorner( const  QRect&  iRect,
             NCHitLeftBorder( iRect, iBorderWidth, iX, iY );
 }
 
-
-//--------------------------------------------------------------------------------------
-//----------------------------------------------- Protected Non-Client OS event handling
 bool
 IFramelessTranslucentBlurBehindWindow::NCHitCaption( const  QRect&  iRect, const  long iBorderWidth, long iX, long iY )
 {
@@ -255,9 +219,6 @@ IFramelessTranslucentBlurBehindWindow::NCHitCaption( const  QRect&  iRect, const
     return  true;
 }
 
-
-//--------------------------------------------------------------------------------------
-//------------------------------------------ Protected Qt / Win32 native events override
 bool
 IFramelessTranslucentBlurBehindWindow::nativeEvent( const  QByteArray&  eventType, void* message, long* result)
 {
@@ -305,8 +266,4 @@ IFramelessTranslucentBlurBehindWindow::nativeEvent( const  QByteArray&  eventTyp
 
     } // switch( msg )
 }
-
-
-} // namespace  __private__
-} // namespace  Rivet
 
