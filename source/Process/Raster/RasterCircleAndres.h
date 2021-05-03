@@ -1255,7 +1255,7 @@ void DrawCircleAndresSP(
 
     //Clipping -----
     int x = 0;
-    int y = iRadius; //We start from the top of the circle for the first octant
+    int y = int(iRadius); //We start from the top of the circle for the first octant
 
     FRectI clippingRect = iClippingRect;
     clippingRect.w--;
@@ -1449,7 +1449,7 @@ void DrawCircleAndresSP(
 
     //Octant 2 ------
     x = 0;
-    y = iRadius;
+    y = int(iRadius);
     if (drawRectOctant2 == 1)
     {
         float errMax = 2 * iRadius;
@@ -1588,7 +1588,7 @@ void DrawCircleAndresSP(
 
     //Octant 3 ------
     x = 0;
-    y = iRadius;
+    y = int(iRadius);
     if (drawRectOctant3 == 1)
     {
         float errMax = 2 * iRadius;
@@ -1727,7 +1727,7 @@ void DrawCircleAndresSP(
 
     //Octant 4 ------
     x = 0;
-    y = iRadius;
+    y = int(iRadius);
     if (drawRectOctant4 == 1)
     {
         float errMax = 2 * iRadius;
@@ -1867,7 +1867,7 @@ void DrawCircleAndresSP(
 
     //Octant 5 ------
     x = 0;
-    y = iRadius;
+    y = int(iRadius);
     if (drawRectOctant5 == 1)
     {
         float errMax = 2 * iRadius;
@@ -2007,7 +2007,7 @@ void DrawCircleAndresSP(
 
     //Octant 6 ------
     x = 0;
-    y = iRadius;
+    y = int(iRadius);
     if (drawRectOctant6 == 1)
     {
         float errMax = 2 * iRadius;
@@ -2147,7 +2147,7 @@ void DrawCircleAndresSP(
 
     //Octant 7------
     x = 0;
-    y = iRadius;
+    y = int(iRadius);
     if (drawRectOctant7 == 1)
     {
         float errMax = 2 * iRadius;
@@ -2285,7 +2285,7 @@ void DrawCircleAndresSP(
 
     //Octant 8------
     x = 0;
-    y = iRadius;
+    y = int(iRadius);
     if (drawRectOctant8 == 1)
     {
         float errMax = 2 * iRadius;
@@ -2425,7 +2425,7 @@ void DrawCircleAndresSP(
     if (iFilled)
     {
         x = 0;
-        y = iRadius;
+        y = int(iRadius);
         float diff = 2 * iRadius * InternalGetPixelBaseAlphaFromCoord(point0);
 
         while (y >= x)
