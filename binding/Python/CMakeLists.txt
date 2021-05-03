@@ -73,7 +73,6 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         pybind11::embed
         Qt5::Core
         Qt5::Gui
-        Qt5::WebEngine
         Qt5::WebEngineWidgets
         Qt5::Widgets
         Qt5::WinExtras

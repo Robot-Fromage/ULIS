@@ -15,10 +15,10 @@
 #include <QObject>
 
 /////////////////////////////////////////////////////
-/// @class      RDefaultCaption
-/// @brief      The RDefaultCaption class provides a default custom caption widget.
+/// @class      FDefaultCaption
+/// @brief      The FDefaultCaption class provides a default custom caption widget.
 /// @details    It provides window snap / close / minimize / maximize mechanisms and buttons.
-class  RDefaultCaption
+class  FDefaultCaption
     : public  FCustomCaption
 {
     Q_OBJECT
@@ -26,23 +26,23 @@ class  RDefaultCaption
 private:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------- Typedefs
-    typedef  RDefaultCaption    tSelf;
+    typedef  FDefaultCaption    tSelf;
     typedef  FCustomCaption     tSuperClass;
 
 
 public:
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
-    /// @fn         virtual  ~RDefaultCaption()
+    /// @fn         virtual  ~FDefaultCaption()
     /// @brief      Default Destructor.
     /// @details    virtual, does nothing.
-    virtual  ~RDefaultCaption();
+    virtual  ~FDefaultCaption();
 
 
-    /// @fn         RDefaultCaption( QWidget* iParent = nullptr )
+    /// @fn         FDefaultCaption( QWidget* iParent = nullptr )
     /// @brief      Default Constructor.
     /// @details    Init data members.
-    RDefaultCaption( QWidget* iParent = nullptr );
+    FDefaultCaption( QWidget* iParent = nullptr );
 
 
 public:

@@ -37,7 +37,7 @@ SCanvas::SCanvas( FULISLoader& iHandle )
     setFixedSize( 800, 600 );
 
     FContext& ctx = mHandle.Context();
-    ctx.Clear( mCanvas );
+    ctx.Fill( mCanvas, FColor::White );
     ctx.Finish();
 
     mImage  = new QImage( mCanvas.Bits(), mCanvas.Width(), mCanvas.Height(), mCanvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
@@ -79,7 +79,7 @@ SCanvas::keyPressEvent( QKeyEvent* event ) {
 void
 SCanvas::tickEvent() {
     FContext& ctx = mHandle.Context();
-    ctx.Clear( mCanvas );
+    ctx.Fill( mCanvas, FColor::White );
     ctx.Finish();
     //py::object pyCanvas = pyULIS4.attr( "FBlock" )( 800, 600, Format_RGBA8 );
 

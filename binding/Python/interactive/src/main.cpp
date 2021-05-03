@@ -11,6 +11,8 @@
 */
 #include "ULISLoader.h"
 #include "Canvas.h"
+#include "CustomMainWindow.h"
+#include "DefaultCaption.h"
 #include <QApplication>
 
 #include <cstdlib>
@@ -21,9 +23,14 @@ main( int argc, char *argv[] ) {
     QApplication app( argc, argv );
     FULISLoader handle;
     SCanvas* canvas = new SCanvas( handle );
+    FDefaultCaption* cap = new FDefaultCaption();
+    FCustomMainWindow* w = new FCustomMainWindow();
+    w->SetCaptionWidget( cap );
+    w->SetCenterWidget( canvas );
     canvas->show();
+    w->show();
     int exit_code = app.exec();
-    delete  canvas;
+    delete  w;
     return  exit_code;
 }
 

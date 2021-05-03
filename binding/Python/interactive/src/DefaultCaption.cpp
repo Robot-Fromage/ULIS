@@ -22,12 +22,12 @@
 //----------------------------------------------------------- Construction / Destruction
 
 
-RDefaultCaption::~RDefaultCaption()
+FDefaultCaption::~FDefaultCaption()
 {
     Destroy();
 }
 
-RDefaultCaption::RDefaultCaption( QWidget* iParent )
+FDefaultCaption::FDefaultCaption( QWidget* iParent )
     : tSuperClass(              iParent                             )
     , mCloseButton(             nullptr                             )
     , mMaximizeButton(          nullptr                             )
@@ -44,7 +44,7 @@ RDefaultCaption::RDefaultCaption( QWidget* iParent )
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------ Public Geometry API
 QRect
-RDefaultCaption::ButtonsGeometry()
+FDefaultCaption::ButtonsGeometry()
 {
     return  QRect( mMinimizeButton->x(), 0, width() - mMinimizeButton->x(), height() );
 }
@@ -53,34 +53,34 @@ RDefaultCaption::ButtonsGeometry()
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------- Public customization utilities
 void
-RDefaultCaption::ActiveBackgroundColor( const  QColor& iColor )
+FDefaultCaption::ActiveBackgroundColor( const  QColor& iColor )
 {
     mActiveBackgroundColor = iColor;
 }
 
 
 const  QColor&
-RDefaultCaption::ActiveBackgroundColor()
+FDefaultCaption::ActiveBackgroundColor()
 {
     return  mActiveBackgroundColor;
 }
 
 void
-RDefaultCaption::InactiveBackgroundColor( const  QColor& iColor )
+FDefaultCaption::InactiveBackgroundColor( const  QColor& iColor )
 {
     mInactiveBackgroundColor = iColor;
 }
 
 
 const  QColor&
-RDefaultCaption::InactiveBackgroundColor()
+FDefaultCaption::InactiveBackgroundColor()
 {
     return  mInactiveBackgroundColor;
 }
 
 
 void
-RDefaultCaption::SetBlackControls()
+FDefaultCaption::SetBlackControls()
 {
     QColor black = Qt::black;
     mCloseButton->SetColor( black );
@@ -98,7 +98,7 @@ RDefaultCaption::SetBlackControls()
 
 
 void
-RDefaultCaption::SetWhiteControls()
+FDefaultCaption::SetWhiteControls()
 {
     QColor white = Qt::white;
     mCloseButton->SetColor( white );
@@ -118,7 +118,7 @@ RDefaultCaption::SetWhiteControls()
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------- Protected Qt event overrides
 void
-RDefaultCaption::paintEvent(  QPaintEvent*    event )
+FDefaultCaption::paintEvent(  QPaintEvent*    event )
 {
     QPainter painter(this);
     painter.setRenderHint( QPainter::Antialiasing, false );
@@ -133,7 +133,7 @@ RDefaultCaption::paintEvent(  QPaintEvent*    event )
 
 
 void
-RDefaultCaption::resizeEvent( QResizeEvent *event )
+FDefaultCaption::resizeEvent( QResizeEvent *event )
 {
     QWidget::resizeEvent(event);
     Compose();
@@ -143,7 +143,7 @@ RDefaultCaption::resizeEvent( QResizeEvent *event )
 //--------------------------------------------------------------------------------------
 //------------------------------------------------------------------------ GUI utilities
 void
-RDefaultCaption::Init()
+FDefaultCaption::Init()
 {
     if( !mCloseButton )     mCloseButton    = new  FCustomButton( this );
     if( !mMaximizeButton )  mMaximizeButton = new  FCustomButton( this );
@@ -152,7 +152,7 @@ RDefaultCaption::Init()
 
 
 void
-RDefaultCaption::Build()
+FDefaultCaption::Build()
 {
     mCloseButton->SetIconShape( FCustomButton::eButtonIconShape::kClose );
     mMaximizeButton->SetIconShape( FCustomButton::eButtonIconShape::kMaximize );
@@ -167,7 +167,7 @@ RDefaultCaption::Build()
 
 
 void
-RDefaultCaption::Compose()
+FDefaultCaption::Compose()
 {
     int w = width();
     int h = height();
@@ -189,7 +189,7 @@ RDefaultCaption::Compose()
 
 
 void
-RDefaultCaption::Destroy()
+FDefaultCaption::Destroy()
 {
     delete  mCloseButton;
     delete  mMaximizeButton;
