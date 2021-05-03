@@ -194,6 +194,21 @@ void DrawCircleBresenhamAA(
             x++; xx++;
             diff = diff + 8 * x + 4;
         }
+
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; yy++;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val); // 0° to 45°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y - 1, val); // 0° to 45°
     }
 
     //Octant 2 ------
@@ -295,6 +310,21 @@ void DrawCircleBresenhamAA(
             x++; yy--;
             diff = diff + 8 * x + 4;
         }
+
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; xx--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val); // 90° to 45°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + y + 1, iCenter.y - x, val); // 90° to 45°
     }
 
     //Octant 3 ------
@@ -397,6 +427,21 @@ void DrawCircleBresenhamAA(
             x++; yy++;
             diff = diff + 8 * x + 4;
         }
+
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; xx--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val); // 90° to 135°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + y + 1, iCenter.y + x, val); // 90° to 135°
     }
 
     //Octant 4 ------
@@ -498,6 +543,20 @@ void DrawCircleBresenhamAA(
             x++; xx++;
             diff = diff + 8 * x + 4;
         }
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; yy--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val); // 180° to 135°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y + 1, val); // 180° to 135°
     }
 
     //Octant 5 ------
@@ -599,6 +658,20 @@ void DrawCircleBresenhamAA(
             x++; xx--;
             diff = diff + 8 * x + 4;
         }
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; yy--;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val); // 180° to 225°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y + 1, val); // 180° to 225°
     }
 
     //Octant 6 ------
@@ -700,6 +773,20 @@ void DrawCircleBresenhamAA(
             x++; yy++;
             diff = diff + 8 * x + 4;
         }
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; xx++;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val); // 270° to 225°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - y - 1, iCenter.y + x, val); // 270° to 225°
     }
 
     //Octant 7 ------
@@ -801,6 +888,20 @@ void DrawCircleBresenhamAA(
             x++; yy--;
             diff = diff + 8 * x + 4;
         }
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; xx++;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val); // 270° to 315°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - y - 1, iCenter.y - x, val); // 270° to 315°
     }
 
     //Octant 8 ------
@@ -902,6 +1003,20 @@ void DrawCircleBresenhamAA(
             x++; xx--;
             diff = diff + 8 * x + 4;
         }
+        float alphaTop = (float(diff - errMax) / float(errMin - errMax)) - 1; //Interpolation of slopedifferential between errMin and errMax
+        if (alphaTop < 0.f)
+        {
+            alphaTop = 1 - FMath::Abs(alphaTop);
+            y--; yy++;
+        }
+
+        val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val); // 0° to 315°
+
+        val.SetAlphaT<T>(T(maxAlpha * alphaTop));
+
+        iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y - 1, val); // 0° to 315°
     }
 
     //Filled
