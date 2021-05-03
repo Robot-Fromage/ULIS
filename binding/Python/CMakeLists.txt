@@ -72,8 +72,10 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         pyULIS
         pybind11::embed
         Qt5::Core
-        Qt5::Widgets
         Qt5::Gui
+        Qt5::WebEngine
+        Qt5::Widgets
+        Qt5::WinExtras
         ${OPENGL_gl_LIBRARY}
         libglew_static
     )

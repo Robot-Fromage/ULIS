@@ -16,10 +16,12 @@ if( NOT "${ULIS_QT_CMAKE_PATH}" STREQUAL "" )
     set( CMAKE_PREFIX_PATH ${ULIS_QT_CMAKE_PATH} )
     find_package(
         Qt5
-        REQUIRED COMPONENTS
+        COMPONENTS
         Core
         Widgets
         Gui
+        WebEngine
+        WinExtras
     )
 
     set( CMAKE_AUTOMOC ON )
