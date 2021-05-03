@@ -1254,8 +1254,8 @@ void DrawCircleAndresSP(
         return;
 
     //Clipping -----
-    float x = 0.f;
-    float y = iRadius; //We start from the top of the circle for the first octant
+    int x = 0;
+    int y = iRadius; //We start from the top of the circle for the first octant
 
     FRectI clippingRect = iClippingRect;
     clippingRect.w--;
@@ -1329,11 +1329,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y)), val); // 0° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val); // 0° to 45°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val); // 0° to 45°
 
             if (diff >= (2 * x))
             {
@@ -1359,11 +1359,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y)), val); // 0° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val); // 0° to 45°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val); // 0° to 45°
     }
     else if (drawRectOctant1 == 2)
     {
@@ -1410,11 +1410,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y)), val); // 0° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val); // 0° to 45°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val); // 0° to 45°
 
             if (diff >= (2 * x))
             {
@@ -1440,11 +1440,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y)), val); // 0° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val); // 0° to 45°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val); // 0° to 45°
     }
 
     //Octant 2 ------
@@ -1468,11 +1468,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val); // 90° to 45°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val); // 90° to 45°
 
             if (diff >= (2 * x))
             {
@@ -1498,11 +1498,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val); // 90° to 45°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val); // 90° to 45°
     }
     else if (drawRectOctant2 == 2)
     {
@@ -1549,11 +1549,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val); // 90° to 45°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val); // 90° to 45°
 
             if (diff >= (2 * x))
             {
@@ -1579,11 +1579,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val); // 90° to 45°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y - x)), val); // 90° to 45°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val); // 90° to 45°
     }
 
     //Octant 3 ------
@@ -1607,11 +1607,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y + x), val); // 90° to 135°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val); // 90° to 135°
 
             if (diff >= (2 * x))
             {
@@ -1637,11 +1637,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y + x), val); // 90° to 135°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val); // 90° to 135°
     }
     else if (drawRectOctant3 == 2)
     {
@@ -1688,11 +1688,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y + x), val); // 90° to 135°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val); // 90° to 135°
 
             if (diff >= (2 * x))
             {
@@ -1718,11 +1718,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y + x), val); // 90° to 135°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + y + 1)), uint16(round(iCenter.y + x)), val); // 90° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val); // 90° to 135°
     }
 
     //Octant 4 ------
@@ -1746,11 +1746,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y)), val); // 180° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y), val); // 180° to 135°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val); // 180° to 135°
 
             if (diff >= (2 * x))
             {
@@ -1776,11 +1776,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y)), val); // 180° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y), val); // 180° to 135°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val); // 180° to 135°
     }
     else if (drawRectOctant4 == 2)
     {
@@ -1828,11 +1828,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y)), val); // 180° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y), val); // 180° to 135°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val); // 180° to 135°
 
             if (diff >= (2 * x))
             {
@@ -1858,11 +1858,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y)), val); // 180° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y), val); // 180° to 135°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x + x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 135°
+        iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val); // 180° to 135°
     }
 
     //Octant 5 ------
@@ -1886,11 +1886,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y)), val); // 180° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y), val); // 180° to 225°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val); // 180° to 225°
 
             if (diff >= (2 * x))
             {
@@ -1916,11 +1916,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y)), val); // 180° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y), val); // 180° to 225°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val); // 180° to 225°
     }
     else if (drawRectOctant5 == 2)
     {
@@ -1967,11 +1967,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y)), val); // 180° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y), val); // 180° to 225°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val); // 180° to 225°
 
             if (diff >= (2 * x))
             {
@@ -1997,11 +1997,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y)), val); // 180° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y), val); // 180° to 225°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y + y + 1)), val); // 180° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val); // 180° to 225°
     }
 
 
@@ -2026,11 +2026,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y + x), val);  // 270° to 225°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);  // 270° to 225°
 
             if (diff >= (2 * x))
             {
@@ -2056,11 +2056,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y + x), val);  // 270° to 225°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);  // 270° to 225°
     }
     else if (drawRectOctant6 == 2)
     {
@@ -2107,11 +2107,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y + x), val);  // 270° to 225°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);  // 270° to 225°
 
             if (diff >= (2 * x))
             {
@@ -2137,11 +2137,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y + x), val);  // 270° to 225°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y + x)), val);  // 270° to 225°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);  // 270° to 225°
     }
 
 
@@ -2166,11 +2166,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y - x), val); // 270° to 315°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val); // 270° to 315°
 
             if (diff >= (2 * x))
             {
@@ -2195,11 +2195,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y - x), val); // 270° to 315°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val); // 270° to 315°
     }
     else if (drawRectOctant7 == 2)
     {
@@ -2246,11 +2246,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y - x), val); // 270° to 315°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val); // 270° to 315°
 
             if (diff >= (2 * x))
             {
@@ -2275,11 +2275,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y - x), val); // 270° to 315°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - y - 1)), uint16(round(iCenter.y - x)), val); // 270° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val); // 270° to 315°
     }
 
 
@@ -2304,11 +2304,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y)), val); // 0° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y), val); // 0° to 315°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val); // 0° to 315°
 
             if (diff >= (2 * x))
             {
@@ -2333,11 +2333,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y)), val); // 0° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y), val); // 0° to 315°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val); // 0° to 315°
     }
     else if (drawRectOctant8 == 2)
     {
@@ -2385,11 +2385,11 @@ void DrawCircleAndresSP(
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y)), val); // 0° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y), val); // 0° to 315°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val); // 0° to 315°
 
             if (diff >= (2 * x))
             {
@@ -2414,11 +2414,11 @@ void DrawCircleAndresSP(
 
         val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y)), val); // 0° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y), val); // 0° to 315°
 
         val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-        iBlock.SetPixelSafe(uint16(round(iCenter.x - x)), uint16(round(iCenter.y - y - 1)), val); // 0° to 315°
+        iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val); // 0° to 315°
     }
 
     //Filled
@@ -2438,20 +2438,20 @@ void DrawCircleAndresSP(
 
             if (diff >= (2 * x))
             {
-                DrawLine(iBlock, FVec2I(round(iCenter.x + x), round(iCenter.y - y)), FVec2I(round(iCenter.x + x), round(iCenter.y + y)), iColor, iClippingRect);
-                DrawLine(iBlock, FVec2I(round(iCenter.x - x), round(iCenter.y - y)), FVec2I(round(iCenter.x - x), round(iCenter.y + y)), iColor, iClippingRect);
-                DrawLine(iBlock, FVec2I(round(iCenter.x + y), round(iCenter.y - x)), FVec2I(round(iCenter.x + y), round(iCenter.y + x)), iColor, iClippingRect);
-                DrawLine(iBlock, FVec2I(round(iCenter.x - y), round(iCenter.y - x)), FVec2I(round(iCenter.x - y), round(iCenter.y + x)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x + x), (iCenter.y - y)), FVec2I((iCenter.x + x), (iCenter.y + y)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x - x), (iCenter.y - y)), FVec2I((iCenter.x - x), (iCenter.y + y)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x + y), (iCenter.y - x)), FVec2I((iCenter.x + y), (iCenter.y + x)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x - y), (iCenter.y - x)), FVec2I((iCenter.x - y), (iCenter.y + x)), iColor, iClippingRect);
 
                 diff -= (2 * x + 1);
                 x++;
             }
             else
             {
-                DrawLine(iBlock, FVec2I(round(iCenter.x + x), round(iCenter.y - y)), FVec2I(round(iCenter.x + x), round(iCenter.y + y)), iColor, iClippingRect);
-                DrawLine(iBlock, FVec2I(round(iCenter.x - x), round(iCenter.y - y)), FVec2I(round(iCenter.x - x), round(iCenter.y + y)), iColor, iClippingRect);
-                DrawLine(iBlock, FVec2I(round(iCenter.x + y), round(iCenter.y - x)), FVec2I(round(iCenter.x + y), round(iCenter.y + x)), iColor, iClippingRect);
-                DrawLine(iBlock, FVec2I(round(iCenter.x - y), round(iCenter.y - x)), FVec2I(round(iCenter.x - y), round(iCenter.y + x)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x + x), (iCenter.y - y)), FVec2I((iCenter.x + x), (iCenter.y + y)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x - x), (iCenter.y - y)), FVec2I((iCenter.x - x), (iCenter.y + y)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x + y), (iCenter.y - x)), FVec2I((iCenter.x + y), (iCenter.y + x)), iColor, iClippingRect);
+                DrawLine(iBlock, FVec2I((iCenter.x - y), (iCenter.y - x)), FVec2I((iCenter.x - y), (iCenter.y + x)), iColor, iClippingRect);
 
                 diff += (2 * (y - x - 1));
                 y--;
@@ -2459,10 +2459,10 @@ void DrawCircleAndresSP(
             }
         }
 
-        DrawLine(iBlock, FVec2I(round(iCenter.x + x), round(iCenter.y - y)), FVec2I(round(iCenter.x + x), round(iCenter.y + y)), iColor, iClippingRect);
-        DrawLine(iBlock, FVec2I(round(iCenter.x - x), round(iCenter.y - y)), FVec2I(round(iCenter.x - x), round(iCenter.y + y)), iColor, iClippingRect);
-        DrawLine(iBlock, FVec2I(round(iCenter.x + y), round(iCenter.y - x)), FVec2I(round(iCenter.x + y), round(iCenter.y + x)), iColor, iClippingRect);
-        DrawLine(iBlock, FVec2I(round(iCenter.x - y), round(iCenter.y - x)), FVec2I(round(iCenter.x - y), round(iCenter.y + x)), iColor, iClippingRect);
+        DrawLine(iBlock, FVec2I((iCenter.x + x), (iCenter.y - y)), FVec2I((iCenter.x + x), (iCenter.y + y)), iColor, iClippingRect);
+        DrawLine(iBlock, FVec2I((iCenter.x - x), (iCenter.y - y)), FVec2I((iCenter.x - x), (iCenter.y + y)), iColor, iClippingRect);
+        DrawLine(iBlock, FVec2I((iCenter.x + y), (iCenter.y - x)), FVec2I((iCenter.x + y), (iCenter.y + x)), iColor, iClippingRect);
+        DrawLine(iBlock, FVec2I((iCenter.x - y), (iCenter.y - x)), FVec2I((iCenter.x - y), (iCenter.y + x)), iColor, iClippingRect);
     }
 }
 
