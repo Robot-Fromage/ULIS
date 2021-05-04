@@ -10,5 +10,5 @@
 # @license      Please refer to LICENSE.md
 cmake_minimum_required( VERSION 3.11.0 )
 
-string( TIMESTAMP ULIS_GENERATION_TIMESTAMP "%d%m%Y %H%M%S" )
+#string( TIMESTAMP ULIS_GENERATION_TIMESTAMP "%d%m%Y %H%M%S" )
 
