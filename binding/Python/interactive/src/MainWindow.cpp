@@ -17,9 +17,15 @@ FMainWindow::~FMainWindow()
 {
     // Do not delete mCaption, parent has ownership.
     // Do not delete mCenter, parent has ownership.
-    delete mLeft;
-    delete mCode;
-    delete mSplitterLeftCode;
+    delete  mMetrics;
+    delete  mViewport;
+    delete  mSplitterMetricsViewport;
+    delete  mTop;
+    delete  mConsole;
+    delete  mSplitterTopConsole;
+    delete  mLeft;
+    delete  mCode;
+    delete  mSplitterLeftCode;
 }
 
 FMainWindow::FMainWindow()
@@ -52,5 +58,14 @@ FMainWindow::FMainWindow()
 
     mSplitterTopConsole->resize( 200, 500 );
     mTop->resize( 200, 200 );
+
+    mSplitterMetricsViewport = new QSplitter( mTop );
+    mMetrics = new QWidget();
+    mViewport = new QWidget();
+    mSplitterMetricsViewport->addWidget( mMetrics );
+    mSplitterMetricsViewport->addWidget( mViewport );
+
+    mSplitterMetricsViewport->resize( 200, 200 );
+    mMetrics->resize( 100, 200 );
 }
 

@@ -33,5 +33,8 @@ private:
     QSplitter* mSplitterTopConsole;
     QWidget* mTop;
     QWidget* mConsole;
+    QSplitter* mSplitterMetricsViewport;
+    QWidget* mMetrics;
+    QWidget* mViewport;
 };
 
