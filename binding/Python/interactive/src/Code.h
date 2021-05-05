@@ -3,12 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         Canvas.h
+* @file         Code.h
 * @author       Clement Berthaud
 * @brief        pyULIS_Interactive application for testing pyULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+/*
 #include "ULISLoader.h"
 #include <ULIS>
 
@@ -50,3 +51,4 @@ private:
     py::scoped_interpreter mGuard;
 };
 
+*/

@@ -3,12 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         Canvas.cpp
+* @file         Console.cpp
 * @author       Clement Berthaud
 * @brief        pyULIS_Interactive application for testing pyULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+/*
 #include "Canvas.h"
 #include <QImage>
 #include <QLabel>
@@ -100,3 +101,4 @@ SCanvas::tickEvent() {
     auto dummy = 0;
 }
 
+*/

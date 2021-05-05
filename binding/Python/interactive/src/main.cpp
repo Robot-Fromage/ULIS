@@ -9,10 +9,7 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "ULISLoader.h"
-#include "Canvas.h"
-#include "CustomMainWindow.h"
-#include "DefaultCaption.h"
+#include "MainWindow.h"
 #include <QApplication>
 
 #include <cstdlib>
@@ -21,16 +18,11 @@ int
 main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     QApplication app( argc, argv );
-    FULISLoader handle;
-    SCanvas* canvas = new SCanvas( handle );
-    FDefaultCaption* cap = new FDefaultCaption();
-    FCustomMainWindow* w = new FCustomMainWindow();
-    w->SetCaptionWidget( cap );
-    w->SetCenterWidget( canvas );
-    canvas->show();
-    w->show();
+    FMainWindow* window = new FMainWindow();
+    window->setWindowTitle( "pyULIS4 Interactive Demo" );
+    window->show();
     int exit_code = app.exec();
-    delete  w;
+    delete  window;
     return  exit_code;
 }
 

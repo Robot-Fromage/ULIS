@@ -3,50 +3,31 @@
 /*
 *   ULIS
 *__________________
-* @file         Canvas.h
+* @file         Caption.h
 * @author       Clement Berthaud
 * @brief        pyULIS_Interactive application for testing pyULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "ULISLoader.h"
-#include <ULIS>
-
-#include <pybind11/embed.h>
-namespace py = pybind11;
-using namespace py::literals;
-
-#include <QWidget>
-
-class QImage;
+#include "Rivet/DefaultCaption.h"
 class QLabel;
-class QPixmap;
-class QTimer;
 
-using namespace ::ULIS;
-
-class SCanvas : public QWidget
+class FCaption
+    : public FDefaultCaption
 {
     Q_OBJECT
 
+    typedef  FCaption           tSelf;
+    typedef  FDefaultCaption    tSuperClass;
+
 public:
-    ~SCanvas();
-    SCanvas( FULISLoader& iHandle );
+    ~FCaption();
+    FCaption();
 
 protected:
-    virtual void mouseMoveEvent( QMouseEvent* event ) override;
-    virtual void keyPressEvent( QKeyEvent* event ) override;
+    void  Compose() override;
 
 private:
-    Q_SLOT void tickEvent();
-
-private:
-    FULISLoader& mHandle;
-    FBlock mCanvas;
-    QImage* mImage;
-    QPixmap* mPixmap;
-    QLabel* mLabel;
-    QTimer* mTimer;
-    py::scoped_interpreter mGuard;
+    QLabel* mTitle;
 };
 

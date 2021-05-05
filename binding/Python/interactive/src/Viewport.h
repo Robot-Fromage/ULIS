@@ -3,12 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         Canvas.h
+* @file         Viewport.h
 * @author       Clement Berthaud
 * @brief        pyULIS_Interactive application for testing pyULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+/*
 #include "ULISLoader.h"
 #include <ULIS>
 
@@ -25,7 +26,7 @@ class QTimer;
 
 using namespace ::ULIS;
 
-class SCanvas : public QWidget
+class FViewport : public QWidget
 {
     Q_OBJECT
 
@@ -50,3 +51,4 @@ private:
     py::scoped_interpreter mGuard;
 };
 
+*/

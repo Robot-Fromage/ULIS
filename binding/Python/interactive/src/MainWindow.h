@@ -3,63 +3,35 @@
 /*
 *   ULIS
 *__________________
-* @file         MainEditorWindow.h
+* @file         MainWindow.h
 * @author       Clement Berthaud
 * @brief        pyULIS_Interactive application for testing pyULIS.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#ifndef GLEW_STATIC
-#define GLEW_STATIC
-#endif
-#include <GL/glew.h>
-#include <QOpenGLWidget>
-#undef near
-#undef far
+#include "Rivet/CustomMainWindow.h"
 
-class SWindow
-    : public QOpenGLWidget
+class FCaption;
+class QSplitter;
+
+class FMainWindow
+    : public FCustomMainWindow
 {
     Q_OBJECT
 
-enum eAction {
-      kMoveLeft
-    , kMoveRight
-    , kMoveForward
-    , kMoveBackward
-    , kMoveUp
-    , kMoveDown
-    , kYawRight
-    , kYawLeft
-    , kPitchUp
-    , kPitchDown
-    , kCenterCamera
-    , kMaxActions
-};
-
 public:
-    ~SWindow() override;
-    SWindow();
-
-protected:
-    void initializeGL() override;
-    void resizeGL( int w, int h ) override;
-    void paintGL() override;
-    virtual void keyPressEvent( QKeyEvent* event ) override;
-    virtual void keyReleaseEvent( QKeyEvent* event ) override;
+    ~FMainWindow() override;
+    FMainWindow();
 
 private:
-    void Update();
-    void Render();
-
-private:
-    GLuint m_tex_id;
-    GLuint m_fbo_id;
-    uint8_t* m_bitmap;
-    uint8_t* m_volume;
-    QTimer* m_timer;
-    bool m_actions[kMaxActions];
-    Qt::Key m_keys[kMaxActions];
+    FCaption* mCaption;
+    QWidget* mCenter;
+    QSplitter* mSplitterLeftCode;
+    QWidget* mLeft;
+    QWidget* mCode;
+    QSplitter* mSplitterTopConsole;
+    QWidget* mTop;
+    QWidget* mConsole;
 };
 
