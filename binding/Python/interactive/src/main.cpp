@@ -19,7 +19,7 @@ main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     QApplication app( argc, argv );
     FMainWindow* window = new FMainWindow();
-    window->setWindowTitle( "pyULIS4 Interactive Demo" );
+    window->setWindowTitle( "pyULIS4 Interactive" );
     window->show();
     int exit_code = app.exec();
     delete  window;

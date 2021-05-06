@@ -188,6 +188,8 @@ FCustomMainWindow::Compose()
 void
 FCustomMainWindow::Destroy()
 {
+    // Qt Composite Design Pattern should ensure destruction for us.
+    /*
     if( mCaptionWidget )
     {
         // This is owner of mCaptionWidget, responsibility to delete
@@ -201,5 +203,6 @@ FCustomMainWindow::Destroy()
         delete  mCenterWidget;
         mCenterWidget = nullptr;
     }
+    */
 }
 

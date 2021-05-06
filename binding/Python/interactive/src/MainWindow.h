@@ -13,7 +13,6 @@
 #include "Rivet/CustomMainWindow.h"
 
 class FCaption;
-class QSplitter;
 
 class FMainWindow
     : public FCustomMainWindow
@@ -27,13 +26,8 @@ public:
 private:
     FCaption* mCaption;
     QWidget* mCenter;
-    QSplitter* mSplitterLeftCode;
-    QWidget* mLeft;
     QWidget* mCode;
-    QSplitter* mSplitterTopConsole;
-    QWidget* mTop;
     QWidget* mConsole;
-    QSplitter* mSplitterMetricsViewport;
     QWidget* mMetrics;
     QWidget* mViewport;
 };

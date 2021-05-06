@@ -21,7 +21,7 @@ FCaption::FCaption()
     , mTitle( nullptr )
 {
     mTitle = new QLabel( this );
-    mTitle->setText( "pyULIS4 Interactive Demo" );
+    mTitle->setText( "pyULIS4 Interactive" );
     mTitle->setStyleSheet("QLabel { color: white; }");
     ActiveBackgroundColor( QColor( 50, 50, 50 ) );
     InactiveBackgroundColor( QColor( 20, 20, 20 ) );
