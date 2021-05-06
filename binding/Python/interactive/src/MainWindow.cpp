@@ -11,9 +11,20 @@
 */
 #include "MainWindow.h"
 #include "Caption.h"
-#include <QSplitter>
+
 #include <QBoxLayout>
+#include <QColor>
+#include <QHeaderView>
+#include <QScrollBar>
+#include <QSplitter>
+#include <QStandardItemModel>
+#include <QTableView>
+#include <QFontDatabase>
+#include <QTextEdit>
+
 #include <functional>
+
+#include <ULIS>
 
 FMainWindow::~FMainWindow()
 {
@@ -71,13 +82,14 @@ FMainWindow::FMainWindow()
 {
     mCaption = new FCaption();
     mCenter = new QWidget();
-    setMinimumSize( 400, 400 );
+    setMinimumSize( 800, 600 );
     SetCaptionWidget( mCaption );
     SetCenterWidget( mCenter );
+    EnableBlurBehind();
 
-    mCode = new QWidget();
-    mConsole = new QWidget();
-    mMetrics = new QWidget();
+    mCode = new QTextEdit();
+    mConsole = new QTextEdit();
+    mMetrics = new QTableView();
     mViewport = new QWidget();
 
     // root
@@ -90,7 +102,7 @@ FMainWindow::FMainWindow()
         SAddWidget(
             // left
             SCreateChild( QWidget )
-            SDef( setMinimumWidth( 200 ) )
+            SDef( setMinimumWidth( 270 ) )
             SAddLayout(
                 SCreateChild( QHBoxLayout )
                 SDef( setMargin( 0 ) )
@@ -111,29 +123,196 @@ FMainWindow::FMainWindow()
                                 SCreateChild( QSplitter )
                                 SDef( setChildrenCollapsible( false ) )
                                 SAddWidget(
-                                    SExistingChild( QWidget, mMetrics )
-                                    SDef( setMinimumWidth( 100 ) )
+                                    // metrics
+                                    SExistingChild( QTableView, mMetrics )
+                                    SDef( setMinimumWidth( 250 ) )
                                 )
                                 SAddWidget(
+                                    // viewport
                                     SExistingChild( QWidget, mViewport )
-                                    SDef( setMinimumWidth( 100 ) )
+                                    SDef( setMinimumSize( 10, 10 ) )
                                 )
                             )
                         )
                     )
                     SAddWidget(
                         // console
-                        SExistingChild( QWidget, mConsole )
+                        SExistingChild( QTextEdit, mConsole )
                         SDef( setMinimumHeight( 200 ) )
                     )
+                    SDef( setSizes( QList< int >( { 800, 200 } ) ) )
                 )
             )
         )
         SAddWidget(
             // mCode
-            SExistingChild( QWidget, mCode )
+            SExistingChild( QTextEdit, mCode )
             SDef( setMinimumWidth( 200 ) )
         )
+        SDef( setSizes( QList< int >( { 800, 200 } ) ) )
     );
+
+
+    ::ULIS::FHardwareMetrics hw;
+    const char* out[] = { "NO", "YES" };
+    QString keys[] = {
+          "Vendor_AMD"
+        , "Vendor_Intel"
+        , "OS_x64"
+        , "OS_AVX"
+        , "OS_AVX512"
+        , "HW_MMX"
+        , "HW_x64"
+        , "HW_ABM"
+        , "HW_RDRAND"
+        , "HW_BMI1"
+        , "HW_BMI2"
+        , "HW_ADX"
+        , "HW_PREFETCHWT1 "
+        , "HW_MPX"
+        , "HW_SSE"
+        , "HW_SSE2"
+        , "HW_SSE3"
+        , "HW_SSSE3"
+        , "HW_SSE41"
+        , "HW_SSE42"
+        , "HW_SSE4a"
+        , "HW_AES"
+        , "HW_SHA"
+        , "HW_AVX"
+        , "HW_XOP"
+        , "HW_FMA3"
+        , "HW_FMA4"
+        , "HW_AVX2"
+        , "HW_AVX512_F"
+        , "HW_AVX512_PF"
+        , "HW_AVX512_ER"
+        , "HW_AVX512_CD"
+        , "HW_AVX512_VL"
+        , "HW_AVX512_BW"
+        , "HW_AVX512_DQ"
+        , "HW_AVX512_IFMA "
+        , "HW_AVX512_VBMI "
+        , "MAXWORKERS"
+        , "L1CACHE"
+        , "L1CACHELINE"
+    };
+
+    QString values[] = {
+          out[ hw.IsHardwareAMD()          ]
+        , out[ hw.IsHardwareIntel()        ]
+        , out[ hw.IsOSx64()                ]
+        , out[ hw.HasOSAVX()               ]
+        , out[ hw.HasOSAVX512()            ]
+        , out[ hw.HasHardwarex64()         ]
+        , out[ hw.HasHardwareMMX()         ]
+        , out[ hw.HasHardwareABM()         ]
+        , out[ hw.HasHardwareRDRAND()      ]
+        , out[ hw.HasHardwareBMI1()        ]
+        , out[ hw.HasHardwareBMI2()        ]
+        , out[ hw.HasHardwareADX()         ]
+        , out[ hw.HasHardwarePREFETCHWT1() ]
+        , out[ hw.HasHardwareMPX()         ]
+        , out[ hw.HasHardwareSSE()         ]
+        , out[ hw.HasHardwareSSE2()        ]
+        , out[ hw.HasHardwareSSE3()        ]
+        , out[ hw.HasHardwareSSSE3()       ]
+        , out[ hw.HasHardwareSSE41()       ]
+        , out[ hw.HasHardwareSSE42()       ]
+        , out[ hw.HasHardwareSSE4a()       ]
+        , out[ hw.HasHardwareAES()         ]
+        , out[ hw.HasHardwareSHA()         ]
+        , out[ hw.HasHardwareAVX()         ]
+        , out[ hw.HasHardwareXOP()         ]
+        , out[ hw.HasHardwareFMA3()        ]
+        , out[ hw.HasHardwareFMA4()        ]
+        , out[ hw.HasHardwareAVX2()        ]
+        , out[ hw.HasHardwareAVX512_F()    ]
+        , out[ hw.HasHardwareAVX512_PF()   ]
+        , out[ hw.HasHardwareAVX512_ER()   ]
+        , out[ hw.HasHardwareAVX512_CD()   ]
+        , out[ hw.HasHardwareAVX512_VL()   ]
+        , out[ hw.HasHardwareAVX512_BW()   ]
+        , out[ hw.HasHardwareAVX512_DQ()   ]
+        , out[ hw.HasHardwareAVX512_IFMA() ]
+        , out[ hw.HasHardwareAVX512_VBMI() ]
+        , QString::number( hw.MaxWorkers() )
+        , QString::number( hw.L1CacheSize() )
+        , QString::number( hw.L1CacheLineSize() )
+    };
+    QStandardItemModel* mod = new QStandardItemModel( sizeof( keys ) / sizeof( QString ), 2 );
+    float hue = 0.f;
+    for( int i = 0; i < mod->rowCount(); ++i ) {
+        QStandardItem* keyItem = new QStandardItem( keys[i] );
+        QStandardItem* valItem = new QStandardItem( values[i] );
+        keyItem->setSelectable( false );
+        float val = i % 2 ? 0.5f : 0.45f;
+        keyItem->setBackground( QBrush( QColor::fromHsvF( hue, 0.5f, val ) ) );
+        keyItem->setForeground( QBrush( QColor::fromRgbF( 1.f, 1.f, 1.f ) ) );
+
+        valItem->setBackground( QBrush( QColor::fromHsvF( hue, 0.5f, val ) ) );
+        valItem->setForeground( QBrush( QColor::fromRgbF( 1.f, 1.f, 1.f ) ) );
+        valItem->setSelectable( false );
+        valItem->setTextAlignment( Qt::AlignRight | Qt::AlignVCenter );
+
+        mod->setItem( i, 0, keyItem );
+        mod->setItem( i, 1, valItem );
+        hue = fmodf( hue + 0.025f, 1.f );
+    }
+    mMetrics->setModel( mod );
+    mMetrics->setShowGrid( false );
+    mMetrics->setSelectionBehavior( QAbstractItemView::SelectionBehavior::SelectRows );
+    mMetrics->setSelectionMode( QAbstractItemView::SelectionMode::NoSelection );
+    mMetrics->verticalHeader()->setVisible( false );
+    mMetrics->verticalHeader()->setDefaultSectionSize( 20 );
+    mMetrics->horizontalHeader()->setVisible( false );
+    mMetrics->horizontalHeader()->setStretchLastSection( true );
+    mMetrics->resizeColumnsToContents();
+    mMetrics->setEditTriggers( QAbstractItemView::EditTrigger::NoEditTriggers );
+    mMetrics->setFocusPolicy( Qt::NoFocus );
+    mMetrics->setFrameStyle( QFrame::NoFrame );
+
+    mConsole->setFrameStyle( QFrame::NoFrame );
+    mConsole->setReadOnly( true );
+    mConsole->setText( "Hello World !" );
+    mConsole->setLineWrapMode( QTextEdit::LineWrapMode::NoWrap );
+    mConsole->setOverwriteMode( true );
+    for( int i = 0; i < 200; ++i )
+        mConsole->append( QString::number( i ) + ">>>" );
+    mConsole->verticalScrollBar()->setValue( mConsole->verticalScrollBar()->maximum() );
+
+    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    //font.setFamily( "Courier" );
+    font.setStyleHint( QFont::Monospace );
+    font.setHintingPreference( QFont::PreferVerticalHinting );
+    font.setStyleStrategy( QFont::PreferAntialias );
+    font.setFixedPitch( true );
+    font.setPointSize( 11 );
+
+    mCode->setFrameStyle( QFrame::NoFrame );
+    mCode->setText(
+        "from pyULIS4 import *\n"
+        "\n"
+        "pool = FThreadPool()\n"
+        "queue = FCommandQueue( pool )\n"
+        "fmt = Format_RGBA8\n"
+        "ctx = FContext( pool, fmt )\n"
+        "canvas = FBlock( 800, 600, fmt )\n"
+        "\n"
+        "def start():\n"
+        "	ctx.Clear( canvas )\n"
+        "	ctx.Finish()\n"
+        "\n"
+        "def update( delta ):\n"
+        "	ctx.Fill( canvas, FColor.Black )\n"
+        "	ctx.Finish()\n"
+        "\n"
+        "\n"
+    );
+    mCode->setLineWrapMode( QTextEdit::LineWrapMode::NoWrap );
+    mCode->setObjectName( "Code" );
+    mCode->setFont(font);
+    QFontMetrics metrics( font );
+    mCode->setTabStopWidth( 4 * metrics.width(' ') );
 }
 

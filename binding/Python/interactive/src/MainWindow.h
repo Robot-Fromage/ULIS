@@ -13,6 +13,8 @@
 #include "Rivet/CustomMainWindow.h"
 
 class FCaption;
+class QTableView;
+class QTextEdit;
 
 class FMainWindow
     : public FCustomMainWindow
@@ -26,9 +28,9 @@ public:
 private:
     FCaption* mCaption;
     QWidget* mCenter;
-    QWidget* mCode;
-    QWidget* mConsole;
-    QWidget* mMetrics;
+    QTextEdit* mCode;
+    QTextEdit* mConsole;
+    QTableView* mMetrics;
     QWidget* mViewport;
 };
 

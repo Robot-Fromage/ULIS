@@ -11,6 +11,8 @@
 */
 #include "MainWindow.h"
 #include <QApplication>
+#include <QFile>
+#include <QStyle>
 
 #include <cstdlib>
 #include <ctime>
@@ -19,7 +21,11 @@ main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     QApplication app( argc, argv );
     FMainWindow* window = new FMainWindow();
-    window->setWindowTitle( "pyULIS4 Interactive" );
+    QFile stylesheet("C:/Users/PRAXINOS/work/ULIS_Workspace/Versions/dev/ULIS/binding/Python/interactive/res/style/style.qss");
+    stylesheet.open( QFile::ReadOnly );
+    app.setStyleSheet( stylesheet.readAll() );
+
+    window->setWindowTitle( "pyULIS4 Interactive Demo" );
     window->show();
     int exit_code = app.exec();
     delete  window;
