@@ -240,6 +240,10 @@ FMainWindow::FMainWindow()
         , QString::number( hw.L1CacheSize() )
         , QString::number( hw.L1CacheLineSize() )
     };
+
+    QFont metricsFont = QFontDatabase::systemFont( QFontDatabase::SmallestReadableFont );
+    metricsFont.setPointSize( 8 );
+
     QStandardItemModel* mod = new QStandardItemModel( sizeof( keys ) / sizeof( QString ), 2 );
     float hue = 0.f;
     for( int i = 0; i < mod->rowCount(); ++i ) {
@@ -249,11 +253,13 @@ FMainWindow::FMainWindow()
         float val = i % 2 ? 0.5f : 0.45f;
         keyItem->setBackground( QBrush( QColor::fromHsvF( hue, 0.5f, val ) ) );
         keyItem->setForeground( QBrush( QColor::fromRgbF( 1.f, 1.f, 1.f ) ) );
+        keyItem->setFont( metricsFont );
 
         valItem->setBackground( QBrush( QColor::fromHsvF( hue, 0.5f, val ) ) );
         valItem->setForeground( QBrush( QColor::fromRgbF( 1.f, 1.f, 1.f ) ) );
         valItem->setSelectable( false );
         valItem->setTextAlignment( Qt::AlignRight | Qt::AlignVCenter );
+        valItem->setFont( metricsFont );
 
         mod->setItem( i, 0, keyItem );
         mod->setItem( i, 1, valItem );
@@ -264,7 +270,7 @@ FMainWindow::FMainWindow()
     mMetrics->setSelectionBehavior( QAbstractItemView::SelectionBehavior::SelectRows );
     mMetrics->setSelectionMode( QAbstractItemView::SelectionMode::NoSelection );
     mMetrics->verticalHeader()->setVisible( false );
-    mMetrics->verticalHeader()->setDefaultSectionSize( 20 );
+    mMetrics->verticalHeader()->setDefaultSectionSize( 8 );
     mMetrics->horizontalHeader()->setVisible( false );
     mMetrics->horizontalHeader()->setStretchLastSection( true );
     mMetrics->resizeColumnsToContents();
@@ -274,18 +280,19 @@ FMainWindow::FMainWindow()
 
     mConsole->setFrameStyle( QFrame::NoFrame );
     mConsole->setReadOnly( true );
-    mConsole->setText( "Hello World !" );
+    mConsole->append( "[cpp]> " + QString( ::ULIS::FullLibraryInformationString().Data() ) );
+    mConsole->append( "[cpp]> Hello World !" );
     mConsole->setLineWrapMode( QTextEdit::LineWrapMode::NoWrap );
     mConsole->setOverwriteMode( true );
-    for( int i = 0; i < 200; ++i )
-        mConsole->append( QString::number( i ) + ">>>" );
+    //for( int i = 0; i < 10; ++i )
+    //    mConsole->append( QString::number( i ) + ">>>" );
     mConsole->verticalScrollBar()->setValue( mConsole->verticalScrollBar()->maximum() );
 
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     //font.setFamily( "Courier" );
+    //font.setHintingPreference( QFont::PreferNoHinting );
     font.setStyleHint( QFont::Monospace );
-    font.setHintingPreference( QFont::PreferVerticalHinting );
-    font.setStyleStrategy( QFont::PreferAntialias );
+    font.setStyleStrategy( QFont::NoAntialias );
     font.setFixedPitch( true );
     font.setPointSize( 11 );
 
