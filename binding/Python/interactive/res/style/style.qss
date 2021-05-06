@@ -476,6 +476,12 @@ QTextEdit
 
 #Code
 {
-    background: rgba( 20, 20, 20, 245 );
-    color: rgb( 200, 200, 200 );
+    padding: 1px;
+    background: #272822;
+    color: #f8f8f2;
+}
+
+#Code:focus
+{
+    border: 1px solid #ffa02f;
 }

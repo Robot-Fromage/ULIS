@@ -15,6 +15,8 @@
 class FCaption;
 class QTableView;
 class QTextEdit;
+class QPlainTextEdit;
+class FPythonSyntaxHighlighter;
 
 class FMainWindow
     : public FCustomMainWindow
@@ -28,9 +30,10 @@ public:
 private:
     FCaption* mCaption;
     QWidget* mCenter;
-    QTextEdit* mCode;
+    QPlainTextEdit* mCode;
     QTextEdit* mConsole;
     QTableView* mMetrics;
     QWidget* mViewport;
+    FPythonSyntaxHighlighter* mHighlighter;
 };
 

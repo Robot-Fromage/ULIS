@@ -11,15 +11,17 @@
 */
 #include "MainWindow.h"
 #include "Caption.h"
+#include "SyntaxHighlight.h"
 
 #include <QBoxLayout>
 #include <QColor>
+#include <QFontDatabase>
 #include <QHeaderView>
+#include <QPlainTextEdit>
 #include <QScrollBar>
 #include <QSplitter>
 #include <QStandardItemModel>
 #include <QTableView>
-#include <QFontDatabase>
 #include <QTextEdit>
 
 #include <functional>
@@ -87,7 +89,7 @@ FMainWindow::FMainWindow()
     SetCenterWidget( mCenter );
     EnableBlurBehind();
 
-    mCode = new QTextEdit();
+    mCode = new QPlainTextEdit();
     mConsole = new QTextEdit();
     mMetrics = new QTableView();
     mViewport = new QWidget();
@@ -146,7 +148,7 @@ FMainWindow::FMainWindow()
         )
         SAddWidget(
             // mCode
-            SExistingChild( QTextEdit, mCode )
+            SExistingChild( QPlainTextEdit, mCode )
             SDef( setMinimumWidth( 200 ) )
         )
         SDef( setSizes( QList< int >( { 800, 200 } ) ) )
@@ -292,12 +294,12 @@ FMainWindow::FMainWindow()
     //font.setFamily( "Courier" );
     //font.setHintingPreference( QFont::PreferNoHinting );
     font.setStyleHint( QFont::Monospace );
-    font.setStyleStrategy( QFont::NoAntialias );
+    //font.setStyleStrategy( QFont::NoAntialias );
     font.setFixedPitch( true );
     font.setPointSize( 11 );
 
     mCode->setFrameStyle( QFrame::NoFrame );
-    mCode->setText(
+    mCode->setPlainText(
         "from pyULIS4 import *\n"
         "\n"
         "pool = FThreadPool()\n"
@@ -316,10 +318,11 @@ FMainWindow::FMainWindow()
         "\n"
         "\n"
     );
-    mCode->setLineWrapMode( QTextEdit::LineWrapMode::NoWrap );
+    mCode->setLineWrapMode( QPlainTextEdit::LineWrapMode::NoWrap );
     mCode->setObjectName( "Code" );
     mCode->setFont(font);
     QFontMetrics metrics( font );
     mCode->setTabStopWidth( 4 * metrics.width(' ') );
+    mHighlighter = new FPythonSyntaxHighlighter( mCode->document() );
 }
 
