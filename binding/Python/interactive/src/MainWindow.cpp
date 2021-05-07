@@ -12,6 +12,8 @@
 #include "MainWindow.h"
 #include "Caption.h"
 #include "SyntaxHighlight.h"
+#include "Rivet/TabArea.h"
+#include "Rivet/Tab.h"
 
 #include <QBoxLayout>
 #include <QColor>
@@ -20,6 +22,7 @@
 #include <QPlainTextEdit>
 #include <QScrollBar>
 #include <QSplitter>
+#include <QStackedWidget>
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QTextEdit>
@@ -104,7 +107,7 @@ FMainWindow::FMainWindow()
         SAddWidget(
             // left
             SCreateChild( QWidget )
-            SDef( setMinimumWidth( 270 ) )
+            SDef( setMinimumWidth( 10 ) )
             SAddLayout(
                 SCreateChild( QHBoxLayout )
                 SDef( setMargin( 0 ) )
@@ -116,7 +119,7 @@ FMainWindow::FMainWindow()
                     SAddWidget(
                         // top
                         SCreateChild( QWidget )
-                        SDef( setMinimumHeight( 200 ) )
+                        SDef( setMinimumHeight( 10 ) )
                         SAddLayout(
                             SCreateChild( QHBoxLayout )
                             SDef( setMargin( 0 ) )
@@ -127,7 +130,7 @@ FMainWindow::FMainWindow()
                                 SAddWidget(
                                     // metrics
                                     SExistingChild( QTableView, mMetrics )
-                                    SDef( setMinimumWidth( 250 ) )
+                                    SDef( setMinimumWidth( 10 ) )
                                 )
                                 SAddWidget(
                                     // viewport
@@ -140,7 +143,7 @@ FMainWindow::FMainWindow()
                     SAddWidget(
                         // console
                         SExistingChild( QTextEdit, mConsole )
-                        SDef( setMinimumHeight( 200 ) )
+                        SDef( setMinimumHeight( 10 ) )
                     )
                     SDef( setSizes( QList< int >( { 800, 200 } ) ) )
                 )
@@ -149,9 +152,9 @@ FMainWindow::FMainWindow()
         SAddWidget(
             // mCode
             SExistingChild( QPlainTextEdit, mCode )
-            SDef( setMinimumWidth( 200 ) )
+            SDef( setMinimumWidth( 10 ) )
         )
-        SDef( setSizes( QList< int >( { 800, 200 } ) ) )
+        SDef( setSizes( QList< int >( { 400, 400 } ) ) )
     );
 
 
@@ -324,5 +327,8 @@ FMainWindow::FMainWindow()
     QFontMetrics metrics( font );
     mCode->setTabStopWidth( 4 * metrics.width(' ') );
     mHighlighter = new FPythonSyntaxHighlighter( mCode->document() );
+    QTextOption opts = mCode->document()->defaultTextOption();
+    opts.setFlags( opts.flags() | QTextOption::ShowTabsAndSpaces );
+    mCode->document()->setDefaultTextOption( opts );
 }
 

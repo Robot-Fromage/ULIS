@@ -178,8 +178,8 @@ private:
     QScrollArea*                mScrollArea;
     QWidget*                    mScrollWidgetWrapper;
     QScroller*                  mScroller;
-    FCustomButton*               mLeftButton;
-    FCustomButton*               mRightButton;
+    FCustomButton*              mLeftButton;
+    FCustomButton*              mRightButton;
 
     // Size data
     int mTabWidth;

@@ -30,15 +30,16 @@ FPythonSyntaxHighlighter::FPythonSyntaxHighlighter( QTextDocument* iParent )
 
     braces = QStringList() << "{" << "}" << "\\(" << "\\)" << "\\[" << "]";
 
-    basicStyles.insert( "keyword",  getTextCharFormat( "#66d9ef" ) );
-    basicStyles.insert( "operator", getTextCharFormat( "#f92672" ) );
-    basicStyles.insert( "brace",    getTextCharFormat( "#f8f8f2" ) );
-    basicStyles.insert( "defclass", getTextCharFormat( "#a6e22e" ) );
-    basicStyles.insert( "string",   getTextCharFormat( "#e6db74" ) );
-    basicStyles.insert( "string2",  getTextCharFormat( "#e6db74" ) );
-    basicStyles.insert( "comment",  getTextCharFormat( "#75715e" ) );
-    basicStyles.insert( "self",     getTextCharFormat( "#66d9ef" ) );
-    basicStyles.insert( "numbers",  getTextCharFormat( "#ae81ff" ) );
+    basicStyles.insert( "keyword",      getTextCharFormat( "#66d9ef" ) );
+    basicStyles.insert( "operator",     getTextCharFormat( "#f92672" ) );
+    basicStyles.insert( "brace",        getTextCharFormat( "#f8f8f2" ) );
+    basicStyles.insert( "defclass",     getTextCharFormat( "#a6e22e" ) );
+    basicStyles.insert( "string",       getTextCharFormat( "#e6db74" ) );
+    basicStyles.insert( "string2",      getTextCharFormat( "#e6db74" ) );
+    basicStyles.insert( "comment",      getTextCharFormat( "#75715e" ) );
+    basicStyles.insert( "self",         getTextCharFormat( "#66d9ef" ) );
+    basicStyles.insert( "numbers",      getTextCharFormat( "#ae81ff" ) );
+    basicStyles.insert( "whitespace",   getTextCharFormat( "#75715e" ) );
 
     triSingleQuote.setPattern( "'''" );
     triDoubleQuote.setPattern( "\"\"\"" );
@@ -85,6 +86,10 @@ FPythonSyntaxHighlighter::initializeRules()
     rules.append(FHighlightingRule("\\b[+-]?[0-9]+[lL]?\\b", 0, basicStyles.value("numbers"))); // r'\b[+-]?[0-9]+[lL]?\b'
     rules.append(FHighlightingRule("\\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\\b", 0, basicStyles.value("numbers"))); // r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b'
     rules.append(FHighlightingRule("\\b[+-]?[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b", 0, basicStyles.value("numbers"))); // r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b'
+
+    // Whitespace
+    rules.append( FHighlightingRule( " ", 0, basicStyles.value( "whitespace" ) ) );
+    rules.append( FHighlightingRule( "	", 0, basicStyles.value( "whitespace" ) ) );
 }
 
 void FPythonSyntaxHighlighter::highlightBlock(const QString &text)
