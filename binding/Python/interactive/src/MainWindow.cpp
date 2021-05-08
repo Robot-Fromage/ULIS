@@ -19,6 +19,7 @@
 
 #include "Rivet/TabArea.h"
 #include "Rivet/Tab.h"
+#include "Rivet/DockingCallbackLibrary.h"
 
 #include <QBoxLayout>
 #include <QSplitter>
@@ -84,33 +85,66 @@ SMainWindow::SMainWindow()
                                 SCreateChild( QSplitter )
                                 SDef( setChildrenCollapsible( false ) )
                                 SAddWidget(
-                                    // metrics
-                                    SExistingChild( SHardwareMetrics, mMetrics )
-                                    SDef( setMinimumWidth( 10 ) )
+                                    BuildTabSection( "Info", mMetrics )
                                 )
                                 SAddWidget(
-                                    // viewport
-                                    SExistingChild( QWidget, mViewport )
-                                    SDef( setMinimumSize( 10, 10 ) )
+                                    BuildTabSection( "Viewport", mViewport )
                                 )
+                                SDef( setSizes( QList< int >( { 200, 800 } ) ) )
                             )
                         )
                     )
                     SAddWidget(
-                        // console
-                        SExistingChild( SConsole, mConsole )
-                        SDef( setMinimumHeight( 10 ) )
+                        BuildTabSection( "Console", mConsole )
                     )
                     SDef( setSizes( QList< int >( { 800, 200 } ) ) )
                 )
             )
         )
         SAddWidget(
-            // mCode
-            SExistingChild( SCode, mCode )
-            SDef( setMinimumWidth( 10 ) )
+            BuildTabSection( "Code", mCode )
         )
         SDef( setSizes( QList< int >( { 400, 400 } ) ) )
     );
+}
+
+QWidget*
+SMainWindow::BuildTabSection( const QString& iName, QWidget* iWidget )
+{
+    QStackedWidget* stack = new QStackedWidget();
+    FTabArea* area = new FTabArea();
+    FTab* tab = new FTab();
+    auto ret = (
+        SCreateChild( QWidget )
+        SAddLayout(
+            SCreateChild( QVBoxLayout )
+            SDef( setMargin( 0 ) )
+            SDef( setSpacing( 0 ) )
+            SAddWidget(
+                SExistingChild( FTabArea, area )
+                SDef( SetMinimumTabWidth( 50 ) )
+                SDef( SetMaximumTabWidth( 100 ) )
+                SDef( SetOverlap( 20 ) )
+                SDef( SetTabsClosable( false ) )
+                SDef( SetWhiteControls() )
+                SDef( SetOnAreaBecomesEmptyCB( OnAreaBecomesEmptyCB_DoNothing ) )
+                SDef( SetOnTabDroppedOutCB( OnTabDroppedOutCB_RevertBack ) )
+                SDef( SetLinkedStack( stack ) )
+                SDef( setFixedHeight( 25 ) )
+            )
+            SAddWidget(
+                SExistingChild( QStackedWidget, stack )
+            )
+        )
+    ).m;
+
+    tab->SetColor( QColor( 60, 60, 60 ) );
+    tab->SetFadeColor( QColor( 40, 40, 40 ) );
+    tab->SetLinkWidget( iWidget );
+    tab->SetTitle( iName );
+    area->ManualAddNewTab( tab );
+    area->Recompose();
+
+    return  ret;
 }
 

@@ -169,6 +169,7 @@ FTabArea::FTabArea( QWidget* iParent ) :
 
     mLinkedStack( NULL )
 {
+    setObjectName( "TabArea" );
     Init();
     Build();
     Compose();
@@ -749,12 +750,20 @@ FTabArea::Build()
     mScroller->setScrollerProperties( ScrollerProperties );
 
     // Temporary debug stylesheet should move to a qss separate file.
+    /*
     setStyleSheet(  "QScrollArea { background: transparent; border: none; }"
                     "QScrollArea > QWidget > QWidget { background: transparent; border: none; }"
                     "QScrollArea > QWidget > QScrollBar { background: palette(base); border: none; }" );
+                    */
 
     mRightButton->SetIconShape( FCustomButton::eButtonIconShape::kRightArrow );
     mLeftButton->SetIconShape( FCustomButton::eButtonIconShape::kLeftArrow );
+    mRightButton->SetBackgroundColor( QColor( 58, 58, 58 ) );
+    mLeftButton->SetBackgroundColor( QColor( 58, 58, 58 ) );
+    mRightButton->SetHoveredBackgroundColor( QColor( 68, 68, 68 ) );
+    mLeftButton->SetHoveredBackgroundColor( QColor( 68, 68, 68 ) );
+    mRightButton->SetPressedBackgroundColor( QColor( 48, 48, 48 ) );
+    mLeftButton->SetPressedBackgroundColor( QColor( 48, 48, 48 ) );
 
     // Temporary debug stylesheet should move to a qss separate file.
     /*
@@ -840,14 +849,14 @@ FTabArea::ComposeScrollArea()
 
     if( GetTabWidth() <= GetMinimumTabWidth() )
     {
-        mLeftButton->setGeometry( 0, 0, height(), height() - 1 );
-        mRightButton->setGeometry( width() - height(), 0, height(), height() - 1 );
+        mLeftButton->setGeometry( 0, 0, height(), height() );
+        mRightButton->setGeometry( width() - height(), 0, height(), height() );
         mScrollArea->setGeometry( height(), 0, width() - height() * 2, height() * 2 );
     }
     else
     {
-        mLeftButton->setGeometry( -height() + 1, 0, height(), height() - 1 );
-        mRightButton->setGeometry( width() - 1, 0, height(), height() - 1 );
+        mLeftButton->setGeometry( -height() + 1, 0, height(), height() );
+        mRightButton->setGeometry( width() - 1, 0, height(), height() );
         mScrollArea->setGeometry( 1, 0, width() - 2, height() * 2 );
     }
 

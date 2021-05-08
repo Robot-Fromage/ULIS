@@ -143,7 +143,9 @@ SHardwareMetrics::SHardwareMetrics( QWidget* iParent )
     this->verticalHeader()->setVisible( false );
     this->verticalHeader()->setDefaultSectionSize( 8 );
     this->horizontalHeader()->setVisible( false );
-    this->horizontalHeader()->setStretchLastSection( true );
+    //this->horizontalHeader()->setStretchLastSection( true );
+    this->horizontalHeader()->setSectionResizeMode( 0, QHeaderView::ResizeMode::Stretch );
+    this->horizontalHeader()->setSectionResizeMode( 1, QHeaderView::ResizeMode::ResizeToContents );
     this->resizeColumnsToContents();
     this->setEditTriggers( QAbstractItemView::EditTrigger::NoEditTriggers );
     this->setFocusPolicy( Qt::NoFocus );

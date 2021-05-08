@@ -30,20 +30,31 @@ public:
     }
 
     template< typename U >
-    SSlateQtAdapter< T >& AddWidget( SSlateQtAdapter< U > iObj ) {
+    SSlateQtAdapter< T >& AddWidget( SSlateQtAdapter< U >& iObj ) {
         m->addWidget( iObj.m );
         return  *this;
     }
 
+    SSlateQtAdapter< T >& AddWidget( QWidget* iObj ) {
+        m->addWidget( iObj );
+        return  *this;
+    }
+
     template< typename U >
-    SSlateQtAdapter< T >& AddLayout( SSlateQtAdapter< U > iObj ) {
+    SSlateQtAdapter< T >& AddLayout( SSlateQtAdapter< U >& iObj ) {
         m->setLayout( iObj.m );
+        return  *this;
+    }
+
+    SSlateQtAdapter< T >& AddLayout( QLayout* iObj ) {
+        m->setLayout( iObj );
         return  *this;
     }
 
 public:
     T* m;
 };
+
 #define SCreateRoot( _Class_, _Parent_ )            SSlateQtAdapter< _Class_ >( _Parent_ )
 #define SAssignRoot( _Class_, _Elem_, _Parent_ )    SSlateQtAdapter< _Class_ >( _Elem_, _Parent )
 #define SCreateChild( _Class_ )                     SSlateQtAdapter< _Class_ >( nullptr )
@@ -51,4 +62,5 @@ public:
 #define SDef( ... )                                 .Def( [&]( auto i ){ i-> __VA_ARGS__ ; } )
 #define SAddWidget( _Elem_ )                        .AddWidget( _Elem_ )
 #define SAddLayout( _Elem_ )                        .AddLayout( _Elem_ )
+#define SReturn( ... )                              return  ( __VA_ARGS__ ).m
 

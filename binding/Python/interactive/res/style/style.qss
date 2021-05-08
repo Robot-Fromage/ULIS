@@ -481,7 +481,20 @@ QTextEdit
     color: #f8f8f2;
 }
 
-#Code:focus
+#TabArea
 {
-    border: 1px solid #ffa02f;
+    background: rgba( 30, 30, 30, 255 );
+    border: none;
+}
+
+#TabArea QWidget
+{
+    background: rgba( 30, 30, 30, 255 );
+    border: none;
+}
+
+#TabAreaButton
+{
+    background: rgb( 58, 58, 58 );
+    border-left:1px solid rgb( 100, 100, 100 );
 }

@@ -29,6 +29,13 @@ public:
     SMainWindow();
 
 private:
+    QWidget* BuildTabSection( const QString& iName, QWidget* iWidget );
+    QWidget* BuildCodeSection();
+    QWidget* BuildConsoleSection();
+    QWidget* BuildViewportSection();
+    QWidget* BuildHardwareMetricsSection();
+
+private:
     SCaption* mCaption;
     QWidget* mCenter;
     SCode* mCode;
