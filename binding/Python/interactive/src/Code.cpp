@@ -21,7 +21,7 @@ SCode::~SCode() {
 SCode::SCode( QWidget* iParent )
     : QPlainTextEdit( iParent )
 {
-    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    QFont font = QFontDatabase::systemFont( QFontDatabase::FixedFont );
     //font.setFamily( "Courier" );
     //font.setHintingPreference( QFont::PreferNoHinting );
     //font.setStyleStrategy( QFont::NoAntialias );

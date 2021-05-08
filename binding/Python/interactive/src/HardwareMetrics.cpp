@@ -9,96 +9,143 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-/*
-#include "Canvas.h"
-#include <QImage>
-#include <QLabel>
-#include <QPixmap>
-#include <QTimer>
-#include <QEvent>
-#include <QKeyEvent>
-#include <QMouseEvent>
+#include "HardwareMetrics.h"
 
-SCanvas::~SCanvas() {
-    delete  mTimer;
-    delete  mImage;
-    delete  mPixmap;
-    delete  mLabel;
+#include <QFontDatabase>
+#include <QHeaderView>
+#include <QStandardItemModel>
+
+#include <ULIS>
+
+SHardwareMetrics::~SHardwareMetrics() {
 }
 
-SCanvas::SCanvas( FULISLoader& iHandle )
-    : QWidget( nullptr )
-    , mHandle( iHandle )
-    , mCanvas( FBlock( 800, 600, mHandle.Format() ) )
-    , mImage( nullptr )
-    , mPixmap( nullptr )
-    , mLabel( nullptr )
-    , mTimer( nullptr )
+SHardwareMetrics::SHardwareMetrics( QWidget* iParent )
+    : QTableView( iParent )
 {
-    setFixedSize( 800, 600 );
+    ::ULIS::FHardwareMetrics hw;
+    const char* out[] = { "NO", "YES" };
+    QString keys[] = {
+          "Vendor_AMD"
+        , "Vendor_Intel"
+        , "OS_x64"
+        , "OS_AVX"
+        , "OS_AVX512"
+        , "HW_MMX"
+        , "HW_x64"
+        , "HW_ABM"
+        , "HW_RDRAND"
+        , "HW_BMI1"
+        , "HW_BMI2"
+        , "HW_ADX"
+        , "HW_PREFETCHWT1 "
+        , "HW_MPX"
+        , "HW_SSE"
+        , "HW_SSE2"
+        , "HW_SSE3"
+        , "HW_SSSE3"
+        , "HW_SSE41"
+        , "HW_SSE42"
+        , "HW_SSE4a"
+        , "HW_AES"
+        , "HW_SHA"
+        , "HW_AVX"
+        , "HW_XOP"
+        , "HW_FMA3"
+        , "HW_FMA4"
+        , "HW_AVX2"
+        , "HW_AVX512_F"
+        , "HW_AVX512_PF"
+        , "HW_AVX512_ER"
+        , "HW_AVX512_CD"
+        , "HW_AVX512_VL"
+        , "HW_AVX512_BW"
+        , "HW_AVX512_DQ"
+        , "HW_AVX512_IFMA "
+        , "HW_AVX512_VBMI "
+        , "MAXWORKERS"
+        , "L1CACHE"
+        , "L1CACHELINE"
+    };
 
-    FContext& ctx = mHandle.Context();
-    ctx.Fill( mCanvas, FColor::White );
-    ctx.Finish();
+    QString values[] = {
+          out[ hw.IsHardwareAMD()          ]
+        , out[ hw.IsHardwareIntel()        ]
+        , out[ hw.IsOSx64()                ]
+        , out[ hw.HasOSAVX()               ]
+        , out[ hw.HasOSAVX512()            ]
+        , out[ hw.HasHardwarex64()         ]
+        , out[ hw.HasHardwareMMX()         ]
+        , out[ hw.HasHardwareABM()         ]
+        , out[ hw.HasHardwareRDRAND()      ]
+        , out[ hw.HasHardwareBMI1()        ]
+        , out[ hw.HasHardwareBMI2()        ]
+        , out[ hw.HasHardwareADX()         ]
+        , out[ hw.HasHardwarePREFETCHWT1() ]
+        , out[ hw.HasHardwareMPX()         ]
+        , out[ hw.HasHardwareSSE()         ]
+        , out[ hw.HasHardwareSSE2()        ]
+        , out[ hw.HasHardwareSSE3()        ]
+        , out[ hw.HasHardwareSSSE3()       ]
+        , out[ hw.HasHardwareSSE41()       ]
+        , out[ hw.HasHardwareSSE42()       ]
+        , out[ hw.HasHardwareSSE4a()       ]
+        , out[ hw.HasHardwareAES()         ]
+        , out[ hw.HasHardwareSHA()         ]
+        , out[ hw.HasHardwareAVX()         ]
+        , out[ hw.HasHardwareXOP()         ]
+        , out[ hw.HasHardwareFMA3()        ]
+        , out[ hw.HasHardwareFMA4()        ]
+        , out[ hw.HasHardwareAVX2()        ]
+        , out[ hw.HasHardwareAVX512_F()    ]
+        , out[ hw.HasHardwareAVX512_PF()   ]
+        , out[ hw.HasHardwareAVX512_ER()   ]
+        , out[ hw.HasHardwareAVX512_CD()   ]
+        , out[ hw.HasHardwareAVX512_VL()   ]
+        , out[ hw.HasHardwareAVX512_BW()   ]
+        , out[ hw.HasHardwareAVX512_DQ()   ]
+        , out[ hw.HasHardwareAVX512_IFMA() ]
+        , out[ hw.HasHardwareAVX512_VBMI() ]
+        , QString::number( hw.MaxWorkers() )
+        , QString::number( hw.L1CacheSize() )
+        , QString::number( hw.L1CacheLineSize() )
+    };
 
-    mImage  = new QImage( mCanvas.Bits(), mCanvas.Width(), mCanvas.Height(), mCanvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
-    mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
-    mLabel  = new QLabel( this );
-    mLabel->setPixmap( *mPixmap );
-    this->QWidget::setFixedSize( mPixmap->size() );
+    QFont metricsFont = QFontDatabase::systemFont( QFontDatabase::SmallestReadableFont );
+    metricsFont.setPointSize( 8 );
 
-    mTimer = new QTimer();
-    mTimer->setInterval( 1000.0 / 24.0 );
-    QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
-    mTimer->start();
+    QStandardItemModel* mod = new QStandardItemModel( sizeof( keys ) / sizeof( QString ), 2 );
+    float hue = 0.f;
+    for( int i = 0; i < mod->rowCount(); ++i ) {
+        QStandardItem* keyItem = new QStandardItem( keys[i] );
+        QStandardItem* valItem = new QStandardItem( values[i] );
+        keyItem->setSelectable( false );
+        float val = i % 2 ? 0.5f : 0.45f;
+        keyItem->setBackground( QBrush( QColor::fromHsvF( hue, 0.5f, val ) ) );
+        keyItem->setForeground( QBrush( QColor::fromRgbF( 1.f, 1.f, 1.f ) ) );
+        keyItem->setFont( metricsFont );
 
-    py::module_ pyULIS4 = py::module_::import("pyULIS4");
-    py::exec( R"(
-        from pyULIS4 import *
-        canvas = FBlock( 800, 600, Format_RGBA8 )
-    )" );
+        valItem->setBackground( QBrush( QColor::fromHsvF( hue, 0.5f, val ) ) );
+        valItem->setForeground( QBrush( QColor::fromRgbF( 1.f, 1.f, 1.f ) ) );
+        valItem->setSelectable( false );
+        valItem->setTextAlignment( Qt::AlignRight | Qt::AlignVCenter );
+        valItem->setFont( metricsFont );
 
-    py::module_ main = py::module_::import("__main__");
-    main.add_object( "canvas2", py::cast( &mCanvas ), true );
-
-    // Sample backward / forward
-    // py::object obj = py::cast( &mCanvas );
-    //FBlock* canvas = pyCanvas.cast< FBlock* >();
-    //std::cout << canvas->Format();
-    //std::cout << canvas->Rect().w;
-    //auto dummy = 0;
-}
-
-void
-SCanvas::mouseMoveEvent( QMouseEvent* event ) {
-}
-
-void
-SCanvas::keyPressEvent( QKeyEvent* event ) {
-}
-
-void
-SCanvas::tickEvent() {
-    FContext& ctx = mHandle.Context();
-    ctx.Fill( mCanvas, FColor::White );
-    ctx.Finish();
-    //py::object pyCanvas = pyULIS4.attr( "FBlock" )( 800, 600, Format_RGBA8 );
-
-    auto message = "Hello world from python embed !"_s;
-
-    try {
-        py::exec(R"(
-            print( "block from py", canvas2.Width() )
-        )");
-    } catch( const std::exception& ) {
-        std::cout << "error" << std::endl;
+        mod->setItem( i, 0, keyItem );
+        mod->setItem( i, 1, valItem );
+        hue = fmodf( hue + 0.025f, 1.f );
     }
-
-    py::module_ main = py::module_::import("__main__");
-    py::object canvas_attr = main.attr( "canvas" );
-    FBlock* canvas = canvas_attr.cast< FBlock* >();
-    std::cout << "block from cpp" << canvas->Width() << std::endl;
-    auto dummy = 0;
+    this->setModel( mod );
+    this->setShowGrid( false );
+    this->setSelectionBehavior( QAbstractItemView::SelectionBehavior::SelectRows );
+    this->setSelectionMode( QAbstractItemView::SelectionMode::NoSelection );
+    this->verticalHeader()->setVisible( false );
+    this->verticalHeader()->setDefaultSectionSize( 8 );
+    this->horizontalHeader()->setVisible( false );
+    this->horizontalHeader()->setStretchLastSection( true );
+    this->resizeColumnsToContents();
+    this->setEditTriggers( QAbstractItemView::EditTrigger::NoEditTriggers );
+    this->setFocusPolicy( Qt::NoFocus );
+    this->setFrameStyle( QFrame::NoFrame );
 }
 
-*/
