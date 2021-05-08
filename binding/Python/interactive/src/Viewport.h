@@ -10,11 +10,32 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+// The inclusion constraints here are rather complicated:
+// We should define GLEW_STATIC here if it is not defined BEFORE including glew.
+// We should include glew BEFORE including QOpenGL-related stuff.
+// pybind11 includes python files, which use the "slots" name at times, which is
+// also a macro used by Qt. We should also include pybind BEFORE any Qt stuff,
+// but it is not always possible, so we have to temporarily disable the macro.
+// Also, QOpenGLWidget indirectly includes GDI stuff on windows that define the
+// RGB macro, which causes issues in ULIS for the same reason, so we simply
+// undef it here.
+#pragma push_macro("slots")
+#undef slots
+#include <pybind11/embed.h>
+namespace py = pybind11;
+using namespace py::literals;
+#pragma pop_macro("slots")
+
 #ifndef GLEW_STATIC
 #define GLEW_STATIC
 #endif
 #include <GL/glew.h>
+
 #include <QOpenGLWidget>
+#undef RGB
+
+class SCode;
+class SConsole;
 
 class SViewport : public QOpenGLWidget
 {
@@ -22,7 +43,7 @@ class SViewport : public QOpenGLWidget
 
 public:
     ~SViewport();
-    SViewport( QWidget* iParent = nullptr );
+    SViewport( QWidget* iParent, SCode* iCode, SConsole* iConsole );
 
 protected:
     void initializeGL() override;
@@ -40,5 +61,8 @@ private:
     GLuint m_fbo_id;
     uint8_t* m_bitmap;
     QTimer* m_timer;
+    SCode* mCode;
+    SConsole* mConsole;
+    py::scoped_interpreter mGuard;
 };
 

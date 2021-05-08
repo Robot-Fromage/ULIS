@@ -10,10 +10,11 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Viewport.h"
+#include "Code.h"
+#include "Console.h"
 #include <QTimer>
 #include <QEvent>
 #include <QKeyEvent>
-#undef RGB
 #include <ULIS>
 
 #define IMG_SIZEX 800
@@ -27,12 +28,14 @@ SViewport::~SViewport()
     delete m_timer;
 }
 
-SViewport::SViewport( QWidget* iParent )
+SViewport::SViewport( QWidget* iParent, SCode* iCode, SConsole* iConsole )
     : QOpenGLWidget( iParent )
     , m_tex_id( 0 )
     , m_fbo_id( 0 )
     , m_bitmap( nullptr )
     , m_timer( nullptr )
+    , mCode( iCode )
+    , mConsole( iConsole )
 {
     // Init timer
     m_timer = new QTimer();
@@ -53,7 +56,7 @@ SViewport::initializeGL()
     glewInit();
 
     // Print version
-    printf( "[cpp]> [%s], OpenGL version: %s\n", __FUNCSIG__, glGetString( GL_VERSION ) );
+    mConsole->LogCPP( "[" + QString( __FUNCSIG__ ) + "]" + QString( "OpenGLVersion: " ) + QString( (const char*)glGetString( GL_VERSION ) ) );
 
     // Build texture
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );

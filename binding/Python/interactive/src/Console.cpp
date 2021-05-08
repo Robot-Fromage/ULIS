@@ -21,10 +21,33 @@ SConsole::SConsole( QWidget* iParent )
 {
     this->setFrameStyle( QFrame::NoFrame );
     this->setReadOnly( true );
-    this->append( "[cpp]> " + QString( ::ULIS::FullLibraryInformationString().Data() ) );
-    this->append( "[cpp]> Hello World !" );
     this->setLineWrapMode( QTextEdit::LineWrapMode::NoWrap );
     this->setOverwriteMode( true );
+    LogCPP( QString( ::ULIS::FullLibraryInformationString().Data() ) );
+}
+
+void
+SConsole::LogCPP( const QString& iStr )
+{
+    Log( "[cpp]> " + iStr );
+}
+
+void
+SConsole::LogPy( const QString& iStr )
+{
+    Log( "[py]> " + iStr );
+}
+
+void
+SConsole::Log( const QString& iStr )
+{
+    this->append( iStr );
+    ScrollBottom();
+}
+
+void
+SConsole::ScrollBottom()
+{
     this->verticalScrollBar()->setValue( this->verticalScrollBar()->maximum() );
 }
 

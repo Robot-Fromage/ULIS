@@ -19,6 +19,10 @@ class SConsole : public QTextEdit
 public:
     ~SConsole();
     SConsole( QWidget* iParent = nullptr );
+    void LogCPP( const QString& iStr );
+    void LogPy( const QString& iStr );
+    void Log( const QString& iStr );
+    void ScrollBottom();
 
 private:
 };
