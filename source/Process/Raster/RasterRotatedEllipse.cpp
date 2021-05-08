@@ -39,11 +39,10 @@ void DrawRotatedEllipse(        FBlock&                  iBlock
 
     //               x  y
     std::map< int,std::vector< int > > storagePoints; // storagePoints[x][0]  We have two points for each x on the ellipse: p1(x, y0), p2(x, y1)
-                                                        //                 [1]
+                                                      //                 [1]
     storagePoints[0].push_back(iCenter.x);           // In order to only pass storagePoints in parameter to InternalDrawQuadRationalBezierSeg
     storagePoints[0].push_back(iCenter.y);           // we store the center (useful in this function) at index 0 (we'll know it's there)
-
-
+        
     int a = iA;
     int b = iB;
 
@@ -93,7 +92,7 @@ void DrawRotatedEllipse(        FBlock&                  iBlock
             {
                 DrawLine(iBlock,FVec2I(iCenter.x + it->first,iCenter.y + it->second[0]),FVec2I(iCenter.x + it->first,iCenter.y + it->second[1]),iColor,iClippingRect);
             }
-            if(it->second.size() > 2) // where we draw more than 2 pixels for a said y
+            else if(it->second.size() > 2) // where we draw more than 2 pixels for a said y
             {
                 int minY = it->second[0];
                 int maxY = it->second[0];

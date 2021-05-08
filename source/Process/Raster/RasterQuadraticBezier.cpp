@@ -40,8 +40,10 @@ InternalDrawQuadRationalBezierSeg(
         return;
     }
 
-    if(cur != 0.0 && w > 0.0) {
-        if(sx*(long)sx+sy*(long)sy > xx*xx+yy*yy) {
+    if(cur != 0.0 && w > 0.0) 
+    {
+        if(sx*(long)sx+sy*(long)sy > xx*xx+yy*yy) 
+        {
             x2 = x0; x0 -= int(dx); y2 = y0; y0 -= int(dy); cur = -cur;
         }
         xx = 2.0*(4.0*w*sx*xx+dx*dx);
@@ -109,10 +111,13 @@ InternalDrawQuadRationalBezierSeg(
         if(x0 == x2 && y0 == y2) //Corners where we draw a single pixel
         {
             (*iStoragePoints)[x0 - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
-        } else if(y0 == y2) //Horizontal lines
+        } 
+        else if(y0 == y2) //Horizontal lines
         {
             for(int i = x0; i < x2; i++)
+            {
                 (*iStoragePoints)[i - (*iStoragePoints)[0][0]].push_back(y0 - (*iStoragePoints)[0][1]);
+            }
         }
         //We don't need to take care of vertical lines, since storagePoints is used to fill an ellipse using the exact same type of vertical lines
     }

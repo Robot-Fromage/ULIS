@@ -305,7 +305,7 @@ InternalDrawQuadRationalBezierSegSP(
                 if (x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h))
                 {
                     val.SetAlphaT<T>(alphaTop);
-                    iBlock.SetPixel(int(round(x0)), int(round(y0)), val);
+                    iBlock.SetPixel(uint16(x0), uint16(y0), val);
                 }
 
                 if (iStoragePoints && errorRatio >= 0)
@@ -326,7 +326,7 @@ InternalDrawQuadRationalBezierSegSP(
                     if (x0 > clippingRect.x && x0 < (clippingRect.x + clippingRect.w) && y0 >= clippingRect.y && y0 <= (clippingRect.y + clippingRect.h))
                     {
                         val.SetAlphaT<T>(T(maxAlpha * alpha));
-                        iBlock.SetPixel(int(round(x0 + sx)), int(round(y0)), val);
+                        iBlock.SetPixel(uint16(x0 + sx), uint16(y0), val);
                     }
 
                     if (iStoragePoints && errorRatio <= 0)
@@ -348,7 +348,7 @@ InternalDrawQuadRationalBezierSegSP(
                     if (x0 >= clippingRect.x && x0 <= (clippingRect.x + clippingRect.w) && y0 > clippingRect.y && y0 < (clippingRect.y + clippingRect.h))
                     {
                         val.SetAlphaT<T>(T(maxAlpha * alpha));
-                        iBlock.SetPixel(int(round(x0)), int(round(y0 + sy)), val);
+                        iBlock.SetPixel(uint16(x0), uint16(y0 + sy), val);
                     }
 
                     if (iStoragePoints && errorRatio >= 0)

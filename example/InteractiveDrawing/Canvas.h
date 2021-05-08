@@ -68,6 +68,7 @@ private:
     QLabel* mLabel;
     QTimer* mTimer;
     QVector< QPoint > mPoints;
+    int mAngle;
     int mPtIndex;
     int mOpMaxPoints;
 };
