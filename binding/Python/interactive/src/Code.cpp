@@ -39,16 +39,26 @@ SCode::SCode( QWidget* iParent )
         "pool    = FThreadPool()\n"
         "queue   = FCommandQueue( pool )\n"
         "fmt     = Format_RGBA8\n"
-        "ctx     = FContext( pool, fmt )\n"
+        "ctx     = FContext( queue, fmt )\n"
         "canvas  = FBlock( 800, 600, fmt )\n"
+        "elapsed = 0.0\n"
         "\n"
         "# Called once at the beginning of play.\n"
         "def start():\n"
+        "    global fmt\n"
+        "    global ctx\n"
+        "    global canvas\n"
+        "    global elapsed\n"
         "    ctx.Clear( canvas )\n"
         "    ctx.Finish()\n"
         "\n"
         "# Called every frame during play.\n"
         "def update( delta ):\n"
+        "    global fmt\n"
+        "    global ctx\n"
+        "    global canvas\n"
+        "    global elapsed\n"
+        "    elapsed += delta\n"
         "    ctx.Fill( canvas, FColor.Black )\n"
         "    ctx.Finish()\n"
         "\n"
@@ -61,7 +71,7 @@ SCode::SCode( QWidget* iParent )
     this->setTabStopWidth( 4 * metrics.width(' ') );
     mHighlighter = new FPythonSyntaxHighlighter( this->document() );
     QTextOption opts = this->document()->defaultTextOption();
-    opts.setFlags( opts.flags() | QTextOption::ShowTabsAndSpaces );
+    opts.setFlags( opts.flags() | QTextOption::ShowTabsAndSpaces | QTextOption::ShowDocumentTerminator );
     this->document()->setDefaultTextOption( opts );
 }
 

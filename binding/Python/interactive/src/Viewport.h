@@ -34,8 +34,11 @@ using namespace py::literals;
 #include <QOpenGLWidget>
 #undef RGB
 
+// Forward Declaration
+namespace ULIS { class FBlock; }
 class SCode;
 class SConsole;
+class FOutputRedirectionWrapper; // FDecl stdoutput redirection wrapper for py
 
 class SViewport : public QOpenGLWidget
 {
@@ -59,10 +62,11 @@ private:
 private:
     GLuint m_tex_id;
     GLuint m_fbo_id;
-    uint8_t* m_bitmap;
+    ::ULIS::FBlock* mBitmap;
     QTimer* m_timer;
     SCode* mCode;
     SConsole* mConsole;
-    py::scoped_interpreter mGuard;
+    FOutputRedirectionWrapper* mRedirect;
+    bool mLaunched;
 };
 

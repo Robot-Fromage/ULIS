@@ -24,6 +24,7 @@ public:
     void Log( const QString& iStr );
     void ScrollBottom();
 
-private:
+protected:
+    void keyPressEvent( QKeyEvent* e ) override;
 };
 
