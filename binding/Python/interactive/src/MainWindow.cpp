@@ -9,6 +9,9 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
+#include <ULIS>
+#include "Viewport.h"
+
 #include "MainWindow.h"
 #include "Caption.h"
 #include "Code.h"
@@ -27,7 +30,6 @@
 
 #include <functional>
 
-#include <ULIS>
 
 SMainWindow::~SMainWindow()
 {
@@ -52,7 +54,7 @@ SMainWindow::SMainWindow()
     mCode = new SCode();
     mConsole = new SConsole();
     mMetrics = new SHardwareMetrics();
-    mViewport = new QWidget();
+    mViewport = new SViewport();
 
     // root
     SCreateRoot( QHBoxLayout, mCenter )

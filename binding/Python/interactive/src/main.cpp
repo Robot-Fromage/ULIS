@@ -9,10 +9,12 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "MainWindow.h"
+#include <GL/glew.h>
 #include <QApplication>
+#include <QOpenGLWidget>
 #include <QFile>
 #include <QStyle>
+#include "MainWindow.h"
 
 #include <cstdlib>
 #include <ctime>

@@ -9,96 +9,126 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-/*
-#include "Canvas.h"
-#include <QImage>
-#include <QLabel>
-#include <QPixmap>
+#include "Viewport.h"
 #include <QTimer>
 #include <QEvent>
 #include <QKeyEvent>
-#include <QMouseEvent>
+#undef RGB
+#include <ULIS>
 
-SCanvas::~SCanvas() {
-    delete  mTimer;
-    delete  mImage;
-    delete  mPixmap;
-    delete  mLabel;
-}
+#define IMG_SIZEX 800
+#define IMG_SIZEY 600
 
-SCanvas::SCanvas( FULISLoader& iHandle )
-    : QWidget( nullptr )
-    , mHandle( iHandle )
-    , mCanvas( FBlock( 800, 600, mHandle.Format() ) )
-    , mImage( nullptr )
-    , mPixmap( nullptr )
-    , mLabel( nullptr )
-    , mTimer( nullptr )
+SViewport::~SViewport()
 {
-    setFixedSize( 800, 600 );
+    delete [] m_bitmap;
+    glDeleteTextures( 1, &m_tex_id );
+    glDeleteFramebuffers( 1, &m_fbo_id );
+    delete m_timer;
+}
 
-    FContext& ctx = mHandle.Context();
-    ctx.Fill( mCanvas, FColor::White );
-    ctx.Finish();
+SViewport::SViewport( QWidget* iParent )
+    : QOpenGLWidget( iParent )
+    , m_tex_id( 0 )
+    , m_fbo_id( 0 )
+    , m_bitmap( nullptr )
+    , m_timer( nullptr )
+{
+    // Init timer
+    m_timer = new QTimer();
+    m_timer->setInterval( 0 );
+    QObject::connect( m_timer, SIGNAL( timeout() ), this, SLOT( update() ) );
+    m_timer->start();
 
-    mImage  = new QImage( mCanvas.Bits(), mCanvas.Width(), mCanvas.Height(), mCanvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
-    mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
-    mLabel  = new QLabel( this );
-    mLabel->setPixmap( *mPixmap );
-    this->QWidget::setFixedSize( mPixmap->size() );
-
-    mTimer = new QTimer();
-    mTimer->setInterval( 1000.0 / 24.0 );
-    QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
-    mTimer->start();
-
-    py::module_ pyULIS4 = py::module_::import("pyULIS4");
-    py::exec( R"(
-        from pyULIS4 import *
-        canvas = FBlock( 800, 600, Format_RGBA8 )
-    )" );
-
-    py::module_ main = py::module_::import("__main__");
-    main.add_object( "canvas2", py::cast( &mCanvas ), true );
-
-    // Sample backward / forward
-    // py::object obj = py::cast( &mCanvas );
-    //FBlock* canvas = pyCanvas.cast< FBlock* >();
-    //std::cout << canvas->Format();
-    //std::cout << canvas->Rect().w;
-    //auto dummy = 0;
+    // Init bitmap
+    m_bitmap = new uint8_t[ IMG_SIZEX * IMG_SIZEY * 3 ];
+    for( int i = 0; i < IMG_SIZEX * IMG_SIZEY * 3; ++i )
+        m_bitmap[i] = ((i/3)%2) * 50 + 20;
 }
 
 void
-SCanvas::mouseMoveEvent( QMouseEvent* event ) {
+SViewport::initializeGL()
+{
+    // Init gl
+    glewInit();
+
+    // Print version
+    printf( "[cpp]> [%s], OpenGL version: %s\n", __FUNCSIG__, glGetString( GL_VERSION ) );
+
+    // Build texture
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glGenTextures( 1, &m_tex_id );
+
+    // Send texture data
+    glBindTexture( GL_TEXTURE_2D, m_tex_id );
+    glTexStorage2D( GL_TEXTURE_2D, 1, GL_RGB8, IMG_SIZEX, IMG_SIZEY );
+    glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, IMG_SIZEX, IMG_SIZEY, GL_RGB, GL_UNSIGNED_BYTE, m_bitmap );
+
+    // Build framebuffer
+    glGenFramebuffers( 1, &m_fbo_id );
+    glBindFramebuffer( GL_READ_FRAMEBUFFER, m_fbo_id );
+
+    // Bind texture to framebuffer
+    glFramebufferTexture2D( GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_tex_id, 0 );
+    glBindFramebuffer( GL_READ_FRAMEBUFFER, 0 );
+
+    // Unnecessary
+    glFinish();
 }
 
 void
-SCanvas::keyPressEvent( QKeyEvent* event ) {
+SViewport::resizeGL( int w, int h )
+{
+    //glViewport( 0, 0, w, h );
 }
 
 void
-SCanvas::tickEvent() {
-    FContext& ctx = mHandle.Context();
-    ctx.Fill( mCanvas, FColor::White );
-    ctx.Finish();
-    //py::object pyCanvas = pyULIS4.attr( "FBlock" )( 800, 600, Format_RGBA8 );
+SViewport::paintGL()
+{
+    Update();
+    Render();
 
-    auto message = "Hello world from python embed !"_s;
+    // Update texture
+    //glBindTexture( GL_TEXTURE_2D, m_tex_id );
+    //glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, IMG_SIZEX, IMG_SIZEY, GL_RGB, GL_UNSIGNED_BYTE, m_bitmap );
 
-    try {
-        py::exec(R"(
-            print( "block from py", canvas2.Width() )
-        )");
-    } catch( const std::exception& ) {
-        std::cout << "error" << std::endl;
-    }
-
-    py::module_ main = py::module_::import("__main__");
-    py::object canvas_attr = main.attr( "canvas" );
-    FBlock* canvas = canvas_attr.cast< FBlock* >();
-    std::cout << "block from cpp" << canvas->Width() << std::endl;
-    auto dummy = 0;
+    int dstw = ::ULIS::FMath::Min( width(), IMG_SIZEX );
+    float imageRatio = float( IMG_SIZEX ) / float( IMG_SIZEY );
+    int dsth = dstw / imageRatio;
+    int dstx = width() / 2 - dstw / 2;
+    int dsty = height() / 2 - dsth / 2;
+    dstw += dstx;
+    dsth += dsty;
+    glClearColor( 0.04f, 0.04f, 0.04f, 1 );
+    glClear( GL_COLOR_BUFFER_BIT );
+    glBindFramebuffer( GL_READ_FRAMEBUFFER, m_fbo_id );
+    glBlitFramebuffer(
+          0, 0, IMG_SIZEX, IMG_SIZEY
+        , dstx, dsty, dstw, dsth
+        , GL_COLOR_BUFFER_BIT, GL_NEAREST
+    );
+    glBindFramebuffer( GL_READ_FRAMEBUFFER, 0 );
+    glFinish();
 }
 
-*/
+void
+SViewport::keyPressEvent( QKeyEvent* event )
+{
+}
+
+void
+SViewport::keyReleaseEvent( QKeyEvent* event )
+{
+}
+
+void
+SViewport::Update()
+{
+}
+
+void
+SViewport::Render()
+{
+}
+

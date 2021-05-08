@@ -9,46 +9,36 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-/*
-#include "ULISLoader.h"
-#include <ULIS>
+#pragma once
+#ifndef GLEW_STATIC
+#define GLEW_STATIC
+#endif
+#include <GL/glew.h>
+#include <QOpenGLWidget>
 
-#include <pybind11/embed.h>
-namespace py = pybind11;
-using namespace py::literals;
-
-#include <QWidget>
-
-class QImage;
-class QLabel;
-class QPixmap;
-class QTimer;
-
-using namespace ::ULIS;
-
-class FViewport : public QWidget
+class SViewport : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
-    ~SCanvas();
-    SCanvas( FULISLoader& iHandle );
+    ~SViewport();
+    SViewport( QWidget* iParent = nullptr );
 
 protected:
-    virtual void mouseMoveEvent( QMouseEvent* event ) override;
-    virtual void keyPressEvent( QKeyEvent* event ) override;
+    void initializeGL() override;
+    void resizeGL( int w, int h ) override;
+    void paintGL() override;
+    void keyPressEvent( QKeyEvent* event ) override;
+    void keyReleaseEvent( QKeyEvent* event ) override;
 
 private:
-    Q_SLOT void tickEvent();
+    void Update();
+    void Render();
 
 private:
-    FULISLoader& mHandle;
-    FBlock mCanvas;
-    QImage* mImage;
-    QPixmap* mPixmap;
-    QLabel* mLabel;
-    QTimer* mTimer;
-    py::scoped_interpreter mGuard;
+    GLuint m_tex_id;
+    GLuint m_fbo_id;
+    uint8_t* m_bitmap;
+    QTimer* m_timer;
 };
 
-*/

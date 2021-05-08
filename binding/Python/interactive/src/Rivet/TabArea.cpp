@@ -1015,6 +1015,9 @@ FTabArea::NavDelta( int iDelta, int iTimeMS )
 void
 FTabArea::NavLeftDoubleClick()
 {
+    if( mRightButton->geometry().left() <= mLeftButton->geometry().right() + 5 )
+        return;
+
     mScroller->stop();
     mScroller->ensureVisible( mDomesticTabs.first()->geometry(), 0, 0, DEFAULT_ENSURE_TIME );
 }
@@ -1044,6 +1047,9 @@ FTabArea::NavLeftUp()
 void
 FTabArea::NavRightDoubleClick()
 {
+    if( mRightButton->geometry().left() <= mLeftButton->geometry().right() + 5 )
+        return;
+
     mScroller->stop();
     mScroller->ensureVisible( mDomesticTabs.last()->geometry(), 0, 0, DEFAULT_ENSURE_TIME );
 }

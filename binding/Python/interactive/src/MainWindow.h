@@ -13,11 +13,11 @@
 #include "Rivet/CustomMainWindow.h"
 
 class SCaption;
-class QTableView;
 class FPythonSyntaxHighlighter;
 class SCode;
 class SConsole;
 class SHardwareMetrics;
+class SViewport;
 
 class SMainWindow
     : public FCustomMainWindow
@@ -30,10 +30,6 @@ public:
 
 private:
     QWidget* BuildTabSection( const QString& iName, QWidget* iWidget );
-    QWidget* BuildCodeSection();
-    QWidget* BuildConsoleSection();
-    QWidget* BuildViewportSection();
-    QWidget* BuildHardwareMetricsSection();
 
 private:
     SCaption* mCaption;
@@ -41,7 +37,7 @@ private:
     SCode* mCode;
     SConsole* mConsole;
     SHardwareMetrics* mMetrics;
-    QWidget* mViewport;
+    SViewport* mViewport;
     FPythonSyntaxHighlighter* mHighlighter;
 };
 
