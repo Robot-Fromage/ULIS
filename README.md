@@ -22,7 +22,7 @@ ULIS is a rendering library written in C++. It is aimed at software rasterizatio
 ![](meta/image/sample/BlendNormals.png) | ![](meta/image/sample/Unicode.png) | ![](meta/image/sample/Transforms.png) | ![](meta/image/sample/BrownianNoise.png)
 ---- | ---- | ---- | ----
 ![](meta/image/sample/BezierDeform.png) | ![](meta/image/sample/Text.png) | ![](meta/image/sample/Raster.png) | ![](meta/image/sample/VoronoiNoise.png) |
-![](meta/image/sample/Gradient.png) | ![](meta/image/sample/MipMap.png) | ![](meta/image/sample/RasterText.png) | ![](meta/image/sample/All.png)
+![](meta/image/sample/Gradient.png) | ![](meta/image/sample/MipMap.png) | ![](meta/image/sample/RasterText.png) | ![](meta/image/sample/Interactive.png)
 
 ## Workflow
 <p align="center">

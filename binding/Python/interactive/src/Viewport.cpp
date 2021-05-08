@@ -92,8 +92,12 @@ SViewport::SViewport( QWidget* iParent, SCode* iCode, SConsole* iConsole )
     // Init bitmap
     mBitmap = new ::ULIS::FBlock( IMG_SIZEX, IMG_SIZEY, ::ULIS::Format_RGBA8 );
     ::ULIS::uint8* data = mBitmap->Bits();
-    for( int i = 0; i < mBitmap->BytesTotal(); ++i )
-        data[i] = ( ( i / 3 ) % 2) * 50 + 20;
+    for( int i = 0; i < mBitmap->BytesTotal(); i+=4 ) {
+        data[i + 0] = ( ( i / 3 ) % 2) * 50 + 20;
+        data[i + 1] = ( ( i / 3 ) % 2) * 50 + 20;
+        data[i + 2] = ( ( i / 3 ) % 2) * 50 + 20;
+        data[i + 3] = 255;
+    }
 
     py::initialize_interpreter();
 }
@@ -228,7 +232,8 @@ SViewport::Render()
 
     int dstw = ::ULIS::FMath::Min( (int)width(), (int)mBitmap->Width() );
     float imageRatio = float( mBitmap->Width() ) / float( mBitmap->Height() );
-    int dsth = dstw / imageRatio;
+    int dsth = ::ULIS::FMath::Min( (int)height(), int( dstw / imageRatio ) );
+    dstw = dsth * imageRatio;
     int dstx = width() / 2 - dstw / 2;
     int dsty = height() / 2 - dsth / 2;
     dstw += dstx;

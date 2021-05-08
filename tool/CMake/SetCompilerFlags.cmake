@@ -46,7 +46,7 @@ endif()
 # MSVC
 if( ${ULIS_MSVC} )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /EHsc -D__SSE4_2__ -D__AVX2__" )
-    set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Z7 /Od /MDd" )
+    set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Z7 /Od /MDd /bigobj" )
     set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Z7" )
     # EHsc: Exception stuff
     # Z7:   Produced object files contain full symbolic debugging information.

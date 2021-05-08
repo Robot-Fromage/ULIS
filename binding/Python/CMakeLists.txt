@@ -39,6 +39,14 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
         "python/module/src/"
     )
 
+    set_target_properties(
+        pyULIS
+        PROPERTIES
+        MAP_IMPORTED_CONFIG_RELEASE Release
+        MAP_IMPORTED_CONFIG_DEBUG Release
+        MAP_IMPORTED_CONFIG_RELWITHDEBUGINFO Release
+    )
+
     set_target_properties( pyULIS PROPERTIES OUTPUT_NAME "pyULIS${ULIS_VERSION_MAJOR}" )
     set_target_properties( pyULIS PROPERTIES PREFIX "${ULIS_BINARY_PREFIX}" )
 

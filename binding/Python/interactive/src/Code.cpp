@@ -48,7 +48,6 @@ SCode::SCode( QWidget* iParent )
         "    global fmt\n"
         "    global ctx\n"
         "    global canvas\n"
-        "    global elapsed\n"
         "    ctx.Clear( canvas )\n"
         "    ctx.Finish()\n"
         "\n"
