@@ -246,14 +246,14 @@ void DrawRotatedEllipseSP( FBlock&                  iBlock
     float dz = (dx - dy) * s;
     dx = std::sqrt(dx - dz * s);
     dy = std::sqrt(dy + dz * s);
-    a = dx + InternalGetPixelBaseAlphaFromCoord( iCenter + FVec2F( iA, 0.5 ) );
-    b = dy + InternalGetPixelBaseAlphaFromCoord( iCenter + FVec2F( 0.5, iB ) );
+    a = dx + 0.5;
+    b = dy + 0.5;
     dz = dz * a * b / (dx * dy);
 
-    float x0 = iCenter.x - a;
-    float y0 = iCenter.y - b;
-    float x1 = iCenter.x + a;
-    float y1 = iCenter.y + b;
+    int x0 = int(iCenter.x - a);
+    int y0 = int(iCenter.y - b);
+    int x1 = int(iCenter.x + a);
+    int y1 = int(iCenter.y + b);
     dz = float(4 * dz * std::cos(FMath::DegToRad(rotation)));
 
 
@@ -266,17 +266,17 @@ void DrawRotatedEllipseSP( FBlock&                  iBlock
     if(w > 1 || w < 0)
         return;
 
-    dx = float(std::floor(dx * w + 0.5));
-    dy = float(std::floor(dy * w + 0.5));
+    dx = float(std::floor(dx * w + InternalGetPixelBaseAlphaFromCoord( iCenter + FVec2F( iA, 0.5 ) )));
+    dy = float(std::floor(dy * w + InternalGetPixelBaseAlphaFromCoord( iCenter + FVec2F( 0.5, iB ) )));
 
 
 
     if(!iFilled)
     {
-        InternalDrawQuadRationalBezierSegSP<T>(iBlock,x0,int(y0 + dy),x0,y0,int(x0 + dx),y0,1 - w,iColor,iClippingRect); //top left
-        InternalDrawQuadRationalBezierSegSP<T>(iBlock,x0,int(y0 + dy),x0,y1,int(x1 - dx),y1,w,iColor,iClippingRect); //bottom left
-        InternalDrawQuadRationalBezierSegSP<T>(iBlock,x1,int(y1 - dy),x1,y1,int(x1 - dx),y1,1 - w,iColor,iClippingRect); //bottom right
-        InternalDrawQuadRationalBezierSegSP<T>(iBlock,x1,int(y1 - dy),x1,y0,int(x0 + dx),y0,w,iColor,iClippingRect); //top right
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock, x0, y0 + dy, x0, y0, x0 + dx, y0, 1 - w, iColor, iClippingRect); //top left
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock, x0, y0 + dy, x0, y1, x1 - dx, y1, w, iColor, iClippingRect); //bottom left
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock, x1, y1 - dy, x1, y1, x1 - dx, y1, 1 - w, iColor, iClippingRect); //bottom right
+        InternalDrawQuadRationalBezierSegSP<T>(iBlock, x1, y1 - dy, x1, y0, x0 + dx, y0, w, iColor, iClippingRect); //top right
     } 
     else //Filled Ellipse
     {
