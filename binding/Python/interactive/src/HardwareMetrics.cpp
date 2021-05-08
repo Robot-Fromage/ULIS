@@ -14,6 +14,7 @@
 #include <QFontDatabase>
 #include <QHeaderView>
 #include <QStandardItemModel>
+#include <QColor>
 
 #include <ULIS>
 
