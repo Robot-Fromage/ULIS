@@ -51,7 +51,6 @@ private:
     void initializeRules();
     bool matchMultiline( const QString& text, const QRegExp& delimiter, const int inState, const QTextCharFormat& style );
     const QTextCharFormat getTextCharFormat( const QString& colorName, const QString& style = QString() );
-    const QTextCharFormat getTextCharFormatForColor( const QColor& color, const QString& style = QString() );
 
     QList<FHighlightingRule> rules;
     QRegExp triSingleQuote;

@@ -176,17 +176,3 @@ const QTextCharFormat FPythonSyntaxHighlighter::getTextCharFormat( const QString
     return charFormat;
 }
 
-const QTextCharFormat FPythonSyntaxHighlighter::getTextCharFormatForColor( const QColor& colorName, const QString& style )
-{
-    QTextCharFormat charFormat;
-    QColor color( colorName );
-    charFormat.setForeground( color );
-
-    if (style.contains("bold", Qt::CaseInsensitive))
-        charFormat.setFontWeight(QFont::Bold);
-
-    if (style.contains("italic", Qt::CaseInsensitive))
-        charFormat.setFontItalic(true);
-
-    return charFormat;
-}

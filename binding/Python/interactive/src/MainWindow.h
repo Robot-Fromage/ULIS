@@ -12,25 +12,26 @@
 #pragma once
 #include "Rivet/CustomMainWindow.h"
 
-class FCaption;
+class SCaption;
 class QTableView;
 class QTextEdit;
 class QPlainTextEdit;
 class FPythonSyntaxHighlighter;
+class SCode;
 
-class FMainWindow
+class SMainWindow
     : public FCustomMainWindow
 {
     Q_OBJECT
 
 public:
-    ~FMainWindow() override;
-    FMainWindow();
+    ~SMainWindow() override;
+    SMainWindow();
 
 private:
-    FCaption* mCaption;
+    SCaption* mCaption;
     QWidget* mCenter;
-    QPlainTextEdit* mCode;
+    SCode* mCode;
     QTextEdit* mConsole;
     QTableView* mMetrics;
     QWidget* mViewport;

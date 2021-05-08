@@ -9,46 +9,22 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-/*
-#include "ULISLoader.h"
-#include <ULIS>
+#pragma once
+#include <QPlainTextEdit>
+class FPythonSyntaxHighlighter;
 
-#include <pybind11/embed.h>
-namespace py = pybind11;
-using namespace py::literals;
-
-#include <QWidget>
-
-class QImage;
-class QLabel;
-class QPixmap;
-class QTimer;
-
-using namespace ::ULIS;
-
-class SCanvas : public QWidget
+class SCode : public QPlainTextEdit
 {
     Q_OBJECT
 
 public:
-    ~SCanvas();
-    SCanvas( FULISLoader& iHandle );
+    ~SCode();
+    SCode( QWidget* iParent = nullptr );
 
 protected:
-    virtual void mouseMoveEvent( QMouseEvent* event ) override;
-    virtual void keyPressEvent( QKeyEvent* event ) override;
+    void keyPressEvent( QKeyEvent* e ) override;
 
 private:
-    Q_SLOT void tickEvent();
-
-private:
-    FULISLoader& mHandle;
-    FBlock mCanvas;
-    QImage* mImage;
-    QPixmap* mPixmap;
-    QLabel* mLabel;
-    QTimer* mTimer;
-    py::scoped_interpreter mGuard;
+    FPythonSyntaxHighlighter* mHighlighter;
 };
 
-*/

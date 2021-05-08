@@ -12,11 +12,11 @@
 #include "Caption.h"
 #include <QLabel>
 
-FCaption::~FCaption() {
+SCaption::~SCaption() {
     delete  mTitle;
 }
 
-FCaption::FCaption()
+SCaption::SCaption()
     : FDefaultCaption()
     , mTitle( nullptr )
 {
@@ -31,7 +31,7 @@ FCaption::FCaption()
 }
 
 void
-FCaption::Compose()
+SCaption::Compose()
 {
     tSuperClass::Compose();
     mTitle->resize( mTitle->width(), height() );

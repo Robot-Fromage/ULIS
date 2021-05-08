@@ -12,17 +12,17 @@
 #include "Rivet/DefaultCaption.h"
 class QLabel;
 
-class FCaption
+class SCaption
     : public FDefaultCaption
 {
     Q_OBJECT
 
-    typedef  FCaption           tSelf;
+    typedef  SCaption           tSelf;
     typedef  FDefaultCaption    tSuperClass;
 
 public:
-    ~FCaption();
-    FCaption();
+    ~SCaption();
+    SCaption();
 
 protected:
     void  Compose() override;

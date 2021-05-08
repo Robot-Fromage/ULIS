@@ -20,7 +20,7 @@ int
 main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     QApplication app( argc, argv );
-    FMainWindow* window = new FMainWindow();
+    SMainWindow* window = new SMainWindow();
     QFile stylesheet("style.qss");
 
     if( !stylesheet.open( QFile::ReadOnly ) ) {

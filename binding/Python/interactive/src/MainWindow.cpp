@@ -12,6 +12,7 @@
 #include "MainWindow.h"
 #include "Caption.h"
 #include "SyntaxHighlight.h"
+#include "Code.h"
 #include "Rivet/TabArea.h"
 #include "Rivet/Tab.h"
 
@@ -31,7 +32,7 @@
 
 #include <ULIS>
 
-FMainWindow::~FMainWindow()
+SMainWindow::~SMainWindow()
 {
 }
 
@@ -76,7 +77,7 @@ public:
 #define SAddWidget( _Elem_ )                        .AddWidget( _Elem_ )
 #define SAddLayout( _Elem_ )                        .AddLayout( _Elem_ )
 
-FMainWindow::FMainWindow()
+SMainWindow::SMainWindow()
     : FCustomMainWindow( nullptr )
     , mCaption( nullptr )
     , mCenter( nullptr )
@@ -85,14 +86,14 @@ FMainWindow::FMainWindow()
     , mMetrics( nullptr )
     , mViewport( nullptr )
 {
-    mCaption = new FCaption();
+    mCaption = new SCaption();
     mCenter = new QWidget();
     setMinimumSize( 800, 600 );
     SetCaptionWidget( mCaption );
     SetCenterWidget( mCenter );
     EnableBlurBehind();
 
-    mCode = new QPlainTextEdit();
+    mCode = new SCode();
     mConsole = new QTextEdit();
     mMetrics = new QTableView();
     mViewport = new QWidget();
@@ -151,7 +152,7 @@ FMainWindow::FMainWindow()
         )
         SAddWidget(
             // mCode
-            SExistingChild( QPlainTextEdit, mCode )
+            SExistingChild( SCode, mCode )
             SDef( setMinimumWidth( 10 ) )
         )
         SDef( setSizes( QList< int >( { 400, 400 } ) ) )
@@ -293,42 +294,6 @@ FMainWindow::FMainWindow()
     //    mConsole->append( QString::number( i ) + ">>>" );
     mConsole->verticalScrollBar()->setValue( mConsole->verticalScrollBar()->maximum() );
 
-    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    //font.setFamily( "Courier" );
-    //font.setHintingPreference( QFont::PreferNoHinting );
-    font.setStyleHint( QFont::Monospace );
-    //font.setStyleStrategy( QFont::NoAntialias );
-    font.setFixedPitch( true );
-    font.setPointSize( 11 );
 
-    mCode->setFrameStyle( QFrame::NoFrame );
-    mCode->setPlainText(
-        "from pyULIS4 import *\n"
-        "\n"
-        "pool = FThreadPool()\n"
-        "queue = FCommandQueue( pool )\n"
-        "fmt = Format_RGBA8\n"
-        "ctx = FContext( pool, fmt )\n"
-        "canvas = FBlock( 800, 600, fmt )\n"
-        "\n"
-        "def start():\n"
-        "	ctx.Clear( canvas )\n"
-        "	ctx.Finish()\n"
-        "\n"
-        "def update( delta ):\n"
-        "	ctx.Fill( canvas, FColor.Black )\n"
-        "	ctx.Finish()\n"
-        "\n"
-        "\n"
-    );
-    mCode->setLineWrapMode( QPlainTextEdit::LineWrapMode::NoWrap );
-    mCode->setObjectName( "Code" );
-    mCode->setFont(font);
-    QFontMetrics metrics( font );
-    mCode->setTabStopWidth( 4 * metrics.width(' ') );
-    mHighlighter = new FPythonSyntaxHighlighter( mCode->document() );
-    QTextOption opts = mCode->document()->defaultTextOption();
-    opts.setFlags( opts.flags() | QTextOption::ShowTabsAndSpaces );
-    mCode->document()->setDefaultTextOption( opts );
 }
 

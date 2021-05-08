@@ -9,96 +9,68 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-/*
-#include "Canvas.h"
-#include <QImage>
-#include <QLabel>
-#include <QPixmap>
-#include <QTimer>
+#include "Code.h"
+#include "SyntaxHighlight.h"
 #include <QEvent>
 #include <QKeyEvent>
-#include <QMouseEvent>
 
-SCanvas::~SCanvas() {
-    delete  mTimer;
-    delete  mImage;
-    delete  mPixmap;
-    delete  mLabel;
+SCode::~SCode() {
+    delete  mHighlighter;
 }
 
-SCanvas::SCanvas( FULISLoader& iHandle )
-    : QWidget( nullptr )
-    , mHandle( iHandle )
-    , mCanvas( FBlock( 800, 600, mHandle.Format() ) )
-    , mImage( nullptr )
-    , mPixmap( nullptr )
-    , mLabel( nullptr )
-    , mTimer( nullptr )
+SCode::SCode( QWidget* iParent )
+    : QPlainTextEdit( iParent )
 {
-    setFixedSize( 800, 600 );
+    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    //font.setFamily( "Courier" );
+    //font.setHintingPreference( QFont::PreferNoHinting );
+    //font.setStyleStrategy( QFont::NoAntialias );
+    font.setStyleHint( QFont::Monospace );
+    font.setFixedPitch( true );
+    font.setPointSize( 11 );
 
-    FContext& ctx = mHandle.Context();
-    ctx.Fill( mCanvas, FColor::White );
-    ctx.Finish();
-
-    mImage  = new QImage( mCanvas.Bits(), mCanvas.Width(), mCanvas.Height(), mCanvas.BytesPerScanLine(), QImage::Format::Format_RGBA8888 );
-    mPixmap = new QPixmap( QPixmap::fromImage( *mImage ) );
-    mLabel  = new QLabel( this );
-    mLabel->setPixmap( *mPixmap );
-    this->QWidget::setFixedSize( mPixmap->size() );
-
-    mTimer = new QTimer();
-    mTimer->setInterval( 1000.0 / 24.0 );
-    QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
-    mTimer->start();
-
-    py::module_ pyULIS4 = py::module_::import("pyULIS4");
-    py::exec( R"(
-        from pyULIS4 import *
-        canvas = FBlock( 800, 600, Format_RGBA8 )
-    )" );
-
-    py::module_ main = py::module_::import("__main__");
-    main.add_object( "canvas2", py::cast( &mCanvas ), true );
-
-    // Sample backward / forward
-    // py::object obj = py::cast( &mCanvas );
-    //FBlock* canvas = pyCanvas.cast< FBlock* >();
-    //std::cout << canvas->Format();
-    //std::cout << canvas->Rect().w;
-    //auto dummy = 0;
+    this->setFrameStyle( QFrame::NoFrame );
+    this->setPlainText(
+        "from pyULIS4 import *\n"
+        "\n"
+        "pool   = FThreadPool()\n"
+        "queue  = FCommandQueue( pool )\n"
+        "fmt    = Format_RGBA8\n"
+        "ctx    = FContext( pool, fmt )\n"
+        "canvas = FBlock( 800, 600, fmt )\n"
+        "\n"
+        "def start():\n"
+        "   ctx.Clear( canvas )\n"
+        "   ctx.Finish()\n"
+        "\n"
+        "def update( delta ):\n"
+        "   ctx.Fill( canvas, FColor.Black )\n"
+        "   ctx.Finish()\n"
+        "\n"
+        "\n"
+    );
+    this->setLineWrapMode( QPlainTextEdit::LineWrapMode::NoWrap );
+    this->setObjectName( "Code" );
+    this->setFont(font);
+    QFontMetrics metrics( font );
+    this->setTabStopWidth( 4 * metrics.width(' ') );
+    mHighlighter = new FPythonSyntaxHighlighter( this->document() );
+    QTextOption opts = this->document()->defaultTextOption();
+    opts.setFlags( opts.flags() | QTextOption::ShowTabsAndSpaces );
+    this->document()->setDefaultTextOption( opts );
 }
 
 void
-SCanvas::mouseMoveEvent( QMouseEvent* event ) {
-}
-
-void
-SCanvas::keyPressEvent( QKeyEvent* event ) {
-}
-
-void
-SCanvas::tickEvent() {
-    FContext& ctx = mHandle.Context();
-    ctx.Fill( mCanvas, FColor::White );
-    ctx.Finish();
-    //py::object pyCanvas = pyULIS4.attr( "FBlock" )( 800, 600, Format_RGBA8 );
-
-    auto message = "Hello world from python embed !"_s;
-
-    try {
-        py::exec(R"(
-            print( "block from py", canvas2.Width() )
-        )");
-    } catch( const std::exception& ) {
-        std::cout << "error" << std::endl;
+SCode::keyPressEvent( QKeyEvent* e )
+{
+    if( e->key() == Qt::Key_Tab ) {
+        int amount = 4 - this->textCursor().positionInBlock() % 4;
+        QString str = " ";
+        this->insertPlainText( str.repeated( amount ) );
     }
-
-    py::module_ main = py::module_::import("__main__");
-    py::object canvas_attr = main.attr( "canvas" );
-    FBlock* canvas = canvas_attr.cast< FBlock* >();
-    std::cout << "block from cpp" << canvas->Width() << std::endl;
-    auto dummy = 0;
+    else
+    {
+        QPlainTextEdit::keyPressEvent( e );
+    }
 }
 
-*/
