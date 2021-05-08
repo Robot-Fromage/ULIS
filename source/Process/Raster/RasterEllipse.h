@@ -821,11 +821,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0 to 45 degrees
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y - y),val); // 0 to 45 degrees
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x,iCenter.y - y - step,val); // 0 to 45 degrees
+            iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16(iCenter.y - y - step),val); // 0 to 45 degrees
 
             if(sigma >= 0)
             {
@@ -862,11 +862,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0 to 45 degrees
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y - y),val); // 0 to 45 degrees
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x,iCenter.y - y - step,val); // 0 to 45 degrees
+            iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16(iCenter.y - y - step),val); // 0 to 45 degrees
 
             if(sigma >= 0)
             {
@@ -894,11 +894,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y - y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x + step,iCenter.y - y,val); // 90 to 45 degrees
+            iBlock.SetPixelSafe(uint16(iCenter.x + x + step),uint16(iCenter.y - y),val); // 90 to 45 degrees
 
             if(sigma >= 0)
             {
@@ -935,11 +935,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y - y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x + step,iCenter.y - y,val); // 90 to 45 degrees
+            iBlock.SetPixelSafe(uint16(iCenter.x + x + step),uint16(iCenter.y - y),val); // 90 to 45 degrees
 
             if(sigma >= 0)
             {
@@ -968,11 +968,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x + step,iCenter.y + y,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x + x + step),uint16(iCenter.y + y),val);
 
             if(sigma >= 0)
             {
@@ -1009,11 +1009,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x + step,iCenter.y + y,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x + x + step),uint16(iCenter.y + y),val);
 
             if(sigma >= 0)
             {
@@ -1042,11 +1042,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x,iCenter.y + y + step,val); // 180 to 135 degrees
+            iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16(iCenter.y + y + step),val); // 180 to 135 degrees
 
             if(sigma >= 0)
             {
@@ -1083,11 +1083,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x + x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x + x,iCenter.y + y + step,val); // 180 to 135 degrees
+            iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16(iCenter.y + y + step),val); // 180 to 135 degrees
 
             if(sigma >= 0)
             {
@@ -1115,11 +1115,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x,iCenter.y + y + step,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16(iCenter.y + y + step),val);
 
             if(sigma >= 0)
             {
@@ -1156,11 +1156,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x,iCenter.y + y + step,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16(iCenter.y + y + step),val);
 
             if(sigma >= 0)
             {
@@ -1188,11 +1188,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x - step,iCenter.y + y,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x - step),uint16(iCenter.y + y),val);
 
             if(sigma >= 0)
             {
@@ -1229,11 +1229,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y + y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x - step,iCenter.y + y,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x - step),uint16(iCenter.y + y),val);
 
             if(sigma >= 0)
             {
@@ -1261,11 +1261,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y - y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x - step,iCenter.y - y,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x - step),uint16(iCenter.y - y),val);
 
             if(sigma >= 0)
             {
@@ -1302,11 +1302,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             val.SetAlphaT<T>(T(maxAlpha * alphaTop));
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y - y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x - step,iCenter.y - y,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x - step),uint16(iCenter.y - y),val);
 
             if(sigma >= 0)
             {
@@ -1334,11 +1334,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y - y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x,iCenter.y - y - step,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16(iCenter.y - y - step),val);
 
             if(sigma >= 0)
             {
@@ -1375,11 +1375,11 @@ void DrawEllipseSP( FBlock&                  iBlock
 
             int step = sigma <= 0 ? 1 : -1;
 
-            iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
+            iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y - y),val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixelSafe(iCenter.x - x,iCenter.y - y - step,val);
+            iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16(iCenter.y - y - step),val);
 
             if(sigma >= 0)
             {
