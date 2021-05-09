@@ -246,8 +246,8 @@ void DrawRotatedEllipseSP( FBlock&                  iBlock
     float dz = (dx - dy) * s;
     dx = std::sqrt(dx - dz * s);
     dy = std::sqrt(dy + dz * s);
-    a = dx + 0.5;
-    b = dy + 0.5;
+    a = dx + 0.5f;
+    b = dy + 0.5f;
     dz = dz * a * b / (dx * dy);
 
     int x0 = int(iCenter.x - a);
