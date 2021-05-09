@@ -324,7 +324,7 @@ void DrawCircleAndresAA(
         //Top and left clip
         while (xx >= limitX && yy >= limitY )
         {
-            if (diff < (2 * (iRadius - y)) && xx != limitX )
+            if (diff < (2 * (iRadius - y)) )
             {
                 diff += (2 * y - 1);
                 y--; xx--;
@@ -354,7 +354,7 @@ void DrawCircleAndresAA(
         }
 
         //Last special case to handle manually
-        if (diff < (2 * (iRadius - y)) && xx != limitX)
+        if (diff < (2 * (iRadius - y)) )
         {
             diff += (2 * y - 1);
             y--; xx--;
