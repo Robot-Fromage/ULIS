@@ -36,7 +36,7 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
     target_include_directories(
         pyULIS
         PUBLIC
-        "python/module/src/"
+        "Python/module/src/"
     )
 
     set_target_properties(
