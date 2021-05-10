@@ -14,13 +14,14 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawArcAndres(           FBlock&                   iBlock
-                            , const FVec2I&             iCenter
-                            , const int                 iRadius
-                            , const int                 iStartDegree
-                            , const int                 iEndDegree
-                            , const FColor&             iColor
-                            , const FRectI&             iClippingRect )
+void DrawArcAndres(
+      FBlock& iBlock
+    , const FVec2I& iCenter
+    , const int iRadius
+    , const int iStartDegree
+    , const int iEndDegree
+    , const FColor& iColor
+    , const FRectI& iClippingRect )
 {
     if(iRadius == 0)
         return;
@@ -120,17 +121,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     //Octant 1 ------
     if(drawRectOctant1 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
-
-            // Complex cases
-            if(octantsToDraw[0] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[0] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x + x, iCenter.y - y, val); // 0° to 45°
+            }
+            else if(octantsToDraw[0] == 2) //complex case
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
                 else if(directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
                 else if(directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
@@ -140,25 +148,42 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant1 == 2)
+        //Last case to handle manually
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[0] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val); // 0° to 45°
+        }
+        else if (octantsToDraw[0] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val);
+            else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val);
+            else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val);
+        }
+    } 
+    else if(drawRectOctant1 == 2)
     {
         int xx = rectOctant1.x;
         int yy = rectOctant1.y;
         int limitX = rectOctant1Clipped.w + rectOctant1Clipped.x;
         int limitY = rectOctant1Clipped.h + rectOctant1Clipped.y;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         while(xx < rectOctant1Clipped.x || yy < rectOctant1Clipped.y)
         {
@@ -166,11 +191,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx++;
-            } else if(diff < (2 * (iRadius - y)))
+            } 
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; yy++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy++;
@@ -180,13 +207,20 @@ void DrawArcAndres(           FBlock&                   iBlock
 
         while(xx <= limitX && yy <= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[0] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val); // 0° to 45°
-
-            // Complex cases
-            if(octantsToDraw[0] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; yy++;
+            }
+
+            if(octantsToDraw[0] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x + x, iCenter.y - y, val); // 0° to 45°
+            }
+            else if(octantsToDraw[0] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
                 else if(directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
                 else if(directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y - y,val);
@@ -196,16 +230,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; yy++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy++;
                 x++; xx++;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; yy++;
+        }
+
+        if (octantsToDraw[0] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val); // 0° to 45°
+        }
+        else if (octantsToDraw[0] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val);
+            else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val);
+            else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y - y, val);
         }
     }
 
@@ -214,16 +263,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     y = iRadius;
     if(drawRectOctant2 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
-
-            if(octantsToDraw[1] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[1] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x + y, iCenter.y - x, val); // 90° to 45°
+            }
+            else if(octantsToDraw[1] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
                 else if(directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
                 else if(directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
@@ -233,25 +290,41 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant2 == 2)
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[1] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val); // 90° to 45°
+        }
+        else if (octantsToDraw[1] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val);
+            else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val);
+            else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val);
+        }
+    } 
+    else if(drawRectOctant2 == 2)
     {
         int xx = rectOctant2.x + rectOctant2.w;
         int yy = rectOctant2.y + rectOctant2.h;
         int limitX = rectOctant2Clipped.x;
         int limitY = rectOctant2Clipped.y;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         while(xx > rectOctant2Clipped.x + rectOctant2Clipped.w || yy > rectOctant2Clipped.y + rectOctant2Clipped.h)
         {
@@ -259,11 +332,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy--;
-            } else if(diff < (2 * (iRadius - y)))
+            } 
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; xx--;
-            } else
+            } 
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx--;
@@ -273,12 +348,20 @@ void DrawArcAndres(           FBlock&                   iBlock
 
         while(xx >= limitX && yy >= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[1] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val); // 90° to 45°
-
-            if(octantsToDraw[1] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; xx--;
+            }
+
+            if(octantsToDraw[1] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x + y, iCenter.y - x, val); // 90° to 45°
+            }
+            else if(octantsToDraw[1] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
                 else if(directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
                 else if(directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y - x,val);
@@ -288,16 +371,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy--;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; xx--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx--;
                 x++; yy--;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; xx--;
+        }
+
+        if (octantsToDraw[1] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val); // 90° to 45°
+        }
+        else if (octantsToDraw[1] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val);
+            else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val);
+            else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y - x, val);
         }
     }
 
@@ -306,16 +404,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     y = iRadius;
     if(drawRectOctant3 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
-
-            if(octantsToDraw[2] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[2] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x + y, iCenter.y + x, val); // 90° to 135°
+            }
+            else if(octantsToDraw[2] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
                 else if(directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
                 else if(directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
@@ -325,25 +431,41 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            } 
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant3 == 2)
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[2] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val); // 90° to 135°
+        }
+        else if (octantsToDraw[2] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val);
+            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val);
+            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val);
+        }
+    } 
+    else if(drawRectOctant3 == 2)
     {
         int xx = rectOctant3.x + rectOctant3.w;
         int yy = rectOctant3.y;
         int limitX = rectOctant3Clipped.x;
         int limitY = rectOctant3Clipped.y + rectOctant3Clipped.h;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Right and top clip
         while(xx > rectOctant3Clipped.x + rectOctant3Clipped.w || yy < rectOctant3Clipped.y)
@@ -352,11 +474,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy++;
-            } else if(diff < (2 * (iRadius - y)))
+            } 
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; xx--;
-            } else
+            } 
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx--;
@@ -367,12 +491,20 @@ void DrawArcAndres(           FBlock&                   iBlock
         //Bottom and left clip
         while(xx >= limitX && yy <= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[2] == 1) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val); // 90° to 135°
-
-            if(octantsToDraw[2] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; xx--;
+            }
+
+            if(octantsToDraw[2] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x + y, iCenter.y + x, val); // 90° to 135°
+            }
+            else if(octantsToDraw[2] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
                 else if(directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
                 else if(directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + y,iCenter.y + x,val);
@@ -382,16 +514,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; xx--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx--;
                 x++; yy++;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; xx--;
+        }
+
+        if (octantsToDraw[2] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val); // 90° to 135°
+        }
+        else if (octantsToDraw[2] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val);
+            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val);
+            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + y, iCenter.y + x, val);
         }
     }
 
@@ -400,16 +547,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     y = iRadius;
     if(drawRectOctant4 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
-
-            if(octantsToDraw[3] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[3] == 1)
+            {
+                iBlock.SetPixel(iCenter.x + x, iCenter.y + y, val); // 180° to 135°
+            }
+            else if(octantsToDraw[3] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
                 else if(directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
                 else if(directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
@@ -419,25 +574,41 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant4 == 2)
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[3] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val); // 180° to 135°
+        }
+        else if (octantsToDraw[3] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val);
+            else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val);
+            else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val);
+        }
+    } 
+    else if(drawRectOctant4 == 2)
     {
         int xx = rectOctant4.x;
         int yy = rectOctant4.y + rectOctant4.h;
         int limitX = rectOctant4Clipped.x + rectOctant4Clipped.w;
         int limitY = rectOctant4Clipped.y;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while(xx < rectOctant4Clipped.x || yy > rectOctant4Clipped.y + rectOctant4Clipped.h)
@@ -446,11 +617,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx++;
-            } else if(diff < (2 * (iRadius - y)))
+            } 
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; yy--;
-            } else
+            } 
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy--;
@@ -461,12 +634,20 @@ void DrawArcAndres(           FBlock&                   iBlock
         //Bottom and left clip
         while(xx <= limitX && yy >= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[3] == 1) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val); // 180° to 135°
-
-            if(octantsToDraw[3] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; yy--;
+            }
+
+            if(octantsToDraw[3] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x + x, iCenter.y + y, val); // 180° to 135°
+            }
+            else if(octantsToDraw[3] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
                 else if(directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
                 else if(directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x + x,iCenter.y + y,val);
@@ -476,16 +657,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; yy--;
-            } else
+            } 
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy--;
                 x++; xx++;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; yy--;
+        }
+
+        if (octantsToDraw[3] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val); // 180° to 135°
+        }
+        else if (octantsToDraw[3] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val);
+            else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val);
+            else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x + x, iCenter.y + y, val);
         }
     }
 
@@ -495,16 +691,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     y = iRadius;
     if(drawRectOctant5 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
-
-            if(octantsToDraw[4] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[4] == 1)
+            {
+                iBlock.SetPixel(iCenter.x - x, iCenter.y + y, val); // 180° to 225°
+            }
+            else if(octantsToDraw[4] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
                 else if(directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
                 else if(directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
@@ -514,25 +718,41 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant5 == 2)
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[4] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val); // 180° to 225°
+        }
+        else if (octantsToDraw[4] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val);
+            else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val);
+            else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val);
+        }
+    } 
+    else if(drawRectOctant5 == 2)
     {
         int xx = rectOctant5.x + rectOctant5.w;
         int yy = rectOctant5.y + rectOctant5.h;
         int limitX = rectOctant5Clipped.x;
         int limitY = rectOctant5Clipped.y;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while(xx > rectOctant5Clipped.x + rectOctant5Clipped.w || yy > rectOctant5Clipped.y + rectOctant5Clipped.h)
@@ -541,11 +761,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx--;
-            } else if(diff < (2 * (iRadius - y)))
+            } 
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; yy--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy--;
@@ -556,12 +778,20 @@ void DrawArcAndres(           FBlock&                   iBlock
         //Bottom and left clip
         while(xx >= limitX && yy >= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[4] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val); // 180° to 225°
-
-            if(octantsToDraw[4] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; yy--;
+            }
+
+            if(octantsToDraw[4] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x - x, iCenter.y + y, val); // 180° to 225°
+            }
+            else if(octantsToDraw[4] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
                 else if(directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
                 else if(directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y + y,val);
@@ -571,16 +801,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx--;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; yy--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy--;
                 x++; xx--;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; yy--;
+        }
+
+        if (octantsToDraw[4] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val); // 180° to 225°
+        }
+        else if (octantsToDraw[4] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val);
+            else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val);
+            else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y + y, val);
         }
     }
 
@@ -590,16 +835,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     y = iRadius;
     if(drawRectOctant6 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
-
-            if(octantsToDraw[5] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[5] == 1)
+            {
+                iBlock.SetPixel(iCenter.x - y, iCenter.y + x, val);  // 270° to 225°
+            }
+            else if(octantsToDraw[5] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
                 else if(directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
                 else if(directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
@@ -609,25 +862,41 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant6 == 2)
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[5] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);  // 270° to 225°
+        }
+        else if (octantsToDraw[5] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);
+            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);
+            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);
+        }
+    } 
+    else if(drawRectOctant6 == 2)
     {
         int xx = rectOctant6.x;
         int yy = rectOctant6.y;
         int limitX = rectOctant6Clipped.x + rectOctant6Clipped.w;
         int limitY = rectOctant6Clipped.y + rectOctant6Clipped.h;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while(xx < rectOctant6Clipped.x || yy < rectOctant6Clipped.y)
@@ -636,11 +905,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy++;
-            } else if(diff < (2 * (iRadius - y)))
+            } 
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; xx++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx++;
@@ -651,12 +922,20 @@ void DrawArcAndres(           FBlock&                   iBlock
         //Bottom and left clip
         while(xx <= limitX && yy <= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[5] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);  // 270° to 225°
-
-            if(octantsToDraw[5] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; xx++;
+            }
+
+            if(octantsToDraw[5] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x - y, iCenter.y + x, val);  // 270° to 225°
+            }
+            else if(octantsToDraw[5] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
                 else if(directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
                 else if(directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y + x,val);
@@ -666,16 +945,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; xx++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx++;
                 x++; yy++;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; xx++;
+        }
+
+        if (octantsToDraw[5] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);  // 270° to 225°
+        }
+        else if (octantsToDraw[5] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);
+            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);
+            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y + x, val);
         }
     }
 
@@ -685,16 +979,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     y = iRadius;
     if(drawRectOctant7 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
-
-            if(octantsToDraw[6] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[6] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x - y, iCenter.y - x, val); // 270° to 315°
+            }
+            else if(octantsToDraw[6] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
                 else if(directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
                 else if(directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
@@ -704,25 +1006,41 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant7 == 2)
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[6] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val); // 270° to 315°
+        }
+        else if (octantsToDraw[6] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val);
+            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val);
+            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val);
+        }
+    } 
+    else if(drawRectOctant7 == 2)
     {
         int xx = rectOctant7.x;
         int yy = rectOctant7.y + rectOctant7.h;
         int limitX = rectOctant7Clipped.x + rectOctant7Clipped.w;
         int limitY = rectOctant7Clipped.y;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while(xx < rectOctant7Clipped.x || yy > rectOctant7Clipped.y + rectOctant7Clipped.h)
@@ -731,11 +1049,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy--;
-            } else if(diff < (2 * (iRadius - y)))
+            } 
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; xx++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx++;
@@ -746,12 +1066,20 @@ void DrawArcAndres(           FBlock&                   iBlock
         //Bottom and left clip
         while(xx <= limitX && yy >= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[6] == 1) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val); // 270° to 315°
-
-            if(octantsToDraw[6] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; xx++;
+            }
+
+            if(octantsToDraw[6] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x - y, iCenter.y - x, val); // 270° to 315°
+            }
+            else if(octantsToDraw[6] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
                 else if(directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
                 else if(directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - y,iCenter.y - x,val);
@@ -761,16 +1089,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; yy--;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; xx++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; xx++;
                 x++; yy--;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; xx++;
+        }
+
+        if (octantsToDraw[6] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val); // 270° to 315°
+        }
+        else if (octantsToDraw[6] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val);
+            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val);
+            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - y, iCenter.y - x, val);
         }
     }
 
@@ -780,16 +1123,24 @@ void DrawArcAndres(           FBlock&                   iBlock
     y = iRadius;
     if(drawRectOctant8 == 1)
     {
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
-        while(y >= x)
+        while(y > x)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
-
-            if(octantsToDraw[7] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--;
+            }
+
+            if(octantsToDraw[7] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x - x, iCenter.y - y, val); // 0° to 315°
+            }
+            else if(octantsToDraw[7] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
                 else if(directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
                 else if(directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
@@ -799,25 +1150,41 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--;
                 x++;
             }
         }
-    } else if(drawRectOctant8 == 2)
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        if (octantsToDraw[7] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val); // 0° to 315°
+        }
+        else if (octantsToDraw[7] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val);
+            else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val);
+            else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val);
+        }
+    } 
+    else if(drawRectOctant8 == 2)
     {
         int xx = rectOctant8.x + rectOctant8.w;
         int yy = rectOctant8.y;
         int limitX = rectOctant8Clipped.x;
         int limitY = rectOctant8Clipped.y + rectOctant8Clipped.h;
 
-        int diff = iRadius - 1;
+        int diff = iRadius;
 
         //Left and bottom clip
         while(xx > rectOctant8Clipped.x + rectOctant8Clipped.w || yy < rectOctant8Clipped.y)
@@ -826,11 +1193,13 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx--;
-            } else if(diff < (2 * (iRadius - y)))
+            }
+            else if(diff < (2 * (iRadius - y)))
             {
                 diff += (2 * y - 1);
                 y--; yy++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy++;
@@ -841,12 +1210,20 @@ void DrawArcAndres(           FBlock&                   iBlock
         //Bottom and left clip
         while(xx >= limitX && yy <= limitY)
         {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(octantsToDraw[7] == 1) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val); // 0° to 315°
-
-            if(octantsToDraw[7] == 2)
+            if (diff < (2 * (iRadius - y)))
             {
+                diff += (2 * y - 1);
+                y--; yy++;
+            }
+
+            if(octantsToDraw[7] == 1) 
+            {
+                iBlock.SetPixel(iCenter.x - x, iCenter.y - y, val); // 0° to 315°
+            }
+            else if(octantsToDraw[7] == 2)
+            {
+                double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
                 if(directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
                 else if(directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
                 else if(directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(iCenter.x - x,iCenter.y - y,val);
@@ -856,16 +1233,31 @@ void DrawArcAndres(           FBlock&                   iBlock
             {
                 diff -= (2 * x + 1);
                 x++; xx--;
-            } else if(diff < (2 * (iRadius - y)))
-            {
-                diff += (2 * y - 1);
-                y--; yy++;
-            } else
+            }
+            else
             {
                 diff += (2 * (y - x - 1));
                 y--; yy++;
                 x++; xx--;
             }
+        }
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--; yy++;
+        }
+
+        if (octantsToDraw[7] == 1)
+        {
+            iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val); // 0° to 315°
+        }
+        else if (octantsToDraw[7] == 2)
+        {
+            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+            if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val);
+            else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val);
+            else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(iCenter.x - x, iCenter.y - y, val);
         }
     }
 }
