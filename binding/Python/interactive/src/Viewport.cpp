@@ -163,7 +163,8 @@ SViewport::keyPressEvent( QKeyEvent* event )
                 sys.stdout = __redirector__
                 sys.stderr = __redirector__
             )" );
-        } catch( const std::exception& ) {
+        } catch( const std::exception& e ) {
+            mConsole->LogPy( e.what() );
             mConsole->LogCPP( "Interpreter exception during stream redirection, error in cpp code." );
         }
 
@@ -171,7 +172,8 @@ SViewport::keyPressEvent( QKeyEvent* event )
         QString script = mCode->document()->toPlainText();
         try {
             py::exec( script.toUtf8().constData() );
-        } catch( const std::exception& ) {
+        } catch( const std::exception& e ) {
+            mConsole->LogPy( e.what() );
             mConsole->LogCPP( "Interpreter exception, error in python script." );
         }
 
@@ -180,7 +182,8 @@ SViewport::keyPressEvent( QKeyEvent* event )
             py::module_ main = py::module_::import("__main__");
             main.attr( "start" )();
             mLaunched = true;
-        } catch( const std::exception& ) {
+        } catch( const std::exception& e ) {
+            mConsole->LogPy( e.what() );
             mConsole->LogCPP( "Interpreter exception, start() function defined in script." );
         }
     }
@@ -199,7 +202,8 @@ SViewport::Update()
         try {
             py::module_ main = py::module_::import("__main__");
             main.attr( "update" )( 24.0 / 1000.0 );
-        } catch( const std::exception& ) {
+        } catch( const std::exception& e ) {
+            mConsole->LogPy( e.what() );
             mConsole->LogCPP( "Interpreter exception, update( delta ) function defined in script." );
         }
     }
@@ -217,7 +221,8 @@ SViewport::Render()
             py::module_ main = py::module_::import("__main__");
             py::object canvas_attr = main.attr( "canvas" );
             canvas = canvas_attr.cast< ::ULIS::FBlock* >();
-        } catch( const std::exception& ) {
+        } catch( const std::exception& e ) {
+            mConsole->LogPy( e.what() );
             mConsole->LogCPP( "Interpreter exception, Render failed to retrieve variable named canvas." );
         }
 
