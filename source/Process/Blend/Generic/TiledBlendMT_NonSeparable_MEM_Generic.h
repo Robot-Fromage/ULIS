@@ -56,7 +56,7 @@ InvokeTiledBlendMT_NonSeparable_MEM_Generic(
         #define TMP_ASSIGN( _BM, _E1, _E2, _E3 ) res_conv = NonSeparableOpF< _BM >( src_conv, bdp_conv );
         ULIS_SWITCH_FOR_ALL_DO( cargs->blendingMode, ULIS_FOR_ALL_NONSEPARABLE_BM_DO, TMP_ASSIGN, 0, 0, 0 )
         #undef TMP_ASSIGN
-        conv_backward_fptr( FPixel( reinterpret_cast< uint8* >( &bdp_conv.m[0] ), Format_RGBF ), FPixel( result, fmt.FMT ), 1 );
+        conv_backward_fptr( FPixel( reinterpret_cast< uint8* >( &res_conv.m[0] ), Format_RGBF ), FPixel( result, fmt.FMT ), 1 );
 
         for( uint8 j = 0; j < fmt.NCC; ++j ) {
             const uint8 r = fmt.IDT[j];
