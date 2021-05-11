@@ -32,10 +32,6 @@ auto ctxCallAdapter( F fptr ) {
 
 /////////
 // wULIS4
-float lerp(float a, float b, float t) {
-    return (1 - t) * a + t * b;
-}
-
 EMSCRIPTEN_BINDINGS( wULIS4 ) {
     /////////
     // ulError codes
@@ -52,6 +48,41 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
 
     /////////
     // AXI
-    function( "VersionString", optional_override( [](){ return  std::string( VersionString().Data() ); } ) );
+    function( "VersionString",                  optional_override( [](){ return  std::string( VersionString().Data() ); } ) );
+    function( "VersionMajorString",             optional_override( [](){ return  std::string( VersionMajorString().Data() ); } ) );
+    function( "VersionMinorString",             optional_override( [](){ return  std::string( VersionMinorString().Data() ); } ) );
+    function( "VersionPatchString",             optional_override( [](){ return  std::string( VersionPatchString().Data() ); } ) );
+    function( "VersionMajor",                   &VersionMajor );
+    function( "VersionMinor",                   &VersionMinor );
+    function( "VersionPatch",                   &VersionPatch );
+    function( "ConfigurationString",            optional_override( [](){ return  std::string( ConfigurationString().Data() ); } ) );
+    function( "CompilationTimeStampString",     optional_override( [](){ return  std::string( CompilationTimeStampString().Data() ); } ) );
+    function( "CompilerNameString",             optional_override( [](){ return  std::string( CompilerNameString().Data() ); } ) );
+    function( "CompilerVersionString",          optional_override( [](){ return  std::string( CompilerVersionString().Data() ); } ) );
+    function( "CompilerInformationString",      optional_override( [](){ return  std::string( CompilerInformationString().Data() ); } ) );
+    function( "BranchName",                     optional_override( [](){ return  std::string( BranchName().Data() ); } ) );
+    function( "CommitHash",                     optional_override( [](){ return  std::string( CommitHash().Data() ); } ) );
+    function( "CommitAbbreviatedHash",          optional_override( [](){ return  std::string( CommitAbbreviatedHash().Data() ); } ) );
+    function( "CompiledFor64Bit",               &CompiledFor64Bit );
+    function( "CompiledWithAVX2",               &CompiledWithAVX2 );
+    function( "CompiledWithSSE42",              &CompiledWithSSE42 );
+    function( "CompiledWithMT",                 &CompiledWithMT );
+    function( "FullLibraryInformationString",   optional_override( [](){ return  std::string( FullLibraryInformationString().Data() ); } ) );
+
+
+
+    /////////
+    // eColorModel
+    enum_< eColorModel >( "eColorModel" )
+        .value( "ColorModel_GREY",  eColorModel::ColorModel_GREY    )
+        .value( "ColorModel_RGB",   eColorModel::ColorModel_RGB     )
+        .value( "ColorModel_HSV",   eColorModel::ColorModel_HSV     )
+        .value( "ColorModel_HSL",   eColorModel::ColorModel_HSL     )
+        .value( "ColorModel_CMY",   eColorModel::ColorModel_CMY     )
+        .value( "ColorModel_CMYK",  eColorModel::ColorModel_CMYK    )
+        .value( "ColorModel_YUV",   eColorModel::ColorModel_YUV     )
+        .value( "ColorModel_Lab",   eColorModel::ColorModel_Lab     )
+        .value( "ColorModel_XYZ",   eColorModel::ColorModel_XYZ     )
+        .value( "ColorModel_Yxy",   eColorModel::ColorModel_Yxy     );
 }
 
