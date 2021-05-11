@@ -15,5 +15,5 @@ add_executable( wimgui_interop
 
 target_include_directories( wimgui_interop PUBLIC wimgui_interop/src)
 include_directories( wimgui_interop SYSTEM PUBLIC 3rdparty/imgui ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
-target_link_libraries(wimgui_interop libwULIS ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(wimgui_interop libULIS ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})
 target_link_libraries(wimgui_interop "--preload-file ${CMAKE_CURRENT_SOURCE_DIR}/resources@/resources" )

@@ -15,5 +15,5 @@ add_executable( wBlendDemo
 
 target_include_directories( wBlendDemo PUBLIC wBlendDemo/src)
 include_directories( wBlendDemo SYSTEM PUBLIC 3rdparty/imgui ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
-target_link_libraries(wBlendDemo libwULIS ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(wBlendDemo libULIS ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})
 target_link_libraries(wBlendDemo "--preload-file ${CMAKE_CURRENT_SOURCE_DIR}/resources@/resources" )
