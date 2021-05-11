@@ -47,11 +47,11 @@ file(
 )
 
 # Create Library
-add_library( libwULIS SHARED ${source_list} )
+add_library( libULIS SHARED ${source_list} )
 
 # Compile Definitions
 target_compile_definitions(
-    libwULIS
+    libULIS
     PUBLIC
     UNICODE
     PRIVATE
@@ -66,7 +66,7 @@ target_compile_definitions(
 
 # Include
 target_include_directories(
-    libwULIS
+    libULIS
     PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../../include/"
     PRIVATE
@@ -82,13 +82,13 @@ target_include_directories(
 )
 
 # Link
-target_link_libraries( libwULIS PRIVATE lcms2 )
-target_link_libraries( libwULIS PRIVATE freetype )
-target_link_libraries( libwULIS PRIVATE zlibstatic )
+target_link_libraries( libULIS PRIVATE lcms2 )
+target_link_libraries( libULIS PRIVATE freetype )
+target_link_libraries( libULIS PRIVATE zlibstatic )
 
 # Configure
-set_target_properties( libwULIS PROPERTIES OUTPUT_NAME "libwULIS${ULIS_VERSION_MAJOR}" )
-set_target_properties( libwULIS PROPERTIES PREFIX "" )
+set_target_properties( libULIS PROPERTIES OUTPUT_NAME "libULIS${ULIS_VERSION_MAJOR}" )
+set_target_properties( libULIS PROPERTIES PREFIX "" )
 set( CMAKE_EXECUTABLE_SUFFIX ".html" )
 
 # Test & Example
@@ -96,5 +96,5 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/wFormats/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/wInfo/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/wimgui_interop/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/wBlendDemo/CMakeLists.txt )
-include( ${CMAKE_CURRENT_SOURCE_DIR}/jsULIS/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/wULIS/CMakeLists.txt )
 
