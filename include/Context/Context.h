@@ -1649,10 +1649,10 @@ public:
     );
 
     /*!
-        Draws a circle with Andres algorithm. Nice for multiple concentric drawings.
+        Draws a circle
     */
     ulError
-    DrawCircleAndres(
+    DrawCircle(
           FBlock& iBlock
         , const FVec2I& iCenter
         , const int iRadius
@@ -1666,10 +1666,10 @@ public:
     );
 
     /*!
-        Draws a circle with Andres algorithm. Nice for multiple concentric drawings. AA version
+        Draws a circle. AA version
     */
     ulError
-    DrawCircleAndresAA(
+    DrawCircleAA(
           FBlock& iBlock
         , const FVec2I& iCenter
         , const int iRadius
@@ -1683,10 +1683,10 @@ public:
     );
 
     /*!
-        Draws a circle with Andres algorithm. Nice for multiple concentric drawings. SP version
+        Draws a circle. SP version
     */
     ulError
-    DrawCircleAndresSP(
+    DrawCircleSP(
           FBlock& iBlock
         , const FVec2F& iCenter
         , const float iRadius
@@ -1700,61 +1700,10 @@ public:
     );
 
     /*!
-        Draws a circle with Bresenham algorithm. Nice for drawing a single circle.
+        Draws a circle arc
     */
     ulError
-    DrawCircleBresenham(
-          FBlock& iBlock
-        , const FVec2I& iCenter
-        , const int iRadius
-        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const bool iFilled = false
-        , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Draws a circle with Bresenham algorithm. Nice for drawing a single circle. AA version
-    */
-    ulError
-    DrawCircleBresenhamAA(
-          FBlock& iBlock
-        , const FVec2I& iCenter
-        , const int iRadius
-        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const bool iFilled = false
-        , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Draws a circle with Bresenham algorithm. Nice for drawing a single circle. SP version
-    */
-    ulError
-    DrawCircleBresenhamSP(
-          FBlock& iBlock
-        , const FVec2F& iCenter
-        , const float iRadius
-        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const bool iFilled = false
-        , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings.
-    */
-    ulError
-    DrawArcAndres(
+    DrawArc(
           FBlock& iBlock
         , const FVec2I& iCenter
         , const int iRadius
@@ -1769,10 +1718,10 @@ public:
     );
 
     /*!
-        Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings. AA version
+        Draws a circle arc. AA version
     */
     ulError
-    DrawArcAndresAA(
+    DrawArcAA(
           FBlock& iBlock
         , const FVec2I& iCenter
         , const int iRadius
@@ -1787,64 +1736,10 @@ public:
     );
 
     /*!
-        Draws a circle arc with Andres algorithm. Nice for multiple concentric drawings. SP version
+        Draws a circle arc. SP version
     */
     ulError
-    DrawArcAndresSP(
-          FBlock& iBlock
-        , const FVec2F& iCenter
-        , const float iRadius
-        , const int iStartDegree
-        , const int iEndDegree
-        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle.
-    */
-    ulError
-    DrawArcBresenham(
-          FBlock& iBlock
-        , const FVec2I& iCenter
-        , const int iRadius
-        , const int iStartDegree
-        , const int iEndDegree
-        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle. AA version
-    */
-    ulError
-    DrawArcBresenhamAA(
-          FBlock& iBlock
-        , const FVec2I& iCenter
-        , const int iRadius
-        , const int iStartDegree
-        , const int iEndDegree
-        , const FColor& iColor = FColor::RGBA8( 0, 0, 0 )
-        , const FRectI& iClippingRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    /*!
-        Draws a circle arc with Bresenham algorithm. Nice for drawing a single circle. SP version
-    */
-    ulError
-    DrawArcBresenhamSP(
+    DrawArcSP(
           FBlock& iBlock
         , const FVec2F& iCenter
         , const float iRadius

@@ -16,10 +16,8 @@
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
 
-#include "Process/Raster/RasterArcAndres.h"
-#include "Process/Raster/RasterArcBresenham.h"
-#include "Process/Raster/RasterCircleAndres.h"
-#include "Process/Raster/RasterCircleBresenham.h"
+#include "Process/Raster/RasterArc.h"
+#include "Process/Raster/RasterCircle.h"
 #include "Process/Raster/RasterEllipse.h"
 #include "Process/Raster/RasterLine.h"
 #include "Process/Raster/RasterPolygon.h"
@@ -519,82 +517,42 @@ InvokeDrawLineSPMT_MEM_Generic(
 
 template<typename T>
 void
-InvokeDrawCircleAndresAAMT_MEM_Generic(
+InvokeDrawCircleAAMT_MEM_Generic(
       const FSimpleBufferJobArgs*   jargs
     , const FDrawCircleCommandArgs* cargs
 )
 {
-    DrawCircleAndresAA<T>(cargs->dst,cargs->center,cargs->radius,cargs->color,cargs->filled,cargs->dstRect);
+    DrawCircleAA<T>(cargs->dst,cargs->center,cargs->radius,cargs->color,cargs->filled,cargs->dstRect);
 }
 
 template<typename T>
 void
-InvokeDrawCircleAndresSPMT_MEM_Generic(
+InvokeDrawCircleSPMT_MEM_Generic(
       const FSimpleBufferJobArgs*   jargs
     , const FDrawCircleSPCommandArgs* cargs
 )
 {
-    DrawCircleAndresSP<T>(cargs->dst,cargs->center,cargs->radius,cargs->color,cargs->filled,cargs->dstRect);
+    DrawCircleSP<T>(cargs->dst,cargs->center,cargs->radius,cargs->color,cargs->filled,cargs->dstRect);
 }
 
 template<typename T>
 void
-InvokeDrawCircleBresenhamAAMT_MEM_Generic(
-      const FSimpleBufferJobArgs*   jargs
-    , const FDrawCircleCommandArgs* cargs
-)
-{
-    DrawCircleBresenhamAA<T>( cargs->dst, cargs->center, cargs->radius, cargs->color, cargs->filled, cargs->dstRect );
-}
-
-template<typename T>
-void
-InvokeDrawCircleBresenhamSPMT_MEM_Generic(
-      const FSimpleBufferJobArgs*   jargs
-    , const FDrawCircleSPCommandArgs* cargs
-)
-{
-    DrawCircleBresenhamSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->color, cargs->filled, cargs->dstRect );
-}
-
-template<typename T>
-void
-InvokeDrawArcAndresAAMT_MEM_Generic(
+InvokeDrawArcAAMT_MEM_Generic(
       const FSimpleBufferJobArgs*   jargs
     , const FDrawArcCommandArgs* cargs
 )
 {
-    DrawArcAndresAA<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
+    DrawArcAA<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
 }
 
 template<typename T>
 void
-InvokeDrawArcAndresSPMT_MEM_Generic(
+InvokeDrawArcSPMT_MEM_Generic(
       const FSimpleBufferJobArgs*   jargs
     , const FDrawArcSPCommandArgs* cargs
 )
 {
-    DrawArcAndresSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
-}
-
-template<typename T>
-void
-InvokeDrawArcBresenhamAAMT_MEM_Generic(
-      const FSimpleBufferJobArgs*   jargs
-    , const FDrawArcCommandArgs* cargs
-)
-{
-    DrawArcBresenhamAA<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
-}
-
-template<typename T>
-void
-InvokeDrawArcBresenhamSPMT_MEM_Generic(
-      const FSimpleBufferJobArgs*   jargs
-    , const FDrawArcSPCommandArgs* cargs
-)
-{
-    DrawArcBresenhamSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
+    DrawArcSP<T>( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
 }
 
 template<typename T>
@@ -683,18 +641,12 @@ InvokeDrawQuadraticBezierSPMT_MEM_Generic(
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawLineMT_MEM );
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawLineAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawLineCommandArgs, &InvokeDrawLineAAMT_MEM_Generic<T> )
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawLineSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawLineSPCommandArgs, &InvokeDrawLineSPMT_MEM_Generic<T> )
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawCircleAndresMT_MEM );
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE(ScheduleDrawCircleAndresAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawCircleCommandArgs, &InvokeDrawCircleAndresAAMT_MEM_Generic<T> )
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE(ScheduleDrawCircleAndresSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawCircleSPCommandArgs, &InvokeDrawCircleAndresSPMT_MEM_Generic<T> )
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawCircleBresenhamMT_MEM );
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawCircleBresenhamAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawCircleCommandArgs, &InvokeDrawCircleBresenhamAAMT_MEM_Generic<T> )
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawCircleBresenhamSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawCircleSPCommandArgs, &InvokeDrawCircleBresenhamSPMT_MEM_Generic<T> )
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawArcAndresMT_MEM );
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcAndresAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawArcCommandArgs, &InvokeDrawArcAndresAAMT_MEM_Generic<T> )
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcAndresSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawArcSPCommandArgs, &InvokeDrawArcAndresSPMT_MEM_Generic<T> )
-ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawArcBresenhamMT_MEM );
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcBresenhamAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawArcCommandArgs, &InvokeDrawArcBresenhamAAMT_MEM_Generic<T> )
-ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcBresenhamSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawArcSPCommandArgs, &InvokeDrawArcBresenhamSPMT_MEM_Generic<T> )
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawCircleMT_MEM );
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE(ScheduleDrawCircleAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawCircleCommandArgs, &InvokeDrawCircleAAMT_MEM_Generic<T> )
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE(ScheduleDrawCircleSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawCircleSPCommandArgs, &InvokeDrawCircleSPMT_MEM_Generic<T> )
+ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawArcMT_MEM );
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawArcCommandArgs, &InvokeDrawArcAAMT_MEM_Generic<T> )
+ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawArcSPCommandArgs, &InvokeDrawArcSPMT_MEM_Generic<T> )
 ULIS_DECLARE_COMMAND_SCHEDULER( ScheduleDrawEllipseMT_MEM );
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawEllipseAAMT_MEM_Generic, FSimpleBufferJobArgs, FDrawEllipseCommandArgs, &InvokeDrawEllipseAAMT_MEM_Generic<T> )
 ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawEllipseSPMT_MEM_Generic, FSimpleBufferJobArgs, FDrawEllipseSPCommandArgs, &InvokeDrawEllipseSPMT_MEM_Generic<T> )
@@ -712,18 +664,12 @@ ULIS_DEFINE_GENERIC_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawQuadraticBezie
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineAAInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawLineSPInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleAndresInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleAndresAAInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleAndresSPInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleBresenhamInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleBresenhamAAInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleBresenhamSPInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcAndresInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcAndresAAInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcAndresSPInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcBresenhamInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcBresenhamAAInvocationSchedulerSelector )
-ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcBresenhamSPInvocationSchedulerSelector )
+ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleInvocationSchedulerSelector )
+ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleAAInvocationSchedulerSelector )
+ULIS_DECLARE_DISPATCHER( FDispatchedDrawCircleSPInvocationSchedulerSelector )
+ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcInvocationSchedulerSelector )
+ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcAAInvocationSchedulerSelector )
+ULIS_DECLARE_DISPATCHER( FDispatchedDrawArcSPInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawEllipseInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawEllipseAAInvocationSchedulerSelector )
 ULIS_DECLARE_DISPATCHER( FDispatchedDrawEllipseSPInvocationSchedulerSelector )
@@ -751,52 +697,28 @@ ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
     ,&ScheduleDrawLineSPMT_MEM_Generic<T>
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawCircleAndresInvocationSchedulerSelector
-    ,&ScheduleDrawCircleAndresMT_MEM
+      FDispatchedDrawCircleInvocationSchedulerSelector
+    ,&ScheduleDrawCircleMT_MEM
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawCircleAndresAAInvocationSchedulerSelector
-    ,&ScheduleDrawCircleAndresAAMT_MEM_Generic<T>
+      FDispatchedDrawCircleAAInvocationSchedulerSelector
+    ,&ScheduleDrawCircleAAMT_MEM_Generic<T>
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawCircleAndresSPInvocationSchedulerSelector
-    ,&ScheduleDrawCircleAndresSPMT_MEM_Generic<T>
+      FDispatchedDrawCircleSPInvocationSchedulerSelector
+    ,&ScheduleDrawCircleSPMT_MEM_Generic<T>
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawCircleBresenhamInvocationSchedulerSelector
-    ,&ScheduleDrawCircleBresenhamMT_MEM
+      FDispatchedDrawArcInvocationSchedulerSelector
+    ,&ScheduleDrawArcMT_MEM
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawCircleBresenhamAAInvocationSchedulerSelector
-    ,&ScheduleDrawCircleBresenhamAAMT_MEM_Generic<T>
+      FDispatchedDrawArcAAInvocationSchedulerSelector
+    ,&ScheduleDrawArcAAMT_MEM_Generic<T>
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawCircleBresenhamSPInvocationSchedulerSelector
-    ,&ScheduleDrawCircleBresenhamSPMT_MEM_Generic<T>
-)
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawArcAndresInvocationSchedulerSelector
-    ,&ScheduleDrawArcAndresMT_MEM
-)
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawArcAndresAAInvocationSchedulerSelector
-    ,&ScheduleDrawArcAndresAAMT_MEM_Generic<T>
-)
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawArcAndresSPInvocationSchedulerSelector
-    ,&ScheduleDrawArcAndresSPMT_MEM_Generic<T>
-)
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawArcBresenhamInvocationSchedulerSelector
-    ,&ScheduleDrawArcBresenhamMT_MEM
-)
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawArcBresenhamAAInvocationSchedulerSelector
-    ,&ScheduleDrawArcBresenhamAAMT_MEM_Generic<T>
-)
-ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
-      FDispatchedDrawArcBresenhamSPInvocationSchedulerSelector
-    ,&ScheduleDrawArcBresenhamSPMT_MEM_Generic<T>
+      FDispatchedDrawArcSPInvocationSchedulerSelector
+    ,&ScheduleDrawArcSPMT_MEM_Generic<T>
 )
 ULIS_DEFINE_DISPATCHER_GENERIC_GROUP_MONO(
       FDispatchedDrawEllipseInvocationSchedulerSelector

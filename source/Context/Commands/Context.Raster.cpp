@@ -168,7 +168,7 @@ FContext::DrawLineSP(
 }
 
 ulError
-FContext::DrawCircleAndres(
+FContext::DrawCircle(
       FBlock& iBlock
     , const FVec2I&            iCenter
     , const int                iRadius
@@ -195,7 +195,7 @@ FContext::DrawCircleAndres(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleDrawCircleAndres
+              mContextualDispatchTable->mScheduleDrawCircle
             , new FDrawCircleCommandArgs(
                   iBlock
                 , src_roi
@@ -218,7 +218,7 @@ FContext::DrawCircleAndres(
 }
 
 ulError
-FContext::DrawCircleAndresAA(
+FContext::DrawCircleAA(
       FBlock& iBlock
     , const FVec2I&            iCenter
     , const int                iRadius
@@ -245,7 +245,7 @@ FContext::DrawCircleAndresAA(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleDrawCircleAndresAA
+              mContextualDispatchTable->mScheduleDrawCircleAA
             , new FDrawCircleCommandArgs(
                   iBlock
                 , src_roi
@@ -268,7 +268,7 @@ FContext::DrawCircleAndresAA(
 }
 
 ulError
-FContext::DrawCircleAndresSP(
+FContext::DrawCircleSP(
       FBlock& iBlock
     , const FVec2F&            iCenter
     , const float              iRadius
@@ -295,7 +295,7 @@ FContext::DrawCircleAndresSP(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleDrawCircleAndresSP
+              mContextualDispatchTable->mScheduleDrawCircleSP
             , new FDrawCircleSPCommandArgs(
                   iBlock
                 , src_roi
@@ -318,157 +318,7 @@ FContext::DrawCircleAndresSP(
 }
 
 ulError
-FContext::DrawCircleBresenham(
-      FBlock& iBlock
-    , const FVec2I&            iCenter
-    , const int                iRadius
-    , const FColor&            iColor
-    , const bool               iFilled
-    , const FRectI&            iClippingRect
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
-    
-    // Check no-op
-    if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
-    
-    // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
-
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleDrawCircleBresenham
-            , new FDrawCircleCommandArgs(
-                  iBlock
-                , src_roi
-                , iCenter
-                , iRadius
-                , color
-                , iFilled
-            )
-            , iPolicy
-            , false
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , src_roi
-        )
-    );
-    
-    return  ULIS_NO_ERROR;
-}
-
-ulError
-FContext::DrawCircleBresenhamAA(
-      FBlock& iBlock
-    , const FVec2I&            iCenter
-    , const int                iRadius
-    , const FColor&            iColor
-    , const bool               iFilled
-    , const FRectI&            iClippingRect
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
-    
-    // Check no-op
-    if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
-    
-    // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
-
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleDrawCircleBresenhamAA
-            , new FDrawCircleCommandArgs(
-                  iBlock
-                , src_roi
-                , iCenter
-                , iRadius
-                , color
-                , iFilled
-            )
-            , iPolicy
-            , false
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , src_roi
-        )
-    );
-    
-    return  ULIS_NO_ERROR;
-}
-
-ulError
-FContext::DrawCircleBresenhamSP(
-      FBlock& iBlock
-    , const FVec2F&            iCenter
-    , const float              iRadius
-    , const FColor&            iColor
-    , const bool               iFilled
-    , const FRectI&            iClippingRect
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
-    
-    // Check no-op
-    if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
-    
-    // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
-
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleDrawCircleBresenhamSP
-            , new FDrawCircleSPCommandArgs(
-                  iBlock
-                , src_roi
-                , iCenter
-                , iRadius
-                , color
-                , iFilled
-            )
-            , iPolicy
-            , false
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , src_roi
-        )
-    );
-    
-    return  ULIS_NO_ERROR;
-}
-
-ulError
-FContext::DrawArcAndres(
+FContext::DrawArc(
       FBlock& iBlock
     , const FVec2I&            iCenter
     , const int                iRadius
@@ -496,7 +346,7 @@ FContext::DrawArcAndres(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleDrawArcAndres
+              mContextualDispatchTable->mScheduleDrawArc
             , new FDrawArcCommandArgs(
                   iBlock
                 , src_roi
@@ -520,7 +370,7 @@ FContext::DrawArcAndres(
 }
 
 ulError
-FContext::DrawArcAndresAA(
+FContext::DrawArcAA(
       FBlock& iBlock
     , const FVec2I&            iCenter
     , const int                iRadius
@@ -548,7 +398,7 @@ FContext::DrawArcAndresAA(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleDrawArcAndresAA
+              mContextualDispatchTable->mScheduleDrawArcAA
             , new FDrawArcCommandArgs(
                   iBlock
                 , src_roi
@@ -572,7 +422,7 @@ FContext::DrawArcAndresAA(
 }
 
 ulError
-FContext::DrawArcAndresSP(
+FContext::DrawArcSP(
       FBlock& iBlock
     , const FVec2F&            iCenter
     , const float              iRadius
@@ -600,163 +450,7 @@ FContext::DrawArcAndresSP(
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
-              mContextualDispatchTable->mScheduleDrawArcAndresSP
-            , new FDrawArcSPCommandArgs(
-                  iBlock
-                , src_roi
-                , iCenter
-                , iRadius
-                , iStartDegree
-                , iEndDegree
-                , color
-            )
-            , iPolicy
-            , false
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , src_roi
-        )
-    );
-    
-    return  ULIS_NO_ERROR;
-}
-
-ulError
-FContext::DrawArcBresenham(
-      FBlock& iBlock
-    , const FVec2I&            iCenter
-    , const int                iRadius
-    , const int                iStartDegree
-    , const int                iEndDegree
-    , const FColor&            iColor
-    , const FRectI&            iClippingRect
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
-    
-    // Check no-op
-    if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
-    
-    // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
-
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleDrawArcBresenham
-            , new FDrawArcCommandArgs(
-                  iBlock
-                , src_roi
-                , iCenter
-                , iRadius
-                , iStartDegree
-                , iEndDegree
-                , color
-            )
-            , iPolicy
-            , false
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , src_roi
-        )
-    );
-    
-    return  ULIS_NO_ERROR;
-}
-
-ulError
-FContext::DrawArcBresenhamAA(
-      FBlock& iBlock
-    , const FVec2I&            iCenter
-    , const int                iRadius
-    , const int                iStartDegree
-    , const int                iEndDegree
-    , const FColor&            iColor
-    , const FRectI&            iClippingRect
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
-    
-    // Check no-op
-    if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
-    
-    // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
-
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleDrawArcBresenhamAA
-            , new FDrawArcCommandArgs(
-                  iBlock
-                , src_roi
-                , iCenter
-                , iRadius
-                , iStartDegree
-                , iEndDegree
-                , color
-            )
-            , iPolicy
-            , false
-            , true
-            , iNumWait
-            , iWaitList
-            , iEvent
-            , src_roi
-        )
-    );
-    
-    return  ULIS_NO_ERROR;
-}
-
-ulError
-FContext::DrawArcBresenhamSP(
-      FBlock& iBlock
-    , const FVec2F&            iCenter
-    , const float              iRadius
-    , const int                iStartDegree
-    , const int                iEndDegree
-    , const FColor&            iColor
-    , const FRectI&            iClippingRect
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    // Sanitize geometry
-    const FRectI src_rect = iBlock.Rect();
-    const FRectI src_roi = iClippingRect.Sanitized() & src_rect;
-    
-    // Check no-op
-    if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
-    
-    // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
-
-    // Bake and push command
-    mCommandQueue.d->Push(
-        new FCommand(
-              mContextualDispatchTable->mScheduleDrawArcBresenhamSP
+              mContextualDispatchTable->mScheduleDrawArcSP
             , new FDrawArcSPCommandArgs(
                   iBlock
                 , src_roi

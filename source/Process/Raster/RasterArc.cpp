@@ -3,18 +3,18 @@
 /*
 *   ULIS
 *__________________
-* @file         RasterArcAndres.cpp
+* @file         RasterArc.cpp
 * @author       Thomas Schmitt
-* @brief        This file provides the implementation of non template Arc Andres functions for the raster API
+* @brief        This file provides the implementation of non template Arc functions for the raster API
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 
-#include "Process/Raster/RasterArcAndres.h"
+#include "Process/Raster/RasterArc.h"
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawArcAndres(
+void DrawArc(
       FBlock& iBlock
     , const FVec2I& iCenter
     , const int iRadius

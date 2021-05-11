@@ -31,44 +31,22 @@ InvokeDrawLineMT_MEM(
 }
 
 void
-InvokeDrawCircleAndresMT_MEM(
+InvokeDrawCircleMT_MEM(
       const FSimpleBufferJobArgs* jargs
     , const FDrawCircleCommandArgs* cargs
 )
 {
-    DrawCircleAndres( cargs->dst, cargs->center, cargs->radius, cargs->color, cargs->filled, cargs->dstRect );
+    DrawCircle( cargs->dst, cargs->center, cargs->radius, cargs->color, cargs->filled, cargs->dstRect );
 }
 
 void
-InvokeDrawCircleBresenhamMT_MEM(
-      const FSimpleBufferJobArgs* jargs
-    , const FDrawCircleCommandArgs* cargs
-)
-{
-    DrawCircleBresenham( cargs->dst, cargs->center, cargs->radius, cargs->color, cargs->filled, cargs->dstRect );
-}
-
-
-void
-InvokeDrawArcAndresMT_MEM(
+InvokeDrawArcMT_MEM(
       const FSimpleBufferJobArgs* jargs
     , const FDrawArcCommandArgs* cargs
 )
 {
-    DrawArcAndres( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
+    DrawArc( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
 }
-
-
-
-void
-InvokeDrawArcBresenhamMT_MEM(
-      const FSimpleBufferJobArgs* jargs
-    , const FDrawArcCommandArgs* cargs
-)
-{
-    DrawArcBresenham( cargs->dst, cargs->center, cargs->radius, cargs->startDegree, cargs->endDegree, cargs->color, cargs->dstRect );
-}
-
 
 void
 InvokeDrawEllipseMT_MEM(
@@ -87,7 +65,6 @@ InvokeDrawRotatedEllipseMT_MEM(
 {
     DrawRotatedEllipse( cargs->dst, cargs->center, cargs->a, cargs->b, cargs->rotationDegrees, cargs->color, cargs->filled, cargs->dstRect );
 }
-
 
 void
 InvokeDrawRectangleMT_MEM(
@@ -119,10 +96,8 @@ InvokeDrawQuadraticBezierMT_MEM(
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawLineMT_MEM, FSimpleBufferJobArgs, FDrawLineCommandArgs, &InvokeDrawLineMT_MEM )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawCircleAndresMT_MEM, FSimpleBufferJobArgs, FDrawCircleCommandArgs, &InvokeDrawCircleAndresMT_MEM )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawCircleBresenhamMT_MEM, FSimpleBufferJobArgs, FDrawCircleCommandArgs, &InvokeDrawCircleBresenhamMT_MEM )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcAndresMT_MEM, FSimpleBufferJobArgs, FDrawArcCommandArgs, &InvokeDrawArcAndresMT_MEM )
-ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcBresenhamMT_MEM, FSimpleBufferJobArgs, FDrawArcCommandArgs, &InvokeDrawArcBresenhamMT_MEM )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawCircleMT_MEM, FSimpleBufferJobArgs, FDrawCircleCommandArgs, &InvokeDrawCircleMT_MEM )
+ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawArcMT_MEM, FSimpleBufferJobArgs, FDrawArcCommandArgs, &InvokeDrawArcMT_MEM )
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawEllipseMT_MEM, FSimpleBufferJobArgs, FDrawEllipseCommandArgs, &InvokeDrawEllipseMT_MEM )
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawRotatedEllipseMT_MEM, FSimpleBufferJobArgs, FDrawRotatedEllipseCommandArgs, &InvokeDrawRotatedEllipseMT_MEM )
 ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawRectangleMT_MEM, FSimpleBufferJobArgs, FDrawRectangleCommandArgs, &InvokeDrawRectangleMT_MEM )
@@ -131,18 +106,12 @@ ULIS_DEFINE_COMMAND_SCHEDULER_FORWARD_SIMPLE( ScheduleDrawQuadraticBezierMT_MEM,
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawLineInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawLineAAInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawLineSPInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleAndresInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleAndresAAInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleAndresSPInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleBresenhamInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleBresenhamAAInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleBresenhamSPInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcAndresInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcAndresAAInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcAndresSPInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcBresenhamInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcBresenhamAAInvocationSchedulerSelector )
-ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcBresenhamSPInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleAAInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawCircleSPInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcAAInvocationSchedulerSelector )
+ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawArcSPInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawEllipseInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawEllipseAAInvocationSchedulerSelector )
 ULIS_DISPATCHER_NO_SPECIALIZATION_DEFINITION( FDispatchedDrawEllipseSPInvocationSchedulerSelector )

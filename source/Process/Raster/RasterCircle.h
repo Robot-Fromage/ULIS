@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         RasterCircleAndres.h
+* @file         RasterCircle.h
 * @author       Thomas Schmitt
-* @brief        This file provides the actual functions for the raster of Arc Andres
+* @brief        This file provides the actual functions for the raster of Arc
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -18,7 +18,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawCircleAndres(            
+void DrawCircle(            
       FBlock& iBlock
     , const FVec2I& iCenter
     , const int iRadius
@@ -27,7 +27,7 @@ void DrawCircleAndres(
     , const FRectI& iClippingRect );
 
 template< typename T >
-void DrawCircleAndresAA(   
+void DrawCircleAA(   
       FBlock& iBlock
     , const FVec2I& iCenter
     , const int iRadius
@@ -1242,7 +1242,7 @@ void DrawCircleAndresAA(
 
 
 template< typename T >
-void DrawCircleAndresSP(
+void DrawCircleSP(
        FBlock& iBlock
      , const FVec2F& iCenter
      , const float iRadius

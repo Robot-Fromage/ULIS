@@ -21,10 +21,8 @@ using namespace ::ULIS;
 
 enum eRasterOp {
       kLine
-    , kCircleAndres
-    , kCircleBresenham
-    , kArcAndres
-    , kArcBresenham
+    , kCircle
+    , kArc
     , kEllipse
     , kRotatedEllipse
     , kRectangle
@@ -35,10 +33,8 @@ enum eRasterOp {
 
 static const char* kwRasterOP[] = {
       "Line"
-    , "CircleAndres"
-    , "CircleBresenham"
-    , "ArcAndres"
-    , "ArcBresenham"
+    , "Circle"
+    , "Arc"
     , "Ellipse"
     , "RotatedEllipse"
     , "Rectangle"

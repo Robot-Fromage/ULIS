@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         RasterArcAndres.h
+* @file         RasterArc.h
 * @author       Thomas Schmitt
-* @brief        This file provides the actual functions for the raster of the Arc Andres
+* @brief        This file provides the actual functions for the raster of the Arc
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -17,7 +17,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawArcAndres(
+void DrawArc(
     FBlock& iBlock
     , const FVec2I& iCenter
     , const int iRadius
@@ -27,7 +27,7 @@ void DrawArcAndres(
     , const FRectI& iClippingRect );
 
 template< typename T >
-void DrawArcAndresAA(
+void DrawArcAA(
       FBlock& iBlock
     , const FVec2I& iCenter
     , const int iRadius
@@ -1730,7 +1730,7 @@ void DrawArcAndresAA(
 }
 
 template< typename T >
-void DrawArcAndresSP(
+void DrawArcSP(
       FBlock& iBlock
     , const FVec2F& iCenter
     , const float iRadius

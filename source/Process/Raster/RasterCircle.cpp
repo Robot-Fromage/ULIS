@@ -3,17 +3,17 @@
 /*
 *   ULIS
 *__________________
-* @file         RasterCircleAndres.cpp
+* @file         RasterCircle.cpp
 * @author       Thomas Schmitt
-* @brief        This file provides the implementation of non template Circle Andres functions for the raster API
+* @brief        This file provides the implementation of non template Circle functions for the raster API
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Process/Raster/RasterCircleAndres.h"
+#include "Process/Raster/RasterCircle.h"
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawCircleAndres(            FBlock&                  iBlock
+void DrawCircle(            FBlock&                  iBlock
                                 , const FVec2I&            iCenter
                                 , const int                iRadius
                                 , const FColor&            iColor

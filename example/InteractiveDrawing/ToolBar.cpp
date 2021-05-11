@@ -151,43 +151,23 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             }
             break;
         }
-        case kCircleAndres: {
+        case kCircle: {
             if( iRasterMode == kNone ) {
-                ctx.DrawCircleAndres( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
+                ctx.DrawCircle( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
-                ctx.DrawCircleAndresAA( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
+                ctx.DrawCircleAA( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kSP ) {
-                ctx.DrawCircleAndresSP( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
+                ctx.DrawCircleSP( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             }
             break;
         }
-        case kCircleBresenham: {
+        case kArc: {
             if( iRasterMode == kNone ) {
-                ctx.DrawCircleBresenham( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
+                ctx.DrawArc( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
-                ctx.DrawCircleBresenhamAA( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
+                ctx.DrawArcAA( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kSP ) {
-                ctx.DrawCircleBresenhamSP( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
-            }
-            break;
-        }
-        case kArcAndres: {
-            if( iRasterMode == kNone ) {
-                ctx.DrawArcAndres( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
-            } else if( iRasterMode == kAA ) {
-                ctx.DrawArcAndresAA( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
-            } else if( iRasterMode == kSP ) {
-                ctx.DrawArcAndresSP( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
-            }
-            break;
-        }
-        case kArcBresenham: {
-            if( iRasterMode == kNone ) {
-                ctx.DrawArcBresenham( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
-            } else if( iRasterMode == kAA ) {
-                ctx.DrawArcBresenhamAA( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
-            } else if( iRasterMode == kSP ) {
-                ctx.DrawArcBresenhamSP( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
+                ctx.DrawArcSP( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             }
             break;
         }
