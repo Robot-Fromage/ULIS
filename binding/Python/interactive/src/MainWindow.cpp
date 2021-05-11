@@ -48,7 +48,7 @@ SMainWindow::SMainWindow()
     setMinimumSize( 800, 600 );
     SetCaptionWidget( mCaption );
     SetCenterWidget( mCenter );
-    EnableBlurBehind();
+    //EnableBlurBehind();
 
     mCode = new SCode();
     mConsole = new SConsole();
