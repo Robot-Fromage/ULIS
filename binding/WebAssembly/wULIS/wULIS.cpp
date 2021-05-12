@@ -479,7 +479,6 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
     // FFormatMetrics
     class_< FFormatMetrics >( "FFormatMetrics" )
         .constructor< eFormat >()
-        .constructor< const FFormatMetrics& >()
         .function( "ReinterpretedType", &FFormatMetrics::ReinterpretedType )
         // Error !
         //.property( "IDT", &FFormatMetrics::IDT )
