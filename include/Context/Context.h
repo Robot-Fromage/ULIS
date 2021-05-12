@@ -1649,7 +1649,7 @@ public:
     );
 
     /*!
-        Draws a circle
+        Draws a circle. Using Andres algorithm.
     */
     ulError
     DrawCircle(
@@ -1666,7 +1666,7 @@ public:
     );
 
     /*!
-        Draws a circle. AA version
+        Draws a circle. AA version. Using Andres algorithm.
     */
     ulError
     DrawCircleAA(
@@ -1683,7 +1683,7 @@ public:
     );
 
     /*!
-        Draws a circle. SP version
+        Draws a circle. SP version. Using Andres algorithm.
     */
     ulError
     DrawCircleSP(
@@ -1700,7 +1700,7 @@ public:
     );
 
     /*!
-        Draws a circle arc
+        Draws a circle arc. Using Andres algorithm.
     */
     ulError
     DrawArc(
@@ -1718,7 +1718,7 @@ public:
     );
 
     /*!
-        Draws a circle arc. AA version
+        Draws a circle arc. AA version. Using Andres algorithm.
     */
     ulError
     DrawArcAA(
@@ -1736,7 +1736,7 @@ public:
     );
 
     /*!
-        Draws a circle arc. SP version
+        Draws a circle arc. SP version. Using Andres algorithm.
     */
     ulError
     DrawArcSP(
