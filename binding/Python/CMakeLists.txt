@@ -25,6 +25,8 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
     set_target_properties( pyULIS PROPERTIES FOLDER ULIS )
     target_compile_definitions( pyULIS PRIVATE pyULIS_BUILD_SHARED )
 
+    # Disable python to enable Pypy
+    #set( PYBIND11_NOPYTHON ON CACHE BOOL "Disable search for Python" )
     add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/pybind11-2.6.2 )
     target_link_libraries(
         pyULIS
