@@ -517,5 +517,12 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .property( "LIN", &FFormatMetrics::LIN )
         .property( "PRO", &FFormatMetrics::PRO )
         .property( "PLA", &FFormatMetrics::PLA );
+
+
+
+    /////////
+    // FColorSpace
+    class_< FColorSpace >( "FColorSpace" )
+        .constructor<>();
 }
 
