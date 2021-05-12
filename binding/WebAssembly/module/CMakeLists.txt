@@ -1,0 +1,5 @@
+file( GLOB_RECURSE wULIS_source_list RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "src/*" )
+add_executable( wULIS ${wULIS_source_list} )
+target_link_libraries( wULIS libULIS )
+set_target_properties( wULIS PROPERTIES LINK_FLAGS "-s DEMANGLE_SUPPORT=1 --bind" )
+set_target_properties( wULIS PROPERTIES OUTPUT_NAME "wULIS${ULIS_VERSION_MAJOR}" )
