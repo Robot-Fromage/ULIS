@@ -1,9 +1,13 @@
 <!doctypehtml><html lang=en-us><head><meta charset=utf-8><meta content="text/html; charset=utf-8"http-equiv=Content-Type><title>Emscripten-Generated Code</title>
   <script>
     var Module = {
-      onRuntimeInitialized: function() {
-        console.log('Version: ' + Module.VersionString() );
-      }
+        onRuntimeInitialized: function() {
+            console.log('Version: ' + Module.FullLibraryInformationString() );
+            var fmt = new Module.FFormatMetrics( Module.eFormat.Format_RGBA8 );
+            console.log( fmt.SPP )
+            console.log( fmt.BPP )
+            fmt.delete()
+        }
     };
   </script>
   <script src="wULIS.js"></script>
