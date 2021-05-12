@@ -91,6 +91,24 @@ FContext::Blend(
 }
 
 ulError
+FContext::BlendBucket(
+      const FBlock& iSource
+    , FBlock& iBackdrop
+    , const FRectI& iSourceRect
+    , const TArray< FVec2I >& iPosition
+    , eBlendMode iBlendingMode
+    , eAlphaMode iAlphaMode
+    , ufloat iOpacity
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    return  ULIS_NO_ERROR;
+}
+
+ulError
 FContext::BlendAA(
       const FBlock& iSource
     , FBlock& iBackdrop

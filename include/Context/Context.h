@@ -239,6 +239,29 @@ public:
     );
 
     /*!
+        Blend a bucket of the same source at different positions, with potential
+        concurrency so an event dependency graph is automatically generated.
+        May be used for particles drawing.
+        There will be as many blends as there are elements in the positions array.
+
+        \sa Blend()
+    */
+    ulError
+    BlendBucket(
+          const FBlock& iSource
+        , FBlock& iBackdrop
+        , const FRectI& iSourceRect = FRectI::Auto
+        , const TArray< FVec2I >& iPosition = TArray< FVec2I >( 1 )
+        , eBlendMode iBlendingMode = Blend_Normal
+        , eAlphaMode iAlphaMode = Alpha_Normal
+        , ufloat iOpacity = 1.0f
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
         Perform an antialiased blend operation with iSource composited on top of
         iBackdrop. iBackdrop is modified to receive the result of the operation,
         while iSource is left untouched.
