@@ -229,10 +229,33 @@ SViewport::Render()
         if( canvas && canvas->Bits() != mBitmap->Bits() ) {
             // Non owning steal
             mBitmap->LoadFromData( canvas->Bits(), canvas->Width(), canvas->Height(), canvas->Format(), nullptr, ::ULIS::FOnInvalidBlock(), ::ULIS::FOnCleanupData() );
-        }
 
-        glBindTexture( GL_TEXTURE_2D, m_tex_id );
-        glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, mBitmap->Width(), mBitmap->Height(), GL_RGBA, GL_UNSIGNED_BYTE, mBitmap->Bits() );
+            // Regenerate full texture and framebuffer
+            glDeleteTextures( 1, &m_tex_id );
+            glDeleteFramebuffers( 1, &m_fbo_id );
+
+            // Build texture
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+            glGenTextures( 1, &m_tex_id );
+
+            // Send texture data
+            glBindTexture( GL_TEXTURE_2D, m_tex_id );
+            glTexStorage2D( GL_TEXTURE_2D, 1, GL_RGBA8, canvas->Width(), canvas->Height() );
+            glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, canvas->Width(), canvas->Height(), GL_RGBA, GL_UNSIGNED_BYTE, mBitmap->Bits() );
+
+            // Build framebuffer
+            glGenFramebuffers( 1, &m_fbo_id );
+            glBindFramebuffer( GL_READ_FRAMEBUFFER, m_fbo_id );
+
+            // Bind texture to framebuffer
+            glFramebufferTexture2D( GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_tex_id, 0 );
+            glBindFramebuffer( GL_READ_FRAMEBUFFER, 0 );
+        } else {
+            // Only update texture data
+            glBindTexture( GL_TEXTURE_2D, m_tex_id );
+            glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, mBitmap->Width(), mBitmap->Height(), GL_RGBA, GL_UNSIGNED_BYTE, mBitmap->Bits() );
+        }
     }
 
     int dstw = ::ULIS::FMath::Min( (int)width(), (int)mBitmap->Width() );
