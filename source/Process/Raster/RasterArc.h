@@ -1935,27 +1935,27 @@ void DrawArcSP(
 
             if (octantsToDraw[0] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y), val); // 0° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val); // 0° to 45°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val); // 0° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val); // 0° to 45°
             }
             else if (octantsToDraw[0] == 2) // Complex cases
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
-                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
-                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
-                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
+                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
+                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
+                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
+                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val);
-                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val);
+                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val);
+                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val);
             }
 
             if (diff >= (2 * x))
@@ -2049,27 +2049,27 @@ void DrawArcSP(
 
             if (octantsToDraw[0] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y), val); // 0° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y), val); // 0° to 45°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val); // 0° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val); // 0° to 45°
             }
             else if (octantsToDraw[0] == 2) // Complex cases
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
+                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val);
+                if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y - y - 1), val);
             }
 
             if (diff >= (2 * x))
@@ -2141,27 +2141,27 @@ void DrawArcSP(
 
             if (octantsToDraw[1] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y - x), val); // 90° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val); // 90° to 45°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val); // 90° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val); // 90° to 45°
             }
             else if (octantsToDraw[1] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
-                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
-                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
-                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
+                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
+                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
+                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
+                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
-                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
-                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
-                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
+                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
+                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
+                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
+                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y - x), val);
             }
 
             if (diff >= (2 * x))
@@ -2254,27 +2254,27 @@ void DrawArcSP(
 
             if (octantsToDraw[1] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val); // 90° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val); // 90° to 45°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val); // 90° to 45°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val); // 90° to 45°
             }
             else if (octantsToDraw[1] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
+                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y - x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
-                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(uint16(iCenter.x + y + 1)),uint16(uint16( iCenter.y - x)), val);
-                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(uint16(iCenter.x + y + 1)),uint16(uint16( iCenter.y - x)), val);
-                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(uint16(iCenter.x + y + 1)), uint16(uint16(iCenter.y - x)), val);
+                if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
+                else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(uint16(iCenter.x + y + 1)),uint16(uint16( iCenter.y - x)), val);
+                else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(uint16(iCenter.x + y + 1)),uint16(uint16( iCenter.y - x)), val);
+                else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(uint16(iCenter.x + y + 1)), uint16(uint16(iCenter.y - x)), val);
             }
 
             if (diff >= (2 * x))
@@ -2301,27 +2301,27 @@ void DrawArcSP(
 
         if (octantsToDraw[1] == 1)
         {
-            iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val); // 90° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val); // 90° to 45°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val); // 90° to 45°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val); // 90° to 45°
         }
         else if (octantsToDraw[1] == 2)
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
+            if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y - x), val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
+            if (directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y - x), val);
         }
     }
 
@@ -2346,27 +2346,27 @@ void DrawArcSP(
 
             if (octantsToDraw[2] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
             }
             else if (octantsToDraw[2] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y + x), val);
+                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y + x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val);
+                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val);
             }
 
             if (diff >= (2 * x))
@@ -2393,27 +2393,27 @@ void DrawArcSP(
 
         if (octantsToDraw[2] == 1)
         {
-            iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
         }
         else if (octantsToDraw[2] == 2)
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
         }
     }
     else if (drawRectOctant3 == 2)
@@ -2461,27 +2461,27 @@ void DrawArcSP(
 
             if (octantsToDraw[2] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
             }
             else if (octantsToDraw[2] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y), uint16(iCenter.y + x), val);
+                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y), uint16(iCenter.y + x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val);
+                if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1), uint16(iCenter.y + x), val);
             }
 
             if (diff >= (2 * x))
@@ -2508,27 +2508,27 @@ void DrawArcSP(
 
         if (octantsToDraw[2] == 1)
         {
-            iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val); // 90° to 135°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
+            iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val); // 90° to 135°
         }
         else if (octantsToDraw[2] == 2)
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y),uint16( iCenter.y + x), val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            if (directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + y + 1),uint16( iCenter.y + x), val);
         }
     }
 
@@ -2553,27 +2553,27 @@ void DrawArcSP(
 
             if (octantsToDraw[3] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val); // 180° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val); // 180° to 135°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val); // 180° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val); // 180° to 135°
             }
             else if (octantsToDraw[3] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y + y), val);
+                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val);
+                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val);
             }
 
             if (diff >= (2 * x))
@@ -2668,27 +2668,27 @@ void DrawArcSP(
 
             if (octantsToDraw[3] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val); // 180° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val); // 180° to 135°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val); // 180° to 135°
+                iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val); // 180° to 135°
             }
             else if (octantsToDraw[3] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y + y), val);
+                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val);
+                if (directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x + x), uint16(iCenter.y + y + 1), val);
             }
 
             if (diff >= (2 * x))
@@ -2762,27 +2762,27 @@ void DrawArcSP(
 
             if (octantsToDraw[4] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val); // 180° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val); // 180° to 225°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val); // 180° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val); // 180° to 225°
             }
             else if (octantsToDraw[4] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y + y), val);
+                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val);
+                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val);
             }
 
             if (diff >= (2 * x))
@@ -2878,27 +2878,27 @@ void DrawArcSP(
 
             if (octantsToDraw[4] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val); // 180° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val); // 180° to 225°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val); // 180° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val); // 180° to 225°
             }
             else if (octantsToDraw[4] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
-                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y + y), val);
+                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y), val);
+                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
-                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val);
+                if (directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y + y + 1), val);
+                else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y + y + 1), val);
             }
 
             if (diff >= (2 * x))
@@ -2971,27 +2971,27 @@ void DrawArcSP(
 
             if (octantsToDraw[5] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
             }
             else if (octantsToDraw[5] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y), uint16(iCenter.y + x), val);
+                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y + x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);
+                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);
             }
 
             if (diff >= (2 * x))
@@ -3018,27 +3018,27 @@ void DrawArcSP(
 
         if (octantsToDraw[5] == 1)
         {
-            iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
         }
         else if (octantsToDraw[5] == 2)
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
         }
     }
     else if (drawRectOctant6 == 2)
@@ -3086,27 +3086,27 @@ void DrawArcSP(
 
             if (octantsToDraw[5] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
             }
             else if (octantsToDraw[5] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y), uint16(iCenter.y + x), val);
+                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y + x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);
+                if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+                else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y + x), val);
             }
 
             if (diff >= (2 * x))
@@ -3133,27 +3133,27 @@ void DrawArcSP(
 
         if (octantsToDraw[5] == 1)
         {
-            iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);  // 270° to 225°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);  // 270° to 225°
         }
         else if (octantsToDraw[5] == 2)
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y + x), val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
-            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
+            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y + x), val);
         }
     }
 
@@ -3179,27 +3179,27 @@ void DrawArcSP(
 
             if (octantsToDraw[6] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
             }
             else if (octantsToDraw[6] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y), uint16(iCenter.y - x), val);
+                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y - x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val);
+                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val);
             }
 
             if (diff >= (2 * x))
@@ -3226,27 +3226,27 @@ void DrawArcSP(
 
         if (octantsToDraw[6] == 1)
         {
-            iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
         }
         else if (octantsToDraw[6] == 2)
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
         }
     }
     else if (drawRectOctant7 == 2)
@@ -3294,27 +3294,27 @@ void DrawArcSP(
 
             if (octantsToDraw[6] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
             }
             else if (octantsToDraw[6] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y), uint16(iCenter.y - x), val);
+                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y), uint16(iCenter.y - x), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val);
+                if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+                else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1), uint16(iCenter.y - x), val);
             }
 
             if (diff >= (2 * x))
@@ -3341,27 +3341,27 @@ void DrawArcSP(
 
         if (octantsToDraw[6] == 1)
         {
-            iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val); // 270° to 315°
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
+            iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val); // 270° to 315°
         }
         else if (octantsToDraw[6] == 2)
         {
             double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y),uint16( iCenter.y - x), val);
 
             val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
-            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            if (directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
+            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - y - 1),uint16( iCenter.y - x), val);
         }
     }
 
@@ -3387,27 +3387,27 @@ void DrawArcSP(
 
             if (octantsToDraw[7] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val); // 0° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val); // 0° to 315°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val); // 0° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val); // 0° to 315°
             }
             else if (octantsToDraw[7] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y - y), val);
+                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y - y - 1), val);
-                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y - y - 1), val);
-                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16(iCenter.y - y - 1), val);
-                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val);
+                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16(iCenter.y - y - 1), val);
+                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16(iCenter.y - y - 1), val);
+                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16(iCenter.y - y - 1), val);
+                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val);
             }
 
             if (diff >= (2 * x))
@@ -3502,27 +3502,27 @@ void DrawArcSP(
 
             if (octantsToDraw[7] == 1)
             {
-                iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val); // 0° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val); // 0° to 315°
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val); // 0° to 315°
+                iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val); // 0° to 315°
             }
             else if (octantsToDraw[7] == 2)
             {
                 double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
-                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y - y), val);
+                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y), val);
+                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y), val);
 
                 val.SetAlphaT<T>(T(maxAlpha * (1 - alphaTop)));
 
-                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val);
-                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixel(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val);
+                if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x),uint16( iCenter.y - y - 1), val);
+                else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) iBlock.SetPixelSafe(uint16(iCenter.x - x), uint16(iCenter.y - y - 1), val);
             }
 
             if (diff >= (2 * x))
