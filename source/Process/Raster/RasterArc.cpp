@@ -122,7 +122,6 @@ void DrawArc(
             directionToDraw[currentAngle / 45][0] = 1;
         else
             directionToDraw[currentAngle / 45][0] = 3;
-
     }
 
     //0� is on top and we turn clockwise
