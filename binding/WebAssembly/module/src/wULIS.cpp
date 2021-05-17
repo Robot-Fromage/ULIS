@@ -17,18 +17,20 @@ using namespace emscripten;
 
 /////////
 // Context Utils
-/*
 template< typename ... Ts, typename F >
 auto ctxCallAdapter( F fptr ) {
-    return  [fptr]( FContext* ctx, Ts ... args, list iWaitList, FEvent* iEvent ) {
+    return  [fptr]( FContext* ctx, Ts ... args, const emscripten::val& iWaitList, FEvent* iEvent ) {
         TArray< FEvent > arr;
-        arr.Reserve( iWaitList.size() );
-        for( auto it = iWaitList.begin(); it != iWaitList.end(); ++it )
-            arr.PushBack( (*it).cast< FEvent >() );
+
+        const auto len = iWaitList["length"].as< unsigned >();
+        arr.Reserve( len );
+
+        emscripten::val memoryView{ emscripten::typed_memory_view( len, arr.Data() ) };
+        memoryView.call<void>( "set", iWaitList );
+
         (ctx->*fptr)( args ..., static_cast< uint32 >( arr.Size() ), arr.Data(), iEvent );
     };
 }
-*/
 
 /////////
 // wULIS4
