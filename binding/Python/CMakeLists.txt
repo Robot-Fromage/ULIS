@@ -79,7 +79,7 @@ if( ${ULIS_BUILD_PYTHON_MODULE} )
     target_link_libraries(
         pyULIS_Interactive
         PUBLIC
-        pyULIS
+        ULIS
         pybind11::embed
         Qt5::Core
         Qt5::Gui
