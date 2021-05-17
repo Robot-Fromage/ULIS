@@ -524,5 +524,50 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
     // FColorSpace
     class_< FColorSpace >( "FColorSpace" )
         .constructor<>();
+
+
+
+    /////////
+    // FOnInvalidBlock
+    class_< FOnInvalidBlock >( "FOnInvalidBlock" )
+        .constructor<>()
+        .constructor< FOnInvalidBlock::tFptr, void* >( allow_raw_pointers() )
+        .function( "ExecuteIfBound", &FOnInvalidBlock::ExecuteIfBound, allow_raw_pointers() )
+        .function( "Execute", &FOnInvalidBlock::Execute, allow_raw_pointers() );
+
+
+
+    /////////
+    // FOnCleanupData
+    class_< FOnCleanupData >( "FOnCleanupData" )
+        .constructor<>()
+        .constructor< FOnCleanupData::tFptr, void* >( allow_raw_pointers() )
+        .function( "ExecuteIfBound", &FOnCleanupData::ExecuteIfBound, allow_raw_pointers() )
+        .function( "Execute", &FOnCleanupData::Execute, allow_raw_pointers() )
+        .class_function( "OnCleanupFreeMemory", optional_override( [](){ return  FOnCleanupData( &OnCleanup_FreeMemory ); } ) );
+
+
+
+    /////////
+    // FOnEventComplete
+    class_< FOnEventComplete >( "FOnEventComplete" )
+        .constructor<>()
+        .constructor< FOnEventComplete::tFptr >()
+        // Lambda wrapper to authorize creating an FOnEventComplete from a
+        // js function, wrapped into a secondary lambda.
+        // Don't care about async since wasm binding is monothread.
+        .constructor(
+            optional_override(
+                []( emscripten::val func ) {
+                    return  FOnEventComplete(
+                        [ func ]( const FRectI& rect ) {
+                            func( rect );
+                        }
+                    );
+                }
+            )
+        )
+        .function( "ExecuteIfBound", &FOnEventComplete::ExecuteIfBound )
+        .function( "Execute", &FOnEventComplete::Execute );
 }
 
