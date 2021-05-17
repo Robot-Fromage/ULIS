@@ -571,5 +571,16 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         )
         .function( "ExecuteIfBound", &FOnEventComplete::ExecuteIfBound )
         .function( "Execute", &FOnEventComplete::Execute );
+
+
+
+    /////////
+    // FEvent
+    class_< FEvent >( "FEvent" )
+        .constructor<>()
+        .constructor< const FOnEventComplete& >()
+        .function( "Status", &FEvent::Status )
+        .function( "Wait", &FEvent::Wait );
+    register_vector< FEvent >( "FEventVector" );
 }
 
