@@ -32,6 +32,13 @@ list( GET ULIS_VERSION_LIST 2 ULIS_VERSION_PATCH )
 project( wULIS${ULIS_VERSION_MAJOR}_Project )
 
 # Library Dependencies
+set( SKIP_INSTALL_ALL true )
+set( CMAKE_DISABLE_FIND_PACKAGE_ZLIB        ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_PNG         ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_BZip2       ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz    ON )
+set( CMAKE_DISABLE_FIND_PACKAGE_BrotliDec   ON )
+
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/zlib       ${PROJECT_BINARY_DIR}/3rdparty/build_zlib       )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/Little-CMS ${PROJECT_BINARY_DIR}/3rdparty/build_lcms2      )
 add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/freetype2  ${PROJECT_BINARY_DIR}/3rdparty/build_freetype2  )
