@@ -754,25 +754,25 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "Normalize", &FVec2I::Normalize )
         .function( "Normalized", &FVec2I::Normalized )
         .function( "DecimalPart", &FVec2I::DecimalPart )
-        //.function( self += int() )
-        //.function( self -= int() )
-        //.function( self *= int() )
-        //.function( self /= int() )
-        //.function( self += self )
-        //.function( self -= self )
-        //.function( self *= self )
-        //.function( self /= self )
-        //.function( self + int() )
-        //.function( self - int() )
-        //.function( self * int() )
-        //.function( self / int() )
-        //.function( self + self )
-        //.function( self - self )
-        //.function( self * self )
-        //.function( self / self )
-        //.function( self == self )
-        //.function( self != self )
-        //.function( -self )
+        //.function( self += int() )    // Unary addition int           UAddI
+        //.function( self -= int() )    // Unary substraction int       USubI
+        //.function( self *= int() )    // Unary multiplication int     UMulI
+        //.function( self /= int() )    // Unary division int           UDivI
+        //.function( self += self )     // Unary addition FVec2I        UAdd
+        //.function( self -= self )     // Unary substraction FVec2I    USub
+        //.function( self *= self )     // Unary multiplication FVec2I  UMul
+        //.function( self /= self )     // Unary division FVec2I        UDiv
+        //.function( self + int() )     // Binary addition int          AddI
+        //.function( self - int() )     // Binary substraction int      SubI
+        //.function( self * int() )     // Binary multiplication int    MulI
+        //.function( self / int() )     // Binary division int          DivI
+        //.function( self + self )      // Binary addition FVec2I       Add
+        //.function( self - self )      // Binary substraction FVec2I   Sub
+        //.function( self * self )      // Binary multiplication FVec2I Mul
+        //.function( self / self )      // Binary division FVec2I       Div
+        //.function( self == self )     // Equality comparison FVec2I   Eq
+        //.function( self != self )     // Inequality comparison FVec2I Neq
+        //.function( -self )            // Unary negation FVec2I        Neg
         WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( FVec2I )
         .property( "x", &FVec2I::x )
         .property( "y", &FVec2I::y );
