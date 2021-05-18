@@ -2,13 +2,20 @@
   <script>
     var Module = {
         onRuntimeInitialized: function() {
-            console.log('Version: ' + Module.FullLibraryInformationString() );
-            var fmt = new Module.FFormatMetrics( Module.eFormat.Format_RGBA8 );
-            console.log( fmt.SPP )
-            console.log( fmt.BPP )
+            var wULIS4 = Module;
+            console.log('Version: ' + wULIS4.FullLibraryInformationString() );
+            var fmt = new wULIS4.FFormatMetrics( wULIS4.eFormat.Format_RGBA8 );
             fmt.delete()
+
+            function onEventCompleteDoStuff( iRect ) {
+                console.log( iRect.x )
+            }
+
+            var event = new wULIS4.FEvent( new wULIS4.FOnEventComplete( onEventCompleteDoStuff ) );
+            event.delete()
         }
     };
   </script>
-  <script src="wULIS.js"></script>
+  <script src="wULIS4.js"></script>
 </html>
+

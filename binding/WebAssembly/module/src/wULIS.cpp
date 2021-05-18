@@ -554,7 +554,8 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
     // FOnEventComplete
     class_< FOnEventComplete >( "FOnEventComplete" )
         .constructor<>()
-        .constructor< FOnEventComplete::tFptr >()
+        // Disable first construction, cannot overload same number of params.
+        //.constructor< FOnEventComplete::tFptr >()
         // Lambda wrapper to authorize creating an FOnEventComplete from a
         // js function, wrapped into a secondary lambda.
         // Don't care about async since wasm binding is monothread.
@@ -581,6 +582,6 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .constructor< const FOnEventComplete& >()
         .function( "Status", &FEvent::Status )
         .function( "Wait", &FEvent::Wait );
-    register_vector< FEvent >( "FEventVector" );
+    //register_vector< FEvent >( "FEventVector" );
 }
 
