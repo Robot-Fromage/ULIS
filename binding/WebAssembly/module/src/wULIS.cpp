@@ -696,5 +696,78 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "L1CacheSize",               &FHardwareMetrics::L1CacheSize              )
         .function( "L1CacheLineSize",           &FHardwareMetrics::L1CacheLineSize          )
         .function( "Field",                     &FHardwareMetrics::Field                    );
+
+
+
+    /////////
+    // Vec Utils
+    #define WULIS_DEFINE_VEC2_SWIZZLE_FUNCTION( CLASS, E0, E1 )         .function( ULIS_STRINGIFY( E0 ## E1 ), & CLASS :: E0 ## E1 )
+    #define WULIS_DEFINE_VEC3_SWIZZLE_FUNCTION( CLASS, E0, E1, E2 )     .function( ULIS_STRINGIFY( E0 ## E1 ## E2 ), & CLASS :: E0 ## E1 ## E2 )
+    #define WULIS_DEFINE_VEC4_SWIZZLE_FUNCTION( CLASS, E0, E1, E2, E3 ) .function( ULIS_STRINGIFY( E0 ## E1 ## E2 ## E3 ), & CLASS :: E0 ## E1 ## E2 ## E3 )
+    #define WULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS ) ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, WULIS_DEFINE_VEC2_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS ) ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, WULIS_DEFINE_VEC2_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS ) ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, WULIS_DEFINE_VEC2_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS ) ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, WULIS_DEFINE_VEC3_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS ) ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, WULIS_DEFINE_VEC3_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS ) ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, WULIS_DEFINE_VEC3_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS ) ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS, WULIS_DEFINE_VEC4_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS ) ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS, WULIS_DEFINE_VEC4_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS ) ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS, WULIS_DEFINE_VEC4_SWIZZLE_FUNCTION )
+    #define WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( CLASS )    \
+    WULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )        \
+    WULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )        \
+    WULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2( CLASS )
+    #define WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3( CLASS )    \
+    WULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )        \
+    WULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )        \
+    WULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3( CLASS )
+    #define WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4( CLASS )    \
+    WULIS_DEFINE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )        \
+    WULIS_DEFINE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )        \
+    WULIS_DEFINE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4( CLASS )
+
+
+
+    /////////
+    // FVec2I
+    class_< FVec2I >( "FVec2I" )
+        .constructor<>()
+        .constructor< int >()
+        .constructor< int, int >()
+        //.constructor< const FVec2I& >()
+        //.constructor< const FVec3I& >()
+        //.constructor< const FVec4I& >()
+        //.constructor< const FVec2F& >()
+        //.constructor< const FVec3F& >()
+        //.constructor< const FVec4F& >()
+        .function( "Distance", &FVec2I::Distance )
+        .function( "DistanceSquared", &FVec2I::DistanceSquared )
+        .function( "ManhattanDistance", &FVec2I::ManhattanDistance )
+        .function( "DotProduct", &FVec2I::DotProduct )
+        .function( "Normalize", &FVec2I::Normalize )
+        .function( "Normalized", &FVec2I::Normalized )
+        .function( "DecimalPart", &FVec2I::DecimalPart )
+        //.function( self += int() )
+        //.function( self -= int() )
+        //.function( self *= int() )
+        //.function( self /= int() )
+        //.function( self += self )
+        //.function( self -= self )
+        //.function( self *= self )
+        //.function( self /= self )
+        //.function( self + int() )
+        //.function( self - int() )
+        //.function( self * int() )
+        //.function( self / int() )
+        //.function( self + self )
+        //.function( self - self )
+        //.function( self * self )
+        //.function( self / self )
+        //.function( self == self )
+        //.function( self != self )
+        //.function( -self )
+        WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( FVec2I )
+        .property( "x", &FVec2I::x )
+        .property( "y", &FVec2I::y );
 }
 
