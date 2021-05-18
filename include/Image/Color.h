@@ -12,6 +12,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Image/Sample.h"
+#pragma push_macro( "RGB" )
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -231,4 +232,6 @@ extern template FColor::FColor( eFormat, std::initializer_list< ufloat >, const 
 //DISABLED:DOUBLEextern template FColor::FColor( eFormat, std::initializer_list< udouble >, const FColorSpace* );
 
 ULIS_NAMESPACE_END
+
+#pragma pop_macro( "RGB" )
 
