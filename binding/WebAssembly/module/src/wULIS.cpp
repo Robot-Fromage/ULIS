@@ -1005,5 +1005,77 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "Eq", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA == iB; } ) )
         .function( "Neq", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA != iB; } ) )
         .function( "Neg", optional_override( []( const FMat3F& iA ){ return  -iA; } ) );
+
+
+
+    /////////
+    // FRectI
+    class_< FRectI >( "FRectI" )
+        .constructor<>()
+        .constructor< int, int, int, int >()
+        .class_function( "FromXYWH", &FRectI::FromXYWH )
+        .class_function( "FromMinMax", &FRectI::FromMinMax )
+        .class_function( "FromPositionAndSize", &FRectI::FromPositionAndSize )
+        .function( "HitTest", &FRectI::HitTest )
+        .function( "HitTest", &FRectI::InVerticalRange )
+        .function( "HitTest", &FRectI::InHorizontalRange )
+        .function( "Exclusion", &FRectI::Exclusion, allow_raw_pointers() )
+        .function( "UnionLeaveEmpty", &FRectI::UnionLeaveEmpty )
+        .function( "And", optional_override( []( const FRectI& iA, const FRectI& iB  ){ return  iA & iB; } ) )
+        .function( "Or", optional_override( []( const FRectI& iA, const FRectI& iB  ){ return  iA | iB; } ) )
+        .function( "Sub", optional_override( []( const FRectI& iA, const FRectI& iB  ){ return  iA - iB; } ) )
+        .function( "Eq", optional_override( []( const FRectI& iA, const FRectI& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FRectI& iA, const FRectI& iB  ){ return  iA != iB; } ) )
+        .function( "Area", &FRectI::Area )
+        .function( "Sanitize", &FRectI::Sanitize )
+        .function( "Sanitized", &FRectI::Sanitized )
+        .function( "TransformAffine", &FRectI::TransformAffine )
+        .function( "TransformPerspective", &FRectI::TransformPerspective )
+        .function( "TransformedAffine", &FRectI::TransformedAffine )
+        .function( "TransformedPerspective", &FRectI::TransformedPerspective )
+        .function( "Shift", &FRectI::Shift )
+        .function( "Position", &FRectI::Position )
+        .function( "Size", &FRectI::Size )
+        .class_property( "Auto", (const FRectI*)&FRectI::Auto )
+        .property( "x", &FRectI::x )
+        .property( "y", &FRectI::y )
+        .property( "h", &FRectI::h )
+        .property( "w", &FRectI::w );
+
+
+
+    /////////
+    // FRectF
+    class_< FRectF >( "FRectF" )
+        .constructor<>()
+        .constructor< float, float, float, float >()
+        .class_function( "FromXYWH", &FRectF::FromXYWH )
+        .class_function( "FromMinMax", &FRectF::FromMinMax )
+        .class_function( "FromPositionAndSize", &FRectF::FromPositionAndSize )
+        .function( "HitTest", &FRectF::HitTest )
+        .function( "HitTest", &FRectF::InVerticalRange )
+        .function( "HitTest", &FRectF::InHorizontalRange )
+        .function( "Exclusion", &FRectF::Exclusion, allow_raw_pointers() )
+        .function( "UnionLeaveEmpty", &FRectF::UnionLeaveEmpty )
+        .function( "And", optional_override( []( const FRectF& iA, const FRectF& iB  ){ return  iA & iB; } ) )
+        .function( "Or", optional_override( []( const FRectF& iA, const FRectF& iB  ){ return  iA | iB; } ) )
+        .function( "Sub", optional_override( []( const FRectF& iA, const FRectF& iB  ){ return  iA - iB; } ) )
+        .function( "Eq", optional_override( []( const FRectF& iA, const FRectF& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FRectF& iA, const FRectF& iB  ){ return  iA != iB; } ) )
+        .function( "Area", &FRectF::Area )
+        .function( "Sanitize", &FRectF::Sanitize )
+        .function( "Sanitized", &FRectF::Sanitized )
+        .function( "TransformAffine", &FRectF::TransformAffine )
+        .function( "TransformPerspective", &FRectF::TransformPerspective )
+        .function( "TransformedAffine", &FRectF::TransformedAffine )
+        .function( "TransformedPerspective", &FRectF::TransformedPerspective )
+        .function( "Shift", &FRectF::Shift )
+        .function( "Position", &FRectF::Position )
+        .function( "Size", &FRectF::Size )
+        .class_property( "Auto", (const FRectF*)&FRectF::Auto )
+        .property( "x", &FRectF::x )
+        .property( "y", &FRectF::y )
+        .property( "h", &FRectF::h )
+        .property( "w", &FRectF::w );
 }
 
