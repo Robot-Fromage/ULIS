@@ -3,8 +3,18 @@
     var Module = {
         onRuntimeInitialized: function() {
             var wULIS4 = Module;
+            //console.log( wULIS4 );
+            console.log( Object.getOwnPropertyNames( wULIS4["FSchedulePolicy"].prototype ) );
+
+            for( const key in wULIS4["FSchedulePolicy"] ) {
+                console.log( key, wULIS4["FSchedulePolicy"][key], typeof( wULIS4["FSchedulePolicy"][key] ) );
+                //console.log( wULIS4["FSchedulePolicy"][key] );
+            }
+
+            /*
             console.log('Version: ' + wULIS4.FullLibraryInformationString() );
             var fmt = new wULIS4.FFormatMetrics( wULIS4.eFormat.Format_RGBA8 );
+            console.log( fmt.BPP );
             fmt.delete()
 
             function onEventCompleteDoStuff( iRect ) {
@@ -13,6 +23,7 @@
 
             var event = new wULIS4.FEvent( new wULIS4.FOnEventComplete( onEventCompleteDoStuff ) );
             event.delete()
+            */
         }
     };
   </script>
