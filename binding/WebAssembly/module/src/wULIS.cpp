@@ -758,25 +758,6 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "DecimalPart", &FVec2I::DecimalPart )
         // Workaround: cannot use operator overloads in JS.
         // Use named operators instead. Get rid of unary operators except negate.
-        //.function( self += int() )    // Unary addition int           UAddI
-        //.function( self -= int() )    // Unary substraction int       USubI
-        //.function( self *= int() )    // Unary multiplication int     UMulI
-        //.function( self /= int() )    // Unary division int           UDivI
-        //.function( self += self )     // Unary addition FVec2I        UAdd
-        //.function( self -= self )     // Unary substraction FVec2I    USub
-        //.function( self *= self )     // Unary multiplication FVec2I  UMul
-        //.function( self /= self )     // Unary division FVec2I        UDiv
-        //.function( self + int() )     // Binary addition int          AddI
-        //.function( self - int() )     // Binary substraction int      SubI
-        //.function( self * int() )     // Binary multiplication int    MulI
-        //.function( self / int() )     // Binary division int          DivI
-        //.function( self + self )      // Binary addition FVec2I       Add
-        //.function( self - self )      // Binary substraction FVec2I   Sub
-        //.function( self * self )      // Binary multiplication FVec2I Mul
-        //.function( self / self )      // Binary division FVec2I       Div
-        //.function( self == self )     // Equality comparison FVec2I   Eq
-        //.function( self != self )     // Inequality comparison FVec2I Neq
-        //.function( -self )            // Unary negation FVec2I        Neg
         .function( "AddI", optional_override( []( const FVec2I& iA, int iB  ){ return  iA + iB; } ) )
         .function( "SubI", optional_override( []( const FVec2I& iA, int iB  ){ return  iA - iB; } ) )
         .function( "MulI", optional_override( []( const FVec2I& iA, int iB  ){ return  iA * iB; } ) )
@@ -791,5 +772,200 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( FVec2I )
         .property( "x", &FVec2I::x )
         .property( "y", &FVec2I::y );
+
+
+
+    /////////
+    // FVec3I
+    class_< FVec3I >( "FVec3I" )
+        .constructor<>()
+        .constructor< int >()
+        .constructor< int, int, int >()
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther ){ return  FVec3I( iOther ); } ) )
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther, int iVal ){ return  FVec3I( iOther, iVal ); } ) )
+        .class_function( "FromVec3I", optional_override( []( const FVec3I& iOther ){ return  FVec3I( iOther ); } ) )
+        .class_function( "FromVec4I", optional_override( []( const FVec4I& iOther ){ return  FVec3I( iOther ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther ){ return  FVec3I( iOther ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther, float iVal ){ return  FVec3I( iOther, iVal ); } ) )
+        .class_function( "FromVec3F", optional_override( []( const FVec3F& iOther ){ return  FVec3I( iOther ); } ) )
+        .class_function( "FromVec4F", optional_override( []( const FVec4F& iOther ){ return  FVec3I( iOther ); } ) )
+        .function( "Distance", &FVec3I::Distance )
+        .function( "DistanceSquared", &FVec3I::DistanceSquared )
+        .function( "ManhattanDistance", &FVec3I::ManhattanDistance )
+        .function( "DotProduct", &FVec3I::DotProduct )
+        .function( "Normalize", &FVec3I::Normalize )
+        .function( "Normalized", &FVec3I::Normalized )
+        .function( "AddI", optional_override( []( const FVec3I& iA, int iB  ){ return  iA + iB; } ) )
+        .function( "SubI", optional_override( []( const FVec3I& iA, int iB  ){ return  iA - iB; } ) )
+        .function( "MulI", optional_override( []( const FVec3I& iA, int iB  ){ return  iA * iB; } ) )
+        .function( "DivI", optional_override( []( const FVec3I& iA, int iB  ){ return  iA / iB; } ) )
+        .function( "Add", optional_override( []( const FVec3I& iA, const FVec3I& iB  ){ return  iA + iB; } ) )
+        .function( "Sub", optional_override( []( const FVec3I& iA, const FVec3I& iB  ){ return  iA - iB; } ) )
+        .function( "Mul", optional_override( []( const FVec3I& iA, const FVec3I& iB  ){ return  iA * iB; } ) )
+        .function( "Div", optional_override( []( const FVec3I& iA, const FVec3I& iB  ){ return  iA / iB; } ) )
+        .function( "Eq", optional_override( []( const FVec3I& iA, const FVec3I& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FVec3I& iA, const FVec3I& iB  ){ return  iA != iB; } ) )
+        .function( "Neg", optional_override( []( const FVec3I& iA ){ return  -iA; } ) )
+        WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3( FVec3I )
+        .property( "x", &FVec3I::x )
+        .property( "y", &FVec3I::y )
+        .property( "z", &FVec3I::z );
+
+
+
+    /////////
+    // FVec4I
+    class_< FVec4I >( "FVec4I" )
+        .constructor<>()
+        .constructor< int >()
+        .constructor< int, int, int, int >()
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther ){ return  FVec4I( iOther ); } ) )
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther, int iA, int iB ){ return  FVec4I( iOther, iA, iB ); } ) )
+        .class_function( "FromVec3I", optional_override( []( const FVec3I& iOther ){ return  FVec4I( iOther ); } ) )
+        .class_function( "FromVec3I", optional_override( []( const FVec3I& iOther, int iA ){ return  FVec4I( iOther, iA ); } ) )
+        .class_function( "FromVec4I", optional_override( []( const FVec4I& iOther ){ return  FVec4I( iOther ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther ){ return  FVec4I( iOther ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther, float iA ){ return  FVec4I( iOther, iA  ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther, float iA, float iB ){ return  FVec4I( iOther, iA, iB ); } ) )
+        .class_function( "FromVec3F", optional_override( []( const FVec3F& iOther ){ return  FVec4I( iOther ); } ) )
+        .class_function( "FromVec3F", optional_override( []( const FVec3F& iOther, float iA ){ return  FVec4I( iOther, iA ); } ) )
+        .class_function( "FromVec4F", optional_override( []( const FVec4F& iOther ){ return  FVec4I( iOther ); } ) )
+        .function( "Distance", &FVec4I::Distance )
+        .function( "DistanceSquared", &FVec4I::DistanceSquared )
+        .function( "ManhattanDistance", &FVec4I::ManhattanDistance )
+        .function( "DotProduct", &FVec4I::DotProduct )
+        .function( "Normalize", &FVec4I::Normalize )
+        .function( "Normalized", &FVec4I::Normalized )
+        .function( "AddI", optional_override( []( const FVec4I& iA, int iB  ){ return  iA + iB; } ) )
+        .function( "SubI", optional_override( []( const FVec4I& iA, int iB  ){ return  iA - iB; } ) )
+        .function( "MulI", optional_override( []( const FVec4I& iA, int iB  ){ return  iA * iB; } ) )
+        .function( "DivI", optional_override( []( const FVec4I& iA, int iB  ){ return  iA / iB; } ) )
+        .function( "Add", optional_override( []( const FVec4I& iA, const FVec4I& iB  ){ return  iA + iB; } ) )
+        .function( "Sub", optional_override( []( const FVec4I& iA, const FVec4I& iB  ){ return  iA - iB; } ) )
+        .function( "Mul", optional_override( []( const FVec4I& iA, const FVec4I& iB  ){ return  iA * iB; } ) )
+        .function( "Div", optional_override( []( const FVec4I& iA, const FVec4I& iB  ){ return  iA / iB; } ) )
+        .function( "Eq", optional_override( []( const FVec4I& iA, const FVec4I& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FVec4I& iA, const FVec4I& iB  ){ return  iA != iB; } ) )
+        .function( "Neg", optional_override( []( const FVec4I& iA ){ return  -iA; } ) )
+        WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4( FVec4I )
+        .property( "x", &FVec4I::x )
+        .property( "y", &FVec4I::y )
+        .property( "z", &FVec4I::z )
+        .property( "w", &FVec4I::w );
+
+
+
+    /////////
+    // FVec2F
+    class_< FVec2F >( "FVec2F" )
+        .constructor<>()
+        .constructor< float >()
+        .constructor< float, float >()
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther ){ return  FVec2F( iOther ); } ) )
+        .class_function( "FromVec3F", optional_override( []( const FVec3F& iOther ){ return  FVec2F( iOther ); } ) )
+        .class_function( "FromVec4F", optional_override( []( const FVec4F& iOther ){ return  FVec2F( iOther ); } ) )
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther ){ return  FVec2F( iOther ); } ) )
+        .class_function( "FromVec3I", optional_override( []( const FVec3I& iOther ){ return  FVec2F( iOther ); } ) )
+        .class_function( "FromVec4I", optional_override( []( const FVec4I& iOther ){ return  FVec2F( iOther ); } ) )
+        .function( "Distance", &FVec2F::Distance )
+        .function( "DistanceSquared", &FVec2F::DistanceSquared )
+        .function( "ManhattanDistance", &FVec2F::ManhattanDistance )
+        .function( "DotProduct", &FVec2F::DotProduct )
+        .function( "Normalize", &FVec2F::Normalize )
+        .function( "Normalized", &FVec2F::Normalized )
+        .function( "DecimalPart", &FVec2F::DecimalPart )
+        .function( "AddF", optional_override( []( const FVec2F& iA, float iB  ){ return  iA + iB; } ) )
+        .function( "SubF", optional_override( []( const FVec2F& iA, float iB  ){ return  iA - iB; } ) )
+        .function( "MulF", optional_override( []( const FVec2F& iA, float iB  ){ return  iA * iB; } ) )
+        .function( "DivF", optional_override( []( const FVec2F& iA, float iB  ){ return  iA / iB; } ) )
+        .function( "Add", optional_override( []( const FVec2F& iA, const FVec2F& iB  ){ return  iA + iB; } ) )
+        .function( "Sub", optional_override( []( const FVec2F& iA, const FVec2F& iB  ){ return  iA - iB; } ) )
+        .function( "Mul", optional_override( []( const FVec2F& iA, const FVec2F& iB  ){ return  iA * iB; } ) )
+        .function( "Div", optional_override( []( const FVec2F& iA, const FVec2F& iB  ){ return  iA / iB; } ) )
+        .function( "Eq", optional_override( []( const FVec2F& iA, const FVec2F& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FVec2F& iA, const FVec2F& iB  ){ return  iA != iB; } ) )
+        .function( "Neg", optional_override( []( const FVec2F& iA ){ return  -iA; } ) )
+        WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( FVec2F )
+        .property( "x", &FVec2F::x )
+        .property( "y", &FVec2F::y );
+
+
+
+    /////////
+    // FVec3F
+    class_< FVec3F >( "FVec3F" )
+        .constructor<>()
+        .constructor< float >()
+        .constructor< float, float, float >()
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther ){ return  FVec3F( iOther ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther, float iVal ){ return  FVec3F( iOther, iVal ); } ) )
+        .class_function( "FromVec3F", optional_override( []( const FVec3F& iOther ){ return  FVec3F( iOther ); } ) )
+        .class_function( "FromVec4F", optional_override( []( const FVec4F& iOther ){ return  FVec3F( iOther ); } ) )
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther ){ return  FVec3F( iOther ); } ) )
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther, int iVal ){ return  FVec3F( iOther, iVal ); } ) )
+        .class_function( "FromVec3I", optional_override( []( const FVec3I& iOther ){ return  FVec3F( iOther ); } ) )
+        .class_function( "FromVec4I", optional_override( []( const FVec4I& iOther ){ return  FVec3F( iOther ); } ) )
+        .function( "Distance", &FVec3F::Distance )
+        .function( "DistanceSquared", &FVec3F::DistanceSquared )
+        .function( "ManhattanDistance", &FVec3F::ManhattanDistance )
+        .function( "DotProduct", &FVec3F::DotProduct )
+        .function( "Normalize", &FVec3F::Normalize )
+        .function( "Normalized", &FVec3F::Normalized )
+        .function( "AddF", optional_override( []( const FVec3F& iA, float iB  ){ return  iA + iB; } ) )
+        .function( "SubF", optional_override( []( const FVec3F& iA, float iB  ){ return  iA - iB; } ) )
+        .function( "MulF", optional_override( []( const FVec3F& iA, float iB  ){ return  iA * iB; } ) )
+        .function( "DivF", optional_override( []( const FVec3F& iA, float iB  ){ return  iA / iB; } ) )
+        .function( "Add", optional_override( []( const FVec3F& iA, const FVec3F& iB  ){ return  iA + iB; } ) )
+        .function( "Sub", optional_override( []( const FVec3F& iA, const FVec3F& iB  ){ return  iA - iB; } ) )
+        .function( "Mul", optional_override( []( const FVec3F& iA, const FVec3F& iB  ){ return  iA * iB; } ) )
+        .function( "Div", optional_override( []( const FVec3F& iA, const FVec3F& iB  ){ return  iA / iB; } ) )
+        .function( "Eq", optional_override( []( const FVec3F& iA, const FVec3F& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FVec3F& iA, const FVec3F& iB  ){ return  iA != iB; } ) )
+        .function( "Neg", optional_override( []( const FVec3F& iA ){ return  -iA; } ) )
+        WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC3( FVec3F )
+        .property( "x", &FVec3F::x )
+        .property( "y", &FVec3F::y )
+        .property( "z", &FVec3F::z );
+
+
+
+    /////////
+    // FVec4F
+    class_< FVec4F >( "FVec4F" )
+        .constructor<>()
+        .constructor< float >()
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther ){ return  FVec4F( iOther ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther, float iA ){ return  FVec4F( iOther, iA  ); } ) )
+        .class_function( "FromVec2F", optional_override( []( const FVec2F& iOther, float iA, float iB ){ return  FVec4F( iOther, iA, iB ); } ) )
+        .class_function( "FromVec3F", optional_override( []( const FVec3F& iOther ){ return  FVec4F( iOther ); } ) )
+        .class_function( "FromVec3F", optional_override( []( const FVec3F& iOther, float iA ){ return  FVec4F( iOther, iA ); } ) )
+        .class_function( "FromVec4F", optional_override( []( const FVec4F& iOther ){ return  FVec4F( iOther ); } ) )
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther ){ return  FVec4F( iOther ); } ) )
+        .class_function( "FromVec2I", optional_override( []( const FVec2I& iOther, int iA, int iB ){ return  FVec4F( iOther, iA, iB ); } ) )
+        .class_function( "FromVec3I", optional_override( []( const FVec3I& iOther ){ return  FVec4F( iOther ); } ) )
+        .class_function( "FromVec3I", optional_override( []( const FVec3I& iOther, int iA ){ return  FVec4F( iOther, iA ); } ) )
+        .class_function( "FromVec4I", optional_override( []( const FVec4I& iOther ){ return  FVec4F( iOther ); } ) )
+        .function( "Distance", &FVec4F::Distance )
+        .function( "DistanceSquared", &FVec4F::DistanceSquared )
+        .function( "ManhattanDistance", &FVec4F::ManhattanDistance )
+        .function( "DotProduct", &FVec4F::DotProduct )
+        .function( "Normalize", &FVec4F::Normalize )
+        .function( "Normalized", &FVec4F::Normalized )
+        .function( "AddF", optional_override( []( const FVec4F& iA, float iB  ){ return  iA + iB; } ) )
+        .function( "SubF", optional_override( []( const FVec4F& iA, float iB  ){ return  iA - iB; } ) )
+        .function( "MulF", optional_override( []( const FVec4F& iA, float iB  ){ return  iA * iB; } ) )
+        .function( "DivF", optional_override( []( const FVec4F& iA, float iB  ){ return  iA / iB; } ) )
+        .function( "Add", optional_override( []( const FVec4F& iA, const FVec4F& iB  ){ return  iA + iB; } ) )
+        .function( "Sub", optional_override( []( const FVec4F& iA, const FVec4F& iB  ){ return  iA - iB; } ) )
+        .function( "Mul", optional_override( []( const FVec4F& iA, const FVec4F& iB  ){ return  iA * iB; } ) )
+        .function( "Div", optional_override( []( const FVec4F& iA, const FVec4F& iB  ){ return  iA / iB; } ) )
+        .function( "Eq", optional_override( []( const FVec4F& iA, const FVec4F& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FVec4F& iA, const FVec4F& iB  ){ return  iA != iB; } ) )
+        .function( "Neg", optional_override( []( const FVec4F& iA ){ return  -iA; } ) )
+        WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC4( FVec4F )
+        .property( "x", &FVec4F::x )
+        .property( "y", &FVec4F::y )
+        .property( "z", &FVec4F::z )
+        .property( "w", &FVec4F::w );
 }
 
