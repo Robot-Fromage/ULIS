@@ -967,5 +967,43 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .property( "y", &FVec4F::y )
         .property( "z", &FVec4F::z )
         .property( "w", &FVec4F::w );
+
+
+
+    /////////
+    // FMat3F
+    class_< FMat3F >( "FMat3F" )
+        .constructor<>()
+        .constructor< float >()
+        .constructor<
+              float, float, float
+            , float, float, float
+            , float, float, float
+        >
+        ()
+        .constructor< const FVec3F&, const FVec3F&, const FVec3F& >()
+        .function( "Data", select_overload< float*() >( &FMat3F::Data ), allow_raw_pointers() )
+        .function( "Inverse", &FMat3F::Inverse )
+        .function( "Transpose", &FMat3F::Transpose )
+        .function( "Determinant", &FMat3F::Determinant )
+        .function( "Decompose", &FMat3F::Decompose, allow_raw_pointers() )
+        .function( "ApplyHomography", &FMat3F::ApplyHomography )
+        .function( "MakeRotationMatrix", &FMat3F::MakeRotationMatrix )
+        .function( "MakeScaleMatrix", &FMat3F::MakeScaleMatrix )
+        .function( "MakeSkewMatrix", &FMat3F::MakeSkewMatrix )
+        .function( "MakeTranslationMatrix", &FMat3F::MakeTranslationMatrix )
+        .function( "MakeHomography", &FMat3F::MakeHomography, allow_raw_pointers() )
+        .function( "AddF", optional_override( []( const FMat3F& iA, float iB  ){ return  iA + iB; } ) )
+        .function( "SubF", optional_override( []( const FMat3F& iA, float iB  ){ return  iA - iB; } ) )
+        .function( "MulF", optional_override( []( const FMat3F& iA, float iB  ){ return  iA * iB; } ) )
+        .function( "DivF", optional_override( []( const FMat3F& iA, float iB  ){ return  iA / iB; } ) )
+        .function( "Add", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA + iB; } ) )
+        .function( "Sub", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA - iB; } ) )
+        .function( "Mul", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA * iB; } ) )
+        .function( "Div", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA / iB; } ) )
+        .function( "MulV", optional_override( []( const FMat3F& iA, const FVec3F& iB  ){ return  iA * iB; } ) )
+        .function( "Eq", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FMat3F& iA, const FMat3F& iB  ){ return  iA != iB; } ) )
+        .function( "Neg", optional_override( []( const FMat3F& iA ){ return  -iA; } ) );
 }
 
