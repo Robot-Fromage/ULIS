@@ -38,6 +38,7 @@ auto ctxCallAdapter( F fptr ) {
 class IHasFormat_Wrapper : public IHasFormat {};
 class IHasFormatAndColorspace_Wrapper : public IHasFormat_Wrapper, public IHasColorSpace {};
 class ISampleWrapper : public IHasFormatAndColorspace_Wrapper {};
+class FColorWrapper : public ISampleWrapper {};
 
 /////////
 // wULIS4
@@ -1121,10 +1122,14 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
     /////////
     // IHasFormat_Wrapper
     // IHasFormatAndColorspace_Wrapper
-    // ISample
     // Workaround to simulate multiple inheritance, despite JS allowing only single inheritance chains
     class_< IHasFormat_Wrapper >( "IHasFormat_Wrapper" );
     class_< IHasFormatAndColorspace_Wrapper, base< IHasColorSpace > >( "IHasFormatAndColorspace_Wrapper" );
+
+
+
+    /////////
+    // ISample
     class_< ISampleWrapper, base< IHasFormatAndColorspace_Wrapper > >( "ISample" )
         .function( "Eq", optional_override( []( const ISample& iA, const ISample& iB  ){ return  iA == iB; } ) )
         .function( "Neq", optional_override( []( const ISample& iA, const ISample& iB  ){ return  iA != iB; } ) )
@@ -1318,5 +1323,57 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "Unpremultiply", &ISample::Unpremultiply )
         .function( "Premultiplied", &ISample::Premultiplied )
         .function( "Unpremultiplied", &ISample::Unpremultiplied );
+
+
+
+    /////////
+    // FColor
+    class_< FColorWrapper, base< ISampleWrapper > >( "FColor" )
+        .constructor( optional_override( []( eFormat iFormat ) { return  FColor( iFormat ); } ) )
+        .constructor( optional_override( []( uint8* iData, eFormat iFormat ) { return  FColor( iData, iFormat ); } ), allow_raw_pointers() )
+        .class_function( "FromPixel", optional_override( []( const FPixel& iValue ) { return  FColor( iValue ); } ) )
+        .class_function( "FromColor", optional_override( []( const FColor& iValue ) { return  FColor( iValue ); } ) )
+        .class_function( "FromSample", optional_override( []( const ISample& iValue ) { return  FColor( iValue ); } ) )
+        .class_function( "RGB", &FColor::RGB )
+        .class_function( "CMYA16", &FColor::CMYA16 )
+        .class_function( "CMYA8", &FColor::CMYA8 )
+        .class_function( "CMYAF", &FColor::CMYAF )
+        .class_function( "CMYKA16", &FColor::CMYKA16 )
+        .class_function( "CMYKA8", &FColor::CMYKA8 )
+        .class_function( "CMYKAF", &FColor::CMYKAF )
+        .class_function( "GreyA16", &FColor::GreyA16 )
+        .class_function( "GreyA8", &FColor::GreyA8 )
+        .class_function( "GreyAF", &FColor::GreyAF )
+        .class_function( "HSLA16", &FColor::HSLA16 )
+        .class_function( "HSLA8", &FColor::HSLA8 )
+        .class_function( "HSLAF", &FColor::HSLAF )
+        .class_function( "HSVA16", &FColor::HSVA16 )
+        .class_function( "HSVA8", &FColor::HSVA8 )
+        .class_function( "HSVAF", &FColor::HSVAF )
+        .class_function( "LabA16", &FColor::LabA16 )
+        .class_function( "LabA8", &FColor::LabA8 )
+        .class_function( "LabAF", &FColor::LabAF )
+        .class_function( "RGB", &FColor::RGB )
+        .class_function( "RGBA16", &FColor::RGBA16 )
+        .class_function( "RGBA8", &FColor::RGBA8 )
+        .class_function( "RGBAF", &FColor::RGBAF )
+        .class_function( "XYZA16", &FColor::XYZA16 )
+        .class_function( "XYZA8", &FColor::XYZA8 )
+        .class_function( "XYZAF", &FColor::XYZAF )
+        .class_function( "YUVA16", &FColor::YUVA16 )
+        .class_function( "YUVA8", &FColor::YUVA8 )
+        .class_function( "YUVAF", &FColor::YUVAF )
+        .class_function( "YxyA16", &FColor::YxyA16 )
+        .class_function( "YxyA8", &FColor::YxyA8 )
+        .class_function( "YxyAF", &FColor::YxyAF )
+        .class_property( "Black", (const FColor*)&FColor::Black )
+        .class_property( "White", (const FColor*)&FColor::White )
+        .class_property( "Red", (const FColor*)&FColor::Red )
+        .class_property( "Green", (const FColor*)&FColor::Green )
+        .class_property( "Blue", (const FColor*)&FColor::Blue )
+        .class_property( "Yellow", (const FColor*)&FColor::Yellow )
+        .class_property( "Magenta", (const FColor*)&FColor::Magenta )
+        .class_property( "Cyan", (const FColor*)&FColor::Cyan )
+        .class_property( "Transparent", (const FColor*)&FColor::Transparent );
 }
 
