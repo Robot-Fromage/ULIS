@@ -582,6 +582,119 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .constructor< const FOnEventComplete& >()
         .function( "Status", &FEvent::Status )
         .function( "Wait", &FEvent::Wait );
-    //register_vector< FEvent >( "FEventVector" );
+    register_vector< FEvent >( "FEventVector" );
+
+
+
+    /////////
+    // FFilePathRegistry
+    class_< FFilePathRegistry >( "FFilePathRegistry" )
+        .constructor<>()
+        .function( "LookupPaths", &FFilePathRegistry::LookupPaths )
+        .function( "Filters", &FFilePathRegistry::Filters )
+        .function( "Records", &FFilePathRegistry::Records )
+        .function( "AddLookupPath", &FFilePathRegistry::AddLookupPath )
+        .function( "AddLookupPaths", &FFilePathRegistry::AddLookupPaths )
+        .function( "AddFilter", &FFilePathRegistry::AddFilter )
+        .function( "AddFilters", &FFilePathRegistry::AddFilters )
+        .function( "Parse", &FFilePathRegistry::Parse )
+        .function( "FilePathForExactMatchingName", &FFilePathRegistry::FilePathForExactMatchingName )
+        .function( "FilePathForClosestMatchingName", &FFilePathRegistry::FilePathForClosestMatchingName );
+
+
+
+    /////////
+    // FThreadPool
+    class_< FThreadPool >( "FThreadPool" )
+        .constructor< uint32 >()
+        .function( "WaitForCompletion", &FThreadPool::WaitForCompletion )
+        .function( "SetNumWorkers", &FThreadPool::SetNumWorkers )
+        .function( "GetNumWorkers", &FThreadPool::GetNumWorkers )
+        .class_function( "MaxWorkers", &FThreadPool::MaxWorkers );
+
+
+
+    /////////
+    // FCommandQueue
+    class_< FCommandQueue >( "FCommandQueue" )
+        .constructor< FThreadPool& >()
+        .function( "Flush", &FCommandQueue::Flush )
+        .function( "Finish", &FCommandQueue::Finish )
+        .function( "Fence", &FCommandQueue::Fence );
+
+
+
+    /////////
+    // FSchedulePolicy
+    class_< FSchedulePolicy >( "FSchedulePolicy" )
+        .constructor<
+              eScheduleTimePolicy
+            , eScheduleRunPolicy
+            , eScheduleModePolicy
+            , eScheduleParameterPolicy
+            , ULIS::int64
+        >
+        ()
+        .function( "TimePolicy", &FSchedulePolicy::TimePolicy )
+        .function( "RunPolicy", &FSchedulePolicy::RunPolicy )
+        .function( "ModePolicy", &FSchedulePolicy::ModePolicy )
+        .function( "ParameterPolicy", &FSchedulePolicy::ParameterPolicy )
+        .function( "Value", &FSchedulePolicy::Value )
+        .class_property( "AsyncCacheEfficient", &FSchedulePolicy::AsyncCacheEfficient   )
+        .class_property( "CacheEfficient",      &FSchedulePolicy::CacheEfficient        )
+        .class_property( "AsyncMonoChunk",      &FSchedulePolicy::AsyncMonoChunk        )
+        .class_property( "MonoChunk",           &FSchedulePolicy::MonoChunk             )
+        .class_property( "AsyncMultiScanlines", &FSchedulePolicy::AsyncMultiScanlines   )
+        .class_property( "AsyncMonoScanlines",  &FSchedulePolicy::AsyncMonoScanlines    )
+        .class_property( "MultiScanlines",      &FSchedulePolicy::MultiScanlines        )
+        .class_property( "MonoScanlines",       &FSchedulePolicy::MonoScanlines         );
+
+
+
+    /////////
+    // FHardwareMetrics
+    class_< FHardwareMetrics >( "FHardwareMetrics" )
+        .constructor<>()
+        .function( "IsHardwareAMD",             &FHardwareMetrics::IsHardwareAMD            )
+        .function( "IsHardwareIntel",           &FHardwareMetrics::IsHardwareIntel          )
+        .function( "IsOSx64",                   &FHardwareMetrics::IsOSx64                  )
+        .function( "HasOSAVX",                  &FHardwareMetrics::HasOSAVX                 )
+        .function( "HasOSAVX512",               &FHardwareMetrics::HasOSAVX512              )
+        .function( "HasHardwarex64",            &FHardwareMetrics::HasHardwarex64           )
+        .function( "HasHardwareMMX",            &FHardwareMetrics::HasHardwareMMX           )
+        .function( "HasHardwareABM",            &FHardwareMetrics::HasHardwareABM           )
+        .function( "HasHardwareRDRAND",         &FHardwareMetrics::HasHardwareRDRAND        )
+        .function( "HasHardwareBMI1",           &FHardwareMetrics::HasHardwareBMI1          )
+        .function( "HasHardwareBMI2",           &FHardwareMetrics::HasHardwareBMI2          )
+        .function( "HasHardwareADX",            &FHardwareMetrics::HasHardwareADX           )
+        .function( "HasHardwarePREFETCHWT1",    &FHardwareMetrics::HasHardwarePREFETCHWT1   )
+        .function( "HasHardwareMPX",            &FHardwareMetrics::HasHardwareMPX           )
+        .function( "HasHardwareSSE",            &FHardwareMetrics::HasHardwareSSE           )
+        .function( "HasHardwareSSE2",           &FHardwareMetrics::HasHardwareSSE2          )
+        .function( "HasHardwareSSE3",           &FHardwareMetrics::HasHardwareSSE3          )
+        .function( "HasHardwareSSSE3",          &FHardwareMetrics::HasHardwareSSSE3         )
+        .function( "HasHardwareSSE41",          &FHardwareMetrics::HasHardwareSSE41         )
+        .function( "HasHardwareSSE42",          &FHardwareMetrics::HasHardwareSSE42         )
+        .function( "HasHardwareSSE4a",          &FHardwareMetrics::HasHardwareSSE4a         )
+        .function( "HasHardwareAES",            &FHardwareMetrics::HasHardwareAES           )
+        .function( "HasHardwareSHA",            &FHardwareMetrics::HasHardwareSHA           )
+        .function( "HasHardwareAVX",            &FHardwareMetrics::HasHardwareAVX           )
+        .function( "HasHardwareXOP",            &FHardwareMetrics::HasHardwareXOP           )
+        .function( "HasHardwareFMA3",           &FHardwareMetrics::HasHardwareFMA3          )
+        .function( "HasHardwareFMA4",           &FHardwareMetrics::HasHardwareFMA4          )
+        .function( "HasHardwareAVX2",           &FHardwareMetrics::HasHardwareAVX2          )
+        .function( "HasHardwareAVX512_F",       &FHardwareMetrics::HasHardwareAVX512_F      )
+        .function( "HasHardwareAVX512_PF",      &FHardwareMetrics::HasHardwareAVX512_PF     )
+        .function( "HasHardwareAVX512_ER",      &FHardwareMetrics::HasHardwareAVX512_ER     )
+        .function( "HasHardwareAVX512_CD",      &FHardwareMetrics::HasHardwareAVX512_CD     )
+        .function( "HasHardwareAVX512_VL",      &FHardwareMetrics::HasHardwareAVX512_VL     )
+        .function( "HasHardwareAVX512_BW",      &FHardwareMetrics::HasHardwareAVX512_BW     )
+        .function( "HasHardwareAVX512_DQ",      &FHardwareMetrics::HasHardwareAVX512_DQ     )
+        .function( "HasHardwareAVX512_IFMA",    &FHardwareMetrics::HasHardwareAVX512_IFMA   )
+        .function( "HasHardwareAVX512_VBMI",    &FHardwareMetrics::HasHardwareAVX512_VBMI   )
+        .function( "MaxWorkers",                &FHardwareMetrics::MaxWorkers               )
+        .function( "L1CacheSize",               &FHardwareMetrics::L1CacheSize              )
+        .function( "L1CacheLineSize",           &FHardwareMetrics::L1CacheLineSize          )
+        .function( "Field",                     &FHardwareMetrics::Field                    );
 }
 
