@@ -35,10 +35,10 @@ auto ctxCallAdapter( F fptr ) {
 /////////
 // Wrapper Utils
 // Workaround to simulate multiple inheritance, despite JS allowing only single inheritance chains
-class IHasFormat_Wrapper : public IHasFormat {};
-class IHasFormatAndColorspace_Wrapper : public IHasFormat_Wrapper, public IHasColorSpace {};
-class ISampleWrapper : public IHasFormatAndColorspace_Wrapper {};
-class FColorWrapper : public ISampleWrapper {};
+//class IHasFormat_Wrapper : public IHasFormat {};
+//class IHasFormatAndColorspace_Wrapper : public IHasFormat_Wrapper, public IHasColorSpace {};
+//class ISampleWrapper : public IHasFormatAndColorspace_Wrapper {};
+//class FColorWrapper : public ISampleWrapper {};
 
 /////////
 // wULIS4
@@ -1120,17 +1120,20 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
 
 
     /////////
+    // __DEPRECATED__ SEE BELOW
     // IHasFormat_Wrapper
     // IHasFormatAndColorspace_Wrapper
     // Workaround to simulate multiple inheritance, despite JS allowing only single inheritance chains
-    class_< IHasFormat_Wrapper >( "IHasFormat_Wrapper" );
-    class_< IHasFormatAndColorspace_Wrapper, base< IHasColorSpace > >( "IHasFormatAndColorspace_Wrapper" );
+    //class_< IHasFormat_Wrapper >( "IHasFormat_Wrapper" );
+    //class_< IHasFormatAndColorspace_Wrapper, base< IHasColorSpace > >( "IHasFormatAndColorspace_Wrapper" );
+    // __DEPRECATED__
+    // Instead of using complicated wrappers, we decided to discard the inheritance path from IHasColorSpace for now.
 
 
 
     /////////
     // ISample
-    class_< ISampleWrapper, base< IHasFormatAndColorspace_Wrapper > >( "ISample" )
+    class_< ISample, base< IHasFormat > >( "ISample" )
         .function( "Eq", optional_override( []( const ISample& iA, const ISample& iB  ){ return  iA == iB; } ) )
         .function( "Neq", optional_override( []( const ISample& iA, const ISample& iB  ){ return  iA != iB; } ) )
         .function( "Bits", select_overload< uint8*() >( &ISample::Bits ), allow_raw_pointers() )
@@ -1328,7 +1331,7 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
 
     /////////
     // FColor
-    class_< FColorWrapper, base< ISampleWrapper > >( "FColor" )
+    class_< FColor, base< ISample > >( "FColor" )
         .constructor( optional_override( []( eFormat iFormat ) { return  FColor( iFormat ); } ) )
         .constructor( optional_override( []( uint8* iData, eFormat iFormat ) { return  FColor( iData, iFormat ); } ), allow_raw_pointers() )
         .class_function( "FromPixel", optional_override( []( const FPixel& iValue ) { return  FColor( iValue ); } ) )
