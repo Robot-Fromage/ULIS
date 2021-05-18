@@ -986,13 +986,13 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "Inverse", &FMat3F::Inverse )
         .function( "Transpose", &FMat3F::Transpose )
         .function( "Determinant", &FMat3F::Determinant )
-        .function( "Decompose", &FMat3F::Decompose, allow_raw_pointers() )
+        .function( "Decompose", &FMat3F::Decompose, allow_raw_pointers() ) // Warning, output by ptr* o, find a workaround.
         .function( "ApplyHomography", &FMat3F::ApplyHomography )
         .function( "MakeRotationMatrix", &FMat3F::MakeRotationMatrix )
         .function( "MakeScaleMatrix", &FMat3F::MakeScaleMatrix )
         .function( "MakeSkewMatrix", &FMat3F::MakeSkewMatrix )
         .function( "MakeTranslationMatrix", &FMat3F::MakeTranslationMatrix )
-        .function( "MakeHomography", &FMat3F::MakeHomography, allow_raw_pointers() )
+        .function( "MakeHomography", &FMat3F::MakeHomography, allow_raw_pointers() ) // Warning, input points array by ptr* i, find a workaround
         .function( "AddF", optional_override( []( const FMat3F& iA, float iB  ){ return  iA + iB; } ) )
         .function( "SubF", optional_override( []( const FMat3F& iA, float iB  ){ return  iA - iB; } ) )
         .function( "MulF", optional_override( []( const FMat3F& iA, float iB  ){ return  iA * iB; } ) )
