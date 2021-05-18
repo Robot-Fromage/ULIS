@@ -1177,7 +1177,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
-    // IHasFormat
+    // IHasColorSpace
     py::class_< IHasColorSpace >( m, "IHasColorSpace" )
         .def( "AssignColorSpace", &IHasColorSpace::AssignColorSpace )
         .def( "ColorSpace", &IHasColorSpace::ColorSpace );

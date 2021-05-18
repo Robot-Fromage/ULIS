@@ -1077,5 +1077,36 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .property( "y", &FRectF::y )
         .property( "h", &FRectF::h )
         .property( "w", &FRectF::w );
+
+
+
+    /////////
+    // IHasFormat
+    class_< IHasFormat >( "IHasFormat" )
+        .function( "FormatMetrics", &IHasFormat::FormatMetrics )
+        .function( "IndexTable", &IHasFormat::IndexTable, allow_raw_pointers() )
+        .function( "Format", &IHasFormat::Format )
+        .function( "Type", &IHasFormat::Type )
+        .function( "Model", &IHasFormat::Model )
+        .function( "BytesPerSample", &IHasFormat::BytesPerSample )
+        .function( "NumColorChannels", &IHasFormat::NumColorChannels )
+        .function( "HasAlpha", &IHasFormat::HasAlpha )
+        .function( "SamplesPerPixel", &IHasFormat::SamplesPerPixel )
+        .function( "BytesPerPixel", &IHasFormat::BytesPerPixel )
+        .function( "AlphaIndex", &IHasFormat::AlphaIndex )
+        .function( "Reversed", &IHasFormat::Reversed )
+        .function( "Swapped", &IHasFormat::Swapped )
+        .function( "Premultiplied", &IHasFormat::Premultiplied )
+        .function( "Linear", &IHasFormat::Linear )
+        .function( "DefaultProfileCode", &IHasFormat::DefaultProfileCode )
+        .function( "RedirectedIndex", &IHasFormat::RedirectedIndex );
+
+
+
+    /////////
+    // IHasColorSpace
+    class_< IHasColorSpace >( "IHasColorSpace" )
+        .function( "AssignColorSpace", &IHasColorSpace::AssignColorSpace, allow_raw_pointers() )
+        .function( "ColorSpace", &IHasColorSpace::ColorSpace, allow_raw_pointers() );
 }
 
