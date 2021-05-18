@@ -754,6 +754,8 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "Normalize", &FVec2I::Normalize )
         .function( "Normalized", &FVec2I::Normalized )
         .function( "DecimalPart", &FVec2I::DecimalPart )
+        // Workaround: cannot use operator overloads in JS.
+        // Use named operators instead. Get rid of unary operators except negate.
         //.function( self += int() )    // Unary addition int           UAddI
         //.function( self -= int() )    // Unary substraction int       USubI
         //.function( self *= int() )    // Unary multiplication int     UMulI
@@ -773,6 +775,17 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         //.function( self == self )     // Equality comparison FVec2I   Eq
         //.function( self != self )     // Inequality comparison FVec2I Neq
         //.function( -self )            // Unary negation FVec2I        Neg
+        .function( "AddI", optional_override( []( const FVec2I& iA, int iB  ){ return  iA + iB; } ) )
+        .function( "SubI", optional_override( []( const FVec2I& iA, int iB  ){ return  iA - iB; } ) )
+        .function( "MulI", optional_override( []( const FVec2I& iA, int iB  ){ return  iA * iB; } ) )
+        .function( "DivI", optional_override( []( const FVec2I& iA, int iB  ){ return  iA / iB; } ) )
+        .function( "Add", optional_override( []( const FVec2I& iA, const FVec2I& iB  ){ return  iA + iB; } ) )
+        .function( "Sub", optional_override( []( const FVec2I& iA, const FVec2I& iB  ){ return  iA - iB; } ) )
+        .function( "Mul", optional_override( []( const FVec2I& iA, const FVec2I& iB  ){ return  iA * iB; } ) )
+        .function( "Div", optional_override( []( const FVec2I& iA, const FVec2I& iB  ){ return  iA / iB; } ) )
+        .function( "Eq", optional_override( []( const FVec2I& iA, const FVec2I& iB  ){ return  iA == iB; } ) )
+        .function( "Neq", optional_override( []( const FVec2I& iA, const FVec2I& iB  ){ return  iA != iB; } ) )
+        .function( "Neg", optional_override( []( const FVec2I& iA ){ return  -iA; } ) )
         WULIS_DEFINE_ALL_SWIZZLE_FUNCTIONS_VEC2( FVec2I )
         .property( "x", &FVec2I::x )
         .property( "y", &FVec2I::y );
