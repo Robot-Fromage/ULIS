@@ -640,14 +640,14 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "ModePolicy", &FSchedulePolicy::ModePolicy )
         .function( "ParameterPolicy", &FSchedulePolicy::ParameterPolicy )
         .function( "Value", &FSchedulePolicy::Value )
-        .class_property( "AsyncCacheEfficient", &FSchedulePolicy::AsyncCacheEfficient   )
-        .class_property( "CacheEfficient",      &FSchedulePolicy::CacheEfficient        )
-        .class_property( "AsyncMonoChunk",      &FSchedulePolicy::AsyncMonoChunk        )
-        .class_property( "MonoChunk",           &FSchedulePolicy::MonoChunk             )
-        .class_property( "AsyncMultiScanlines", &FSchedulePolicy::AsyncMultiScanlines   )
-        .class_property( "AsyncMonoScanlines",  &FSchedulePolicy::AsyncMonoScanlines    )
-        .class_property( "MultiScanlines",      &FSchedulePolicy::MultiScanlines        )
-        .class_property( "MonoScanlines",       &FSchedulePolicy::MonoScanlines         );
+        .class_property( "AsyncCacheEfficient", (const FSchedulePolicy*)&FSchedulePolicy::AsyncCacheEfficient )
+        .class_property( "CacheEfficient",      (const FSchedulePolicy*)&FSchedulePolicy::CacheEfficient      )
+        .class_property( "AsyncMonoChunk",      (const FSchedulePolicy*)&FSchedulePolicy::AsyncMonoChunk      )
+        .class_property( "MonoChunk",           (const FSchedulePolicy*)&FSchedulePolicy::MonoChunk           )
+        .class_property( "AsyncMultiScanlines", (const FSchedulePolicy*)&FSchedulePolicy::AsyncMultiScanlines )
+        .class_property( "AsyncMonoScanlines",  (const FSchedulePolicy*)&FSchedulePolicy::AsyncMonoScanlines  )
+        .class_property( "MultiScanlines",      (const FSchedulePolicy*)&FSchedulePolicy::MultiScanlines      )
+        .class_property( "MonoScanlines",       (const FSchedulePolicy*)&FSchedulePolicy::MonoScanlines       );
 
 
 
