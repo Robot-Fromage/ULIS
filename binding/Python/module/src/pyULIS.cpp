@@ -1025,7 +1025,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
-    // FVec4F
+    // FMat3F
     py::class_< FMat3F >( m, "FMat3F" )
         .def( py::init<>() )
         .def( py::init< float >(), "value"_a )
