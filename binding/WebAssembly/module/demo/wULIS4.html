@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>wULIS4 Interactive WebAssembly Demo</title>
+    <meta name="description" content="wULIS4 Interactive WebAssembly Demo">
+    <meta name="author" content="Clément BERTHAUD - Layl">
+
+    <!-- Core load wULIS4 and delegate to onStart -->
+    <script> var Module = { onRuntimeInitialized: function() { onStart( Module ); } }; </script>
+    <script src="wULIS4.js"></script>
+
+    <!-- monaco editor include style -->
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.css">
+
+    <!-- Our Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="main-container" >
+        <div id="title" >
+            <span>
+                wULIS4 Interactive WebAssembly Demo
+            </span>
+        </div>
+        <div id="contents" >
+        </div>
+        <div id="console" >
+        </div>
+    </div><!--
+
+ --><div id="monaco-supercontainer" ><div id="monaco-container" ></div></div>
+    <script>var require = { paths: { 'vs': 'monaco-editor/node_modules/monaco-editor/min/vs' } };</script>
+    <script src="monaco-editor/node_modules/monaco-editor/min/vs/loader.js"></script>
+    <script src="monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+    <script src="monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.js"></script>
+</body>
+
+<script>
+    /////////
+    // Main gui log function
+    function stdout( iText ) {
+        document.getElementById( "console" ).innerHTML += iText + '</br>';
+    }
+
+    /////////
+    // Main onStart entry point for wULIS4 Demo
+    function onStart( wULIS4 ) {
+        //console.log( wULIS4 );
+        //console.log( Object.getOwnPropertyNames( wULIS4["FColor"].prototype ) );
+        //console.log( Object.getOwnPropertySymbols( wULIS4["FColor"].prototype ) );
+        //console.log( wULIS4["FColor"] );
+        //console.log( wULIS4["FColor"].prototype );
+        //for( const key in wULIS4["FColor"] ) console.log( key, wULIS4["FColor"][key], typeof( wULIS4["FColor"][key] ) );
+        //for( const key in wULIS4["FColor"].prototype ) console.log( key, wULIS4["FColor"].prototype[key], typeof( wULIS4["FColor"].prototype[key] ) );
+        //console.log('Version: ' + wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+        stdout( wULIS4.FullLibraryInformationString() );
+
+        // Test FFormatMetrics
+        //var fmt = new wULIS4.FFormatMetrics( wULIS4.eFormat.Format_RGBA8 );
+        //console.log( fmt.BPP );
+        //fmt.delete()
+
+        // Test FEvent with callback
+        //function onEventCompleteDoStuff( iRect ) {
+        //    console.log( iRect.x )
+        //}
+        //var event = new wULIS4.FEvent( new wULIS4.FOnEventComplete( onEventCompleteDoStuff ) );
+        //event.delete()
+
+        // Test FColor
+        //var color = wULIS4.FColor.RGBA8( 255, 255, 255, 255 );
+        //color.SetR8( 5 );
+        //console.log( color.R8() );
+        //color.delete();
+    }
+</script>
+
+<script>
+    /////////
+    // monaco special behaviours
+    monaco.editor.setTheme('vs-dark');
+
+    // resize
+    function updateDimensions() { this.editor.layout(); }
+    window.onresize = updateDimensions;
+
+    // create
+    var editor = monaco.editor.create( document.getElementById( 'monaco-container' ), { value: "", language: 'javascript' } );
+
+    // fill Value
+    editor.setValue( "sample" );
+</script>
+
+</html>
+
