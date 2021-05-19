@@ -1391,5 +1391,52 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "SetPointer", &FPixel::SetPointer, allow_raw_pointers() )
         .function( "Next", &FPixel::Next )
         .function( "Prev", &FPixel::Prev );
+
+
+
+    /////////
+    // FBlock
+    class_< FBlock, base< IHasFormat > >( "FBlock" )
+        .constructor<
+              ULIS::uint16
+            , ULIS::uint16
+            , eFormat
+            , const FColorSpace*
+            , const FOnInvalidBlock&
+            , const FOnCleanupData&
+        >
+        ( allow_raw_pointers() )
+        .constructor<
+              uint8*
+            , ULIS::uint16
+            , ULIS::uint16
+            , eFormat
+            , const FColorSpace*
+            , const FOnInvalidBlock&
+            , const FOnCleanupData&
+        >
+        ( allow_raw_pointers() )
+        .function( "Area", &FBlock::Area )
+        .function( "Bits", select_overload< uint8*() >( &FBlock::Bits ), allow_raw_pointers() )
+        .function( "BytesPerScanLine", &FBlock::BytesPerScanLine )
+        .function( "BytesTotal", &FBlock::BytesTotal )
+        .function( "Color", &FBlock::Color )
+        .function( "Dirty", select_overload< void( bool )const >( &FBlock::Dirty) )
+        .function( "Dirty", select_overload< void ( const FRectI&, bool ) const >( &FBlock::Dirty ) )
+        .function( "Height", &FBlock::Height )
+        .function( "IsHollow", &FBlock::IsHollow )
+        .function( "OnCleanup", &FBlock::OnCleanup )
+        .function( "OnInvalid", &FBlock::OnInvalid )
+        .function( "Pixel", select_overload< FPixel ( uint16, uint16 ) >( &FBlock::Pixel ) )
+        .function( "PixelBits", select_overload< uint8* ( uint16, uint16 ) >( &FBlock::PixelBits ), allow_raw_pointers() )
+        .function( "Rect", &FBlock::Rect )
+        .function( "LoadFromData", &FBlock::LoadFromData, allow_raw_pointers() )
+        .function( "ReallocInternalData", &FBlock::ReallocInternalData, allow_raw_pointers() )
+        .function( "Rect", &FBlock::Rect )
+        .function( "Sample", &FBlock::Sample )
+        .function( "SampleSubpixel", &FBlock::SampleSubpixel )
+        .function( "ScanlineBits", select_overload< uint8*( uint16 ) >( &FBlock::ScanlineBits ), allow_raw_pointers() )
+        .function( "SetPixel", &FBlock::SetPixel )
+        .function( "Width", &FBlock::Width );
 }
 
