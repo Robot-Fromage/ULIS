@@ -1378,5 +1378,18 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .class_property( "Magenta", (const FColor*)&FColor::Magenta )
         .class_property( "Cyan", (const FColor*)&FColor::Cyan )
         .class_property( "Transparent", (const FColor*)&FColor::Transparent );
+
+
+
+    /////////
+    // FPixel
+    class_< FPixel, base< ISample > >( "FPixel" )
+        .constructor( optional_override( []( uint8* iData, eFormat iFormat ) { return  FPixel( iData, iFormat ); } ), allow_raw_pointers() )
+        .class_function( "FromPixel", optional_override( []( const FPixel& iValue ) { return  FPixel( iValue ); } ) )
+        .class_function( "FromColor", optional_override( []( const FColor& iValue ) { return  FPixel( iValue ); } ) )
+        .class_function( "FromSample", optional_override( []( const ISample& iValue ) { return  FPixel( iValue ); } ) )
+        .function( "SetPointer", &FPixel::SetPointer, allow_raw_pointers() )
+        .function( "Next", &FPixel::Next )
+        .function( "Prev", &FPixel::Prev );
 }
 
