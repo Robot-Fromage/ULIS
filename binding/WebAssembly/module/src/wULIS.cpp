@@ -1562,5 +1562,46 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         //.function( "FontEngine", &FFont::FontEngine ) // Cannot use this since copy constructor and copy assignment are deleted.
         .function( "Family", &FFont::Family )
         .function( "Style", &FFont::Style );
+
+
+
+    /////////
+    // FColorStep
+    class_< FColorStep >( "FColorStep" )
+        .constructor<>()
+        .constructor< ufloat, const FColor& >()
+        .class_function( "MakeShared", &FColorStep::MakeShared )
+        .function( "Param", select_overload< void ( ufloat ) >( &FColorStep::Param ) )
+        .function( "Param", select_overload< ufloat () const >( &FColorStep::Param ) )
+        .function( "Value", select_overload< FColor& () >( &FColorStep::Value ) );
+
+
+
+    /////////
+    // FGradient
+    class_< FGradient >( "FGradient" )
+        .constructor< eFormat >()
+        //.function( "ColorSteps", select_overload< TArray< FSharedColorStep >& () >( &FGradient::ColorSteps ) )
+        //.function( "AlphaSteps", select_overload< TArray< FSharedAlphaStep >& () >( &FGradient::AlphaSteps ) )
+        .function( "Reset", select_overload< void () >( &FGradient::Reset ) )
+        .function( "Reset", select_overload< void ( eFormat ) >( &FGradient::Reset ) )
+        .function( "ReinterpretInterpolationFormat", &FGradient::ReinterpretInterpolationFormat )
+        .function( "AddColorStep", &FGradient::AddColorStep )
+        .function( "AddAlphaStep", &FGradient::AddAlphaStep )
+        .function( "Sort", &FGradient::Sort );
+
+
+
+    /////////
+    // FSanitizedGradient
+    class_< FSanitizedGradient >( "FSanitizedGradient" )
+        .constructor< eFormat, const FGradient& >()
+        //.function( "ColorSteps", &FSanitizedGradient::ColorSteps )
+        //.function( "AlphaSteps", &FSanitizedGradient::AlphaSteps )
+        .function( "IndexLUTColor", &FSanitizedGradient::IndexLUTColor, allow_raw_pointers() )
+        .function( "IndexLUTAlpha", &FSanitizedGradient::IndexLUTAlpha, allow_raw_pointers() )
+        .function( "ReinterpretInterpolationFormat", &FSanitizedGradient::ReinterpretInterpolationFormat )
+        .function( "FastColorIndexAtParameter", &FSanitizedGradient::FastColorIndexAtParameter )
+        .function( "FastAlphaIndexAtParameter", &FSanitizedGradient::FastAlphaIndexAtParameter );
 }
 
