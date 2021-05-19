@@ -1509,5 +1509,58 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "Size", &FStructuringElement::Size )
         .function( "Pivot", &FStructuringElement::Pivot )
         .function( "SetPivot", &FStructuringElement::SetPivot );
+
+
+
+    /////////
+    // FFontStyleEntry
+    class_< FFontStyleEntry >( "FFontStyleEntry" )
+        .constructor< const std::string&, const std::string&, const std::string& >()
+        .function( "Family", &FFontStyleEntry::Family )
+        .function( "Style", &FFontStyleEntry::Style )
+        .function( "Path", &FFontStyleEntry::Path );
+
+
+
+    /////////
+    // FFontFamilyEntry
+    class_< FFontFamilyEntry >( "FFontFamilyEntry" )
+        .constructor< const std::string& >()
+        .function( "AddFontStyleKey", &FFontFamilyEntry::AddFontStyleKey )
+        .function( "StyleCount", &FFontFamilyEntry::StyleCount )
+        .function( "Styles", &FFontFamilyEntry::Styles )
+        .function( "Family", &FFontFamilyEntry::Family )
+        .function( "FuzzyFindFontStyleKey", &FFontFamilyEntry::FuzzyFindFontStyleKey, allow_raw_pointers() );
+
+
+
+    /////////
+    // FFontEngine
+    class_< FFontEngine >( "FFontEngine" )
+        .constructor<>()
+        .function( "LibraryHandle", &FFontEngine::LibraryHandle, allow_raw_pointers() )
+        .function( "AddLookupPath", &FFontEngine::AddLookupPath )
+        .function( "AddLookupPaths", &FFontEngine::AddLookupPaths )
+        .function( "Refresh", &FFontEngine::Refresh )
+        .function( "FamilyCount", &FFontEngine::FamilyCount )
+        .function( "Records", &FFontEngine::Records )
+        .function( "LookupPaths", &FFontEngine::LookupPaths )
+        .function( "FuzzyFindFontFamily", &FFontEngine::FuzzyFindFontFamily, allow_raw_pointers() )
+        .function( "FuzzyFindFontStyle", &FFontEngine::FuzzyFindFontStyle, allow_raw_pointers() )
+        .function( "FuzzyFindFontPath", &FFontEngine::FuzzyFindFontPath );
+
+
+
+    /////////
+    // FFont
+    class_< FFont >( "FFont" )
+        .constructor< const FFontEngine&, const std::string&, const std::string& >()
+        //.constructor< const FFontEngine&, const FFontStyleEntry* >() // Cannot use this because we can't overload by type, only by parameter count.
+        .constructor< const FFontEngine&, const std::string& >()
+        .constructor< const FFont& >()
+        .function( "FontHandle", &FFont::FontHandle, allow_raw_pointers() )
+        //.function( "FontEngine", &FFont::FontEngine ) // Cannot use this since copy constructor and copy assignment are deleted.
+        .function( "Family", &FFont::Family )
+        .function( "Style", &FFont::Style );
 }
 
