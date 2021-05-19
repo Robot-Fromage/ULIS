@@ -1416,6 +1416,7 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
             , const FOnCleanupData&
         >
         ( allow_raw_pointers() )
+        .function( "JSCanvasCompatibleData", optional_override( []( const FBlock& iSelf ){ return val( typed_memory_view( iSelf.BytesTotal(), iSelf.Bits() ) ); } ) )
         .function( "Area", &FBlock::Area )
         .function( "Bits", select_overload< uint8*() >( &FBlock::Bits ), allow_raw_pointers() )
         .function( "BytesPerScanLine", &FBlock::BytesPerScanLine )
