@@ -1438,5 +1438,76 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "ScanlineBits", select_overload< uint8*( uint16 ) >( &FBlock::ScanlineBits ), allow_raw_pointers() )
         .function( "SetPixel", &FBlock::SetPixel )
         .function( "Width", &FBlock::Width );
+
+
+
+    /////////
+    // FKernel
+    class_< FKernel, base< FBlock > >( "FKernel" )
+        .constructor< const FVec2I&, float >()
+        .constructor< const FKernel& >()
+        .function( "At", select_overload< float ( int, int ) const >( &FKernel::At ) )
+        .function( "At", select_overload< float ( const FVec2I& ) const >( &FKernel::At ) )
+        .function( "SetAt", select_overload< void ( int, int, float ) >( &FKernel::SetAt ) )
+        .function( "SetAt", select_overload< void ( const FVec2I&, float ) >( &FKernel::SetAt ) )
+        .function( "Clear", &FKernel::Clear )
+        .function( "Fill", &FKernel::Fill )
+        .function( "SetZeroes", &FKernel::SetZeroes )
+        .function( "SetOnes", &FKernel::SetOnes )
+        .function( "Sum", &FKernel::Sum )
+        .function( "Add", &FKernel::Add )
+        .function( "Mul", &FKernel::Mul )
+        .function( "Normalize", &FKernel::Normalize )
+        .function( "IsNormalized", &FKernel::IsNormalized )
+        .function( "FlipX", &FKernel::FlipX )
+        .function( "FlipY", &FKernel::FlipY )
+        .function( "Rotate90CW", &FKernel::Rotate90CW )
+        .function( "Rotate90CCW", &FKernel::Rotate90CCW )
+        .function( "Rotate180", &FKernel::Rotate180 )
+        .function( "Normalized", &FKernel::Normalized )
+        .function( "FlippedX", &FKernel::FlippedX )
+        .function( "FlippedY", &FKernel::FlippedY )
+        .function( "Rotated90CW", &FKernel::Rotated90CW )
+        .function( "Rotated90CCW", &FKernel::Rotated90CCW )
+        .function( "Rotated180", &FKernel::Rotated180 )
+        .function( "Size", &FKernel::Size )
+        .function( "Pivot", &FKernel::Pivot )
+        .function( "SetPivot", &FKernel::SetPivot )
+        .class_property( "Identity",       ( const FKernel* )&FKernel::Identity      )
+        .class_property( "Edge4",          ( const FKernel* )&FKernel::Edge4         )
+        .class_property( "Edge8",          ( const FKernel* )&FKernel::Edge8         )
+        .class_property( "Sharpen",        ( const FKernel* )&FKernel::Sharpen       )
+        .class_property( "BoxBlur",        ( const FKernel* )&FKernel::BoxBlur       )
+        .class_property( "GaussianBlur",   ( const FKernel* )&FKernel::GaussianBlur  )
+        .class_property( "UnsharpMask",    ( const FKernel* )&FKernel::UnsharpMask   );
+
+
+
+    /////////
+    // FStructuringElement
+    class_< FStructuringElement, base< FBlock > >( "FStructuringElement" )
+        .constructor< const FVec2I&, eMorphologicalElementValue >()
+        .constructor< const FStructuringElement& >()
+        .function( "At", select_overload< eMorphologicalElementValue ( int, int ) const >( &FStructuringElement::At ) )
+        .function( "At", select_overload< eMorphologicalElementValue ( const FVec2I& ) const >( &FStructuringElement::At ) )
+        .function( "SetAt", select_overload< void ( int, int, eMorphologicalElementValue ) >( &FStructuringElement::SetAt ) )
+        .function( "SetAt", select_overload< void ( const FVec2I&, eMorphologicalElementValue ) >( &FStructuringElement::SetAt ) )
+        .function( "Clear", &FStructuringElement::Clear )
+        .function( "Fill", &FStructuringElement::Fill )
+        .function( "SetZeroes", &FStructuringElement::SetZeroes )
+        .function( "SetOnes", &FStructuringElement::SetOnes )
+        .function( "FlipX", &FStructuringElement::FlipX )
+        .function( "FlipY", &FStructuringElement::FlipY )
+        .function( "Rotate90CW", &FStructuringElement::Rotate90CW )
+        .function( "Rotate90CCW", &FStructuringElement::Rotate90CCW )
+        .function( "Rotate180", &FStructuringElement::Rotate180 )
+        .function( "FlippedX", &FStructuringElement::FlippedX )
+        .function( "FlippedY", &FStructuringElement::FlippedY )
+        .function( "Rotated90CW", &FStructuringElement::Rotated90CW )
+        .function( "Rotated90CCW", &FStructuringElement::Rotated90CCW )
+        .function( "Rotated180", &FStructuringElement::Rotated180 )
+        .function( "Size", &FStructuringElement::Size )
+        .function( "Pivot", &FStructuringElement::Pivot )
+        .function( "SetPivot", &FStructuringElement::SetPivot );
 }
 
