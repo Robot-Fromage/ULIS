@@ -6,8 +6,14 @@
     <meta name="description" content="wULIS4 Interactive WebAssembly Demo">
     <meta name="author" content="Clément BERTHAUD - Layl">
 
-    <!-- Core load wULIS4 and delegate to onStart -->
-    <script> var Module = { onRuntimeInitialized: function() { onStart( Module ); } }; </script>
+    <!-- Core load wULIS4 and delegate to beginApplication -->
+    <script>
+        var Module = {
+            onRuntimeInitialized: function() {
+                beginApplication( Module );
+            }
+        };
+    </script>
     <script src="wULIS4.js"></script>
 
     <!-- monaco editor include style -->
@@ -25,6 +31,19 @@
             </span>
         </div>
         <div id="contents" >
+            <div id="canvas-container" >
+            </div>
+            <div id="controls-container" >
+                <span>
+                    <div title="Run the script." class="control" id="play-control" >&#9654</div><!--
+                 --><div title="Advance one frame." class="control" id="next-control" >&#x23ED</div><!--
+                 --><div title="Pause/Play the script." class="control" id="pause-control" >&#x23F8</div><!--
+                 --><div title="Stop the script." class="control" id="stop-control" >&#9724</div><!--
+                 --><div title="Reload the script." class="control" id="reload-control" >&#8617</div><!--
+                 --><div title="Clear the console." class="control" id="clear-control" >&#10799</div><!--
+                 --><div title="Auto scroll the console." class="control" id="scroll-control" >&#8595</div>
+                </span>
+            </div>
         </div>
         <div id="console" >
         </div>
@@ -39,39 +58,33 @@
 
 <script>
     /////////
+    // Utils
+    var wULIS4;
+    var bReady = false;
+    var bAutoScroll = true;
+    /////////
     // Main gui log function
     function stdout( iText ) {
-        document.getElementById( "console" ).innerHTML += iText + '</br>';
+        var console = document.getElementById( "console" );
+        console.innerHTML += "<div>" + iText + "</div>";
+        if( bAutoScroll )
+            console.scrollTo( 0, console.scrollHeight );
     }
 
     /////////
-    // Main onStart entry point for wULIS4 Demo
-    function onStart( wULIS4 ) {
+    // Main beginApplication entry point for wULIS4 Demo
+    function beginApplication( iMod ) {
+        bReady = true;
+        wULIS4 = iMod;
+        stdout( wULIS4.FullLibraryInformationString() );
         //console.log( wULIS4 );
         //console.log( Object.getOwnPropertyNames( wULIS4["FColor"].prototype ) );
         //console.log( Object.getOwnPropertySymbols( wULIS4["FColor"].prototype ) );
         //console.log( wULIS4["FColor"] );
         //console.log( wULIS4["FColor"].prototype );
-        //for( const key in wULIS4["FColor"] ) console.log( key, wULIS4["FColor"][key], typeof( wULIS4["FColor"][key] ) );
-        //for( const key in wULIS4["FColor"].prototype ) console.log( key, wULIS4["FColor"].prototype[key], typeof( wULIS4["FColor"].prototype[key] ) );
+        //for( const key in wULIS4["FColor"] ) stdout( key, wULIS4["FColor"][key] );
+        //for( const key in wULIS4["FColor"].prototype ) stdout( key, wULIS4["FColor"].prototype[key] );
         //console.log('Version: ' + wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
-        stdout( wULIS4.FullLibraryInformationString() );
 
         // Test FFormatMetrics
         //var fmt = new wULIS4.FFormatMetrics( wULIS4.eFormat.Format_RGBA8 );
@@ -95,6 +108,48 @@
 
 <script>
     /////////
+    // Utils
+    var bPlaying = false;
+
+    /////////
+    // controls UI behaviours
+    document.getElementById( "play-control" ).onclick = function() {
+        //stdout( "Play clicked" );
+        if( bReady )
+            onStart();
+        bPlaying = true;
+    };
+
+    document.getElementById( "stop-control" ).onclick = function() {
+        //stdout( "Stop clicked" );
+        bPlaying = false;
+    };
+
+    document.getElementById( "reload-control" ).onclick = function() {
+        //stdout( "Reload clicked" );
+        bPlaying = false;
+        eval( editor.getValue() );
+    };
+
+    document.getElementById( "clear-control" ).onclick = function() {
+        //stdout( "Clear clicked" );
+        document.getElementById( "console" ).innerHTML = "";
+    };
+
+    document.getElementById( "scroll-control" ).onclick = function() {
+        //stdout( "Scroll clicked" );
+        bAutoScroll = !bAutoScroll;
+    };
+
+    function runUpdate() {
+        if( bReady && bPlaying )
+            onUpdate( 42.0 / 1000.0 );
+    }
+    setInterval( runUpdate, 42 );
+</script>
+
+<script>
+    /////////
     // monaco special behaviours
     monaco.editor.setTheme('vs-dark');
 
@@ -106,7 +161,25 @@
     var editor = monaco.editor.create( document.getElementById( 'monaco-container' ), { value: "", language: 'javascript' } );
 
     // fill Value
-    editor.setValue( "sample" );
+    editor.setValue(
+          "// wULIS4 Interactive WebAssembly Demo.\n"
+        + "// Interaction beetween C++ compiled to WebAssembly and JS container.\n"
+        + "// No documentation is available for the binding yet.\n"
+        + "// You can use the C++ API reference instead:\n"
+        + "// https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/\n"
+        + "// Have fun,\n"
+        + "// - Layl.\n"
+        + "onStart = function() {\n"
+        + "    stdout( wULIS4.FullLibraryInformationString() );\n"
+        + "}\n"
+        + "\n"
+        + "onUpdate = function( delta ) {\n"
+        + "    //stdout( \"test\" );\n"
+        + "}\n"
+        + "\n"
+    );
+
+    eval( editor.getValue() );
 </script>
 
 </html>

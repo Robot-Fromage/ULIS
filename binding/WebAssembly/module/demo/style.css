@@ -1,6 +1,7 @@
 :root {
     --titleHeight: 40px;
-    --consoleHeight: 200px;
+    --consoleHeight: 300px;
+    --controlsHeight: 50px;
 }
 
 html
@@ -43,6 +44,8 @@ body
     display: table;
     box-sizing: border-box;
     text-align: center;
+    background-color: #222222;
+    font-family: Arial Black;
 }
 
 #title span
@@ -65,16 +68,83 @@ body
     background: #000000;
 }
 
+#canvas-container
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: calc( 100% - var( --controlsHeight ) );
+    display: block;
+    box-sizing: border-box;
+    overflow: clip;
+    background: #000000;
+}
+
+#controls-container
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: var( --controlsHeight );
+    display: table;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #111111;
+}
+
+#controls-container span
+{
+    margin: 0;
+    padding: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.control
+{
+    margin: 4px;
+    padding: 5px;
+    display: inline-block;
+    box-sizing: border-box;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    cursor: pointer;
+    background: #222222;
+    width: 30px;
+    height: 30px;
+}
+
+.control:hover
+{
+    background-color: #444444;
+}
+
+.control:active
+{
+    background-color: #010101;
+}
+
 #console
 {
     margin: 0;
-    padding: 10px;
+    padding: 0;
     width: 100%;
     height: var( --consoleHeight );
     display: block;
     box-sizing: border-box;
     background: #111111;
     overflow: scroll;
+}
+
+#console > div {
+    padding: 5px;
+}
+
+#console > div:nth-of-type( odd ) {
+  background: #212121;
 }
 
 #monaco-supercontainer
