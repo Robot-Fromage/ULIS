@@ -32,6 +32,9 @@
         </div>
         <div id="contents" >
             <div id="canvas-container" >
+                <span>
+                    <canvas id="viewport" ></canvas>
+                </span>
             </div>
             <div id="controls-container" >
                 <span>
@@ -110,42 +113,82 @@
     /////////
     // Utils
     var bPlaying = false;
+    var framerate = 24;
+    var timeout_ms = 1000.0 / 24.0;
+    var delta = timeout_ms / 1000.0;
 
     /////////
     // controls UI behaviours
     document.getElementById( "play-control" ).onclick = function() {
-        //stdout( "Play clicked" );
+        bPlaying = true;
         if( bReady )
             onStart();
-        bPlaying = true;
+    };
+
+    document.getElementById( "next-control" ).onclick = function() {
+        bPlaying = false;
+        if( bReady )
+            onUpdate( delta );
+    };
+
+    document.getElementById( "pause-control" ).onclick = function() {
+        bPlaying = !bPlaying;
     };
 
     document.getElementById( "stop-control" ).onclick = function() {
-        //stdout( "Stop clicked" );
         bPlaying = false;
     };
 
     document.getElementById( "reload-control" ).onclick = function() {
-        //stdout( "Reload clicked" );
         bPlaying = false;
         eval( editor.getValue() );
     };
 
     document.getElementById( "clear-control" ).onclick = function() {
-        //stdout( "Clear clicked" );
         document.getElementById( "console" ).innerHTML = "";
     };
 
     document.getElementById( "scroll-control" ).onclick = function() {
-        //stdout( "Scroll clicked" );
         bAutoScroll = !bAutoScroll;
     };
 
     function runUpdate() {
         if( bReady && bPlaying )
-            onUpdate( 42.0 / 1000.0 );
+            onUpdate( delta );
     }
-    setInterval( runUpdate, 42 );
+    setInterval( runUpdate, timeout_ms );
+
+    /////////
+    // Setup
+    {
+        var w = 256;
+        var h = 256;
+        var viewport = document.getElementById( "viewport" );
+        viewport.width = w;
+        viewport.height = h;
+        var ctx = viewport.getContext( "2d" );
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect( 0, 0, w, h );
+        var imageData = ctx.getImageData( 0, 0, w, h );
+    }
+
+    /////////
+    // Refresh
+    function refresh( iBlock ) {
+        var w = iBlock.Width();
+        var h = iBlock.Height();
+        var viewport = document.getElementById( "viewport" );
+        viewport.width = w;
+        viewport.height = h;
+        var ctx = viewport.getContext( "2d" );
+        var imageData = ctx.getImageData( 0, 0, w, h );
+        var bits = iBlock.JSCanvasCompatibleData();
+        imageData.data.set( bits );
+        ctx.putImageData( imageData, 0, 0 );
+    }
+
+    //if( crossOriginIsolated ) { alert( "MT" ); }
+
 </script>
 
 <script>
