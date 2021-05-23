@@ -1647,79 +1647,79 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
         .function( "BlendAA", ctxCallAdapter< WULIS_FUNK( &FContext::BlendAA ), const FBlock&, FBlock&, const FRectI&, const FVec2F&, eBlendMode, eAlphaMode, ufloat >() )
         .function( "BlendColor", ctxCallAdapter< WULIS_FUNK( &FContext::BlendColor ), const ISample&, FBlock&, const FRectI&, eBlendMode, eAlphaMode, ufloat >() )
         .function( "BlendTiled", ctxCallAdapter< WULIS_FUNK( &FContext::BlendTiled ), const FBlock&, FBlock&, const FRectI&, const FRectI&, const FVec2I&, eBlendMode, eAlphaMode, ufloat >() )
+        .function( "BrownianNoise", ctxCallAdapter< WULIS_FUNK( &FContext::BrownianNoise ), FBlock&, float, float, float, ULIS::uint8, int, const FRectI& >() )
+        .function( "BuildSummedAreaTable", ctxCallAdapter< WULIS_FUNK( &FContext::BuildSummedAreaTable ), const FBlock&, FBlock& >() )
+        .function( "Clear", ctxCallAdapter< WULIS_FUNK( &FContext::Clear ), FBlock&, const FRectI& >() )
+        .function( "Clouds", ctxCallAdapter< WULIS_FUNK( &FContext::Clouds ), FBlock&, int, const FRectI& >() )
+        .function( "ConvertFormat", ctxCallAdapter< WULIS_FUNK( &FContext::ConvertFormat ), const FBlock&, FBlock&, const FRectI&, const FVec2I& >() )
+        .function( "Convolve", ctxCallAdapter< WULIS_FUNK( &FContext::Convolve ), const FBlock&, FBlock&, const FKernel&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample& >() )
+        .function( "ConvolvePremult", ctxCallAdapter< WULIS_FUNK( &FContext::ConvolvePremult ), const FBlock&, FBlock&, const FKernel&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample& >() )
+        .function( "Copy", ctxCallAdapter< WULIS_FUNK( &FContext::Copy ), const FBlock&, FBlock&, const FRectI&, const FVec2I& >() )
+        .function( "DrawArc", ctxCallAdapter< WULIS_FUNK( &FContext::DrawArc ), FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI& >() )
+        .function( "DrawArcAA", ctxCallAdapter< WULIS_FUNK( &FContext::DrawArcAA ), FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI& >() )
+        .function( "DrawArcSP", ctxCallAdapter< WULIS_FUNK( &FContext::DrawArcSP ), FBlock&, const FVec2F&, const float, const int, const int, const FColor&, const FRectI& >() )
+        .function( "DrawCircle", ctxCallAdapter< WULIS_FUNK( &FContext::DrawCircle ), FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI& >() )
+        .function( "DrawCircleAA", ctxCallAdapter< WULIS_FUNK( &FContext::DrawCircleAA ), FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI& >() )
+        .function( "DrawCircleSP", ctxCallAdapter< WULIS_FUNK( &FContext::DrawCircleSP ), FBlock&, const FVec2F&, const float, const FColor&, const bool,  const FRectI& >() )
+        .function( "DrawEllipse", ctxCallAdapter< WULIS_FUNK( &FContext::DrawEllipse ), FBlock&, const FVec2I&, const int, const int, const FColor&, const bool, const FRectI& >() )
+        .function( "DrawEllipseAA", ctxCallAdapter< WULIS_FUNK( &FContext::DrawEllipseAA ), FBlock&, const FVec2I&, const int, const int, const FColor&, const bool, const FRectI& >() )
+        .function( "DrawEllipseSP", ctxCallAdapter< WULIS_FUNK( &FContext::DrawEllipseSP ), FBlock&, const FVec2F&, const float, const float, const FColor&, const bool, const FRectI& >() )
         /*
-        .function( "BrownianNoise", ctxCallAdapter< FBlock&, float, float, float, ULIS::uint8, int, const FRectI& >WULIS_FUNK( &FContext::BrownianNoise ), 
-        .function( "BuildSummedAreaTable", ctxCallAdapter< const FBlock&, FBlock& >WULIS_FUNK( &FContext::BuildSummedAreaTable ), 
-        .function( "Clear", ctxCallAdapter< FBlock&, const FRectI& >WULIS_FUNK( &FContext::Clear ), 
-        .function( "Clouds", ctxCallAdapter< FBlock&, int, const FRectI& >WULIS_FUNK( &FContext::Clouds ), 
-        .function( "ConvertFormat", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2I& >WULIS_FUNK( &FContext::ConvertFormat ), 
-        .function( "Convolve", ctxCallAdapter< const FBlock&, FBlock&, const FKernel&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::Convolve ), 
-        .function( "ConvolvePremult", ctxCallAdapter< const FBlock&, FBlock&, const FKernel&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::ConvolvePremult ), 
-        .function( "Copy", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FVec2I& >WULIS_FUNK( &FContext::Copy ), 
-        .function( "DrawArc", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawArc ), 
-        .function( "DrawArcAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawArcAA ), 
-        .function( "DrawArcSP", ctxCallAdapter< FBlock&, const FVec2F&, const float, const int, const int, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawArcSP ), 
-        .function( "DrawCircle", ctxCallAdapter< FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI& >WULIS_FUNK( &FContext::DrawCircle ), 
-        .function( "DrawCircleAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const FColor&, const bool,  const FRectI& >WULIS_FUNK( &FContext::DrawCircleAA ), 
-        .function( "DrawCircleSP", ctxCallAdapter< FBlock&, const FVec2F&, const float, const FColor&, const bool,  const FRectI& >WULIS_FUNK( &FContext::DrawCircleSP ), 
-        .function( "DrawEllipse", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawEllipse ), 
-        .function( "DrawEllipseAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawEllipseAA ), 
-        .function( "DrawEllipseSP", ctxCallAdapter< FBlock&, const FVec2F&, const float, const float, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawEllipseSP ), 
-        .function( "DrawLine", ctxCallAdapter< FBlock&, const FVec2I&, const FVec2I&, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawLine ), 
-        .function( "DrawLineAA", ctxCallAdapter< FBlock&, const FVec2I&, const FVec2I&, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawLineAA ), 
-        .function( "DrawLineSP", ctxCallAdapter< FBlock&, const FVec2F&, const FVec2F&, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawLineSP ), 
-        .function( "DrawPolygon", ctxCallAdapter< FBlock&, const std::vector< FVec2I >&, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawPolygon ), 
-        .function( "DrawPolygonAA", ctxCallAdapter< FBlock&, const std::vector< FVec2I >&, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawPolygonAA ), 
-        .function( "DrawPolygonSP", ctxCallAdapter< FBlock&, const std::vector< FVec2F >&, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawPolygonSP ), 
-        .function( "DrawQuadraticBezier", ctxCallAdapter< FBlock&, const FVec2I&, const FVec2I&, const FVec2I&, const float, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawQuadraticBezier ), 
-        .function( "DrawQuadraticBezierAA", ctxCallAdapter< FBlock&, const FVec2I&, const FVec2I&, const FVec2I&, const float, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawQuadraticBezierAA ), 
-        .function( "DrawQuadraticBezierSP", ctxCallAdapter< FBlock&, const FVec2F&, const FVec2F&, const FVec2F&, const float, const FColor&, const FRectI& >WULIS_FUNK( &FContext::DrawQuadraticBezierSP ), 
-        .function( "DrawRectangle", ctxCallAdapter< FBlock&, const FVec2I&, const FVec2I&, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawRectangle ), 
-        .function( "DrawRotatedEllipse", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawRotatedEllipse ), 
-        .function( "DrawRotatedEllipseAA", ctxCallAdapter< FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawRotatedEllipseAA ), 
-        .function( "DrawRotatedEllipseSP", ctxCallAdapter< FBlock&, const FVec2F&, const float, const float, const int, const FColor&, const bool, const FRectI& >WULIS_FUNK( &FContext::DrawRotatedEllipseAA ), 
-        .function( "Dummy_OP", ctxCallAdapter<>( &FContext::Dummy_OP ), 
-        .function( "Extract", ctxCallAdapter< const FBlock&, FBlock&, ULIS::uint8, ULIS::uint8, bool, const FRectI&, const FVec2I& >WULIS_FUNK( &FContext::Extract ), 
-        .function( "Fill", ctxCallAdapter< FBlock&, const ISample&, const FRectI& >WULIS_FUNK( &FContext::Fill ), 
-        .function( "FillPreserveAlpha", ctxCallAdapter< FBlock&, const ISample&, const FRectI& >WULIS_FUNK( &FContext::FillPreserveAlpha ), 
+        .function( "DrawLine", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2I&, const FVec2I&, const FColor&, const FRectI& >DrawLine
+        .function( "DrawLineAA", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2I&, const FVec2I&, const FColor&, const FRectI& >DrawLineAA
+        .function( "DrawLineSP", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2F&, const FVec2F&, const FColor&, const FRectI& >DrawLineSP
+        .function( "DrawPolygon", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const std::vector< FVec2I >&, const FColor&, const bool, const FRectI& >DrawPolygon
+        .function( "DrawPolygonAA", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const std::vector< FVec2I >&, const FColor&, const bool, const FRectI& >DrawPolygonAA
+        .function( "DrawPolygonSP", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const std::vector< FVec2F >&, const FColor&, const bool, const FRectI& >DrawPolygonSP
+        .function( "DrawQuadraticBezier", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2I&, const FVec2I&, const FVec2I&, const float, const FColor&, const FRectI& >DrawQuadraticBezier
+        .function( "DrawQuadraticBezierAA", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2I&, const FVec2I&, const FVec2I&, const float, const FColor&, const FRectI& >DrawQuadraticBezierAA
+        .function( "DrawQuadraticBezierSP", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2F&, const FVec2F&, const FVec2F&, const float, const FColor&, const FRectI& >DrawQuadraticBezierSP
+        .function( "DrawRectangle", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2I&, const FVec2I&, const FColor&, const bool, const FRectI& >DrawRectangle
+        .function( "DrawRotatedEllipse", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const bool, const FRectI& >DrawRotatedEllipse
+        .function( "DrawRotatedEllipseAA", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2I&, const int, const int, const int, const FColor&, const bool, const FRectI& >DrawRotatedEllipseAA
+        .function( "DrawRotatedEllipseSP", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2F&, const float, const float, const int, const FColor&, const bool, const FRectI& >DrawRotatedEllipseAA
+        .function( "Dummy_OP", ctxCallAdapter<>( &FContext::Dummy_OP
+        .function( "Extract", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, ULIS::uint8, ULIS::uint8, bool, const FRectI&, const FVec2I& >Extract
+        .function( "Fill", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const ISample&, const FRectI& >Fill
+        .function( "FillPreserveAlpha", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const ISample&, const FRectI& >FillPreserveAlpha
         .function( "FinishEventNo_OP", &FContext::FinishEventNo_OP )
-        .function( "LinearTosRGB", ctxCallAdapter< FBlock&, const FRectI& >WULIS_FUNK( &FContext::LinearTosRGB ), 
+        .function( "LinearTosRGB", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FRectI& >LinearTosRGB
         .class_function( "LoadBlockFromDiskMetrics", &FContext::LoadBlockFromDiskMetrics )
         .class_function( "LoadPSDFromDiskMetrics", &FContext::LoadPSDFromDiskMetrics )
         .class_function( "MaxMipLevelMetrics", &FContext::MaxMipLevelMetrics )
         .class_function( "MipLevelMetrics", &FContext::MipLevelMetrics )
         .class_function( "MipMapMetrics", &FContext::MipMapMetrics )
         .class_function( "MipRectsMetrics", &FContext::MipRectsMetrics )
-        .function( "MorphologicalProcess", ctxCallAdapter< const FBlock&, FBlock&, const FStructuringElement&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::MorphologicalProcess ), 
-        .function( "Premultiply", ctxCallAdapter< FBlock&, const FRectI& >WULIS_FUNK( &FContext::Premultiply ), 
-        .function( "RasterGradient", ctxCallAdapter< FBlock&, const FVec2F&, const FVec2F&, const FSanitizedGradient&, float, eGradientType, const FRectI&, const FSchedulePolicy >WULIS_FUNK( &FContext::RasterGradient ), 
-        .function( "RasterText", ctxCallAdapter< FBlock&, const std::wstring&, const FFont&, ULIS::uint32, const FMat3F&, const ISample& >WULIS_FUNK( &FContext::RasterText ), 
-        .function( "RasterTextAA", ctxCallAdapter< FBlock&, const std::wstring&, const FFont&, ULIS::uint32, const FMat3F&, const ISample& >WULIS_FUNK( &FContext::RasterTextAA ), 
-        .function( "Resize", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FRectF&, eResamplingMethod, eBorderMode, const ISample&, const FBlock* >WULIS_FUNK( &FContext::Resize ), 
-        .function( "SanitizeZeroAlpha", ctxCallAdapter< FBlock&, const FRectI& >WULIS_FUNK( &FContext::SanitizeZeroAlpha ), 
-        .function( "SaveBlockToDisk", ctxCallAdapter< const FBlock&, const std::string&, eFileFormat, int >WULIS_FUNK( &FContext::SaveBlockToDisk ), 
-        .function( "sRGBToLinear", ctxCallAdapter< FBlock&, const FRectI& >WULIS_FUNK( &FContext::sRGBToLinear ), 
+        .function( "MorphologicalProcess", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, const FStructuringElement&, const FRectI&, const FVec2I&, eResamplingMethod, eBorderMode, const ISample& >MorphologicalProcess
+        .function( "Premultiply", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FRectI& >Premultiply
+        .function( "RasterGradient", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FVec2F&, const FVec2F&, const FSanitizedGradient&, float, eGradientType, const FRectI&, const FSchedulePolicy >RasterGradient
+        .function( "RasterText", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const std::wstring&, const FFont&, ULIS::uint32, const FMat3F&, const ISample& >RasterText
+        .function( "RasterTextAA", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const std::wstring&, const FFont&, ULIS::uint32, const FMat3F&, const ISample& >RasterTextAA
+        .function( "Resize", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, const FRectI&, const FRectF&, eResamplingMethod, eBorderMode, const ISample&, const FBlock* >Resize
+        .function( "SanitizeZeroAlpha", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FRectI& >SanitizeZeroAlpha
+        .function( "SaveBlockToDisk", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, const std::string&, eFileFormat, int >SaveBlockToDisk
+        .function( "sRGBToLinear", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FRectI& >sRGBToLinear
         .class_function( "SummedAreaTableMetrics", &FContext::SummedAreaTableMetrics )
-        .function( "Swap", ctxCallAdapter< FBlock&, ULIS::uint8, ULIS::uint8, const FRectI& >WULIS_FUNK( &FContext::Swap ), 
+        .function( "Swap", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, ULIS::uint8, ULIS::uint8, const FRectI& >Swap
         .class_function( "TextMetrics", &FContext::TextMetrics )
-        .function( "TransformAffine", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FMat3F&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::TransformAffine ), 
+        .function( "TransformAffine", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, const FRectI&, const FMat3F&, eResamplingMethod, eBorderMode, const ISample& >TransformAffine
         .class_function( "TransformAffineMetrics", &FContext::TransformAffineMetrics )
-        .function( "TransformAffineTiled", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FRectI&, const FMat3F&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::TransformAffineTiled ), 
-        .function( "TransformBezier", ctxCallAdapter< const FBlock&, FBlock&, const TArray< FCubicBezierControlPoint >&, float, ULIS::uint32, const FRectI&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::TransformBezier ), 
+        .function( "TransformAffineTiled", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, const FRectI&, const FRectI&, const FMat3F&, eResamplingMethod, eBorderMode, const ISample& >TransformAffineTiled
+        .function( "TransformBezier", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, const TArray< FCubicBezierControlPoint >&, float, ULIS::uint32, const FRectI&, eResamplingMethod, eBorderMode, const ISample& >TransformBezier
         .class_function( "TransformBezierMetrics", &FContext::TransformBezierMetrics )
-        .function( "TransformPerspective", ctxCallAdapter< const FBlock&, FBlock&, const FRectI&, const FMat3F&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::TransformPerspective ), 
+        .function( "TransformPerspective", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, const FRectI&, const FMat3F&, eResamplingMethod, eBorderMode, const ISample& >TransformPerspective
         .class_function( "TransformPerspectiveMetrics", &FContext::TransformBezierMetrics )
-        .function( "Unpremultiply", ctxCallAdapter< FBlock&, const FRectI& >WULIS_FUNK( &FContext::Unpremultiply ), 
-        .function( "ValueNoise", ctxCallAdapter< FBlock&, float, int, const FRectI& >WULIS_FUNK( &FContext::ValueNoise ), 
-        .function( "VoronoiNoise", ctxCallAdapter< FBlock&, ULIS::uint32, int, const FRectI& >WULIS_FUNK( &FContext::VoronoiNoise ), 
-        .function( "Wait", &FContext::Wait ), 
-        .function( "WhiteNoise", ctxCallAdapter< FBlock&, int, const FRectI& >WULIS_FUNK( &FContext::WhiteNoise ), 
-        .function( "XAllocateBlockData", ctxCallAdapter< FBlock&, ULIS::uint16, ULIS::uint16, eFormat, const FColorSpace*, const FOnInvalidBlock&, const FOnCleanupData&, const FSchedulePolicy >WULIS_FUNK( &FContext::XAllocateBlockData ), 
-        .function( "XBuildMipMap", ctxCallAdapter< const FBlock&, FBlock&, int, const FRectI&, eResamplingMethod >WULIS_FUNK( &FContext::XBuildMipMap ), 
-        .function( "XCreateTestBlock", ctxCallAdapter< FBlock& >WULIS_FUNK( &FContext::XCreateTestBlock ), 
-        .function( "XDeallocateBlockData", ctxCallAdapter< FBlock& >WULIS_FUNK( &FContext::XDeallocateBlockData ), 
-        .function( "XLoadBlockFromDisk", ctxCallAdapter< FBlock&, const std::string& >WULIS_FUNK( &FContext::XLoadBlockFromDisk ), 
-        .function( "XProcessBezierDisplacementField", ctxCallAdapter< const FBlock&, const FBlock&, FBlock&, FBlock&, const TArray< FCubicBezierControlPoint >&, float, ULIS::uint32, const FRectI&, eResamplingMethod, eBorderMode, const ISample& >WULIS_FUNK( &FContext::XProcessBezierDisplacementField ), 
+        .function( "Unpremultiply", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const FRectI& >Unpremultiply
+        .function( "ValueNoise", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, float, int, const FRectI& >ValueNoise
+        .function( "VoronoiNoise", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, ULIS::uint32, int, const FRectI& >VoronoiNoise
+        .function( "Wait", &FContext::Wait
+        .function( "WhiteNoise", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, int, const FRectI& >WhiteNoise
+        .function( "XAllocateBlockData", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, ULIS::uint16, ULIS::uint16, eFormat, const FColorSpace*, const FOnInvalidBlock&, const FOnCleanupData&, const FSchedulePolicy >XAllocateBlockData
+        .function( "XBuildMipMap", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, FBlock&, int, const FRectI&, eResamplingMethod >XBuildMipMap
+        .function( "XCreateTestBlock", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock& >XCreateTestBlock
+        .function( "XDeallocateBlockData", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock& >XDeallocateBlockData
+        .function( "XLoadBlockFromDisk", ctxCallAdapter< WULIS_FUNK( &FContext:: ), FBlock&, const std::string& >XLoadBlockFromDisk
+        .function( "XProcessBezierDisplacementField", ctxCallAdapter< WULIS_FUNK( &FContext:: ), const FBlock&, const FBlock&, FBlock&, FBlock&, const TArray< FCubicBezierControlPoint >&, float, ULIS::uint32, const FRectI&, eResamplingMethod, eBorderMode, const ISample& >XProcessBezierDisplacementField
 */;
 }
 
