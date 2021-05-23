@@ -92,7 +92,9 @@
 /////////////////////////////////////////////////////
 // Disable thread and SIMD for Emscripten target
 #ifdef ULIS_EMSCRIPTEN
+#ifndef __EMSCRIPTEN_PTHREADS__
 #define ULIS_NO_THREAD_SUPPORT
+#endif
 #define ULIS_NO_SIMD_SUPPORT
 #endif
 
