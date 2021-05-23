@@ -1,1 +1,4 @@
+# HTTP header fields used to enable multithreading with shared buffers, now disabled.
+#Header set Cross-Origin-Opener-Policy "same-origin"
+#Header set Cross-Origin-Embedder-Policy "require-corp"
 AddType application/wasm wasm
