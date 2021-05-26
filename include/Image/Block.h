@@ -15,6 +15,7 @@
 #include "Image/Color.h"
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"
+#include "Image/Size2D.h"
 #include "Image/Pixel.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
@@ -61,6 +62,7 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FBlock
     : public IHasFormat
     , public IHasColorSpace
+    , public IHasSize2D
 {
 public:
     /*! Destroy the block and invoke the cleanup callback. */
@@ -247,44 +249,6 @@ public:
     \sa ScanlineBits()
     */
     const uint8* PixelBits( uint16 iX, uint16 iY ) const;
-
-    /*!
-    Return the width of the block.
-
-    \sa Height()
-    \sa Area()
-    \sa Rect()
-    */
-    uint16 Width() const;
-
-    /*!
-    Return the height of the block.
-
-    \sa Width()
-    \sa Area()
-    \sa Rect()
-    */
-    uint16 Height() const;
-
-    /*!
-    Return the area of the block.
-
-    This can also be interpreted as the full length of the underlying buffer.
-
-    \sa Width()
-    \sa Height()
-    \sa Rect()
-    */
-    uint32 Area() const;
-
-    /*!
-    Return a rect representing the bounding box of the block.
-
-    \sa Width()
-    \sa Height()
-    \sa Area()
-    */
-    FRectI Rect() const;
 
     /*!
     Return the numbers of bytes per scanline
@@ -517,8 +481,6 @@ public:
 
 protected:
     uint8* mBitmap; ///< Contiguous memory storage buffer for the block.
-    uint16 mWidth; ///< The width of the block.
-    uint16 mHeight; ///< Height of the block.
     uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.
     uint64 mBytesTotal; ///< Cached number of bytes for the whole buffer.
     FOnInvalidBlock mOnInvalid; ///< The callback for when the block is dirty.

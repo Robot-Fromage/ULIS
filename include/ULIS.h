@@ -45,6 +45,8 @@
 #include "Memory/Memory.h"
 #include "Memory/ForwardList.h"
 #include "Memory/Queue.h"
+#include "Memory/Tree.h"
+#include "Memory/ContainerAlgorithms.h"
 // String
 #include "String/String.h"
 #include "String/WString.h"

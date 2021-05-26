@@ -106,10 +106,9 @@ FKernel&
 FKernel::operator=( const FKernel& iOther ) {
     mPivot = iOther.mPivot;
     delete [] mBitmap;
-    mWidth = iOther.Width();
-    mHeight = iOther.Height();
-    mBytesPerScanline = mWidth * BytesPerPixel();
-    mBytesTotal = mHeight * mBytesPerScanline;
+    ReinterpretSize( FVec2UI16( iOther.Size() ) );
+    mBytesPerScanline = Width() * BytesPerPixel();
+    mBytesTotal = Height() * mBytesPerScanline;
     mBitmap = new uint8[ mBytesTotal ];
     memcpy( mBitmap, iOther.mBitmap, BytesTotal() );
     return  *this;
@@ -119,10 +118,9 @@ FKernel&
 FKernel::operator=( FKernel&& iOther ) {
     mPivot = iOther.mPivot;
     delete [] mBitmap;
-    mWidth = iOther.Width();
-    mHeight = iOther.Height();
-    mBytesPerScanline = mWidth * BytesPerPixel();
-    mBytesTotal = mHeight * mBytesPerScanline;
+    ReinterpretSize( FVec2UI16( iOther.Size() ) );
+    mBytesPerScanline = Width() * BytesPerPixel();
+    mBytesTotal = Height() * mBytesPerScanline;
     iOther.OnCleanup( FOnCleanupData() );
     mBitmap = iOther.mBitmap;
     iOther.mBitmap = nullptr;
@@ -221,9 +219,9 @@ FKernel::IsNormalized() const {
 void
 FKernel::FlipX() {
     const uint32 w = Width() - 1;
-    FKernel ret( FVec2I( mWidth, mHeight ) );
-    for( uint32 x = 0; x < mWidth; ++x )
-        for( uint32 y = 0; y < mHeight; ++y )
+    FKernel ret( FVec2I( Width(), Height() ) );
+    for( uint32 x = 0; x < Width(); ++x )
+        for( uint32 y = 0; y < Height(); ++y )
             ret.SetAt( x, y, At( w - x, y ) );
     *this = std::move( ret );
 }
@@ -231,42 +229,42 @@ FKernel::FlipX() {
 void
 FKernel::FlipY() {
     const uint32 h = Height() - 1;
-    FKernel ret( FVec2I( mWidth, mHeight ) );
-    for( uint32 x = 0; x < mWidth; ++x )
-        for( uint32 y = 0; y < mHeight; ++y )
+    FKernel ret( FVec2I( Width(), Height() ) );
+    for( uint32 x = 0; x < Width(); ++x )
+        for( uint32 y = 0; y < Height(); ++y )
             ret.SetAt( x, y, At( x, h - y ) );
     *this = std::move( ret );
 }
 
 void
 FKernel::Rotate90CW() {
-    FKernel ret( FVec2I( mHeight, mWidth ) );
+    FKernel ret( FVec2I( Height(), Width() ) );
     const int w = Height() - 1;
     //const int h = Width() - 1;
-    for( uint32 x = 0; x < mHeight; ++x )
-        for( uint32 y = 0; y < mWidth; ++y )
+    for( uint32 x = 0; x < Height(); ++x )
+        for( uint32 y = 0; y < Width(); ++y )
             ret.SetAt( x, y, At( y, w - x ) );
     *this = std::move( ret );
 }
 
 void
 FKernel::Rotate90CCW() {
-    FKernel ret( FVec2I( mHeight, mWidth ) );
+    FKernel ret( FVec2I( Height(), Width() ) );
     //const int w = Height() - 1;
     const int h = Width() - 1;
-    for( uint32 x = 0; x < mHeight; ++x )
-        for( uint32 y = 0; y < mWidth; ++y )
+    for( uint32 x = 0; x < Height(); ++x )
+        for( uint32 y = 0; y < Width(); ++y )
             ret.SetAt( x, y, At( h - y, x ) );
     *this = std::move( ret );
 }
 
 void
 FKernel::Rotate180() {
-    FKernel ret( FVec2I( mWidth, mHeight ) );
+    FKernel ret( FVec2I( Width(), Height() ) );
     const int w = Width() - 1;
     const int h = Height() - 1;
-    for( uint32 x = 0; x < mWidth; ++x )
-        for( uint32 y = 0; y < mHeight; ++y )
+    for( uint32 x = 0; x < Width(); ++x )
+        for( uint32 y = 0; y < Height(); ++y )
             ret.SetAt( x, y, At( w - x, h - y ) );
     *this = std::move( ret );
 }

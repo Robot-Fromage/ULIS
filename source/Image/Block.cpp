@@ -28,9 +28,8 @@ FBlock::FBlock(
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
+    , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , mBitmap( nullptr )
-    , mWidth( iWidth )
-    , mHeight( iHeight )
     , mBytesPerScanline( 0 )
     , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
@@ -38,8 +37,8 @@ FBlock::FBlock(
 {
     ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    mBytesPerScanline = mWidth * FormatMetrics().BPP;
-    mBytesTotal = mHeight * mBytesPerScanline;
+    mBytesPerScanline = Width() * FormatMetrics().BPP;
+    mBytesTotal = Height() * mBytesPerScanline;
 
     ULIS_ASSERT( mBytesTotal != 0, "Cannot allocate a buffer of size 0" );
 
@@ -58,9 +57,8 @@ FBlock::FBlock(
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
+    , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , mBitmap( iData )
-    , mWidth( iWidth )
-    , mHeight( iHeight )
     , mBytesPerScanline( 0 )
     , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
@@ -68,8 +66,8 @@ FBlock::FBlock(
 {
     //ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     //ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
-    mBytesPerScanline = mWidth * FormatMetrics().BPP;
-    mBytesTotal = mHeight * mBytesPerScanline;
+    mBytesPerScanline = Width() * FormatMetrics().BPP;
+    mBytesTotal = Height() * mBytesPerScanline;
 }
 
 FBlock
@@ -93,15 +91,15 @@ FBlock::Bits()
 uint8*
 FBlock::ScanlineBits( uint16 iRow )
 {
-    ULIS_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
+    ULIS_ASSERT( iRow >= 0 && iRow < Height(), "Index out of range" );
     return  mBitmap + ( iRow * mBytesPerScanline );
 }
 
 uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY )
 {
-    ULIS_ASSERT( iX < mWidth, "Index out of range: " << iX << " " << mWidth );
-    ULIS_ASSERT( iY < mHeight, "Index out of range: " << iY << " " << mHeight );
+    ULIS_ASSERT( iX < Width(), "Index out of range: " << iX << " " << Width() );
+    ULIS_ASSERT( iY < Height(), "Index out of range: " << iY << " " << Height() );
     return  mBitmap + ( iX * FormatMetrics().BPP + iY * mBytesPerScanline );
 }
 
@@ -114,41 +112,16 @@ FBlock::Bits() const
 const uint8*
 FBlock::ScanlineBits( uint16 iRow ) const
 {
-    ULIS_ASSERT( iRow >= 0 && iRow < mHeight, "Index out of range" );
+    ULIS_ASSERT( iRow >= 0 && iRow < Height(), "Index out of range" );
     return  mBitmap + ( iRow * mBytesPerScanline );
 }
 
 const uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY ) const
 {
-    ULIS_ASSERT( iX >= 0 && iX < mWidth, "Index out of range" );
-    ULIS_ASSERT( iY >= 0 && iY < mHeight, "Index out of range" );
+    ULIS_ASSERT( iX >= 0 && iX < Width(), "Index out of range" );
+    ULIS_ASSERT( iY >= 0 && iY < Height(), "Index out of range" );
     return  mBitmap + ( iX * FormatMetrics().BPP + iY * mBytesPerScanline );
-}
-
-uint16
-FBlock::Width() const
-{
-    return  mWidth;
-}
-
-
-uint16
-FBlock::Height() const
-{
-    return  mHeight;
-}
-
-uint32
-FBlock::Area() const
-{
-    return  mWidth * mHeight;
-}
-
-FRectI
-FBlock::Rect() const
-{
-    return  FRectI( 0, 0, mWidth, mHeight );
 }
 
 uint32
@@ -185,8 +158,8 @@ FBlock::Dirty( const FRectI* iRectList, const uint32 iNumRects, bool iCall ) con
 
 #ifdef ULIS_ASSERT_ENABLED
     {
-        int w = static_cast< int >( mWidth );
-        int h = static_cast< int >( mHeight );
+        int w = static_cast< int >( Width() );
+        int h = static_cast< int >( Height() );
         for( uint32 i = 0; i < iNumRects; ++i ) {
             int x1 = iRectList[i].x;
             int y1 = iRectList[i].y;
@@ -228,10 +201,10 @@ FBlock::Sample( int16 iX, int16 iY, eBorderMode iBorderMode, const FColor& iCons
                 return  iConstant;
         }
         case eBorderMode::Border_Extend : {
-            return  Color( FMath::Clamp( iX, int16(0), int16( mWidth ) ), FMath::Clamp( iY, int16(0), int16( mHeight ) ) );
+            return  Color( FMath::Clamp( iX, int16(0), int16( Width() ) ), FMath::Clamp( iY, int16(0), int16( Height() ) ) );
         }
         case eBorderMode::Border_Wrap : {
-            return  Color( FMath::PyModulo( iX, int16( mWidth ) ), FMath::PyModulo( iY, int16( mHeight ) ) );
+            return  Color( FMath::PyModulo( iX, int16( Width() ) ), FMath::PyModulo( iY, int16( Height() ) ) );
         }
         default : {
             return  FColor::Transparent;
@@ -288,7 +261,7 @@ FBlock::SetPixel( uint16 iX, uint16 iY, const ISample& iSample )
 void
 FBlock::SetPixelSafe(uint16 iX, uint16 iY, const ISample& iSample)
 {
-    if( iX < 0 || iY < 0 || iX >= mWidth || iY >= mHeight )
+    if( iX < 0 || iY < 0 || iX >= Width() || iY >= Height() )
         return;
 
     FPixel pixel = Pixel(iX, iY);
@@ -325,15 +298,13 @@ FBlock::LoadFromData(
 
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
-
+    ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
     mBitmap = iData;
-    mWidth = iWidth;
-    mHeight = iHeight;
     mOnInvalid = iOnInvalid;
     mOnCleanup = iOnCleanup;
 
-    mBytesPerScanline = mWidth * FormatMetrics().BPP;
-    mBytesTotal = mHeight * mBytesPerScanline;
+    mBytesPerScanline = Width() * FormatMetrics().BPP;
+    mBytesTotal = Height() * mBytesPerScanline;
 }
 
 void
@@ -353,16 +324,15 @@ FBlock::ReallocInternalData(
 
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
+    ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
 
     mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
     ULIS_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
-    mWidth = iWidth;
-    mHeight = iHeight;
     mOnInvalid = iOnInvalid;
     mOnCleanup = iOnCleanup;
 
-    mBytesPerScanline = mWidth * FormatMetrics().BPP;
-    mBytesTotal = mHeight * mBytesPerScanline;
+    mBytesPerScanline = Width() * FormatMetrics().BPP;
+    mBytesTotal = Height() * mBytesPerScanline;
 }
 
 ULIS_NAMESPACE_END

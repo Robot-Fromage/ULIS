@@ -18,8 +18,169 @@
 #include <chrono>
 using namespace ::ULIS;
 
+class IKLayer
+    : public virtual TNode< IKLayer >
+{
+    typedef TNode< IKLayer > tNode;
+    typedef TNode< IKLayer > tParent;
+    typedef TNode< IKLayer > tSuperClass;
+    typedef IKLayer tSelf;
+
+public:
+    virtual ~IKLayer() override = 0
+    {}
+
+    IKLayer( const FString& iName = "Untitled", tParent iParent = nullptr )
+        : tNode( iParent )
+        , mName( iName )
+    {}
+
+    const FString& Name() const {
+        return  mName;
+    }
+
+    void SetName( const FString& iName ) {
+        mName = iName;
+    }
+
+private:
+    FString mName;
+};
+
+class FKLayerImage
+    : public IKLayer
+{
+    typedef TNode< IKLayer > tNode;
+    typedef TNode< IKLayer > tParent;
+    typedef IKLayer tSuperClass;
+    typedef FKLayerImage tSelf;
+
+public:
+    virtual ~FKLayerImage() override
+    {}
+
+    FKLayerImage(
+          const FString& iName = "Untitled"
+        , eBlendMode iBlendMode = Blend_Normal
+        , tParent iParent = nullptr
+    )
+        : tSuperClass( iName, iParent )
+        , mBlendMode( iBlendMode )
+    {}
+
+    eBlendMode BlendMode() const {
+        return  mBlendMode;
+    }
+
+    void SetBlendMode( eBlendMode iBlendMode ) {
+        mBlendMode = iBlendMode;
+    }
+
+private:
+    eBlendMode mBlendMode;
+};
+
+class FKLayerFolder final
+    : public FKLayerImage
+    , public TConcreteRoot< FKLayerFolder, IKLayer >
+{
+    typedef TNode< IKLayer > tNode;
+    typedef TNode< IKLayer > tParent;
+    typedef FKLayerImage tSuperClassLayer;
+    typedef TConcreteRoot< FKLayerFolder, IKLayer > tSuperClassRoot;
+    typedef FKLayerFolder tSelf;
+
+public:
+    ~FKLayerFolder() override
+    {}
+
+    FKLayerFolder(
+          const FString& iName = "Untitled"
+        , eBlendMode iBlendMode = Blend_Normal
+        , bool iCollapsed = false
+        , tParent iParent = nullptr
+    )
+        : tSuperClassLayer( iName, iBlendMode, iParent )
+        , tSuperClassRoot()
+        , mCollapsed( iCollapsed )
+    {}
+
+    bool Collapsed() const {
+        return  mCollapsed;
+    }
+
+    void SetCollapsed( bool iCollapsed ) {
+        mCollapsed = iCollapsed;
+    }
+
+private:
+    bool mCollapsed;
+};
+
+class FKLayerStack final
+    : public TConcreteRoot< FKLayerStack, IKLayer >
+{
+    typedef TNode< IKLayer > tNode;
+    typedef TConcreteRoot< FKLayerStack, IKLayer > tSuperClass;
+    typedef FKLayerStack tSelf;
+
+public:
+    ~FKLayerStack() override
+    {}
+
+    FKLayerStack(
+          uint16 iWidth = 1024
+        , uint16 iHeight = 1024
+        , eFormat iFormat = eFormat::Format_RGBA8
+    )
+        : tSuperClass()
+        , mWidth( iWidth )
+        , mHeight( iHeight )
+        , mFormat( iFormat )
+    {}
+
+    uint16 Width() const {
+        return  mWidth;
+    }
+
+    uint16 Height() const {
+        return  mHeight;
+    }
+
+    eFormat Format() const {
+        return  mFormat;
+    }
+
+private:
+    void SetWidth( uint16 iWidth ) {
+        mWidth = iWidth;
+    }
+
+    void SetHeight( uint16 iHeight ) {
+        mHeight = iHeight;
+    }
+
+    void SetFormat( eFormat iFormat ) {
+        mFormat = iFormat;
+    }
+
+private:
+    uint16 mWidth;
+    uint16 mHeight;
+    eFormat mFormat;
+};
+
 int
 main( int argc, char *argv[] ) {
+
+
+    FKLayerStack* stack = new FKLayerStack();
+    FKLayerFolder* folder = new FKLayerFolder();
+    folder->AddChild( new FKLayerImage() ).AddChild( new FKLayerImage() ).AddChild( new FKLayerImage() );
+    stack->AddChild( folder );
+    stack->AddChild( new FKLayerImage() );
+    delete stack;
+
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;

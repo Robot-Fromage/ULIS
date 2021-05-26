@@ -25,32 +25,39 @@ class TAbstractRoot;
 template< class Type >
 class TNode {
 
-    friend class TAbstractRoot< Type >;
-    typedef TNode< Type > tSelf;
+    typedef TNode< Type >           tSelf;
+    typedef TAbstractRoot< Type >   tParent;
 
-private:
+public:
     virtual ~TNode() {
-        if( mData )
-            delete  mData;
     }
 
-    TNode()
-        : mData( new Type() )
-        , mParent( nullptr )
+    TNode( tParent* iParent = nullptr )
+        : mParent( iParent )
     {}
 
-    TNode( Type* iData, tSelf* iParent = nullptr )
-        : mData( iData )
-        , mParent( iParent )
-    {}
+    Type* Self() {
+        return  this;
+    }
 
-    virtual bool CanHaveChildren() const {
-        return  false;
+    const Type* Self() const {
+        return  this;
+    }
+
+    tParent* Parent() {
+        return  mParent;
+    }
+
+    const tParent* Parent() const {
+        return  mParent;
+    }
+
+    void SetParent( tParent* iParent ) {
+        mParent = iParent;
     }
 
 private:
-    Type* mData;
-    tSelf* mParent;
+    tParent* mParent;
 };
 
 /////////////////////////////////////////////////////
@@ -58,45 +65,40 @@ private:
 /// @brief      Abstract Root
 template< class Type >
 class TAbstractRoot
-    : public TNode< Type >
+    : public virtual TNode< Type >
 {
-    typedef TNode< Type > tNode;
+    typedef TAbstractRoot< Type >   tSelf;
+    typedef TNode< Type >           tSuperClass;
+    typedef TAbstractRoot< Type >   tParent;
+    typedef TNode< Type >           tNode;
 
 public:
     virtual ~TAbstractRoot() override {
         Reset();
     }
 
+    TAbstractRoot( tParent* iParent = nullptr )
+        : tSuperClass( iParent )
+    {}
+
     void
     Reset()
     {
-        for( uint64 i = 0; i < mChilds.Size(); ++i )
-            delete  mChilds[i];
-        mChilds.Clear();
-    }
-
-    TAbstractRoot()
-        : tNode()
-    {}
-
-    TAbstractRoot( Type* iData, tNode* iParent = nullptr )
-        : tNode( iData, iParent )
-    {}
-
-    virtual bool CanHaveChildren() const override {
-        return  true;
+        for( uint64 i = 0; i < mChildren.Size(); ++i )
+            delete  mChildren[i];
+        mChildren.Clear();
     }
 
     TArray< tNode* >& Children() {
         return  mChildren;
     }
 
-    const TArray< ILayer* >& Children() const {
+    const TArray< tNode* >& Children() const {
         return  mChildren;
     }
 
     void DeleteChild( int iIndex ) {
-        ULIS_ASSERT( iIndex < mChildren.Size() );
+        ULIS_ASSERT( iIndex < mChildren.Size(), "Bad Index" );
         delete mChildren[ iIndex ];
         mChildren.Erase( iIndex, 1 );
     }
@@ -112,29 +114,26 @@ template< class ConcreteDerived, class Type >
 class TConcreteRoot
     : public TAbstractRoot< Type >
 {
-    typedef TNode< Type > tNode;
     typedef TConcreteRoot< ConcreteDerived, Type > tSelf;
-    typedef TAbstractRoot< Type > tParent;
+    typedef TAbstractRoot< Type > tSuperClass;
+    typedef TConcreteRoot< ConcreteDerived, Type > tParent;
+    typedef TNode< Type > tNode;
 
 public:
     virtual ~TConcreteRoot() override {
     }
 
-    TConcreteRoot()
-        : tParent()
+    TConcreteRoot( tParent* iParent = nullptr )
+        : tSuperClass( iParent )
     {}
 
-    TConcreteRoot( Type* iData, tNode* iParent = nullptr )
-        : tParent( iData, iParent )
-    {}
-
-    ConcreteDerived& AddChild( Type* iData, uint64 iIndex = ULIS_UINT64_MAX ) {
-        tNode* node = new tNode( iData, this );
+    ConcreteDerived& AddChild( tNode* iNode, uint64 iIndex = ULIS_UINT64_MAX ) {
+        iNode->SetParent( this );
         if( iIndex >= Children().Size() )
-            Children().PushBack( node );
+            Children().PushBack( iNode );
         else
-            Children().Insert( iIndex, node );
-        return *this;
+            Children().Insert( iIndex, iNode );
+        return *static_cast< ConcreteDerived* >( this );
     }
 };
 
