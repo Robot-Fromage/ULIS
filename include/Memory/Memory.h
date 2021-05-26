@@ -15,5 +15,20 @@
 ULIS_NAMESPACE_BEGIN
 ULIS_API void* XMalloc( uint64 iSizeBytes );
 ULIS_API void XFree( void* iAlloc );
+
+template< typename Derived, typename Base >
+Derived& DynamicCast( Base& iBase );
+
+/*
+class UBase {
+public:
+    virtual ~UBase() {
+    }
+};
+class UDerived : public UBase {};
+
+template ULIS_API UDerived& DynamicCast< UDerived, UBase >( UBase& );
+*/
+
 ULIS_NAMESPACE_END
 

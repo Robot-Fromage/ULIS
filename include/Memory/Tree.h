@@ -36,12 +36,12 @@ public:
         : mParent( iParent )
     {}
 
-    Type* Self() {
-        return  this;
+    Type& Self() {
+        return  *reinterpret_cast< Type* >( __GetDerivedPtr__() );
     }
 
-    const Type* Self() const {
-        return  this;
+    const Type& Self() const {
+        return  *reinterpret_cast< Type* >( __GetDerivedPtr__() );
     }
 
     tParent* Parent() {
@@ -54,6 +54,16 @@ public:
 
     void SetParent( tParent* iParent ) {
         mParent = iParent;
+    }
+
+private:
+    #define ULIS_DERIVED_FROM_NODE                      \
+        virtual void* __GetDerivedPtr__() override {    \
+            return this;                                \
+        }
+
+    virtual void* __GetDerivedPtr__() = 0 {
+        return nullptr;
     }
 
 private:
@@ -95,6 +105,14 @@ public:
 
     const TArray< tNode* >& Children() const {
         return  mChildren;
+    }
+
+    Type& operator[]( uint64 iIndex ) {
+        return  mChildren[ iIndex ]->Self();
+    }
+
+    const Type& operator[]( uint64 iIndex ) const {
+        return  mChildren[ iIndex ]->Self();
     }
 
     void DeleteChild( int iIndex ) {

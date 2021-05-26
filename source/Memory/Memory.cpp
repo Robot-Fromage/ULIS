@@ -28,5 +28,10 @@ XFree(
     free( iAlloc );
 }
 
+template< typename Derived, typename Base >
+Derived& DynamicCast( Base& iBase ) {
+    return  dynamic_cast< Derived& >( iBase );
+}
+
 ULIS_NAMESPACE_END
 

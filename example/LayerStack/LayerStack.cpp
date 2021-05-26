@@ -21,17 +21,16 @@ using namespace ::ULIS;
 class IKLayer
     : public virtual TNode< IKLayer >
 {
-    typedef TNode< IKLayer > tNode;
-    typedef TNode< IKLayer > tParent;
+    ULIS_DERIVED_FROM_NODE
+    typedef TAbstractRoot< IKLayer > tParent;
     typedef TNode< IKLayer > tSuperClass;
-    typedef IKLayer tSelf;
 
 public:
     virtual ~IKLayer() override = 0
     {}
 
-    IKLayer( const FString& iName = "Untitled", tParent iParent = nullptr )
-        : tNode( iParent )
+    IKLayer( const FString& iName = "Untitled", tParent* iParent = nullptr )
+        : tSuperClass( iParent )
         , mName( iName )
     {}
 
@@ -43,17 +42,25 @@ public:
         mName = iName;
     }
 
+    static const FString& StaticType() {
+        return  mType;
+    }
+
+    virtual const FString& Type() const = 0;
+
 private:
     FString mName;
+    static const FString mType;
 };
+
+const FString IKLayer::mType = "Abstract";
 
 class FKLayerImage
     : public IKLayer
 {
-    typedef TNode< IKLayer > tNode;
-    typedef TNode< IKLayer > tParent;
+    ULIS_DERIVED_FROM_NODE
+    typedef TAbstractRoot< IKLayer > tParent;
     typedef IKLayer tSuperClass;
-    typedef FKLayerImage tSelf;
 
 public:
     virtual ~FKLayerImage() override
@@ -62,7 +69,7 @@ public:
     FKLayerImage(
           const FString& iName = "Untitled"
         , eBlendMode iBlendMode = Blend_Normal
-        , tParent iParent = nullptr
+        , tParent* iParent = nullptr
     )
         : tSuperClass( iName, iParent )
         , mBlendMode( iBlendMode )
@@ -76,19 +83,28 @@ public:
         mBlendMode = iBlendMode;
     }
 
+    static const FString& StaticType() {
+        return  mType;
+    }
+
+    virtual const FString& Type() const override {
+        return  mType;
+    }
+
 private:
     eBlendMode mBlendMode;
+    static const FString mType;
 };
+
+const FString FKLayerImage::mType = "Image";
 
 class FKLayerFolder final
     : public FKLayerImage
     , public TConcreteRoot< FKLayerFolder, IKLayer >
 {
-    typedef TNode< IKLayer > tNode;
-    typedef TNode< IKLayer > tParent;
-    typedef FKLayerImage tSuperClassLayer;
-    typedef TConcreteRoot< FKLayerFolder, IKLayer > tSuperClassRoot;
-    typedef FKLayerFolder tSelf;
+    ULIS_DERIVED_FROM_NODE
+    typedef TAbstractRoot< IKLayer > tParent;
+    typedef FKLayerImage tSuperClass;
 
 public:
     ~FKLayerFolder() override
@@ -98,10 +114,9 @@ public:
           const FString& iName = "Untitled"
         , eBlendMode iBlendMode = Blend_Normal
         , bool iCollapsed = false
-        , tParent iParent = nullptr
+        , tParent* iParent = nullptr
     )
-        : tSuperClassLayer( iName, iBlendMode, iParent )
-        , tSuperClassRoot()
+        : tSuperClass( iName, iBlendMode, iParent )
         , mCollapsed( iCollapsed )
     {}
 
@@ -113,16 +128,25 @@ public:
         mCollapsed = iCollapsed;
     }
 
+    static const FString& StaticType() {
+        return  mType;
+    }
+
+    const FString& Type() const override {
+        return  mType;
+    }
+
 private:
     bool mCollapsed;
+    static const FString mType;
 };
+
+const FString FKLayerFolder::mType = "Folder";
 
 class FKLayerStack final
     : public TConcreteRoot< FKLayerStack, IKLayer >
 {
-    typedef TNode< IKLayer > tNode;
-    typedef TConcreteRoot< FKLayerStack, IKLayer > tSuperClass;
-    typedef FKLayerStack tSelf;
+    ULIS_DERIVED_FROM_NODE
 
 public:
     ~FKLayerStack() override
@@ -133,8 +157,7 @@ public:
         , uint16 iHeight = 1024
         , eFormat iFormat = eFormat::Format_RGBA8
     )
-        : tSuperClass()
-        , mWidth( iWidth )
+        : mWidth( iWidth )
         , mHeight( iHeight )
         , mFormat( iFormat )
     {}
@@ -179,6 +202,12 @@ main( int argc, char *argv[] ) {
     folder->AddChild( new FKLayerImage() ).AddChild( new FKLayerImage() ).AddChild( new FKLayerImage() );
     stack->AddChild( folder );
     stack->AddChild( new FKLayerImage() );
+
+    for( int i = 0; i < stack->Children().Size(); ++i ) {
+        auto& a = (*stack)[i];
+        IKLayer& b = stack->Children()[i]->Self();
+        auto dummy = 0;
+    }
     delete stack;
 
     FThreadPool pool;
