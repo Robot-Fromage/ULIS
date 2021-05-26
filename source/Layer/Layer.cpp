@@ -25,7 +25,7 @@ ILayer::ILayer()
 {
 }
 
-ILayer::ILayer( const FString& iName, FLayerRoot* iParent )
+ILayer::ILayer( const FString& iName, ILayerRoot* iParent )
     : mName( iName )
     , mLocked( false )
     , mVisible( true )
@@ -74,20 +74,20 @@ ILayer::SetVisible( bool iValue )
     mVisible = iValue;
 }
 
-FLayerRoot*
+ILayerRoot*
 ILayer::Parent()
 {
     return  mParent;
 }
 
-const FLayerRoot*
+const ILayerRoot*
 ILayer::Parent() const
 {
     return  mParent;
 }
 
 void
-ILayer::SetParent( FLayerRoot* iParent )
+ILayer::SetParent( ILayerRoot* iParent )
 {
     mParent = iParent;
 }

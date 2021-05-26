@@ -5,7 +5,7 @@
 *__________________
 * @file         LayerRoot.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FLayerRoot class.
+* @brief        This file provides the declaration for the ILayerRoot class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -17,25 +17,25 @@
 ULIS_NAMESPACE_BEGIN
 template class ULIS_API TArray< ILayer* >;
 /////////////////////////////////////////////////////
-/// @class      FLayerRoot
-/// @brief      The FLayerRoot class provides a class to store a folder of
+/// @class      ILayerRoot
+/// @brief      The ILayerRoot class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
-class ULIS_API FLayerRoot
+class ULIS_API ILayerRoot
     : public virtual ILayer
 {
 protected:
-    virtual ~FLayerRoot() override;
-    FLayerRoot( const FString& iName, FLayerRoot* iParent = nullptr );
+    virtual ~ILayerRoot() override;
+    ILayerRoot( const FString& iName, ILayerRoot* iParent = nullptr );
 
-    FLayerRoot( const FLayerRoot& ) = delete;
-    FLayerRoot& operator=( const FLayerRoot& ) = delete;
+    ILayerRoot( const ILayerRoot& ) = delete;
+    ILayerRoot& operator=( const ILayerRoot& ) = delete;
 
 public:
     virtual eLayerType Type() const override;
     TArray< ILayer* >& Layers();
     const TArray< ILayer* >& Layers() const;
-    FLayerRoot& AddLayer( ILayer* iLayer, uint64 iIndex = ULIS_UINT64_MAX );
-    FLayerRoot& AddLayer( ILayer& iLayer, uint64 iIndex = ULIS_UINT64_MAX );
+    ILayerRoot& AddLayer( ILayer* iLayer, uint64 iIndex = ULIS_UINT64_MAX );
+    ILayerRoot& AddLayer( ILayer& iLayer, uint64 iIndex = ULIS_UINT64_MAX );
     void DeleteLayer( int iIndex );
     void Reset();
 

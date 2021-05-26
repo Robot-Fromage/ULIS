@@ -31,7 +31,7 @@ public:
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
-        , FLayerRoot* iParent = nullptr
+        , ILayerRoot* iParent = nullptr
     );
 
     FLayerImage(
@@ -43,7 +43,7 @@ public:
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
-        , FLayerRoot* iParent = nullptr
+        , ILayerRoot* iParent = nullptr
     );
 
     FLayerImage( const FLayerImage& ) = delete;

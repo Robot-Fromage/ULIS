@@ -258,7 +258,7 @@ FContext::XLoadPSDFromDisk(
 
     // Genarating layer stack from imported info
     eFormat layerStackFormat = iStack.Format();
-    FLayerRoot* currentRoot = &iStack;
+    ILayerRoot* currentRoot = &iStack;
 
     Dummy_OP( iNumWait, iWaitList, nullptr );
 

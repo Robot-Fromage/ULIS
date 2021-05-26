@@ -77,7 +77,7 @@ main( int argc, char *argv[] ) {
         FEvent eventFill0;
         ctx.Clear( image0->Block(), image0->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear0 );
         ctx.Fill( image0->Block(), FColor::RGBA8( 0, 255, 255, 100 ), FRectI( 10, 50, 504, 1004 ), policy_sync_cache_efficient, 1, &eventClear0, &eventFill0 );
-        ctx.DrawCircleAndresAA( image0->Block(), image0->Block().Rect().Size() / 2, 128, FColor::RGB( 255, 0, 255 ), true, image0->Block().Rect(), FSchedulePolicy(), 1, &eventFill0, nullptr );
+        ctx.DrawCircleAA( image0->Block(), image0->Block().Rect().Size() / 2, 128, FColor::RGB( 255, 0, 255 ), true, image0->Block().Rect(), FSchedulePolicy(), 1, &eventFill0, nullptr );
 
         FEvent eventClear1;
         ctx.Clear( image1->Block(), image1->Block().Rect(), policy_sync_cache_efficient, 0, nullptr, &eventClear1 );

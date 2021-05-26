@@ -5,7 +5,7 @@
 *__________________
 * @file         LayerRoot.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FLayerRoot class.
+* @brief        This file provides the definition for the ILayerRoot class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,12 +14,12 @@
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
-FLayerRoot::~FLayerRoot()
+ILayerRoot::~ILayerRoot()
 {
     Reset();
 }
 
-FLayerRoot::FLayerRoot( const FString& iName, FLayerRoot* iParent )
+ILayerRoot::ILayerRoot( const FString& iName, ILayerRoot* iParent )
     : ILayer(
           iName
         , iParent
@@ -29,25 +29,25 @@ FLayerRoot::FLayerRoot( const FString& iName, FLayerRoot* iParent )
 }
 
 eLayerType
-FLayerRoot::Type() const
+ILayerRoot::Type() const
 {
     return  Layer_Root;
 }
 
 TArray< ILayer* >&
-FLayerRoot::Layers()
+ILayerRoot::Layers()
 {
     return  mLayers;
 }
 
 const TArray< ILayer* >&
-FLayerRoot::Layers() const
+ILayerRoot::Layers() const
 {
     return  mLayers;
 }
 
-FLayerRoot&
-FLayerRoot::AddLayer( ILayer* iLayer, uint64 iIndex )
+ILayerRoot&
+ILayerRoot::AddLayer( ILayer* iLayer, uint64 iIndex )
 {
     iLayer->SetParent( this );
 
@@ -59,21 +59,21 @@ FLayerRoot::AddLayer( ILayer* iLayer, uint64 iIndex )
     return *this;
 }
 
-FLayerRoot&
-FLayerRoot::AddLayer( ILayer& iLayer, uint64 iIndex )
+ILayerRoot&
+ILayerRoot::AddLayer( ILayer& iLayer, uint64 iIndex )
 {
     return  AddLayer( &iLayer, iIndex );
 }
 
 void
-FLayerRoot::DeleteLayer( int iIndex )
+ILayerRoot::DeleteLayer( int iIndex )
 {
     delete mLayers[ iIndex ];
     mLayers.Erase( iIndex, 1 );
 }
 
 void
-FLayerRoot::Reset()
+ILayerRoot::Reset()
 {
     for( uint64 i = 0; i < mLayers.Size(); ++i ) {
         delete  mLayers[i];

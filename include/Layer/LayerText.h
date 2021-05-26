@@ -44,7 +44,7 @@ public:
         , const FMat3F& iTransform = FMat3F()
         , const ISample& iColor = FColor::Black
         , bool iAA = true
-        , FLayerRoot* iParent = nullptr
+        , ILayerRoot* iParent = nullptr
     );
 
     FLayerText(
@@ -62,7 +62,7 @@ public:
         , const FMat3F& iTransform = FMat3F()
         , const ISample& iColor = FColor::Black
         , bool iAA = true
-        , FLayerRoot* iParent = nullptr
+        , ILayerRoot* iParent = nullptr
     );
 
     FLayerText( const FLayerText& ) = delete;

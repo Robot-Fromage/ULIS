@@ -31,7 +31,7 @@ FLayerText::FLayerText(
     , const FMat3F& iTransform
     , const ISample& iColor
     , bool iAA
-    , FLayerRoot* iParent
+    , ILayerRoot* iParent
 )
     : ILayer(
           iName
@@ -71,7 +71,7 @@ FLayerText::FLayerText(
     , const FMat3F& iTransform
     , const ISample& iColor
     , bool iAA
-    , FLayerRoot* iParent
+    , ILayerRoot* iParent
 )
     : ILayer(
           iName

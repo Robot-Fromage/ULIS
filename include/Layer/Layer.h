@@ -26,7 +26,7 @@ enum eLayerType
     , Layer_Mask
 };
 
-class FLayerRoot;
+class ILayerRoot;
 /////////////////////////////////////////////////////
 /// @class      ILayer
 /// @brief      The ILayer class provides a base abstract class to store a layer
@@ -36,7 +36,7 @@ class ULIS_API ILayer
 public:
     virtual ~ILayer() = 0;
     ILayer();
-    ILayer( const FString& iName, FLayerRoot* iParent );
+    ILayer( const FString& iName, ILayerRoot* iParent );
 
 public:
     virtual eLayerType Type() const = 0;
@@ -46,15 +46,15 @@ public:
     bool Visible() const;
     void SetLocked( bool iValue );
     void SetVisible( bool iValue );
-    FLayerRoot* Parent();
-    const FLayerRoot* Parent() const;
-    void SetParent( FLayerRoot* iParent );
+    ILayerRoot* Parent();
+    const ILayerRoot* Parent() const;
+    void SetParent( ILayerRoot* iParent );
 
 private:
     FString mName;
     bool mLocked;
     bool mVisible;
-    FLayerRoot* mParent;
+    ILayerRoot* mParent;
 };
 
 ULIS_NAMESPACE_END

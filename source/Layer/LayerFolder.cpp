@@ -25,13 +25,13 @@ FLayerFolder::FLayerFolder(
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , FLayerRoot* iParent
+    , ILayerRoot* iParent
 )
     : ILayer(
           iName
         , iParent
     )
-    , FLayerRoot(
+    , ILayerRoot(
           iName
         , iParent
     )
@@ -57,13 +57,13 @@ FLayerFolder::FLayerFolder(
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , FLayerRoot* iParent
+    , ILayerRoot* iParent
 )
     : ILayer(
           iName
         , iParent
     )
-    , FLayerRoot(
+    , ILayerRoot(
           iName
         , iParent
     )

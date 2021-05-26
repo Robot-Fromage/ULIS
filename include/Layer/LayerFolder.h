@@ -21,7 +21,7 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The FLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
 class ULIS_API FLayerFolder final
-    : public FLayerRoot
+    : public ILayerRoot
     , public FLayerImage
 {
 public:
@@ -34,7 +34,7 @@ public:
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
-        , FLayerRoot* iParent = nullptr
+        , ILayerRoot* iParent = nullptr
     );
 
     FLayerFolder(
@@ -46,7 +46,7 @@ public:
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
-        , FLayerRoot* iParent = nullptr
+        , ILayerRoot* iParent = nullptr
     );
 
     FLayerFolder( const FLayerFolder& ) = delete;

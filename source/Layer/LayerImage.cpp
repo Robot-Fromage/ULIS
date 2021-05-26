@@ -26,7 +26,7 @@ FLayerImage::FLayerImage(
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , FLayerRoot* iParent
+    , ILayerRoot* iParent
 )
     : ILayer(
           iName
@@ -49,7 +49,7 @@ FLayerImage::FLayerImage(
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , FLayerRoot* iParent
+    , ILayerRoot* iParent
 )
     : ILayer(
           iName
