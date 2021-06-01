@@ -19,39 +19,43 @@ FLayerText::~FLayerText()
 
 FLayerText::FLayerText(
       const FString& iName
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iColor
     , uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
-    , const FFont& iFont
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
+    , bool iAlphaLocked
+    , const FFont& iFont
     , const std::wstring& iText
     , uint32 iFontSize
     , const FMat3F& iTransform
-    , const ISample& iColor
+    , const ISample& iTextColor
     , bool iAA
-    , ILayerRoot* iParent
+    , tParent* iParent
 )
-    : ILayer(
+    : tSuperClass(
           iName
-        , iParent
-    )
-    , FLayerImage(
-          iName
+        , iLocked
+        , iVisible
+        , iColor
         , iWidth
         , iHeight
         , iFormat
         , iBlendMode
         , iAlphaMode
         , iOpacity
+        , iAlphaLocked
         , iParent
     )
     , mText( iText )
     , mFont( iFont )
     , mFontSize( iFontSize )
     , mTransform( iTransform )
-    , mColor( iColor )
+    , mTextColor( iTextColor )
     , mAA( iAA )
 {
 }
@@ -59,48 +63,40 @@ FLayerText::FLayerText(
 FLayerText::FLayerText(
       FBlock* iBlock
     , const FString& iName
-    , uint16 iWidth
-    , uint16 iHeight
-    , eFormat iFormat
-    , const FFont& iFont
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iColor
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
+    , bool iAlphaLocked
+    , const FFont& iFont
     , const std::wstring& iText
     , uint32 iFontSize
     , const FMat3F& iTransform
-    , const ISample& iColor
+    , const ISample& iTextColor
     , bool iAA
-    , ILayerRoot* iParent
+    , tParent* iParent
 )
-    : ILayer(
-          iName
-        , iParent
-    )
-    , FLayerImage(
+    : tSuperClass(
           iBlock
         , iName
-        , iWidth
-        , iHeight
-        , iFormat
+        , iLocked
+        , iVisible
+        , iColor
         , iBlendMode
         , iAlphaMode
         , iOpacity
+        , iAlphaLocked
         , iParent
     )
     , mText( iText )
     , mFont( iFont )
     , mFontSize( iFontSize )
     , mTransform( iTransform )
-    , mColor( iColor )
+    , mTextColor( iTextColor )
     , mAA( iAA )
 {
-}
-
-eLayerType
-FLayerText::Type() const
-{
-    return  Layer_Text;
 }
 
 const std::wstring&
@@ -128,9 +124,9 @@ FLayerText::Transform() const
 }
 
 const FColor&
-FLayerText::Color() const
+FLayerText::TextColor() const
 {
-    return  mColor;
+    return  mTextColor;
 }
 
 bool
@@ -164,9 +160,9 @@ FLayerText::SetTransform( const FMat3F& iValue )
 }
 
 void
-FLayerText::SetColor( const ISample& iValue )
+FLayerText::SetTextColor( const ISample& iValue )
 {
-    mColor = iValue;
+    mTextColor = iValue;
 }
 
 void

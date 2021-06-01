@@ -25,48 +25,12 @@ FLayerStack::FLayerStack(
     , eFormat iFormat
     , const FColorSpace* iColorSpace
 )
-    : IHasFormat( iFormat )
+    : ILayer( "Stack", false, true, FColor::Transparent, nullptr )
+    , TRoot< ILayer >()
+    , IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
-    , ILayerRoot( "Root", nullptr )
-    , mWidth( iWidth )
-    , mHeight( iHeight )
-{
-}
-
-uint16
-FLayerStack::Width() const
-{
-    return  mWidth;
-}
-
-uint16
-FLayerStack::Height() const
-{
-    return  mHeight;
-}
-
-uint32
-FLayerStack::Area() const
-{
-    return  mWidth * mHeight;
-}
-
-FRectI
-FLayerStack::Rect() const
-{
-    return  FRectI( 0, 0, mWidth, mHeight );
-}
-
-ILayerRoot&
-FLayerStack::Root()
-{
-    return  *this;
-}
-const ILayerRoot&
-FLayerStack::Root() const
-{
-    return  *this;
-}
+    , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
+{}
 
 void
 FLayerStack::Reset(
@@ -78,43 +42,8 @@ FLayerStack::Reset(
 {
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
-    this->ILayerRoot::Reset();
-    mWidth = iWidth;
-    mHeight = iHeight;
-}
-
-bool
-FLayerStack::CheckSanity() const
-{
-    std::function< bool( const ILayerRoot* ) > CheckSanity_imp;
-    CheckSanity_imp = [&CheckSanity_imp, this]( const ILayerRoot* iFolder )->bool {
-        for( uint64 i = 0; i < iFolder->Layers().Size(); ++i ) {
-            eLayerType type = iFolder->Layers()[i]->Type();
-            switch( type ) {
-                case Layer_Image: {
-                    FLayerImage* ptr = dynamic_cast< FLayerImage* >( iFolder->Layers()[i] );
-                    bool goodFormat = this->Format() == ptr->Block().Format();
-                    bool goodSize   = this->Rect() == ptr->Block().Rect();
-                    bool goodCS     = this->ColorSpace() == ptr->Block().ColorSpace();
-                    if( !( goodFormat && goodSize && goodCS ) )
-                        return  false;
-                    break;
-                }
-                case Layer_Folder: {
-                    FLayerFolder* ptr = dynamic_cast< FLayerFolder* >( iFolder->Layers()[i] );
-                    bool goodFormat = this->Format() == ptr->Block().Format();
-                    bool goodSize   = this->Rect() == ptr->Block().Rect();
-                    bool goodCS     = this->ColorSpace() == ptr->Block().ColorSpace();
-                    if( !( goodFormat && goodSize && goodCS ) )
-                        return  false;
-                    CheckSanity_imp( ptr );
-                    break;
-                }
-            }
-        }
-        return  true;
-    };
-    return  CheckSanity_imp( this );
+    ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
+    this->TRoot< ILayer >::Reset();
 }
 
 ULIS_NAMESPACE_END

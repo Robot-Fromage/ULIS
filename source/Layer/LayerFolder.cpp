@@ -19,72 +19,74 @@ FLayerFolder::~FLayerFolder()
 
 FLayerFolder::FLayerFolder(
       const FString& iName
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iColor
     , uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , ILayerRoot* iParent
+    , bool iAlphaLocked
+    , bool iCollapsed
+    , tParent* iParent
 )
-    : ILayer(
+    : tSuperClass(
           iName
-        , iParent
-    )
-    , ILayerRoot(
-          iName
-        , iParent
-    )
-    , FLayerImage(
-          iName
+        , iLocked
+        , iVisible
+        , iColor
         , iWidth
         , iHeight
         , iFormat
         , iBlendMode
         , iAlphaMode
         , iOpacity
+        , iAlphaLocked
         , iParent
     )
+    , mCollapsed( iCollapsed )
 {
 }
 
 FLayerFolder::FLayerFolder(
       FBlock* iBlock
     , const FString& iName
-    , uint16 iWidth
-    , uint16 iHeight
-    , eFormat iFormat
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iColor
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , ILayerRoot* iParent
+    , bool iAlphaLocked
+    , bool iCollapsed
+    , tParent* iParent
 )
-    : ILayer(
-          iName
-        , iParent
-    )
-    , ILayerRoot(
-          iName
-        , iParent
-    )
-    , FLayerImage(
+    : tSuperClass(
           iBlock
         , iName
-        , iWidth
-        , iHeight
-        , iFormat
+        , iLocked
+        , iVisible
+        , iColor
         , iBlendMode
         , iAlphaMode
         , iOpacity
+        , iAlphaLocked
         , iParent
     )
+    , mCollapsed( iCollapsed )
 {
 }
 
-eLayerType
-FLayerFolder::Type() const
-{
-    return  Layer_Folder;
+bool
+FLayerFolder::IsCollapsed() const {
+    return  mCollapsed;
+}
+
+void
+FLayerFolder::SetCollapsed( bool iCollapsed ) {
+    mCollapsed = iCollapsed;
 }
 
 ULIS_NAMESPACE_END

@@ -10,44 +10,30 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/Layer.h"
-#include "Layer/LayerRoot.h"
 
 ULIS_NAMESPACE_BEGIN
 ILayer::~ILayer()
 {
 }
 
-ILayer::ILayer()
-    : mName( "Untitled" )
-    , mLocked( false )
-    , mVisible( true )
-    , mParent( nullptr )
-{
-}
-
-ILayer::ILayer( const FString& iName, ILayerRoot* iParent )
-    : mName( iName )
-    , mLocked( false )
-    , mVisible( true )
-    , mParent( iParent )
+ILayer::ILayer(
+      const FString& iName
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iColor
+    , tParent* iParent
+)
+    : tSuperClass( iParent )
+    , mName( iName )
+    , mLocked( iLocked )
+    , mVisible( iVisible )
+    , mColor( iColor.ToFormat( Format_RGBA8 ) )
 {}
-
-eLayerType
-ILayer::Type() const
-{
-    return  Layer_Invalid;
-}
 
 const FString&
 ILayer::Name() const
 {
     return  mName;
-}
-
-void
-ILayer::SetName( const FString& iName )
-{
-    mName = iName;
 }
 
 bool
@@ -62,6 +48,19 @@ ILayer::Visible() const
     return  mVisible;
 }
 
+const FColor&
+ILayer::Color() const
+{
+    // supposed to be always RGBA8
+    return  mColor;
+}
+
+void
+ILayer::SetName( const FString& iName )
+{
+    mName = iName;
+}
+
 void
 ILayer::SetLocked( bool iValue )
 {
@@ -74,22 +73,12 @@ ILayer::SetVisible( bool iValue )
     mVisible = iValue;
 }
 
-ILayerRoot*
-ILayer::Parent()
-{
-    return  mParent;
-}
-
-const ILayerRoot*
-ILayer::Parent() const
-{
-    return  mParent;
-}
-
 void
-ILayer::SetParent( ILayerRoot* iParent )
+ILayer::SetColor( const FColor& iColor )
 {
-    mParent = iParent;
+    // Ensure conversion to local mColor format,
+    // supposed to be always RGBA8
+    FColor::ConvertFormat( iColor, mColor );
 }
 
 ULIS_NAMESPACE_END

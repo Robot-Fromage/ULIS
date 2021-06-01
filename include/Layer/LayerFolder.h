@@ -12,7 +12,6 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Layer.h"
-#include "Layer/LayerRoot.h"
 #include "Layer/LayerImage.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -21,39 +20,61 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The FLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
 class ULIS_API FLayerFolder final
-    : public ILayerRoot
-    , public FLayerImage
+    : public FLayerImage
+    , public TRoot< ILayer >
 {
+    typedef TRoot< ILayer > tParent;
+    typedef FLayerImage     tSuperClass;
+
 public:
-    ~FLayerFolder() override final;
+    ~FLayerFolder() override;
+
     FLayerFolder(
-          const FString& iName
-        , uint16 iWidth
-        , uint16 iHeight
-        , eFormat iFormat
+          const FString& iName = "Untitled"
+        , bool iLocked = false
+        , bool iVisible = true
+        , const FColor& iColor = FColor::Transparent
+        , uint16 iWidth = 1
+        , uint16 iHeight = 1
+        , eFormat iFormat = Format_RGBA8
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
-        , ILayerRoot* iParent = nullptr
+        , bool iAlphaLocked = false
+        , bool iCollapsed = false
+        , tParent* iParent = nullptr
     );
 
     FLayerFolder(
           FBlock* iBlock
-        , const FString& iName
-        , uint16 iWidth
-        , uint16 iHeight
-        , eFormat iFormat
+        , const FString& iName = "Untitled"
+        , bool iLocked = false
+        , bool iVisible = true
+        , const FColor& iColor = FColor::Transparent
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
-        , ILayerRoot* iParent = nullptr
+        , bool iAlphaLocked = false
+        , bool iCollapsed = false
+        , tParent* iParent = nullptr
     );
 
     FLayerFolder( const FLayerFolder& ) = delete;
     FLayerFolder& operator=( const FLayerFolder& ) = delete;
 
 public:
-    eLayerType Type() const override;
+    bool IsCollapsed() const;
+
+    void SetCollapsed( bool iValue );
+
+    constexpr static const char* StaticType() { return  mType; }
+    constexpr static const uint32 StaticTypeID() { return  crc32b( mType); }
+    const FString Type() const override { return  StaticType(); }
+    const uint32 TypeID() const override { return  StaticTypeID(); }
+
+private:
+    bool mCollapsed;
+    constexpr static const char* mType = "Folder";
 };
 
 ULIS_NAMESPACE_END

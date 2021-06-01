@@ -20,53 +20,46 @@ FLayerImage::~FLayerImage()
 
 FLayerImage::FLayerImage(
       const FString& iName
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iColor
     , uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , ILayerRoot* iParent
+    , bool iAlphaLocked
+    , tParent* iParent
 )
-    : ILayer(
-          iName
-        , iParent
-    )
-    , mAlphaLock( false )
+    : tSuperClass( iName, iLocked, iVisible, iColor, iParent )
     , mBlock( new FBlock( iWidth, iHeight, iFormat ) )
     , mBlendMode( iBlendMode )
     , mAlphaMode( iAlphaMode )
     , mOpacity( iOpacity )
+    , mAlphaLock( iAlphaLocked )
 {
 }
 
 FLayerImage::FLayerImage(
       FBlock* iBlock
     , const FString& iName
-    , uint16 iWidth
-    , uint16 iHeight
-    , eFormat iFormat
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iColor
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , ILayerRoot* iParent
+    , bool iAlphaLocked
+    , tParent* iParent
 )
-    : ILayer(
-          iName
-        , iParent
-    )
-    , mAlphaLock( false )
+    : tSuperClass( iName, iLocked, iVisible, iColor, iParent )
     , mBlock( iBlock )
     , mBlendMode( iBlendMode )
     , mAlphaMode( iAlphaMode )
     , mOpacity( iOpacity )
+    , mAlphaLock( iAlphaLocked )
 {
-}
-
-eLayerType
-FLayerImage::Type() const
-{
-    return  Layer_Image;
 }
 
 FBlock&
@@ -85,12 +78,6 @@ bool
 FLayerImage::IsAlphaLocked() const
 {
     return  mAlphaLock;
-}
-
-void
-FLayerImage::SetAlphaLocked( bool iValue )
-{
-    mAlphaLock = iValue;
 }
 
 eBlendMode
@@ -127,6 +114,12 @@ void
 FLayerImage::SetOpacity( ufloat iValue )
 {
     mOpacity = iValue;
+}
+
+void
+FLayerImage::SetAlphaLocked( bool iValue )
+{
+    mAlphaLock = iValue;
 }
 
 ULIS_NAMESPACE_END

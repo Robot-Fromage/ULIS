@@ -12,49 +12,56 @@
 #pragma once
 #include "Core/Core.h"
 #include "String/String.h"
+#include "Image/Color.h"
+#include "Memory/Tree.h"
+#include "String/CRC32.h"
 
 ULIS_NAMESPACE_BEGIN
-enum eLayerType
-{
-      Layer_Invalid
-    , Layer_Root
-    , Layer_Image
-    , Layer_Folder
-    , Layer_Text
-    , Layer_Vector
-    , Layer_FX
-    , Layer_Mask
-};
+class ILayer;
+template class ULIS_API TNode< ILayer >;
+template class ULIS_API TArray< TNode< ILayer >* >;
+template class ULIS_API TRoot< ILayer >;
+typedef TRoot< ILayer > ILayerRoot;
 
-class ILayerRoot;
 /////////////////////////////////////////////////////
 /// @class      ILayer
 /// @brief      The ILayer class provides a base abstract class to store a layer
 ///             in a layer stack for painting applications.
 class ULIS_API ILayer
+    : public virtual TNode< ILayer >
 {
-public:
-    virtual ~ILayer() = 0;
-    ILayer();
-    ILayer( const FString& iName, ILayerRoot* iParent );
+    typedef TRoot< ILayer > tParent;
+    typedef TNode< ILayer > tSuperClass;
 
 public:
-    virtual eLayerType Type() const = 0;
+    virtual ~ILayer() override = 0;
+
+    ILayer(
+          const FString& iName = "Untitled"
+        , bool iLocked = false
+        , bool iVisible = true
+        , const FColor& iColor = FColor::Transparent
+        , tParent* iParent = nullptr
+    );
+
     const FString& Name() const;
-    void SetName( const FString& iName );
     bool Locked() const;
     bool Visible() const;
+    const FColor& Color() const;
+
+    void SetName( const FString& iName );
     void SetLocked( bool iValue );
     void SetVisible( bool iValue );
-    ILayerRoot* Parent();
-    const ILayerRoot* Parent() const;
-    void SetParent( ILayerRoot* iParent );
+    void SetColor( const FColor& iColor );
+
+    virtual const FString Type() const = 0;
+    virtual const uint32 TypeID() const = 0;
 
 private:
     FString mName;
     bool mLocked;
     bool mVisible;
-    ILayerRoot* mParent;
+    FColor mColor;
 };
 
 ULIS_NAMESPACE_END

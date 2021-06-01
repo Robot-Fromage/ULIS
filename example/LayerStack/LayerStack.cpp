@@ -18,197 +18,64 @@
 #include <chrono>
 using namespace ::ULIS;
 
-class IKLayer
-    : public virtual TNode< IKLayer >
-{
-    ULIS_DERIVED_FROM_NODE
-    typedef TAbstractRoot< IKLayer > tParent;
-    typedef TNode< IKLayer > tSuperClass;
+/*
+class IKLayer;
+typedef TAbstractRoot< IKLayer > tLayerParent;
+typedef IKLayer* (*fpLayerTypeCreateNew)( tLayerParent* iParent );
+
+namespace std {
+    template<>
+    struct hash< FString > {
+        size_t operator()( const FString& iStr ) const {
+            return  iStr.CRC32();
+        }
+    };
+}
+
+class FLayerRegistry {
 
 public:
-    virtual ~IKLayer() override = 0
-    {}
-
-    IKLayer( const FString& iName = "Untitled", tParent* iParent = nullptr )
-        : tSuperClass( iParent )
-        , mName( iName )
-    {}
-
-    const FString& Name() const {
-        return  mName;
+    FLayerRegistry( const FString& iType, fpLayerTypeCreateNew iValue ) {
+        mFactories.emplace( iType, iValue );
     }
 
-    void SetName( const FString& iName ) {
-        mName = iName;
-    }
-
-    static const FString& StaticType() {
-        return  mType;
-    }
-
-    virtual const FString& Type() const = 0;
-
-private:
-    FString mName;
-    static const FString mType;
+    static std::unordered_map< FString, fpLayerTypeCreateNew > mFactories;
 };
 
-const FString IKLayer::mType = "Abstract";
+std::unordered_map< FString, fpLayerTypeCreateNew > FLayerRegistry::mFactories;
 
-class FKLayerImage
-    : public IKLayer
-{
-    ULIS_DERIVED_FROM_NODE
-    typedef TAbstractRoot< IKLayer > tParent;
-    typedef IKLayer tSuperClass;
+#define ULIS_PASTE2( A, B ) A ## B
+#define ULIS_PASTE( A, B ) ULIS_PASTE2( A, B )
+#define ULIS_REGISTER_LAYER_TYPE( iName, iValue ) namespace __layer_registry__ { FLayerRegistry ULIS_PASTE( __Unique_Reg_, __LINE__ )( iName, iValue ); }
+*/
 
-public:
-    virtual ~FKLayerImage() override
-    {}
-
-    FKLayerImage(
-          const FString& iName = "Untitled"
-        , eBlendMode iBlendMode = Blend_Normal
-        , tParent* iParent = nullptr
-    )
-        : tSuperClass( iName, iParent )
-        , mBlendMode( iBlendMode )
-    {}
-
-    eBlendMode BlendMode() const {
-        return  mBlendMode;
-    }
-
-    void SetBlendMode( eBlendMode iBlendMode ) {
-        mBlendMode = iBlendMode;
-    }
-
-    static const FString& StaticType() {
-        return  mType;
-    }
-
-    virtual const FString& Type() const override {
-        return  mType;
-    }
-
-private:
-    eBlendMode mBlendMode;
-    static const FString mType;
-};
-
-const FString FKLayerImage::mType = "Image";
-
-class FKLayerFolder final
-    : public FKLayerImage
-    , public TConcreteRoot< FKLayerFolder, IKLayer >
-{
-    ULIS_DERIVED_FROM_NODE
-    typedef TAbstractRoot< IKLayer > tParent;
-    typedef FKLayerImage tSuperClass;
-
-public:
-    ~FKLayerFolder() override
-    {}
-
-    FKLayerFolder(
-          const FString& iName = "Untitled"
-        , eBlendMode iBlendMode = Blend_Normal
-        , bool iCollapsed = false
-        , tParent* iParent = nullptr
-    )
-        : tSuperClass( iName, iBlendMode, iParent )
-        , mCollapsed( iCollapsed )
-    {}
-
-    bool Collapsed() const {
-        return  mCollapsed;
-    }
-
-    void SetCollapsed( bool iCollapsed ) {
-        mCollapsed = iCollapsed;
-    }
-
-    static const FString& StaticType() {
-        return  mType;
-    }
-
-    const FString& Type() const override {
-        return  mType;
-    }
-
-private:
-    bool mCollapsed;
-    static const FString mType;
-};
-
-const FString FKLayerFolder::mType = "Folder";
-
-class FKLayerStack final
-    : public TConcreteRoot< FKLayerStack, IKLayer >
-{
-    ULIS_DERIVED_FROM_NODE
-
-public:
-    ~FKLayerStack() override
-    {}
-
-    FKLayerStack(
-          uint16 iWidth = 1024
-        , uint16 iHeight = 1024
-        , eFormat iFormat = eFormat::Format_RGBA8
-    )
-        : mWidth( iWidth )
-        , mHeight( iHeight )
-        , mFormat( iFormat )
-    {}
-
-    uint16 Width() const {
-        return  mWidth;
-    }
-
-    uint16 Height() const {
-        return  mHeight;
-    }
-
-    eFormat Format() const {
-        return  mFormat;
-    }
-
-private:
-    void SetWidth( uint16 iWidth ) {
-        mWidth = iWidth;
-    }
-
-    void SetHeight( uint16 iHeight ) {
-        mHeight = iHeight;
-    }
-
-    void SetFormat( eFormat iFormat ) {
-        mFormat = iFormat;
-    }
-
-private:
-    uint16 mWidth;
-    uint16 mHeight;
-    eFormat mFormat;
-};
+//ULIS_REGISTER_LAYER_TYPE( FKLayerImage::StaticType(), FKLayerImage::StaticCreateNew )
+//ULIS_REGISTER_LAYER_TYPE( FKLayerFolder::StaticType(), nullptr )
 
 int
 main( int argc, char *argv[] ) {
-
-
+    /*
     FKLayerStack* stack = new FKLayerStack();
     FKLayerFolder* folder = new FKLayerFolder();
-    folder->AddChild( new FKLayerImage() ).AddChild( new FKLayerImage() ).AddChild( new FKLayerImage() );
+    folder->AddChild< FKLayerImage >( "Image0", Blend_Normal ).AddChild( new FKLayerImage() ).AddChild< FKLayerImage >();
     stack->AddChild( folder );
     stack->AddChild( new FKLayerImage() );
+    auto& a = stack->Self();
 
     for( int i = 0; i < stack->Children().Size(); ++i ) {
         auto& a = (*stack)[i];
         IKLayer& b = stack->Children()[i]->Self();
+        auto parent = a.TopLevelParent();
         auto dummy = 0;
     }
     delete stack;
+    */
+
+    /*
+    for( auto it : FLayerRegistry::mFactories ) {
+        std::cout << it.first.Data() << std::endl;
+    }
+    */
 
     FThreadPool pool;
     FCommandQueue queue( pool );
@@ -227,38 +94,38 @@ main( int argc, char *argv[] ) {
     uint16 h = 1024;
     FBlock canvas( w, h, fmt );
     FLayerStack layerStack( w, h, fmt );
-    FLayerText* text0 = new FLayerText( "Text0", w, h, fmt, font, Blend_Dissolve, Alpha_Normal, 0.5f, L"TEXT", 16, FMat3F::MakeTranslationMatrix( 50, 50 ), FColor::Black, true, &layerStack );
-    FLayerFolder* folder0 = new FLayerFolder( "folder0", w, h, fmt, Blend_Dissolve, Alpha_Normal, 0.9f, &layerStack );
-    FLayerImage* image0 = new FLayerImage( "image0", w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, &layerStack );
-    FLayerImage* image1 = new FLayerImage( "image1", w, h, fmt, Blend_Normal, Alpha_Normal, 0.5f, &layerStack );
-    FLayerImage* image2 = new FLayerImage( "image2", w, h, fmt, Blend_BayerDither8x8, Alpha_Normal, 0.5f, &layerStack );
-    FLayerImage* image3 = new FLayerImage( "image3", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
-    FLayerImage* image00 = new FLayerImage( "image00", w, h, fmt, Blend_Normal, Alpha_Erase, 1.f, &layerStack );
-    FLayerImage* image01 = new FLayerImage( "image01", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
-    FLayerFolder* folder1 = new FLayerFolder( "folder1", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
-    FLayerImage* image10 = new FLayerImage( "image10", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
-    FLayerImage* image11 = new FLayerImage( "image11", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
-    FLayerImage* image12 = new FLayerImage( "image12", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
-    FLayerImage* image13 = new FLayerImage( "image13", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack );
+    FLayerText* text0 = new FLayerText( "Text0", false, true, FColor::Transparent, w, h, fmt, Blend_Dissolve, Alpha_Normal, 0.5f, false, font, L"TEXT", 16, FMat3F::MakeTranslationMatrix( 50, 50 ), FColor::Black, true, &layerStack );
+    FLayerFolder* folder0 = new FLayerFolder( "folder0", false, true, FColor::Transparent, w, h, fmt, Blend_Dissolve, Alpha_Normal, 0.9f, false, false, &layerStack );
+    FLayerImage* image0 = new FLayerImage( "image0", false, true, FColor::Transparent, w, h, fmt, Blend_Color, Alpha_Normal, 0.5f, false, &layerStack );
+    FLayerImage* image1 = new FLayerImage( "image1", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Normal, 0.5f, false, &layerStack );
+    FLayerImage* image2 = new FLayerImage( "image2", false, true, FColor::Transparent, w, h, fmt, Blend_BayerDither8x8, Alpha_Normal, 0.5f, false, &layerStack );
+    FLayerImage* image3 = new FLayerImage( "image3", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, false, &layerStack );
+    FLayerImage* image00 = new FLayerImage( "image00", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Erase, 1.f, false, &layerStack );
+    FLayerImage* image01 = new FLayerImage( "image01", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, false, &layerStack );
+    FLayerFolder* folder1 = new FLayerFolder( "folder1", false, true, FColor::Transparent, w, h, fmt, Blend_Dissolve, Alpha_Normal, 0.9f, false, false, &layerStack );
+    FLayerImage* image10 = new FLayerImage( "image10", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, false, &layerStack );
+    FLayerImage* image11 = new FLayerImage( "image11", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, false, &layerStack );
+    FLayerImage* image12 = new FLayerImage( "image12", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, false, &layerStack );
+    FLayerImage* image13 = new FLayerImage( "image13", false, true, FColor::Transparent, w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, false, &layerStack );
 
     //FLayerFolder* folder00 = new FLayerFolder( "folder00", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, folder0 );
-    layerStack.AddLayer( text0 );
-    layerStack.AddLayer( image0 );
-    layerStack.AddLayer( image1 );
-        layerStack.AddLayer( folder0 );
-            folder0->AddLayer( image00 );
-    //folder0->AddLayer( folder00 );
-    //folder00->AddLayer( new FLayerImage( "image000", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    //folder00->AddLayer( new FLayerImage( "image001", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-    //folder00->AddLayer( new FLayerImage( "image002", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
-            folder0->AddLayer( image01 );
-        layerStack.AddLayer( folder1 );
-            folder1->AddLayer( image10 );
-            folder1->AddLayer( image11 );
-            folder1->AddLayer( image12 );
-            folder1->AddLayer( image13 );
-    layerStack.AddLayer( image2 );
-    layerStack.AddLayer( image3 );
+    layerStack.AddChild( text0 );
+    layerStack.AddChild( image0 );
+    layerStack.AddChild( image1 );
+        layerStack.AddChild( folder0 );
+            folder0->AddChild( image00 );
+    //folder0->AddChild( folder00 );
+    //folder00->AddChild( new FLayerImage( "image000", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
+    //folder00->AddChild( new FLayerImage( "image001", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
+    //folder00->AddChild( new FLayerImage( "image002", w, h, fmt, Blend_Normal, Alpha_Normal, 1.f, &layerStack ) );
+            folder0->AddChild( image01 );
+        layerStack.AddChild( folder1 );
+            folder1->AddChild( image10 );
+            folder1->AddChild( image11 );
+            folder1->AddChild( image12 );
+            folder1->AddChild( image13 );
+    layerStack.AddChild( image2 );
+    layerStack.AddChild( image3 );
 
     {
         ctx.Clear( canvas, canvas.Rect(), policy_sync_cache_efficient );

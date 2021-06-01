@@ -12,7 +12,6 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Layer.h"
-#include "Layer/LayerRoot.h"
 #include "Layer/LayerImage.h"
 #include "Font/Font.h"
 #include "Image/Color.h"
@@ -28,69 +27,83 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FLayerText final
     : public FLayerImage
 {
+    typedef TRoot< ILayer > tParent;
+    typedef FLayerImage     tSuperClass;
+
 public:
-    ~FLayerText() override final;
+    ~FLayerText() override;
+
     FLayerText(
-          const FString& iName
-        , uint16 iWidth
-        , uint16 iHeight
-        , eFormat iFormat
-        , const FFont& iFont
+          const FString& iName = "Untitled"
+        , bool iLocked = false
+        , bool iVisible = true
+        , const FColor& iColor = FColor::Transparent
+        , uint16 iWidth = 1
+        , uint16 iHeight = 1
+        , eFormat iFormat = Format_RGBA8
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
+        , bool iAlphaLocked = false
+        , const FFont& iFont = FFont::DefaultFont
         , const std::wstring& iText = L""
         , uint32 iFontSize = 12
         , const FMat3F& iTransform = FMat3F()
-        , const ISample& iColor = FColor::Black
+        , const ISample& iTextColor = FColor::Black
         , bool iAA = true
-        , ILayerRoot* iParent = nullptr
+        , tParent* iParent = nullptr
     );
 
     FLayerText(
           FBlock* iBlock
-        , const FString& iName
-        , uint16 iWidth
-        , uint16 iHeight
-        , eFormat iFormat
-        , const FFont& iFont
+        , const FString& iName = "Untitled"
+        , bool iLocked = false
+        , bool iVisible = true
+        , const FColor& iColor = FColor::Transparent
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
+        , bool iAlphaLocked = false
+        , const FFont& iFont = FFont::DefaultFont
         , const std::wstring& iText = L""
         , uint32 iFontSize = 12
         , const FMat3F& iTransform = FMat3F()
-        , const ISample& iColor = FColor::Black
+        , const ISample& iTextColor = FColor::Black
         , bool iAA = true
-        , ILayerRoot* iParent = nullptr
+        , tParent* iParent = nullptr
     );
 
     FLayerText( const FLayerText& ) = delete;
     FLayerText& operator=( const FLayerText& ) = delete;
 
 public:
-    eLayerType Type() const override;
     const std::wstring& Text() const;
     const FFont& Font() const;
     uint32 FontSize() const;
     const FMat3F& Transform() const;
-    const FColor& Color() const;
+    const FColor& TextColor() const;
     bool AA() const;
 
     void SetText( const std::wstring& iValue );
     void SetFont( const FFont& iValue );
     void SetFontSize( uint32 iValue );
     void SetTransform( const FMat3F& iValue );
-    void SetColor( const ISample& iValue );
+    void SetTextColor( const ISample& iValue );
     void SetAA( bool iValue );
+
+    constexpr static const char* StaticType() { return  mType; }
+    constexpr static const uint32 StaticTypeID() { return  crc32b( mType); }
+    const FString Type() const override { return  StaticType(); }
+    const uint32 TypeID() const override { return  StaticTypeID(); }
 
 private:
     std::wstring mText;
     FFont mFont;
     uint32 mFontSize;
     FMat3F mTransform;
-    FColor mColor;
+    FColor mTextColor;
     bool mAA;
+    constexpr static const char* mType = "Text";
 };
 #pragma warning(pop)
 ULIS_NAMESPACE_END

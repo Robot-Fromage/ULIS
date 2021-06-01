@@ -55,7 +55,7 @@ FContext::Flatten(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    const uint64 size = iStack.Layers().Size();
+    const uint64 size = iStack.Children().Size();
     const int64 max = static_cast< int64 >( size ) - 1;
     TArray< FEvent > events( 1 );
     events.Reserve( size );
@@ -63,16 +63,16 @@ FContext::Flatten(
     ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten preprocess clear of dst block", err );
 
     for( int64 i = max; i >= 0; --i ) {
-        eLayerType type = iStack.Layers()[i]->Type();
+        uint32 typeID = iStack[i].TypeID();
         FLayerImage* layer = nullptr;
         int num_wait = 1;
-        switch( type ) {
-            case Layer_Image: {
-                layer = dynamic_cast< FLayerImage* >( iStack.Layers()[i] );
+        switch( typeID ) {
+            case FLayerImage::StaticTypeID(): {
+                layer = dynamic_cast< FLayerImage* >( iStack.Children()[i] );
                 break;
             }
-            case Layer_Folder: {
-                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iStack.Layers()[i] );
+            case FLayerStack::StaticTypeID(): {
+                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iStack.Children()[i] );
                 layer = dynamic_cast< FLayerImage* >( folder );
                 events.PushBack();
                 err = RenderLayerFolder( *folder, dst_roi, iPolicy, 0, nullptr, &events.Back() );
@@ -80,8 +80,8 @@ FContext::Flatten(
                 num_wait = 2;
                 break;
             }
-            case Layer_Text: {
-                FLayerText* text = dynamic_cast< FLayerText* >( iStack.Layers()[i] );
+            case FLayerText::StaticTypeID(): {
+                FLayerText* text = dynamic_cast< FLayerText* >( iStack.Children()[i] );
                 layer = dynamic_cast< FLayerImage* >( text );
                 events.PushBack();
                 err = RenderLayerText( *text, iPolicy, 0, nullptr, &events.Back() );
@@ -129,7 +129,7 @@ FContext::RenderLayerFolder(
     const FRectI dst_rect = iFolder.Block().Rect();
     const FRectI dst_roi = src_rect & dst_rect;
 
-    const uint64 size = iFolder.Layers().Size();
+    const uint64 size = iFolder.Children().Size();
     const int64 max = static_cast< int64 >( size ) - 1;
     TArray< FEvent > events( 1 );
     events.Reserve( size );
@@ -137,16 +137,16 @@ FContext::RenderLayerFolder(
     ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render preprocess clear of folder block", err );
 
     for( int64 i = max; i >= 0; --i ) {
-        eLayerType type = iFolder.Layers()[i]->Type();
+        uint32 type = iFolder[i].TypeID();
         FLayerImage* layer = nullptr;
         int num_wait = 1;
         switch( type ) {
-            case Layer_Image: {
-                layer = dynamic_cast< FLayerImage* >( iFolder.Layers()[i] );
+            case FLayerImage::StaticTypeID(): {
+                layer = dynamic_cast< FLayerImage* >( iFolder.Children()[i] );
                 break;
             }
-            case Layer_Folder: {
-                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Layers()[i] );
+            case FLayerFolder::StaticTypeID(): {
+                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Children()[i] );
                 layer = dynamic_cast< FLayerImage* >( folder );
                 events.PushBack();
                 err = RenderLayerFolder( *folder, dst_roi, iPolicy, 0, nullptr, &events.Back() );
@@ -154,8 +154,8 @@ FContext::RenderLayerFolder(
                 num_wait = 2;
                 break;
             }
-            case Layer_Text: {
-                FLayerText* text = dynamic_cast< FLayerText* >( iFolder.Layers()[i] );
+            case FLayerText::StaticTypeID(): {
+                FLayerText* text = dynamic_cast< FLayerText* >( iFolder.Children()[i] );
                 layer = dynamic_cast< FLayerImage* >( text );
                 events.PushBack();
                 err = RenderLayerText( *text, iPolicy, 0, nullptr, &events.Back() );
@@ -335,7 +335,7 @@ FContext::XLoadPSDFromDisk(
             //bool isVisible = !( op.GetLayersInfo()[i].mFlags & 0x02 );
             eBlendMode blendMode = op.GetBlendingModeFromPSD( op.GetLayersInfo()[i].mBlendModeKey );
 
-            currentRoot->AddLayer(
+            currentRoot->AddChild(
                 new FLayerImage(
                       layerBlock
                     , layerName
@@ -364,7 +364,10 @@ FContext::XLoadPSDFromDisk(
             eBlendMode blendMode = op.GetBlendingModeFromPSD( op.GetLayersInfo()[i].mBlendModeKey );
 
             FLayerFolder* layerFolder = new FLayerFolder(
-                layerName
+                  layerName
+                , false
+                , true
+                , FColor::Transparent
                 , op.GetImageWidth()
                 , op.GetImageHeight()
                 , layerStackFormat
@@ -374,7 +377,7 @@ FContext::XLoadPSDFromDisk(
                 , currentRoot
             );
 
-            currentRoot->AddLayer( layerFolder );
+            currentRoot->AddChild( layerFolder );
 
             currentRoot = layerFolder;
         }

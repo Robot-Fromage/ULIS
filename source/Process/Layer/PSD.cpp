@@ -1060,7 +1060,20 @@ void FPSDOperations::GenerateLayerStackFromLayerStackData()
         }
         FBlock* srcblock = new FBlock( mImageDst, mImageWidth, mImageHeight, eFormat::Format_G8);
 
-        mLayerStack.AddLayer( new FLayerImage(srcblock, FString("Layer1"), mImageWidth, mImageHeight, eFormat::Format_G8, eBlendMode::Blend_Normal, eAlphaMode::Alpha_Normal, 1.f, &mLayerStack ) );
+        mLayerStack.AddChild(
+            new FLayerImage(
+                  srcblock
+                , FString("Layer1")
+                , false
+                , true
+                , FColor::Transparent
+                , eBlendMode::Blend_Normal
+                , eAlphaMode::Alpha_Normal
+                , 1.f
+                , false
+                , &mLayerStack
+            )
+        );
     }
     //-----------------------------------------------------------
 

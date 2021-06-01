@@ -13,24 +13,27 @@
 #include "Core/Core.h"
 #include "Image/ColorSpace.h"
 #include "Image/Format.h"
+#include "Image/Size2D.h"
 #include "Layer/Layer.h"
 #include "Layer/LayerImage.h"
 #include "Layer/LayerFolder.h"
 #include "Layer/LayerText.h"
-#include "Layer/LayerRoot.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FLayerStack
 /// @brief      The FLayerStack class provides a class to store a layer stack
 ///             for painting applications.
-class ULIS_API FLayerStack
-    : public IHasFormat
+class ULIS_API FLayerStack final
+    : private ILayer
+    , public TRoot< ILayer >
+    , public IHasFormat
     , public IHasColorSpace
-    , public ILayerRoot
+    , public IHasSize2D
 {
 public:
-    virtual ~FLayerStack();
+    ~FLayerStack() override;
+
     FLayerStack(
           uint16 iWidth
         , uint16 iHeight
@@ -42,14 +45,6 @@ public:
     FLayerStack& operator=( const FLayerStack& ) = delete;
 
 public:
-    uint16 Width() const;
-    uint16 Height() const;
-    uint32 Area() const;
-    FRectI Rect() const;
-
-    ILayerRoot& Root();
-    const ILayerRoot& Root() const;
-
     void Reset(
           uint16 iWidth
         , uint16 iHeight
@@ -57,11 +52,13 @@ public:
         , const FColorSpace* iColorSpace = nullptr
     );
 
-    bool CheckSanity() const;
+    constexpr static const char* StaticType() { return  mType; }
+    constexpr static const uint32 StaticTypeID() { return  crc32b( mType); }
+    const FString Type() const override { return  StaticType(); }
+    const uint32 TypeID() const override { return  StaticTypeID(); }
 
 private:
-    uint16 mWidth;
-    uint16 mHeight;
+    constexpr static const char* mType = "Stack";
 };
 
 ULIS_NAMESPACE_END
