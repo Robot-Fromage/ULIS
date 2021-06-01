@@ -27,6 +27,7 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 #include "Font/Font.h"
+#include "Font/FontEngine.h"
 #include <vector>
 #include <atomic>
 
@@ -45,7 +46,7 @@ FContext::XCreateTestBlock(
     FBlock* paper = new FBlock( 4, 3, fmt );
     const FColor background = FColor::RGB( 28, 25, 31, 240 );
     const FColor foreground = FColor::RGB( 170, 146, 64 );
-    FFont* font = new FFont( FontEngine(), "Segoe UI", "Regular" );
+    FFont* font = new FFont( FFontEngine::GFontEngine, "Segoe UI", "Regular" );
 
     const std::wstring text = L"Test";
     FRectI textBox = TextMetrics( text, *font, 23 );
