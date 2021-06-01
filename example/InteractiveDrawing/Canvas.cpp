@@ -21,6 +21,8 @@
 #include <QMouseEvent>
 #include <QResizeEvent>
 
+#include "Math/ShapeGeneration/Line.h"
+
 SCanvas::~SCanvas() {
     FContext& ctx = mHandle.ContextCanvas();
     ctx.Finish();
@@ -214,6 +216,17 @@ SCanvas::Update()
                 ctx.DrawLineAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if( mRasterMode == eRasterMode::kSP )
                 ctx.DrawLineSP(*mTemp, FVec2F(mPoints[0].x() + 0.26, mPoints[0].y() + 0.11), FVec2F(mPoints[1].x(), mPoints[1].y()), FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            else if (mRasterMode == eRasterMode::kGeneratePoints)
+            {
+                TArray<FVec2I> points;
+                FColor color = FColor::HSVA8(0, 255, 255, 255);
+                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                for (int i = 0; i < points.Size(); i++)
+                {
+                    color.SetHue8(i % 255);
+                    mTemp->SetPixelSafe(points[i].x, points[i].y, color);
+                }
+            }
             else
                 ctx.DrawLine(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;

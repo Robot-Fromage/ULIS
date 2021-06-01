@@ -3,47 +3,45 @@
 /*
 *   ULIS
 *__________________
-* @file         RasterLine.cpp
+* @file         Line.h
 * @author       Thomas Schmitt
-* @brief        This file provides the implementation of non template Line functions for the raster API
+* @brief        This file provides the line points generation methods
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Process/Raster/RasterLine.h"
+
+#pragma once
+#include "Core/Core.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Interpolation/Spline.h"
+#include "Math/Math.h"
+#include <cmath>
+#include <vector>
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawLine(
-      FBlock& iBlock
+
+static inline void GenerateLinePoints(
+    FBlock& iBlock
     , const FVec2I& iP0
     , const FVec2I& iP1
-    , const FColor& iColor
-    , const FRectI& iClippingRect)
+    , TArray<FVec2I>& ioLinePoints)
 {
-    //Clipping ----
+
+    if( ioLinePoints.Size() != 0 )
+        ioLinePoints.Clear();
 
     FVec2I p0 = iP0;
     FVec2I p1 = iP1;
 
-    FRectI clippingRect = iClippingRect;
-    clippingRect.w--;
-    clippingRect.h--;
-
-    if (clippingRect.Area() == 0)
-    {
-        clippingRect = FRectI::FromXYWH(0, 0, iBlock.Width() - 1, iBlock.Height() - 1);
-    }
-
-    if (!InternalCropLineToRectangle(p0, p1, clippingRect))
-        return; //Nothing to draw
-
-    //Drawing ----
-    FColor val = iColor;
+    bool pushArray = true; //While inserting the points into the array, if true, we push back, else, we insert at front
 
     if (::ULIS::FMath::Abs(p1.y - p0.y) < ::ULIS::FMath::Abs(p1.x - p0.x)) // x slope > y slope
     {
         if (p1.x < p0.x)
         {
+            pushArray = false;
             FVec2I temp = p0;
             p0 = p1;
             p1 = temp;
@@ -64,7 +62,10 @@ void DrawLine(
 
         for (int x = p0.x; x <= p1.x; x++)
         {
-            iBlock.SetPixel(x, y, val);
+            if (pushArray || ioLinePoints.Size() == 0)
+                ioLinePoints.PushBack( FVec2I( x, y ) );
+            else
+                ioLinePoints.Insert( 0, FVec2I( x, y ) );
 
             if (slopeDifferential > 0)
             {
@@ -78,6 +79,7 @@ void DrawLine(
     {
         if (p1.y < p0.y)
         {
+            pushArray = false;
             FVec2I temp = p0;
             p0 = p1;
             p1 = temp;
@@ -98,7 +100,10 @@ void DrawLine(
 
         for (int y = p0.y; y <= p1.y; y++)
         {
-            iBlock.SetPixel(x, y, val);
+            if( pushArray || ioLinePoints.Size() == 0  )
+                ioLinePoints.PushBack( FVec2I( x, y ) );
+            else
+                ioLinePoints.Insert(0, FVec2I(x, y));
 
             if (slopeDifferential > 0)
             {
@@ -109,6 +114,7 @@ void DrawLine(
         }
     }
 }
+
 
 ULIS_NAMESPACE_END
 

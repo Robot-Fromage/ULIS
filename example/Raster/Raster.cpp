@@ -15,6 +15,10 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
+
+#include "Math/ShapeGeneration/Line.h"
+#include "Math/Interpolation/CatmullRom.h"
+
 using namespace ::ULIS;
 
 int
@@ -33,6 +37,15 @@ main(int argc,char *argv[])
     ctx.Clear(canvas);
     ctx.Finish();
     {
+        TArray<FVec2I> points;
+        FColor color =  FColor::HSVA8(0,255,255,255);
+        GenerateLinePoints( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), points);
+        for (int i = 0; i < points.Size(); i++)
+        {
+            color.SetHue8( i % 255 );
+            canvas.SetPixelSafe(points[i].x, points[i].y, color );
+        }
+
         //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBA8(255,0,0, 255) );
         //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBAF(1,0,0,1) );
         //ctx.DrawLineSP( canvas, FVec2F( 200.45, 200.2 ), FVec2F( 515.1, 321.2 ), FColor::RGBAF(1,0,0,1) );

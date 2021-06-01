@@ -17,7 +17,14 @@
 
 ULIS_NAMESPACE_BEGIN
 
-void DrawLine(FBlock&       iBlock
+void SimulateLine(
+    FBlock& iBlock
+    , const FVec2F& iP0
+    , const FVec2F& iP1
+    , TArray<FVec2F>& ioLinePoints );
+
+void DrawLine(
+      FBlock& iBlock
     , const FVec2I& iP0
     , const FVec2I& iP1
     , const FColor& iColor

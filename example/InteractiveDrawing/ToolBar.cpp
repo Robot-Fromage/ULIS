@@ -132,7 +132,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
 
     ctx.Clear( *block, block->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, &eventClear );
 
-    if( iRasterMode == kNone ) {
+    if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
         ctx.Dummy_OP( 1, &eventRaster, &eventText );
     } else if( iRasterMode == kAA ) {
         ctx.Blend( iAA, *block, iAA.Rect(), FVec2I( size.x - iAA.Width(), 1 ), Blend_Normal, Alpha_Normal, 1.f, FSchedulePolicy::MonoChunk, 1, &eventRaster, &eventText );
@@ -142,7 +142,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
 
     switch( iRasterOp ) {
         case kLine: {
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 ctx.DrawLine( *block, padding, size - padding, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
                 ctx.DrawLineAA( *block, padding, size - padding, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
@@ -152,7 +152,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             break;
         }
         case kCircle: {
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 ctx.DrawCircle( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
                 ctx.DrawCircleAA( *block, center, radius, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
@@ -162,7 +162,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             break;
         }
         case kArc: {
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 ctx.DrawArc( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
                 ctx.DrawArcAA( *block, center, radius, 315, 90, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
@@ -172,7 +172,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             break;
         }
         case kEllipse: {
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 ctx.DrawEllipse( *block, center, radius, radius / 2, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
                 ctx.DrawEllipseAA( *block, center, radius, radius / 2, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
@@ -182,7 +182,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             break;
         }
         case kRotatedEllipse: {
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 ctx.DrawRotatedEllipse( *block, center, radius, radius / 2, 45, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
                 ctx.DrawRotatedEllipseAA( *block, center, radius, radius / 2, 45, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
@@ -192,7 +192,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             break;
         }
         case kRectangle: {
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 ctx.DrawRectangle( *block, padding, size - padding, FColor::Black, false, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
                 // Rectangle AA ?
@@ -204,7 +204,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             break;
         }
         case kPolygon: {
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 std::vector< FVec2I > vec {
                       FVec2I( padding.x, padding.y )
                     , FVec2I( size.x - padding.x, padding.y * 2 )
@@ -238,7 +238,7 @@ SToolBar::BuildButton( QPushButton* ioButton, eRasterOp iRasterOp, eRasterMode i
             FVec2I p0( padding.x, size.y - padding.y );
             FVec2I p1( center.x, padding.y );
             FVec2I p2( size.x - padding.x, size.y - padding.y );
-            if( iRasterMode == kNone ) {
+            if( iRasterMode == kNone || iRasterMode == kGeneratePoints ) {
                 ctx.DrawQuadraticBezier( *block, p0, p1, p2, 1.f, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );
             } else if( iRasterMode == kAA ) {
                 ctx.DrawQuadraticBezierAA( *block, p0, p1, p2, 1.f, FColor::Black, block->Rect(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventRaster );

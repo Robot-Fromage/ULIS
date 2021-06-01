@@ -26,9 +26,9 @@ SMainWindow::SMainWindow( FULISLoader& iHandle )
     , mCanvas( new SCanvas( this, mHandle ) )
 {
     setFixedSize( 1280, 800 );
-    mToolBar->setFixedSize( 116, 800 );
-    mCanvas->setFixedSize( 1280 - 116, 800 );
-    mCanvas->move( 116, 0 );
+    mToolBar->setFixedSize( 180, 800 );
+    mCanvas->setFixedSize( 1280 - 180, 800 );
+    mCanvas->move( 180, 0 );
 
     QObject::connect( mToolBar, SIGNAL( FormatChanged( int ) ), mCanvas, SLOT( SetFormat( int ) ) );
     QObject::connect( mToolBar, SIGNAL( RasterChanged( eRasterOp, eRasterMode ) ), mCanvas, SLOT( SetRaster( eRasterOp, eRasterMode ) ) );

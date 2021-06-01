@@ -47,6 +47,7 @@ enum eRasterMode {
       kNone
     , kAA
     , kSP
+    , kGeneratePoints
     , kNumRasterMode
 };
 
