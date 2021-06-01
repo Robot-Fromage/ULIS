@@ -12,21 +12,20 @@
 #pragma once
 #include "Core/Core.h"
 #include "Memory/Array.h"
+#include <functional>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Forward declaration
 template< class Type >
-class TAbstractRoot;
+class TRoot;
 
 /////////////////////////////////////////////////////
 /// @class      TNode
 /// @brief      Basic node
 template< class Type >
-class TNode {
-
-    typedef TNode< Type >           tSelf;
-    typedef TAbstractRoot< Type >   tParent;
+class ULIS_API TNode {
+    typedef TRoot< Type > tParent;
 
 public:
     virtual ~TNode() {
@@ -37,11 +36,18 @@ public:
     {}
 
     Type& Self() {
-        return  *reinterpret_cast< Type* >( __GetDerivedPtr__() );
+        //return  *reinterpret_cast< Type* >( __GetDerivedPtr__() ); // No RTTI
+        return  *dynamic_cast< Type* >( this ); // Yes RTTI
     }
 
     const Type& Self() const {
-        return  *reinterpret_cast< Type* >( __GetDerivedPtr__() );
+        //return  *reinterpret_cast< const Type* >( __GetDerivedPtr__() ); // No RTTI
+        return  *dynamic_cast< const Type* >( this ); // Yes RTTI
+    }
+
+    Type& Def( std::function< void( Type& ) > iFunc ) {
+        iFunc( Self() );
+        return  Self();
     }
 
     tParent* Parent() {
@@ -56,7 +62,36 @@ public:
         mParent = iParent;
     }
 
+    tParent* TopLevelParent() {
+        if( mParent == nullptr )
+            return  nullptr;
+
+        tParent* parent = mParent;
+        while( true ) {
+            if( parent->mParent == nullptr ) {
+                return  parent;
+            }
+            parent = parent->mParent;
+        }
+    }
+
+    const tParent* TopLevelParent() const {
+        if( mParent == nullptr )
+            return  nullptr;
+
+        tParent* parent = mParent;
+        while( true ) {
+            if( parent->mParent == nullptr ) {
+                return  parent;
+            }
+            parent = parent->mParent;
+        }
+    }
+
 private:
+    // In case RTTI is disabled this cas enable virtual dynamic casting
+    // alternative for derived classes.
+    /*
     #define ULIS_DERIVED_FROM_NODE                      \
         virtual void* __GetDerivedPtr__() override {    \
             return this;                                \
@@ -65,29 +100,30 @@ private:
     virtual void* __GetDerivedPtr__() = 0 {
         return nullptr;
     }
+    */
 
 private:
     tParent* mParent;
 };
 
 /////////////////////////////////////////////////////
-/// @class      TAbstractRoot
+/// @class      TRoot
 /// @brief      Abstract Root
 template< class Type >
-class TAbstractRoot
+class ULIS_API TRoot
     : public virtual TNode< Type >
 {
-    typedef TAbstractRoot< Type >   tSelf;
     typedef TNode< Type >           tSuperClass;
-    typedef TAbstractRoot< Type >   tParent;
+    typedef TRoot< Type >   tParent;
+    typedef TRoot< Type >   tSelf;
     typedef TNode< Type >           tNode;
 
 public:
-    virtual ~TAbstractRoot() override {
+    virtual ~TRoot() override {
         Reset();
     }
 
-    TAbstractRoot( tParent* iParent = nullptr )
+    TRoot( tParent* iParent = nullptr )
         : tSuperClass( iParent )
     {}
 
@@ -121,38 +157,27 @@ public:
         mChildren.Erase( iIndex, 1 );
     }
 
-private:
-    TArray< tNode* > mChildren;
-};
-
-/////////////////////////////////////////////////////
-/// @class      TConcreteRoot
-/// @brief      Concrete Root with CRTP
-template< class ConcreteDerived, class Type >
-class TConcreteRoot
-    : public TAbstractRoot< Type >
-{
-    typedef TConcreteRoot< ConcreteDerived, Type > tSelf;
-    typedef TAbstractRoot< Type > tSuperClass;
-    typedef TConcreteRoot< ConcreteDerived, Type > tParent;
-    typedef TNode< Type > tNode;
-
-public:
-    virtual ~TConcreteRoot() override {
-    }
-
-    TConcreteRoot( tParent* iParent = nullptr )
-        : tSuperClass( iParent )
-    {}
-
-    ConcreteDerived& AddChild( tNode* iNode, uint64 iIndex = ULIS_UINT64_MAX ) {
+    tSelf& AddChild( tNode* iNode, uint64 iIndex = ULIS_UINT64_MAX ) {
         iNode->SetParent( this );
         if( iIndex >= Children().Size() )
             Children().PushBack( iNode );
         else
             Children().Insert( iIndex, iNode );
-        return *static_cast< ConcreteDerived* >( this );
+        return  *this;
     }
+
+    template< typename ChildType, class ... Args >
+    tSelf& AddChild( Args&& ... args ) {
+        return  AddChild( new ChildType( std::forward< Args >(args) ... ), ULIS_UINT64_MAX );
+    }
+
+    template< typename ChildType, class ... Args >
+    tSelf& AddChild( uint64 iIndex, Args&& ... args ) {
+        return  AddChild( new ChildType( std::forward< Args >(args) ... ), iIndex );
+    }
+
+private:
+    TArray< tNode* > mChildren;
 };
 
 ULIS_NAMESPACE_END
