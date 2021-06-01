@@ -20,7 +20,6 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "System/Device.h"
-#include "Font/FontEngine.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
@@ -99,16 +98,6 @@ public:
         Getter for the context format
     */
     eFormat Format() const;
-
-    /*!
-        Getter for the context font engine
-    */
-    FFontEngine& FontEngine();
-
-    /*!
-        Getter for the context font engine
-    */
-    const FFontEngine& FontEngine() const;
 
 public:
     /*!
@@ -2090,7 +2079,6 @@ public:
 private:
     FCommandQueue& mCommandQueue;
     const FContextualDispatchTable* mContextualDispatchTable;
-    FFontEngine mFontEngine;
 };
 
 ULIS_NAMESPACE_END
