@@ -328,7 +328,7 @@ public:
     void Insert( uint64 iPos, const T& iValue ) {
         ULIS_ASSERT( iPos < mSize, "Bad Index" );
         CheckGrowBulk();
-        memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
+        memmove( mBulk + iPos + 1, mBulk + iPos, ( mSize - iPos ) * sizeof( T ) );
         new  ( mBulk + iPos )  T( iValue );
         mSize++;
     }
@@ -340,7 +340,7 @@ public:
     void Insert( uint64 iPos, T&& iValue ) {
         ULIS_ASSERT( iPos < mSize, "Bad Index" );
         CheckGrowBulk();
-        memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
+        memmove( mBulk + iPos + 1, mBulk + iPos, ( mSize - iPos ) * sizeof( T )  );
         new  ( mBulk + iPos )  T( std::forward< T >( iValue ) );
         mSize++;
     }
@@ -353,7 +353,7 @@ public:
     void Emplace( uint64 iPos, Args&& ... args ) {
         ULIS_ASSERT( iPos < mSize, "Bad Index" );
         CheckGrowBulk();
-        memmove( mBulk + iPos + 1, mBulk + iPos, mSize - iPos );
+        memmove( mBulk + iPos + 1, mBulk + iPos, ( mSize - iPos ) * sizeof( T )  );
         new  ( mBulk + iPos )  T( std::forward< Args >(args) ... );
         mSize++;
     }
@@ -365,7 +365,7 @@ public:
     void Insert( uint64 iPos, uint64 iCount, const T& iValue ) {
         ULIS_ASSERT( iPos < mSize, "Bad Index" );
         Reserve( mSize + iCount );
-        memmove( mBulk + iPos + iCount, mBulk + iPos, mSize - iPos );
+        memmove( mBulk + iPos + iCount, mBulk + iPos, ( mSize - iPos ) * sizeof( T )  );
         for( uint64 i = iPos; i < iPos + iCount; ++i )
             new  ( mBulk + i )  T( iValue );
         mSize += iCount;
@@ -379,7 +379,7 @@ public:
         ULIS_ASSERT( iPos + iCount <= mSize, "Bad arguments" );
         for( uint64 i = iPos; i < iPos + iCount; ++i )
             mBulk[i].~T();
-        memmove( mBulk + iPos, mBulk + iPos + iCount, mSize - ( iPos + iCount ) );
+        memmove( mBulk + iPos, mBulk + iPos + iCount, ( mSize - ( iPos + iCount ) ) * sizeof( T ) );
         mSize -= iCount;
     }
 
