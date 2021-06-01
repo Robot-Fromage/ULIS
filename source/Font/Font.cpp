@@ -18,6 +18,8 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FFont
+const FFontEngine FFontEngine::GFontEngine = FFontEngine();
+const FFont FFont::DefaultFont = FFont( FFontEngine::GFontEngine, "Arial", "Regular" );
 //--------------------------------------------------------------------------------------
 //----------------------------------------------------------- Construction / Destruction
 FFont::~FFont()

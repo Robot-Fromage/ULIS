@@ -52,6 +52,9 @@ public:
     const std::string& Family() const;
     const std::string& Style() const;
 
+public:
+    static const FFont DefaultFont;
+
 private:
     // Private Data Members
     void* mFontHandle;
