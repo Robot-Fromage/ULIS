@@ -18,6 +18,8 @@ ULIS is a rendering library written in C++. It is aimed at software rasterizatio
 - [Documentation](https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/)
 - [License](LICENSE.md)
 
+Check out the [Interactive Wasm Demo !](https://praxinos.coop/demo/wULIS4/wULIS4.html).
+
 ## Samples
 ![](meta/image/sample/BlendNormals.png) | ![](meta/image/sample/Unicode.png) | ![](meta/image/sample/Transforms.png) | ![](meta/image/sample/BrownianNoise.png)
 ---- | ---- | ---- | ----
