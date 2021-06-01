@@ -259,7 +259,7 @@ FString::Prepend( char_type iChar ) {
 }
 
 bool
-FString::operator==( const FString& iOther ) {
+FString::operator==( const FString& iOther ) const {
     if( mSize != iOther.mSize )
         return  false;
 
@@ -271,7 +271,7 @@ FString::operator==( const FString& iOther ) {
 }
 
 bool
-FString::operator!=( const FString& iOther ) {
+FString::operator!=( const FString& iOther ) const {
     return  !( (*this) == iOther );
 }
 
@@ -546,6 +546,12 @@ FString::operator+=( const FString& iOther ) {
 FString&
 FString::operator+=( const char_type* iOther ) {
     return  Append( iOther );
+}
+
+uint32
+FString::CRC32() const
+{
+    return  ::ULIS::CRC32( reinterpret_cast< uint8* >( mBulk ), static_cast< int >( mSize ) );
 }
 
 // Private

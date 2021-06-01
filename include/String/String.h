@@ -112,10 +112,10 @@ public:
     FString& Prepend( char_type iChar );
 
     /* Equality operator */
-    bool operator==( const FString& iOther );
+    bool operator==( const FString& iOther ) const;
 
     /* Inequality operator */
-    bool operator!=( const FString& iOther );
+    bool operator!=( const FString& iOther ) const;
 
     /* To Int */
     int ToInt() const;
@@ -221,6 +221,9 @@ public:
 
     /* Operator += */
     FString& operator+=( const char_type* iOther );
+
+    /* HASH CRC32 */
+    uint32 CRC32() const;
 
 private:
     void CleanupBulk();
