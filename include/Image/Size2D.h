@@ -47,6 +47,10 @@ public:
         return  mSize.x * mSize.y;
     }
 
+    ULIS_FORCEINLINE FVec2I Size() const {
+        return  mSize;
+    }
+
     ULIS_FORCEINLINE FRectI Rect() const {
         return  FRectI::FromPositionAndSize( FVec2I( 0 ), mSize );
     }
