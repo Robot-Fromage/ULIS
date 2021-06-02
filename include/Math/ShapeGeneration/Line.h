@@ -12,10 +12,6 @@
 
 #pragma once
 #include "Core/Core.h"
-#include "Math/Geometry/Vector.h"
-#include "Math/Math.h"
-#include <cmath>
-#include <vector>
 
 ULIS_NAMESPACE_BEGIN
 
