@@ -12,9 +12,7 @@
 
 #pragma once
 #include "Core/Core.h"
-#include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
-#include "Math/Interpolation/Spline.h"
 #include "Math/Math.h"
 #include <cmath>
 #include <vector>

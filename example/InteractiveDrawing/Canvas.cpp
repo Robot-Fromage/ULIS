@@ -21,7 +21,15 @@
 #include <QMouseEvent>
 #include <QResizeEvent>
 
+#include "Math/ShapeGeneration/Arc.h"
+#include "Math/ShapeGeneration/Circle.h"
+#include "Math/ShapeGeneration/Ellipse.h"
 #include "Math/ShapeGeneration/Line.h"
+#include "Math/ShapeGeneration/Polygon.h"
+#include "Math/ShapeGeneration/QuadraticBezier.h"
+#include "Math/ShapeGeneration/Rectangle.h"
+#include "Math/ShapeGeneration/RotatedEllipse.h"
+
 
 SCanvas::~SCanvas() {
     FContext& ctx = mHandle.ContextCanvas();
@@ -235,6 +243,17 @@ SCanvas::Update()
                 ctx.DrawCircleAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
                 ctx.DrawCircleSP(*mTemp, FVec2F(mPoints[0].x() + 0.25, mPoints[0].y() + 0.25), FMath::Dist(float(mPoints[0].x()), float(mPoints[0].y()), float(mPoints[1].x()), float(mPoints[1].y())), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            else if (mRasterMode == eRasterMode::kGeneratePoints)
+            {
+                TArray<FVec2I> points;
+                FColor color = FColor::HSVA8(0, 255, 255, 255);
+                GenerateCirclePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), points);
+                for (int i = 0; i < points.Size(); i++)
+                {
+                    color.SetHue8(i % 255);
+                    mTemp->SetPixelSafe(points[i].x, points[i].y, color);
+                }
+            }
             else
                 ctx.DrawCircle(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
@@ -246,6 +265,17 @@ SCanvas::Update()
                 ctx.DrawArcAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), dist, angle2, angle1, FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
                 ctx.DrawArcSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), dist, angle2, angle1, FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            else if (mRasterMode == eRasterMode::kGeneratePoints)
+            {
+                TArray<FVec2I> points;
+                FColor color = FColor::HSVA8(0, 255, 255, 255);
+                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                for (int i = 0; i < points.Size(); i++)
+                {
+                    color.SetHue8(i % 255);
+                    mTemp->SetPixelSafe(points[i].x, points[i].y, color);
+                }
+            }
             else
                 ctx.DrawArc(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), dist, angle2, angle1, FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
@@ -254,6 +284,17 @@ SCanvas::Update()
                 ctx.DrawEllipseAA( *mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs( mPoints[0].x() - mPoints[1].x() ), FMath::Abs(mPoints[0].y() - mPoints[1].y() ), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
                 ctx.DrawEllipseSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs(mPoints[0].x() - mPoints[1].x()), FMath::Abs(mPoints[0].y() - mPoints[1].y()), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            else if (mRasterMode == eRasterMode::kGeneratePoints)
+            {
+                TArray<FVec2I> points;
+                FColor color = FColor::HSVA8(0, 255, 255, 255);
+                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                for (int i = 0; i < points.Size(); i++)
+                {
+                    color.SetHue8(i % 255);
+                    mTemp->SetPixelSafe(points[i].x, points[i].y, color);
+                }
+            }
             else
                 ctx.DrawEllipse( *mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs( mPoints[0].x() - mPoints[1].x() ), FMath::Abs(mPoints[0].y() - mPoints[1].y() ), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
@@ -262,11 +303,34 @@ SCanvas::Update()
                 ctx.DrawRotatedEllipseAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs(mPoints[0].x() - mPoints[1].x()), FMath::Abs(mPoints[0].y() - mPoints[1].y()), mAngle, FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
                 ctx.DrawRotatedEllipseSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs(mPoints[0].x() - mPoints[1].x()), FMath::Abs(mPoints[0].y() - mPoints[1].y()), mAngle, FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            else if (mRasterMode == eRasterMode::kGeneratePoints)
+            {
+                TArray<FVec2I> points;
+                FColor color = FColor::HSVA8(0, 255, 255, 255);
+                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                for (int i = 0; i < points.Size(); i++)
+                {
+                    color.SetHue8(i % 255);
+                    mTemp->SetPixelSafe(points[i].x, points[i].y, color);
+                }
+            }
             else
                 ctx.DrawRotatedEllipse(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs(mPoints[0].x() - mPoints[1].x()), FMath::Abs(mPoints[0].y() - mPoints[1].y()), mAngle, FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;
         case kRectangle:
-            ctx.DrawRectangle(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()) - (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FVec2I(mPoints[0].x(), mPoints[0].y()) + (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            if (mRasterMode == eRasterMode::kGeneratePoints)
+            {
+                TArray<FVec2I> points;
+                FColor color = FColor::HSVA8(0, 255, 255, 255);
+                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                for (int i = 0; i < points.Size(); i++)
+                {
+                    color.SetHue8(i % 255);
+                    mTemp->SetPixelSafe(points[i].x, points[i].y, color);
+                }
+            }
+            else 
+                ctx.DrawRectangle(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()) - (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FVec2I(mPoints[0].x(), mPoints[0].y()) + (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FColor::Black, mFilled, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
         case kPolygon:
             if (mRasterMode == eRasterMode::kAA)
                 ;
@@ -280,6 +344,17 @@ SCanvas::Update()
                 ctx.DrawQuadraticBezierAA(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), FVec2I(mPoints[2].x(), mPoints[2].y()), 1, FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             else if (mRasterMode == eRasterMode::kSP)
                 ctx.DrawQuadraticBezierSP(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), FVec2I(mPoints[2].x(), mPoints[2].y()), 1, FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
+            else if (mRasterMode == eRasterMode::kGeneratePoints)
+            {
+                TArray<FVec2I> points;
+                FColor color = FColor::HSVA8(0, 255, 255, 255);
+                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                for (int i = 0; i < points.Size(); i++)
+                {
+                    color.SetHue8(i % 255);
+                    mTemp->SetPixelSafe(points[i].x, points[i].y, color);
+                }
+            }
             else
                 ctx.DrawQuadraticBezier(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), FVec2I(mPoints[2].x(), mPoints[2].y()), 1, FColor::Black, mTemp->Rect(), FSchedulePolicy::MonoChunk, 0, nullptr, nullptr);
             break;

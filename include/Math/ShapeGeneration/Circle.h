@@ -11,8 +11,263 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Math/Geometry/Vector.h"
+#include "Math/Math.h"
+#include <cmath>
+#include <vector>
 
 ULIS_NAMESPACE_BEGIN
+
+static inline void GenerateCirclePoints(
+      FBlock&                  iBlock
+    , const FVec2I&            iCenter
+    , const int                iRadius
+    , TArray<FVec2I>&          ioCirclePoints )
+{
+    if( ioCirclePoints.Size() != 0 )
+        ioCirclePoints.Clear();
+
+    int x = 0;
+    int y = iRadius; //We start from the top of the circle for the first octant
+    int octantStartingIndex = 0;
+
+    //0° is on top and we turn clockwise
+    //Octant 1 ------
+    int diff = iRadius;
+
+    while (y >= x)
+    {
+        if (diff < (2 * (iRadius - y)))
+        {
+            diff += (2 * y - 1);
+            y--;
+        }
+
+        ioCirclePoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
+
+        if (diff >= (2 * x))
+        {
+            diff -= (2 * x + 1);
+            x++;
+        }
+        else
+        {
+            diff += (2 * (y - x - 1));
+            y--;
+            x++;
+        }
+    }
+    
+    octantStartingIndex = ioCirclePoints.Size();
+
+    //Octant 2 ------
+    x = 0;
+    y = iRadius;
+    diff = iRadius;
+
+    while (y >= x)
+    {
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        ioCirclePoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+
+        if( diff >= ( 2 * x ) )
+        {
+            diff -= ( 2 * x + 1 );
+            x++;
+        }
+        else
+        {
+            diff += (2 * ( y - x - 1 ) );
+            y--;
+            x++;
+        }
+    }
+
+    octantStartingIndex = ioCirclePoints.Size();
+
+    //Octant 3 ------
+    x = 0;
+    y = iRadius;
+    diff = iRadius;
+
+    while (y >= x)
+    {
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        ioCirclePoints.PushBack( FVec2I( iCenter.x + y, iCenter.y + x ));
+
+        if( diff >= ( 2 * x ) )
+        {
+            diff -= ( 2 * x + 1 );
+            x++;
+        }
+        else
+        {
+            diff += (2 * ( y - x - 1 ) );
+            y--;
+            x++;
+        }
+    }
+
+    octantStartingIndex = ioCirclePoints.Size();
+
+    //Octant 4 ------
+    x = 0;
+    y = iRadius;
+    diff = iRadius;
+
+    while (y >= x)
+    {
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        ioCirclePoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+
+        if( diff >= ( 2 * x ) )
+        {
+            diff -= ( 2 * x + 1 );
+            x++;
+        }
+        else
+        {
+            diff += (2 * ( y - x - 1 ) );
+            y--;
+            x++;
+        }
+    }
+
+    octantStartingIndex = ioCirclePoints.Size();
+
+    //Octant 5 ------
+    x = 0;
+    y = iRadius;
+    diff = iRadius;
+
+    while (y > x)
+    {
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        ioCirclePoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+
+        if( diff >= ( 2 * x ) )
+        {
+            diff -= ( 2 * x + 1 );
+            x++;
+        }
+        else
+        {
+            diff += (2 * ( y - x - 1 ) );
+            y--;
+            x++;
+        }
+    }
+
+    octantStartingIndex = ioCirclePoints.Size();
+
+    //Octant 6 ------
+    x = 0;
+    y = iRadius;
+    diff = iRadius;
+
+    while (y > x)
+    {
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        ioCirclePoints.Insert( octantStartingIndex, FVec2I( iCenter.x - y, iCenter.y + x ));
+
+        if( diff >= ( 2 * x ) )
+        {
+            diff -= ( 2 * x + 1 );
+            x++;
+        }
+        else
+        {
+            diff += (2 * ( y - x - 1 ) );
+            y--;
+            x++;
+        }
+    }
+
+    octantStartingIndex = ioCirclePoints.Size();
+
+    //Octant 7 ------
+    x = 0;
+    y = iRadius;
+    diff = iRadius;
+
+    while (y > x)
+    {
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        ioCirclePoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+
+        if( diff >= ( 2 * x ) )
+        {
+            diff -= ( 2 * x + 1 );
+            x++;
+        }
+        else
+        {
+            diff += (2 * ( y - x - 1 ) );
+            y--;
+            x++;
+        }
+    }
+
+    octantStartingIndex = ioCirclePoints.Size();
+
+    //Octant 8 ------
+    x = 0;
+    y = iRadius;
+    diff = iRadius;
+
+    while (y > x)
+    {
+        if ( diff < ( 2 * ( iRadius - y ) ) )
+        {
+            diff += ( 2 * y - 1 );
+            y--;
+        }
+
+        ioCirclePoints.Insert( octantStartingIndex, FVec2I( iCenter.x - x, iCenter.y - y) );
+
+        if( diff >= ( 2 * x ) )
+        {
+            diff -= ( 2 * x + 1 );
+            x++;
+        }
+        else
+        {
+            diff += (2 * ( y - x - 1 ) );
+            y--;
+            x++;
+        }
+    }
+}
 
 ULIS_NAMESPACE_END
 
