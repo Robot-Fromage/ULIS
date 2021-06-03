@@ -38,7 +38,8 @@ main( int argc, char *argv[] ) {
     */
 
     FLayerStack* stack;
-    ULAssignStack( stack, w, h, fmt ) [
+    ULAssignStack( stack, w, h, fmt )
+    [
         ULCreateChild( FLayerImage, "Image0" )
         ULDef( SetColor( FColor::Black ) )
         ULDef( SetBlendMode( Blend_Multiply ) )
@@ -49,7 +50,8 @@ main( int argc, char *argv[] ) {
     ][
         ULCreateChild( FLayerFolder, "Folder0" )
         ULDef( SetColor( FColor::Blue ) )
-        ULDef( SetOpacity( 0.5f ) ) [
+        ULDef( SetOpacity( 0.5f ) )
+        [
             ULCreateChild( FLayerImage, "Image0_0" )
             ULDef( SetColor( FColor::White ) )
             ULDef( SetBlendMode( Blend_Overlay ) )
@@ -59,6 +61,9 @@ main( int argc, char *argv[] ) {
             ULDef( SetBlendMode( Blend_Normal ) )
         ]
     ];
+
+    FLayerImage& temp = stack->Find< FLayerFolder >( "Folder0" )
+        .Find< FLayerImage >( "Image0_0" );
 
     {
         ctx.Clear( canvas, canvas.Rect() );

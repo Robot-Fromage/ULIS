@@ -129,11 +129,12 @@ FLayerImage::SetAlphaLocked( bool iValue )
 
 void
 FLayerImage::InitFromParent( const tParent* iParent ) {
-    if( !iParent )
+    const tParent* topLevel = iParent->TopLevelParent();
+    if( !topLevel )
         return;
 
     if( !mBlock ) {
-        const ILayer* layer = dynamic_cast< const ILayer* >( iParent );
+        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer !" );
         uint32 typeID = layer->TypeID();
         switch( typeID ) {

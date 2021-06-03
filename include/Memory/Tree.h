@@ -65,28 +65,22 @@ public:
 
     tParent* TopLevelParent() {
         if( mParent == nullptr )
-            return  nullptr;
+            return  dynamic_cast< tParent* >( this );
 
         tParent* parent = mParent;
-        while( true ) {
-            if( parent->mParent == nullptr ) {
-                return  parent;
-            }
+        while( parent->mParent )
             parent = parent->mParent;
-        }
+        return  parent;
     }
 
     const tParent* TopLevelParent() const {
         if( mParent == nullptr )
-            return  nullptr;
+            return  dynamic_cast< const tParent* >( this );
 
         tParent* parent = mParent;
-        while( true ) {
-            if( parent->mParent == nullptr ) {
-                return  parent;
-            }
+        while( parent->mParent )
             parent = parent->mParent;
-        }
+        return  parent;
     }
 
 private:
