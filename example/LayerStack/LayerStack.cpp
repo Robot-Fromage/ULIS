@@ -41,23 +41,23 @@ main( int argc, char *argv[] ) {
     ULAssignStack( stack, w, h, fmt )
     [
         ULCreateChild( FLayerImage, "Image0" )
-        ULDef( SetColor( FColor::Black ) )
+        ULDef( SetPrettyColor( FColor::Black ) )
         ULDef( SetBlendMode( Blend_Multiply ) )
     ][
         ULCreateChild( FLayerImage, "Image1" )
-        ULDef( SetColor( FColor::Red ) )
+        ULDef( SetPrettyColor( FColor::Red ) )
         ULDef( SetBlendMode( Blend_Normal ) )
     ][
         ULCreateChild( FLayerFolder, "Folder0" )
-        ULDef( SetColor( FColor::Blue ) )
+        ULDef( SetPrettyColor( FColor::Blue ) )
         ULDef( SetOpacity( 0.5f ) )
         [
             ULCreateChild( FLayerImage, "Image0_0" )
-            ULDef( SetColor( FColor::White ) )
+            ULDef( SetPrettyColor( FColor::White ) )
             ULDef( SetBlendMode( Blend_Overlay ) )
         ][
             ULCreateChild( FLayerImage, "Image0_1" )
-            ULDef( SetColor( FColor::White ) )
+            ULDef( SetPrettyColor( FColor::White ) )
             ULDef( SetBlendMode( Blend_Normal ) )
         ]
     ];

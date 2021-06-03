@@ -15,8 +15,7 @@
 #include "Image/Block.h"
 
 ULIS_NAMESPACE_BEGIN
-FLayerImage::~FLayerImage()
-{
+FLayerImage::~FLayerImage() {
     if( mBlock )
         delete  mBlock;
 }
@@ -68,38 +67,32 @@ FLayerImage::FLayerImage(
 }
 
 FBlock&
-FLayerImage::Block()
-{
+FLayerImage::Block() {
     return  *mBlock;
 }
 
 const FBlock&
-FLayerImage::Block() const
-{
+FLayerImage::Block() const {
     return  *mBlock;
 }
 
 bool
-FLayerImage::IsAlphaLocked() const
-{
+FLayerImage::IsAlphaLocked() const {
     return  mAlphaLock;
 }
 
 eBlendMode
-FLayerImage::BlendMode() const
-{
+FLayerImage::BlendMode() const {
     return  mBlendMode;
 }
 
 eAlphaMode
-FLayerImage::AlphaMode() const
-{
+FLayerImage::AlphaMode() const {
     return  mAlphaMode;
 }
 
 ufloat
-FLayerImage::Opacity() const
-{
+FLayerImage::Opacity() const {
     return  mOpacity;
 }
 
@@ -110,21 +103,26 @@ FLayerImage::SetBlendMode( eBlendMode iValue )
 }
 
 void
-FLayerImage::SetAlphaMode( eAlphaMode iValue )
-{
+FLayerImage::SetAlphaMode( eAlphaMode iValue ) {
     mAlphaMode = iValue;
 }
 
 void
-FLayerImage::SetOpacity( ufloat iValue )
-{
+FLayerImage::SetOpacity( ufloat iValue ) {
     mOpacity = iValue;
 }
 
 void
-FLayerImage::SetAlphaLocked( bool iValue )
-{
+FLayerImage::SetAlphaLocked( bool iValue ) {
     mAlphaLock = iValue;
+}
+
+void
+FLayerImage::RenderImage( FBlock& ioBlock, const FRectI& iRect, const FVec2I& iPos ) {
+    if( IsImageCacheValid() )
+        return;
+
+    ValidateImageCache();
 }
 
 void

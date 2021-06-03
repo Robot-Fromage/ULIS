@@ -205,7 +205,7 @@ FContext::RenderLayerText(
             , iText.Font()
             , iText.FontSize()
             , iText.Transform()
-            , iText.Color()
+            , iText.TextColor()
             , iPolicy
             , iNumWait
             , iWaitList
@@ -218,7 +218,7 @@ FContext::RenderLayerText(
             , iText.Font()
             , iText.FontSize()
             , iText.Transform()
-            , iText.Color()
+            , iText.TextColor()
             , iPolicy
             , iNumWait
             , iWaitList

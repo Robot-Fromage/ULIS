@@ -27,12 +27,15 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FLayerText final
     : public FLayerImage
 {
+    // Typedefs
     typedef TRoot< ILayer > tParent;
     typedef FLayerImage     tSuperClass;
 
 public:
+    // DTor
     ~FLayerText() override;
 
+    // CTors
     FLayerText(
           const FString& iName = "Untitled"
         , bool iLocked = false
@@ -73,10 +76,12 @@ public:
         , tParent* iParent = nullptr
     );
 
+    // Disable copy
     FLayerText( const FLayerText& ) = delete;
     FLayerText& operator=( const FLayerText& ) = delete;
 
 public:
+    // Getters
     const std::wstring& Text() const;
     const FFont& Font() const;
     uint32 FontSize() const;
@@ -84,6 +89,7 @@ public:
     const FColor& TextColor() const;
     bool AA() const;
 
+    // Setters
     void SetText( const std::wstring& iValue );
     void SetFont( const FFont& iValue );
     void SetFontSize( uint32 iValue );
@@ -91,12 +97,19 @@ public:
     void SetTextColor( const ISample& iValue );
     void SetAA( bool iValue );
 
+    // Static Interface
     constexpr static const char* StaticType() { return  mType; }
     constexpr static const uint32 StaticTypeID() { return  crc32b( mType); }
+
+    // ILayer Interface
     const FString Type() const override { return  StaticType(); }
     const uint32 TypeID() const override { return  StaticTypeID(); }
 
+    // ICachedImageRendering Interface
+    void RenderImage( FBlock& ioBlock, const FRectI& iRect = FRectI::Auto, const FVec2I& iPos = FVec2I( 0 ) ) override;
+
 private:
+    // Private data members
     std::wstring mText;
     FFont mFont;
     uint32 mFontSize;
@@ -106,5 +119,6 @@ private:
     constexpr static const char* mType = "Text";
 };
 #pragma warning(pop)
+
 ULIS_NAMESPACE_END
 

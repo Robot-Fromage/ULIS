@@ -16,7 +16,7 @@
 
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
-#pragma warning(disable : 4250) // Shut dominance of inheritance
+#pragma warning(disable : 4250) // Shut dominance of inheritance for ULIS::FLayerImage::InitFromParent
 /////////////////////////////////////////////////////
 /// @class      FLayerFolder
 /// @brief      The FLayerFolder class provides a class to store a folder of
@@ -25,12 +25,15 @@ class ULIS_API FLayerFolder final
     : public FLayerImage
     , public TRoot< ILayer >
 {
+    // Typedefs
     typedef TRoot< ILayer > tParent;
     typedef FLayerImage     tSuperClass;
 
 public:
+    // DTor
     ~FLayerFolder() override;
 
+    // CTors
     FLayerFolder(
           const FString& iName = "Untitled"
         , bool iLocked = false
@@ -61,34 +64,39 @@ public:
         , tParent* iParent = nullptr
     );
 
+    // Disable copy
     FLayerFolder( const FLayerFolder& ) = delete;
     FLayerFolder& operator=( const FLayerFolder& ) = delete;
 
 public:
+    // Getters
     bool IsCollapsed() const;
 
+    // Setters
     void SetCollapsed( bool iValue );
 
+    // Utils
+    template< typename T > T& Find( const FString& iName ) { return  dynamic_cast< T& >( (*this)[ iName ] ); }
+    template< typename T > const T& Find( const FString& iName ) const { return  dynamic_cast< const T& >( (*this)[ iName ] ); }
+
+    // Static Interface
     constexpr static const char* StaticType() { return  mType; }
     constexpr static const uint32 StaticTypeID() { return  crc32b( mType); }
+
+    // ILayer Interface
     const FString Type() const override { return  StaticType(); }
     const uint32 TypeID() const override { return  StaticTypeID(); }
 
+    // TRoot overload-shadow Interface
     using TRoot< ILayer >::operator[];
     ILayer& operator[]( const FString& iName );
     const ILayer& operator[]( const FString& iName ) const;
 
-    template< typename T >
-    T& Find( const FString& iName ) {
-        return  dynamic_cast< T& >( (*this)[ iName ] );
-    }
-
-    template< typename T >
-    const T& Find( const FString& iName ) const {
-        return  dynamic_cast< const T& >( (*this)[ iName ] );
-    }
+    // ICachedImageRendering Interface
+    void RenderImage( FBlock& ioBlock, const FRectI& iRect = FRectI::Auto, const FVec2I& iPos = FVec2I( 0 ) ) override;
 
 private:
+    // Private data members
     bool mCollapsed;
     constexpr static const char* mType = "Folder";
 };

@@ -10,6 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/Layer.h"
+#include "Layer/LayerStack.h"
+#include "Layer/LayerFolder.h"
 
 ULIS_NAMESPACE_BEGIN
 ILayer::~ILayer()
@@ -27,7 +29,7 @@ ILayer::ILayer(
     , mName( iName )
     , mLocked( iLocked )
     , mVisible( iVisible )
-    , mColor( iColor.ToFormat( Format_RGBA8 ) )
+    , mPrettyColor( iColor.ToFormat( Format_RGBA8 ) )
 {}
 
 const FString&
@@ -49,10 +51,10 @@ ILayer::Visible() const
 }
 
 const FColor&
-ILayer::Color() const
+ILayer::PrettyColor() const
 {
     // supposed to be always RGBA8
-    return  mColor;
+    return  mPrettyColor;
 }
 
 void
@@ -74,12 +76,36 @@ ILayer::SetVisible( bool iValue )
 }
 
 void
-ILayer::SetColor( const FColor& iColor )
+ILayer::SetPrettyColor( const FColor& iColor )
 {
-    // Ensure conversion to local mColor format,
+    // Ensure conversion to local mPrettyColor format,
     // supposed to be always RGBA8
-    FColor::ConvertFormat( iColor, mColor );
+    FColor::ConvertFormat( iColor, mPrettyColor );
 }
 
+void
+ILayer::InvalidImageCache() {
+    ICachedImageRendering::InvalidImageCache();
+    tParent* root = Parent();
+    ILayer* layer = dynamic_cast< ILayer* >( root );
+    if( !layer )
+        return;
+
+    uint32 typeID = layer->TypeID();
+    switch( typeID ) {
+        case FLayerStack::StaticTypeID(): {
+            FLayerStack* stack = dynamic_cast< FLayerStack* >( layer );
+            ULIS_ASSERT( stack, "Parent cannot be cast to stack !" );
+            stack->InvalidImageCache();
+            break;
+        }
+        case FLayerFolder::StaticTypeID(): {
+            FLayerFolder* folder = dynamic_cast< FLayerFolder* >( layer );
+            ULIS_ASSERT( folder, "Parent cannot be cast to folder !" );
+            folder->InvalidImageCache();
+            break;
+        }
+    }
+}
 ULIS_NAMESPACE_END
 

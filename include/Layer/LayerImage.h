@@ -21,12 +21,15 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FLayerImage
     : public ILayer
 {
+    // Typedefs
     typedef TRoot< ILayer > tParent;
     typedef ILayer          tSuperClass;
 
 public:
+    // DTor
     virtual ~FLayerImage() override;
 
+    // CTors
     FLayerImage(
           const FString& iName = "Untitled"
         , bool iLocked = false
@@ -55,10 +58,12 @@ public:
         , tParent* iParent = nullptr
     );
 
+    // Disable copy
     FLayerImage( const FLayerImage& ) = delete;
     FLayerImage& operator=( const FLayerImage& ) = delete;
 
 public:
+    // Getters
     FBlock& Block();
     const FBlock& Block() const;
     eBlendMode BlendMode() const;
@@ -66,20 +71,29 @@ public:
     ufloat Opacity() const;
     bool IsAlphaLocked() const;
 
+    // Setters
     void SetBlendMode( eBlendMode iValue );
     void SetAlphaMode( eAlphaMode iValue );
     void SetOpacity( ufloat iValue );
     void SetAlphaLocked( bool iValue );
 
+    // Static Interface
     constexpr static const char* StaticType() { return  mType; }
     constexpr static const uint32 StaticTypeID() { return  crc32b( mType); }
+
+    // ILayer Interface
     const FString Type() const override { return  StaticType(); }
     const uint32 TypeID() const override { return  StaticTypeID(); }
 
+    // ICachedImageRendering Interface
+    virtual void RenderImage( FBlock& ioBlock, const FRectI& iRect = FRectI::Auto, const FVec2I& iPos = FVec2I( 0 ) ) override;
+
 protected:
+    // TNode Interface
     virtual void InitFromParent( const tParent* iParent ) override;
 
 private:
+    // Private data members
     FBlock* mBlock;
     eBlendMode mBlendMode;
     eAlphaMode mAlphaMode;

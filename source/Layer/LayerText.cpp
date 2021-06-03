@@ -171,5 +171,13 @@ FLayerText::SetAA( bool iValue )
     mAA = iValue;
 }
 
+void
+FLayerText::RenderImage( FBlock& ioBlock, const FRectI& iRect, const FVec2I& iPos ) {
+    if( IsImageCacheValid() )
+        return;
+
+    ValidateImageCache();
+}
+
 ULIS_NAMESPACE_END
 

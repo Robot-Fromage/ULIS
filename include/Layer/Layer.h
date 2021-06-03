@@ -11,16 +11,23 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/CacheRendering.h"
+#include "Layer/LayerBuilder.h"
 #include "String/String.h"
 #include "Image/Color.h"
 #include "Memory/Tree.h"
 #include "String/CRC32.h"
 
 ULIS_NAMESPACE_BEGIN
+// Forward Declarations
 class ILayer;
+
+// Exports
 template class ULIS_API TNode< ILayer >;
 template class ULIS_API TArray< TNode< ILayer >* >;
 template class ULIS_API TRoot< ILayer >;
+
+// Typedefs
 typedef TRoot< ILayer > ILayerRoot;
 
 /////////////////////////////////////////////////////
@@ -29,13 +36,17 @@ typedef TRoot< ILayer > ILayerRoot;
 ///             in a layer stack for painting applications.
 class ULIS_API ILayer
     : public virtual TNode< ILayer >
+    , public ICachedImageRendering
 {
+    // Typedefs
     typedef TRoot< ILayer > tParent;
     typedef TNode< ILayer > tSuperClass;
 
 public:
+    // DTor
     virtual ~ILayer() override = 0;
 
+    // CTor
     ILayer(
           const FString& iName = "Untitled"
         , bool iLocked = false
@@ -44,80 +55,33 @@ public:
         , tParent* iParent = nullptr
     );
 
+public:
+    // Getters
     const FString& Name() const;
     bool Locked() const;
     bool Visible() const;
-    const FColor& Color() const;
+    const FColor& PrettyColor() const;
 
+    // Setters
     void SetName( const FString& iName );
     void SetLocked( bool iValue );
     void SetVisible( bool iValue );
-    void SetColor( const FColor& iColor );
+    void SetPrettyColor( const FColor& iColor );
 
+    // ILayer Interface
     virtual const FString Type() const = 0;
     virtual const uint32 TypeID() const = 0;
 
+    // ICachedImageRendering Interface
+    virtual void InvalidImageCache() override;
+
 private:
+    // Private data members
     FString mName;
     bool mLocked;
     bool mVisible;
-    FColor mColor;
+    FColor mPrettyColor;
 };
-
-template< typename T >
-class TLayerBuilder {
-public:
-
-    TLayerBuilder< T >( T* iElem, ILayerRoot* iParent = nullptr )
-        : m( iElem )
-    {
-        m->SetParent( iParent );
-    }
-
-    template< class ... Args >
-    static
-    TLayerBuilder
-    Assign( T** ioElem, Args&& ... args ) {
-        T* ptr = new T( std::forward< Args >( args ) ... );
-        *ioElem = ptr;
-        return  TLayerBuilder( ptr );
-    }
-
-    template< class ... Args >
-    static
-    TLayerBuilder
-    Create( Args&& ... args ) {
-        T* ptr = new T( std::forward< Args >( args ) ... );
-        return  TLayerBuilder( ptr );
-    }
-
-    TLayerBuilder< T >& Def( std::function< void( T* ) > iFunc ) {
-        iFunc( m );
-        return  *this;
-    }
-
-    template< typename U >
-    TLayerBuilder< T >& AddChild( TLayerBuilder< U >& iObj ) {
-        m->AddChild( iObj.m );
-        return  *this;
-    }
-
-    template< typename U >
-    TLayerBuilder< T >& operator[]( TLayerBuilder< U >& iObj ) {
-        m->AddChild( iObj.m );
-        return  *this;
-    }
-
-public:
-    T* m;
-};
-
-#define ULAssociateStack( _Elem_ )              TLayerBuilder< FLayerStack >( & _Elem_ )
-#define ULAssignStack( _Elem_, ... )            TLayerBuilder< FLayerStack >::Assign( & _Elem_, __VA_ARGS__ )
-#define ULCreateChild( _Class_, ... )           TLayerBuilder< _Class_ >::Create( __VA_ARGS__ )
-#define ULAssignChild( _Class_, _Elem_, ... )   TLayerBuilder< _Class_ >::Assign( & _Elem_, __VA_ARGS__ )
-#define ULAddLayer( _Elem_ )                    .AddChild( _Elem_ )
-#define ULDef( ... )                            .Def( [&]( auto i ){ i-> __VA_ARGS__ ; } )
 
 ULIS_NAMESPACE_END
 
