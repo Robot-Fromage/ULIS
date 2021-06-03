@@ -269,7 +269,7 @@ SCanvas::Update()
             {
                 TArray<FVec2I> points;
                 FColor color = FColor::HSVA8(0, 255, 255, 255);
-                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                GenerateArcPoints( FVec2I(mPoints[0].x(), mPoints[0].y()), dist, angle2, angle1, points);
                 for (int i = 0; i < points.Size(); i++)
                 {
                     color.SetHue8(i % 255);
