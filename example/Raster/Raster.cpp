@@ -17,7 +17,7 @@
 #include <QLabel>
 
 #include "Math/ShapeGeneration/Line.h"
-#include "Math/Interpolation/CatmullRom.h"
+#include "Math/ShapeGeneration/Polygon.h"
 
 using namespace ::ULIS;
 
@@ -37,14 +37,14 @@ main(int argc,char *argv[])
     ctx.Clear(canvas);
     ctx.Finish();
     {
-        TArray<FVec2I> points;
+        TArray<FVec2I> pointsGenerated;
         FColor color =  FColor::HSVA8(0,255,255,255);
-        GenerateLinePoints( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), points);
+        /*GenerateLinePoints( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), points);
         for (int i = 0; i < points.Size(); i++)
         {
             color.SetHue8( i % 255 );
             canvas.SetPixelSafe(points[i].x, points[i].y, color );
-        }
+        }*/
 
         //ctx.DrawLine( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBA8(255,0,0, 255) );
         //ctx.DrawLineAA( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), FColor::RGBAF(1,0,0,1) );
@@ -101,14 +101,21 @@ main(int argc,char *argv[])
 
         //ctx.DrawQuadraticBezier( canvas, FVec2I( 150, 150 ),  FVec2I( 250, 126 ), FVec2I( 72, 59 ), 1 );
 
-        /*std::vector< FVec2I > points;
-        points.push_back( FVec2I( 381, 144 ));
-        points.push_back(FVec2I(211,586));
-        points.push_back(FVec2I(511,234));
-        points.push_back(FVec2I(158,236));
-        points.push_back(FVec2I(502,589));
+        std::vector< FVec2I > points;
+        points.push_back( FVec2I( 381, 144 )); //Top
+        points.push_back(FVec2I(211,586)); //Bottom left
+        points.push_back(FVec2I(511,234)); // Right
+        points.push_back(FVec2I(158,236)); // Left
+        points.push_back(FVec2I(502,589)); // Bottom Right
 
-        ctx.DrawPolygon( canvas, points, FColor::RGBA8(0,200,0, 155), false);*/
+        //ctx.DrawPolygon( canvas, points, FColor::RGBA8(0,200,0, 155), false);
+        GeneratePolygonPoints( points, pointsGenerated );
+
+        for (int i = 0; i < pointsGenerated.Size(); i++)
+        {
+            color.SetHue8(i % 255);
+            canvas.SetPixelSafe(pointsGenerated[i].x, pointsGenerated[i].y, color);
+        }
 
         //ctx.DrawLineAA( canvas, FVec2F( 381, 144 ), FVec2F( 211, 586 ), FColor::RGBA8(0,200,0,155) );
 

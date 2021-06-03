@@ -14,5 +14,20 @@
 
 ULIS_NAMESPACE_BEGIN
 
+static inline void GeneratePolygonPoints(
+    const std::vector< FVec2I >& iPoints
+    , TArray<FVec2I>& ioPolygonPoints )
+{
+    if(iPoints.size() < 3)
+        return;
+
+    for(int i = 0; i < iPoints.size() - 1; i++)
+    {
+        GenerateLinePoints(iPoints.at(i),iPoints.at(i+1),ioPolygonPoints);
+    }
+    GenerateLinePoints(iPoints.at(iPoints.size() - 1), iPoints.at(0), ioPolygonPoints);
+
+}
+
 ULIS_NAMESPACE_END
 
