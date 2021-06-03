@@ -54,12 +54,19 @@ FLayerStack::operator[]( const FString& iName ) const {
     return  FindLayerByFuzzyNameInContainer( iName, *this );
 }
 
-void
-FLayerStack::RenderImage( FBlock& ioBlock, const FRectI& iRect, const FVec2I& iPos ) {
-    if( IsImageCacheValid() )
-        return;
-
-    ValidateImageCache();
+FEvent
+FLayerStack::RenderImage(
+      FContext& iCtx
+    , FBlock& ioBlock
+    , const FRectI& iRect
+    , const FVec2I& iPos
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    RenderCache( iCtx );
+    return  FEvent::NoOP();
 }
 
 ULIS_NAMESPACE_END

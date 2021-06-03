@@ -22,12 +22,28 @@ ICachedImageRendering::IsImageCacheValid() const {
     return  mImageCacheValid;
 }
 
-void
-ICachedImageRendering::RenderImage( FBlock& ioBlock, const FRectI& iRect, const FVec2I& iPos ) {
+FEvent
+ICachedImageRendering::RenderCache( FContext& iCtx ) {
     if( IsImageCacheValid() )
-        return;
+        return  FEvent::NoOP();
 
     ValidateImageCache();
+    return  FEvent::NoOP();
+}
+
+FEvent
+ICachedImageRendering::RenderImage(
+      FContext& iCtx
+    , FBlock& ioBlock
+    , const FRectI& iRect
+    , const FVec2I& iPos
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    RenderCache( iCtx );
+    return  FEvent::NoOP();
 }
 
 void

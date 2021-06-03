@@ -51,5 +51,14 @@ FEvent::Wait() const
     d->Wait();
 }
 
+//static
+FEvent
+FEvent::NoOP()
+{
+    FEvent ev;
+    ev.d->m->NotifyAllJobsFinished();
+    return  ev;
+}
+
 ULIS_NAMESPACE_END
 

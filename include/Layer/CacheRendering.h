@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include "Scheduling/Event.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -25,7 +26,18 @@ protected:
     ICachedImageRendering();
 
 public:
-    virtual void RenderImage( FBlock& ioBlock, const FRectI& iRect = FRectI::Auto, const FVec2I& iPos = FVec2I( 0 ) ) = 0;
+    virtual FEvent RenderCache( FContext& iCtx );
+    virtual FEvent RenderImage(
+          FContext& iCtx
+        , FBlock& ioBlock
+        , const FRectI& iRect = FRectI::Auto
+        , const FVec2I& iPos = FVec2I( 0 )
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    ) = 0;
+
+
     bool IsImageCacheValid() const;
     virtual void InvalidImageCache();
 

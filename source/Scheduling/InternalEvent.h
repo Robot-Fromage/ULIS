@@ -40,6 +40,7 @@ typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 ///             \sa FCommandQueue
 class FInternalEvent
 {
+    friend class FEvent;
 
 public:
     /*! Destructor */

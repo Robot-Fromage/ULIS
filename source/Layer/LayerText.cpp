@@ -139,44 +139,66 @@ void
 FLayerText::SetText( const std::wstring& iValue )
 {
     mText = iValue;
+    InvalidImageCache();
 }
 
 void
 FLayerText::SetFont( const FFont& iValue )
 {
     mFont = iValue;
+    InvalidImageCache();
 }
 
 void
 FLayerText::SetFontSize( uint32 iValue )
 {
     mFontSize = iValue;
+    InvalidImageCache();
 }
 
 void
 FLayerText::SetTransform( const FMat3F& iValue )
 {
     mTransform = iValue;
+    InvalidImageCache();
 }
 
 void
 FLayerText::SetTextColor( const ISample& iValue )
 {
     mTextColor = iValue;
+    InvalidImageCache();
 }
 
 void
 FLayerText::SetAA( bool iValue )
 {
     mAA = iValue;
+    InvalidImageCache();
 }
 
-void
-FLayerText::RenderImage( FBlock& ioBlock, const FRectI& iRect, const FVec2I& iPos ) {
+FEvent
+FLayerText::RenderCache( FContext& iCtx ) {
     if( IsImageCacheValid() )
-        return;
+        return  FEvent::NoOP();
 
     ValidateImageCache();
+    return  FEvent::NoOP();
+}
+
+FEvent
+FLayerText::RenderImage(
+      FContext& iCtx
+    , FBlock& ioBlock
+    , const FRectI& iRect
+    , const FVec2I& iPos
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    RenderCache( iCtx );
+    return  FEvent::NoOP();
 }
 
 ULIS_NAMESPACE_END

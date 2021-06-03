@@ -73,6 +73,7 @@ void
 ILayer::SetVisible( bool iValue )
 {
     mVisible = iValue;
+    InvalidImageCache();
 }
 
 void

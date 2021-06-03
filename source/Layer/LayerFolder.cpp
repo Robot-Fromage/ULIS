@@ -99,12 +99,28 @@ FLayerFolder::operator[]( const FString& iName ) const {
     return  FindLayerByFuzzyNameInContainer( iName, *this );
 }
 
-void
-FLayerFolder::RenderImage( FBlock& ioBlock, const FRectI& iRect, const FVec2I& iPos ) {
+FEvent
+FLayerFolder::RenderCache( FContext& iCtx ) {
     if( IsImageCacheValid() )
-        return;
+        return  FEvent::NoOP();
 
     ValidateImageCache();
+    return  FEvent::NoOP();
+}
+
+FEvent
+FLayerFolder::RenderImage(
+      FContext& iCtx
+    , FBlock& ioBlock
+    , const FRectI& iRect
+    , const FVec2I& iPos
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    RenderCache( iCtx );
+    return  FEvent::NoOP();
 }
 
 ULIS_NAMESPACE_END

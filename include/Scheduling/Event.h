@@ -56,9 +56,11 @@ public:
 
     FEvent( const FEvent& );
     FEvent& operator=( const FEvent& );
-    
+
     eEventStatus Status() const;
     void Wait() const;
+
+    static FEvent NoOP();
 
 private:
     FEvent_Private* d;

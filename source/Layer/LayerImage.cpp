@@ -100,16 +100,19 @@ void
 FLayerImage::SetBlendMode( eBlendMode iValue )
 {
     mBlendMode = iValue;
+    InvalidImageCache();
 }
 
 void
 FLayerImage::SetAlphaMode( eAlphaMode iValue ) {
     mAlphaMode = iValue;
+    InvalidImageCache();
 }
 
 void
 FLayerImage::SetOpacity( ufloat iValue ) {
     mOpacity = iValue;
+    InvalidImageCache();
 }
 
 void
@@ -117,12 +120,19 @@ FLayerImage::SetAlphaLocked( bool iValue ) {
     mAlphaLock = iValue;
 }
 
-void
-FLayerImage::RenderImage( FBlock& ioBlock, const FRectI& iRect, const FVec2I& iPos ) {
-    if( IsImageCacheValid() )
-        return;
-
-    ValidateImageCache();
+FEvent
+FLayerImage::RenderImage(
+      FContext& iCtx
+    , FBlock& ioBlock
+    , const FRectI& iRect
+    , const FVec2I& iPos
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    RenderCache( iCtx );
+    return  FEvent::NoOP();
 }
 
 void
