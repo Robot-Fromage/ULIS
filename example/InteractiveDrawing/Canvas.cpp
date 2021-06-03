@@ -288,7 +288,7 @@ SCanvas::Update()
             {
                 TArray<FVec2I> points;
                 FColor color = FColor::HSVA8(0, 255, 255, 255);
-                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                GenerateEllipsePoints( FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Abs(mPoints[0].x() - mPoints[1].x()), FMath::Abs(mPoints[0].y() - mPoints[1].y()), points);
                 for (int i = 0; i < points.Size(); i++)
                 {
                     color.SetHue8(i % 255);
