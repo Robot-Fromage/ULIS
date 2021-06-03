@@ -10,12 +10,15 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/LayerImage.h"
+#include "Layer/LayerFolder.h"
+#include "Layer/LayerStack.h"
 #include "Image/Block.h"
 
 ULIS_NAMESPACE_BEGIN
 FLayerImage::~FLayerImage()
 {
-    delete  mBlock;
+    if( mBlock )
+        delete  mBlock;
 }
 
 FLayerImage::FLayerImage(
@@ -33,12 +36,14 @@ FLayerImage::FLayerImage(
     , tParent* iParent
 )
     : tSuperClass( iName, iLocked, iVisible, iColor, iParent )
-    , mBlock( new FBlock( iWidth, iHeight, iFormat ) )
+    , mBlock( nullptr )
     , mBlendMode( iBlendMode )
     , mAlphaMode( iAlphaMode )
     , mOpacity( iOpacity )
     , mAlphaLock( iAlphaLocked )
 {
+    if( iWidth && iHeight )
+        mBlock = new FBlock( iWidth, iHeight, iFormat );
 }
 
 FLayerImage::FLayerImage(
@@ -120,6 +125,33 @@ void
 FLayerImage::SetAlphaLocked( bool iValue )
 {
     mAlphaLock = iValue;
+}
+
+void
+FLayerImage::InitFromParent( const tParent* iParent ) {
+    if( !iParent )
+        return;
+
+    if( !mBlock ) {
+        const ILayer* layer = dynamic_cast< const ILayer* >( iParent );
+        ULIS_ASSERT( layer, "Parent cannot be cast to ILayer !" );
+        uint32 typeID = layer->TypeID();
+        switch( typeID ) {
+            case FLayerStack::StaticTypeID(): {
+                const FLayerStack* stack = dynamic_cast< const FLayerStack* >( layer );
+                ULIS_ASSERT( stack, "Parent cannot be cast to stack !" );
+                mBlock = new FBlock( stack->Width(), stack->Height(), stack->Format() );
+                break;
+            }
+            case FLayerFolder::StaticTypeID(): {
+                const FLayerFolder* folder = dynamic_cast< const FLayerFolder* >( layer );
+                ULIS_ASSERT( folder, "Parent cannot be cast to folder !" );
+                const FBlock& ref = folder->Block();
+                mBlock = new FBlock( ref.Width(), ref.Height(), ref.Format() );
+                break;
+            }
+        }
+    }
 }
 
 ULIS_NAMESPACE_END

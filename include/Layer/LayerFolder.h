@@ -15,6 +15,8 @@
 #include "Layer/LayerImage.h"
 
 ULIS_NAMESPACE_BEGIN
+#pragma warning(push)
+#pragma warning(disable : 4250) // Shut dominance of inheritance
 /////////////////////////////////////////////////////
 /// @class      FLayerFolder
 /// @brief      The FLayerFolder class provides a class to store a folder of
@@ -90,6 +92,7 @@ private:
     bool mCollapsed;
     constexpr static const char* mType = "Folder";
 };
+#pragma warning(pop)
 
 ULIS_NAMESPACE_END
 

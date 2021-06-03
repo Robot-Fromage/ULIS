@@ -64,5 +64,60 @@ private:
     FColor mColor;
 };
 
+template< typename T >
+class FLayerBuilder {
+public:
+
+    FLayerBuilder< T >( T* iElem, ILayerRoot* iParent = nullptr )
+        : m( iElem )
+    {
+        m->SetParent( iParent );
+    }
+
+    template< class ... Args >
+    static
+    FLayerBuilder
+    Assign( T** ioElem, Args&& ... args ) {
+        T* ptr = new T( std::forward< Args >( args ) ... );
+        *ioElem = ptr;
+        return  FLayerBuilder( ptr );
+    }
+
+    template< class ... Args >
+    static
+    FLayerBuilder
+    Create( Args&& ... args ) {
+        T* ptr = new T( std::forward< Args >( args ) ... );
+        return  FLayerBuilder( ptr );
+    }
+
+    FLayerBuilder< T >& Def( std::function< void( T* ) > iFunc ) {
+        iFunc( m );
+        return  *this;
+    }
+
+    template< typename U >
+    FLayerBuilder< T >& AddChild( FLayerBuilder< U >& iObj ) {
+        m->AddChild( iObj.m );
+        return  *this;
+    }
+
+    template< typename U >
+    FLayerBuilder< T >& operator[]( FLayerBuilder< U >& iObj ) {
+        m->AddChild( iObj.m );
+        return  *this;
+    }
+
+public:
+    T* m;
+};
+
+#define ULAssociateStack( _Elem_ )              FLayerBuilder< FLayerStack >( & _Elem_ )
+#define ULAssignStack( _Elem_, ... )            FLayerBuilder< FLayerStack >::Assign( & _Elem_, __VA_ARGS__ )
+#define ULCreateChild( _Class_, ... )           FLayerBuilder< _Class_ >::Create( __VA_ARGS__ )
+#define ULAssignChild( _Class_, _Elem_, ... )   FLayerBuilder< _Class_ >::Assign( & _Elem_, __VA_ARGS__ )
+#define ULAddLayer( _Elem_ )                    .AddChild( _Elem_ )
+#define ULDef( ... )                            .Def( [&]( auto i ){ i-> __VA_ARGS__ ; } )
+
 ULIS_NAMESPACE_END
 

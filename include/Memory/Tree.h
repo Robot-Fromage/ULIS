@@ -26,6 +26,7 @@ class TRoot;
 template< class Type >
 class ULIS_API TNode {
     typedef TRoot< Type > tParent;
+    friend class TRoot< Type >;
 
 public:
     virtual ~TNode() {
@@ -102,6 +103,9 @@ private:
     }
     */
 
+    virtual void InitFromParent( const tParent* iParent ) {
+    }
+
 private:
     tParent* mParent;
 };
@@ -159,6 +163,7 @@ public:
 
     tSelf& AddChild( tNode* iNode, uint64 iIndex = ULIS_UINT64_MAX ) {
         iNode->SetParent( this );
+        iNode->InitFromParent( this );
         if( iIndex >= Children().Size() )
             Children().PushBack( iNode );
         else

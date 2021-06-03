@@ -25,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The FLayerStack class provides a class to store a layer stack
 ///             for painting applications.
 class ULIS_API FLayerStack final
-    : private ILayer
+    : public ILayer
     , public TRoot< ILayer >
     , public IHasFormat
     , public IHasColorSpace

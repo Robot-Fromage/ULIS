@@ -32,8 +32,8 @@ public:
         , bool iLocked = false
         , bool iVisible = true
         , const FColor& iColor = FColor::Transparent
-        , uint16 iWidth = 1
-        , uint16 iHeight = 1
+        , uint16 iWidth = 0
+        , uint16 iHeight = 0
         , eFormat iFormat = Format_RGBA8
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
@@ -75,6 +75,9 @@ public:
     constexpr static const uint32 StaticTypeID() { return  crc32b( mType); }
     const FString Type() const override { return  StaticType(); }
     const uint32 TypeID() const override { return  StaticTypeID(); }
+
+protected:
+    virtual void InitFromParent( const tParent* iParent ) override;
 
 private:
     FBlock* mBlock;
