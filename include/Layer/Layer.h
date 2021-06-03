@@ -65,10 +65,10 @@ private:
 };
 
 template< typename T >
-class FLayerBuilder {
+class TLayerBuilder {
 public:
 
-    FLayerBuilder< T >( T* iElem, ILayerRoot* iParent = nullptr )
+    TLayerBuilder< T >( T* iElem, ILayerRoot* iParent = nullptr )
         : m( iElem )
     {
         m->SetParent( iParent );
@@ -76,34 +76,34 @@ public:
 
     template< class ... Args >
     static
-    FLayerBuilder
+    TLayerBuilder
     Assign( T** ioElem, Args&& ... args ) {
         T* ptr = new T( std::forward< Args >( args ) ... );
         *ioElem = ptr;
-        return  FLayerBuilder( ptr );
+        return  TLayerBuilder( ptr );
     }
 
     template< class ... Args >
     static
-    FLayerBuilder
+    TLayerBuilder
     Create( Args&& ... args ) {
         T* ptr = new T( std::forward< Args >( args ) ... );
-        return  FLayerBuilder( ptr );
+        return  TLayerBuilder( ptr );
     }
 
-    FLayerBuilder< T >& Def( std::function< void( T* ) > iFunc ) {
+    TLayerBuilder< T >& Def( std::function< void( T* ) > iFunc ) {
         iFunc( m );
         return  *this;
     }
 
     template< typename U >
-    FLayerBuilder< T >& AddChild( FLayerBuilder< U >& iObj ) {
+    TLayerBuilder< T >& AddChild( TLayerBuilder< U >& iObj ) {
         m->AddChild( iObj.m );
         return  *this;
     }
 
     template< typename U >
-    FLayerBuilder< T >& operator[]( FLayerBuilder< U >& iObj ) {
+    TLayerBuilder< T >& operator[]( TLayerBuilder< U >& iObj ) {
         m->AddChild( iObj.m );
         return  *this;
     }
@@ -112,10 +112,10 @@ public:
     T* m;
 };
 
-#define ULAssociateStack( _Elem_ )              FLayerBuilder< FLayerStack >( & _Elem_ )
-#define ULAssignStack( _Elem_, ... )            FLayerBuilder< FLayerStack >::Assign( & _Elem_, __VA_ARGS__ )
-#define ULCreateChild( _Class_, ... )           FLayerBuilder< _Class_ >::Create( __VA_ARGS__ )
-#define ULAssignChild( _Class_, _Elem_, ... )   FLayerBuilder< _Class_ >::Assign( & _Elem_, __VA_ARGS__ )
+#define ULAssociateStack( _Elem_ )              TLayerBuilder< FLayerStack >( & _Elem_ )
+#define ULAssignStack( _Elem_, ... )            TLayerBuilder< FLayerStack >::Assign( & _Elem_, __VA_ARGS__ )
+#define ULCreateChild( _Class_, ... )           TLayerBuilder< _Class_ >::Create( __VA_ARGS__ )
+#define ULAssignChild( _Class_, _Elem_, ... )   TLayerBuilder< _Class_ >::Assign( & _Elem_, __VA_ARGS__ )
 #define ULAddLayer( _Elem_ )                    .AddChild( _Elem_ )
 #define ULDef( ... )                            .Def( [&]( auto i ){ i-> __VA_ARGS__ ; } )
 
