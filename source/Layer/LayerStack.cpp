@@ -10,9 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/LayerStack.h"
-#include "Image/Block.h"
-#include "Math/Geometry/Rectangle.h"
-#include <functional>
+#include "Layer/LayerUtils.h"
 
 ULIS_NAMESPACE_BEGIN
 FLayerStack::~FLayerStack()
@@ -44,6 +42,16 @@ FLayerStack::Reset(
     AssignColorSpace( iColorSpace );
     ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
     this->TRoot< ILayer >::Reset();
+}
+
+ILayer&
+FLayerStack::operator[]( const FString& iName ) {
+    return  FindLayerByFuzzyNameInContainer( iName, *this );
+}
+
+const ILayer&
+FLayerStack::operator[]( const FString& iName ) const {
+    return  FindLayerByFuzzyNameInContainer( iName, *this );
 }
 
 ULIS_NAMESPACE_END

@@ -72,6 +72,20 @@ public:
     const FString Type() const override { return  StaticType(); }
     const uint32 TypeID() const override { return  StaticTypeID(); }
 
+    using TRoot< ILayer >::operator[];
+    ILayer& operator[]( const FString& iName );
+    const ILayer& operator[]( const FString& iName ) const;
+
+    template< typename T >
+    T& Find( const FString& iName ) {
+        return  dynamic_cast< T& >( (*this)[ iName ] );
+    }
+
+    template< typename T >
+    const T& Find( const FString& iName ) const {
+        return  dynamic_cast< const T& >( (*this)[ iName ] );
+    }
+
 private:
     bool mCollapsed;
     constexpr static const char* mType = "Folder";

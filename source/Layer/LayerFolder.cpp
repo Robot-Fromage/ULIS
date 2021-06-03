@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/LayerFolder.h"
-#include "Image/Block.h"
+#include "Layer/LayerUtils.h"
 
 ULIS_NAMESPACE_BEGIN
 FLayerFolder::~FLayerFolder()
@@ -87,6 +87,16 @@ FLayerFolder::IsCollapsed() const {
 void
 FLayerFolder::SetCollapsed( bool iCollapsed ) {
     mCollapsed = iCollapsed;
+}
+
+ILayer&
+FLayerFolder::operator[]( const FString& iName ) {
+    return  FindLayerByFuzzyNameInContainer( iName, *this );
+}
+
+const ILayer&
+FLayerFolder::operator[]( const FString& iName ) const {
+    return  FindLayerByFuzzyNameInContainer( iName, *this );
 }
 
 ULIS_NAMESPACE_END

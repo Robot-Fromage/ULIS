@@ -113,10 +113,10 @@ template< class Type >
 class ULIS_API TRoot
     : public virtual TNode< Type >
 {
-    typedef TNode< Type >           tSuperClass;
+    typedef TNode< Type >   tSuperClass;
     typedef TRoot< Type >   tParent;
     typedef TRoot< Type >   tSelf;
-    typedef TNode< Type >           tNode;
+    typedef TNode< Type >   tNode;
 
 public:
     virtual ~TRoot() override {
