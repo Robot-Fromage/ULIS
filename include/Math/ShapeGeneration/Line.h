@@ -17,17 +17,14 @@ ULIS_NAMESPACE_BEGIN
 
 
 static inline void GenerateLinePoints(
-    FBlock& iBlock
-    , const FVec2I& iP0
+      const FVec2I& iP0
     , const FVec2I& iP1
     , TArray<FVec2I>& ioLinePoints)
 {
-
-    if( ioLinePoints.Size() != 0 )
-        ioLinePoints.Clear();
-
     FVec2I p0 = iP0;
     FVec2I p1 = iP1;
+
+    int startArray = ioLinePoints.Size(); 
 
     bool pushArray = true; //While inserting the points into the array, if true, we push back, else, we insert at front
 
@@ -59,7 +56,7 @@ static inline void GenerateLinePoints(
             if (pushArray || ioLinePoints.Size() == 0)
                 ioLinePoints.PushBack( FVec2I( x, y ) );
             else
-                ioLinePoints.Insert( 0, FVec2I( x, y ) );
+                ioLinePoints.Insert( startArray, FVec2I( x, y ) );
 
             if (slopeDifferential > 0)
             {
@@ -97,7 +94,7 @@ static inline void GenerateLinePoints(
             if( pushArray || ioLinePoints.Size() == 0  )
                 ioLinePoints.PushBack( FVec2I( x, y ) );
             else
-                ioLinePoints.Insert(0, FVec2I(x, y));
+                ioLinePoints.Insert( startArray, FVec2I(x, y) );
 
             if (slopeDifferential > 0)
             {

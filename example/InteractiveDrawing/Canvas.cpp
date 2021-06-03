@@ -228,7 +228,7 @@ SCanvas::Update()
             {
                 TArray<FVec2I> points;
                 FColor color = FColor::HSVA8(0, 255, 255, 255);
-                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                GenerateLinePoints( FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
                 for (int i = 0; i < points.Size(); i++)
                 {
                     color.SetHue8(i % 255);
@@ -247,7 +247,7 @@ SCanvas::Update()
             {
                 TArray<FVec2I> points;
                 FColor color = FColor::HSVA8(0, 255, 255, 255);
-                GenerateCirclePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), points);
+                GenerateCirclePoints( FVec2I(mPoints[0].x(), mPoints[0].y()), FMath::Dist(mPoints[0].x(), mPoints[0].y(), mPoints[1].x(), mPoints[1].y()), points);
                 for (int i = 0; i < points.Size(); i++)
                 {
                     color.SetHue8(i % 255);
@@ -307,7 +307,7 @@ SCanvas::Update()
             {
                 TArray<FVec2I> points;
                 FColor color = FColor::HSVA8(0, 255, 255, 255);
-                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                GenerateLinePoints( FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
                 for (int i = 0; i < points.Size(); i++)
                 {
                     color.SetHue8(i % 255);
@@ -322,7 +322,7 @@ SCanvas::Update()
             {
                 TArray<FVec2I> points;
                 FColor color = FColor::HSVA8(0, 255, 255, 255);
-                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                GenerateRectanglePoints(FVec2I(mPoints[0].x(), mPoints[0].y()) - (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), FVec2I(mPoints[0].x(), mPoints[0].y()) + (FVec2I(mPoints[0].x(), mPoints[0].y()) - FVec2I(mPoints[1].x(), mPoints[1].y())), points);
                 for (int i = 0; i < points.Size(); i++)
                 {
                     color.SetHue8(i % 255);
@@ -348,7 +348,7 @@ SCanvas::Update()
             {
                 TArray<FVec2I> points;
                 FColor color = FColor::HSVA8(0, 255, 255, 255);
-                GenerateLinePoints(*mTemp, FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
+                GenerateLinePoints( FVec2I(mPoints[0].x(), mPoints[0].y()), FVec2I(mPoints[1].x(), mPoints[1].y()), points);
                 for (int i = 0; i < points.Size(); i++)
                 {
                     color.SetHue8(i % 255);

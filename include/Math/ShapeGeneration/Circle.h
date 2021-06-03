@@ -15,14 +15,10 @@
 ULIS_NAMESPACE_BEGIN
 
 static inline void GenerateCirclePoints(
-      FBlock&                  iBlock
-    , const FVec2I&            iCenter
+      const FVec2I&            iCenter
     , const int                iRadius
     , TArray<FVec2I>&          ioCirclePoints )
 {
-    if( ioCirclePoints.Size() != 0 )
-        ioCirclePoints.Clear();
-
     int x = 0;
     int y = iRadius; //We start from the top of the circle for the first octant
     int octantStartingIndex = 0;

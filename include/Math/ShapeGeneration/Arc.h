@@ -25,9 +25,6 @@ static inline void GenerateArcPoints(
     if(iRadius == 0)
         return;
 
-    if( ioArcPoints.Size() != 0 )
-        ioArcPoints.Clear();
-
     int x = 0;
     int y = iRadius; //We start from the top of the circle for the first octant
     int octantStartingIndex = 0;
