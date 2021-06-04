@@ -60,13 +60,16 @@ FLayerStack::RenderImage(
     , FBlock& ioBlock
     , const FRectI& iRect
     , const FVec2I& iPos
+    , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
     , const FEvent* iWaitList
-    , FEvent* iEvent
 )
 {
     RenderCache( iCtx );
-    return  FEvent::NoOP();
+    FEvent ev;
+    for( int i = Children().Size() - 1; i >= 0; --i )
+        ev = Children()[i]->Self().RenderImage( iCtx, ioBlock, iRect, iPos, iPolicy, iNumWait, iWaitList );
+    return  ev;
 }
 
 ULIS_NAMESPACE_END

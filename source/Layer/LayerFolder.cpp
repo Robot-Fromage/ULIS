@@ -11,6 +11,7 @@
 */
 #include "Layer/LayerFolder.h"
 #include "Layer/LayerUtils.h"
+#include "Context/Context.h"
 
 ULIS_NAMESPACE_BEGIN
 FLayerFolder::~FLayerFolder()
@@ -104,23 +105,13 @@ FLayerFolder::RenderCache( FContext& iCtx ) {
     if( IsImageCacheValid() )
         return  FEvent::NoOP();
 
-    ValidateImageCache();
-    return  FEvent::NoOP();
-}
+    FEvent ev;
+    iCtx.Clear( Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &ev );
+    for( int i = Children().Size() - 1; i >= 0; --i )
+        ev = Children()[i]->Self().RenderImage( iCtx, Block(), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::MultiScanlines, 1, &ev );
 
-FEvent
-FLayerFolder::RenderImage(
-      FContext& iCtx
-    , FBlock& ioBlock
-    , const FRectI& iRect
-    , const FVec2I& iPos
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    RenderCache( iCtx );
-    return  FEvent::NoOP();
+    ValidateImageCache();
+    return  ev;
 }
 
 ULIS_NAMESPACE_END

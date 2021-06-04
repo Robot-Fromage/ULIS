@@ -37,9 +37,9 @@ ICachedImageRendering::RenderImage(
     , FBlock& ioBlock
     , const FRectI& iRect
     , const FVec2I& iPos
+    , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
     , const FEvent* iWaitList
-    , FEvent* iEvent
 )
 {
     RenderCache( iCtx );

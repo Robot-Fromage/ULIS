@@ -127,19 +127,12 @@ public:
     ulError
     RenderLayerFolder(
           FLayerFolder& iFolder
-        , const FRectI& iRect = FRectI::Auto
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
 
     ulError
     RenderLayerText(
           FLayerText& iText
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
 

@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/LayerText.h"
-#include "Image/Block.h"
+#include "Context/Context.h"
 
 ULIS_NAMESPACE_BEGIN
 FLayerText::~FLayerText()
@@ -182,23 +182,16 @@ FLayerText::RenderCache( FContext& iCtx ) {
     if( IsImageCacheValid() )
         return  FEvent::NoOP();
 
-    ValidateImageCache();
-    return  FEvent::NoOP();
-}
+    FEvent clr;
+    FEvent ev;
+    iCtx.Clear( Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &clr );
+    if( mAA )
+        iCtx.RasterTextAA( Block(), mText, mFont, mFontSize, mTransform, mTextColor, FSchedulePolicy::MonoChunk, 1, &clr, &ev );
+    else
+        iCtx.RasterText( Block(), mText, mFont, mFontSize, mTransform, mTextColor, FSchedulePolicy::MonoChunk, 1, &clr, &ev );
 
-FEvent
-FLayerText::RenderImage(
-      FContext& iCtx
-    , FBlock& ioBlock
-    , const FRectI& iRect
-    , const FVec2I& iPos
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-    , FEvent* iEvent
-)
-{
-    RenderCache( iCtx );
-    return  FEvent::NoOP();
+    ValidateImageCache();
+    return  ev;
 }
 
 ULIS_NAMESPACE_END

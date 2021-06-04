@@ -13,6 +13,7 @@
 #include "Layer/LayerFolder.h"
 #include "Layer/LayerStack.h"
 #include "Image/Block.h"
+#include "Context/Context.h"
 
 ULIS_NAMESPACE_BEGIN
 FLayerImage::~FLayerImage() {
@@ -126,13 +127,28 @@ FLayerImage::RenderImage(
     , FBlock& ioBlock
     , const FRectI& iRect
     , const FVec2I& iPos
+    , const FSchedulePolicy& iPolicy
     , uint32 iNumWait
     , const FEvent* iWaitList
-    , FEvent* iEvent
 )
 {
     RenderCache( iCtx );
-    return  FEvent::NoOP();
+    FEvent ev;
+    ulError err = iCtx.Blend(
+          *mBlock
+        , ioBlock
+        , iRect
+        , iPos
+        , mBlendMode
+        , mAlphaMode
+        , mOpacity
+        , iPolicy
+        , iNumWait
+        , iWaitList
+        , &ev
+    );
+    ULIS_ASSERT( !err, "Error during layer image blend" );
+    return  ev;
 }
 
 void

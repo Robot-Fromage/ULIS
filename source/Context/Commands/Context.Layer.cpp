@@ -55,61 +55,8 @@ FContext::Flatten(
     if( dst_roi.Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
-    const uint64 size = iStack.Children().Size();
-    const int64 max = static_cast< int64 >( size ) - 1;
-    TArray< FEvent > events( 1 );
-    events.Reserve( size );
-    ulError err = Clear( oDestination, dst_roi, iPolicy, iNumWait, iWaitList, size ? &(events.Front()) : iEvent );
-    ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten preprocess clear of dst block", err );
-
-    for( int64 i = max; i >= 0; --i ) {
-        uint32 typeID = iStack[i].TypeID();
-        FLayerImage* layer = nullptr;
-        int num_wait = 1;
-        switch( typeID ) {
-            case FLayerImage::StaticTypeID(): {
-                layer = dynamic_cast< FLayerImage* >( iStack.Children()[i] );
-                break;
-            }
-            case FLayerStack::StaticTypeID(): {
-                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iStack.Children()[i] );
-                layer = dynamic_cast< FLayerImage* >( folder );
-                events.PushBack();
-                err = RenderLayerFolder( *folder, dst_roi, iPolicy, 0, nullptr, &events.Back() );
-                ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process render of folder block", err );
-                num_wait = 2;
-                break;
-            }
-            case FLayerText::StaticTypeID(): {
-                FLayerText* text = dynamic_cast< FLayerText* >( iStack.Children()[i] );
-                layer = dynamic_cast< FLayerImage* >( text );
-                events.PushBack();
-                err = RenderLayerText( *text, iPolicy, 0, nullptr, &events.Back() );
-                ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render subfolder", err );
-                num_wait = 2;
-                break;
-            }
-        }
-
-        if( layer )
-        {
-            events.PushBack();
-            err = Blend(
-                    layer->Block()
-                , oDestination
-                , src_roi
-                , iPosition
-                , layer->BlendMode()
-                , layer->AlphaMode()
-                , layer->Opacity()
-                , iPolicy
-                , num_wait
-                , &events[ events.Size() - 1 - num_wait ]
-                , i ? &events.Back() : iEvent
-            );
-            ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process blend in dst block", err );
-        }
-    }
+    FEvent ev = iStack.RenderImage( *this, oDestination, src_roi, dst_roi.Position(), iPolicy, iNumWait, iWaitList );
+    Dummy_OP( 1, &ev, iEvent );
 
     return  ULIS_NO_ERROR;
 }
@@ -117,73 +64,11 @@ FContext::Flatten(
 ulError
 FContext::RenderLayerFolder(
       FLayerFolder& iFolder
-    , const FRectI& iRect
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
     , FEvent* iEvent
 )
 {
-    // Sanitize geometry
-    const FRectI src_rect = iRect.Sanitized();
-    const FRectI dst_rect = iFolder.Block().Rect();
-    const FRectI dst_roi = src_rect & dst_rect;
-
-    const uint64 size = iFolder.Children().Size();
-    const int64 max = static_cast< int64 >( size ) - 1;
-    TArray< FEvent > events( 1 );
-    events.Reserve( size );
-    ulError err = Clear( iFolder.Block(), dst_roi, iPolicy, iNumWait, iWaitList, size ? &( events.Front() ) : iEvent );
-    ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render preprocess clear of folder block", err );
-
-    for( int64 i = max; i >= 0; --i ) {
-        uint32 type = iFolder[i].TypeID();
-        FLayerImage* layer = nullptr;
-        int num_wait = 1;
-        switch( type ) {
-            case FLayerImage::StaticTypeID(): {
-                layer = dynamic_cast< FLayerImage* >( iFolder.Children()[i] );
-                break;
-            }
-            case FLayerFolder::StaticTypeID(): {
-                FLayerFolder* folder = dynamic_cast< FLayerFolder* >( iFolder.Children()[i] );
-                layer = dynamic_cast< FLayerImage* >( folder );
-                events.PushBack();
-                err = RenderLayerFolder( *folder, dst_roi, iPolicy, 0, nullptr, &events.Back() );
-                ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render subfolder", err );
-                num_wait = 2;
-                break;
-            }
-            case FLayerText::StaticTypeID(): {
-                FLayerText* text = dynamic_cast< FLayerText* >( iFolder.Children()[i] );
-                layer = dynamic_cast< FLayerImage* >( text );
-                events.PushBack();
-                err = RenderLayerText( *text, iPolicy, 0, nullptr, &events.Back() );
-                ULIS_ASSERT_RETURN_ERROR( !err, "Error during folder render subfolder", err );
-                num_wait = 2;
-                break;
-            }
-        }
-
-        if( layer )
-        {
-            events.PushBack();
-            err = Blend(
-                  layer->Block()
-                , iFolder.Block()
-                , dst_roi
-                , dst_roi.Position()
-                , layer->BlendMode()
-                , layer->AlphaMode()
-                , layer->Opacity()
-                , iPolicy
-                , num_wait
-                , &events[ events.Size() - 1 - num_wait ]
-                , i ? &events.Back() : iEvent
-            );
-            ULIS_ASSERT_RETURN_ERROR( !err, "Error during stack flatten process blend in dst block", err );
-        }
-    }
+    FEvent ev = iFolder.RenderCache( *this );
+    Dummy_OP( 1, &ev, iEvent );
 
     return  ULIS_NO_ERROR;
 }
@@ -191,41 +76,11 @@ FContext::RenderLayerFolder(
 ulError
 FContext::RenderLayerText(
       FLayerText& iText
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
     , FEvent* iEvent
 )
 {
-    const bool bAA = iText.AA();
-    if( bAA ) {
-        RasterTextAA(
-              iText.Block()
-            , iText.Text()
-            , iText.Font()
-            , iText.FontSize()
-            , iText.Transform()
-            , iText.TextColor()
-            , iPolicy
-            , iNumWait
-            , iWaitList
-            , iEvent
-        );
-    } else {
-        RasterText(
-              iText.Block()
-            , iText.Text()
-            , iText.Font()
-            , iText.FontSize()
-            , iText.Transform()
-            , iText.TextColor()
-            , iPolicy
-            , iNumWait
-            , iWaitList
-            , iEvent
-        );
-    }
-
+    FEvent ev = iText.RenderCache( *this );
+    Dummy_OP( 1, &ev, iEvent );
     return  ULIS_NO_ERROR;
 }
 
