@@ -31,6 +31,7 @@ FBlock::FBlock(
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , mBitmap( nullptr )
     , mBytesPerScanline( 0 )
+    , mBytesPerPlane( 0 )
     , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
@@ -38,6 +39,7 @@ FBlock::FBlock(
     ULIS_ASSERT( iWidth  > 0, "Width must be greater than zero" );
     ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mBytesPerScanline = Width() * FormatMetrics().BPP;
+    mBytesPerPlane = Planar() ? Area() * BytesPerSample() : BytesPerSample();
     mBytesTotal = Height() * mBytesPerScanline;
 
     ULIS_ASSERT( mBytesTotal != 0, "Cannot allocate a buffer of size 0" );
@@ -60,6 +62,7 @@ FBlock::FBlock(
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , mBitmap( iData )
     , mBytesPerScanline( 0 )
+    , mBytesPerPlane( 0 )
     , mBytesTotal( 0 )
     , mOnInvalid( iOnInvalid )
     , mOnCleanup( iOnCleanup )
@@ -68,6 +71,7 @@ FBlock::FBlock(
     //ULIS_ASSERT( iHeight > 0, "Height must be greater than zero" );
     mBytesPerScanline = Width() * FormatMetrics().BPP;
     mBytesTotal = Height() * mBytesPerScanline;
+    mBytesPerPlane = Planar() ? Area() * BytesPerSample() : BytesPerSample();
 }
 
 FBlock
@@ -96,6 +100,13 @@ FBlock::ScanlineBits( uint16 iRow )
 }
 
 uint8*
+FBlock::PlaneBits( uint16 iPlane )
+{
+    ULIS_ASSERT( iPlane >= 0 && iPlane < SamplesPerPixel(), "Index out of range" );
+    return  mBitmap + ( iPlane * mBytesPerPlane );
+}
+
+uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY )
 {
     ULIS_ASSERT( iX < Width(), "Index out of range: " << iX << " " << Width() );
@@ -117,6 +128,13 @@ FBlock::ScanlineBits( uint16 iRow ) const
 }
 
 const uint8*
+FBlock::PlaneBits( uint16 iPlane ) const
+{
+    ULIS_ASSERT( iPlane >= 0 && iPlane < SamplesPerPixel(), "Index out of range" );
+    return  mBitmap + ( iPlane * mBytesPerPlane );
+}
+
+const uint8*
 FBlock::PixelBits( uint16 iX, uint16 iY ) const
 {
     ULIS_ASSERT( iX >= 0 && iX < Width(), "Index out of range" );
@@ -130,6 +148,11 @@ FBlock::BytesPerScanLine() const
     return  mBytesPerScanline;
 }
 
+uint32
+FBlock::BytesPerPlane() const
+{
+    return  mBytesPerPlane;
+}
 
 uint64
 FBlock::BytesTotal() const
@@ -242,13 +265,13 @@ FBlock::SampleSubpixel( float iX, float iY, eBorderMode iBorderMode, const FColo
 FPixel
 FBlock::Pixel( uint16 iX, uint16 iY )
 {
-    return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace() );
+    return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace(), BytesPerPlane() );
 }
 
 const FPixel
 FBlock::Pixel( uint16 iX, uint16 iY ) const
 {
-    return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace() );
+    return  FPixel( PixelBits( iX, iY ), Format(), ColorSpace(), BytesPerPlane() );
 }
 
 void
@@ -304,6 +327,7 @@ FBlock::LoadFromData(
     mOnCleanup = iOnCleanup;
 
     mBytesPerScanline = Width() * FormatMetrics().BPP;
+    mBytesPerPlane = Planar() ? Area() * BytesPerSample() : BytesPerSample();
     mBytesTotal = Height() * mBytesPerScanline;
 }
 
@@ -332,6 +356,7 @@ FBlock::ReallocInternalData(
     mOnCleanup = iOnCleanup;
 
     mBytesPerScanline = Width() * FormatMetrics().BPP;
+    mBytesPerPlane = Planar() ? Area() * BytesPerSample() : BytesPerSample();
     mBytesTotal = Height() * mBytesPerScanline;
 }
 

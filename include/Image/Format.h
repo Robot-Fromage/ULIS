@@ -40,7 +40,7 @@ struct ULIS_API FFormatMetrics
     FFormatMetrics( FFormatMetrics&& iOther );
 
     /*! Reinterpret the format by changing its type only. */
-    FFormatMetrics ReinterpretedType( eType iType ) const;
+    FFormatMetrics ReinterpretedFloatType( eType iType ) const;
 
     /*! Cached Index Table */
     uint8*      IDT;
@@ -184,6 +184,11 @@ public:
     /*! Return wether the format is linear or not. */
     ULIS_FORCEINLINE bool Linear() const {
         return  mFormatMetrics.LIN;
+    }
+
+    /*! Return wether the format is planar or not. */
+    ULIS_FORCEINLINE bool Planar() const {
+        return  mFormatMetrics.PLA;
     }
 
     /*! Return wether the format default profile identifier. */

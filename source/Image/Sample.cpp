@@ -61,11 +61,14 @@ Unpremultiply_imp( ISample& iSample )
 
 } // namespace detail
 
-ISample::ISample( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
+ISample::ISample( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace, uint64 iPlaneSize )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
     , mSignal( iData )
+    , mPlaneSize( iPlaneSize )
 {
+    if( mPlaneSize == 0 )
+        mPlaneSize = BytesPerSample();
 }
 
 ISample::~ISample()
@@ -81,7 +84,7 @@ ISample::operator==( const  ISample& iOther )  const {
 
     bool bytePerfectMatch = true;
     for( int i = 0; i < BytesPerPixel(); ++i ) {
-        if( mSignal[i] != iOther.mSignal[i] ) {
+        if( Channel8( i ) != iOther.Channel8(i) ) {
             bytePerfectMatch = false;
             break;
         }
@@ -105,6 +108,12 @@ const uint8*
 ISample::Bits() const
 {
     return  mSignal;
+}
+
+uint64
+ISample::PlaneSize() const
+{
+    return  mPlaneSize;
 }
 
 FColor

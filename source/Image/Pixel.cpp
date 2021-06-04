@@ -17,30 +17,30 @@ FPixel::~FPixel()
 {
 }
 
-FPixel::FPixel( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
-    : ISample( iData, iFormat, iColorSpace )
+FPixel::FPixel( uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace, uint64 iPlaneSize )
+    : ISample( iData, iFormat, iColorSpace, iPlaneSize )
 {
     ULIS_ASSERT( iData, "Bad data provided." );
 }
 
-FPixel::FPixel( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace )
-    : ISample( const_cast< uint8* >( iData ), iFormat, iColorSpace )
+FPixel::FPixel( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSpace, uint64 iPlaneSize )
+    : ISample( const_cast< uint8* >( iData ), iFormat, iColorSpace, iPlaneSize )
 {
     ULIS_ASSERT( iData, "Bad data provided." );
 }
 
 FPixel::FPixel( const FPixel& iValue )
-    : ISample( const_cast< uint8* >( iValue.mSignal ), iValue.Format(), iValue.ColorSpace() )
+    : ISample( const_cast< uint8* >( iValue.mSignal ), iValue.Format(), iValue.ColorSpace(), iValue.mPlaneSize )
 {
 }
 
 FPixel::FPixel( const ISample& iSample )
-    : ISample( const_cast< uint8* >( iSample.Bits() ), iSample.Format(), iSample.ColorSpace() )
+    : ISample( const_cast< uint8* >( iSample.Bits() ), iSample.Format(), iSample.ColorSpace(), iSample.PlaneSize() )
 {
 }
 
 FPixel::FPixel( FPixel&& iValue )
-    : ISample( iValue.mSignal, iValue.Format(), iValue.ColorSpace() )
+    : ISample( iValue.mSignal, iValue.Format(), iValue.ColorSpace(), iValue.mPlaneSize )
 {
 }
 
@@ -49,6 +49,7 @@ FPixel::operator=( const FPixel& iValue ) {
     ReinterpretFormat( iValue.Format() );
     AssignColorSpace( iValue.ColorSpace() );
     mSignal = iValue.mSignal;
+    mPlaneSize = iValue.mPlaneSize;
     return  *this;
 }
 

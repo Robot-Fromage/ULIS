@@ -180,6 +180,26 @@ public:
     uint8* ScanlineBits( uint16 iRow );
 
     /*!
+    Obtain a pointer to the raw data at the specified plane element of the
+    underlying image buffer.
+
+    This data is the same as the one used by the block. It is non-const and can
+    be modified safely, as long as you don't dereference elements outside of
+    the buffer boundaries, or trigger race conditions when applying
+    multithreaded operations on the same data.
+
+    \warning If you specify a plane that is negative or bigger than the block
+    sample count, the function will trigger an assert and crash in debug builds, but
+    it will fail silently and access the buffer out of bounds in release builds
+    , leading to potential memory corruption or crashes further down the line.
+
+    \sa Bits()
+    \sa PixelBits()
+    \sa ScanlineBits()
+    */
+    uint8* PlaneBits( uint16 iPlane );
+
+    /*!
     Obtain a pointer to the raw data at the specified pixel location of
     the underlying image buffer.
 
@@ -232,6 +252,26 @@ public:
     const uint8* ScanlineBits( uint16 iRow ) const;
 
     /*!
+    Obtain a pointer to the raw data at the specified plane element of the
+    underlying image buffer.
+
+    This data is the same as the one used by the block. It is non-const and can
+    be modified safely, as long as you don't dereference elements outside of
+    the buffer boundaries, or trigger race conditions when applying
+    multithreaded operations on the same data.
+
+    \warning If you specify a plane that is negative or bigger than the block
+    sample count, the function will trigger an assert and crash in debug builds, but
+    it will fail silently and access the buffer out of bounds in release builds
+    , leading to potential memory corruption or crashes further down the line.
+
+    \sa Bits()
+    \sa PixelBits()
+    \sa ScanlineBits()
+    */
+    const uint8* PlaneBits( uint16 iPlane ) const;
+
+    /*!
     Obtain a pointer to the raw data at the specified pixel location of
     the underlying image buffer.
 
@@ -256,6 +296,14 @@ public:
     \sa BytesTotal()
     */
     uint32 BytesPerScanLine() const;
+
+    /*!
+    Return the numbers of bytes per plane
+
+    \sa BytesTotal()
+    \sa BytesPerScanLine()
+    */
+    uint32 BytesPerPlane() const;
 
     /*!
     Return the total numbers of bytes in the block.
@@ -482,6 +530,7 @@ public:
 protected:
     uint8* mBitmap; ///< Contiguous memory storage buffer for the block.
     uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.
+    uint32 mBytesPerPlane; ///< Cached number of bytes per plane.
     uint64 mBytesTotal; ///< Cached number of bytes for the whole buffer.
     FOnInvalidBlock mOnInvalid; ///< The callback for when the block is dirty.
     FOnCleanupData mOnCleanup; ///< The callback for when the block is destroyed.

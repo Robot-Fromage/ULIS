@@ -175,7 +175,7 @@ FContext::SummedAreaTableMetrics(
     const FBlock& iSource
 )
 {
-    return  iSource.FormatMetrics().ReinterpretedType( eType::Type_ufloat ).FMT;
+    return  iSource.FormatMetrics().ReinterpretedFloatType( eType::Type_ufloat ).FMT;
 }
 
 ULIS_NAMESPACE_END

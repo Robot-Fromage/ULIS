@@ -117,7 +117,7 @@ FFormatMetrics::FFormatMetrics( FFormatMetrics&& iOther )
 }
 
 FFormatMetrics
-FFormatMetrics::ReinterpretedType( eType iType ) const
+FFormatMetrics::ReinterpretedFloatType( eType iType ) const
 {
     uint32 newType = static_cast< uint32 >( iType );
     uint32 newFormat = static_cast< uint32 >( FMT );
