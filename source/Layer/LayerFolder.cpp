@@ -114,5 +114,37 @@ FLayerFolder::RenderCache( FContext& iCtx ) {
     return  ev;
 }
 
+FEvent
+FLayerFolder::RenderImage(
+      FContext& iCtx
+    , FBlock& ioBlock
+    , const FRectI& iRect
+    , const FVec2I& iPos
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+)
+{
+    if( ( iRect & Block().Rect() ) == Block().Rect() )
+        RenderCache( iCtx );
+
+    FEvent ev;
+    ulError err = iCtx.Blend(
+          Block()
+        , ioBlock
+        , iRect
+        , iPos
+        , BlendMode()
+        , AlphaMode()
+        , Opacity()
+        , iPolicy
+        , iNumWait
+        , iWaitList
+        , &ev
+    );
+    ULIS_ASSERT( !err, "Error during layer image blend" );
+    return  ev;
+}
+
 ULIS_NAMESPACE_END
 

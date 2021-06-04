@@ -94,6 +94,15 @@ public:
 
     // ICachedImageRendering Interface
     FEvent RenderCache( FContext& iCtx ) override;
+    virtual FEvent RenderImage(
+          FContext& iCtx
+        , FBlock& ioBlock
+        , const FRectI& iRect = FRectI::Auto
+        , const FVec2I& iPos = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+    ) override;
 
 private:
     // Private data members
