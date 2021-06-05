@@ -52,5 +52,37 @@ FindLayerByFuzzyNameInContainer( const FString& iStr, const ILayerRoot& iRoot ) 
     return  matches.size() ? *std::get< 1 >( matches[0] ) : iRoot.Self();
 }
 
+IAnimatedLayer&
+FindLayerByFuzzyNameInContainer( const FString& iStr, IAnimatedLayerRoot& iRoot ) {
+    const uint64 size = iRoot.Children().Size();
+    std::vector< std::tuple< int, IAnimatedLayer* > > matches;
+    matches.reserve( size );
+    for( uint64 i = 0; i < size; ++i ) {
+        IAnimatedLayer* layer = &iRoot[i];
+        const FString& name = layer->Name();
+        uint32 typeID = iRoot[i].TypeID();
+        int dist = static_cast< int >( LevenshteinDistance( iStr.Data(), iStr.Size(), name.Data(), name.Size() ) );
+        matches.push_back( std::tuple< int, IAnimatedLayer* >( dist, layer ) );
+    }
+    std::sort( matches.begin(), matches.end() );
+    return  matches.size() ? *std::get< 1 >( matches[0] ) : iRoot.Self();
+}
+
+const IAnimatedLayer&
+FindLayerByFuzzyNameInContainer( const FString& iStr, const IAnimatedLayerRoot& iRoot ) {
+    const uint64 size = iRoot.Children().Size();
+    std::vector< std::tuple< int, const IAnimatedLayer* > > matches;
+    matches.reserve( size );
+    for( uint64 i = 0; i < size; ++i ) {
+        const IAnimatedLayer* layer = &iRoot[i];
+        const FString& name = layer->Name();
+        uint32 typeID = iRoot[i].TypeID();
+        int dist = static_cast< int >( LevenshteinDistance( iStr.Data(), iStr.Size(), name.Data(), name.Size() ) );
+        matches.push_back( std::tuple< int, const IAnimatedLayer* >( dist, layer ) );
+    }
+    std::sort( matches.begin(), matches.end() );
+    return  matches.size() ? *std::get< 1 >( matches[0] ) : iRoot.Self();
+}
+
 ULIS_NAMESPACE_END
 

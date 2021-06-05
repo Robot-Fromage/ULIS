@@ -26,7 +26,7 @@ class ULIS_API FAnimatedLayerFolder final
 {
     // Typedefs
     typedef TRoot< IAnimatedLayer > tParent;
-    typedef FLayerImage             tSuperClass;
+    typedef FAnimatedLayerImage     tSuperClass;
 
 public:
     // DTor
@@ -87,9 +87,9 @@ public:
     const uint32 TypeID() const override { return  StaticTypeID(); }
 
     // TRoot overload-shadow Interface
-    using TRoot< ILayer >::operator[];
-    ILayer& operator[]( const FString& iName );
-    const ILayer& operator[]( const FString& iName ) const;
+    using TRoot< IAnimatedLayer >::operator[];
+    IAnimatedLayer& operator[]( const FString& iName );
+    const IAnimatedLayer& operator[]( const FString& iName ) const;
 
     // ICachedImageRendering Interface
     FEvent RenderCache( FContext& iCtx ) override;

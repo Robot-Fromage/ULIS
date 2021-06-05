@@ -86,7 +86,7 @@ IAnimatedLayer::SetPrettyColor( const FColor& iColor )
 
 void
 IAnimatedLayer::InvalidImageCache() {
-    ICachedImageRendering::InvalidImageCache();
+    IAnimatedCachedImageRendering::InvalidImageCache();
     tParent* root = Parent();
     IAnimatedLayer* layer = dynamic_cast< IAnimatedLayer* >( root );
     if( !layer )

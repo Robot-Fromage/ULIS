@@ -90,12 +90,12 @@ FAnimatedLayerFolder::SetCollapsed( bool iCollapsed ) {
     mCollapsed = iCollapsed;
 }
 
-ILayer&
+IAnimatedLayer&
 FAnimatedLayerFolder::operator[]( const FString& iName ) {
     return  FindLayerByFuzzyNameInContainer( iName, *this );
 }
 
-const ILayer&
+const IAnimatedLayer&
 FAnimatedLayerFolder::operator[]( const FString& iName ) const {
     return  FindLayerByFuzzyNameInContainer( iName, *this );
 }

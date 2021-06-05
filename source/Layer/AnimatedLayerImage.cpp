@@ -158,18 +158,18 @@ FAnimatedLayerImage::InitFromParent( const tParent* iParent ) {
         return;
 
     if( !mBlock ) {
-        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
-        ULIS_ASSERT( layer, "Parent cannot be cast to ILayer !" );
+        const IAnimatedLayer* layer = dynamic_cast< const IAnimatedLayer* >( topLevel );
+        ULIS_ASSERT( layer, "Parent cannot be cast to IAnimatedLayer !" );
         uint32 typeID = layer->TypeID();
         switch( typeID ) {
-            case FLayerStack::StaticTypeID(): {
-                const FLayerStack* stack = dynamic_cast< const FLayerStack* >( layer );
+            case FAnimatedLayerStack::StaticTypeID(): {
+                const FAnimatedLayerStack* stack = dynamic_cast< const FAnimatedLayerStack* >( layer );
                 ULIS_ASSERT( stack, "Parent cannot be cast to stack !" );
                 mBlock = new FBlock( stack->Width(), stack->Height(), stack->Format() );
                 break;
             }
-            case FLayerFolder::StaticTypeID(): {
-                const FLayerFolder* folder = dynamic_cast< const FLayerFolder* >( layer );
+            case FAnimatedLayerFolder::StaticTypeID(): {
+                const FAnimatedLayerFolder* folder = dynamic_cast< const FAnimatedLayerFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder !" );
                 const FBlock& ref = folder->Block();
                 mBlock = new FBlock( ref.Width(), ref.Height(), ref.Format() );

@@ -12,9 +12,12 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Layer.h"
+#include "Layer/AnimatedLayer.h"
 
 ULIS_NAMESPACE_BEGIN
 ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, ILayerRoot& iRoot );
 const ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, const ILayerRoot& iRoot );
+IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, IAnimatedLayerRoot& iRoot );
+const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, const IAnimatedLayerRoot& iRoot );
 ULIS_NAMESPACE_END
 

@@ -36,7 +36,7 @@ typedef TRoot< IAnimatedLayer > IAnimatedLayerRoot;
 ///             in a layer stack for painting applications.
 class ULIS_API IAnimatedLayer
     : public virtual TNode< IAnimatedLayer >
-    , public ICachedImageRendering
+    , public IAnimatedCachedImageRendering
 {
     // Typedefs
     typedef TRoot< IAnimatedLayer > tParent;
