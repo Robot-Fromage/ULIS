@@ -438,21 +438,6 @@ PYBIND11_MODULE( pyULIS4, m ) {
 
 
     /////////
-    // eLayerType
-    py::enum_< eLayerType >( m, "eLayerType" )
-        .value( "Layer_Invalid",    eLayerType::Layer_Invalid   )
-        .value( "Layer_Root",       eLayerType::Layer_Root      )
-        .value( "Layer_Image",      eLayerType::Layer_Image     )
-        .value( "Layer_Folder",     eLayerType::Layer_Folder    )
-        .value( "Layer_Text",       eLayerType::Layer_Text      )
-        .value( "Layer_Vector",     eLayerType::Layer_Vector    )
-        .value( "Layer_FX",         eLayerType::Layer_FX        )
-        .value( "Layer_Mask",       eLayerType::Layer_Mask      )
-        .export_values();
-
-
-
-    /////////
     // eEventStatus
     py::enum_< eEventStatus >( m, "eEventStatus" )
         .value( "EventStatus_Idle",     eEventStatus::EventStatus_Idle      )
@@ -514,7 +499,7 @@ PYBIND11_MODULE( pyULIS4, m ) {
     py::class_< FFormatMetrics >( m, "FFormatMetrics" )
         .def( py::init< eFormat >(), "format"_a )
         .def( py::init< const FFormatMetrics& >(), "other"_a )
-        .def( "ReinterpretedType", &FFormatMetrics::ReinterpretedType )
+        .def( "ReinterpretedType", &FFormatMetrics::ReinterpretedFloatType )
         .def_readonly( "IDT", &FFormatMetrics::IDT )
         .def_readonly( "FMT", &FFormatMetrics::FMT )
         .def_readonly( "TP", &FFormatMetrics::TP )
@@ -1632,7 +1617,8 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "LookupPaths", &FFontEngine::LookupPaths )
         .def( "FuzzyFindFontFamily", &FFontEngine::FuzzyFindFontFamily )
         .def( "FuzzyFindFontStyle", &FFontEngine::FuzzyFindFontStyle )
-        .def( "FuzzyFindFontPath", &FFontEngine::FuzzyFindFontPath );
+        .def( "FuzzyFindFontPath", &FFontEngine::FuzzyFindFontPath )
+        .def_readonly_static( "GFontEngine", &FFontEngine::GFontEngine );
 
 
 
@@ -1646,7 +1632,10 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "FontHandle", &FFont::FontHandle )
         .def( "FontEngine", &FFont::FontEngine )
         .def( "Family", &FFont::Family )
-        .def( "Style", &FFont::Style );
+        .def( "Style", &FFont::Style )
+        .def_readonly_static( "DefaultFont", &FFont::DefaultFont );
+
+
 
     /////////
     // FColorStep
@@ -1698,7 +1687,6 @@ PYBIND11_MODULE( pyULIS4, m ) {
         .def( "Fence", &FContext::Fence )
         .def( "Wait", &FContext::Wait )
         .def( "Format", &FContext::Format )
-        .def( "FontEngine", static_cast< FFontEngine& ( FContext::* )() >( &FContext::FontEngine ) )
         .def( "FinishEventNo_OP", &FContext::FinishEventNo_OP )
         .def( "Dummy_OP", &FContext::Dummy_OP )
         .def( "AccumulateSample", ctxCallAdapter< const FBlock&, FColor*, const FRectI&, const FSchedulePolicy& >( &FContext::AccumulateSample )
