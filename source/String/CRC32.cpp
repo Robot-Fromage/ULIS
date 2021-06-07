@@ -15,7 +15,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // CRC32
 uint32
-CRC32( const uint8*iData, int iLen )
+CRC32( const uint8* iData, int iLen )
 {
     int i = 0;
     int j = 0;
@@ -41,6 +41,10 @@ CRC32( const uint8*iData, int iLen )
     }
 
     return  ~crc;
+}
+
+uint32 CRC32( const char* iData ) {
+    return  CRC32( reinterpret_cast< const uint8* >( iData ), static_cast< int >( strlen( iData ) ) );
 }
 
 ULIS_NAMESPACE_END

@@ -22,7 +22,17 @@ ULIS_NAMESPACE_BEGIN
 /// @return     An uint32 representing the CRC32 hash.
 uint32 CRC32( const uint8* iData, int iLen );
 
+/////////////////////////////////////////////////////
+/// @fn         CRC32( const char* iData )
+/// @brief      Simple CRC32 computation for hashing purposes.
+/// @details    Hashes the data of with specified size in bytes. The implementation is not optimal in terms of efficiency, but is simple and straightforward.
+/// @param      iData The data to hash, cast as pointer to const uint8.
+/// @param      iLen The size of the data to hash in bytes.
+/// @return     An uint32 representing the CRC32 hash.
+uint32 CRC32( const char* iData );
+
 // Constexpr CRC32
+/*
 /////////////////////////////////////////////////////
 // CRC32
 static constexpr unsigned int crc_table[256] = {
@@ -71,7 +81,6 @@ static constexpr unsigned int crc_table[256] = {
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-
 template<int size, int idx = 0, class dummy = void>
 struct MM{
   static constexpr unsigned int crc32(const char * str, unsigned int prev_crc = 0xFFFFFFFF)
@@ -89,6 +98,7 @@ struct MM<size, size, dummy>{
       return prev_crc^ 0xFFFFFFFF;
   }
 };
+*/
 
 /////////////////////////////////////////////////////
 // Alternative Implementation

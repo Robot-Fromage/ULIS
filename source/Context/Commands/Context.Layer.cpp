@@ -13,7 +13,7 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Image/Block.h"
-#include "Layer/LayerStack.h"
+#include "Layer/Layer/LayerStack.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/CommandQueue_Private.h"
