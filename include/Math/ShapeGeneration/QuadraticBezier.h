@@ -24,16 +24,14 @@ static inline void InternalGenerateQuadraticBezierSegPoints(
     , float w
     , TArray<FVec2I>& ioQuadraticBezierPoints
     , bool iInvertArray //If true, we invert the array we would have normally by inserting or pushing back elements correctly
+    , int iCustomIndexToPush = 0
 )
 {
     int sx = x2-x1,sy = y2-y1;
     double dx = x0-x2,dy = y0-y2,xx = x0-x1,yy = y0-y1;
     double xy = xx*sy+yy*sx,cur = xx*sy-yy*sx,err;
     bool pushBack = true;
-
-    int indexEndArray = 0;
-    if (!iInvertArray)
-        indexEndArray = ioQuadraticBezierPoints.Size();
+    int indexEndArray = ioQuadraticBezierPoints.Size();
 
     if(xx*sx > 0.0 || yy*sy > 0.0)
     {
@@ -67,10 +65,10 @@ static inline void InternalGenerateQuadraticBezierSegPoints(
             sy = int(floor((y0+2.0*w*y1+y2)*xy/2.0+0.5));
             dx = floor((w*x1+x0)*xy+0.5);
             dy = floor((y1*w+y0)*xy+0.5);
-            InternalGenerateQuadraticBezierSegPoints(x0,y0,int(dx),int(dy),sx,sy,float(cur),ioQuadraticBezierPoints, iInvertArray);
+            InternalGenerateQuadraticBezierSegPoints(x0,y0,int(dx),int(dy),sx,sy,float(cur),ioQuadraticBezierPoints, iInvertArray, iCustomIndexToPush);
             dx = floor((w*x1+x2)*xy+0.5);
             dy = floor((y1*w+y2)*xy+0.5);
-            InternalGenerateQuadraticBezierSegPoints(sx,sy,int(dx),int(dy),x2,y2,float(cur),ioQuadraticBezierPoints, iInvertArray);
+            InternalGenerateQuadraticBezierSegPoints(sx,sy,int(dx),int(dy),x2,y2,float(cur),ioQuadraticBezierPoints, iInvertArray, iCustomIndexToPush);
             return;
         }
         err = dx+dy-xy;
@@ -81,12 +79,12 @@ static inline void InternalGenerateQuadraticBezierSegPoints(
                 if( !iInvertArray)
                     ioQuadraticBezierPoints.PushBack(FVec2I(x0, y0));
                 else
-                    ioQuadraticBezierPoints.Insert( 0, FVec2I(x0, y0));
+                    ioQuadraticBezierPoints.Insert( iCustomIndexToPush, FVec2I(x0, y0) );
             else //if pushBack
                 if (!iInvertArray)
-                    ioQuadraticBezierPoints.Insert(indexEndArray, FVec2I(x0, y0));
+                    ioQuadraticBezierPoints.Insert( indexEndArray, FVec2I(x0, y0) );
                 else
-                    ioQuadraticBezierPoints.Insert(indexEndArray++, FVec2I(x0, y0));
+                    ioQuadraticBezierPoints.Insert( iCustomIndexToPush++, FVec2I(x0, y0) );
 
             if(x0 == x2 && y0 == y2)
                 return;
@@ -100,12 +98,12 @@ static inline void InternalGenerateQuadraticBezierSegPoints(
         if( !iInvertArray)
             GenerateLinePoints(FVec2I(x0, y0), FVec2I(x2, y2), ioQuadraticBezierPoints );
         else
-            GenerateLinePoints(FVec2I(x0, y0), FVec2I(x2, y2), ioQuadraticBezierPoints, 0);
+            GenerateLinePoints(FVec2I(x0, y0), FVec2I(x2, y2), ioQuadraticBezierPoints, iCustomIndexToPush);
     else //if pushBack
         if (!iInvertArray)
             GenerateLinePoints(FVec2I(x0, y0), FVec2I(x2, y2), ioQuadraticBezierPoints, indexEndArray);
         else
-            GenerateLinePoints(FVec2I(x2, y2), FVec2I(x0, y0), ioQuadraticBezierPoints, indexEndArray); //But reversed
+            GenerateLinePoints(FVec2I(x2, y2), FVec2I(x0, y0), ioQuadraticBezierPoints, iCustomIndexToPush); //But reversed
 }
 
 static inline void GenerateQuadraticBezierPoints(
