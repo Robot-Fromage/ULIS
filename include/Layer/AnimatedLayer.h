@@ -32,8 +32,9 @@ typedef TRoot< IAnimatedLayer > IAnimatedLayerRoot;
 
 /////////////////////////////////////////////////////
 /// @class      IAnimatedLayer
-/// @brief      The IAnimatedLayer class provides a base abstract class to store a layer
-///             in a layer stack for painting applications.
+/// @brief      The IAnimatedLayer class provides a base abstract class to
+///             store an animated layer in an animated  layer stack for
+///             animation applications.
 class ULIS_API IAnimatedLayer
     : public virtual TNode< IAnimatedLayer >
     , public IAnimatedCachedImageRendering
