@@ -19,12 +19,13 @@ ULIS_NAMESPACE_BEGIN
 static inline void GenerateLinePoints(
       const FVec2I& iP0
     , const FVec2I& iP1
-    , TArray<FVec2I>& ioLinePoints)
+    , TArray<FVec2I>& ioLinePoints
+    , int iCustomIndex = -1 )//Custom index at which we begin to generate the points
 {
     FVec2I p0 = iP0;
     FVec2I p1 = iP1;
 
-    int startArray = ioLinePoints.Size(); 
+    int startArray = iCustomIndex != -1 ? iCustomIndex : ioLinePoints.Size(); 
 
     bool pushArray = true; //While inserting the points into the array, if true, we push back, else, we insert at front
 
@@ -53,7 +54,7 @@ static inline void GenerateLinePoints(
 
         for (int x = p0.x; x <= p1.x; x++)
         {
-            if (pushArray || ioLinePoints.Size() == 0)
+            if ( iCustomIndex == -1 && pushArray )
                 ioLinePoints.PushBack( FVec2I( x, y ) );
             else
                 ioLinePoints.Insert( startArray, FVec2I( x, y ) );
@@ -91,10 +92,10 @@ static inline void GenerateLinePoints(
 
         for (int y = p0.y; y <= p1.y; y++)
         {
-            if( pushArray || ioLinePoints.Size() == 0  )
+            if (iCustomIndex == -1 && pushArray)
                 ioLinePoints.PushBack( FVec2I( x, y ) );
             else
-                ioLinePoints.Insert( startArray, FVec2I(x, y) );
+                ioLinePoints.Insert(startArray, FVec2I(x, y));
 
             if (slopeDifferential > 0)
             {
