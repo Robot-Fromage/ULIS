@@ -31,8 +31,7 @@ class TQueue
 public:
     /*! Destroy the queue and cleanup memory. */
     ~TQueue< T >()
-    {
-    }
+    {}
 
     /*! Default constructor ( empty ). */
     TQueue< T >()

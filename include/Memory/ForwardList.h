@@ -16,6 +16,48 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
+/// @class      TForwardListNode
+/// @brief      The TForwardListNode class provides a simple node class
+///             fot TForwardList
+/// @details    TForwardListNode is really a simple way to store nodes
+///             for singly linked lists, it holds the element and a pointer
+///             to the next node.
+template< typename T >
+struct TForwardListNode
+{
+public:
+    template< typename > friend class TForwardList;
+
+    TForwardListNode( TForwardListNode< T >* iNext, const T& iValue )
+        : mNext( iNext )
+        , mValue( iValue )
+    {}
+
+    TForwardListNode( TForwardListNode< T >* iNext, T&& iValue )
+        : mNext( iNext )
+        , mValue( std::forward< T >( iValue ) )
+    {}
+
+    template< class ... Args >
+    TForwardListNode( TForwardListNode< T >* iNext, Args&& ... args )
+        : mNext( iNext )
+        , mValue( std::forward< Args >(args)... )
+    {}
+
+    T& Value() {
+        return  mValue;
+    }
+
+    const T& Value() const {
+        return  mValue;
+    }
+
+private:
+    TForwardListNode< T >* mNext;
+    T mValue;
+};
+
+/////////////////////////////////////////////////////
 /// @class      TForwardList
 /// @brief      The TForwardList class provides a simple dynamic singly
 ///             linked list class for ULIS interfaces.
@@ -26,48 +68,7 @@ template< typename T >
 class TForwardList
 {
 public:
-    /// @class      TNode
-    /// @brief      The TNode class provides a simple node class
-    ///             fot TForwardList
-    /// @details    TNode is really a simple way to store nodes
-    ///             for singly linked lists, it holds the element and a pointer
-    ///             to the next node.
-    template< typename U >
-    struct TNode
-    {
-    public:
-        template< typename > friend class TForwardList;
-
-        TNode( TNode< U >* iNext, const T& iValue )
-            : mNext( iNext )
-            , mValue( iValue )
-        {}
-
-        TNode( TNode< U >* iNext, T&& iValue )
-            : mNext( iNext )
-            , mValue( std::forward< U >( iValue ) )
-        {}
-
-        template< class ... Args >
-        TNode( TNode< U >* iNext, Args&& ... args )
-            : mNext( iNext )
-            , mValue( std::forward< Args >(args)... )
-        {}
-
-        U& Value() {
-            return  mValue;
-        }
-
-        const U& Value() const {
-            return  mValue;
-        }
-
-    private:
-        TNode< U >* mNext;
-        U mValue;
-    };
-
-    typedef TNode< T > tNode;
+    typedef TForwardListNode< T > tNode;
 
 public:
     /*! Destroy the list and cleanup memory. */
