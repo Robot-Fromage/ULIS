@@ -3,13 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         PaintInfo.cpp
+* @file         TextInfo.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FPaintInfo class.
+* @brief        This file provides the definition for the FTextInfo class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/PaintInfo.h"
+#include "Layer/Components/TextInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END
