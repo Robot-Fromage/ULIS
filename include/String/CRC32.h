@@ -18,7 +18,6 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple CRC32 computation for hashing purposes.
 /// @details    Hashes the data of with specified size in bytes. The implementation is not optimal in terms of efficiency, but is simple and straightforward.
 /// @param      iData The data to hash, cast as pointer to const uint8.
-/// @param      iLen The size of the data to hash in bytes.
 /// @return     An uint32 representing the CRC32 hash.
 uint32 CRC32( const uint8* iData, int iLen );
 

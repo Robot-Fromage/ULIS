@@ -3,13 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         HasText.cpp
+* @file         HasTimeSettings.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the IHasText class.
+* @brief        This file provides the definition for the IHasTimeSettings class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/HasText.h"
+#include "Layer/Components/HasTimeSettings.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

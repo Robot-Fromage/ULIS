@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         HasCachedAnimatedImageRendering.h
+* @file         AnimatedDrawable.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the IHasCachedAnimatedImageRendering class.
+* @brief        This file provides the declaration for the TAnimatedDrawable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -18,13 +18,13 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      IHasCachedAnimatedImageRendering
-/// @brief      The IHasCachedAnimatedImageRendering class provides a base abstract interface to
+/// @class      TAnimatedDrawable
+/// @brief      The TAnimatedDrawable class provides a base abstract interface to
 ///             perform cached renders of contents for layers
-class ULIS_API IHasCachedAnimatedImageRendering
+class ULIS_API TAnimatedDrawable
 {
 protected:
-    IHasCachedAnimatedImageRendering();
+    TAnimatedDrawable();
 
 public:
     virtual FEvent RenderCache( FContext& iCtx );

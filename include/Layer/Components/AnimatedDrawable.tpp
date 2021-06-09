@@ -3,26 +3,26 @@
 /*
 *   ULIS
 *__________________
-* @file         HasCachedAnimatedImageRendering.cpp
+* @file         AnimatedDrawable.tpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the IHasCachedAnimatedImageRendering class.
+* @brief        This file provides the definition for the TAnimatedDrawable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/HasCachedAnimatedImageRendering.h"
+#include "Layer/Components/AnimatedDrawable.h"
 
 ULIS_NAMESPACE_BEGIN
-IHasCachedAnimatedImageRendering::IHasCachedAnimatedImageRendering()
+TAnimatedDrawable::TAnimatedDrawable()
     : mImageCacheValid( false )
 {}
 
 bool
-IHasCachedAnimatedImageRendering::IsImageCacheValid() const {
+TAnimatedDrawable::IsImageCacheValid() const {
     return  mImageCacheValid;
 }
 
 FEvent
-IHasCachedAnimatedImageRendering::RenderCache( FContext& iCtx ) {
+TAnimatedDrawable::RenderCache( FContext& iCtx ) {
     if( IsImageCacheValid() )
         return  FEvent::NoOP();
 
@@ -31,7 +31,7 @@ IHasCachedAnimatedImageRendering::RenderCache( FContext& iCtx ) {
 }
 
 FEvent
-IHasCachedAnimatedImageRendering::RenderImage(
+TAnimatedDrawable::RenderImage(
       FContext& iCtx
     , FBlock& ioBlock
     , uint32 iFrame
@@ -47,12 +47,12 @@ IHasCachedAnimatedImageRendering::RenderImage(
 }
 
 void
-IHasCachedAnimatedImageRendering::InvalidImageCache() {
+TAnimatedDrawable::InvalidImageCache() {
     mImageCacheValid = false;
 }
 
 void
-IHasCachedAnimatedImageRendering::ValidateImageCache() {
+TAnimatedDrawable::ValidateImageCache() {
     mImageCacheValid = true;
 }
 

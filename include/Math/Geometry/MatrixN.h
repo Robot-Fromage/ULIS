@@ -215,7 +215,7 @@ bool PartialPivotingLUDecomposition_imp(
     LUP Solving implementation
     @param iMat     filled from PartialPivotingLUDecomposition_imp
     @param iPermut  filled from PartialPivotingLUDecomposition_imp
-    @param iVec, right hand side vector
+    @param iVec     right hand side vector
     @return solution vector "x" of ioMat * x = iVec.
 */
 template< typename T, typename P, uint8 N >

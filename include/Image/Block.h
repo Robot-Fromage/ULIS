@@ -464,7 +464,7 @@ public:
     This function is here for convenience but is not recommended to used for
     intensive raster tasks, as it does not provide any kind of optimizations.
 
-    \safe version that checks if the pixel set is in the block bounds.
+    Safe version that checks if the pixel set is in the block bounds.
     Slow but useful in some cases. The usage of this function usually 
     means that optimization is possible where it is used.
 

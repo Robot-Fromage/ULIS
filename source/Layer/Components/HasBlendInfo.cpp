@@ -3,13 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         Blendable.cpp
+* @file         IHasBlendInfo.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the IBlendable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/Blendable.h"
+#include "Layer/Components/HasBlendInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

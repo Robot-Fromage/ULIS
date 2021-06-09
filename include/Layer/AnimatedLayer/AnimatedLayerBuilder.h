@@ -65,12 +65,5 @@ public:
     T* m;
 };
 
-#define ULAssociateAnimatedStack( _Elem_ )              TAnimatedLayerBuilder< FLayerStack >( _Elem_ )
-#define ULAssignAnimatedStack( _Elem_, ... )            TAnimatedLayerBuilder< FLayerStack >::Assign( & _Elem_, __VA_ARGS__ )
-#define ULCreateAnimatedChild( _Class_, ... )           TAnimatedLayerBuilder< _Class_ >::Create( __VA_ARGS__ )
-#define ULAssignAnimatedChild( _Class_, _Elem_, ... )   TAnimatedLayerBuilder< _Class_ >::Assign( & _Elem_, __VA_ARGS__ )
-#define ULAddAnimatedLayer( _Elem_ )                    .AddChild( _Elem_ )
-#define ULAnimatedDef( ... )                            .Def( [&]( auto i ){ i-> __VA_ARGS__ ; } )
-
 ULIS_NAMESPACE_END
 

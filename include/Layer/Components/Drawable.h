@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         CacheRendering.h
+* @file         Drawable.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the IHasCachedImageRendering class.
+* @brief        This file provides the declaration for the TDrawable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -18,13 +18,13 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      IHasCachedImageRendering
-/// @brief      The IHasCachedImageRendering class provides a base abstract interface to
+/// @class      TDrawable
+/// @brief      The TDrawable class provides a base abstract interface to
 ///             perform cached renders of contents for layers
-class ULIS_API IHasCachedImageRendering
+class ULIS_API TDrawable
 {
 protected:
-    IHasCachedImageRendering();
+    TDrawable();
 
 public:
     virtual FEvent RenderCache( FContext& iCtx );

@@ -3,13 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         TextInfo.cpp
+* @file         TimeSettings.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FTextInfo class.
+* @brief        This file provides the definition for the FTimeSettings class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/TextInfo.h"
+#include "Layer/Components/TimeSettings.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

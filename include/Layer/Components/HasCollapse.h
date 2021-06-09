@@ -3,22 +3,17 @@
 /*
 *   ULIS
 *__________________
-* @file         Collapsible.h
+* @file         HasCollapse.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the ICollapsible class.
+* @brief        This file provides the declaration for the IHasCollapse class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Common/LayerUtils.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-/// @class      ICollapsible
-/// @brief      Simple Collapsible class.
-class ULIS_API ICollapsible
-{
-};
-
+ULIS_DECLARE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasCollapse, bool, false, IsCollapsed, SetCollapsed )
 ULIS_NAMESPACE_END
 

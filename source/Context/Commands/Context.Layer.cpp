@@ -24,6 +24,7 @@
 #include "Process/Layer/PSD.h"
 
 ULIS_NAMESPACE_BEGIN
+/*
 /////////////////////////////////////////////////////
 // Entry points
 ulError
@@ -245,6 +246,6 @@ FContext::XLoadPSDFromDisk(
     Dummy_OP( uint32(eventConvert.Size()), eventConvert.Data(), iEvent );
     return  ULIS_NO_ERROR;
 }
-
+*/
 ULIS_NAMESPACE_END
 

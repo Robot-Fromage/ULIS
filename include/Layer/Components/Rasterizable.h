@@ -5,7 +5,7 @@
 *__________________
 * @file         Rasterizable.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the IRasterizable class.
+* @brief        This file provides the declaration for the TRasterizable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,9 +14,9 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      IRasterizable
+/// @class      TRasterizable
 /// @brief      Simple Rasterizable class.
-class ULIS_API IRasterizable
+class ULIS_API TRasterizable
 {
 };
 

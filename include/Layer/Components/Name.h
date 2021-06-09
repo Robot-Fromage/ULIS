@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         Identity.h
+* @file         Name.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FIdentity class.
+* @brief        This file provides the declaration for the FName class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,9 +14,9 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FIdentity
-/// @brief      Simple Identity class.
-class ULIS_API FIdentity
+/// @class      FName
+/// @brief      Simple Name class.
+class ULIS_API FName
 {
 };
 

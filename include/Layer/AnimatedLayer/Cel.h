@@ -102,8 +102,6 @@ private:
     FCelExtension mPostBehaviour;
 };
 
-#pragma warning(push)
-#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 /////////////////////////////////////////////////////
 /// @class      TCel
 /// @brief      Basic Animation Cel
@@ -137,42 +135,6 @@ private:
     FCelInfo mInfo;
     Type* mData;
 };
-
-/////////////////////////////////////////////////////
-/// @class      TSequence
-/// @brief      Basic Animation Sequence of Cels
-template< class Type >
-class ULIS_API TSequence {
-
-public:
-    virtual ~TSequence() {
-        Reset();
-    }
-
-    TSequence()
-    {}
-
-public:
-    void
-    Reset()
-    {
-        for( uint64 i = 0; i < mInstances.Size(); ++i )
-            delete  mInstances[i];
-        mInstances.Clear();
-    }
-
-    TArray< TCel< Type >* >& Instances() {
-        return  mInstances;
-    }
-
-    const TArray< TCel< Type >* >& Instances() const {
-        return  mInstances;
-    }
-
-private:
-    TArray< TCel< Type >* > mInstances;
-};
-#pragma warning(pop)
 
 #define ULIS_EXPORT_CEL_CLASSES( CLASS )                \
     template class ULIS_API TCel< CLASS >;              \

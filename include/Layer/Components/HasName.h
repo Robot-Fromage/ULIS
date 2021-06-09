@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         Identifiable.h
+* @file         HasName.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the IIdentifiable class.
+* @brief        This file provides the declaration for the IHasName class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,9 +14,9 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      IIdentifiable
-/// @brief      Simple Identifiable class.
-class ULIS_API IIdentifiable
+/// @class      IHasName
+/// @brief      Simple HasName class.
+class ULIS_API IHasName
 {
 };
 

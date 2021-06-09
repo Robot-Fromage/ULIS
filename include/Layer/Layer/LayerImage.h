@@ -11,7 +11,6 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Layer/Layer/Layer.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -19,95 +18,7 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The FLayerImage class provides a class to store an image in a
 ///             layer stack for painting applications.
 class ULIS_API FLayerImage
-    : public ILayer
 {
-    // Typedefs
-    typedef TRoot< ILayer > tParent;
-    typedef ILayer          tSuperClass;
-
-public:
-    // DTor
-    virtual ~FLayerImage() override;
-
-    // CTors
-    FLayerImage(
-          const FString& iName = "Untitled"
-        , bool iLocked = false
-        , bool iVisible = true
-        , const FColor& iColor = FColor::Transparent
-        , uint16 iWidth = 0
-        , uint16 iHeight = 0
-        , eFormat iFormat = Format_RGBA8
-        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
-        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
-        , ufloat iOpacity = 1.f
-        , bool iAlphaLocked = false
-        , tParent* iParent = nullptr
-    );
-
-    FLayerImage(
-          FBlock* iBlock
-        , const FString& iName = "Untitled"
-        , bool iLocked = false
-        , bool iVisible = true
-        , const FColor& iColor = FColor::Transparent
-        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
-        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
-        , ufloat iOpacity = 1.f
-        , bool iAlphaLocked = false
-        , tParent* iParent = nullptr
-    );
-
-    // Disable copy
-    FLayerImage( const FLayerImage& ) = delete;
-    FLayerImage& operator=( const FLayerImage& ) = delete;
-
-public:
-    // Getters
-    FBlock& Block();
-    const FBlock& Block() const;
-    eBlendMode BlendMode() const;
-    eAlphaMode AlphaMode() const;
-    ufloat Opacity() const;
-    bool IsAlphaLocked() const;
-
-    // Setters
-    void SetBlendMode( eBlendMode iValue );
-    void SetAlphaMode( eAlphaMode iValue );
-    void SetOpacity( ufloat iValue );
-    void SetAlphaLocked( bool iValue );
-
-    // Static Interface
-    constexpr static const char* StaticType() { return  mType; }
-    constexpr static const uint32 StaticTypeID() { return  crc32b( mType ); }
-
-    // ILayer Interface
-    const FString Type() const override { return  StaticType(); }
-    const uint32 TypeID() const override { return  StaticTypeID(); }
-
-    // IHasCachedImageRendering Interface
-    virtual FEvent RenderImage(
-          FContext& iCtx
-        , FBlock& ioBlock
-        , const FRectI& iRect = FRectI::Auto
-        , const FVec2I& iPos = FVec2I( 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-    ) override;
-
-protected:
-    // TNode Interface
-    virtual void InitFromParent( const tParent* iParent ) override;
-
-private:
-    // Private data members
-    FBlock* mBlock;
-    eBlendMode mBlendMode;
-    eAlphaMode mAlphaMode;
-    ufloat mOpacity;
-    bool mAlphaLock;
-    constexpr static const char* mType = "Image";
 };
 
 ULIS_NAMESPACE_END

@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         HasText.h
+* @file         HasTimeSettings.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the IHasText class.
+* @brief        This file provides the declaration for the IHasTimeSettings class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,9 +14,9 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      IHasText
-/// @brief      Simple HasText class.
-class ULIS_API IHasText
+/// @class      IHasTimeSettings
+/// @brief      Simple HasTimeSettings class.
+class ULIS_API IHasTimeSettings
 {
 };
 

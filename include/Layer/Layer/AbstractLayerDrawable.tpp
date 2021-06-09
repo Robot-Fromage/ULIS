@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         HasBlock.h
+* @file         AbstractLayerDrawable.tpp
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the THasBlock class.
+* @brief        This file provides the definition for the TAbstractLayerDrawable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -13,12 +13,5 @@
 #include "Core/Core.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-/// @class      THasBlock
-/// @brief      Simple HasBlock class.
-class ULIS_API THasBlock
-{
-};
-
 ULIS_NAMESPACE_END
 

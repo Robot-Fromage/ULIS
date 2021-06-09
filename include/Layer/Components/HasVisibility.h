@@ -11,14 +11,9 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Common/LayerUtils.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-/// @class      IHasVisibility
-/// @brief      Simple HasVisibility class.
-class ULIS_API IHasVisibility
-{
-};
-
+ULIS_DECLARE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasVisibility, bool, true, IsVisible, SetVisible )
 ULIS_NAMESPACE_END
 

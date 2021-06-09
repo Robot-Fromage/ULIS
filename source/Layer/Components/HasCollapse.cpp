@@ -3,14 +3,15 @@
 /*
 *   ULIS
 *__________________
-* @file         Collapsible.cpp
+* @file         HasCollapse.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the ICollapsible class.
+* @brief        This file provides the definition for the IHasCollapse class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/Collapsible.h"
+#include "Layer/Components/HasCollapse.h"
 
 ULIS_NAMESPACE_BEGIN
+ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasCollapse, bool, IsCollapsed, SetCollapsed )
 ULIS_NAMESPACE_END
 

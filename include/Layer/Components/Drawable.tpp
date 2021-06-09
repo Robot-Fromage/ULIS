@@ -3,26 +3,26 @@
 /*
 *   ULIS
 *__________________
-* @file         HasCachedImageRendering.cpp
+* @file         Drawable.tpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the IHasCachedImageRendering class.
+* @brief        This file provides the definition for the TDrawable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/HasCachedImageRendering.h"
+#include "Layer/Components/Drawable.h"
 
 ULIS_NAMESPACE_BEGIN
-IHasCachedImageRendering::IHasCachedImageRendering()
+TDrawable::TDrawable()
     : mImageCacheValid( false )
 {}
 
 bool
-IHasCachedImageRendering::IsImageCacheValid() const {
+TDrawable::IsImageCacheValid() const {
     return  mImageCacheValid;
 }
 
 FEvent
-IHasCachedImageRendering::RenderCache( FContext& iCtx ) {
+TDrawable::RenderCache( FContext& iCtx ) {
     if( IsImageCacheValid() )
         return  FEvent::NoOP();
 
@@ -31,7 +31,7 @@ IHasCachedImageRendering::RenderCache( FContext& iCtx ) {
 }
 
 FEvent
-IHasCachedImageRendering::RenderImage(
+TDrawable::RenderImage(
       FContext& iCtx
     , FBlock& ioBlock
     , const FRectI& iRect
@@ -46,12 +46,12 @@ IHasCachedImageRendering::RenderImage(
 }
 
 void
-IHasCachedImageRendering::InvalidImageCache() {
+TDrawable::InvalidImageCache() {
     mImageCacheValid = false;
 }
 
 void
-IHasCachedImageRendering::ValidateImageCache() {
+TDrawable::ValidateImageCache() {
     mImageCacheValid = true;
 }
 
