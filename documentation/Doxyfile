@@ -2165,21 +2165,21 @@ MACRO_EXPANSION        = YES
 # The default value is: NO.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-EXPAND_ONLY_PREDEF     = YES
+EXPAND_ONLY_PREDEF     = NO
 
 # If the SEARCH_INCLUDES tag is set to YES, the include files in the
 # INCLUDE_PATH will be searched if a #include is found.
 # The default value is: YES.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-SEARCH_INCLUDES        = NO
+SEARCH_INCLUDES        = YES
 
 # The INCLUDE_PATH tag can be used to specify one or more directories that
 # contain include files that are not input files but should be processed by the
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           =
+INCLUDE_PATH           = ./include
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
@@ -2197,41 +2197,8 @@ INCLUDE_FILE_PATTERNS  =
 # recursively expanded use the := operator instead of the = operator.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-PREDEFINED             = __declspec(x)=                                 \
-                         __attribute__(x)=                              \
-                         ULIS_API                                       \
-                         ULIS_NAMESPACE_BEGIN                           \
-                         ULIS_NAMESPACE_END                             \
-                         ULIS_FORCEINLINE                               \
-                         ULIS_VECTORCALL                                \
-                         ULIS_VECTOR_FUNC                               \
-                         ULIS_MATRIX_FUNC                               \
-                         ULIS_MATHS_FUNC                                \
-                         ULIS_NAMESPACE_NAME                            \
-                         ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC4        \
-                         ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC3        \
-                         ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC2        \
-                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    \
-                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    \
-                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    \
-                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    \
-                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    \
-                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    \
-                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2    \
-                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3    \
-                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4    \
-                         ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC2    \
-                         ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC3    \
-                         ULIS_FOR_ALL_VEC2_SWIZZLE_FUNCTIONS_IN_VEC4    \
-                         ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC2    \
-                         ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC3    \
-                         ULIS_FOR_ALL_VEC3_SWIZZLE_FUNCTIONS_IN_VEC4    \
-                         ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC2    \
-                         ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC3    \
-                         ULIS_FOR_ALL_VEC4_SWIZZLE_FUNCTIONS_IN_VEC4    \
-                         ULIS_DECLARE_VEC2_SWIZZLE_FUNCTION             \
-                         ULIS_DECLARE_VEC3_SWIZZLE_FUNCTION             \
-                         ULIS_DECLARE_VEC4_SWIZZLE_FUNCTION
+PREDEFINED             =    ULIS_NAMESPACE_BEGIN   \
+                            ULIS_NAMESPACE_END
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
@@ -2250,7 +2217,7 @@ EXPAND_AS_DEFINED      =
 # The default value is: YES.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-SKIP_FUNCTION_MACROS   = YES
+SKIP_FUNCTION_MACROS   = NO
 
 #---------------------------------------------------------------------------
 # Configuration options related to external references
