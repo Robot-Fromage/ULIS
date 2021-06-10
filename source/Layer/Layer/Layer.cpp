@@ -12,5 +12,24 @@
 #include "Layer/Layer/Layer.h"
 
 ULIS_NAMESPACE_BEGIN
+ILayer::~ILayer()
+{
+}
+
+ILayer::ILayer(
+      const FString& iName
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iPrettyColor
+    , TRoot< ILayer >* iParent
+)
+    : IHasLock( iLocked )
+    , IHasName( iName )
+    , IHasPrettyColor( iPrettyColor )
+    , IHasVisibility( iVisible )
+    , ITypeIdentifiable()
+    , TNode< ILayer >( iParent )
+{}
+
 ULIS_NAMESPACE_END
 

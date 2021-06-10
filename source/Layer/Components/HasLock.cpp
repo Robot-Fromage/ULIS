@@ -12,8 +12,9 @@
 #include "Layer/Components/HasLock.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasLock, bool, IsLocked, SetLocked )
-ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasPaintLock, bool, IsPaintLocked, SetPaintLocked )
-ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasTimeLock, bool, IsTimeLocked, SetTimeLocked )
+// We define the methods of the IHasLock* classes
+ULIS_DEFINE_PIC_SIMPLE( IHasLock, bool, IsLocked, SetLocked )
+ULIS_DEFINE_PIC_SIMPLE( IHasPaintLock, bool, IsPaintLocked, SetPaintLocked )
+ULIS_DEFINE_PIC_SIMPLE( IHasTimeLock, bool, IsTimeLocked, SetTimeLocked )
 ULIS_NAMESPACE_END
 

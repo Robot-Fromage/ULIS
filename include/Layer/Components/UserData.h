@@ -3,15 +3,26 @@
 /*
 *   ULIS
 *__________________
-* @file         AbstractLayerDrawable.tpp
+* @file         UserData.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TAbstractLayerDrawable class.
+* @brief        This file provides the declaration for the IUserData class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Layer/Layer/AbstractLayerDrawable.h"
+#include "Core/Core.h"
+#include "TypeIdentifiable.h"
 
 ULIS_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+/// @class      IUserData
+/// @brief      Simple UserData class.
+class ULIS_API IUserData
+    : public ITypeIdentifiable
+{
+public:
+    virtual ~IUserData() = 0;
+};
+
 ULIS_NAMESPACE_END
 

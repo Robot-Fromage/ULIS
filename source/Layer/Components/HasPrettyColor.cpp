@@ -3,13 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         LayerStack.tpp
+* @file         HasPrettyColor.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TLayerStack class.
+* @brief        This file provides the definition for the IHasPrettyColor class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Layer/LayerStack.h"
+#include "Layer/Components/HasPrettyColor.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

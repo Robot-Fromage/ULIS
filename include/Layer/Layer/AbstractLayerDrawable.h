@@ -11,14 +11,21 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/Drawable.h"
+#include "Layer/Layer/Layer.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TAbstractLayerDrawable
 /// @brief      Simple TAbstractLayerDrawable class.
+template< class BlockType >
 class ULIS_API TAbstractLayerDrawable
+    : public virtual ILayer
+    , public TDrawable< BlockType >
 {
 };
 
 ULIS_NAMESPACE_END
+
+#include "Layer/Layer/AbstractLayerDrawable.tpp"
 

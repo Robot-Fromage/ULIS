@@ -15,31 +15,31 @@
 #include "Layer/AnimatedLayer/AnimatedLayer.h"
 
 ULIS_NAMESPACE_BEGIN
-ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, ILayerRoot& iRoot );
-const ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, const ILayerRoot& iRoot );
+ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, TRoot< ILayer >& iRoot );
+const ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, const TRoot< ILayer >& iRoot );
 IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, IAnimatedLayerRoot& iRoot );
 const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, const IAnimatedLayerRoot& iRoot );
 
-#define ULIS_DECLARE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( __Class__, __Type__, __Default__, __Getter__, __Setter__ )    \
-    class ULIS_API __Class__ {                                                                                                      \
-        public:                                                                                                                     \
-            __Class__ ( __Type__ i = __Default__ );                                                                                 \
-            __Type__ __Getter__ () const;                                                                                           \
-            void __Setter__ ( __Type__ i );                                                                                         \
-        private:                                                                                                                    \
-            __Type__ m;                                                                                                             \
+// PIC Helper macros
+// PIC stands for Pseudo-Interface-Composition [class]
+// Example Usage:
+// ULIS_DECLARE_PIC_SIMPLE( IHasLock, bool, false, IsLocked, SetLocked ) // ( Header.h )
+// ULIS_DEFINE_PIC_SIMPLE( IHasLock, bool, IsLocked, SetLocked ) // ( Source.cpp )
+#define ULIS_DECLARE_PIC_SIMPLE( __Class__, __Type__, __Default__, __Getter__, __Setter__ ) \
+    class ULIS_API __Class__ {                                                              \
+        protected:                                                                          \
+            __Class__ ( __Type__ i = __Default__ );                                         \
+        public:                                                                             \
+            __Type__ __Getter__ () const;                                                   \
+            void __Setter__ ( __Type__ i );                                                 \
+        private:                                                                            \
+            __Type__ m;                                                                     \
     };
 
-#define ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( __Class__, __Type__, __Getter__, __Setter__ )  \
-    __Class__ :: __Class__ ( __Type__ i ) : m( i ) {}                                                               \
-    __Type__ __Class__ :: __Getter__ () const { return  m; }                                                        \
+#define ULIS_DEFINE_PIC_SIMPLE( __Class__, __Type__, __Getter__, __Setter__ )   \
+    __Class__ :: __Class__ ( __Type__ i ) : m( i ) {}                           \
+    __Type__ __Class__ :: __Getter__ () const { return  m; }                    \
     void __Class__ :: __Setter__ ( __Type__ i ) { m = i; }
-
-// Exemple Usage:
-// Header:
-//ULIS_DECLARE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasLock, bool, false, IsLocked, SetLocked )
-// Source:
-//ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasLock, bool, IsLocked, SetLocked )
 
 ULIS_NAMESPACE_END
 

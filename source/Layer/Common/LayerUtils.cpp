@@ -21,7 +21,7 @@
 
 ULIS_NAMESPACE_BEGIN
 ILayer&
-FindLayerByFuzzyNameInContainer( const FString& iStr, ILayerRoot& iRoot ) {
+FindLayerByFuzzyNameInContainer( const FString& iStr, TRoot< ILayer >& iRoot ) {
     const uint64 size = iRoot.Children().Size();
     std::vector< std::tuple< int, ILayer* > > matches;
     matches.reserve( size );
@@ -37,7 +37,7 @@ FindLayerByFuzzyNameInContainer( const FString& iStr, ILayerRoot& iRoot ) {
 }
 
 const ILayer&
-FindLayerByFuzzyNameInContainer( const FString& iStr, const ILayerRoot& iRoot ) {
+FindLayerByFuzzyNameInContainer( const FString& iStr, const TRoot< ILayer >& iRoot ) {
     const uint64 size = iRoot.Children().Size();
     std::vector< std::tuple< int, const ILayer* > > matches;
     matches.reserve( size );

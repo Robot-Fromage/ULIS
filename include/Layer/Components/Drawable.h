@@ -21,6 +21,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TDrawable
 /// @brief      The TDrawable class provides a base abstract interface to
 ///             perform cached renders of contents for layers
+template< class BlockType >
 class ULIS_API TDrawable
 {
 protected:
@@ -30,7 +31,7 @@ public:
     virtual FEvent RenderCache( FContext& iCtx );
     virtual FEvent RenderImage(
           FContext& iCtx
-        , FBlock& ioBlock
+        , BlockType& ioBlock
         , const FRectI& iRect = FRectI::Auto
         , const FVec2I& iPos = FVec2I( 0 )
         , const FSchedulePolicy& iPolicy = FSchedulePolicy()
@@ -39,14 +40,14 @@ public:
     ) = 0;
 
 
-    bool IsImageCacheValid() const;
-    virtual void InvalidImageCache();
+    bool IsCacheValid() const;
+    virtual void InvalidCache();
 
 protected:
-    void ValidateImageCache();
+    void ValidateCache();
 
 private:
-    bool mImageCacheValid;
+    bool mCacheValid;
 };
 
 ULIS_NAMESPACE_END
