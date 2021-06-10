@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/TextInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -18,6 +19,9 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple HasText class.
 class ULIS_API IHasText
 {
+public:
+private:
+    FTextInfo mInfo;
 };
 
 ULIS_NAMESPACE_END

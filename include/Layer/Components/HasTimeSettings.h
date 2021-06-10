@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/TimeSettings.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

@@ -18,6 +18,9 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple Blendable class.
 class ULIS_API IHasBlendInfo
 {
+protected:
+public:
+private:
 };
 
 ULIS_NAMESPACE_END

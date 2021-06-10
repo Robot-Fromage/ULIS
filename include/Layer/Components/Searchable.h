@@ -18,6 +18,7 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple Searchable class.
 class ULIS_API ISearchable
 {
+
 };
 
 ULIS_NAMESPACE_END

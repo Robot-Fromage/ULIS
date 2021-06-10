@@ -18,6 +18,10 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple TimeSettings class.
 class ULIS_API FTimeSettings
 {
+private:
+    uint16 mFPS;
+    int64 mBeginFrame;
+    int64 mEndFrame;
 };
 
 ULIS_NAMESPACE_END

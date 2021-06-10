@@ -16,9 +16,23 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      THasBlock
 /// @brief      Simple HasBlock class.
+template< class BlockType, class BlockAllocatorType >
 class ULIS_API THasBlock
 {
+public:
+    ~THasBlock();
+    THasBlock();
+    THasBlock( BlockType* iBlock );
+
+public:
+    BlockType& Block();
+    const BlockType& Block() const;
+
+private:
+    BlockType* mBlock;
 };
 
 ULIS_NAMESPACE_END
+
+#include "Layer/Components/HasBlock.tpp"
 

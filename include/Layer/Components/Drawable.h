@@ -51,3 +51,5 @@ private:
 
 ULIS_NAMESPACE_END
 
+#include "Layer/Components/Drawable.tpp"
+

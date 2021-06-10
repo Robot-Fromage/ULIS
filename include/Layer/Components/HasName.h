@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "String/String.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -18,6 +19,15 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple HasName class.
 class ULIS_API IHasName
 {
+public:
+    IHasName( const FString& iName );
+
+public:
+    const FString& Name() const;
+    void SetName( const FString& iName );
+
+private:
+    FString mStr;
 };
 
 ULIS_NAMESPACE_END

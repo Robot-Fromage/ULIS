@@ -16,9 +16,13 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TRasterizable
 /// @brief      Simple Rasterizable class.
+template< typename T >
 class ULIS_API TRasterizable
 {
+    virtual T* Rasterize() const = 0;
 };
 
 ULIS_NAMESPACE_END
+
+#include "Layer/Components/Rasterizable.tpp"
 

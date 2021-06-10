@@ -18,6 +18,18 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple BlendInfo class.
 class ULIS_API FBlendInfo
 {
+public:
+    // TODO: CTor
+
+public:
+    // TODO: Getters
+    // TODO: Setters
+
+private:
+    // TODO: Check, do we need more info / fields ?
+    eBlendMode mBlendMode;
+    eAlphaMode mAlphaMode;
+    ufloat mOpacity;
 };
 
 ULIS_NAMESPACE_END

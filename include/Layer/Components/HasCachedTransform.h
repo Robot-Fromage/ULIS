@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/CachedTransformInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -18,6 +19,10 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple HasCachedTransform class.
 class ULIS_API IHasCachedTransform
 {
+protected:
+public:
+private:
+    FCachedTransformInfo mInfo;
 };
 
 ULIS_NAMESPACE_END
