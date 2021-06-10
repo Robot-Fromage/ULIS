@@ -13,28 +13,32 @@
 #include "Layer/Components/Drawable.h"
 
 ULIS_NAMESPACE_BEGIN
-TDrawable::TDrawable()
-    : mImageCacheValid( false )
+template< class BlockType >
+TDrawable< BlockType >::TDrawable()
+    : mCacheValid( false )
 {}
 
+template< class BlockType >
 bool
-TDrawable::IsImageCacheValid() const {
-    return  mImageCacheValid;
+TDrawable< BlockType >::IsCacheValid() const {
+    return  mCacheValid;
 }
 
+template< class BlockType >
 FEvent
-TDrawable::RenderCache( FContext& iCtx ) {
-    if( IsImageCacheValid() )
+TDrawable< BlockType >::RenderCache( FContext& iCtx ) {
+    if( IsCacheValid() )
         return  FEvent::NoOP();
 
-    ValidateImageCache();
+    ValidateCache();
     return  FEvent::NoOP();
 }
 
+template< class BlockType >
 FEvent
-TDrawable::RenderImage(
+TDrawable< BlockType >::RenderImage(
       FContext& iCtx
-    , FBlock& ioBlock
+    , BlockType& ioBlock
     , const FRectI& iRect
     , const FVec2I& iPos
     , const FSchedulePolicy& iPolicy
@@ -46,14 +50,16 @@ TDrawable::RenderImage(
     return  FEvent::NoOP();
 }
 
+template< class BlockType >
 void
-TDrawable::InvalidImageCache() {
-    mImageCacheValid = false;
+TDrawable< BlockType >::InvalidCache() {
+    mCacheValid = false;
 }
 
+template< class BlockType >
 void
-TDrawable::ValidateImageCache() {
-    mImageCacheValid = true;
+TDrawable< BlockType >::ValidateCache() {
+    mCacheValid = true;
 }
 
 

@@ -39,7 +39,6 @@ public:
         , const FEvent* iWaitList = nullptr
     ) = 0;
 
-
     bool IsCacheValid() const;
     virtual void InvalidCache();
 

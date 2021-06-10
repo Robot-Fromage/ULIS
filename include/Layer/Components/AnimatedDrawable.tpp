@@ -13,28 +13,32 @@
 #include "Layer/Components/AnimatedDrawable.h"
 
 ULIS_NAMESPACE_BEGIN
-TAnimatedDrawable::TAnimatedDrawable()
-    : mImageCacheValid( false )
+template< class BlockType >
+TAnimatedDrawable< BlockType >::TAnimatedDrawable()
+    : mCacheValid( false )
 {}
 
+template< class BlockType >
 bool
-TAnimatedDrawable::IsImageCacheValid() const {
-    return  mImageCacheValid;
+TAnimatedDrawable< BlockType >::IsCacheValid() const {
+    return  mCacheValid;
 }
 
+template< class BlockType >
 FEvent
-TAnimatedDrawable::RenderCache( FContext& iCtx ) {
-    if( IsImageCacheValid() )
+TAnimatedDrawable< BlockType >::RenderCache( FContext& iCtx ) {
+    if( IsCacheValid() )
         return  FEvent::NoOP();
 
-    ValidateImageCache();
+    ValidateCache();
     return  FEvent::NoOP();
 }
 
+template< class BlockType >
 FEvent
-TAnimatedDrawable::RenderImage(
+TAnimatedDrawable< BlockType >::RenderImage(
       FContext& iCtx
-    , FBlock& ioBlock
+    , BlockType& ioBlock
     , uint32 iFrame
     , const FRectI& iRect
     , const FVec2I& iPos
@@ -47,14 +51,16 @@ TAnimatedDrawable::RenderImage(
     return  FEvent::NoOP();
 }
 
+template< class BlockType >
 void
-TAnimatedDrawable::InvalidImageCache() {
-    mImageCacheValid = false;
+TAnimatedDrawable< BlockType >::InvalidCache() {
+    mCacheValid = false;
 }
 
+template< class BlockType >
 void
-TAnimatedDrawable::ValidateImageCache() {
-    mImageCacheValid = true;
+TAnimatedDrawable< BlockType >::ValidateCache() {
+    mCacheValid = true;
 }
 
 
