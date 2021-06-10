@@ -545,3 +545,12 @@ span.keyword {
 .paramname code, .paramname code a, .paramname code a:visited {
     color: #aeaeae;
 }
+
+.directory td.entry {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#navigator {
+    visibility:hidden;
+}
