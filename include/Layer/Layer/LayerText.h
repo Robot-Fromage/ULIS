@@ -5,7 +5,7 @@
 *__________________
 * @file         LayerText.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FLayerText class.
+* @brief        This file provides the declaration for the TLayerText class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,10 +14,10 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FLayerText
-/// @brief      The FLayerText class provides a class to store text in a layer
+/// @class      TLayerText
+/// @brief      The TLayerText class provides a class to store text in a layer
 ///             of a layer stack for painting applications.
-class ULIS_API FLayerText final
+class ULIS_API TLayerText final
 {
 };
 

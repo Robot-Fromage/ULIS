@@ -5,7 +5,7 @@
 *__________________
 * @file         LayerFolder.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the FLayerFolder class.
+* @brief        This file provides the declaration for the TLayerFolder class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,10 +14,10 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      FLayerFolder
-/// @brief      The FLayerFolder class provides a class to store a folder of
+/// @class      TLayerFolder
+/// @brief      The TLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
-class ULIS_API FLayerFolder
+class ULIS_API TLayerFolder
 {
 };
 

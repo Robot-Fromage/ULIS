@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         LayerText.cpp
+* @file         LayerText.tpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the FLayerText class.
+* @brief        This file provides the definition for the TLayerText class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
