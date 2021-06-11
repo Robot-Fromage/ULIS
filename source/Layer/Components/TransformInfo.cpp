@@ -3,13 +3,13 @@
 /*
 *   ULIS
 *__________________
-* @file         HasCachedTransform.cpp
+* @file         CachedTransformInfo.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the IHasCachedTransform class.
+* @brief        This file provides the definition for the FCachedTransformInfo class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/Components/HasCachedTransform.h"
+#include "Layer/Components/TransformInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

@@ -19,23 +19,12 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FCachedTransformInfo
 /// @brief      Simple CachedTransformInfo class.
-class ULIS_API FCachedTransformInfo
+struct ULIS_API FTransformInfo
 {
-public:
-    // TODO: CTor
-
-public:
-    // TODO: Getters / Setters
-    // TODO: Check, how do we chose to manipulate it ?
-    // Obtain reference to matrix and manipulate it
-    // Make APIs like Rotate() Translate() SetTranslation(), etc...
-    // Is it gonna be easy to make this an AnimatedProperty in a 2D timeline ?
-
-private:
-    // TODO: Check, how do we chose to store info ?
-    // A) only matrix, implicitely store all there, no real need for a cache then
-    // B) Separate Translation, Rotation, Scale, on demand, build and cache matrix
-    FMat3F mMatrix;
+    FVec2F translation;
+    FVec2F pivot;
+    float rotation;
+    FVec2F scale;
 };
 
 ULIS_NAMESPACE_END
