@@ -11,13 +11,20 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "String/WString.h"
+#include "Font/Font.h"
+#include "Image/Color.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FTextInfo
 /// @brief      Simple TextInfo class.
-class ULIS_API FTextInfo
+struct ULIS_API FTextInfo
 {
+    FWString string;
+    FFont font;
+    int size;
+    FColor color;
 };
 
 ULIS_NAMESPACE_END

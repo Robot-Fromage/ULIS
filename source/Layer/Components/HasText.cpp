@@ -12,5 +12,50 @@
 #include "Layer/Components/HasText.h"
 
 ULIS_NAMESPACE_BEGIN
+
+IHasText::IHasText( const FWString& iString, const FFont& iFont, int iSize = 12, const FColor& iColor)
+    : mInfo( { iString, iFont, iSize, iColor } )
+{}
+
+FWString IHasText::Text() const
+{
+    return mInfo.string;
+}
+
+FFont IHasText::Font() const
+{
+    return mInfo.font;
+}
+
+int IHasText::FontSize() const
+{
+    return mInfo.size;
+}
+
+FColor IHasText::TextColor() const
+{
+    return mInfo.color;
+}
+
+void IHasText::SetText( const FWString& iValue )
+{
+    mInfo.string = iValue;
+}
+
+void IHasText::SetFont( const FFont& iValue )
+{
+    mInfo.font = iValue;
+}
+
+void IHasText::SetFontSize(  int iValue )
+{
+    mInfo.size = iValue;
+}
+
+void IHasText::SetTextColor( const FColor& iValue )
+{
+    mInfo.color = iValue;
+}
+
 ULIS_NAMESPACE_END
 

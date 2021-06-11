@@ -20,14 +20,15 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API IHasBlendInfo
 {
 protected:
-    IHasBlendInfo( eBlendMode iBlendMode, eAlphaMode iAlphaMode, ufloat iOpacity );
+    IHasBlendInfo( eBlendMode iBlendMode = Blend_Normal, eAlphaMode iAlphaMode = Alpha_Normal, ufloat iOpacity = 1.f);
 
 public:
     eBlendMode BlendMode() const;
-    void SetBlendMode( eBlendMode iValue );
     eAlphaMode AlphaMode() const;
-    void SetAlphaMode( eAlphaMode iValue );
     ufloat Opacity() const;
+
+    void SetBlendMode( eBlendMode iValue );
+    void SetAlphaMode( eAlphaMode iValue );
     void SetOpacity( ufloat iValue );
 
 private:

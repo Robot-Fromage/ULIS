@@ -19,7 +19,20 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple HasText class.
 class ULIS_API IHasText
 {
+protected:
+    IHasText( const FWString& string = L"hello world", const FFont& font = FFont::DefaultFont, int size = 12, const FColor& color = FColor::Black );
+
 public:
+    FWString Text() const;
+    FFont Font() const;
+    int FontSize() const;
+    FColor TextColor() const;
+
+    void SetText( const FWString& iValue );
+    void SetFont( const FFont& iValue );
+    void SetFontSize(  int iValue );
+    void SetTextColor( const FColor& iValue );
+
 private:
     FTextInfo mInfo;
 };

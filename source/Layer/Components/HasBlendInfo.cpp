@@ -22,24 +22,24 @@ eBlendMode IHasBlendInfo::BlendMode() const
     return mInfo.blendMode;
 }
 
-void IHasBlendInfo::SetBlendMode( eBlendMode iValue )
-{
-    mInfo.blendMode = iValue;
-}
-
 eAlphaMode IHasBlendInfo::AlphaMode() const
 {
     return mInfo.alphaMode;
 }
 
-void IHasBlendInfo::SetAlphaMode( eAlphaMode iValue )
-{
-     mInfo.alphaMode = iValue;
-}
-
 ufloat IHasBlendInfo::Opacity() const
 {
     return mInfo.opacity;
+}
+
+void IHasBlendInfo::SetBlendMode( eBlendMode iValue )
+{
+    mInfo.blendMode = iValue;
+}
+
+void IHasBlendInfo::SetAlphaMode( eAlphaMode iValue )
+{
+     mInfo.alphaMode = iValue;
 }
 
 void IHasBlendInfo::SetOpacity( ufloat iValue )
