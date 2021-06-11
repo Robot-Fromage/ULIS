@@ -17,10 +17,10 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      IHasBlendInfo
 /// @brief      Simple Blendable class.
-class ULIS_API IHasBlendInfo
+struct ULIS_API IHasBlendInfo
 {
 protected:
-    IHasBlendInfo( eBlendMode iBlendMode = Blend_Normal, eAlphaMode iAlphaMode = Alpha_Normal, ufloat iOpacity = 1.f);
+    IHasBlendInfo( eBlendMode iBlendMode = Blend_Normal, eAlphaMode iAlphaMode = Alpha_Normal, ufloat iOpacity = 1.f );
 
 public:
     eBlendMode BlendMode() const;

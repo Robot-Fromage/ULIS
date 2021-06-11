@@ -16,12 +16,12 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FTimeSettings
 /// @brief      Simple TimeSettings class.
-class ULIS_API FTimeSettings
+struct ULIS_API FTimeSettings
 {
-private:
-    uint16 mFPS;
-    int64 mBeginFrame;
-    int64 mEndFrame;
+    uint16 fps;
+    int64 beginFrame;
+    int64 endFrame;
+    int64 currentFrame;
 };
 
 ULIS_NAMESPACE_END

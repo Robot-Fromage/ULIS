@@ -17,10 +17,10 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      IHasText
 /// @brief      Simple HasText class.
-class ULIS_API IHasText
+struct ULIS_API IHasText
 {
 protected:
-    IHasText( const FWString& string = L"hello world", const FFont& font = FFont::DefaultFont, int size = 12, const FColor& color = FColor::Black );
+    IHasText( const FWString& iString = L"hello world", const FFont& iFont = FFont::DefaultFont, int iSize = 12, const FColor& iColor = FColor::Black );
 
 public:
     FWString Text() const;
