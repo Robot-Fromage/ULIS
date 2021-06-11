@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TSequence
 /// @brief      Basic Animation Sequence of Cels
 template< class Type >
-class ULIS_API TSequence {
+class TSequence {
 
 public:
     virtual ~TSequence() {

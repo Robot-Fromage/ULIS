@@ -106,7 +106,7 @@ private:
 /// @class      TCel
 /// @brief      Basic Animation Cel
 template< class Type >
-class ULIS_API TCel {
+class TCel {
 
 public:
     virtual ~TCel() {

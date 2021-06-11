@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TAnimatedLayerText
 /// @brief      The TAnimatedLayerText class provides a class to store text in a layer
 ///             of a layer stack for painting applications.
-class ULIS_API TAnimatedLayerText final
+class TAnimatedLayerText final
 {
 };
 

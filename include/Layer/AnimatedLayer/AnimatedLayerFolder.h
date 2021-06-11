@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TAnimatedLayerFolder
 /// @brief      The TAnimatedLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
-class ULIS_API TAnimatedLayerFolder
+class TAnimatedLayerFolder
 {
 };
 

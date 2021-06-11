@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TRasterizable
 /// @brief      Simple Rasterizable class.
 template< typename T >
-class ULIS_API TRasterizable
+class TRasterizable
 {
     virtual T* Rasterize() const = 0;
 };

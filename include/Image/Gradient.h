@@ -25,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TGradientStep
 /// @brief      The TGradientStep class provides a mean of storing a gradient step.
 template< typename T >
-class ULIS_API TGradientStep final
+class TGradientStep final
 {
 public:
     /*! Destroy the gradient step. */

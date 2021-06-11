@@ -18,7 +18,7 @@
 
 ULIS_NAMESPACE_BEGIN
 // Forward-declarations
-template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType > class TLayerStack;
+template< class BlockType, class RendererType, class SuperStackExtra > class TLayerStack;
 template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType > class TLayerFolder;
 
 /////////////////////////////////////////////////////
@@ -30,19 +30,19 @@ template<
     , class RasterizerType
     , class RendererType
     , class BlockAllocatorType
+    , class LayerStackType
 >
-class ULIS_API TLayerImage final
+class TLayerImage final
     : public TAbstractLayerDrawable< BlockType >
-    , public TRasterizable< TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType > >
+    , public TRasterizable< TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > >
     , public THasBlock< BlockType, BlockAllocatorType >
     , public IHasBlendInfo
     , public IHasPaintLock
 {
-    typedef TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType > tSelf;
-    typedef TLayerStack< BlockType, RasterizerType, RendererType, BlockAllocatorType > tSiblingStack;
+    typedef TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > tSelf;
     typedef TLayerFolder< BlockType, RasterizerType, RendererType, BlockAllocatorType > tSiblingFolder;
     typedef TAbstractLayerDrawable< BlockType > tAbstractLayerDrawable;
-    typedef TRasterizable< TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType > > tRasterizable;
+    typedef TRasterizable< TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > > tRasterizable;
     typedef THasBlock< BlockType, BlockAllocatorType > tHasBlock;
 
 public:

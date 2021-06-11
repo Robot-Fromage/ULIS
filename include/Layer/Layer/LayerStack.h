@@ -24,17 +24,17 @@ ULIS_NAMESPACE_BEGIN
 ///             for painting applications.
 template<
       class BlockType
-    , class RasterizerType
     , class RendererType
-    , class BlockAllocatorType
+    , class SuperStackExtra
 >
-class ULIS_API TLayerStack final
+class TLayerStack final
     : public TAbstractLayerDrawable< BlockType >
     , public TRoot< ILayer >
     , public ISearchable
     , public IHasSize2D
     , public IHasFormat
     , public IHasColorSpace
+    , public SuperStackExtra
 {
 public:
     // DTor

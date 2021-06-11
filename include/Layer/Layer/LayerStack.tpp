@@ -12,8 +12,8 @@
 #include "Layer/Layer/LayerStack.h"
 
 // Template Macro Utility
-#define TEMPLATE template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType >
-#define CLASS TLayerStack< BlockType, RasterizerType, RendererType, BlockAllocatorType >
+#define TEMPLATE template< class BlockType, class RendererType, class SuperStackExtra >
+#define CLASS TLayerStack< BlockType, RendererType, SuperStackExtra >
 
 ULIS_NAMESPACE_BEGIN
 // DTor

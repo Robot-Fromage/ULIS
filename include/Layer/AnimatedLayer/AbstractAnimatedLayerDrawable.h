@@ -16,7 +16,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TAbstractAnimatedLayerDrawable
 /// @brief      Simple TAbstractAnimatedLayerDrawable class.
-class ULIS_API TAbstractAnimatedLayerDrawable
+class TAbstractAnimatedLayerDrawable
 {
 };
 

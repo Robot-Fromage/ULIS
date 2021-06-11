@@ -22,7 +22,7 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      The TAnimatedDrawable class provides a base abstract interface to
 ///             perform cached renders of contents for layers
 template< class BlockType >
-class ULIS_API TAnimatedDrawable
+class TAnimatedDrawable
 {
 protected:
     TAnimatedDrawable();

@@ -12,8 +12,8 @@
 #include "Layer/Layer/LayerImage.h"
 
 // Template Macro Utility
-#define TEMPLATE template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType >
-#define CLASS TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType >
+#define TEMPLATE template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType, class LayerStackType >
+#define CLASS TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType >
 
 ULIS_NAMESPACE_BEGIN
 TEMPLATE
@@ -130,8 +130,8 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) {
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the class hierarchy !" );
         uint32 typeID = layer->TypeID();
         switch( typeID ) {
-            case tSiblingStack::StaticTypeID(): {
-                const tSiblingStack* stack = dynamic_cast< const tSiblingStack* >( layer );
+            case LayerStackType::StaticTypeID(): {
+                const LayerStackType* stack = dynamic_cast< const LayerStackType* >( layer );
                 ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
                 Realloc( stack->Width(), stack->Height(), stack->Format(), stack->ColorSpace() );
                 break;

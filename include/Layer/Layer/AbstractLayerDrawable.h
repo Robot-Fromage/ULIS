@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TAbstractLayerDrawable
 /// @brief      Simple TAbstractLayerDrawable class.
 template< class BlockType >
-class ULIS_API TAbstractLayerDrawable
+class TAbstractLayerDrawable
     : public virtual ILayer
     , public TDrawable< BlockType >
 {

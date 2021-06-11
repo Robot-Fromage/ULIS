@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TAnimatedLayerStack
 /// @brief      The TAnimatedLayerStack class provides a class to store a layer stack
 ///             for painting applications.
-class ULIS_API TAnimatedLayerStack final
+class TAnimatedLayerStack final
 {
 };
 

@@ -23,7 +23,7 @@ template<
     , class RendererType
     , class BlockAllocatorType
 >
-class ULIS_API TLayerFolder
+class TLayerFolder
 {
 };
 
