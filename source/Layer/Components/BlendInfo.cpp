@@ -12,9 +12,5 @@
 #include "Layer/Components/BlendInfo.h"
 
 ULIS_NAMESPACE_BEGIN
-// TODO: Implementation of FBlendInfo methods
-// CTor
-// Getters
-// Setters
 ULIS_NAMESPACE_END
 

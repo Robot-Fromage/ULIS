@@ -12,5 +12,40 @@
 #include "Layer/Components/HasBlendInfo.h"
 
 ULIS_NAMESPACE_BEGIN
+
+IHasBlendInfo::IHasBlendInfo( eBlendMode iBlendMode, eAlphaMode iAlphaMode, ufloat iOpacity )
+    : mInfo( { iBlendMode, iAlphaMode, iOpacity } )
+{}
+
+eBlendMode IHasBlendInfo::BlendMode() const
+{
+    return mInfo.blendMode;
+}
+
+void IHasBlendInfo::SetBlendMode( eBlendMode iValue )
+{
+    mInfo.blendMode = iValue;
+}
+
+eAlphaMode IHasBlendInfo::AlphaMode() const
+{
+    return mInfo.alphaMode;
+}
+
+void IHasBlendInfo::SetAlphaMode( eAlphaMode iValue )
+{
+     mInfo.alphaMode = iValue;
+}
+
+ufloat IHasBlendInfo::Opacity() const
+{
+    return mInfo.opacity;
+}
+
+void IHasBlendInfo::SetOpacity( ufloat iValue )
+{
+     mInfo.opacity = iValue;
+}
+
 ULIS_NAMESPACE_END
 

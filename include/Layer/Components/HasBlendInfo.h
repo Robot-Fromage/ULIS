@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/BlendInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -19,8 +20,18 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API IHasBlendInfo
 {
 protected:
+    IHasBlendInfo( eBlendMode iBlendMode, eAlphaMode iAlphaMode, ufloat iOpacity );
+
 public:
+    eBlendMode BlendMode() const;
+    void SetBlendMode( eBlendMode iValue );
+    eAlphaMode AlphaMode() const;
+    void SetAlphaMode( eAlphaMode iValue );
+    ufloat Opacity() const;
+    void SetOpacity( ufloat iValue );
+
 private:
+    FBlendInfo mInfo;
 };
 
 ULIS_NAMESPACE_END
