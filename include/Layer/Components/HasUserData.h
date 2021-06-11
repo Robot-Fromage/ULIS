@@ -24,21 +24,50 @@ protected:
     // DTor
     ~IHasUserData();
 
+    // CTor
+    IHasUserData();
+
     // Disable copy
     IHasUserData( const IHasUserData& ) = delete;
     IHasUserData& operator=( const IHasUserData& ) = delete;
 
 public:
+    // IHasUserData API
     void ResetUserData();
-    template< class T > T* GetUserData();
-    template< class T > const T* GetUserData() const;
     TArray< IUserData* >& GetUserDataArray();
     const TArray< IUserData* >& GetUserDataArray() const;
     void AddOrSetUserData( IUserData* iData );
+    bool UserDataExists( uint32 iTypeID ) const;
+    IUserData* GetUserData( uint32 iTypeID );
+    const IUserData* GetUserData( uint32 iTypeID ) const;
+
+    // IHasUserData Template API
+    template< class TUserData >
+    bool
+    HasUserData() const
+    {
+        return  HasUserData( TUserData::StaticTypeID() );
+    }
+
+    template< class TUserData >
+    TUserData*
+    GetUserData()
+    {
+        return  dynamic_cast< TUserData* >( GetUserData( TUserData::StaticTypeID() ) );
+    }
+
+    template< class TUserData >
+    const TUserData*
+    GetUserData() const {
+        return  dynamic_cast< const TUserData* >( GetUserData( TUserData::StaticTypeID() ) );
+    }
+
 
 private:
+    // Private Data Members
     TArray< IUserData* > mUserData;
 };
+
 
 ULIS_NAMESPACE_END
 
