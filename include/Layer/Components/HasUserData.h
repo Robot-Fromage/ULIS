@@ -37,11 +37,18 @@ public:
     TArray< IUserData* >& GetUserDataArray();
     const TArray< IUserData* >& GetUserDataArray() const;
     void AddOrSetUserData( IUserData* iData );
+    void RemoveUserData( uint32 iTypeID );
     bool UserDataExists( uint32 iTypeID ) const;
     IUserData* GetUserData( uint32 iTypeID );
     const IUserData* GetUserData( uint32 iTypeID ) const;
 
     // IHasUserData Template API
+    template< class TUserData >
+    void RemoveUserData()
+    {
+        RemoveUserData( TUserData::StaticTypeID() );
+    }
+
     template< class TUserData >
     bool
     HasUserData() const
@@ -61,7 +68,6 @@ public:
     GetUserData() const {
         return  dynamic_cast< const TUserData* >( GetUserData( TUserData::StaticTypeID() ) );
     }
-
 
 private:
     // Private Data Members

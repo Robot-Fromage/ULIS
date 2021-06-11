@@ -56,6 +56,16 @@ IHasUserData::AddOrSetUserData( IUserData* iData )
     mUserData.PushBack( iData );
 }
 
+void
+IHasUserData::RemoveUserData( uint32 iTypeID )
+{
+    IUserData* userData = GetUserData( iTypeID );
+    if( userData ) {
+        mUserData.Erase( userData );
+        delete  userData;
+    }
+}
+
 bool
 IHasUserData::UserDataExists( uint32 iTypeID ) const
 {
