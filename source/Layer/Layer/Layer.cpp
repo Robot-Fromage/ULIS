@@ -27,6 +27,7 @@ ILayer::ILayer(
     , IHasName( iName )
     , IHasPrettyColor( iPrettyColor )
     , IHasVisibility( iVisible )
+    , IHasUserData()
     , ITypeIdentifiable()
     , TNode< ILayer >( iParent )
 {}
