@@ -12,5 +12,22 @@
 #include "Layer/Components/HasPrettyColor.h"
 
 ULIS_NAMESPACE_BEGIN
+IHasPrettyColor::IHasPrettyColor( const FColor& iColor = FColor::Transparent )
+    : mColor( iColor )
+{}
+
+const FColor&
+IHasPrettyColor::PrettyColor() const {
+    // supposed to be always RGBA8
+    return  mColor;
+}
+
+void
+IHasPrettyColor::SetPrettyColor( const FColor& iValue ) {
+    // Ensure conversion to local mPrettyColor format,
+    // supposed to be always RGBA8
+    FColor::ConvertFormat( iValue, mColor );
+}
+
 ULIS_NAMESPACE_END
 

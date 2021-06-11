@@ -19,8 +19,12 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple HasPrettyColor class.
 class ULIS_API IHasPrettyColor
 {
+protected:
+    IHasPrettyColor( const FColor& iColor = FColor::Transparent );
+
 public:
-    IHasPrettyColor( const FColor& iColor );
+    const FColor& PrettyColor() const;
+    void SetPrettyColor( const FColor& iValue );
 
 private:
     FColor mColor;
