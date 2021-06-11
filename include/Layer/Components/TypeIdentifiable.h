@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "String/String.h"
 #include "String/CRC32.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -19,6 +20,7 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple TypeIdentifiable class.
 class ULIS_API ITypeIdentifiable
 {
+public:
     // ITypeIdentifiable Interface
     virtual const FString Type() const = 0;
     virtual const uint32 TypeID() const = 0;
