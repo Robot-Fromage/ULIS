@@ -11,6 +11,14 @@
 */
 #include "Layer/Layer/LayerFolder.h"
 
+// Template Macro Utility
+#define TEMPLATE template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType >
+#define CLASS TLayerFolder< BlockType, RasterizerType, RendererType, BlockAllocatorType >
+
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END
+
+// Template Macro Utility
+#undef TEMPLATE
+#undef CLASS
 

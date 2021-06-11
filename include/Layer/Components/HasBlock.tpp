@@ -29,8 +29,11 @@ CLASS::THasBlock(
     , eFormat iFormat
     , const FColorSpace* iColorSpace
 )
-    : mBlock( BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace ) )
-{}
+    : mBlock( nullptr )
+{
+    if( iWidth && iHeight )
+        mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace )
+}
 
 TEMPLATE
 CLASS::THasBlock( BlockType* iBlock )
