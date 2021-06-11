@@ -23,6 +23,8 @@ class ULIS_API TAbstractLayerDrawable
     : public virtual ILayer
     , public TDrawable< BlockType >
 {
+public:
+    using ILayer::ILayer;
 };
 
 ULIS_NAMESPACE_END
