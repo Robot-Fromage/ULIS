@@ -12,6 +12,66 @@
 #pragma once
 #include "Layer/Components/HasBlock.h"
 
+#define TEMPLATE template< class BlockType, class BlockAllocatorType >
+#define CLASS THasBlock< BlockType, BlockAllocatorType >
+
 ULIS_NAMESPACE_BEGIN
+TEMPLATE
+CLASS::~THasBlock() {
+    if( mBlock )
+        BlockAllocatorType::Delete( mBlock );
+}
+
+TEMPLATE
+CLASS::THasBlock(
+      uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , const FColorSpace* iColorSpace
+)
+    : mBlock( BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace ) )
+{}
+
+TEMPLATE
+CLASS::THasBlock( BlockType* iBlock )
+    : mBlock( iBlock )
+{}
+
+TEMPLATE
+BlockType*
+CLASS::Block() {
+    return  mBlock;
+}
+
+TEMPLATE
+const
+BlockType*
+CLASS::Block() const {
+    return  mBlock;
+}
+
+TEMPLATE
+void
+CLASS::Realloc(
+      uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat = eFormat::Format_RGBA8
+    , const FColorSpace* iColorSpace = nullptr
+)
+{
+    if( mBlock )
+        BlockAllocatorType::Delete( mBlock );
+    mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace );
+}
+
+TEMPLATE
+void
+CLASS::Replace( BlockType* iValue )
+{
+    if( mBlock )
+        BlockAllocatorType::Delete( mBlock );
+    mBlock = iValue;
+}
+
 ULIS_NAMESPACE_END
 

@@ -58,6 +58,7 @@ public:
         , uint16 iWidth = 0
         , uint16 iHeight = 0
         , eFormat iFormat = Format_RGBA8
+        , const FColorSpace* iColorSpace = nullptr
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f

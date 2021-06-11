@@ -29,6 +29,7 @@ CLASS::TLayerImage(
     , uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
+    , const FColorSpace* iColorSpace
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
@@ -43,8 +44,7 @@ CLASS::TLayerImage(
         , iParent
     )
     , tRasterizable()
-    , tHasBlock(
-        ( iWidth && iHeight ) ? BlockAllocatorType::New( iWidth, iHeight, iFormat ) : nullptr )
+    , tHasBlock( iWidth, iHeight, iFormat, iColorSpace )
     , IHasBlendInfo(
           iBlendMode
         , iAlphaMode
@@ -133,14 +133,14 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) {
             case tSiblingStack::StaticTypeID(): {
                 const tSiblingStack* stack = dynamic_cast< const tSiblingStack* >( layer );
                 ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
-                mBlock = BlockAllocatorType::New( stack->Width(), stack->Height(), stack->Format() );
+                Realloc( stack->Width(), stack->Height(), stack->Format(), stack->ColorSpace() );
                 break;
             }
             case tSiblingFolder::StaticTypeID(): {
                 const tSiblingFolder* folder = dynamic_cast< const tSiblingFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
                 const BlockType& ref = folder->Block();
-                mBlock = BlockAllocatorType::New( ref.Width(), ref.Height(), ref.Format() );
+                Realloc( ref.Width(), ref.Height(), ref.Format(), ref.ColorSpace() );
                 break;
             }
         }

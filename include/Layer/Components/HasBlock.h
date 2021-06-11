@@ -19,14 +19,28 @@ ULIS_NAMESPACE_BEGIN
 template< class BlockType, class BlockAllocatorType >
 class ULIS_API THasBlock
 {
-public:
+protected:
     ~THasBlock();
-    THasBlock();
+    THasBlock(
+          uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat = eFormat::Format_RGBA8
+        , const FColorSpace* iColorSpace = nullptr
+    );
     THasBlock( BlockType* iBlock );
 
 public:
-    BlockType& Block();
-    const BlockType& Block() const;
+    BlockType* Block();
+    const BlockType* Block() const;
+
+protected:
+    void Realloc(
+          uint16 iWidth
+        , uint16 iHeight
+        , eFormat iFormat = eFormat::Format_RGBA8
+        , const FColorSpace* iColorSpace = nullptr
+    );
+    void Replace( BlockType* iValue );
 
 private:
     BlockType* mBlock;
