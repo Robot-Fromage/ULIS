@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Layer/LayerTypedefs.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
