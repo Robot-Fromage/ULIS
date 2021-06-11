@@ -17,6 +17,14 @@ colors = [
     , "#3d5e40"
 ]
 
+strokes = [
+      "#403d29"
+    , "#40293e"
+    , "#2d2940"
+    , "#3d515e"
+    , "#29402b"
+]
+
 arrow_color = "#dcdcdc"
 background_color = "#282828"
 #background_color = "white"
