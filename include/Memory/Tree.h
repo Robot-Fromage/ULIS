@@ -32,7 +32,7 @@ public:
     virtual ~TNode() {
     }
 
-    TNode( tParent* iParent = nullptr )
+    TNode( const tParent* iParent = nullptr )
         : mParent( iParent )
     {}
 
@@ -51,33 +51,19 @@ public:
         return  Self();
     }
 
-    tParent* Parent() {
-        return  mParent;
-    }
-
     const tParent* Parent() const {
         return  mParent;
     }
 
-    void SetParent( tParent* iParent ) {
+    void SetParent( const tParent* iParent ) {
         mParent = iParent;
-    }
-
-    tParent* TopLevelParent() {
-        if( mParent == nullptr )
-            return  dynamic_cast< tParent* >( this );
-
-        tParent* parent = mParent;
-        while( parent->mParent )
-            parent = parent->mParent;
-        return  parent;
     }
 
     const tParent* TopLevelParent() const {
         if( mParent == nullptr )
             return  dynamic_cast< const tParent* >( this );
 
-        tParent* parent = mParent;
+        const tParent* parent = mParent;
         while( parent->mParent )
             parent = parent->mParent;
         return  parent;
@@ -101,7 +87,7 @@ private:
     }
 
 private:
-    tParent* mParent;
+    const tParent* mParent;
 };
 
 /////////////////////////////////////////////////////

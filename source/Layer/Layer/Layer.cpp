@@ -21,7 +21,7 @@ ILayer::ILayer(
     , bool iLocked
     , bool iVisible
     , const FColor& iPrettyColor
-    , TRoot< ILayer >* iParent
+    , const TRoot< ILayer >* iParent
 )
     : IHasLock( iLocked )
     , IHasName( iName )

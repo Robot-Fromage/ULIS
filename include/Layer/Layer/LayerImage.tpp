@@ -34,7 +34,7 @@ CLASS::TLayerImage(
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , bool iAlphaLocked
-    , TRoot< ILayer >* iParent
+    , const TRoot< ILayer >* iParent
 )
     : tAbstractLayerDrawable(
           iName
@@ -65,7 +65,7 @@ CLASS::TLayerImage(
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
     , bool iAlphaLocked
-    , TRoot< ILayer >* iParent
+    , const TRoot< ILayer >* iParent
 )
     : tAbstractLayerDrawable(
           iName

@@ -63,7 +63,7 @@ public:
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
         , bool iAlphaLocked = false
-        , TRoot< ILayer >* iParent = nullptr
+        , const TRoot< ILayer >* iParent = nullptr
     );
 
     TLayerImage(
@@ -76,7 +76,7 @@ public:
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
         , bool iAlphaLocked = false
-        , TRoot< ILayer >* iParent = nullptr
+        , const TRoot< ILayer >* iParent = nullptr
     );
 
     // Disable copy
