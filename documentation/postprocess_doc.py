@@ -63,11 +63,12 @@ def PostProcessSVG( iFile ):
             for it in keys:
                 if className.startswith( it ):
                     polygon.setAttribute( 'fill', colors[count] )
+                    polygon.setAttribute( 'stroke', strokes[count] )
                     break
                 count+=1
 
             try:
-                polygon.removeAttribute( 'stroke' )
+                pass#polygon.removeAttribute( 'stroke' )
             except:
                 pass
             #print( className )
