@@ -12,6 +12,6 @@
 #include "Layer/Components/HasCollapse.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasCollapse, bool, IsCollapsed, SetCollapsed )
+ULIS_DEFINE_PIC_SIMPLE( IHasCollapse, bool, IsCollapsed, SetCollapsed )
 ULIS_NAMESPACE_END
 

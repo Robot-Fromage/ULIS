@@ -14,6 +14,6 @@
 #include "Layer/Common/LayerUtils.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_DECLARE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasCollapse, bool, false, IsCollapsed, SetCollapsed )
+ULIS_DECLARE_PIC_SIMPLE( IHasCollapse, bool, false, IsCollapsed, SetCollapsed )
 ULIS_NAMESPACE_END
 

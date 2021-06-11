@@ -12,6 +12,6 @@
 #include "Layer/Components/HasVisibility.h"
 
 ULIS_NAMESPACE_BEGIN
-ULIS_DEFINE_SIMPLE_PSEUDO_COMPOSITION_CLASS_SINGLE_PROPERTY( IHasVisibility, bool, IsVisible, SetVisible )
+ULIS_DEFINE_PIC_SIMPLE( IHasVisibility, bool, IsVisible, SetVisible )
 ULIS_NAMESPACE_END
 
