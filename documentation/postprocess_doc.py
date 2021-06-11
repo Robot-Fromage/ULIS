@@ -25,6 +25,8 @@ strokes = [
     , "#29402b"
 ]
 
+default_color = "#3887c7"
+
 arrow_color = "#dcdcdc"
 background_color = "#282828"
 #background_color = "white"
@@ -60,6 +62,7 @@ def PostProcessSVG( iFile ):
                 it.setAttribute( 'fill', "white" )
 
             count = 0
+            polygon.setAttribute( 'fill', default_color )
             for it in keys:
                 if className.startswith( it ):
                     polygon.setAttribute( 'fill', colors[count] )
