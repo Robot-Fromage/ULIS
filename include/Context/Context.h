@@ -112,6 +112,7 @@ public:
     /*!
         Perform a flattened blend of the whole layer stack
     */
+    /*
     ulError
     Flatten(
           FLayerStack& iStack
@@ -135,6 +136,7 @@ public:
           FLayerText& iText
         , FEvent* iEvent = nullptr
     );
+    */
 
     /*!
         Collect metrics before a XLoadPSDFromDisk call
@@ -150,6 +152,7 @@ public:
     /*!
         Perform a load of a PSD file in a layer stack
     */
+    /*
     ulError
     XLoadPSDFromDisk(
           FLayerStack& iStack
@@ -161,7 +164,7 @@ public:
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
-
+    */
 /////////////////////////////////////////////////////
 // Gradient
     /*!

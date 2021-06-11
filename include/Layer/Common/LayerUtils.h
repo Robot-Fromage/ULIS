@@ -11,14 +11,14 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Layer/Layer/Layer.h"
-#include "Layer/AnimatedLayer/AnimatedLayer.h"
 
 ULIS_NAMESPACE_BEGIN
+/*
 ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, TRoot< ILayer >& iRoot );
 const ILayer& FindLayerByFuzzyNameInContainer( const FString& iStr, const TRoot< ILayer >& iRoot );
 IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, IAnimatedLayerRoot& iRoot );
 const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, const IAnimatedLayerRoot& iRoot );
+*/
 
 // PIC Helper macros
 // PIC stands for Pseudo-Interface-Composition [class]

@@ -17,6 +17,12 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TLayerText
 /// @brief      The TLayerText class provides a class to store text in a layer
 ///             of a layer stack for painting applications.
+template<
+      class BlockType
+    , class RasterizerType
+    , class RendererType
+    , class BlockAllocatorType
+>
 class ULIS_API TLayerText final
 {
 };

@@ -12,5 +12,19 @@
 #include "Layer/Components/HasName.h"
 
 ULIS_NAMESPACE_BEGIN
+IHasName::IHasName( const FString& iValue )
+    : mStr( iValue )
+{}
+
+const FString&
+IHasName::Name() const {
+    return  mStr;
+}
+
+void
+IHasName::SetName( const FString& iValue ) {
+    mStr = iValue;
+}
+
 ULIS_NAMESPACE_END
 

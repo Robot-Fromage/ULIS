@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      THasBlock
 /// @brief      Simple HasBlock class.
 template< class BlockType, class BlockAllocatorType >
-class ULIS_API THasBlock
+class THasBlock
 {
 protected:
     ~THasBlock();

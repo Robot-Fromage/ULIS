@@ -12,7 +12,7 @@
 #include "Layer/Components/HasPrettyColor.h"
 
 ULIS_NAMESPACE_BEGIN
-IHasPrettyColor::IHasPrettyColor( const FColor& iColor = FColor::Transparent )
+IHasPrettyColor::IHasPrettyColor( const FColor& iColor )
     : mColor( iColor )
 {}
 

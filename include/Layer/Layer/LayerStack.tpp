@@ -43,8 +43,8 @@ void
 CLASS::Reset(
       uint16 iWidth
     , uint16 iHeight
-    , eFormat iFormat = eFormat::Format_RGBA8
-    , const FColorSpace* iColorSpace = nullptr
+    , eFormat iFormat
+    , const FColorSpace* iColorSpace
 )
 {
     ReinterpretFormat( iFormat );
@@ -59,11 +59,11 @@ FEvent
 CLASS::RenderImage(
       FContext& iCtx
     , BlockType& ioBlock
-    , const FRectI& iRect = FRectI::Auto
-    , const FVec2I& iPos = FVec2I( 0 )
-    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
-    , uint32 iNumWait = 0
-    , const FEvent* iWaitList = nullptr
+    , const FRectI& iRect
+    , const FVec2I& iPos
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
 ) // override
 {
     RenderCache( iCtx );
@@ -86,4 +86,8 @@ CLASS::RenderImage(
 }
 
 ULIS_NAMESPACE_END
+
+// Template Macro Utility
+#undef TEMPLATE
+#undef CLASS
 

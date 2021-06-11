@@ -20,6 +20,7 @@
 #include <vector>
 
 ULIS_NAMESPACE_BEGIN
+/*
 ILayer&
 FindLayerByFuzzyNameInContainer( const FString& iStr, TRoot< ILayer >& iRoot ) {
     const uint64 size = iRoot.Children().Size();
@@ -84,5 +85,6 @@ FindLayerByFuzzyNameInContainer( const FString& iStr, const IAnimatedLayerRoot& 
     return  matches.size() ? *std::get< 1 >( matches[0] ) : iRoot.Self();
 }
 
+*/
 ULIS_NAMESPACE_END
 

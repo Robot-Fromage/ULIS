@@ -17,6 +17,12 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TLayerFolder
 /// @brief      The TLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
+template<
+      class BlockType
+    , class RasterizerType
+    , class RendererType
+    , class BlockAllocatorType
+>
 class ULIS_API TLayerFolder
 {
 };

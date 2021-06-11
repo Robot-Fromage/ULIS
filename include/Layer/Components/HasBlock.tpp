@@ -55,8 +55,8 @@ void
 CLASS::Realloc(
       uint16 iWidth
     , uint16 iHeight
-    , eFormat iFormat = eFormat::Format_RGBA8
-    , const FColorSpace* iColorSpace = nullptr
+    , eFormat iFormat
+    , const FColorSpace* iColorSpace
 )
 {
     if( mBlock )
@@ -74,4 +74,8 @@ CLASS::Replace( BlockType* iValue )
 }
 
 ULIS_NAMESPACE_END
+
+// Template Macro Utility
+#undef TEMPLATE
+#undef CLASS
 

@@ -20,11 +20,11 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API IHasName
 {
 public:
-    IHasName( const FString& iName );
+    IHasName( const FString& iValue );
 
 public:
     const FString& Name() const;
-    void SetName( const FString& iName );
+    void SetName( const FString& iValue );
 
 private:
     FString mStr;

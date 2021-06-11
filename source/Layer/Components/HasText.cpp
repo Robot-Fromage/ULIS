@@ -13,7 +13,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-IHasText::IHasText( const FWString& iString, const FFont& iFont, int iSize = 12, const FColor& iColor)
+IHasText::IHasText( const FWString& iString, const FFont& iFont, int iSize, const FColor& iColor)
     : mInfo( { iString, iFont, iSize, iColor } )
 {}
 

@@ -15,6 +15,9 @@
 #include "Memory/Array.h"
 
 ULIS_NAMESPACE_BEGIN
+// Exports
+template class ULIS_API TArray< IUserData* >;
+
 /////////////////////////////////////////////////////
 /// @class      IHasUserData
 /// @brief      Simple HasUserData class.
