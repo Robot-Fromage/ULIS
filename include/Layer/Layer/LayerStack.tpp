@@ -11,6 +11,79 @@
 */
 #include "Layer/Layer/LayerStack.h"
 
+// Template Macro Utility
+#define TEMPLATE template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType >
+#define CLASS TLayerStack< BlockType, RasterizerType, RendererType, BlockAllocatorType >
+
 ULIS_NAMESPACE_BEGIN
+// DTor
+TEMPLATE
+CLASS::~TLayerStack()
+{}
+
+// CTor
+TEMPLATE
+CLASS::TLayerStack(
+      uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat
+    , const FColorSpace* iColorSpace
+)
+    : TAbstractLayerDrawable< BlockType >()
+    , TRoot< ILayer >()
+    , ISearchable()
+    , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
+    , IHasFormat( iFormat )
+    , IHasColorSpace( iColorSpace )
+{}
+
+// TLayerStack Interface
+TEMPLATE
+void
+CLASS::Reset(
+      uint16 iWidth
+    , uint16 iHeight
+    , eFormat iFormat = eFormat::Format_RGBA8
+    , const FColorSpace* iColorSpace = nullptr
+)
+{
+    ReinterpretFormat( iFormat );
+    AssignColorSpace( iColorSpace );
+    ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
+    this->TRoot< ILayer >::Reset();
+}
+
+// TDrawable Interface
+TEMPLATE
+FEvent
+CLASS::RenderImage(
+      FContext& iCtx
+    , BlockType& ioBlock
+    , const FRectI& iRect = FRectI::Auto
+    , const FVec2I& iPos = FVec2I( 0 )
+    , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+    , uint32 iNumWait = 0
+    , const FEvent* iWaitList = nullptr
+) // override
+{
+    RenderCache( iCtx );
+    FEvent ev;
+    const int max = static_cast< int >( Children().Size() ) - 1;
+    bool bFirst = true;
+    for( int i = max; i >= 0; --i ) {
+        ev = Children()[i]->Self().RenderImage(
+              iCtx
+            , ioBlock
+            , iRect
+            , iPos
+            , iPolicy
+            , bFirst ? iNumWait : 0
+            , bFirst ? iWaitList : nullptr
+        );
+        bFirst = false;
+    }
+    return  ev;
+}
+
 ULIS_NAMESPACE_END
 
