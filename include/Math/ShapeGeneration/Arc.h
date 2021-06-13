@@ -16,7 +16,7 @@ ULIS_NAMESPACE_BEGIN
 
 
 static inline void GenerateArcPoints(
-      const FVec2I& iCenter
+    const FVec2I& iCenter
     , const int iRadius
     , const int iStartDegree
     , const int iEndDegree
@@ -73,337 +73,484 @@ static inline void GenerateArcPoints(
             directionToDraw[currentAngle / 45][0] = 3;
     }
 
-    //0� is on top and we turn clockwise
-    //Octant 1 ------
-    int diff = iRadius;
-
-    while(y >= x)
+    bool startPlotting = false; //We start when we find an octant not fully drawn or octants we don't draw at all
+    for (int numLoop = 0; numLoop < 2; numLoop++) //We loop twice: once for positionning ourselves at the right octant and start drawing, and the second time to draw what we didn't during the positionning
     {
-        if (diff < (2 * (iRadius - y)))
+        //0� is on top and we turn clockwise
+        //Octant 1 ------
+        x = 0;
+        y = iRadius;
+        int diff = iRadius;
+
+        if( octantsToDraw[0] != 0 )
         {
-            diff += (2 * y - 1);
-            y--;
+            while(y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
+
+                if(octantsToDraw[0] == 1 && startPlotting) 
+                {
+                    ioArcPoints.PushBack( FVec2I( iCenter.x + x, iCenter.y - y ));
+                }
+                else if(octantsToDraw[0] == 2) //complex case
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+                    if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1] && startPlotting) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
+                    else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
+                    else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
+                    //else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
+                }
+
+                if(diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                }
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
         }
 
-        if(octantsToDraw[0] == 1) 
+        if ((octantsToDraw[0] == 1 || directionToDraw[0][0]) && startPlotting)
         {
-            ioArcPoints.PushBack( FVec2I( iCenter.x + x, iCenter.y - y ));
-        }
-        else if(octantsToDraw[0] == 2) //complex case
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1]) ioArcPoints.PushBack( FVec2I( iCenter.x + x, iCenter.y - y ));
-            else if(directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) ioArcPoints.PushBack( FVec2I( iCenter.x + x, iCenter.y - y ));
-            else if(directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x + x, iCenter.y - y ));
-            else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x + x, iCenter.y - y ));
+            octantsToDraw[0] = 0;
         }
 
-        if(diff >= (2 * x))
+        if( octantsToDraw[0] != 1 )
         {
-            diff -= (2 * x + 1);
-            x++;
-        }
-        else
-        {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
-        }
-    }
-
-    octantStartingIndex = ioArcPoints.Size();
-    
-    //Octant 2 ------
-    x = 0;
-    y = iRadius;
-    diff = iRadius;
-
-    while(y >= x)
-    {
-        if (diff < (2 * (iRadius - y)))
-        {
-            diff += (2 * y - 1);
-            y--;
+            startPlotting = true;
+            if( directionToDraw[0][0] == -1 || directionToDraw[0][0] == 2 || directionToDraw[0][0] == 3 )
+            {
+                octantsToDraw[0] = 0;
+            }
         }
 
-        if(octantsToDraw[1] == 1) 
-        {
-            ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
-        }
-        else if(octantsToDraw[1] == 2)
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-            if(directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
-            else if(directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
-            else if(directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
-            else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
-        }
 
-        if(diff >= (2 * x))
+        octantStartingIndex = ioArcPoints.Size();
+
+        //Octant 2 ------
+        x = 0;
+        y = iRadius;
+        diff = iRadius;
+
+        if (octantsToDraw[1] != 0)
         {
-            diff -= (2 * x + 1);
-            x++;
-        }
-        else
-        {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
-        }
-    }
+            while(y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
 
-    octantStartingIndex = ioArcPoints.Size();
+                if(octantsToDraw[1] == 1 && startPlotting ) 
+                {
+                    ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+                }
+                else if(octantsToDraw[1] == 2)
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-    //Octant 3 ------
-    x = 0;
-    y = iRadius;
-    diff = iRadius;
+                    if(directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1] && startPlotting ) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+                    else if(directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+                    else if(directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+                    else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+                }
 
-    while(y >= x)
-    {
-        if (diff < (2 * (iRadius - y)))
-        {
-            diff += (2 * y - 1);
-            y--;
-        }
-
-        if(octantsToDraw[2] == 1) 
-        {
-            ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
-        }
-        else if(octantsToDraw[2] == 2)
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1]) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
-            else if(directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
-            else if(directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
-            else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                if(diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                }
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
         }
 
-        if(diff >= (2 * x))
+        if ((octantsToDraw[1] == 1 || directionToDraw[1][0]) && startPlotting)
         {
-            diff -= (2 * x + 1);
-            x++;
-        } 
-        else
-        {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
+            octantsToDraw[1] = 0;
         }
-    }
-
-    octantStartingIndex = ioArcPoints.Size();
-
-    //Octant 4 ------
-    x = 0;
-    y = iRadius;
-    diff = iRadius;
-
-    while(y >= x)
-    {
-        if (diff < (2 * (iRadius - y)))
-        {
-            diff += (2 * y - 1);
-            y--;
-        }
-
-        if(octantsToDraw[3] == 1)
-        {
-            ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
-        }
-        else if(octantsToDraw[3] == 2)
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
-            else if(directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
-            else if(directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
-            else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
-        }
-
-        if(diff >= (2 * x))
-        {
-            diff -= (2 * x + 1);
-            x++;
-        }
-        else
-        {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
-        }
-    }
-
-    octantStartingIndex = ioArcPoints.Size();
-
-    //Octant 5 ------
-    x = 0;
-    y = iRadius;
-    diff = iRadius;
-
-    while(y >= x)
-    {
-        if (diff < (2 * (iRadius - y)))
-        {
-            diff += (2 * y - 1);
-            y--;
-        }
-
-        if(octantsToDraw[4] == 1)
-        {
-            ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
-        }
-        else if(octantsToDraw[4] == 2)
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
-            else if(directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
-            else if(directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
-            else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
-        }
-
-        if(diff >= (2 * x))
-        {
-            diff -= (2 * x + 1);
-            x++;
-        }
-        else
-        {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
-        }
-    }
-
-    octantStartingIndex = ioArcPoints.Size();
-
-    //Octant 6 ------
-    x = 0;
-    y = iRadius;
-    diff = iRadius;
-
-    while (y >= x)
-    {
-        if (diff < (2 * (iRadius - y)))
-        {
-            diff += (2 * y - 1);
-            y--;
-        }
-
-        if (octantsToDraw[5] == 1)
-        {
-            ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
-        }
-        else if (octantsToDraw[5] == 2)
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1]) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
-            else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
-            else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
-            else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
-        }
-
-        if (diff >= (2 * x))
-        {
-            diff -= (2 * x + 1);
-            x++;
-        }
-        else
-        {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
-        }
-    }
         
-    octantStartingIndex = ioArcPoints.Size();
-
-    //Octant 7 ------
-    x = 0;
-    y = iRadius;
-    diff = iRadius;
-
-    while(y >= x)
-    {
-        if (diff < (2 * (iRadius - y)))
+        if (octantsToDraw[1] != 1)
         {
-            diff += (2 * y - 1);
-            y--;
+            startPlotting = true;
+            if (directionToDraw[1][0] == -1 || directionToDraw[1][0] == 2 || directionToDraw[1][0] == 3)
+            {
+                octantsToDraw[1] = 0;
+            }
         }
 
-        if(octantsToDraw[6] == 1) 
-        {
-            ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
-        }
-        else if(octantsToDraw[6] == 2)
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+        octantStartingIndex = ioArcPoints.Size();
 
-            if(directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
-            else if(directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
-            else if(directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
-            else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
-        }
+        //Octant 3 ------
+        x = 0;
+        y = iRadius;
+        diff = iRadius;
 
-        if(diff >= (2 * x))
+        if (octantsToDraw[2] != 0)
         {
-            diff -= (2 * x + 1);
-            x++;
-        }
-        else
-        {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
-        }
-    }
+            while(y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
 
-    octantStartingIndex = ioArcPoints.Size();
+                if(octantsToDraw[2] == 1 && startPlotting ) 
+                {
+                    ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                }
+                else if(octantsToDraw[2] == 2)
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
 
-    //Octant 8 ------
-    x = 0;
-    y = iRadius;
-    diff = iRadius;
+                    if(directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1] && startPlotting ) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                    else if(directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                    else if(directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                    else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                }
 
-    while(y >= x)
-    {
-        if (diff < (2 * (iRadius - y)))
-        {
-            diff += (2 * y - 1);
-            y--;
-        }
-
-        if(octantsToDraw[7] == 1) 
-        {
-            ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x - x, iCenter.y - y ));
-        }
-        else if(octantsToDraw[7] == 2)
-        {
-            double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
-
-            if(directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x - x, iCenter.y - y ));
-            else if(directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x - x, iCenter.y - y ));
-            else if(directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x - x, iCenter.y - y ));
-            else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x - x, iCenter.y - y ));
+                if(diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                } 
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
         }
 
-        if(diff >= (2 * x))
+        if ((octantsToDraw[2] == 1 || directionToDraw[2][0]) && startPlotting)
         {
-            diff -= (2 * x + 1);
-            x++;
+            octantsToDraw[2] = 0;
         }
-        else
+
+        if (octantsToDraw[2] != 1)
         {
-            diff += (2 * (y - x - 1));
-            y--;
-            x++;
+            startPlotting = true;
+            if (directionToDraw[2][0] == -1 || directionToDraw[2][0] == 2 || directionToDraw[2][0] == 3)
+            {
+                octantsToDraw[2] = 0;
+            }
         }
+
+        octantStartingIndex = ioArcPoints.Size();
+
+        //Octant 4 ------
+        x = 0;
+        y = iRadius;
+        diff = iRadius;
+
+        if (octantsToDraw[3] != 0)
+        {
+            while(y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
+
+                if(octantsToDraw[3] == 1 && startPlotting )
+                {
+                    ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+                }
+                else if(octantsToDraw[3] == 2)
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+                    if(directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1] && startPlotting ) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+                    else if(directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+                    else if(directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+                    else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+                }
+
+                if(diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                }
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
+        }
+
+        if ((octantsToDraw[3] == 1 || directionToDraw[3][0]) && startPlotting)
+        {
+            octantsToDraw[3] = 0;
+        }
+
+        if (octantsToDraw[3] != 1)
+        {
+            startPlotting = true;
+            if (directionToDraw[3][0] == -1 || directionToDraw[3][0] == 2 || directionToDraw[3][0] == 3)
+            {
+                octantsToDraw[3] = 0;
+            }
+        }
+
+        octantStartingIndex = ioArcPoints.Size();
+
+        //Octant 5 ------
+        x = 0;
+        y = iRadius;
+        diff = iRadius;
+
+        if (octantsToDraw[4] != 0)
+        {
+            while(y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
+
+                if(octantsToDraw[4] == 1 && startPlotting )
+                {
+                    ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+                }
+                else if(octantsToDraw[4] == 2)
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+                    if(directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1] && startPlotting ) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+                    else if(directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+                    else if(directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+                    else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+                }
+
+                if(diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                }
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
+        }
+
+        if ((octantsToDraw[4] == 1 || directionToDraw[4][0]) && startPlotting)
+        {
+            octantsToDraw[4] = 0;
+        }
+
+        if (octantsToDraw[4] != 1)
+        {
+            startPlotting = true;
+            if (directionToDraw[4][0] == -1 || directionToDraw[4][0] == 2 || directionToDraw[4][0] == 3)
+            {
+                octantsToDraw[4] = 0;
+            }
+        }
+
+        octantStartingIndex = ioArcPoints.Size();
+
+        //Octant 6 ------
+        x = 0;
+        y = iRadius;
+        diff = iRadius;
+
+
+        if (octantsToDraw[5] != 0)
+        {
+            while (y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
+
+                if (octantsToDraw[5] == 1 && startPlotting )
+                {
+                    ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
+                }
+                else if (octantsToDraw[5] == 2)
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+                    if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1] && startPlotting ) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
+                    else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
+                    else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
+                    else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
+                }
+
+                if (diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                }
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
+        }
+
+        if ((octantsToDraw[5] == 1 || directionToDraw[5][0]) && startPlotting)
+        {
+            octantsToDraw[5] = 0;
+        }
+
+        if (octantsToDraw[5] != 1)
+        {
+            startPlotting = true;
+            if (directionToDraw[5][0] == -1 || directionToDraw[5][0] == 2 || directionToDraw[5][0] == 3)
+            {
+                octantsToDraw[5] = 0;
+            }
+        }
+
+        octantStartingIndex = ioArcPoints.Size();
+
+        //Octant 7 ------
+        x = 0;
+        y = iRadius;
+        diff = iRadius;
+
+        if (octantsToDraw[6] != 0)
+        {
+            while(y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
+
+                if(octantsToDraw[6] == 1 && startPlotting ) 
+                {
+                    ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+                }
+                else if(octantsToDraw[6] == 2)
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+                    if(directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1] && startPlotting ) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+                    else if(directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+                    else if(directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+                    else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+                }
+
+                if(diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                }
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
+        }
+
+        if ((octantsToDraw[6] == 1 || directionToDraw[6][0]) && startPlotting)
+        {
+            octantsToDraw[6] = 0;
+        }
+
+        if (octantsToDraw[6] != 1)
+        {
+            startPlotting = true;
+            if (directionToDraw[6][0] == -1 || directionToDraw[6][0] == 2 || directionToDraw[6][0] == 3)
+            {
+                octantsToDraw[6] = 0;
+            }
+        }
+
+        octantStartingIndex = ioArcPoints.Size();
+
+        //Octant 8 ------
+        x = 0;
+        y = iRadius;
+        diff = iRadius;
+
+        if (octantsToDraw[7] != 0)
+        {
+            while (y >= x)
+            {
+                if (diff < (2 * (iRadius - y)))
+                {
+                    diff += (2 * y - 1);
+                    y--;
+                }
+
+                if (octantsToDraw[7] == 1 && startPlotting )
+                {
+                    ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
+                }
+                else if (octantsToDraw[7] == 2)
+                {
+                    double currentAngleOnFirstOctant = -::ULIS::FMath::RadToDeg(std::acos(double(x) / double(iRadius)) - (FMath::kPId / 2));
+
+                    if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1] && startPlotting ) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
+                    else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
+                    else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
+                    else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
+                }
+
+                if (diff >= (2 * x))
+                {
+                    diff -= (2 * x + 1);
+                    x++;
+                }
+                else
+                {
+                    diff += (2 * (y - x - 1));
+                    y--;
+                    x++;
+                }
+            }
+        }
+
+        if ((octantsToDraw[7] == 1 || directionToDraw[7][0]) && startPlotting)
+        {
+            octantsToDraw[7] = 0;
+        }
+
+        if (octantsToDraw[7] != 1)
+        {
+            startPlotting = true;
+            if (directionToDraw[7][0] == -1 || directionToDraw[7][0] == 2 || directionToDraw[7][0] == 3)
+            {
+                octantsToDraw[7] = 0;
+            }
+        }
+
+        startPlotting = true;
     }
 }
 
