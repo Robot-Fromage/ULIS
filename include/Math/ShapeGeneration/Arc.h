@@ -103,7 +103,8 @@ static inline void GenerateArcPoints(
                     if (directionToDraw[0][0] == 1 && currentAngleOnFirstOctant < directionToDraw[0][1] && startPlotting) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
                     else if (directionToDraw[0][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[0][1]) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
                     else if (directionToDraw[0][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
-                    //else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
+                    else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
+                    else if (directionToDraw[0][0] == 3 && currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.PushBack(FVec2I(iCenter.x + x, iCenter.y - y));
                 }
 
                 if(diff >= (2 * x))
@@ -120,15 +121,17 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[0] == 1 || directionToDraw[0][0]) && startPlotting)
+        //If we did draw the full octant, we don't draw it on second loop
+        if ((octantsToDraw[0] == 1 || directionToDraw[0][0] == 1 ) && startPlotting)
         {
             octantsToDraw[0] = 0;
         }
 
+        //If we did draw the part of the octant which we needed to draw, we don't draw it anymore. Except in the case directionToDraw == 3. Plus, we start the plot for the rest of the arc
         if( octantsToDraw[0] != 1 )
         {
             startPlotting = true;
-            if( directionToDraw[0][0] == -1 || directionToDraw[0][0] == 2 || directionToDraw[0][0] == 3 )
+            if( directionToDraw[0][0] == -1 || directionToDraw[0][0] == 2 )
             {
                 octantsToDraw[0] = 0;
             }
@@ -164,7 +167,8 @@ static inline void GenerateArcPoints(
                     if(directionToDraw[1][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[1][1] && startPlotting ) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
                     else if(directionToDraw[1][0] == -1 && currentAngleOnFirstOctant < directionToDraw[1][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
                     else if(directionToDraw[1][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
-                    else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+                    else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + y, iCenter.y - x ));
+                    else if (directionToDraw[1][0] == 3 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x + y, iCenter.y - x));
                 }
 
                 if(diff >= (2 * x))
@@ -181,7 +185,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[1] == 1 || directionToDraw[1][0]) && startPlotting)
+        if ((octantsToDraw[1] == 1 || directionToDraw[1][0] == 1) && startPlotting)
         {
             octantsToDraw[1] = 0;
         }
@@ -189,7 +193,7 @@ static inline void GenerateArcPoints(
         if (octantsToDraw[1] != 1)
         {
             startPlotting = true;
-            if (directionToDraw[1][0] == -1 || directionToDraw[1][0] == 2 || directionToDraw[1][0] == 3)
+            if (directionToDraw[1][0] == -1 || directionToDraw[1][0] == 2)
             {
                 octantsToDraw[1] = 0;
             }
@@ -223,7 +227,8 @@ static inline void GenerateArcPoints(
                     if(directionToDraw[2][0] == 1 && currentAngleOnFirstOctant < directionToDraw[2][1] && startPlotting ) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
                     else if(directionToDraw[2][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[2][1]) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
                     else if(directionToDraw[2][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
-                    else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                    else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.PushBack( FVec2I(iCenter.x + y, iCenter.y + x) );
+                    else if (directionToDraw[2][0] == 3 && currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.PushBack(FVec2I(iCenter.x + y, iCenter.y + x));
                 }
 
                 if(diff >= (2 * x))
@@ -240,7 +245,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[2] == 1 || directionToDraw[2][0]) && startPlotting)
+        if ((octantsToDraw[2] == 1 || directionToDraw[2][0] == 1) && startPlotting)
         {
             octantsToDraw[2] = 0;
         }
@@ -248,7 +253,7 @@ static inline void GenerateArcPoints(
         if (octantsToDraw[2] != 1)
         {
             startPlotting = true;
-            if (directionToDraw[2][0] == -1 || directionToDraw[2][0] == 2 || directionToDraw[2][0] == 3)
+            if (directionToDraw[2][0] == -1 || directionToDraw[2][0] == 2 )
             {
                 octantsToDraw[2] = 0;
             }
@@ -282,7 +287,8 @@ static inline void GenerateArcPoints(
                     if(directionToDraw[3][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[3][1] && startPlotting ) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
                     else if(directionToDraw[3][0] == -1 && currentAngleOnFirstOctant < directionToDraw[3][1]) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
                     else if(directionToDraw[3][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
-                    else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+                    else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.Insert( octantStartingIndex, FVec2I( iCenter.x + x, iCenter.y + y ));
+                    else if (directionToDraw[3][0] == 3 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x + x, iCenter.y + y));
                 }
 
                 if(diff >= (2 * x))
@@ -299,7 +305,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[3] == 1 || directionToDraw[3][0]) && startPlotting)
+        if ((octantsToDraw[3] == 1 || directionToDraw[3][0] == 1) && startPlotting)
         {
             octantsToDraw[3] = 0;
         }
@@ -307,7 +313,7 @@ static inline void GenerateArcPoints(
         if (octantsToDraw[3] != 1)
         {
             startPlotting = true;
-            if (directionToDraw[3][0] == -1 || directionToDraw[3][0] == 2 || directionToDraw[3][0] == 3)
+            if (directionToDraw[3][0] == -1 || directionToDraw[3][0] == 2)
             {
                 octantsToDraw[3] = 0;
             }
@@ -341,7 +347,8 @@ static inline void GenerateArcPoints(
                     if(directionToDraw[4][0] == 1 && currentAngleOnFirstOctant < directionToDraw[4][1] && startPlotting ) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
                     else if(directionToDraw[4][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[4][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
                     else if(directionToDraw[4][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
-                    else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+                    else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.PushBack( FVec2I( iCenter.x - x, iCenter.y + y ));
+                    else if (directionToDraw[4][0] == 3 && currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.PushBack(FVec2I(iCenter.x - x, iCenter.y + y));
                 }
 
                 if(diff >= (2 * x))
@@ -358,7 +365,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[4] == 1 || directionToDraw[4][0]) && startPlotting)
+        if ((octantsToDraw[4] == 1 || directionToDraw[4][0] == 1) && startPlotting)
         {
             octantsToDraw[4] = 0;
         }
@@ -366,7 +373,7 @@ static inline void GenerateArcPoints(
         if (octantsToDraw[4] != 1)
         {
             startPlotting = true;
-            if (directionToDraw[4][0] == -1 || directionToDraw[4][0] == 2 || directionToDraw[4][0] == 3)
+            if (directionToDraw[4][0] == -1 || directionToDraw[4][0] == 2)
             {
                 octantsToDraw[4] = 0;
             }
@@ -400,8 +407,8 @@ static inline void GenerateArcPoints(
 
                     if (directionToDraw[5][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[5][1] && startPlotting ) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
                     else if (directionToDraw[5][0] == -1 && currentAngleOnFirstOctant < directionToDraw[5][1]) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
-                    else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
-                    else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
+                    else if (directionToDraw[5][0] == 2 && 45 - currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
+                    else if (directionToDraw[5][0] == 3 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - y, iCenter.y + x));
                 }
 
                 if (diff >= (2 * x))
@@ -418,7 +425,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[5] == 1 || directionToDraw[5][0]) && startPlotting)
+        if ((octantsToDraw[5] == 1 || directionToDraw[5][0] == 1) && startPlotting)
         {
             octantsToDraw[5] = 0;
         }
@@ -426,7 +433,7 @@ static inline void GenerateArcPoints(
         if (octantsToDraw[5] != 1)
         {
             startPlotting = true;
-            if (directionToDraw[5][0] == -1 || directionToDraw[5][0] == 2 || directionToDraw[5][0] == 3)
+            if (directionToDraw[5][0] == -1 || directionToDraw[5][0] == 2 )
             {
                 octantsToDraw[5] = 0;
             }
@@ -460,7 +467,8 @@ static inline void GenerateArcPoints(
                     if(directionToDraw[6][0] == 1 && currentAngleOnFirstOctant < directionToDraw[6][1] && startPlotting ) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
                     else if(directionToDraw[6][0] == -1 && 45 - currentAngleOnFirstOctant < directionToDraw[6][1]) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
                     else if(directionToDraw[6][0] == 2 && currentAngleOnFirstOctant > (iStartDegree % 45) && currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
-                    else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iStartDegree % 45) != currentAngleOnFirstOctant > (iEndDegree % 45)) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+                    else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.PushBack( FVec2I( iCenter.x - y, iCenter.y - x ));
+                    else if (directionToDraw[6][0] == 3 && currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.PushBack(FVec2I(iCenter.x - y, iCenter.y - x));
                 }
 
                 if(diff >= (2 * x))
@@ -477,7 +485,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[6] == 1 || directionToDraw[6][0]) && startPlotting)
+        if ((octantsToDraw[6] == 1 || directionToDraw[6][0] == 1) && startPlotting)
         {
             octantsToDraw[6] = 0;
         }
@@ -485,7 +493,7 @@ static inline void GenerateArcPoints(
         if (octantsToDraw[6] != 1)
         {
             startPlotting = true;
-            if (directionToDraw[6][0] == -1 || directionToDraw[6][0] == 2 || directionToDraw[6][0] == 3)
+            if (directionToDraw[6][0] == -1 || directionToDraw[6][0] == 2)
             {
                 octantsToDraw[6] = 0;
             }
@@ -518,8 +526,8 @@ static inline void GenerateArcPoints(
 
                     if (directionToDraw[7][0] == 1 && 45 - currentAngleOnFirstOctant < directionToDraw[7][1] && startPlotting ) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
                     else if (directionToDraw[7][0] == -1 && currentAngleOnFirstOctant < directionToDraw[7][1]) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
-                    else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && 45 - currentAngleOnFirstOctant < (iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
-                    else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant < (iStartDegree % 45) != 45 - currentAngleOnFirstOctant >(iEndDegree % 45)) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
+                    else if (directionToDraw[7][0] == 2 && 45 - currentAngleOnFirstOctant < (iEndDegree % 45) && startPlotting) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
+                    else if (directionToDraw[7][0] == 3 && 45 - currentAngleOnFirstOctant > (iStartDegree % 45) && !startPlotting) ioArcPoints.Insert(octantStartingIndex, FVec2I(iCenter.x - x, iCenter.y - y));
                 }
 
                 if (diff >= (2 * x))
@@ -536,7 +544,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        if ((octantsToDraw[7] == 1 || directionToDraw[7][0]) && startPlotting)
+        if ((octantsToDraw[7] == 1 || directionToDraw[7][0] == 1) && startPlotting)
         {
             octantsToDraw[7] = 0;
         }
@@ -544,7 +552,7 @@ static inline void GenerateArcPoints(
         if (octantsToDraw[7] != 1)
         {
             startPlotting = true;
-            if (directionToDraw[7][0] == -1 || directionToDraw[7][0] == 2 || directionToDraw[7][0] == 3)
+            if (directionToDraw[7][0] == -1 || directionToDraw[7][0] == 2 )
             {
                 octantsToDraw[7] = 0;
             }
