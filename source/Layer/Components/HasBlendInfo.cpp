@@ -13,37 +13,45 @@
 
 ULIS_NAMESPACE_BEGIN
 
-IHasBlendInfo::IHasBlendInfo( eBlendMode iBlendMode, eAlphaMode iAlphaMode, ufloat iOpacity )
-    : mInfo( { iBlendMode, iAlphaMode, iOpacity } )
+IHasBlendInfo::IHasBlendInfo(
+      eBlendMode iBlendMode
+    , eAlphaMode iAlphaMode
+    , ufloat iOpacity
+)
+    : mInfo{
+          iBlendMode
+        , iAlphaMode
+        , iOpacity
+    }
 {}
 
-eBlendMode IHasBlendInfo::BlendMode() const
-{
+eBlendMode
+IHasBlendInfo::BlendMode() const {
     return mInfo.blendMode;
 }
 
-eAlphaMode IHasBlendInfo::AlphaMode() const
-{
+eAlphaMode
+IHasBlendInfo::AlphaMode() const {
     return mInfo.alphaMode;
 }
 
-ufloat IHasBlendInfo::Opacity() const
-{
+ufloat
+IHasBlendInfo::Opacity() const {
     return mInfo.opacity;
 }
 
-void IHasBlendInfo::SetBlendMode( eBlendMode iValue )
-{
+void
+IHasBlendInfo::SetBlendMode( eBlendMode iValue ) {
     mInfo.blendMode = iValue;
 }
 
-void IHasBlendInfo::SetAlphaMode( eAlphaMode iValue )
-{
+void
+IHasBlendInfo::SetAlphaMode( eAlphaMode iValue ) {
      mInfo.alphaMode = iValue;
 }
 
-void IHasBlendInfo::SetOpacity( ufloat iValue )
-{
+void
+IHasBlendInfo::SetOpacity( ufloat iValue ) {
      mInfo.opacity = iValue;
 }
 

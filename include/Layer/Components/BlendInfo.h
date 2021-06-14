@@ -15,7 +15,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FBlendInfo
-/// @brief      Simple BlendInfo class.
+/// @brief      Simple POD BlendInfo class.
 struct ULIS_API FBlendInfo
 {
     eBlendMode blendMode;

@@ -10,7 +10,12 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/Components/BlendInfo.h"
+#include <type_traits>
 
 ULIS_NAMESPACE_BEGIN
+static_assert( std::is_trivial< FBlendInfo >::value );
+static_assert( std::is_standard_layout< FBlendInfo >::value );
+static_assert( std::is_aggregate< FBlendInfo >::value );
+static_assert( std::is_pod< FBlendInfo >::value );
 ULIS_NAMESPACE_END
 

@@ -16,22 +16,30 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      IHasBlendInfo
-/// @brief      Simple Blendable class.
+/// @brief      Simple PIC Blendable class.
 struct ULIS_API IHasBlendInfo
 {
 protected:
-    IHasBlendInfo( eBlendMode iBlendMode = Blend_Normal, eAlphaMode iAlphaMode = Alpha_Normal, ufloat iOpacity = 1.f );
+    // CTor
+    IHasBlendInfo(
+          eBlendMode iBlendMode = Blend_Normal
+        , eAlphaMode iAlphaMode = Alpha_Normal
+        , ufloat iOpacity = 1.f
+    );
 
 public:
+    // Getters
     eBlendMode BlendMode() const;
     eAlphaMode AlphaMode() const;
     ufloat Opacity() const;
 
+    // Setters
     void SetBlendMode( eBlendMode iValue );
     void SetAlphaMode( eAlphaMode iValue );
     void SetOpacity( ufloat iValue );
 
 private:
+    // Data
     FBlendInfo mInfo;
 };
 
