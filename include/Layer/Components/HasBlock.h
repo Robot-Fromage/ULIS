@@ -11,13 +11,18 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
+template< class BlockType > using TOnBlockChanged = TLambdaCallback< void, const BlockType* >;
+template< class BlockType > class ULIS_API TLambdaCallback< void, const BlockType* >;
+template< class BlockType > class ULIS_API TCallbackCapable< TOnBlockChanged< BlockType > >;
 /////////////////////////////////////////////////////
 /// @class      THasBlock
 /// @brief      Simple HasBlock class.
 template< class BlockType, class BlockAllocatorType >
 class THasBlock
+    : protected TCallbackCapable< TOnBlockChanged< BlockType > >
 {
 protected:
     ~THasBlock();

@@ -33,12 +33,15 @@ CLASS::THasBlock(
 {
     if( iWidth && iHeight )
         mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace )
+    OnChanged( mBlock );
 }
 
 TEMPLATE
 CLASS::THasBlock( BlockType* iBlock )
     : mBlock( iBlock )
-{}
+{
+    OnChanged( mBlock );
+}
 
 TEMPLATE
 BlockType*
@@ -65,6 +68,7 @@ CLASS::Realloc(
     if( mBlock )
         BlockAllocatorType::Delete( mBlock );
     mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace );
+    OnChanged( mBlock );
 }
 
 TEMPLATE
@@ -74,6 +78,7 @@ CLASS::Replace( BlockType* iValue )
     if( mBlock )
         BlockAllocatorType::Delete( mBlock );
     mBlock = iValue;
+    OnChanged( mBlock );
 }
 
 ULIS_NAMESPACE_END
