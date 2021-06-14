@@ -29,6 +29,7 @@ template class ULIS_API TNode< ILayer >;
 template class ULIS_API TArray< TNode< ILayer >* >;
 template class ULIS_API TRoot< ILayer >;
 
+/*
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerCreated, void, ILayer* )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerDeleted, void, ILayer* )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerParentChanged, void, ILayer*, const TRoot< ILayer >* )
@@ -38,6 +39,7 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerPrettyColorChanged, void, ILayer*, const F
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerVisibilityChanged, void, ILayer*, bool )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerLockChanged, void, ILayer*, bool )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerUserDataChanged, void, ILayer*, const FColor& )
+*/
 
 /////////////////////////////////////////////////////
 /// @class      ILayer

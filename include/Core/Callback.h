@@ -105,10 +105,6 @@ template class ULIS_API TCallback< void, uint8* >;
 template class ULIS_API TCallback< void, const FBlock*, const FRectI*, const uint32 >;
 template class ULIS_API TLambdaCallback< void, const FRectI& >;
 
-#define ULIS_DECLARE_SIMPLE_DELEGATE( __Name__, __Ret__, ... )          \
-    typedef TLambdaCallback< __Ret__, __VA_ARGS__ > __Name__;           \
-    template class ULIS_API TLambdaCallback< __Ret__, __VA_ARGS__ >;
-
 #ifdef ULIS_FEATURE_GPU_ENABLED
 typedef TCallback< void, const FTexture* /* iTexture */, const FRectI* /* iRects */, const uint32 /* iNumRects */ > FOnInvalidTexture;
 template class ULIS_API TCallback< void, const FTexture*, const FRectI*, const uint32 >;
