@@ -69,12 +69,14 @@ public:
         return  HasUserData( TUserData::StaticTypeID() );
     }
 
+    /*
     template< class TUserData >
     TUserData*
     GetUserData()
     {
         return  dynamic_cast< TUserData* >( GetUserData( TUserData::StaticTypeID() ) );
     }
+    */
 
     template< class TUserData >
     const TUserData*
