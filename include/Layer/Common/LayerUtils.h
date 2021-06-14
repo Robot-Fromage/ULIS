@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
 /*
@@ -25,10 +26,18 @@ const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, cons
 // Example Usage:
 // ULIS_DECLARE_PIC_SIMPLE( IHasLock, bool, false, IsLocked, SetLocked ) // ( Header.h )
 // ULIS_DEFINE_PIC_SIMPLE( IHasLock, bool, IsLocked, SetLocked ) // ( Source.cpp )
+
+
 #define ULIS_DECLARE_PIC_SIMPLE( __Class__, __Type__, __Default__, __Getter__, __Setter__ ) \
-    class ULIS_API __Class__ {                                                              \
+    ULIS_DECLARE_SIMPLE_DELEGATE( FOn_ ## __Type__ ## _Changed, void, __Type__ )            \
+    class ULIS_API __Class__                                                                \
+        : protected TCallbackCapable< FOn_ ## __Type__ ## _Changed >                        \
+    {                                                                                       \
         protected:                                                                          \
-            __Class__ ( __Type__ i = __Default__ );                                         \
+            __Class__ (                                                                     \
+                  __Type__ i = __Default__                                                  \
+                , const FOn_ ## __Type__ ## _Changed & d = FOn_ ## __Type__ ## _Changed ()  \
+            );                                                                              \
         public:                                                                             \
             __Type__ __Getter__ () const;                                                   \
             void __Setter__ ( __Type__ i );                                                 \
@@ -36,10 +45,15 @@ const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, cons
             __Type__ m;                                                                     \
     };
 
-#define ULIS_DEFINE_PIC_SIMPLE( __Class__, __Type__, __Getter__, __Setter__ )   \
-    __Class__ :: __Class__ ( __Type__ i ) : m( i ) {}                           \
-    __Type__ __Class__ :: __Getter__ () const { return  m; }                    \
-    void __Class__ :: __Setter__ ( __Type__ i ) { m = i; }
+#define ULIS_DEFINE_PIC_SIMPLE( __Class__, __Type__, __Getter__, __Setter__ )       \
+    __Class__ :: __Class__ (                                                        \
+          __Type__ i                                                                \
+        , const FOn_ ## __Type__ ## _Changed & d                                    \
+    )                                                                               \
+        : TCallbackCapable< FOn_ ## __Type__ ## _Changed >( d )                     \
+        , m( i ) {}                                                                 \
+    __Type__ __Class__ :: __Getter__ () const { return  m; }                        \
+    void __Class__ :: __Setter__ ( __Type__ i ) { m = i; OnChanged( m ); }
 
 ULIS_NAMESPACE_END
 
