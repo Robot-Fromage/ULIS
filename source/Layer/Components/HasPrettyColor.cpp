@@ -12,9 +12,15 @@
 #include "Layer/Components/HasPrettyColor.h"
 
 ULIS_NAMESPACE_BEGIN
-IHasPrettyColor::IHasPrettyColor( const FColor& iColor )
-    : mColor( iColor )
-{}
+IHasPrettyColor::IHasPrettyColor(
+      const FColor& iColor
+    , const FOnColorChanged& iDelegate
+)
+    : TCallbackCapable< FOnColorChanged >( iDelegate )
+    , mColor( iColor )
+{
+    OnChanged( mColor );
+}
 
 const FColor&
 IHasPrettyColor::PrettyColor() const {
@@ -27,6 +33,7 @@ IHasPrettyColor::SetPrettyColor( const FColor& iValue ) {
     // Ensure conversion to local mPrettyColor format,
     // supposed to be always RGBA8
     FColor::ConvertFormat( iValue, mColor );
+    OnChanged( mColor );
 }
 
 ULIS_NAMESPACE_END

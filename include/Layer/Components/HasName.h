@@ -12,15 +12,21 @@
 #pragma once
 #include "Core/Core.h"
 #include "String/String.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnNameChanged, void, const FString& )
 /////////////////////////////////////////////////////
 /// @class      IHasName
 /// @brief      Simple HasName class.
 class ULIS_API IHasName
+    : protected TCallbackCapable< FOnNameChanged >
 {
 public:
-    IHasName( const FString& iValue );
+    IHasName(
+          const FString& iValue
+        , const FOnNameChanged& iDelegate = FOnNameChanged()
+    );
 
 public:
     const FString& Name() const;

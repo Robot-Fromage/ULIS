@@ -12,15 +12,21 @@
 #pragma once
 #include "Core/Core.h"
 #include "Image/Color.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnColorChanged, void, const FColor& )
 /////////////////////////////////////////////////////
 /// @class      IHasPrettyColor
 /// @brief      Simple HasPrettyColor class.
 class ULIS_API IHasPrettyColor
+    : protected TCallbackCapable< FOnColorChanged >
 {
 protected:
-    IHasPrettyColor( const FColor& iColor = FColor::Transparent );
+    IHasPrettyColor(
+          const FColor& iColor = FColor::Transparent
+        , const FOnColorChanged& iDelegate = FOnColorChanged()
+    );
 
 public:
     const FColor& PrettyColor() const;

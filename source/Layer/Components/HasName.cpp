@@ -12,9 +12,15 @@
 #include "Layer/Components/HasName.h"
 
 ULIS_NAMESPACE_BEGIN
-IHasName::IHasName( const FString& iValue )
-    : mStr( iValue )
-{}
+IHasName::IHasName(
+      const FString& iValue
+    , const FOnNameChanged& iDelegate
+)
+    : TCallbackCapable< FOnNameChanged >( iDelegate )
+    , mStr( iValue )
+{
+    OnChanged( mStr );
+}
 
 const FString&
 IHasName::Name() const {
@@ -24,6 +30,7 @@ IHasName::Name() const {
 void
 IHasName::SetName( const FString& iValue ) {
     mStr = iValue;
+    OnChanged( mStr );
 }
 
 ULIS_NAMESPACE_END
