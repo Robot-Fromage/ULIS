@@ -41,11 +41,13 @@ public:
     ~TLayerStack() override;
 
     // CTor
+    template< typename ... Args >
     TLayerStack(
           uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
+        , Args ... args
     );
 
     // Disable copy

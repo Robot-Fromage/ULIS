@@ -23,11 +23,13 @@ CLASS::~TLayerStack()
 
 // CTor
 TEMPLATE
+template< typename ... Args >
 CLASS::TLayerStack(
       uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , Args ... args
 )
     : TAbstractLayerDrawable< BlockType >()
     , TRoot< ILayer >()
@@ -35,6 +37,7 @@ CLASS::TLayerStack(
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
+    , SuperStackExtra( args ... )
 {}
 
 // TLayerStack Interface
