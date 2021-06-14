@@ -16,23 +16,34 @@ IHasUserData::~IHasUserData() {
     ResetUserData();
 }
 
-IHasUserData::IHasUserData()
-    : mUserData()
+IHasUserData::IHasUserData(
+      const FOnUserDataAdded& iDelegateAdd
+    , const FOnUserDataChanged& iDelegateChanged
+    , const FOnUserDataRemoved& iDelegateRemoved
+)
+    : TCallbackCapable< FOnUserDataAdded, 0 >( iDelegateAdd )
+    , TCallbackCapable< FOnUserDataChanged, 1 >( iDelegateChanged )
+    , TCallbackCapable< FOnUserDataRemoved, 2 >( iDelegateRemoved )
+    , mUserData()
 {}
 
 void
 IHasUserData::ResetUserData() {
     const uint64 size = mUserData.Size();
-    for( uint64 i = 0; i < size; ++i )
+    for( uint64 i = 0; i < size; ++i ) {
+        TCallbackCapable< FOnUserDataRemoved, 2 >::OnChanged( mUserData[i] );
         delete  mUserData[i];
+    }
     mUserData.Clear();
 }
 
+/*
 TArray< IUserData* >&
 IHasUserData::GetUserDataArray()
 {
     return  mUserData;
 }
+*/
 
 const TArray< IUserData* >&
 IHasUserData::GetUserDataArray() const
@@ -47,13 +58,16 @@ IHasUserData::AddOrSetUserData( IUserData* iData )
     const uint64 size = mUserData.Size();
     for( uint64 i = 0; i < size; ++i ) {
         if( id == mUserData[i]->TypeID() ) {
+            TCallbackCapable< FOnUserDataRemoved, 2 >::OnChanged( mUserData[i] );
             delete mUserData[i];
             mUserData[i] = iData;
+            TCallbackCapable< FOnUserDataChanged, 1 >::OnChanged( mUserData[i] );
             return;
         }
     }
 
     mUserData.PushBack( iData );
+    TCallbackCapable< FOnUserDataAdded, 0 >::OnChanged( iData );
 }
 
 void
@@ -61,6 +75,7 @@ IHasUserData::RemoveUserData( uint32 iTypeID )
 {
     IUserData* userData = GetUserData( iTypeID );
     if( userData ) {
+        TCallbackCapable< FOnUserDataRemoved, 2 >::OnChanged( userData );
         mUserData.Erase( userData );
         delete  userData;
     }
@@ -72,6 +87,7 @@ IHasUserData::UserDataExists( uint32 iTypeID ) const
     return  static_cast< bool >( GetUserData( iTypeID ) );
 }
 
+/*
 IUserData*
 IHasUserData::GetUserData( uint32 iTypeID )
 {
@@ -81,6 +97,7 @@ IHasUserData::GetUserData( uint32 iTypeID )
             return  mUserData[i];
     return  nullptr;
 }
+*/
 
 const IUserData*
 IHasUserData::GetUserData( uint32 iTypeID ) const

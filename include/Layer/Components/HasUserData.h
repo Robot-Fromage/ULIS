@@ -13,22 +13,32 @@
 #include "Core/Core.h"
 #include "Layer/Components/UserData.h"
 #include "Memory/Array.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
 // Exports
 template class ULIS_API TArray< IUserData* >;
-
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnUserDataAdded, void, const IUserData* )
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnUserDataChanged, void, const IUserData* )
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnUserDataRemoved, void, const IUserData* )
 /////////////////////////////////////////////////////
 /// @class      IHasUserData
 /// @brief      Simple HasUserData class.
 class ULIS_API IHasUserData
+    : private TCallbackCapable< FOnUserDataAdded, 0 >
+    , private TCallbackCapable< FOnUserDataChanged, 1 >
+    , private TCallbackCapable< FOnUserDataRemoved, 2 >
 {
 protected:
     // DTor
     ~IHasUserData();
 
     // CTor
-    IHasUserData();
+    IHasUserData(
+          const FOnUserDataAdded& iDelegateAdd = FOnUserDataAdded()
+        , const FOnUserDataChanged& iDelegateChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iDelegateRemoved = FOnUserDataRemoved()
+    );
 
     // Disable copy
     IHasUserData( const IHasUserData& ) = delete;
@@ -37,12 +47,12 @@ protected:
 public:
     // IHasUserData API
     void ResetUserData();
-    TArray< IUserData* >& GetUserDataArray();
+    //TArray< IUserData* >& GetUserDataArray();
     const TArray< IUserData* >& GetUserDataArray() const;
     void AddOrSetUserData( IUserData* iData );
     void RemoveUserData( uint32 iTypeID );
     bool UserDataExists( uint32 iTypeID ) const;
-    IUserData* GetUserData( uint32 iTypeID );
+    //IUserData* GetUserData( uint32 iTypeID );
     const IUserData* GetUserData( uint32 iTypeID ) const;
 
     // IHasUserData Template API

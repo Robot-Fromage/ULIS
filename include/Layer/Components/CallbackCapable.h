@@ -18,7 +18,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TCallbackCapable
 /// @brief      The TCallbackCapable class provides a base abstract interface
 ///             enable callback capability on PIC classes.
-template< class DelegateType >
+template< class DelegateType, int = 0 >
 class TCallbackCapable
 {
 protected:
