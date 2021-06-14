@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Core/Core.h"
-#include "Core/AXI.h"
+#include "System/AXI.h"
 
 /////////////////////////////////////////////////////
 // Macros detect def version

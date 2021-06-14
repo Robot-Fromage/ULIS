@@ -10,8 +10,6 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-// Core
-#include "Core/AXI.h"
 // Context
 #include "Context/Context.h"
 // Image
@@ -51,6 +49,7 @@
 #include "String/String.h"
 #include "String/WString.h"
 // System
+#include "System/AXI.h"
 #include "System/Device.h"
 #include "System/FilePathRegistry.h"
 #include "System/ThreadPool.h"
