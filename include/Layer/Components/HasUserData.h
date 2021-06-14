@@ -52,7 +52,6 @@ public:
     void AddOrSetUserData( IUserData* iData );
     void RemoveUserData( uint32 iTypeID );
     bool UserDataExists( uint32 iTypeID ) const;
-    //IUserData* GetUserData( uint32 iTypeID );
     const IUserData* GetUserData( uint32 iTypeID ) const;
 
     // IHasUserData Template API
@@ -85,6 +84,8 @@ public:
     }
 
 private:
+    IUserData* GetUserData( uint32 iTypeID );
+
     // Private Data Members
     TArray< IUserData* > mUserData;
 };

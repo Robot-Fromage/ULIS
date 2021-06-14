@@ -87,7 +87,6 @@ IHasUserData::UserDataExists( uint32 iTypeID ) const
     return  static_cast< bool >( GetUserData( iTypeID ) );
 }
 
-/*
 IUserData*
 IHasUserData::GetUserData( uint32 iTypeID )
 {
@@ -97,7 +96,6 @@ IHasUserData::GetUserData( uint32 iTypeID )
             return  mUserData[i];
     return  nullptr;
 }
-*/
 
 const IUserData*
 IHasUserData::GetUserData( uint32 iTypeID ) const

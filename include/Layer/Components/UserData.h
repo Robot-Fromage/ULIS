@@ -24,5 +24,31 @@ public:
     virtual ~IUserData() = 0;
 };
 
+/////////////////////////////////////////////////////
+/// @class      FTextUserData
+/// @brief      Simple Test UserData class.
+class ULIS_API FTextUserData
+    : public IUserData
+{
+public:
+    virtual ~FTextUserData() {}
+
+public:
+    // FTextUserData Interface
+    const FString& Text() const {
+        return  mData;
+    }
+
+    void SetText( const FString& iValue ) {
+        mData = iValue;
+    }
+
+    // ITypeIdentifiable Interface
+    ULIS_OVERRIDE_TYPEID_INTERFACE( "Text_UserData" ); // Should be unique amongst other UserData types !
+
+private:
+    FString mData;
+};
+
 ULIS_NAMESPACE_END
 
