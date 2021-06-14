@@ -13,9 +13,23 @@
 
 ULIS_NAMESPACE_BEGIN
 
-IHasText::IHasText( const FWString& iString, const FFont& iFont, int iSize, const FColor& iColor )
-    : mInfo( { iString, iFont, iSize, iColor } )
-{}
+IHasText::IHasText(
+      const FWString& iString
+    , const FFont& iFont
+    , int iSize
+    , const FColor& iColor
+    , const FOnTextInfoChanged& iDelegate
+)
+    : TCallbackCapable< FOnTextInfoChanged >( iDelegate )
+    , mInfo{
+          iString
+        , iFont
+        , iSize
+        , iColor
+    }
+{
+    OnChanged( mInfo );
+}
 
 FWString IHasText::Text() const
 {
@@ -40,21 +54,25 @@ FColor IHasText::TextColor() const
 void IHasText::SetText( const FWString& iValue )
 {
     mInfo.string = iValue;
+    OnChanged( mInfo );
 }
 
 void IHasText::SetFont( const FFont& iValue )
 {
     mInfo.font = iValue;
+    OnChanged( mInfo );
 }
 
 void IHasText::SetFontSize(  int iValue )
 {
     mInfo.size = iValue;
+    OnChanged( mInfo );
 }
 
 void IHasText::SetTextColor( const FColor& iValue )
 {
     mInfo.color = iValue;
+    OnChanged( mInfo );
 }
 
 ULIS_NAMESPACE_END

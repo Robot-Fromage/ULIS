@@ -12,15 +12,24 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Components/TextInfo.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnTextInfoChanged, void, const FTextInfo& )
 /////////////////////////////////////////////////////
 /// @class      IHasText
 /// @brief      Simple HasText class.
 struct ULIS_API IHasText
+    : protected TCallbackCapable< FOnTextInfoChanged >
 {
 protected:
-    IHasText( const FWString& iString = L"hello world", const FFont& iFont = FFont::DefaultFont, int iSize = 12, const FColor& iColor = FColor::Black );
+    IHasText(
+          const FWString& iString = L"hello world"
+        , const FFont& iFont = FFont::DefaultFont
+        , int iSize = 12
+        , const FColor& iColor = FColor::Black
+        , const FOnTextInfoChanged& iDelegate = FOnTextInfoChanged()
+    );
 
 public:
     FWString Text() const;
