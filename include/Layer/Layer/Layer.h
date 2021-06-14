@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Memory/Tree.h"
 #include "Core/Callback.h"
 #include "Layer/Components/HasLock.h"
 #include "Layer/Components/HasName.h"
@@ -18,7 +19,6 @@
 #include "Layer/Components/HasUserData.h"
 #include "Layer/Components/HasVisibility.h"
 #include "Layer/Components/TypeIdentifiable.h"
-#include "Memory/Tree.h"
 
 ULIS_NAMESPACE_BEGIN
 // Forward Declarations

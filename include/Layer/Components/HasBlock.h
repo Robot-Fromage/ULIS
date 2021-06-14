@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Layer/Components/CallbackCapable.h"
+#include "Core/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
 template< class BlockType > using TOnBlockChanged = TLambdaCallback< void, const BlockType* >;
@@ -31,8 +31,13 @@ protected:
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
+        , const TOnBlockChanged< BlockType >& iDelegate = TOnBlockChanged< BlockType >()
     );
-    THasBlock( BlockType* iBlock );
+
+    THasBlock(
+          BlockType* iBlock
+        , const TOnBlockChanged< BlockType >& iDelegate = TOnBlockChanged< BlockType >()
+    );
 
 public:
     BlockType* Block();

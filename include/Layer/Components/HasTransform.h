@@ -12,7 +12,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Components/TransformInfo.h"
-#include "Layer/Components/CallbackCapable.h"
+#include "Core/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnTransformInfoChanged, void, const FTransformInfo& )

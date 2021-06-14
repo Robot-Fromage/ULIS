@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Layer/Components/CallbackCapable.h"
+#include "Core/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
 /*

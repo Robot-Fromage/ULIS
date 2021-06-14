@@ -28,8 +28,10 @@ CLASS::THasBlock(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , const TOnBlockChanged< BlockType >& iDelegate
 )
-    : mBlock( nullptr )
+    : TCallbackCapable< TOnBlockChanged< BlockType > >( iDelegate )
+    , mBlock( nullptr )
 {
     if( iWidth && iHeight )
         mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace )
@@ -37,8 +39,12 @@ CLASS::THasBlock(
 }
 
 TEMPLATE
-CLASS::THasBlock( BlockType* iBlock )
-    : mBlock( iBlock )
+CLASS::THasBlock(
+      BlockType* iBlock
+    , const TOnBlockChanged< BlockType >& iDelegate
+)
+    : TCallbackCapable< TOnBlockChanged< BlockType > >( iDelegate )
+    , mBlock( iBlock )
 {
     OnChanged( mBlock );
 }

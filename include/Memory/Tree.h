@@ -11,20 +11,36 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Core/CallbackCapable.h"
 #include "Memory/Array.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// Forward declaration
 template< class Type >
 class TRoot;
+
+template< class Type >
+class TNode;
+
+template< class Type > using TOnNodeAdded = TLambdaCallback< void, const TRoot< Type >& /* parent */, const TNode< Type >& /* child */ >;
+template< class Type > class ULIS_API TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& >;
+template< class Type > class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& > >;
+
+template< class Type > using TOnNodeRemoved = TLambdaCallback< void, const TRoot< Type >& /* parent */, const TNode< Type >& /* child */ >;
+template< class Type > class ULIS_API TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& >;
+template< class Type > class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& > >;
+
+template< class Type > using TOnParentChanged = TLambdaCallback< void, const TNode< Type >& /* child */, const TRoot< Type >& /* parent */ >;
+template< class Type > class ULIS_API TLambdaCallback< void, const TNode< Type >&, const TRoot< Type >& >;
+template< class Type > class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< Type >&, const TRoot< Type >& > >;
 
 /////////////////////////////////////////////////////
 /// @class      TNode
 /// @brief      Basic node
 template< class Type >
-class ULIS_API TNode {
+class ULIS_API TNode
+    : private TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >
+{
     typedef TRoot< Type > tParent;
     friend class TRoot< Type >;
 
@@ -32,9 +48,15 @@ public:
     virtual ~TNode() {
     }
 
-    TNode( const tParent* iParent = nullptr )
-        : mParent( iParent )
-    {}
+    TNode(
+          const tParent* iParent = nullptr
+        , const TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >& iDelegate = TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >()
+    )
+        : TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >( iDelegate )
+        , mParent( iParent )
+    {
+        TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >::OnChanged( this, mParent );
+    }
 
     Type& Self() {
         //return  *reinterpret_cast< Type* >( __GetDerivedPtr__() ); // No RTTI
@@ -57,6 +79,7 @@ public:
 
     void SetParent( const tParent* iParent ) {
         mParent = iParent;
+        TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >::OnChanged( this, mParent );
     }
 
     const tParent* TopLevelParent() const {
