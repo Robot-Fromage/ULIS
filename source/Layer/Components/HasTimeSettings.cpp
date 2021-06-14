@@ -13,8 +13,20 @@
 
 ULIS_NAMESPACE_BEGIN
 
-IHasTimeSettings::IHasTimeSettings( uint16 iFps, int64 iBeginFrame, int64 iEndFrame, int64 iCurrentFrame )
-    :mInfo( { iFps, iBeginFrame, iEndFrame, iCurrentFrame } )
+IHasTimeSettings::IHasTimeSettings(
+      uint16 iFps
+    , int64 iBeginFrame
+    , int64 iEndFrame
+    , int64 iCurrentFrame
+    , const FOnTimeSettingsChanged& iDelegate
+)
+    : TCallbackCapable< FOnTimeSettingsChanged >( iDelegate )
+    , mInfo{
+          iFps
+        , iBeginFrame
+        , iEndFrame
+        , iCurrentFrame
+    }
 {}
 
 uint16 IHasTimeSettings::Fps()

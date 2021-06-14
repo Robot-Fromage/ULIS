@@ -12,15 +12,24 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Components/TimeSettings.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnTimeSettingsChanged, void, const FTimeSettings& )
 /////////////////////////////////////////////////////
 /// @class      IHasTimeSettings
 /// @brief      Simple HasTimeSettings class.
 class ULIS_API IHasTimeSettings
+    : private TCallbackCapable< FOnTimeSettingsChanged >
 {
 protected:
-    IHasTimeSettings( uint16 iFps = 24, int64 iBeginFrame = 0, int64 iEndFrame = 0, int64 iCurrentFrame = 0 );
+    IHasTimeSettings(
+          uint16 iFps = 24
+        , int64 iBeginFrame = 0
+        , int64 iEndFrame = 0
+        , int64 iCurrentFrame = 0
+        , const FOnTimeSettingsChanged& iDelegate = FOnTimeSettingsChanged()
+    );
 
 public:
     uint16 Fps();

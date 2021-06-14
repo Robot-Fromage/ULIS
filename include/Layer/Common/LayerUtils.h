@@ -31,7 +31,7 @@ const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, cons
 #define ULIS_DECLARE_PIC_SIMPLE( __Class__, __Type__, __Default__, __Getter__, __Setter__ ) \
     ULIS_DECLARE_SIMPLE_DELEGATE( FOn_ ## __Type__ ## _Changed, void, __Type__ )            \
     class ULIS_API __Class__                                                                \
-        : protected TCallbackCapable< FOn_ ## __Type__ ## _Changed >                        \
+        : private TCallbackCapable< FOn_ ## __Type__ ## _Changed >                          \
     {                                                                                       \
         protected:                                                                          \
             __Class__ (                                                                     \

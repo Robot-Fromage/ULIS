@@ -21,8 +21,8 @@ ULIS_NAMESPACE_BEGIN
 /// @brief      Simple CachedTransformInfo class.
 struct ULIS_API FTransformInfo
 {
-    FVec2F translation;
     FVec2F pivot;
+    FVec2F translation;
     float rotation;
     FVec2F scale;
 };

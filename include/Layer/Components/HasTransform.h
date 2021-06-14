@@ -12,76 +12,133 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Components/TransformInfo.h"
+#include "Layer/Components/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
+ULIS_DECLARE_SIMPLE_DELEGATE( FOnTransformInfoChanged, void, const FTransformInfo& )
 /////////////////////////////////////////////////////
 /// @class      IHasCachedTransform
 /// @brief      Simple HasCachedTransform class.
 class ULIS_API IHasTransform
+    : private TCallbackCapable< FOnTransformInfoChanged >
 {
 protected:
-//    IHasTransform( const FMat3F& iMatrix = FMat3F() );
+    IHasTransform(
+          const FVec2F& iPivot = FVec2F( 0.f )
+        , const FVec2F& iTranslation = FVec2F( 0.f )
+        , ufloat iRotation = 0.f
+        , const FVec2F& iScale = FVec2F( 1.f )
+        , const FOnTransformInfoChanged& iDelegate = FOnTransformInfoChanged()
+    );
 
 public:
-    // TODO: Check, how do we chose to manipulate it ?
-    // Obtain reference to matrix and manipulate it
-    // Make APIs like Rotate() Translate() SetTranslation(), etc...
-    // Is it gonna be easy to make this an AnimatedProperty in a 2D timeline ?
+    // Pivot setter
+    void ResetPivot();
+    void SetPivot( const FVec2F& iValues );
+    void SetPivot( float iX, float iY );
+    void SetPivotX( float iValue );
+    void SetPivotY( float iValue );
 
-    // Getters
-    FVec2F Pivot() const;
+    void MovePivot( const FVec2F& iDelta );
+    void MovePivot( float iDeltaX, float iDeltaY );
+    void MovePivotX( float iDelta );
+    void MovePivotY( float iDelta );
+    void MovePivotRight( float iDelta );
+    void MovePivotDown( float iDelta );
+
+    // Translation setter
+    void ResetTranslation();
+    void SetTranslation( const FVec2F& iValues );
+    void SetTranslation( float iX, float iY );
+    void SetTranslationX( float iValue );
+    void SetTranslationY( float iValue );
+
+    void Translate( const FVec2F& iDelta );
+    void Translate( float iDeltaX, float iDeltaY );
+    void TranslateX( float iDelta );
+    void TranslateY( float iDelta );
+    void TranslateZ( float iDelta );
+    void Move( const FVec2F& iDelta );
+    void Move( float iDeltaRight, float iDeltaDown );
+    void MoveRight( float iDelta );
+    void MoveDown( float iDelta );
+
+    // Rotation setter
+    void ResetRotation();
+    void SetRotation( float iAngleRad );
+    void Rotate( float iAngleRad );
+
+    // Scale setter
+    void ResetScale();
+    void SetScale( const FVec2F& iValues );
+    void SetScale( float iX, float iY );
+    void SetScaleuniform( float iValue );
+    void SetScaleX( float iValue );
+    void SetScaleY( float iValue );
+
+    void Stretch( const FVec2F& iValues );
+    void Stretch( float iX, float iY );
+    void StretchUniform( float iValue );
+    void StretchX( float iValue );
+    void StretchY( float iValue );
+
+    void DeltaScale( const FVec2F& iValues );
+    void DeltaScale( float iX, float iY );
+    void DeltaScaleUniform( float iValue );
+    void DeltaScaleX( float iValue );
+    void DeltaScaleY( float iValue );
+
+public:
+    // Pivot Getter
+    const FVec2F& Pivot() const;
     float PivotX() const;
     float PivotY() const;
 
-    FVec2F Translation() const;
+    // Translation Getter
+    const FVec2F& Translation() const;
     float TranslationX() const;
     float TranslationY() const;
 
+    // Rotation Getter
     float Rotation() const;
 
-    FVec2F Scale() const;
+    // Scale Getter
+    const FVec2F& Scale() const;
     float ScaleX() const;
     float ScaleY() const;
 
-    // Setters
-    void SetPivot( float iX, float iY );
-    void SetPivotX( float iX );
-    void SetPivotY( float iY );
+public:
+    // Advanced Positioning
+    void TargetLocal( const FVec2F& iTarget );  // From local
+    void Target( const FVec2F& iTarget );       // From external
 
-    void MovePivot( float iDeltaX, float iDeltaY );
-    void MovePivotX( float iDeltaX );
-    void MovePivotY( float iDeltaY );
+public:
+    // Frame of ref API
+    FVec2F Right() const;   // Intrinsic expressed in external basis
+    FVec2F Down() const;    // Intrinsic expressed in external basis
+    FVec2F IntrinsicXAxis() const;  // Same as X( 1, 0, 0 ), expressed in local basis
+    FVec2F IntrinsicYAxis() const;  // Same as Y( 0, 1, 0 ), expressed in local basis
+    FVec2F ExtrinsicXAxis() const;  // Same as Right, expressed in local basis
+    FVec2F ExtrinsicYAxis() const;  // Same as Down, expressed in local basis
 
-    void Move( float iDeltaX, float iDeltaY );
-    void MoveX( float iDeltaX );
-    void MoveY( float iDeltaY );
+public:
+    // Conversion API
+    FVec3F ToLocal( const  FVec3F& iHPoint ) const;         // from external to local
+    FVec3F FromLocal( const  FVec3F& iHPoint ) const;       // from local to external
+    FVec2F PointToLocal( const FVec2F& iPoint ) const;      // from external to local
+    FVec2F PointFromLocal( const FVec2F& iPoint ) const;    // from local to external
+    FVec2F VecToLocal( const FVec2F& iVec ) const;          // from external to local
+    FVec2F VecFromLocal( const FVec2F& iVec ) const;        // from local to external
 
-    void SetTranslation( float iX, float iY );
-    void SetTranslationX( float iX );
-    void SetTranslationY( float iY );
+public:
+    // Intermediate Matrix API
+    FMat3F PivotMatrix() const;
+    FMat3F TranslationMatrix() const;
+    FMat3F ScaleMatrix() const;
+    FMat3F RotationMatrix() const;
 
-    void SetScale( float iX, float iY );
-    void SetScaleX( float iX );
-    void SetScaleY( float iY );
-    void SetScaleUniform( float iValue );
-
-    void DeltaScale( float iDeltaX, float iDeltaY );
-    void DeltaScaleX( float iDeltaX );
-    void DeltaScaleY( float iDeltaY );
-    void DeltaScaleUniform( float iDelta );
-
-    void SetStretch( float iX, float iY );
-    void SetStretchX( float iX );
-    void SetStretchY( float iY );
-    void StretchUniform( float iValue );
-
-    void SetRotation( float iValue );
-
-    void ResetPivot();
-    void ResetTranslation();
-    void ResetScale();
-    void ResetStretch();
-    void ResetRotation();
+    FMat3F Matrix() const;
+    FMat3F InverseMatrix() const;
 
 private:
     FTransformInfo mInfo;

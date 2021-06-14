@@ -22,7 +22,7 @@ template< class BlockType > class ULIS_API TCallbackCapable< TOnBlockChanged< Bl
 /// @brief      Simple HasBlock class.
 template< class BlockType, class BlockAllocatorType >
 class THasBlock
-    : protected TCallbackCapable< TOnBlockChanged< BlockType > >
+    : private TCallbackCapable< TOnBlockChanged< BlockType > >
 {
 protected:
     ~THasBlock();

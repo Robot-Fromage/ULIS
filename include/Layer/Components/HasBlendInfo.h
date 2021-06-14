@@ -20,7 +20,7 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnBlendInfoChanged, void, const FBlendInfo& )
 /// @class      IHasBlendInfo
 /// @brief      Simple PIC Blendable class.
 struct ULIS_API IHasBlendInfo
-    : protected TCallbackCapable< FOnBlendInfoChanged >
+    : private TCallbackCapable< FOnBlendInfoChanged >
 {
 protected:
     // CTor
