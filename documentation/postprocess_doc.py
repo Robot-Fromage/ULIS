@@ -1,12 +1,16 @@
 import os
 from xml.dom import minidom
 
-keys = [
+keys_begin = [
       "IHas"
     , "I"
     , "TAbstract"
     , "T"
     , "F"
+]
+
+keys_end = [
+      "able"
 ]
 
 colors = [
@@ -63,7 +67,7 @@ def PostProcessSVG( iFile ):
 
             count = 0
             polygon.setAttribute( 'fill', default_color )
-            for it in keys:
+            for it in keys_begin:
                 if className.startswith( it ):
                     polygon.setAttribute( 'fill', colors[count] )
                     polygon.setAttribute( 'stroke', strokes[count] )
