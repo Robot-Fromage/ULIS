@@ -20,7 +20,7 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnTextInfoChanged, void, const FTextInfo& )
 /// @class      IHasText
 /// @brief      Simple HasText class.
 struct ULIS_API IHasText
-    : private TCallbackCapable< FOnTextInfoChanged >
+    : private FOnTextInfoChanged
 {
 protected:
     IHasText(

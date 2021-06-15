@@ -20,7 +20,7 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnTimeSettingsChanged, void, const FTimeSettings&
 /// @class      IHasTimeSettings
 /// @brief      Simple HasTimeSettings class.
 class ULIS_API IHasTimeSettings
-    : private TCallbackCapable< FOnTimeSettingsChanged >
+    : private FOnTimeSettingsChanged
 {
 protected:
     IHasTimeSettings(

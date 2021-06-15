@@ -21,13 +21,16 @@ ULIS_NAMESPACE_BEGIN
 template< class DelegateType, int = 0 >
 class TCallbackCapable
 {
-protected:
+public:
+    using Delegate = DelegateType;
+
+public:
     TCallbackCapable( const DelegateType& iDelegate = DelegateType() )
         : mDelegate( iDelegate )
     {}
 
     template< typename ... Args >
-    ULIS_FORCEINLINE void OnChanged( Args ... args ) const {
+    ULIS_FORCEINLINE void Invoke( Args ... args ) const {
         mDelegate.ExecuteIfBound( args ... );
     }
 
@@ -35,10 +38,15 @@ private:
     DelegateType mDelegate;
 };
 
-#define ULIS_DECLARE_SIMPLE_DELEGATE( __Name__, __Ret__, ... )          \
-    typedef TLambdaCallback< __Ret__, __VA_ARGS__ > __Name__;           \
-    template class ULIS_API TLambdaCallback< __Ret__, __VA_ARGS__ >;    \
-    template class ULIS_API TCallbackCapable< __Name__ >;
+#define ULIS_DECLARE_SIMPLE_DELEGATE( __Name__, __Ret__, ... )                          \
+    typedef TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ > > __Name__;       \
+    template class ULIS_API TLambdaCallback< __Ret__, __VA_ARGS__ >;                    \
+    template class ULIS_API TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ > >;
+
+#define ULIS_DECLARE_SIMPLE_DELEGATE_SPEC( __Name__, __Spec__, __Ret__, ... )                       \
+    typedef TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ >, __Spec__ > __Name__;         \
+    template class ULIS_API TLambdaCallback< __Ret__, __VA_ARGS__ >;                                \
+    template class ULIS_API TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ >, __Spec__ >;
 
 ULIS_NAMESPACE_END
 

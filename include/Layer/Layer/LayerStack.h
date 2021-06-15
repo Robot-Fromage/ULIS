@@ -18,6 +18,9 @@
 #include "Layer/Layer/AbstractLayerDrawable.h"
 
 ULIS_NAMESPACE_BEGIN
+
+struct FDummySuperStack {};
+
 /////////////////////////////////////////////////////
 /// @class      TLayerStack
 /// @brief      The TLayerStack class provides a class to store a layer stack

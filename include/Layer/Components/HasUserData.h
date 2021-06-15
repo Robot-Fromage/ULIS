@@ -18,16 +18,16 @@
 ULIS_NAMESPACE_BEGIN
 // Exports
 template class ULIS_API TArray< IUserData* >;
-ULIS_DECLARE_SIMPLE_DELEGATE( FOnUserDataAdded, void, const IUserData* )
-ULIS_DECLARE_SIMPLE_DELEGATE( FOnUserDataChanged, void, const IUserData* )
-ULIS_DECLARE_SIMPLE_DELEGATE( FOnUserDataRemoved, void, const IUserData* )
+ULIS_DECLARE_SIMPLE_DELEGATE_SPEC( FOnUserDataAdded, 0, void, const IUserData* )
+ULIS_DECLARE_SIMPLE_DELEGATE_SPEC( FOnUserDataChanged, 1, void, const IUserData* )
+ULIS_DECLARE_SIMPLE_DELEGATE_SPEC( FOnUserDataRemoved, 2, void, const IUserData* )
 /////////////////////////////////////////////////////
 /// @class      IHasUserData
 /// @brief      Simple HasUserData class.
 class ULIS_API IHasUserData
-    : private TCallbackCapable< FOnUserDataAdded, 0 >
-    , private TCallbackCapable< FOnUserDataChanged, 1 >
-    , private TCallbackCapable< FOnUserDataRemoved, 2 >
+    : private FOnUserDataAdded
+    , private FOnUserDataChanged
+    , private FOnUserDataRemoved
 {
 protected:
     // DTor

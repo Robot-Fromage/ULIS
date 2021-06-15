@@ -20,7 +20,7 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnColorChanged, void, const FColor& )
 /// @class      IHasPrettyColor
 /// @brief      Simple HasPrettyColor class.
 class ULIS_API IHasPrettyColor
-    : private TCallbackCapable< FOnColorChanged >
+    : private FOnColorChanged
 {
 protected:
     IHasPrettyColor(

@@ -31,7 +31,7 @@ const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, cons
 #define ULIS_DECLARE_PIC_SIMPLE( __Class__, __Type__, __Default__, __Getter__, __Setter__ ) \
     ULIS_DECLARE_SIMPLE_DELEGATE( FOn_ ## __Type__ ## _Changed, void, __Type__ )            \
     class ULIS_API __Class__                                                                \
-        : private TCallbackCapable< FOn_ ## __Type__ ## _Changed >                          \
+        : private FOn_ ## __Type__ ## _Changed                                              \
     {                                                                                       \
         protected:                                                                          \
             __Class__ (                                                                     \
@@ -50,10 +50,10 @@ const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, cons
           __Type__ i                                                                \
         , const FOn_ ## __Type__ ## _Changed & d                                    \
     )                                                                               \
-        : TCallbackCapable< FOn_ ## __Type__ ## _Changed >( d )                     \
+        : FOn_ ## __Type__ ## _Changed( d )                                         \
         , m( i ) {}                                                                 \
     __Type__ __Class__ :: __Getter__ () const { return  m; }                        \
-    void __Class__ :: __Setter__ ( __Type__ i ) { m = i; OnChanged( m ); }
+    void __Class__ :: __Setter__ ( __Type__ i ) { m = i; Invoke( m ); }
 
 ULIS_NAMESPACE_END
 

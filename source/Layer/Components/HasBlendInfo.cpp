@@ -19,14 +19,14 @@ IHasBlendInfo::IHasBlendInfo(
     , ufloat iOpacity
     , const FOnBlendInfoChanged& iDelegate
 )
-    : TCallbackCapable< FOnBlendInfoChanged >( iDelegate )
+    : FOnBlendInfoChanged( iDelegate )
     , mInfo{
           iBlendMode
         , iAlphaMode
         , iOpacity
     }
 {
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 eBlendMode
@@ -47,19 +47,19 @@ IHasBlendInfo::Opacity() const {
 void
 IHasBlendInfo::SetBlendMode( eBlendMode iValue ) {
     mInfo.blendMode = iValue;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasBlendInfo::SetAlphaMode( eAlphaMode iValue ) {
      mInfo.alphaMode = iValue;
-     OnChanged( mInfo );
+     Invoke( mInfo );
 }
 
 void
 IHasBlendInfo::SetOpacity( ufloat iValue ) {
      mInfo.opacity = iValue;
-     OnChanged( mInfo );
+     Invoke( mInfo );
 }
 
 ULIS_NAMESPACE_END

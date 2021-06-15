@@ -20,7 +20,7 @@ IHasTransform::IHasTransform(
     , const FVec2F& iScale
     , const FOnTransformInfoChanged& iDelegate
 )
-    : TCallbackCapable< FOnTransformInfoChanged >( iDelegate )
+    : FOnTransformInfoChanged( iDelegate )
     , mInfo {
           iPivot
         , iTranslation
@@ -28,274 +28,274 @@ IHasTransform::IHasTransform(
         , iScale
     }
 {
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 // Pivot setter
 void
 IHasTransform::ResetPivot() {
     mInfo.pivot = FVec2F( 0 );
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetPivot( const FVec2F& iValues ) {
     mInfo.pivot = iValues;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetPivot( float iX, float iY ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetPivotX( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetPivotY( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MovePivot( const FVec2F& iDelta ) {
     mInfo.pivot += iDelta;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MovePivot( float iDeltaX, float iDeltaY ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MovePivotX( float iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MovePivotY( float iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MovePivotRight( float iDelta ) {
     mInfo.pivot += Right() * iDelta;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MovePivotDown( float iDelta ) {
     mInfo.pivot += Down() * iDelta;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 // Translation setter
 void
 IHasTransform::ResetTranslation() {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetTranslation( const FVec2F& iValues ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 void
 IHasTransform::SetTranslation( float iX, float iY ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetTranslationX( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetTranslationY( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::Translate( const FVec2F& iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::Translate( float iDeltaX, float iDeltaY ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::TranslateX( float iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::TranslateY( float iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::TranslateZ( float iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::Move( const FVec2F& iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::Move( float iDeltaRight, float iDeltaDown ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MoveRight( float iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::MoveDown( float iDelta ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 // Rotation setter
 void
 IHasTransform::ResetRotation() {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetRotation( float iAngleRad ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::Rotate( float iAngleRad ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 // Scale setter
 void
 IHasTransform::ResetScale() {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetScale( const FVec2F& iValues ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetScale( float iX, float iY ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetScaleuniform( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetScaleX( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::SetScaleY( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::Stretch( const FVec2F& iValues ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::Stretch( float iX, float iY ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::StretchUniform( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::StretchX( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::StretchY( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::DeltaScale( const FVec2F& iValues ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::DeltaScale( float iX, float iY ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::DeltaScaleUniform( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::DeltaScaleX( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void
 IHasTransform::DeltaScaleY( float iValue ) {
     // TODO
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 // Pivot Getter

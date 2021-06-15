@@ -16,30 +16,21 @@
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
-template< class Type >
-class TRoot;
-
-template< class Type >
-class TNode;
-
-template< class Type > using TOnNodeAdded = TLambdaCallback< void, const TRoot< Type >& /* parent */, const TNode< Type >& /* child */ >;
-template< class Type > class ULIS_API TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& >;
-template< class Type > class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& > >;
-
-template< class Type > using TOnNodeRemoved = TLambdaCallback< void, const TRoot< Type >& /* parent */, const TNode< Type >& /* child */ >;
-template< class Type > class ULIS_API TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& >;
-template< class Type > class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< Type >&, const TNode< Type >& > >;
-
-template< class Type > using TOnParentChanged = TLambdaCallback< void, const TNode< Type >& /* child */, const TRoot< Type >& /* parent */ >;
-template< class Type > class ULIS_API TLambdaCallback< void, const TNode< Type >&, const TRoot< Type >& >;
-template< class Type > class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< Type >&, const TRoot< Type >& > >;
+template< class Type > class TRoot;
+template< class Type > class TNode;
+template< class Type > using TNodeAddedDelegate = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
+template< class Type > using TOnNodeAdded = TCallbackCapable< TNodeAddedDelegate< Type >, 0 >;
+template< class Type > using TNodeRemovedDelegate = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
+template< class Type > using TOnNodeRemoved = TCallbackCapable< TNodeRemovedDelegate< Type >, 1 >;
+template< class Type > using TParentChangedDelegate = TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >;
+template< class Type > using TOnParentChanged = TCallbackCapable< TParentChangedDelegate< Type > >;
 
 /////////////////////////////////////////////////////
 /// @class      TNode
 /// @brief      Basic node
 template< class Type >
 class ULIS_API TNode
-    : private TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >
+    : private TOnParentChanged< Type >
 {
     typedef TRoot< Type > tParent;
     friend class TRoot< Type >;
@@ -50,12 +41,12 @@ public:
 
     TNode(
           const tParent* iParent = nullptr
-        , const TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >& iDelegate = TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >()
+        , const TOnParentChanged< Type >& iDelegate = TOnParentChanged< Type >()
     )
-        : TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >( iDelegate )
+        : TOnParentChanged< Type >( iDelegate )
         , mParent( iParent )
     {
-        TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >::OnChanged( this, mParent );
+        TOnParentChanged< Type >::Invoke( this, mParent );
     }
 
     Type& Self() {
@@ -79,7 +70,7 @@ public:
 
     void SetParent( const tParent* iParent ) {
         mParent = iParent;
-        TCallbackCapable< TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* > >::OnChanged( this, mParent );
+        TOnParentChanged< Type >::Invoke( this, mParent );
     }
 
     const tParent* TopLevelParent() const {
@@ -119,6 +110,8 @@ private:
 template< class Type >
 class ULIS_API TRoot
     : public virtual TNode< Type >
+    , private TOnNodeAdded< Type >
+    , private TOnNodeRemoved< Type >
 {
     typedef TNode< Type >   tSuperClass;
     typedef TRoot< Type >   tParent;
@@ -130,15 +123,23 @@ public:
         Reset();
     }
 
-    TRoot( tParent* iParent = nullptr )
+    TRoot(
+          tParent* iParent = nullptr
+        , const TOnNodeAdded< Type >& iNodeAddedDelegate = TOnNodeAdded< Type >()
+        , const TOnNodeRemoved< Type >& iNodeRemovedDelegate = TOnNodeRemoved< Type >()
+    )
         : tSuperClass( iParent )
+        , TOnNodeAdded< Type >( iNodeAddedDelegate )
+        , TOnNodeRemoved< Type >( iNodeRemovedDelegate )
     {}
 
     void
     Reset()
     {
-        for( uint64 i = 0; i < mChildren.Size(); ++i )
+        for( uint64 i = 0; i < mChildren.Size(); ++i ) {
+            TOnNodeRemoved< Type >::Invoke( this, mChildren[i] );
             delete  mChildren[i];
+        }
         mChildren.Clear();
     }
 
@@ -160,6 +161,7 @@ public:
 
     void DeleteChild( int iIndex ) {
         ULIS_ASSERT( iIndex < mChildren.Size(), "Bad Index" );
+        TOnNodeRemoved< Type >::Invoke( this, mChildren[ iIndex ] );
         delete mChildren[ iIndex ];
         mChildren.Erase( iIndex, 1 );
     }
@@ -172,6 +174,7 @@ public:
         else
             Children().Insert( iIndex, iNode );
         return  *this;
+        TOnNodeAdded< Type >::Invoke( this, mChildren[ iIndex ] );
     }
 
     template< typename ChildType, class ... Args >

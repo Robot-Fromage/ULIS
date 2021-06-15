@@ -35,7 +35,7 @@ CLASS::THasBlock(
 {
     if( iWidth && iHeight )
         mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace )
-    OnChanged( mBlock );
+    Invoke( mBlock );
 }
 
 TEMPLATE
@@ -46,7 +46,7 @@ CLASS::THasBlock(
     : TCallbackCapable< TOnBlockChanged< BlockType > >( iDelegate )
     , mBlock( iBlock )
 {
-    OnChanged( mBlock );
+    Invoke( mBlock );
 }
 
 TEMPLATE
@@ -74,7 +74,7 @@ CLASS::Realloc(
     if( mBlock )
         BlockAllocatorType::Delete( mBlock );
     mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace );
-    OnChanged( mBlock );
+    Invoke( mBlock );
 }
 
 TEMPLATE
@@ -84,7 +84,7 @@ CLASS::Replace( BlockType* iValue )
     if( mBlock )
         BlockAllocatorType::Delete( mBlock );
     mBlock = iValue;
-    OnChanged( mBlock );
+    Invoke( mBlock );
 }
 
 ULIS_NAMESPACE_END

@@ -20,7 +20,7 @@ IHasText::IHasText(
     , const FColor& iColor
     , const FOnTextInfoChanged& iDelegate
 )
-    : TCallbackCapable< FOnTextInfoChanged >( iDelegate )
+    : FOnTextInfoChanged( iDelegate )
     , mInfo{
           iString
         , iFont
@@ -28,7 +28,7 @@ IHasText::IHasText(
         , iColor
     }
 {
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 FWString IHasText::Text() const
@@ -54,25 +54,25 @@ FColor IHasText::TextColor() const
 void IHasText::SetText( const FWString& iValue )
 {
     mInfo.string = iValue;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void IHasText::SetFont( const FFont& iValue )
 {
     mInfo.font = iValue;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void IHasText::SetFontSize(  int iValue )
 {
     mInfo.size = iValue;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 void IHasText::SetTextColor( const FColor& iValue )
 {
     mInfo.color = iValue;
-    OnChanged( mInfo );
+    Invoke( mInfo );
 }
 
 ULIS_NAMESPACE_END

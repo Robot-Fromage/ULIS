@@ -18,10 +18,11 @@
 #include "Layer/Layer/LayerText.h"
 
 ULIS_NAMESPACE_BEGIN
+/*
 // Typedefs
+typedef TLayerStack< FBlock, void, FDummySuperStack > FLayerStack;
 typedef TLayerFolder< FBlock, void, void, void > FLayerFolder;
 typedef TLayerImage< FBlock, void, void, void > FLayerImage;
-typedef TLayerStack< FBlock, void, void, void > FLayerStack;
 typedef TLayerText< FBlock, void, void, void > FLayerText;
 
 // Exports
@@ -29,6 +30,6 @@ template class ULIS_API TLayerFolder< FBlock, void, void, void >;
 template class ULIS_API TLayerImage< FBlock, void, void, void >;
 template class ULIS_API TLayerStack< FBlock, void, void, void >;
 template class ULIS_API TLayerText< FBlock, void, void, void >;
-
+*/
 ULIS_NAMESPACE_END
 

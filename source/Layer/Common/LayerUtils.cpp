@@ -12,12 +12,14 @@
 #pragma once
 #include "Core/Core.h"
 #include "Layer/Common/LayerUtils.h"
+/*
 #include "Layer/Layer/LayerFolder.h"
 #include "Layer/Layer/LayerStack.h"
 #include "String/Utils.h"
 #include <algorithm>
 #include <tuple>
 #include <vector>
+*/
 
 ULIS_NAMESPACE_BEGIN
 /*

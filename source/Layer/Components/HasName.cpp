@@ -16,10 +16,10 @@ IHasName::IHasName(
       const FString& iValue
     , const FOnNameChanged& iDelegate
 )
-    : TCallbackCapable< FOnNameChanged >( iDelegate )
+    : FOnNameChanged( iDelegate )
     , mStr( iValue )
 {
-    OnChanged( mStr );
+    Invoke( mStr );
 }
 
 const FString&
@@ -30,7 +30,7 @@ IHasName::Name() const {
 void
 IHasName::SetName( const FString& iValue ) {
     mStr = iValue;
-    OnChanged( mStr );
+    Invoke( mStr );
 }
 
 ULIS_NAMESPACE_END

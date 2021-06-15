@@ -20,7 +20,7 @@ IHasTimeSettings::IHasTimeSettings(
     , int64 iCurrentFrame
     , const FOnTimeSettingsChanged& iDelegate
 )
-    : TCallbackCapable< FOnTimeSettingsChanged >( iDelegate )
+    : FOnTimeSettingsChanged( iDelegate )
     , mInfo{
           iFps
         , iBeginFrame

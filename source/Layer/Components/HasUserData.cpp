@@ -21,9 +21,9 @@ IHasUserData::IHasUserData(
     , const FOnUserDataChanged& iDelegateChanged
     , const FOnUserDataRemoved& iDelegateRemoved
 )
-    : TCallbackCapable< FOnUserDataAdded, 0 >( iDelegateAdd )
-    , TCallbackCapable< FOnUserDataChanged, 1 >( iDelegateChanged )
-    , TCallbackCapable< FOnUserDataRemoved, 2 >( iDelegateRemoved )
+    : FOnUserDataAdded( iDelegateAdd )
+    , FOnUserDataChanged( iDelegateChanged )
+    , FOnUserDataRemoved( iDelegateRemoved )
     , mUserData()
 {}
 
@@ -31,7 +31,7 @@ void
 IHasUserData::ResetUserData() {
     const uint64 size = mUserData.Size();
     for( uint64 i = 0; i < size; ++i ) {
-        TCallbackCapable< FOnUserDataRemoved, 2 >::OnChanged( mUserData[i] );
+        FOnUserDataRemoved::Invoke( mUserData[i] );
         delete  mUserData[i];
     }
     mUserData.Clear();
@@ -58,16 +58,16 @@ IHasUserData::AddOrSetUserData( IUserData* iData )
     const uint64 size = mUserData.Size();
     for( uint64 i = 0; i < size; ++i ) {
         if( id == mUserData[i]->TypeID() ) {
-            TCallbackCapable< FOnUserDataRemoved, 2 >::OnChanged( mUserData[i] );
+            FOnUserDataRemoved::Invoke( mUserData[i] );
             delete mUserData[i];
             mUserData[i] = iData;
-            TCallbackCapable< FOnUserDataChanged, 1 >::OnChanged( mUserData[i] );
+            FOnUserDataChanged::Invoke( mUserData[i] );
             return;
         }
     }
 
     mUserData.PushBack( iData );
-    TCallbackCapable< FOnUserDataAdded, 0 >::OnChanged( iData );
+    FOnUserDataAdded::Invoke( iData );
 }
 
 void
@@ -75,7 +75,7 @@ IHasUserData::RemoveUserData( uint32 iTypeID )
 {
     IUserData* userData = GetUserData( iTypeID );
     if( userData ) {
-        TCallbackCapable< FOnUserDataRemoved, 2 >::OnChanged( userData );
+        FOnUserDataRemoved::Invoke( userData );
         mUserData.Erase( userData );
         delete  userData;
     }

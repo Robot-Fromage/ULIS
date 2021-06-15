@@ -16,10 +16,10 @@ IHasPrettyColor::IHasPrettyColor(
       const FColor& iColor
     , const FOnColorChanged& iDelegate
 )
-    : TCallbackCapable< FOnColorChanged >( iDelegate )
+    : FOnColorChanged( iDelegate )
     , mColor( iColor )
 {
-    OnChanged( mColor );
+    Invoke( mColor );
 }
 
 const FColor&
@@ -33,7 +33,7 @@ IHasPrettyColor::SetPrettyColor( const FColor& iValue ) {
     // Ensure conversion to local mPrettyColor format,
     // supposed to be always RGBA8
     FColor::ConvertFormat( iValue, mColor );
-    OnChanged( mColor );
+    Invoke( mColor );
 }
 
 ULIS_NAMESPACE_END
