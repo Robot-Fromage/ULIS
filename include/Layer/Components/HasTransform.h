@@ -57,7 +57,6 @@ public:
     void Translate( float iDeltaX, float iDeltaY );
     void TranslateX( float iDelta );
     void TranslateY( float iDelta );
-    void TranslateZ( float iDelta );
     void Move( const FVec2F& iDelta );
     void Move( float iDeltaRight, float iDeltaDown );
     void MoveRight( float iDelta );
