@@ -24,7 +24,7 @@ struct ULIS_API IHasText
 {
 protected:
     IHasText(
-          const FWString& iString = L"hello world"
+          const FWString& iString = L"Lorem ipsum dolor sit amet..."
         , const FFont& iFont = FFont::DefaultFont
         , int iSize = 12
         , const FColor& iColor = FColor::Black
