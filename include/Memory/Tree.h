@@ -125,10 +125,14 @@ public:
 
     TRoot(
           tParent* iParent = nullptr
+        , const TOnParentChanged< Type >& iParentChangedDelegate = TOnParentChanged< Type >()
         , const TOnNodeAdded< Type >& iNodeAddedDelegate = TOnNodeAdded< Type >()
         , const TOnNodeRemoved< Type >& iNodeRemovedDelegate = TOnNodeRemoved< Type >()
     )
-        : tSuperClass( iParent )
+        : tSuperClass(
+              iParent
+            , iParentChangedDelegate
+        )
         , TOnNodeAdded< Type >( iNodeAddedDelegate )
         , TOnNodeRemoved< Type >( iNodeRemovedDelegate )
     {}
