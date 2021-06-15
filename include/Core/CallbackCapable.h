@@ -18,7 +18,48 @@ ULIS_NAMESPACE_BEGIN
 /// @class      TCallbackCapable
 /// @brief      The TCallbackCapable class provides a base abstract interface
 ///             enable callback capability on PIC classes.
-template< class DelegateType, int = 0 >
+/// @details    Why is TCallbackCapable implemented as a class designed to be
+///             inherited from:
+///
+///             The other solution is to make it a member of the classes that
+///             need a delegate, this may seem simpler, but then it requires
+///             more code to be able to change the delegate during the object
+///             lifetime. This way, the object inherits the SetDelegate method.
+///             You can still have more than one delegate, you just need to
+///             inherit multiple times from the TCallbackCapable with a
+///             different DelegateType. ( Although, most client want to inherit
+///             TCallbackCapable privately.
+///
+///             In case you need multiple delegates of the same type, it is
+///             forbidden to inherit directly multiple time from the same base.
+///             So that's why the _ID arg is provided, it differentiates the
+///             bases artificially and allows to have multiple same delegates
+///             for different purposes.
+///
+///             For simplicity, a macro is provided below, see:
+///                 - ULIS_DECLARE_SIMPLE_DELEGATE
+///                 - ULIS_DECLARE_SIMPLE_DELEGATE_SPEC
+///
+///             it provides default template instanciation and export, as well
+///             as a typedef such as "FOnValueChanged", which is intented to
+///             be the main alias used to acces the TCallbackCapable part of
+///             the PIC that uses it. In case of multiple TCallbackCapable,
+///             Invoke() calls will be ambiguous and need to be prefixed by
+///             the alias:: identifier.
+///
+///             No automatic wrappers are provided to automate callback calls,
+///             because it is not possible to know in advance which delegate
+///             must be called, or if it is necessary in all methods ( such as
+///             getters ), and it would also be problematic in const methods.
+///
+///             TCallbackCapable is not supposed to be instanciated, but it's
+///             still possible to do so if you want to chose to use is by
+///             composition instead of inheritance, and for simplicity the
+///             typedefed TCallbackCapable can be used directly as input
+///             parameter in client classes and needs to be able to be default-
+///             constructed as a default input parameter, which requires it to
+///             be instanciable in global scope.
+template< class DelegateType, int _ID = 0 >
 class TCallbackCapable
 {
 public:
@@ -32,6 +73,14 @@ public:
     template< typename ... Args >
     ULIS_FORCEINLINE void Invoke( Args ... args ) const {
         mDelegate.ExecuteIfBound( args ... );
+    }
+
+    void SetDelegate( const DelegateType& iDelegate ) {
+        mDelegate = iDelegate;
+    }
+
+    void SetDelegate( const TCallbackCapable< DelegateType, _ID >& iOther ) {
+        mDelegate = iOther.mDelegate;
     }
 
 private:

@@ -20,7 +20,7 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnNameChanged, void, const FString& )
 /// @class      IHasName
 /// @brief      Simple HasName class.
 class ULIS_API IHasName
-    : private FOnNameChanged
+    : public FOnNameChanged
 {
 public:
     IHasName(

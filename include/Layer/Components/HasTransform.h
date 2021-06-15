@@ -20,7 +20,7 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnTransformInfoChanged, void, const FTransformInf
 /// @class      IHasCachedTransform
 /// @brief      Simple HasCachedTransform class.
 class ULIS_API IHasTransform
-    : private FOnTransformInfoChanged
+    : public FOnTransformInfoChanged
 {
 protected:
     IHasTransform(

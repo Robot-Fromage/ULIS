@@ -27,11 +27,10 @@ const IAnimatedLayer& FindLayerByFuzzyNameInContainer( const FString& iStr, cons
 // ULIS_DECLARE_PIC_SIMPLE( IHasLock, bool, false, IsLocked, SetLocked ) // ( Header.h )
 // ULIS_DEFINE_PIC_SIMPLE( IHasLock, bool, IsLocked, SetLocked ) // ( Source.cpp )
 
-
 #define ULIS_DECLARE_PIC_SIMPLE( __Class__, __Type__, __Default__, __Getter__, __Setter__ ) \
     ULIS_DECLARE_SIMPLE_DELEGATE( FOn_ ## __Type__ ## _Changed, void, __Type__ )            \
     class ULIS_API __Class__                                                                \
-        : private FOn_ ## __Type__ ## _Changed                                              \
+        : public FOn_ ## __Type__ ## _Changed                                               \
     {                                                                                       \
         protected:                                                                          \
             __Class__ (                                                                     \

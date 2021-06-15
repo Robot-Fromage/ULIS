@@ -30,7 +30,7 @@ template< class Type > using TOnParentChanged = TCallbackCapable< TParentChanged
 /// @brief      Basic node
 template< class Type >
 class ULIS_API TNode
-    : private TOnParentChanged< Type >
+    : public TOnParentChanged< Type >
 {
     typedef TRoot< Type > tParent;
     friend class TRoot< Type >;
@@ -110,8 +110,8 @@ private:
 template< class Type >
 class ULIS_API TRoot
     : public virtual TNode< Type >
-    , private TOnNodeAdded< Type >
-    , private TOnNodeRemoved< Type >
+    , public TOnNodeAdded< Type >
+    , public TOnNodeRemoved< Type >
 {
     typedef TNode< Type >   tSuperClass;
     typedef TRoot< Type >   tParent;

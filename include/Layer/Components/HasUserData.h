@@ -25,9 +25,9 @@ ULIS_DECLARE_SIMPLE_DELEGATE_SPEC( FOnUserDataRemoved, 2, void, const IUserData*
 /// @class      IHasUserData
 /// @brief      Simple HasUserData class.
 class ULIS_API IHasUserData
-    : private FOnUserDataAdded
-    , private FOnUserDataChanged
-    , private FOnUserDataRemoved
+    : public FOnUserDataAdded
+    , public FOnUserDataChanged
+    , public FOnUserDataRemoved
 {
 protected:
     // DTor
