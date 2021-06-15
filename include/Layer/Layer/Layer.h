@@ -33,7 +33,8 @@ template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< IL
 template class ULIS_API TNode< ILayer >;
 template class ULIS_API TArray< TNode< ILayer >* >;
 template class ULIS_API TRoot< ILayer >;
-
+typedef FOn_bool_Changed FOnBoolChanged;
+typedef TOnParentChanged< ILayer > FOnParentChanged;
 /*
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerCreated, void, ILayer* )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerDeleted, void, ILayer* )
@@ -45,19 +46,18 @@ ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerVisibilityChanged, void, ILayer*, bool )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerLockChanged, void, ILayer*, bool )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerUserDataChanged, void, ILayer*, const FColor& )
 */
-
 /////////////////////////////////////////////////////
 /// @class      ILayer
 /// @brief      The ILayer class provides a base abstract class to store a layer
 ///             in a layer stack for painting applications.
 class ULIS_API ILayer
-    : public IHasLock
-    , public IHasName
-    , public IHasPrettyColor
-    , public IHasVisibility
-    , public IHasUserData
+    : public virtual TNode< ILayer >
     , public ITypeIdentifiable
-    , public virtual TNode< ILayer >
+    , public IHasUserData
+    , public IHasName
+    , public IHasLock
+    , public IHasVisibility
+    , public IHasPrettyColor
 {
 public:
     // DTor
@@ -70,6 +70,14 @@ public:
         , bool iVisible = true
         , const FColor& iPrettyColor = FColor::Transparent
         , const TRoot< ILayer >* iParent = nullptr
+        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
+        , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
+        , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()
+        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
+        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
+        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
+        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
     );
 };
 

@@ -22,14 +22,41 @@ ILayer::ILayer(
     , bool iVisible
     , const FColor& iPrettyColor
     , const TRoot< ILayer >* iParent
+    , const FOnNameChanged& iOnNameChanged
+    , const FOnBoolChanged& iOnLockChanged
+    , const FOnBoolChanged& iOnVisibleChanged
+    , const FOnColorChanged& iOnColorChanged
+    , const FOnUserDataAdded& iOnUserDataAdded
+    , const FOnUserDataChanged& iOnUserDataChanged
+    , const FOnUserDataRemoved& iOnUserDataRemoved
+    , const FOnParentChanged& iOnParentChanged
 )
-    : IHasLock( iLocked )
-    , IHasName( iName )
-    , IHasPrettyColor( iPrettyColor )
-    , IHasVisibility( iVisible )
-    , IHasUserData()
+    : TNode< ILayer >(
+          iParent
+        , iOnParentChanged
+    )
     , ITypeIdentifiable()
-    , TNode< ILayer >( iParent )
+    , IHasUserData(
+          iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+    )
+    , IHasName(
+          iName
+        , iOnNameChanged
+    )
+    , IHasLock(
+          iLocked
+        , iOnLockChanged
+    )
+    , IHasVisibility(
+          iVisible
+        , iOnVisibleChanged
+    )
+    , IHasPrettyColor(
+          iPrettyColor
+        , iOnColorChanged
+    )
 {}
 
 ULIS_NAMESPACE_END
