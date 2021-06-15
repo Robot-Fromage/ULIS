@@ -27,6 +27,8 @@
 #include "Layer/Layer/LayerFolder.h"
 #include "Layer/Layer/LayerImage.h"
 #include "Layer/Layer/LayerStack.h"
+#include "Layer/Layer/LayerTypedefs.h"
+#include "Layer/Layer/LayerBuilder.h"
 // Font
 #include "Font/Font.h"
 #include "Font/FontEngine.h"

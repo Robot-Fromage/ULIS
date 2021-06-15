@@ -14,15 +14,14 @@
 #include "Core/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
-template< class BlockType > using TOnBlockChanged = TLambdaCallback< void, const BlockType* >;
-template< class BlockType > class ULIS_API TLambdaCallback< void, const BlockType* >;
-template< class BlockType > class ULIS_API TCallbackCapable< TOnBlockChanged< BlockType > >;
+template< class BlockType > using TBlockChangedDelegate = TLambdaCallback< void, const BlockType* >;
+template< class BlockType > using TOnBlockChanged = TCallbackCapable< TBlockChangedDelegate< BlockType > >;
 /////////////////////////////////////////////////////
 /// @class      THasBlock
 /// @brief      Simple HasBlock class.
 template< class BlockType, class BlockAllocatorType >
 class THasBlock
-    : public TCallbackCapable< TOnBlockChanged< BlockType > >
+    : public TOnBlockChanged< BlockType >
 {
 protected:
     ~THasBlock();

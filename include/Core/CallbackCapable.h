@@ -17,7 +17,7 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TCallbackCapable
 /// @brief      The TCallbackCapable class provides a base abstract interface
-///             enable callback capability on PIC classes.
+///             to enable callback capability on PIC classes.
 /// @details    Why is TCallbackCapable implemented as a class designed to be
 ///             inherited from:
 ///
@@ -53,7 +53,7 @@ ULIS_NAMESPACE_BEGIN
 ///             getters ), and it would also be problematic in const methods.
 ///
 ///             TCallbackCapable is not supposed to be instanciated, but it's
-///             still possible to do so if you want to chose to use is by
+///             still possible to do so if you want to chose to use it by
 ///             composition instead of inheritance, and for simplicity the
 ///             typedefed TCallbackCapable can be used directly as input
 ///             parameter in client classes and needs to be able to be default-

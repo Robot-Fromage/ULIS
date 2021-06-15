@@ -29,9 +29,26 @@ CLASS::TLayerStack(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , const FOnUserDataAdded& iOnUserDataAdded
+    , const FOnUserDataChanged& iOnUserDataChanged
+    , const FOnUserDataRemoved& iOnUserDataRemoved
     , Args ... args
 )
-    : TAbstractLayerDrawable< BlockType >()
+    : TAbstractLayerDrawable< BlockType >(
+          "LayerStack"
+        , false
+        , false
+        , FColor::Transparent
+        , nullptr
+        , FOnNameChanged()
+        , FOnBoolChanged()
+        , FOnBoolChanged()
+        , FOnColorChanged()
+        , iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+        , FOnParentChanged()
+    )
     , TRoot< ILayer >()
     , ISearchable()
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
@@ -42,18 +59,26 @@ CLASS::TLayerStack(
 
 // TLayerStack Interface
 TEMPLATE
+template< typename ... Args >
 void
 CLASS::Reset(
       uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , const FOnUserDataAdded& iOnUserDataAdded
+    , const FOnUserDataChanged& iOnUserDataChanged
+    , const FOnUserDataRemoved& iOnUserDataRemoved
+    , Args ... args
 )
 {
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
     ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
     this->TRoot< ILayer >::Reset();
+    this->FOnUserDataAdded::SetDelegate( iOnUserDataAdded );
+    this->FOnUserDataChanged::SetDelegate( iOnUserDataChanged );
+    this->FOnUserDataRemoved::SetDelegate( iOnUserDataRemoved );
 }
 
 // TDrawable Interface

@@ -50,6 +50,9 @@ public:
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
+        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
+        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
         , Args ... args
     );
 
@@ -59,11 +62,16 @@ public:
 
 public:
     // TLayerStack Interface
+    template< typename ... Args >
     void Reset(
           uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
+        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
+        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
+        , Args ... args
     );
 
     // ITypeIdentifiable Interface
