@@ -70,6 +70,7 @@ public:
         , bool iVisible = true
         , const FColor& iPrettyColor = FColor::Transparent
         , const TRoot< ILayer >* iParent = nullptr
+
         , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
         , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
         , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()

@@ -64,6 +64,19 @@ public:
         , ufloat iOpacity = 1.f
         , bool iAlphaLocked = false
         , const TRoot< ILayer >* iParent = nullptr
+
+        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
+        , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
+        , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()
+        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
+        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
+        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
+        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
+
+        , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
+        , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
+        , const FOnBoolChanged& iOnPaintLockChanged = FOnBoolChanged()
     );
 
     TLayerImage(
@@ -77,6 +90,19 @@ public:
         , ufloat iOpacity = 1.f
         , bool iAlphaLocked = false
         , const TRoot< ILayer >* iParent = nullptr
+
+        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
+        , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
+        , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()
+        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
+        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
+        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
+        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
+
+        , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
+        , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
+        , const FOnBoolChanged& iOnPaintLockChanged = FOnBoolChanged()
     );
 
     // Disable copy

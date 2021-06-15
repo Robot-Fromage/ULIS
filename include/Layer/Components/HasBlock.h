@@ -22,6 +22,7 @@ template< class BlockType > class ULIS_API TCallbackCapable< TOnBlockChanged< Bl
 /// @brief      Simple HasBlock class.
 template< class BlockType, class BlockAllocatorType >
 class THasBlock
+    : public TCallbackCapable< TOnBlockChanged< BlockType > >
 {
 protected:
     ~THasBlock();
@@ -53,7 +54,6 @@ protected:
 
 private:
     BlockType* mBlock;
-    TCallbackCapable< TOnBlockChanged< BlockType > > mOnBlockChanged;
 };
 
 ULIS_NAMESPACE_END

@@ -35,6 +35,19 @@ CLASS::TLayerImage(
     , ufloat iOpacity
     , bool iAlphaLocked
     , const TRoot< ILayer >* iParent
+
+    , const FOnNameChanged& iOnNameChanged
+    , const FOnBoolChanged& iOnLockChanged
+    , const FOnBoolChanged& iOnVisibleChanged
+    , const FOnColorChanged& iOnColorChanged
+    , const FOnUserDataAdded& iOnUserDataAdded
+    , const FOnUserDataChanged& iOnUserDataChanged
+    , const FOnUserDataRemoved& iOnUserDataRemoved
+    , const FOnParentChanged& iOnParentChanged
+
+    , const TOnBlockChanged< BlockType >& iOnBlockChanged
+    , const FOnBlendInfoChanged& iOnBlendInfoChanged
+    , const FOnBoolChanged& iOnPaintLockChanged
 )
     : tAbstractLayerDrawable(
           iName
@@ -42,15 +55,34 @@ CLASS::TLayerImage(
         , iVisible
         , iPrettyColor
         , iParent
+
+        , iOnNameChanged
+        , iOnLockChanged
+        , iOnVisibleChanged
+        , iOnColorChanged
+        , iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+        , iOnParentChanged
     )
     , tRasterizable()
-    , tHasBlock( iWidth, iHeight, iFormat, iColorSpace )
+    , tHasBlock(
+          iWidth
+        , iHeight
+        , iFormat
+        , iColorSpace
+        , iOnBlockChanged
+    )
     , IHasBlendInfo(
           iBlendMode
         , iAlphaMode
         , iOpacity
+        , iOnBlendInfoChanged
     )
-    , IHasPaintLock( iAlphaLocked )
+    , IHasPaintLock(
+          iAlphaLocked
+        , iOnPaintLockChanged
+    )
 {
 }
 
@@ -66,6 +98,19 @@ CLASS::TLayerImage(
     , ufloat iOpacity
     , bool iAlphaLocked
     , const TRoot< ILayer >* iParent
+
+    , const FOnNameChanged& iOnNameChanged
+    , const FOnBoolChanged& iOnLockChanged
+    , const FOnBoolChanged& iOnVisibleChanged
+    , const FOnColorChanged& iOnColorChanged
+    , const FOnUserDataAdded& iOnUserDataAdded
+    , const FOnUserDataChanged& iOnUserDataChanged
+    , const FOnUserDataRemoved& iOnUserDataRemoved
+    , const FOnParentChanged& iOnParentChanged
+
+    , const TOnBlockChanged< BlockType >& iOnBlockChanged
+    , const FOnBlendInfoChanged& iOnBlendInfoChanged
+    , const FOnBoolChanged& iOnPaintLockChanged
 )
     : tAbstractLayerDrawable(
           iName
@@ -73,15 +118,31 @@ CLASS::TLayerImage(
         , iVisible
         , iPrettyColor
         , iParent
+
+        , iOnNameChanged
+        , iOnLockChanged
+        , iOnVisibleChanged
+        , iOnColorChanged
+        , iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+        , iOnParentChanged
     )
     , tRasterizable()
-    , tHasBlock( iBlock )
+    , tHasBlock(
+          iBlock
+        , iOnBlockChanged
+    )
     , IHasBlendInfo(
           iBlendMode
         , iAlphaMode
         , iOpacity
+        , iOnBlendInfoChanged
     )
-    , IHasPaintLock( iAlphaLocked )
+    , IHasPaintLock(
+          iAlphaLocked
+        , iOnPaintLockChanged
+    )
 {
 }
 
@@ -101,7 +162,7 @@ CLASS::RenderImage(
     RenderCache( iCtx );
     FEvent ev;
     ulError err = iCtx.Blend(
-          *mBlock
+          *Block()
         , ioBlock
         , iRect
         , iPos

@@ -22,6 +22,7 @@ ILayer::ILayer(
     , bool iVisible
     , const FColor& iPrettyColor
     , const TRoot< ILayer >* iParent
+
     , const FOnNameChanged& iOnNameChanged
     , const FOnBoolChanged& iOnLockChanged
     , const FOnBoolChanged& iOnVisibleChanged
