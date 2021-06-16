@@ -13,6 +13,9 @@
 #include "Core/Core.h"
 #include "Layer/Layer/Layer.h"
 #include "String/Utils.h"
+#include <algorithm>
+#include <tuple>
+#include <vector>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -24,7 +27,9 @@ class TSearchable
     using InnerType = typename RootType::InnerType;
 
 public:
-    InnerType& operator[]( const FString& iName ) {
+    virtual ~TSearchable() = 0 {}
+
+    InnerType& operator[]( const FString& iStr ) {
         RootType& self = dynamic_cast< RootType& >( *this );
         const uint64 size = self.Children().Size();
         std::vector< std::tuple< int, InnerType* > > matches;
@@ -40,7 +45,7 @@ public:
         return matches.size() ? *std::get< 1 >( matches[0] ) : self.Self();
     }
 
-    const InnerType& operator[]( const FString& iName ) const {
+    const InnerType& operator[]( const FString& iStr ) const {
         const RootType& self = dynamic_cast< const RootType& >( *this );
         const uint64 size = self.Children().Size();
         std::vector< std::tuple< int, const InnerType* > > matches;

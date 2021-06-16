@@ -30,7 +30,7 @@ CLASS::THasBlock(
     , const FColorSpace* iColorSpace
     , const TOnBlockChanged< BlockType >& iDelegate
 )
-    : TCallbackCapable< TOnBlockChanged< BlockType > >( iDelegate )
+    : TOnBlockChanged< BlockType >( iDelegate )
     , mBlock( nullptr )
 {
     if( iWidth && iHeight )
@@ -43,7 +43,7 @@ CLASS::THasBlock(
       BlockType* iBlock
     , const TOnBlockChanged< BlockType >& iDelegate
 )
-    : TCallbackCapable< TOnBlockChanged< BlockType > >( iDelegate )
+    : TOnBlockChanged< BlockType >( iDelegate )
     , mBlock( iBlock )
 {
     Invoke( mBlock );
