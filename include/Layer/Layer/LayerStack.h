@@ -19,8 +19,11 @@
 
 ULIS_NAMESPACE_BEGIN
 
-struct FDummySuperStack {};
-
+struct ULIS_API FDummySuperStack {
+    ~FDummySuperStack() {}
+    FDummySuperStack() {}
+};
+template class ULIS_API TAbstractLayerDrawable< FBlock >;
 /////////////////////////////////////////////////////
 /// @class      TLayerStack
 /// @brief      The TLayerStack class provides a class to store a layer stack
@@ -33,7 +36,7 @@ template<
 class TLayerStack final
     : public TAbstractLayerDrawable< BlockType >
     , public TRoot< ILayer >
-    , public ISearchable
+    , public TSearchable< TRoot< ILayer > >
     , public IHasSize2D
     , public IHasFormat
     , public IHasColorSpace
@@ -89,7 +92,9 @@ public:
     ) override;
 
     // TRoot Overload Shadow Interface
+    // TSearchable Overload Shadow Interface
     using TRoot< ILayer >::operator[];
+    using TSearchable< TRoot< ILayer > >::operator[];
 };
 
 ULIS_NAMESPACE_END

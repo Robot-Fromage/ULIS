@@ -5,20 +5,67 @@
 *__________________
 * @file         Searchable.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the ISearchable class.
+* @brief        This file provides the declaration for the TSearchable class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Layer/Layer.h"
+#include "String/Utils.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      ISearchable
+/// @class      TSearchable
 /// @brief      Simple Searchable class.
-class ULIS_API ISearchable
+template< class RootType >
+class TSearchable
 {
+    using InnerType = typename RootType::InnerType;
 
+public:
+    InnerType& operator[]( const FString& iName ) {
+        RootType& self = dynamic_cast< RootType& >( *this );
+        const uint64 size = self.Children().Size();
+        std::vector< std::tuple< int, InnerType* > > matches;
+        matches.reserve( size );
+        for( uint64 i = 0; i < size; ++i ) {
+            InnerType* layer = &self[i];
+            const FString& name = layer->Name();
+            uint32 typeID = self[i].TypeID();
+            int dist = static_cast< int >( LevenshteinDistance( iStr.Data(), iStr.Size(), name.Data(), name.Size() ) );
+            matches.push_back( std::tuple< int, InnerType* >( dist, layer ) );
+        }
+        std::sort( matches.begin(), matches.end() );
+        return matches.size() ? *std::get< 1 >( matches[0] ) : self.Self();
+    }
+
+    const InnerType& operator[]( const FString& iName ) const {
+        const RootType& self = dynamic_cast< const RootType& >( *this );
+        const uint64 size = self.Children().Size();
+        std::vector< std::tuple< int, const InnerType* > > matches;
+        matches.reserve( size );
+        for( uint64 i = 0; i < size; ++i ) {
+            const InnerType* layer = &self[i];
+            const FString& name = layer->Name();
+            uint32 typeID = self[i].TypeID();
+            int dist = static_cast< int >( LevenshteinDistance( iStr.Data(), iStr.Size(), name.Data(), name.Size() ) );
+            matches.push_back( std::tuple< int, const InnerType* >( dist, layer ) );
+        }
+        std::sort( matches.begin(), matches.end() );
+        return matches.size() ? *std::get< 1 >( matches[0] ) : self.Self();
+    }
+
+
+    template< typename T >
+    T& Find( const FString& iName ) {
+        return  dynamic_cast< T& >( (*this)[ iName ] );
+    }
+
+    template< typename T >
+    const T& Find( const FString& iName ) {
+        return  dynamic_cast< const T& >( (*this)[ iName ] );
+    }
 };
 
 ULIS_NAMESPACE_END

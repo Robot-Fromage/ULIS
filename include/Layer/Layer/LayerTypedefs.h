@@ -19,6 +19,7 @@
 
 ULIS_NAMESPACE_BEGIN
 // Typedefs
+typedef TAbstractLayerDrawable< FBlock > ILayerDrawableBlock;
 typedef TLayerStack< FBlock, void, FDummySuperStack > FLayerStack;
 typedef TLayerFolder< FBlock, void, void, void > FLayerFolder;
 typedef TLayerImage< FBlock, void, void, void, FLayerStack > FLayerImage;

@@ -36,6 +36,9 @@ class ULIS_API TNode
     friend class TRoot< Type >;
 
 public:
+    using InnerType = Type;
+
+public:
     virtual ~TNode() {
     }
 
@@ -117,6 +120,9 @@ class ULIS_API TRoot
     typedef TRoot< Type >   tParent;
     typedef TRoot< Type >   tSelf;
     typedef TNode< Type >   tNode;
+
+public:
+    using InnerType = Type;
 
 public:
     virtual ~TRoot() override {

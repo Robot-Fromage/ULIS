@@ -25,6 +25,7 @@ class TAbstractLayerDrawable
 {
 public:
     using ILayer::ILayer;
+    virtual ~TAbstractLayerDrawable() override = 0 {}
 };
 
 ULIS_NAMESPACE_END

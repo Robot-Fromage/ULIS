@@ -50,7 +50,7 @@ CLASS::TLayerStack(
         , FOnParentChanged()
     )
     , TRoot< ILayer >()
-    , ISearchable()
+    , TSearchable< TRoot< ILayer > >()
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )

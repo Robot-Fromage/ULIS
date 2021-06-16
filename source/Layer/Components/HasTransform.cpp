@@ -441,9 +441,9 @@ IHasTransform::ScaleMatrix() const {
 FMat3F
 IHasTransform::RotationMatrix() const {
     return  FMat3F(
-        ( mInfo.scale.x, 0, 0
+          mInfo.scale.x, 0, 0
         , 0, mInfo.scale.y, 0
-        , 0, 0, 1 );
+        , 0, 0, 1
     );
 }
 
