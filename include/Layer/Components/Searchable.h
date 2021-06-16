@@ -27,7 +27,13 @@ class TSearchable
     using InnerType = typename RootType::InnerType;
 
 public:
-    virtual ~TSearchable() = 0 {}
+    TSearchable() {
+        ULIS_DEBUG_PRINTF( "TSearchable Created" )
+    }
+
+    virtual ~TSearchable() = 0 {
+        ULIS_DEBUG_PRINTF( "TSearchable Destroyed" )
+    }
 
     InnerType& operator[]( const FString& iStr ) {
         RootType& self = dynamic_cast< RootType& >( *this );
@@ -68,7 +74,7 @@ public:
     }
 
     template< typename T >
-    const T& Find( const FString& iName ) {
+    const T& Find( const FString& iName ) const {
         return  dynamic_cast< const T& >( (*this)[ iName ] );
     }
 };

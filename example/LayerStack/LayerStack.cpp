@@ -30,9 +30,46 @@ main( int argc, char *argv[] ) {
     FBlock canvas( w, h, fmt );
 
 
-    FLayerStack* stack = new FLayerStack( w, h, fmt, nullptr );
-    stack->AddChild( new FLayerImage( "image0" ) );
+    FLayerStack* stack = new FLayerStack(
+          w
+        , h
+        , fmt
+        , nullptr
+        , FOnNodeAdded( [stack]( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iChild ){
+            ULIS_DEBUG_PRINTF( "Node added" )
+            auto dummy = 0;
+        } )
+    );
 
+    stack->AddChild(
+        new FLayerImage(
+              "image0"
+            , false
+            , true
+            , FColor::Transparent
+            , w
+            , h
+            , fmt
+            , nullptr
+            , Blend_Normal
+            , Alpha_Normal
+            , 1.f
+            , false
+            , nullptr
+            , FOnNameChanged()
+            , FOnBoolChanged()
+            , FOnBoolChanged()
+            , FOnColorChanged()
+            , FOnUserDataAdded()
+            , FOnUserDataChanged()
+            , FOnUserDataRemoved()
+            , FOnParentChanged( []( const TNode< ILayer >* iNode, const TRoot< ILayer >* iParent ){
+                ULIS_DEBUG_PRINTF( "Parent Changed" )
+                auto dummy = 0;
+            } )
+        )
+    );
+    FLayerImage& img = stack->Find< FLayerImage >( "image0" );
     {
         ctx.Clear( canvas, canvas.Rect() );
         ctx.Finish();

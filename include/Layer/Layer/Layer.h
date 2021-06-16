@@ -35,6 +35,8 @@ template class ULIS_API TArray< TNode< ILayer >* >;
 template class ULIS_API TRoot< ILayer >;
 typedef FOn_bool_Changed FOnBoolChanged;
 typedef TOnParentChanged< ILayer > FOnParentChanged;
+typedef TOnNodeAdded< ILayer > FOnNodeAdded;
+typedef TOnNodeRemoved< ILayer > FOnNodeRemoved;
 /*
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerCreated, void, ILayer* )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerDeleted, void, ILayer* )

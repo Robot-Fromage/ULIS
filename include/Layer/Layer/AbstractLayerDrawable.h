@@ -25,7 +25,9 @@ class TAbstractLayerDrawable
 {
 public:
     using ILayer::ILayer;
-    virtual ~TAbstractLayerDrawable() override = 0 {}
+    virtual ~TAbstractLayerDrawable() override = 0 {
+        ULIS_DEBUG_PRINTF( "TAbstractLayerDrawable Destroyed" )
+    }
 };
 
 ULIS_NAMESPACE_END

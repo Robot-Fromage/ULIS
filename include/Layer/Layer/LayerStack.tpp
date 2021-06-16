@@ -20,7 +20,9 @@ ULIS_NAMESPACE_BEGIN
 // DTor
 TEMPLATE
 CLASS::~TLayerStack()
-{}
+{
+    ULIS_DEBUG_PRINTF( "TLayerStack Destroyed" )
+}
 
 // CTor
 TEMPLATE
@@ -30,12 +32,18 @@ CLASS::TLayerStack(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , const FOnNodeAdded& iOnLayerAdded
+    , const FOnNodeRemoved& iOnLayerRemoved
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
     , Args ... args
 )
-    : TAbstractLayerDrawable< BlockType >(
+    : TNode< ILayer >(
+          nullptr
+        , FOnParentChanged()
+    )
+    , ILayer(
           "LayerStack"
         , false
         , false
@@ -50,13 +58,35 @@ CLASS::TLayerStack(
         , iOnUserDataRemoved
         , FOnParentChanged()
     )
-    , TRoot< ILayer >()
+    , TAbstractLayerDrawable< BlockType >(
+          "LayerStack"
+        , false
+        , false
+        , FColor::Transparent
+        , nullptr
+        , FOnNameChanged()
+        , FOnBoolChanged()
+        , FOnBoolChanged()
+        , FOnColorChanged()
+        , iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+        , FOnParentChanged()
+    )
+    , TRoot< ILayer > (
+          nullptr
+        , FOnParentChanged()
+        , iOnLayerAdded
+        , iOnLayerRemoved
+    )
     , TSearchable< TRoot< ILayer > >()
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
     , SuperStackExtra( args ... )
-{}
+{
+    ULIS_DEBUG_PRINTF( "TLayerStack Created" )
+}
 
 // TLayerStack Interface
 TEMPLATE
@@ -67,6 +97,8 @@ CLASS::Reset(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , const FOnNodeAdded& iOnLayerAdded
+    , const FOnNodeRemoved& iOnLayerRemoved
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
@@ -76,7 +108,12 @@ CLASS::Reset(
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
     ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
-    this->TRoot< ILayer >::Reset();
+    this->TRoot< ILayer >::Reset(
+          nullptr
+        , FOnParentChanged()
+        , iOnLayerAdded
+        , iOnLayerRemoved
+    );
     this->FOnUserDataAdded::SetDelegate( iOnUserDataAdded );
     this->FOnUserDataChanged::SetDelegate( iOnUserDataChanged );
     this->FOnUserDataRemoved::SetDelegate( iOnUserDataRemoved );

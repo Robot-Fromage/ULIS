@@ -20,10 +20,15 @@
 ULIS_NAMESPACE_BEGIN
 
 struct ULIS_API FDummySuperStack {
-    ~FDummySuperStack() {}
-    FDummySuperStack() {}
+    ~FDummySuperStack() {
+        ULIS_DEBUG_PRINTF( "FDummySuperStack Destroyed" )
+    }
+
+    FDummySuperStack() {
+        ULIS_DEBUG_PRINTF( "FDummySuperStack Created" )
+    }
 };
-template class ULIS_API TAbstractLayerDrawable< FBlock >;
+
 /////////////////////////////////////////////////////
 /// @class      TLayerStack
 /// @brief      The TLayerStack class provides a class to store a layer stack
@@ -53,6 +58,8 @@ public:
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
+        , const FOnNodeAdded& iOnLayerAdded = FOnNodeAdded()
+        , const FOnNodeRemoved& iOnLayerRemoved = FOnNodeRemoved()
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
@@ -71,6 +78,8 @@ public:
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
+        , const FOnNodeAdded& iOnLayerAdded = FOnNodeAdded()
+        , const FOnNodeRemoved& iOnLayerRemoved = FOnNodeRemoved()
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
@@ -95,6 +104,10 @@ public:
     // TSearchable Overload Shadow Interface
     using TRoot< ILayer >::operator[];
     using TSearchable< TRoot< ILayer > >::operator[];
+
+private:
+    // TNode< ILayer > Interface ( Hide )
+    using TNode< ILayer >::SetParent;
 };
 
 ULIS_NAMESPACE_END

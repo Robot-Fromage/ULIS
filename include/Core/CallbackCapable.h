@@ -70,6 +70,10 @@ public:
         : mDelegate( iDelegate )
     {}
 
+    TCallbackCapable( typename DelegateType::tFptr iDelegateFPTR )
+        : mDelegate( iDelegateFPTR )
+    {}
+
     template< typename ... Args >
     ULIS_FORCEINLINE void Invoke( Args ... args ) const {
         mDelegate.ExecuteIfBound( args ... );

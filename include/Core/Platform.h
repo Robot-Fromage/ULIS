@@ -249,6 +249,13 @@ namespace ULIS_NAMESPACE_NAME {}
     #define ULIS_ASSERT_RETURN_ERROR( cond, log, ret ) if( !( cond ) ) { return  ret; }
 #endif
 
+#define ULIS_ENABLE_DEBUG_PRINTF
+#ifdef ULIS_ENABLE_DEBUG_PRINTF
+    #define ULIS_DEBUG_PRINTF( log ) { std::cout << log << std::endl; }
+#else
+    #define ULIS_DEBUG_PRINTF( log )
+#endif
+
 /////////////////////////////////////////////////////
 // SIMD PATCH FOR GNU < 9
 // CHECK: this conflicts with xcode sometimes identifying itself as GNUC < 9 but defining the appropriate simd instructions.

@@ -20,6 +20,8 @@ TEMPLATE
 CLASS::~THasBlock() {
     if( mBlock )
         BlockAllocatorType::Delete( mBlock );
+
+    ULIS_DEBUG_PRINTF( "THasBlock Destroyed" )
 }
 
 TEMPLATE
@@ -36,6 +38,7 @@ CLASS::THasBlock(
     if( iWidth && iHeight )
         mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace );
     Invoke( mBlock );
+    ULIS_DEBUG_PRINTF( "THasBlock Created" )
 }
 
 TEMPLATE
@@ -47,6 +50,7 @@ CLASS::THasBlock(
     , mBlock( iBlock )
 {
     Invoke( mBlock );
+    ULIS_DEBUG_PRINTF( "THasBlock Created" )
 }
 
 TEMPLATE

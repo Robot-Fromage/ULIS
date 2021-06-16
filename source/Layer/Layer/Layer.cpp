@@ -14,6 +14,7 @@
 ULIS_NAMESPACE_BEGIN
 ILayer::~ILayer()
 {
+    ULIS_DEBUG_PRINTF( "ILayer Destroyed" )
 }
 
 ILayer::ILayer(
@@ -58,7 +59,9 @@ ILayer::ILayer(
           iPrettyColor
         , iOnColorChanged
     )
-{}
+{
+    ULIS_DEBUG_PRINTF( "ILayer Created" )
+}
 
 ULIS_NAMESPACE_END
 

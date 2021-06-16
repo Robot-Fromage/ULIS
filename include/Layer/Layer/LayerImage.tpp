@@ -19,6 +19,7 @@
 ULIS_NAMESPACE_BEGIN
 TEMPLATE
 CLASS::~TLayerImage() {
+    ULIS_DEBUG_PRINTF( "TLayerImage Destroyed" )
 }
 
 TEMPLATE
@@ -50,7 +51,27 @@ CLASS::TLayerImage(
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
     , const FOnBoolChanged& iOnPaintLockChanged
 )
-    : tAbstractLayerDrawable(
+    : TNode< ILayer >(
+          iParent
+        , iOnParentChanged
+    )
+    , ILayer(
+          iName
+        , iLocked
+        , iVisible
+        , iPrettyColor
+        , iParent
+
+        , iOnNameChanged
+        , iOnLockChanged
+        , iOnVisibleChanged
+        , iOnColorChanged
+        , iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+        , iOnParentChanged
+    )
+    , tAbstractLayerDrawable(
           iName
         , iLocked
         , iVisible
@@ -85,6 +106,7 @@ CLASS::TLayerImage(
         , iOnPaintLockChanged
     )
 {
+    ULIS_DEBUG_PRINTF( "TLayerImage Created" )
 }
 
 TEMPLATE
@@ -145,6 +167,7 @@ CLASS::TLayerImage(
         , iOnPaintLockChanged
     )
 {
+    ULIS_DEBUG_PRINTF( "TLayerImage Created" )
 }
 
 // TDrawable Interface

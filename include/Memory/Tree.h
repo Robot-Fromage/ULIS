@@ -23,7 +23,7 @@ template< class Type > using TOnNodeAdded = TCallbackCapable< TNodeAddedDelegate
 template< class Type > using TNodeRemovedDelegate = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
 template< class Type > using TOnNodeRemoved = TCallbackCapable< TNodeRemovedDelegate< Type >, 1 >;
 template< class Type > using TParentChangedDelegate = TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >;
-template< class Type > using TOnParentChanged = TCallbackCapable< TParentChangedDelegate< Type > >;
+template< class Type > using TOnParentChanged = TCallbackCapable< TParentChangedDelegate< Type >, 2 >; // Not necessary per say to change _ID to 2 but to avoid future mistakes, good habit.
 
 /////////////////////////////////////////////////////
 /// @class      TNode
@@ -40,6 +40,7 @@ public:
 
 public:
     virtual ~TNode() {
+        ULIS_DEBUG_PRINTF( "TNode Destroyed" )
     }
 
     TNode(
@@ -49,6 +50,7 @@ public:
         : TOnParentChanged< Type >( iDelegate )
         , mParent( iParent )
     {
+        ULIS_DEBUG_PRINTF( "TNode Created" )
         TOnParentChanged< Type >::Invoke( this, mParent );
     }
 
@@ -127,6 +129,7 @@ public:
 public:
     virtual ~TRoot() override {
         Reset();
+        ULIS_DEBUG_PRINTF( "TRoot Destroyed" )
     }
 
     TRoot(
@@ -141,16 +144,28 @@ public:
         )
         , TOnNodeAdded< Type >( iNodeAddedDelegate )
         , TOnNodeRemoved< Type >( iNodeRemovedDelegate )
-    {}
+    {
+        ULIS_DEBUG_PRINTF( "TRoot Created" )
+    }
 
     void
-    Reset()
+    Reset(
+          tParent* iParent = nullptr
+        , const TOnParentChanged< Type >& iParentChangedDelegate = TOnParentChanged< Type >()
+        , const TOnNodeAdded< Type >& iNodeAddedDelegate = TOnNodeAdded< Type >()
+        , const TOnNodeRemoved< Type >& iNodeRemovedDelegate = TOnNodeRemoved< Type >()
+    )
     {
         for( uint64 i = 0; i < mChildren.Size(); ++i ) {
             TOnNodeRemoved< Type >::Invoke( this, mChildren[i] );
             delete  mChildren[i];
         }
         mChildren.Clear();
+
+        mParent = iParent;
+        TOnParentChanged< Type >::SetDelegate( iParentChangedDelegate );
+        TOnNodeAdded< Type >::SetDelegate( iNodeAddedDelegate );
+        TOnNodeRemoved< Type >::SetDelegate( iNodeRemovedDelegate );
     }
 
     TArray< tNode* >& Children() {
@@ -183,8 +198,8 @@ public:
             Children().PushBack( iNode );
         else
             Children().Insert( iIndex, iNode );
+        TOnNodeAdded< Type >::Invoke( this, iNode );
         return  *this;
-        TOnNodeAdded< Type >::Invoke( this, mChildren[ iIndex ] );
     }
 
     template< typename ChildType, class ... Args >
