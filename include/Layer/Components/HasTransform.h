@@ -113,12 +113,12 @@ public:
 
 public:
     // Frame of ref API
-    FVec2F Right() const;   // Intrinsic expressed in external basis
-    FVec2F Down() const;    // Intrinsic expressed in external basis
-    FVec2F IntrinsicXAxis() const;  // Same as X( 1, 0, 0 ), expressed in local basis
-    FVec2F IntrinsicYAxis() const;  // Same as Y( 0, 1, 0 ), expressed in local basis
-    FVec2F ExtrinsicXAxis() const;  // Same as Right, expressed in local basis
-    FVec2F ExtrinsicYAxis() const;  // Same as Down, expressed in local basis
+    FVec2F Right() const;   // Local X( 1, 0 ) expressed in external basis
+    FVec2F Down() const;    // Local Y( 0, 1 ) expressed in external basis
+    FVec2F LocalXAxis() const;  // Local X( 1, 0 ), expressed in local basis
+    FVec2F LocalYAxis() const;  // Local Y( 0, 1 ), expressed in local basis
+    FVec2F ExternalXAxis() const;  // External X( 1, 0 ), expressed in local basis
+    FVec2F ExternalYAxis() const;  // External Y( 0, 1 ), expressed in local basis
 
 public:
     // Conversion API

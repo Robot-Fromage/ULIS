@@ -181,7 +181,7 @@ IHasTransform::MoveDown( float iDelta ) {
 // Rotation setter
 void
 IHasTransform::ResetRotation() {
-    mInfo.rotation = 0.f;
+    mInfo.rotation = 0;
     Invoke( mInfo );
 }
 
@@ -351,110 +351,105 @@ IHasTransform::ScaleY() const {
 // Advanced Positioning
 void
 IHasTransform::TargetLocal( const FVec2F& iTarget ) {
+
 }
 
 void
 IHasTransform::Target( const FVec2F& iTarget ) {
+
 }
 
 // Frame of ref API
 FVec2F
 IHasTransform::Right() const {
-    return  FVec2F();
+    return FVec2F( Matrix() * FVec3F( 1, 0, 0 ) ).Normalize();
 }
 
 FVec2F
 IHasTransform::Down() const {
-    return  FVec2F();
+    return FVec2F( Matrix() * FVec3F( 0, 1, 0 ) ).Normalize();
 }
 
 FVec2F
-IHasTransform::IntrinsicXAxis() const {
-    return  FVec2F();
+IHasTransform::LocalXAxis() const {
+    return FVec2F( 1, 0 );
 }
 
 FVec2F
-IHasTransform::IntrinsicYAxis() const {
-    return  FVec2F();
+IHasTransform::LocalYAxis() const {
+    return FVec2F( 0, 1 );
 }
 
 FVec2F
-IHasTransform::ExtrinsicXAxis() const {
-    return  FVec2F();
+IHasTransform::ExternalXAxis() const {
+    return FVec2F( InverseMatrix() * FVec3F( 1, 0, 0 ) ).Normalize();
 }
 
 FVec2F
-IHasTransform::ExtrinsicYAxis() const {
-    return  FVec2F();
+IHasTransform::ExternalYAxis() const {
+    return FVec2F( InverseMatrix() * FVec3F( 0, 1, 0 ) ).Normalize();
 }
 
 // Conversion API
 FVec3F
 IHasTransform::ToLocal( const  FVec3F& iHPoint ) const {
-    return  FVec3F();
+    return FVec3F( Matrix() * iHPoint );
 }
 
 FVec3F
 IHasTransform::FromLocal( const  FVec3F& iHPoint ) const {
-    return  FVec3F();
+    return FVec3F( InverseMatrix() * iHPoint );
 }
 
 FVec2F
 IHasTransform::PointToLocal( const FVec2F& iPoint ) const {
-    return  FVec2F();
+    return FVec2F( Matrix() * FVec3F( iPoint, 1 ) );
 }
 
 FVec2F
 IHasTransform::PointFromLocal( const FVec2F& iPoint ) const {
-    return  FVec2F();
+    return FVec2F( InverseMatrix() * FVec3F( iPoint, 1 ) );
 }
 
 FVec2F
 IHasTransform::VecToLocal( const FVec2F& iVec ) const {
-    return  FVec2F();
+    return FVec2F( Matrix() * FVec3F( iVec, 0 ) );
 }
 
 FVec2F
 IHasTransform::VecFromLocal( const FVec2F& iVec ) const {
-    return  FVec2F();
+    return FVec2F( InverseMatrix() * FVec3F( iVec, 0 ) );
 }
 
 // Intermediate Matrix API
 FMat3F
 IHasTransform::PivotMatrix() const {
-    return  FMat3F();
+    return  FMat3F::MakeTranslationMatrix( mInfo.pivot.x, mInfo.pivot.y );
 }
 
 FMat3F
 IHasTransform::TranslationMatrix() const {
-    return  FMat3F();
+    return  FMat3F::MakeTranslationMatrix( mInfo.translation.x, mInfo.translation.y );
 }
 
 FMat3F
 IHasTransform::ScaleMatrix() const {
-    return FMat3F
-        ( mInfo.scale.x, 0, 0
-        , 0, mInfo.scale.y, 0
-        , 0, 0, 1 );
+    return FMat3F::MakeScaleMatrix( mInfo.scale.x, mInfo.scale.y );
 }
 
 FMat3F
 IHasTransform::RotationMatrix() const {
-    return  FMat3F(
-          mInfo.scale.x, 0, 0
-        , 0, mInfo.scale.y, 0
-        , 0, 0, 1
-    );
+    return  FMat3F::MakeRotationMatrix( mInfo.rotation ) ;
 }
 
 FMat3F
 IHasTransform::Matrix() const {
-    return  FMat3F();
+    return  IHasTransform::PivotMatrix() * IHasTransform::RotationMatrix() * IHasTransform::ScaleMatrix() * IHasTransform::TranslationMatrix() * IHasTransform::PivotMatrix().Inverse() ;
 }
 
 FMat3F
 IHasTransform::InverseMatrix() const {
-    return  FMat3F();
+    return  IHasTransform::Matrix().Inverse();
 }
 
 ULIS_NAMESPACE_END
