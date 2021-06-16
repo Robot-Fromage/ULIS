@@ -31,6 +31,7 @@ main( int argc, char *argv[] ) {
 
 
     FLayerStack* stack = new FLayerStack( w, h, fmt, nullptr );
+    stack->AddChild( new FLayerImage( "image0" ) );
 
     {
         ctx.Clear( canvas, canvas.Rect() );

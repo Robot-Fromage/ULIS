@@ -19,7 +19,7 @@
 ULIS_NAMESPACE_BEGIN
 // Forward-declarations
 template< class BlockType, class RendererType, class SuperStackExtra > class TLayerStack;
-template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType > class TLayerFolder;
+template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType, class LayerStackType > class TLayerFolder;
 
 /////////////////////////////////////////////////////
 /// @class      TLayerImage
@@ -39,12 +39,12 @@ class TLayerImage final
     , public IHasBlendInfo
     , public IHasPaintLock
 {
+    typedef TRoot< ILayer > tParent;
     typedef TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > tSelf;
-    typedef TLayerFolder< BlockType, RasterizerType, RendererType, BlockAllocatorType > tSiblingFolder;
+    typedef TLayerFolder< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > tSiblingFolder;
     typedef TAbstractLayerDrawable< BlockType > tAbstractLayerDrawable;
-    typedef TRasterizable< TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > > tRasterizable;
+    typedef TRasterizable< tSelf > tRasterizable;
     typedef THasBlock< BlockType, BlockAllocatorType > tHasBlock;
-
 public:
     // DTor
     virtual ~TLayerImage() override;
@@ -124,10 +124,15 @@ public:
         , const FEvent* iWaitList = nullptr
     ) override;
 
+    // TRasterizable Interface
+    tSelf* Rasterize() const override;
+
 private:
     // TNode< ILayer > Interface
     void InitFromParent( const TRoot< ILayer >* iParent ) override;
 };
 
 ULIS_NAMESPACE_END
+
+#include "Layer/Layer/LayerImage.tpp"
 

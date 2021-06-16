@@ -34,7 +34,7 @@ CLASS::THasBlock(
     , mBlock( nullptr )
 {
     if( iWidth && iHeight )
-        mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace )
+        mBlock = BlockAllocatorType::New( iWidth, iHeight, iFormat, iColorSpace );
     Invoke( mBlock );
 }
 

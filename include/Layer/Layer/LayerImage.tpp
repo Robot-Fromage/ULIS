@@ -182,7 +182,8 @@ CLASS::RenderImage(
 // TNode< ILayer > Interface
 TEMPLATE
 void
-CLASS::InitFromParent( const TRoot< ILayer >* iParent ) {
+CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
+{
     const tParent* topLevel = iParent->TopLevelParent();
     if( !topLevel )
         return;
@@ -201,12 +202,19 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) {
             case tSiblingFolder::StaticTypeID(): {
                 const tSiblingFolder* folder = dynamic_cast< const tSiblingFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
-                const BlockType& ref = folder->Block();
-                Realloc( ref.Width(), ref.Height(), ref.Format(), ref.ColorSpace() );
+                const BlockType* ref = folder->Block();
+                Realloc( ref->Width(), ref->Height(), ref->Format(), ref->ColorSpace() );
                 break;
             }
         }
     }
+}
+
+TEMPLATE
+typename CLASS::tSelf*
+CLASS::Rasterize() const // override
+{
+    return  nullptr;
 }
 
 ULIS_NAMESPACE_END

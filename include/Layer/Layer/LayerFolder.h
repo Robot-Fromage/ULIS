@@ -11,8 +11,18 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/HasBlendInfo.h"
+#include "Layer/Components/HasBlock.h"
+#include "Layer/Components/HasCollapse.h"
+#include "Layer/Components/Rasterizable.h"
+#include "Layer/Components/Searchable.h"
+#include "Layer/Layer/AbstractLayerDrawable.h"
 
 ULIS_NAMESPACE_BEGIN
+// Forward-declarations
+template< class BlockType, class RendererType, class SuperStackExtra > class TLayerStack;
+template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType, class LayerStackType > class TLayerImage;
+
 /////////////////////////////////////////////////////
 /// @class      TLayerFolder
 /// @brief      The TLayerFolder class provides a class to store a folder of
@@ -22,10 +32,23 @@ template<
     , class RasterizerType
     , class RendererType
     , class BlockAllocatorType
+    , class LayerStackType
 >
 class TLayerFolder
+    : public TAbstractLayerDrawable< BlockType >
+    , public TRoot< ILayer >
+    , public TSearchable< TRoot< ILayer > >
+    , public TRasterizable< TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > >
+    , public THasBlock< BlockType, BlockAllocatorType >
+    , public IHasBlendInfo
+    , public IHasCollapse
 {
+public:
+    // ITypeIdentifiable Interface
+    ULIS_OVERRIDE_TYPEID_INTERFACE( "Folder" );
 };
 
 ULIS_NAMESPACE_END
+
+#include "Layer/Layer/LayerFolder.tpp"
 

@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         LayerText.h
+* @file         RegularBlockRenderer.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the TLayerText class.
+* @brief        This file provides the declaration for the FRegularBlockRenderer class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -14,20 +14,16 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TLayerText
-/// @brief      The TLayerText class provides a class to store text in a layer
-///             of a layer stack for painting applications.
-template<
-      class BlockType
-    , class RasterizerType
-    , class RendererType
-    , class BlockAllocatorType
->
-class TLayerText final
+/// @class      FRegularBlockRenderer
+/// @brief      Allocator Utility for FBlock
+class ULIS_API FRegularBlockRenderer
 {
+private:
+    FRegularBlockRenderer() = default;
+
+public:
+    static void Render();
 };
 
 ULIS_NAMESPACE_END
-
-#include "Layer/Layer/LayerText.tpp"
 

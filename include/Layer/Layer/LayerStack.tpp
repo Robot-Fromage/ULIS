@@ -100,7 +100,12 @@ CLASS::RenderImage(
     const int max = static_cast< int >( Children().Size() ) - 1;
     bool bFirst = true;
     for( int i = max; i >= 0; --i ) {
-        ev = Children()[i]->Self().RenderImage(
+        typedef TAbstractLayerDrawable< BlockType > tDrawable;
+        tDrawable* drawable = dynamic_cast< tDrawable* >( &( Children()[i]->Self() ) );
+        if( !drawable )
+            continue;
+
+        ev = drawable->RenderImage(
               iCtx
             , ioBlock
             , iRect
