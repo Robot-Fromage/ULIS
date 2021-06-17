@@ -32,10 +32,12 @@ ILayer::ILayer(
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
     , const FOnParentChanged& iOnParentChanged
+    , const FOnSelfChanged& iOnSelfChanged
 )
     : TNode< ILayer >(
           iParent
         , iOnParentChanged
+        , iOnSelfChanged
     )
     , ITypeIdentifiable()
     , IHasUserData(

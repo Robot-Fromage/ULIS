@@ -43,9 +43,110 @@ class TLayerFolder
     , public IHasBlendInfo
     , public IHasCollapse
 {
+    typedef TRoot< ILayer > tParent;
+    typedef TLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > tSiblingImage;
+    typedef TLayerFolder< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > tSelf;
+    typedef TAbstractLayerDrawable< BlockType > tAbstractLayerDrawable;
+    typedef TRasterizable< tSiblingImage > tRasterizable;
+    typedef THasBlock< BlockType, BlockAllocatorType > tHasBlock;
+
+public:
+    // DTor
+    virtual ~TLayerFolder() override;
+
+    // CTors
+    TLayerFolder(
+          const FString& iName = "Untitled Folder"
+        , bool iLocked = false
+        , bool iVisible = true
+        , const FColor& iPrettyColor = FColor::Transparent
+        , uint16 iWidth = 0
+        , uint16 iHeight = 0
+        , eFormat iFormat = Format_RGBA8
+        , const FColorSpace* iColorSpace = nullptr
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , bool iCollapsed = false
+        , const TRoot< ILayer >* iParent = nullptr
+
+        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
+        , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
+        , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()
+        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
+        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
+        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
+        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
+        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnNodeAdded& iOnLayerAdded = FOnNodeAdded()
+        , const FOnNodeRemoved& iOnLayerRemoved = FOnNodeRemoved()
+
+        , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
+        , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
+        , const FOnBoolChanged& iOnCollapseChanged = FOnBoolChanged()
+    );
+
+    TLayerFolder(
+          BlockType* iBlock
+        , const FString& iName = "Untitled Folder"
+        , bool iLocked = false
+        , bool iVisible = true
+        , const FColor& iPrettyColor = FColor::Transparent
+        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
+        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
+        , ufloat iOpacity = 1.f
+        , bool iCollapsed = false
+        , const TRoot< ILayer >* iParent = nullptr
+
+        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
+        , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
+        , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()
+        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
+        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
+        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
+        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
+        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
+        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnNodeAdded& iOnLayerAdded = FOnNodeAdded()
+        , const FOnNodeRemoved& iOnLayerRemoved = FOnNodeRemoved()
+
+        , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
+        , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
+        , const FOnBoolChanged& iOnCollapseChanged = FOnBoolChanged()
+    );
+
+    // Disable copy
+    TLayerFolder( const TLayerFolder& ) = delete;
+    TLayerFolder& operator=( const TLayerFolder& ) = delete;
+
 public:
     // ITypeIdentifiable Interface
     ULIS_OVERRIDE_TYPEID_INTERFACE( "Folder" );
+
+    // TDrawable Interface
+    FEvent RenderImageCache( FContext& iCtx ) override;
+    FEvent RenderImage(
+          FContext& iCtx
+        , BlockType& ioBlock
+        , const FRectI& iRect = FRectI::Auto
+        , const FVec2I& iPos = FVec2I( 0 )
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy()
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+    ) override;
+
+    // TRasterizable Interface
+    tSiblingImage* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) override;
+
+    // TRoot Overload Shadow Interface
+    // TSearchable Overload Shadow Interface
+    using TRoot< ILayer >::operator[];
+    using TSearchable< TRoot< ILayer > >::operator[];
+
+private:
+    // TNode< ILayer > Interface
+    void InitFromParent( const TRoot< ILayer >* iParent ) override;
 };
 
 ULIS_NAMESPACE_END

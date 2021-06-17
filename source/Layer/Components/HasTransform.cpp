@@ -444,7 +444,7 @@ IHasTransform::RotationMatrix() const {
 
 FMat3F
 IHasTransform::Matrix() const {
-    return  IHasTransform::PivotMatrix() * IHasTransform::RotationMatrix() * IHasTransform::ScaleMatrix() * IHasTransform::TranslationMatrix() * IHasTransform::PivotMatrix().Inverse() ;
+    return  IHasTransform::PivotMatrix() * IHasTransform::RotationMatrix() * IHasTransform::ScaleMatrix() * IHasTransform::TranslationMatrix() * IHasTransform::PivotMatrix().Inverse();
 }
 
 FMat3F

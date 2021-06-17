@@ -11,6 +11,10 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
+#include "Scheduling/Event.h"
+#include "Scheduling/SchedulePolicy.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -19,7 +23,7 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 class TRasterizable
 {
-    virtual T* Rasterize() const = 0;
+    virtual T* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) = 0;
 };
 
 ULIS_NAMESPACE_END

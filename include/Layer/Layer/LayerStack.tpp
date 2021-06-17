@@ -32,6 +32,7 @@ CLASS::TLayerStack(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , const FOnSelfChanged& iOnSelfChanged
     , const FOnNodeAdded& iOnLayerAdded
     , const FOnNodeRemoved& iOnLayerRemoved
     , const FOnUserDataAdded& iOnUserDataAdded
@@ -42,6 +43,7 @@ CLASS::TLayerStack(
     : TNode< ILayer >(
           nullptr
         , FOnParentChanged()
+        , iOnSelfChanged
     )
     , ILayer(
           "LayerStack"
@@ -57,6 +59,7 @@ CLASS::TLayerStack(
         , iOnUserDataChanged
         , iOnUserDataRemoved
         , FOnParentChanged()
+        , iOnSelfChanged
     )
     , TAbstractLayerDrawable< BlockType >(
           "LayerStack"
@@ -76,6 +79,7 @@ CLASS::TLayerStack(
     , TRoot< ILayer > (
           nullptr
         , FOnParentChanged()
+        , iOnSelfChanged
         , iOnLayerAdded
         , iOnLayerRemoved
     )
@@ -97,6 +101,7 @@ CLASS::Reset(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , const FOnSelfChanged& iOnSelfChanged
     , const FOnNodeAdded& iOnLayerAdded
     , const FOnNodeRemoved& iOnLayerRemoved
     , const FOnUserDataAdded& iOnUserDataAdded
@@ -114,6 +119,7 @@ CLASS::Reset(
         , iOnLayerAdded
         , iOnLayerRemoved
     );
+    this->FOnSelfChanged::SetDelegate( iOnSelfChanged );
     this->FOnUserDataAdded::SetDelegate( iOnUserDataAdded );
     this->FOnUserDataChanged::SetDelegate( iOnUserDataChanged );
     this->FOnUserDataRemoved::SetDelegate( iOnUserDataRemoved );
@@ -132,8 +138,8 @@ CLASS::RenderImage(
     , const FEvent* iWaitList
 ) // override
 {
-    RenderCache( iCtx );
     FEvent ev;
+    iCtx.Clear( ioBlock, FRectI::Auto, FSchedulePolicy::CacheEfficient, iNumWait, iWaitList, &ev );
     const int max = static_cast< int >( Children().Size() ) - 1;
     bool bFirst = true;
     for( int i = max; i >= 0; --i ) {
@@ -148,10 +154,9 @@ CLASS::RenderImage(
             , iRect
             , iPos
             , iPolicy
-            , bFirst ? iNumWait : 0
-            , bFirst ? iWaitList : nullptr
+            , 1
+            , &ev
         );
-        bFirst = false;
     }
     return  ev;
 }

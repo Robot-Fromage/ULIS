@@ -18,12 +18,15 @@
 ULIS_NAMESPACE_BEGIN
 template< class Type > class TRoot;
 template< class Type > class TNode;
-template< class Type > using TNodeAddedDelegate = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
-template< class Type > using TOnNodeAdded = TCallbackCapable< TNodeAddedDelegate< Type >, 0 >;
-template< class Type > using TNodeRemovedDelegate = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
-template< class Type > using TOnNodeRemoved = TCallbackCapable< TNodeRemovedDelegate< Type >, 1 >;
+// Not necessary per say to change _ID always, even when type changes, but to avoid future mistakes, good habit.
+template< class Type > using TNodeAddedDelegate     = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
+template< class Type > using TNodeRemovedDelegate   = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
 template< class Type > using TParentChangedDelegate = TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >;
-template< class Type > using TOnParentChanged = TCallbackCapable< TParentChangedDelegate< Type >, 2 >; // Not necessary per say to change _ID to 2 but to avoid future mistakes, good habit.
+template< class Type > using TSelfChangedDelegate   = TLambdaCallback< void, const TNode< Type >* >;
+template< class Type > using TOnNodeAdded       = TCallbackCapable< TNodeAddedDelegate< Type >, 0 >;
+template< class Type > using TOnNodeRemoved     = TCallbackCapable< TNodeRemovedDelegate< Type >, 1 >;
+template< class Type > using TOnParentChanged   = TCallbackCapable< TParentChangedDelegate< Type >, 2 >;
+template< class Type > using TOnSelfChanged     = TCallbackCapable< TSelfChangedDelegate< Type >, 3 >;
 
 /////////////////////////////////////////////////////
 /// @class      TNode
@@ -31,6 +34,7 @@ template< class Type > using TOnParentChanged = TCallbackCapable< TParentChanged
 template< class Type >
 class ULIS_API TNode
     : public TOnParentChanged< Type >
+    , public TOnSelfChanged< Type >
 {
     typedef TRoot< Type > tParent;
     friend class TRoot< Type >;
@@ -45,9 +49,11 @@ public:
 
     TNode(
           const tParent* iParent = nullptr
-        , const TOnParentChanged< Type >& iDelegate = TOnParentChanged< Type >()
+        , const TOnParentChanged< Type >& iParentChangedDelegate = TOnParentChanged< Type >()
+        , const TOnSelfChanged< Type >& iSelfChangedDelegate = TOnSelfChanged< Type >()
     )
-        : TOnParentChanged< Type >( iDelegate )
+        : TOnParentChanged< Type >( iParentChangedDelegate )
+        , TOnSelfChanged< Type >( iSelfChangedDelegate )
         , mParent( iParent )
     {
         ULIS_DEBUG_PRINTF( "TNode Created" )
@@ -86,6 +92,12 @@ public:
         while( parent->mParent )
             parent = parent->mParent;
         return  parent;
+    }
+
+    void NotifyChange() const {
+        TOnSelfChanged< Type >::Invoke( this );
+        if( mParent )
+            mParent->NotifyChange();
     }
 
 private:
@@ -135,12 +147,14 @@ public:
     TRoot(
           tParent* iParent = nullptr
         , const TOnParentChanged< Type >& iParentChangedDelegate = TOnParentChanged< Type >()
+        , const TOnSelfChanged< Type >& iSelfChangedDelegate = TOnSelfChanged< Type >()
         , const TOnNodeAdded< Type >& iNodeAddedDelegate = TOnNodeAdded< Type >()
         , const TOnNodeRemoved< Type >& iNodeRemovedDelegate = TOnNodeRemoved< Type >()
     )
         : tSuperClass(
               iParent
             , iParentChangedDelegate
+            , iSelfChangedDelegate
         )
         , TOnNodeAdded< Type >( iNodeAddedDelegate )
         , TOnNodeRemoved< Type >( iNodeRemovedDelegate )

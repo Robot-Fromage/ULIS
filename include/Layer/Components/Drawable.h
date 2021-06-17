@@ -28,7 +28,7 @@ protected:
     TDrawable();
 
 public:
-    virtual FEvent RenderCache( FContext& iCtx );
+    virtual FEvent RenderImageCache( FContext& iCtx );
     virtual FEvent RenderImage(
           FContext& iCtx
         , BlockType& ioBlock
@@ -39,11 +39,11 @@ public:
         , const FEvent* iWaitList = nullptr
     ) = 0;
 
-    bool IsCacheValid() const;
-    virtual void InvalidCache();
+    bool IsImageCacheValid() const;
+    virtual void InvalidImageCache();
 
 protected:
-    void ValidateCache();
+    void ValidateImageCache();
 
 private:
     bool mCacheValid;

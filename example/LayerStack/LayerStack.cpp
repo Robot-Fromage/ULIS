@@ -35,10 +35,29 @@ main( int argc, char *argv[] ) {
         , h
         , fmt
         , nullptr
+        , FOnSelfChanged()
         , FOnNodeAdded( [stack]( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iChild ){
             ULIS_DEBUG_PRINTF( "Node added" )
             auto dummy = 0;
         } )
+    );
+
+    stack->AddChild(
+        new FLayerFolder(
+              "folder0"
+            , false
+            , true
+            , FColor::Transparent
+            , w
+            , h
+            , fmt
+            , nullptr
+            , Blend_Normal
+            , Alpha_Normal
+            , 1.f
+            , false
+            , nullptr
+        )
     );
 
     stack->AddChild(

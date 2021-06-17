@@ -26,15 +26,18 @@ class ILayer;
 
 // Exports
 template class ULIS_API TLambdaCallback< void, const TNode< ILayer >*, const TRoot< ILayer >* >;
-template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< ILayer >*, const TRoot< ILayer >* > >;
 template class ULIS_API TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >* >;
+template class ULIS_API TLambdaCallback< void, const TNode< ILayer >* >;
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >* >, 0 >;
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >* >, 1 >;
+template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< ILayer >*, const TRoot< ILayer >* >, 2 >;
+template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< ILayer >* >, 3 >;
 template class ULIS_API TNode< ILayer >;
 template class ULIS_API TArray< TNode< ILayer >* >;
 template class ULIS_API TRoot< ILayer >;
 typedef FOn_bool_Changed FOnBoolChanged;
 typedef TOnParentChanged< ILayer > FOnParentChanged;
+typedef TOnSelfChanged< ILayer > FOnSelfChanged;
 typedef TOnNodeAdded< ILayer > FOnNodeAdded;
 typedef TOnNodeRemoved< ILayer > FOnNodeRemoved;
 /*
@@ -81,6 +84,7 @@ public:
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
         , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
+        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
     );
 };
 

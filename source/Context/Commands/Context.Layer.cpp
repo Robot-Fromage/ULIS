@@ -68,7 +68,7 @@ FContext::RenderLayerFolder(
     , FEvent* iEvent
 )
 {
-    FEvent ev = iFolder.RenderCache( *this );
+    FEvent ev = iFolder.RenderImageCache( *this );
     Dummy_OP( 1, &ev, iEvent );
 
     return  ULIS_NO_ERROR;
@@ -80,7 +80,7 @@ FContext::RenderLayerText(
     , FEvent* iEvent
 )
 {
-    FEvent ev = iText.RenderCache( *this );
+    FEvent ev = iText.RenderImageCache( *this );
     Dummy_OP( 1, &ev, iEvent );
     return  ULIS_NO_ERROR;
 }

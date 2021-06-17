@@ -46,6 +46,7 @@ CLASS::TLayerImage(
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
     , const FOnParentChanged& iOnParentChanged
+    , const FOnSelfChanged& iOnSelfChanged
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
@@ -54,6 +55,10 @@ CLASS::TLayerImage(
     : TNode< ILayer >(
           iParent
         , iOnParentChanged
+        , FOnSelfChanged( [this, iOnSelfChanged]( const TNode< ILayer >* iNode ) {
+            iOnSelfChanged.Invoke( iNode );
+            InvalidImageCache();
+        } )
     )
     , ILayer(
           iName
@@ -70,6 +75,7 @@ CLASS::TLayerImage(
         , iOnUserDataChanged
         , iOnUserDataRemoved
         , iOnParentChanged
+        , iOnSelfChanged
     )
     , tAbstractLayerDrawable(
           iName
@@ -86,6 +92,7 @@ CLASS::TLayerImage(
         , iOnUserDataChanged
         , iOnUserDataRemoved
         , iOnParentChanged
+        , iOnSelfChanged
     )
     , tRasterizable()
     , tHasBlock(
@@ -130,12 +137,18 @@ CLASS::TLayerImage(
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
     , const FOnParentChanged& iOnParentChanged
+    , const FOnSelfChanged& iOnSelfChanged
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
     , const FOnBoolChanged& iOnPaintLockChanged
 )
-    : tAbstractLayerDrawable(
+    : TNode< ILayer >(
+          iParent
+        , iOnParentChanged
+        , iOnSelfChanged
+    )
+    , ILayer(
           iName
         , iLocked
         , iVisible
@@ -150,6 +163,24 @@ CLASS::TLayerImage(
         , iOnUserDataChanged
         , iOnUserDataRemoved
         , iOnParentChanged
+        , iOnSelfChanged
+    )
+    , tAbstractLayerDrawable(
+          iName
+        , iLocked
+        , iVisible
+        , iPrettyColor
+        , iParent
+
+        , iOnNameChanged
+        , iOnLockChanged
+        , iOnVisibleChanged
+        , iOnColorChanged
+        , iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+        , iOnParentChanged
+        , iOnSelfChanged
     )
     , tRasterizable()
     , tHasBlock(
@@ -183,7 +214,6 @@ CLASS::RenderImage(
     , const FEvent* iWaitList
 ) // override
 {
-    RenderCache( iCtx );
     FEvent ev;
     ulError err = iCtx.Blend(
           *Block()
@@ -202,11 +232,55 @@ CLASS::RenderImage(
     return  ev;
 }
 
+TEMPLATE
+typename CLASS::tSelf*
+CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
+{
+    const BlockType* ref = Block();
+    if( !ref )
+        return  nullptr;
+
+    // Actual Deep Copy with Event.
+    tSelf* rasterized = new tSelf(
+          Name()
+        , IsLocked()
+        , IsVisible()
+        , PrettyColor()
+        , ref->Width()
+        , ref->Height()
+        , ref->Format()
+        , ref->ColorSpace()
+        , BlendMode()
+        , AlphaMode()
+        , Opacity()
+        , IsPaintLocked()
+        , nullptr
+
+        , FOnNameChanged::GetDelegate()
+        , FOnBoolChanged::GetDelegate()
+        , FOnBoolChanged::GetDelegate()
+        , FOnColorChanged::GetDelegate()
+        , FOnUserDataAdded::GetDelegate()
+        , FOnUserDataChanged::GetDelegate()
+        , FOnUserDataRemoved::GetDelegate()
+        , FOnParentChanged::GetDelegate()
+        , FOnSelfChanged::GetDelegate()
+        
+        , TOnBlockChanged< BlockType >::GetDelegate()
+        , FOnBlendInfoChanged::GetDelegate()
+        , FOnBoolChanged::GetDelegate()
+    );
+
+    iCtx.Copy( *Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
+    return  rasterized;
+}
+
 // TNode< ILayer > Interface
 TEMPLATE
 void
 CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
 {
+    ULIS_ASSERT( iParent == Parent(), "Inconsistent Parent" );
     const tParent* topLevel = iParent->TopLevelParent();
     if( !topLevel )
         return;
@@ -214,8 +288,7 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
     if( !Block() ) {
         const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the class hierarchy !" );
-        uint32 typeID = layer->TypeID();
-        switch( typeID ) {
+        switch( layer->TypeID() ) {
             case LayerStackType::StaticTypeID(): {
                 const LayerStackType* stack = dynamic_cast< const LayerStackType* >( layer );
                 ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
@@ -231,13 +304,6 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
             }
         }
     }
-}
-
-TEMPLATE
-typename CLASS::tSelf*
-CLASS::Rasterize() const // override
-{
-    return  nullptr;
 }
 
 ULIS_NAMESPACE_END

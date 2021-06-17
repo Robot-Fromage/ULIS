@@ -20,17 +20,17 @@ TDrawable< BlockType >::TDrawable()
 
 template< class BlockType >
 bool
-TDrawable< BlockType >::IsCacheValid() const {
+TDrawable< BlockType >::IsImageCacheValid() const {
     return  mCacheValid;
 }
 
 template< class BlockType >
 FEvent
-TDrawable< BlockType >::RenderCache( FContext& iCtx ) {
-    if( IsCacheValid() )
+TDrawable< BlockType >::RenderImageCache( FContext& iCtx ) {
+    if( IsImageCacheValid() )
         return  FEvent::NoOP();
 
-    ValidateCache();
+    ValidateImageCache();
     return  FEvent::NoOP();
 }
 
@@ -46,19 +46,19 @@ TDrawable< BlockType >::RenderImage(
     , const FEvent* iWaitList
 )
 {
-    RenderCache( iCtx );
+    RenderImageCache( iCtx );
     return  FEvent::NoOP();
 }
 
 template< class BlockType >
 void
-TDrawable< BlockType >::InvalidCache() {
+TDrawable< BlockType >::InvalidImageCache() {
     mCacheValid = false;
 }
 
 template< class BlockType >
 void
-TDrawable< BlockType >::ValidateCache() {
+TDrawable< BlockType >::ValidateImageCache() {
     mCacheValid = true;
 }
 

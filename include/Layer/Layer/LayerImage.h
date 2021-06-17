@@ -45,13 +45,14 @@ class TLayerImage final
     typedef TAbstractLayerDrawable< BlockType > tAbstractLayerDrawable;
     typedef TRasterizable< tSelf > tRasterizable;
     typedef THasBlock< BlockType, BlockAllocatorType > tHasBlock;
+
 public:
     // DTor
     virtual ~TLayerImage() override;
 
     // CTors
     TLayerImage(
-          const FString& iName = "Untitled"
+          const FString& iName = "Untitled Image"
         , bool iLocked = false
         , bool iVisible = true
         , const FColor& iPrettyColor = FColor::Transparent
@@ -73,6 +74,7 @@ public:
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
         , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
+        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
 
         , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
         , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
@@ -81,7 +83,7 @@ public:
 
     TLayerImage(
           BlockType* iBlock
-        , const FString& iName = "Untitled"
+        , const FString& iName = "Untitled Image"
         , bool iLocked = false
         , bool iVisible = true
         , const FColor& iPrettyColor = FColor::Transparent
@@ -99,6 +101,7 @@ public:
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
         , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
+        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
 
         , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
         , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
@@ -125,7 +128,7 @@ public:
     ) override;
 
     // TRasterizable Interface
-    tSelf* Rasterize() const override;
+    tSelf* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) override;
 
 private:
     // TNode< ILayer > Interface

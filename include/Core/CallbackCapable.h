@@ -87,6 +87,10 @@ public:
         mDelegate = iOther.mDelegate;
     }
 
+    const DelegateType& GetDelegate() const {
+        return  mDelegate;
+    }
+
 private:
     DelegateType mDelegate;
 };
