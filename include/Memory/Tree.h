@@ -117,6 +117,9 @@ private:
     virtual void InitFromParent( const tParent* iParent ) {
     }
 
+    virtual void OnChangeNotifiedInternal() {
+    }
+
 private:
     const tParent* mParent;
 };

@@ -224,6 +224,7 @@
 //#pragma warning(disable : 26812)    // Shut non-class enum warnings.
 #pragma warning(disable : 4010)     // Shut single-line comment contains line-continuation character
 #pragma warning(disable : 4996)     // Shut CRT SECURE
+#pragma warning(disable : 4250)     // Virtual inheritance by dominance
 /////////////////////////////////////////////////////
 // Define Namespaces
 #define ULIS_NAMESPACE_NAME        ULIS

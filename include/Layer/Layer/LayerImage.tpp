@@ -55,10 +55,7 @@ CLASS::TLayerImage(
     : TNode< ILayer >(
           iParent
         , iOnParentChanged
-        , FOnSelfChanged( [this, iOnSelfChanged]( const TNode< ILayer >* iNode ) {
-            iOnSelfChanged.Invoke( iNode );
-            InvalidImageCache();
-        } )
+        , iOnSelfChanged
     )
     , ILayer(
           iName
@@ -265,7 +262,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnUserDataRemoved::GetDelegate()
         , FOnParentChanged::GetDelegate()
         , FOnSelfChanged::GetDelegate()
-        
+
         , TOnBlockChanged< BlockType >::GetDelegate()
         , FOnBlendInfoChanged::GetDelegate()
         , FOnBoolChanged::GetDelegate()

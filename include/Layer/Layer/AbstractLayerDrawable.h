@@ -28,6 +28,11 @@ public:
     virtual ~TAbstractLayerDrawable() override = 0 {
         ULIS_DEBUG_PRINTF( "TAbstractLayerDrawable Destroyed" )
     }
+
+    void OnChangeNotifiedInternal() override {
+        ULIS_DEBUG_PRINTF( "Invalidation" )
+        InvalidImageCache();
+    }
 };
 
 ULIS_NAMESPACE_END
