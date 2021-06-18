@@ -296,6 +296,8 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
                 const tSiblingFolder* folder = dynamic_cast< const tSiblingFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
                 const BlockType* ref = folder->Block();
+                if( !ref )
+                    break;
                 Realloc( ref->Width(), ref->Height(), ref->Format(), ref->ColorSpace() );
                 break;
             }

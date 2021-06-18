@@ -43,7 +43,8 @@ main( int argc, char *argv[] ) {
     };
 
     auto onNodeRemoved_print = []( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iNode ) {
-        ULIS_DEBUG_PRINTF( "Node removed from container " << iRoot->Self().Name().Data() << ": " << iNode->Self().Name().Data() );
+        // Warning: can't use iRoot->Self().Name().Data() if called during destructor.
+        ULIS_DEBUG_PRINTF( "Node removed from container " << ": " << iNode->Self().Name().Data() );
     };
 
     FLayerStack* stack;
@@ -59,12 +60,12 @@ main( int argc, char *argv[] ) {
         ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
     ][
         ULCreateChild( FLayerFolder )
-        ULDef( SetName( "image0" ) )
+        ULDef( SetName( "folder0" ) )
         ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
         ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
         [
             ULCreateChild( FLayerImage )
-            ULDef( SetName( "image0" ) )
+            ULDef( SetName( "image0_0" ) )
             ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
             ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
         ]

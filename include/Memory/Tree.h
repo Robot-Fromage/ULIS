@@ -114,9 +114,11 @@ private:
     }
     */
 
+protected:
     virtual void InitFromParent( const tParent* iParent ) {
     }
 
+private:
     virtual void OnChangeNotifiedInternal() {
     }
 
@@ -220,6 +222,7 @@ public:
         return  *this;
     }
 
+private:
     /*
     template< typename ChildType, class ... Args >
     tSelf& AddChild( Args&& ... args ) {
@@ -231,6 +234,13 @@ public:
         return  AddChild( new ChildType( std::forward< Args >(args) ... ), iIndex );
     }
     */
+
+protected:
+    virtual void InitFromParent( const tParent* iParent ) override {
+        for( uint64 i = 0; i < mChildren.Size(); ++i ) {
+            mChildren[i]->InitFromParent( this );
+        }
+    }
 
 private:
     TArray< tNode* > mChildren;
