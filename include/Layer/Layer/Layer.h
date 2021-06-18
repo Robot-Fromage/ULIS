@@ -27,9 +27,10 @@ class ILayer;
 // Exports
 template class ULIS_API TLambdaCallback< void, const TNode< ILayer >*, const TRoot< ILayer >* >;
 template class ULIS_API TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >* >;
+template class ULIS_API TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >*, bool >;
 template class ULIS_API TLambdaCallback< void, const TNode< ILayer >* >;
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >* >, 0 >;
-template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >* >, 1 >;
+template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >*, bool >, 1 >;
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< ILayer >*, const TRoot< ILayer >* >, 2 >;
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< ILayer >* >, 3 >;
 template class ULIS_API TNode< ILayer >;

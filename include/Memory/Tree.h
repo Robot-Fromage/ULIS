@@ -20,7 +20,7 @@ template< class Type > class TRoot;
 template< class Type > class TNode;
 // Not necessary per say to change _ID always, even when type changes, but to avoid future mistakes, good habit.
 template< class Type > using TNodeAddedDelegate     = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
-template< class Type > using TNodeRemovedDelegate   = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >* >;
+template< class Type > using TNodeRemovedDelegate   = TLambdaCallback< void, const TRoot< Type >*, const TNode< Type >*, bool >;
 template< class Type > using TParentChangedDelegate = TLambdaCallback< void, const TNode< Type >*, const TRoot< Type >* >;
 template< class Type > using TSelfChangedDelegate   = TLambdaCallback< void, const TNode< Type >* >;
 template< class Type > using TOnNodeAdded       = TCallbackCapable< TNodeAddedDelegate< Type >, 0 >;
@@ -145,7 +145,11 @@ public:
 
 public:
     virtual ~TRoot() override {
-        Reset();
+        for( uint64 i = 0; i < mChildren.Size(); ++i ) {
+            TOnNodeRemoved< Type >::Invoke( this, mChildren[i], true );
+            delete  mChildren[i];
+        }
+        mChildren.Clear();
         ULIS_DEBUG_PRINTF( "TRoot Destroyed" )
     }
 
@@ -176,7 +180,7 @@ public:
     )
     {
         for( uint64 i = 0; i < mChildren.Size(); ++i ) {
-            TOnNodeRemoved< Type >::Invoke( this, mChildren[i] );
+            TOnNodeRemoved< Type >::Invoke( this, mChildren[i], false );
             delete  mChildren[i];
         }
         mChildren.Clear();
@@ -205,7 +209,7 @@ public:
 
     void DeleteChild( int iIndex ) {
         ULIS_ASSERT( iIndex < mChildren.Size(), "Bad Index" );
-        TOnNodeRemoved< Type >::Invoke( this, mChildren[ iIndex ] );
+        TOnNodeRemoved< Type >::Invoke( this, mChildren[ iIndex ], false );
         delete mChildren[ iIndex ];
         mChildren.Erase( iIndex, 1 );
     }

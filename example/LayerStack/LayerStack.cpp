@@ -42,7 +42,7 @@ main( int argc, char *argv[] ) {
         ULIS_DEBUG_PRINTF( "Node added to container " << iRoot->Self().Name().Data() << ": " << iNode->Self().Name().Data() );
     };
 
-    auto onNodeRemoved_print = []( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iNode ) {
+    auto onNodeRemoved_print = []( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iNode, bool iInDestructor ) {
         // Warning: can't use iRoot->Self().Name().Data() if called during destructor.
         ULIS_DEBUG_PRINTF( "Node removed from container " << ": " << iNode->Self().Name().Data() );
     };
