@@ -25,7 +25,7 @@ typedef TAbstractLayerDrawable< FBlock > ILayerDrawableBlock;
 typedef TLayerStack< FBlock, void, FDummySuperStack > FLayerStack;
 typedef TLayerFolder< FBlock, void, FRegularBlockRenderer, FRegularBlockAllocator, FLayerStack > FLayerFolder;
 typedef TLayerImage< FBlock, void, FRegularBlockRenderer, FRegularBlockAllocator, FLayerStack > FLayerImage;
-typedef TLayerText< FBlock, void, FRegularBlockRenderer, FRegularBlockAllocator > FLayerText;
+typedef TLayerText< FBlock, void, FRegularBlockRenderer, FRegularBlockAllocator, FLayerStack > FLayerText;
 
 // Exports
 //template class ULIS_API TLambdaCallback< void, const FBlock* >;
