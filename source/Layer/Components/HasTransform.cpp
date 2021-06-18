@@ -156,25 +156,24 @@ IHasTransform::TranslateY( float iDelta ) {
 
 void
 IHasTransform::Move( const FVec2F& iDelta ) {
-    // TODO
-    Invoke( mInfo );
+    mInfo.translation += VecFromLocal( iDelta );
 }
 
 void
 IHasTransform::Move( float iDeltaRight, float iDeltaDown ) {
-    // TODO
+    mInfo.translation += VecFromLocal( FVec2F( iDeltaRight, iDeltaDown ) );
     Invoke( mInfo );
 }
 
 void
 IHasTransform::MoveRight( float iDelta ) {
-    // TODO
+    mInfo.translation += Right() * iDelta;
     Invoke( mInfo );
 }
 
 void
 IHasTransform::MoveDown( float iDelta ) {
-    // TODO
+    mInfo.translation += Down() * iDelta;
     Invoke( mInfo );
 }
 
@@ -356,7 +355,10 @@ IHasTransform::TargetLocal( const FVec2F& iTarget ) {
 
 void
 IHasTransform::Target( const FVec2F& iTarget ) {
-
+    if( iTarget != FVec2F(0) )
+    {
+    // produit scalaire & vecto à chercher dans FVec2F
+    }
 }
 
 // Frame of ref API
@@ -444,7 +446,7 @@ IHasTransform::RotationMatrix() const {
 
 FMat3F
 IHasTransform::Matrix() const {
-    return  IHasTransform::PivotMatrix() * IHasTransform::RotationMatrix() * IHasTransform::ScaleMatrix() * IHasTransform::TranslationMatrix() * IHasTransform::PivotMatrix().Inverse();
+    return  IHasTransform::PivotMatrix() * IHasTransform::RotationMatrix() * IHasTransform::ScaleMatrix() * IHasTransform::TranslationMatrix() * IHasTransform::PivotMatrix().Inverse() ;
 }
 
 FMat3F

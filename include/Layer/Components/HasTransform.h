@@ -113,10 +113,10 @@ public:
 
 public:
     // Frame of ref API
-    FVec2F Right() const;   // Local X( 1, 0 ) expressed in external basis
-    FVec2F Down() const;    // Local Y( 0, 1 ) expressed in external basis
-    FVec2F LocalXAxis() const;  // Local X( 1, 0 ), expressed in local basis
-    FVec2F LocalYAxis() const;  // Local Y( 0, 1 ), expressed in local basis
+    FVec2F Right() const;          // Local X( 1, 0 ) expressed in external basis
+    FVec2F Down() const;           // Local Y( 0, 1 ) expressed in external basis
+    FVec2F LocalXAxis() const;     // Local X( 1, 0 ), expressed in local basis
+    FVec2F LocalYAxis() const;     // Local Y( 0, 1 ), expressed in local basis
     FVec2F ExternalXAxis() const;  // External X( 1, 0 ), expressed in local basis
     FVec2F ExternalYAxis() const;  // External Y( 0, 1 ), expressed in local basis
 

@@ -15,10 +15,7 @@
 #include "Math/Geometry/Vector.h"
 
 ULIS_NAMESPACE_BEGIN
-// TODO: Check do we really need it to be called "cached" or to cache at all ?
-/////////////////////////////////////////////////////
-/// @class      FCachedTransformInfo
-/// @brief      Simple CachedTransformInfo class.
+
 struct ULIS_API FTransformInfo
 {
     FVec2F pivot;
