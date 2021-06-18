@@ -29,37 +29,48 @@ main( int argc, char *argv[] ) {
     uint16 h = 1024;
     FBlock canvas( w, h, fmt );
 
+    auto onParentChanged_print = []( const TNode< ILayer >* iSelf, const TRoot< ILayer >* iParent ) {
+        const char* str_parent = iParent ? iParent->Self().Name().Data() : "nullptr";
+        ULIS_DEBUG_PRINTF( iSelf->Self().Name().Data() << ": parent changed to: " << str_parent )
+    };
 
-    FLayerStack* stack = new FLayerStack(
-          w
-        , h
-        , fmt
-        , nullptr
-        , FOnSelfChanged()
-        , FOnNodeAdded( [stack]( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iChild ){
-            ULIS_DEBUG_PRINTF( "Node added" )
-            auto dummy = 0;
-        } )
-    );
+    auto onSelfChanged_print = []( const TNode< ILayer >* iSelf ) {
+        ULIS_DEBUG_PRINTF( iSelf->Self().Name().Data() << ": trigger on changed" )
+    };
 
-    stack->AddChild(
-        new FLayerFolder(
-              "folder0"
-            , false
-            , true
-            , FColor::Transparent
-            , w
-            , h
-            , fmt
-            , nullptr
-            , Blend_Normal
-            , Alpha_Normal
-            , 1.f
-            , false
-            , nullptr
-        )
-    );
+    auto onNodeAdded_print = []( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iNode ) {
+        ULIS_DEBUG_PRINTF( "Node added to container " << iRoot->Self().Name().Data() << ": " << iNode->Self().Name().Data() );
+    };
 
+    auto onNodeRemoved_print = []( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iNode ) {
+        ULIS_DEBUG_PRINTF( "Node removed from container " << iRoot->Self().Name().Data() << ": " << iNode->Self().Name().Data() );
+    };
+
+    FLayerStack* stack;
+    ULAssignStack( stack, w, h, fmt )
+    ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
+    ULDef( FOnNodeAdded::SetDelegate( onNodeAdded_print ) )
+    ULDef( FOnNodeRemoved::SetDelegate( onNodeRemoved_print ) )
+    ULDef( AddOrSetUserData( new FTextUserData( "My test layer stack with custom callbacks and user data !" ) ) )
+    [
+        ULCreateChild( FLayerImage )
+        ULDef( SetName( "image0" ) )
+        ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
+        ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
+    ][
+        ULCreateChild( FLayerFolder )
+        ULDef( SetName( "image0" ) )
+        ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
+        ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
+        [
+            ULCreateChild( FLayerImage )
+            ULDef( SetName( "image0" ) )
+            ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
+            ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
+        ]
+    ];
+
+    /*
     stack->AddChild(
         new FLayerImage(
               "image0"
@@ -88,6 +99,8 @@ main( int argc, char *argv[] ) {
             } )
         )
     );
+    */
+
     FLayerImage& img = stack->Find< FLayerImage >( "image0" );
     {
         ctx.Clear( canvas, canvas.Rect() );

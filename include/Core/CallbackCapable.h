@@ -87,6 +87,10 @@ public:
         mDelegate = iOther.mDelegate;
     }
 
+    void SetDelegate( typename DelegateType::tFptr iDelegateFPTR ) {
+        mDelegate = DelegateType( iDelegateFPTR );
+    }
+
     const DelegateType& GetDelegate() const {
         return  mDelegate;
     }

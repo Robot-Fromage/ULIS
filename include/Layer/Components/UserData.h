@@ -32,6 +32,9 @@ class ULIS_API FTextUserData
 {
 public:
     virtual ~FTextUserData() {}
+    FTextUserData( const FString& iValue )
+        : mData( iValue )
+    {}
 
 public:
     // FTextUserData Interface

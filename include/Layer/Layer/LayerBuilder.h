@@ -62,6 +62,11 @@ public:
         return  *this;
     }
 
+    template< typename W, class ... Args >
+    TLayerBuilder< T >& operator()( W w, Args&& ... args ) {
+        m -> w ( args ... );
+    }
+
 public:
     T* m;
 };

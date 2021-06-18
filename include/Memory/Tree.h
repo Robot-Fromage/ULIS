@@ -209,6 +209,7 @@ public:
     }
 
     tSelf& AddChild( tNode* iNode, uint64 iIndex = ULIS_UINT64_MAX ) {
+        ULIS_ASSERT( iNode, "Bad input" )
         iNode->SetParent( this );
         iNode->InitFromParent( this );
         if( iIndex >= Children().Size() )
@@ -219,6 +220,7 @@ public:
         return  *this;
     }
 
+    /*
     template< typename ChildType, class ... Args >
     tSelf& AddChild( Args&& ... args ) {
         return  AddChild( new ChildType( std::forward< Args >(args) ... ), ULIS_UINT64_MAX );
@@ -228,6 +230,7 @@ public:
     tSelf& AddChild( uint64 iIndex, Args&& ... args ) {
         return  AddChild( new ChildType( std::forward< Args >(args) ... ), iIndex );
     }
+    */
 
 private:
     TArray< tNode* > mChildren;
