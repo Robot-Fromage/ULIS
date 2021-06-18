@@ -10,3 +10,7 @@ pushd %~dp0
 cd ..
 
 doxygen %~dp0Doxyfile
+
+cd documentation
+python postprocess_doc.py
+
