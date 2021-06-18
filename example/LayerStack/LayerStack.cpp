@@ -52,7 +52,8 @@ main( int argc, char *argv[] ) {
     ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
     ULDef( FOnNodeAdded::SetDelegate( onNodeAdded_print ) )
     ULDef( FOnNodeRemoved::SetDelegate( onNodeRemoved_print ) )
-    ULDef( AddOrSetUserData( new FTextUserData( "My test layer stack with custom callbacks and user data !" ) ) )
+    ( &ILayer::AddOrSetUserData, new FTextUserData( "My test layer stack with custom callbacks and user data !" ) )
+    ( &ILayer::SetName, "stack" )
     [
         ULCreateChild( FLayerImage )
         ULDef( SetName( "image0" ) )

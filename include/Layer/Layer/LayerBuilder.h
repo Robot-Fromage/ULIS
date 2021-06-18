@@ -64,7 +64,8 @@ public:
 
     template< typename W, class ... Args >
     TLayerBuilder< T >& operator()( W w, Args&& ... args ) {
-        m -> w ( args ... );
+        (m->*w)( args ... );
+        return  *this;
     }
 
 public:
