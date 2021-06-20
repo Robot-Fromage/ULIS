@@ -71,6 +71,7 @@ public:
         , const FFont& iFont = FFont::DefaultFont
         , uint32 iFontSize = 12
         , const ISample& iTextColor = FColor::Black
+        , bool iAntiAliased = true
         , const FTransformInfo& iTransform = {}
         , const TRoot< ILayer >* iParent = nullptr
 
@@ -103,6 +104,7 @@ public:
         , const FFont& iFont = FFont::DefaultFont
         , uint32 iFontSize = 12
         , const ISample& iTextColor = FColor::Black
+        , bool iAntiAliased = true
         , const FTransformInfo& iTransform = {}
         , const TRoot< ILayer >* iParent = nullptr
 

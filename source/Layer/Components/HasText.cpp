@@ -18,6 +18,7 @@ IHasText::IHasText(
     , const FFont& iFont
     , int iSize
     , const FColor& iColor
+    , bool iAntiAliased
     , const FOnTextInfoChanged& iDelegate
 )
     : FOnTextInfoChanged( iDelegate )
@@ -26,6 +27,7 @@ IHasText::IHasText(
         , iFont
         , iSize
         , iColor
+        , iAntiAliased
     }
 {
     Invoke( mInfo );
@@ -51,6 +53,11 @@ FColor IHasText::TextColor() const
     return mInfo.color;
 }
 
+bool IHasText::IsAntiAliased() const
+{
+    return mInfo.isAntiAliased;
+}
+
 void IHasText::SetText( const FWString& iValue )
 {
     mInfo.string = iValue;
@@ -72,6 +79,12 @@ void IHasText::SetFontSize(  int iValue )
 void IHasText::SetTextColor( const FColor& iValue )
 {
     mInfo.color = iValue;
+    Invoke( mInfo );
+}
+
+void IHasText::SetAntiAliased( bool iValue )
+{
+    mInfo.isAntiAliased = iValue;
     Invoke( mInfo );
 }
 

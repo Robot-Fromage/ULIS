@@ -263,6 +263,7 @@ CLASS::RenderImage(
     return  ev;
 }
 
+// TRasterizable Interface
 TEMPLATE
 typename CLASS::tSiblingImage*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override

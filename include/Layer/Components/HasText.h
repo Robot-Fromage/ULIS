@@ -28,6 +28,7 @@ protected:
         , const FFont& iFont = FFont::DefaultFont
         , int iSize = 12
         , const FColor& iColor = FColor::Black
+        , bool iAntiAliased = true
         , const FOnTextInfoChanged& iDelegate = FOnTextInfoChanged()
     );
 
@@ -36,11 +37,13 @@ public:
     FFont Font() const;
     int FontSize() const;
     FColor TextColor() const;
+    bool IsAntiAliased() const;
 
     void SetText( const FWString& iValue );
     void SetFont( const FFont& iValue );
     void SetFontSize(  int iValue );
     void SetTextColor( const FColor& iValue );
+    void SetAntiAliased( bool iValue );
 
 private:
     FTextInfo mInfo;

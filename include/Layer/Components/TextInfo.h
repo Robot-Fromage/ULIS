@@ -25,6 +25,7 @@ struct ULIS_API FTextInfo
     FFont font;
     int size;
     FColor color;
+    bool isAntiAliased;
 };
 
 ULIS_NAMESPACE_END

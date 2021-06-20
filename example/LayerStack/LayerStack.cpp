@@ -72,37 +72,6 @@ main( int argc, char *argv[] ) {
         ]
     ];
 
-    /*
-    stack->AddChild(
-        new FLayerImage(
-              "image0"
-            , false
-            , true
-            , FColor::Transparent
-            , w
-            , h
-            , fmt
-            , nullptr
-            , Blend_Normal
-            , Alpha_Normal
-            , 1.f
-            , false
-            , nullptr
-            , FOnNameChanged()
-            , FOnBoolChanged()
-            , FOnBoolChanged()
-            , FOnColorChanged()
-            , FOnUserDataAdded()
-            , FOnUserDataChanged()
-            , FOnUserDataRemoved()
-            , FOnParentChanged( []( const TNode< ILayer >* iNode, const TRoot< ILayer >* iParent ){
-                ULIS_DEBUG_PRINTF( "Parent Changed" )
-                auto dummy = 0;
-            } )
-        )
-    );
-    */
-
     FLayerImage& img = stack->Find< FLayerImage >( "image0" );
     {
         ctx.Clear( canvas, canvas.Rect() );
