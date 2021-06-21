@@ -10,8 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "System/CPUInfo.h"
-#include "System/CPUInfoHelpers.h"
+#include "System/CPUInfo/CPUInfo.h"
+#include "System/CPUInfo/CPUInfoHelpers.h"
 
 #pragma message( "GENERIC DEVICE ACTIVATED" )
 

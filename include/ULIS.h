@@ -52,9 +52,9 @@
 #include "String/WString.h"
 // System
 #include "System/LibInfo.h"
-#include "System/CPUInfo.h"
+#include "System/CPUInfo/CPUInfo.h"
 #include "System/FilePathRegistry.h"
-#include "System/ThreadPool.h"
+#include "System/ThreadPool/ThreadPool.h"
 // Scheduling
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/Event.h"

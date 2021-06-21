@@ -14,7 +14,7 @@
 #include "Scheduling/SpecializationCondition.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/Job.h"
-#include "System/CPUInfo.h"
+#include "System/CPUInfo/CPUInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

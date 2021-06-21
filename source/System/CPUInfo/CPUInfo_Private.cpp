@@ -7,8 +7,8 @@
 * @copyright    Copyright 2021 Clement Berthaud.
 * @license      Please refer to LICENSE.md
 */
-#include "System/CPUInfo_Private.h"
-#include "System/CPUInfoHelpers.h"
+#include "System/CPUInfo/CPUInfo_Private.h"
+#include "System/CPUInfo/CPUInfoHelpers.h"
 
 #if defined( ULIS_WIN )
 #include "CPUInfo_Windows.inl"

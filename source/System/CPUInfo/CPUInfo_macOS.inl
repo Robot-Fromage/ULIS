@@ -3,30 +3,30 @@
 /*
 *   ULIS
 *__________________
-* @file         Device_Linux.inl
+* @file         Device_macOS.inl
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the FHardwareMetrics tools.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "System/CPUInfo.h"
-#include "System/CPUInfoHelpers.h"
+#include "System/CPUInfo/CPUInfo.h"
+#include "System/CPUInfo/CPUInfoHelpers.h"
 
 #include <cpuid.h>
-//#include <intrin.h>
+// Check: maybe <intrin.h> for other versions of AppleCLANG ?
+#include <immintrin.h>
 #include <stdint.h>
 #include <string>
 #include <stdlib.h>
 #include <thread>
-#include <stdio.h>
+#include <sys/sysctl.h>
 
 ULIS_NAMESPACE_BEGIN
 
 namespace detail {
 
 #define _XCR_XFEATURE_ENABLED_MASK  0
-
 void
 cpuid( int32_t out[4], int32_t x ) {
     __cpuid_count( x, 0, out[0], out[1], out[2], out[3] );
@@ -88,27 +88,20 @@ get_vendor_string() {
     return  name;
 }
 
-size_t cache_line_size() {
-    FILE * p = 0;
-    p = fopen("/sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size", "r");
-    unsigned int i = 0;
-    if (p) {
-        fscanf(p, "%d", &i);
-        fclose(p);
-    }
-    return i;
+size_t
+cache_line_size() {
+    size_t line_size = 0;
+    size_t sizeof_line_size = sizeof(line_size);
+    sysctlbyname("hw.cachelinesize", &line_size, &sizeof_line_size, 0, 0);
+    return line_size;
 }
 
-
-size_t cache_size() {
-    FILE * p = 0;
-    p = fopen("/sys/devices/system/cpu/cpu0/cache/index0/size", "r");
-    unsigned int i = 0;
-    if (p) {
-        fscanf(p, "%d", &i);
-        fclose(p);
-    }
-    return i;
+size_t
+cache_size() {
+    size_t line_size = 0;
+    size_t sizeof_line_size = sizeof(line_size);
+    sysctlbyname("hw.l1dcachesize", &line_size, &sizeof_line_size, 0, 0);
+    return line_size;
 }
 
 void cache_info( uint8 iLevel, uint32 *oCacheSize, uint32* oLineSize ) {

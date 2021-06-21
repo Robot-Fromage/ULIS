@@ -10,8 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Scheduling/CommandQueue_Private.h"
-#include "System/ThreadPool.h"
-#include "System/ThreadPool_Private.h"
+#include "System/ThreadPool/ThreadPool.h"
+#include "System/ThreadPool/ThreadPool_Private.h"
 
 ULIS_NAMESPACE_BEGIN
 FCommandQueue_Private::~FCommandQueue_Private()

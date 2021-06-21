@@ -11,7 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "System/CPUInfoHelpers.h"
+#include "System/CPUInfo/CPUInfoHelpers.h"
 
 #include <Windows.h>
 #include <intrin.h>

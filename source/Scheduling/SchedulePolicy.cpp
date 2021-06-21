@@ -10,8 +10,8 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Scheduling/SchedulePolicy.h"
-#include "System/CPUInfo.h"
-#include "System/CPUInfo_Private.h"
+#include "System/CPUInfo/CPUInfo.h"
+#include "System/CPUInfo/CPUInfo_Private.h"
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {

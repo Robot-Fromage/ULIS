@@ -3,18 +3,14 @@
 /*
 *   ULIS
 *__________________
-* @file         ThreadPool_Private.h
+* @file         MemoryInfo.cpp
 * @author       Clement Berthaud
-* @brief        This provides definition for the ThreadPool_Private class.
+* @brief        This file provides the definition for the FMemoryInfo tools.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
-#include "Core/Core.h"
+#include "System/MemoryInfo/MemoryInfo.h"
 
-#ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
-#include "System/ThreadPool_Private_Multi.h"
-#else
-#include "System/ThreadPool_Private_Mono.h"
-#endif
+ULIS_NAMESPACE_BEGIN
+ULIS_NAMESPACE_END
 

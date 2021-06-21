@@ -9,8 +9,8 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "System/ThreadPool.h"
-#include "System/ThreadPool_Private.h"
+#include "System/ThreadPool/ThreadPool.h"
+#include "System/ThreadPool/ThreadPool_Private.h"
 
 ULIS_NAMESPACE_BEGIN
 FThreadPool::~FThreadPool()

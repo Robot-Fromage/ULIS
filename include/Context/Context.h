@@ -19,7 +19,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
-#include "System/CPUInfo.h"
+#include "System/CPUInfo/CPUInfo.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
