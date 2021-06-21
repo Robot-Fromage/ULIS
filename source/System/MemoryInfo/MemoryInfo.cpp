@@ -11,6 +11,8 @@
 */
 #include "System/MemoryInfo/MemoryInfo.h"
 
+// Most of the code displayed in the inl files is from here:
+// https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
 #if defined( ULIS_WIN )
 #include "System/MemoryInfo/MemoryInfo_Windows.inl"
 #elif defined( ULIS_MACOS )
