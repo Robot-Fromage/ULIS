@@ -11,13 +11,13 @@
 #include "System/CPUInfo/CPUInfoHelpers.h"
 
 #if defined( ULIS_WIN )
-#include "CPUInfo_Windows.inl"
+#include "System/CPUInfo/CPUInfo_Windows.inl"
 #elif defined( ULIS_MACOS )
-#include "CPUInfo_macOS.inl"
+#include "System/CPUInfo/CPUInfo_macOS.inl"
 #elif defined( ULIS_LINUX )
-#include "CPUInfo_Linux.inl"
+#include "System/CPUInfo/CPUInfo_Linux.inl"
 #else
-#include "CPUInfo_Generic.inl"
+#include "System/CPUInfo/CPUInfo_Generic.inl"
 #endif
 
 ULIS_NAMESPACE_BEGIN

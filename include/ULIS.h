@@ -53,6 +53,7 @@
 // System
 #include "System/LibInfo.h"
 #include "System/CPUInfo/CPUInfo.h"
+#include "System/MemoryInfo/MemoryInfo.h"
 #include "System/FilePathRegistry.h"
 #include "System/ThreadPool/ThreadPool.h"
 // Scheduling

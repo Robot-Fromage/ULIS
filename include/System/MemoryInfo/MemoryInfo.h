@@ -25,6 +25,16 @@ private:
     FMemoryInfo( FMemoryInfo&& ) = delete;
 
 public:
+    static uint64 TotalVirtualMemoryAvailable();
+    static uint64 VirtualMemoryCurrentlyUsed();
+    static uint64 VirtualMemoryCurrentlyUsedByProcess();
+
+    static uint64 TotalRAMAvailable();
+    static uint64 TotalRAMCurrentlyUsed();
+    static uint64 TotalRAMCurrentlyUsedByProcess();
+
+    static float CPUCurrentlyUsed();
+    static float CPUCurrentlyUsedByProcess();
 };
 
 ULIS_NAMESPACE_END
