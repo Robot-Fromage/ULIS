@@ -3,14 +3,14 @@
 /*
 *   ULIS
 *__________________
-* @file         AXI.cpp
+* @file         LibInfo.cpp
 * @author       Clement Berthaud
 * @brief        This file provides definitions for API and ABI infos.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Core/Core.h"
-#include "System/AXI.h"
+#include "System/LibInfo.h"
 
 /////////////////////////////////////////////////////
 // Macros detect def version

@@ -30,7 +30,7 @@ class   FFontStyleEntry;
 struct  FFormatMetrics;
 class   FGradient;
 class   FSanitizedGradient;
-class   FHardwareMetrics;
+class   FCPUInfo;
 class   FKernel;
 class   FStructuringElement;
 //struct  FMath;

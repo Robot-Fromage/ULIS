@@ -45,7 +45,7 @@ enum eScheduleParameterPolicy : uint8 {
 ///
 ///             \sa FContext
 ///             \sa FThreadPool
-///             \sa FHardwareMetrics
+///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class ULIS_API FSchedulePolicy
 {

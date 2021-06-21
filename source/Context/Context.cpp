@@ -32,7 +32,7 @@ FContext::FContext(
     , ePerformanceIntent iPerfIntent
 )
     : mCommandQueue( iQueue )
-    , mContextualDispatchTable( new  FContextualDispatchTable( FHardwareMetrics(), iFormat, iPerfIntent ) )
+    , mContextualDispatchTable( new  FContextualDispatchTable( iFormat, iPerfIntent ) )
 {
 }
 

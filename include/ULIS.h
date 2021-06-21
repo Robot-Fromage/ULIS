@@ -51,8 +51,8 @@
 #include "String/String.h"
 #include "String/WString.h"
 // System
-#include "System/AXI.h"
-#include "System/Device.h"
+#include "System/LibInfo.h"
+#include "System/CPUInfo.h"
 #include "System/FilePathRegistry.h"
 #include "System/ThreadPool.h"
 // Scheduling

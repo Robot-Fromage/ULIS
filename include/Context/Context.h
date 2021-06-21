@@ -19,7 +19,7 @@
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
-#include "System/Device.h"
+#include "System/CPUInfo.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
@@ -41,7 +41,7 @@ ULIS_NAMESPACE_BEGIN
 ///
 ///             \sa FBlock
 ///             \sa FThreadPool
-///             \sa FHardwareMetrics
+///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class ULIS_API FContext
 {

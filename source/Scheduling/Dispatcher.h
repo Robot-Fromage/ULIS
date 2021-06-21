@@ -14,7 +14,7 @@
 #include "Scheduling/SpecializationCondition.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/Job.h"
-#include "System/Device.h"
+#include "System/CPUInfo.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -22,16 +22,16 @@ ULIS_NAMESPACE_BEGIN
 template< typename IMP >
 class TDispatcher {
 public:
-    static ULIS_FORCEINLINE fpCommandScheduler Query( const FHardwareMetrics& iDevice, eFormat iFormat, ePerformanceIntent iPerfIntent ) {
+    static ULIS_FORCEINLINE fpCommandScheduler Query( eFormat iFormat, ePerformanceIntent iPerfIntent ) {
         for( int i = 0; i < IMP::spec_size; ++i ) {
             if( IMP::spec_table[i].select_cond( iFormat ) ) {
                 #ifdef ULIS_COMPILETIME_AVX_SUPPORT
-                    if( iDevice.HasHardwareAVX2() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_AVX ) )
+                    if( FCPUInfo::HasHardwareAVX2() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_AVX ) )
                         return  IMP::spec_table[i].select_AVX;
                     else
                 #endif
                 #ifdef ULIS_COMPILETIME_SSE_SUPPORT
-                    if( iDevice.HasHardwareSSE42() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_SSE ) )
+                    if( FCPUInfo::HasHardwareSSE42() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_SSE ) )
                         return  IMP::spec_table[i].select_SSE;
                     else
                 #endif
@@ -39,7 +39,7 @@ public:
             }
         }
 
-        #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  QueryGeneric< _TYPE >( iDevice, iFormat, iPerfIntent );
+        #define TMP_CALL( _TYPE_ID, _TYPE, _E2, _E3 ) return  QueryGeneric< _TYPE >( iFormat, iPerfIntent );
         ULIS_SWITCH_FOR_ALL_DO( static_cast< eType >( ULIS_R_TYPE( iFormat ) ), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
         #undef TMP_CALL
 
@@ -49,14 +49,14 @@ public:
 
 private:
     template< typename T >
-    static ULIS_FORCEINLINE fpCommandScheduler QueryGeneric( const FHardwareMetrics& iDevice, eFormat iFormat, ePerformanceIntent iPerfIntent ) {
+    static ULIS_FORCEINLINE fpCommandScheduler QueryGeneric( eFormat iFormat, ePerformanceIntent iPerfIntent ) {
         #ifdef ULIS_COMPILETIME_AVX_SUPPORT
-            if( iDevice.HasHardwareAVX2() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_AVX ) )
+            if( FCPUInfo::HasHardwareAVX2() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_AVX ) )
                 return  IMP:: template TGenericDispatchGroup< T >::select_AVX_Generic;
             else
         #endif
         #ifdef ULIS_COMPILETIME_SSE_SUPPORT
-            if( iDevice.HasHardwareSSE42() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_SSE ) )
+            if( FCPUInfo::HasHardwareSSE42() && bool( iPerfIntent & ePerformanceIntent::PerformanceIntent_SSE ) )
                 return  IMP:: template TGenericDispatchGroup< T >::select_SSE_Generic;
             else
         #endif

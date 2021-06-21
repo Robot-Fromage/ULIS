@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         AXI.h
+* @file         LibInfo.h
 * @author       Clement Berthaud
 * @brief        This file provides declarations for API and ABI infos.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.

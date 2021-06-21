@@ -24,7 +24,7 @@ struct FContext::FContextualDispatchTable
 
 public:
     /*! Constructor */
-    FContextualDispatchTable( const FHardwareMetrics& iHardwareMetrics, eFormat iFormat, ePerformanceIntent iPerfIntent );
+    FContextualDispatchTable( eFormat iFormat, ePerformanceIntent iPerfIntent );
 
     /*! Destructor */
     ~FContextualDispatchTable();
@@ -131,7 +131,6 @@ public:
     }
 
 private:
-    const FHardwareMetrics mHardwareMetrics;
     const eFormat mFormat;
     const ePerformanceIntent mPerfIntent;
 

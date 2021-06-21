@@ -30,7 +30,7 @@ ULIS_NAMESPACE_BEGIN
 ///             \sa FContext
 ///             \sa FSchedulePolicy
 ///             \sa FThreadPool
-///             \sa FHardwareMetrics
+///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class FEvent_Private
 {

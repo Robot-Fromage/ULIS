@@ -10,13 +10,17 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Scheduling/SchedulePolicy.h"
-#include "System/Device.h"
+#include "System/CPUInfo.h"
+#include "System/CPUInfo_Private.h"
 
 ULIS_NAMESPACE_BEGIN
+namespace detail {
+FCPUInfo_Private sgCPUInfo_private_instance;
+} // namespace detail
+
 //static
-static const FHardwareMetrics sHW;
-const FSchedulePolicy FSchedulePolicy::AsyncCacheEfficient( ScheduleTime_Async, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, sHW.L1CacheSize() );
-const FSchedulePolicy FSchedulePolicy::CacheEfficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, sHW.L1CacheSize() );
+const FSchedulePolicy FSchedulePolicy::AsyncCacheEfficient( ScheduleTime_Async, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, FCPUInfo::L1CacheSize() );
+const FSchedulePolicy FSchedulePolicy::CacheEfficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, FCPUInfo::L1CacheSize() );
 const FSchedulePolicy FSchedulePolicy::AsyncMonoChunk( ScheduleTime_Async, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 const FSchedulePolicy FSchedulePolicy::MonoChunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 const FSchedulePolicy FSchedulePolicy::AsyncMultiScanlines( ScheduleTime_Async, ScheduleRun_Multi, ScheduleMode_Scanlines );

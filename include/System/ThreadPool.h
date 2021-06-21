@@ -26,7 +26,7 @@ class FThreadPool_Private;
 ///             behaviour anyway with no change to application logic, but it
 ///             processes it in a linear monothreaded fashion.
 ///
-///             \sa FHardwareMetrics
+///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class ULIS_API FThreadPool
 {

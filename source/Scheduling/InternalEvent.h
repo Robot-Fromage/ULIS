@@ -36,7 +36,7 @@ typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 ///             \sa FContext
 ///             \sa FSchedulePolicy
 ///             \sa FThreadPool
-///             \sa FHardwareMetrics
+///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class FInternalEvent
 {

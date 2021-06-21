@@ -27,11 +27,6 @@ main( int argc, char *argv[] ) {
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_Max );
-    FHardwareMetrics hw;
-    FSchedulePolicy policy_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    FSchedulePolicy policy_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
-    FSchedulePolicy policy_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
-    FSchedulePolicy policy_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
     // Create both "hollow" blocks Base and Over.
     FBlock blockBase;
@@ -59,7 +54,7 @@ main( int argc, char *argv[] ) {
     int shadeH = 20;
     FBlock blockShade( shadeW, shadeH, fmt );
     FColor black = FColor::RGBA8( 0, 0, 0 );
-    ctx.Fill( blockShade, black, blockShade.Rect(), policy_cache_efficient );
+    ctx.Fill( blockShade, black, blockShade.Rect(), FSchedulePolicy::CacheEfficient );
     ctx.Flush();
 
     FBlock blockCanvas( w, h, fmt );
@@ -73,12 +68,12 @@ main( int argc, char *argv[] ) {
         int x = ( i % 8 ) * srcRect.w;
         int y = ( i / 8 ) * srcRect.h;
         FEvent event_copy;
-        ctx.Copy( blockBase, blockCanvas, srcRect, FVec2I( x, y ), policy_mono_chunk, 0, nullptr, &event_copy );
+        ctx.Copy( blockBase, blockCanvas, srcRect, FVec2I( x, y ), FSchedulePolicy::MonoChunk, 0, nullptr, &event_copy );
         ctx.Flush();
         FEvent event_blend0;
         FEvent event_blend1;
-        ctx.Blend( blockOver, blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.75f, policy_mono_chunk, 1, &event_copy, &event_blend0 );
-        ctx.Blend( blockShade, blockCanvas, srcRect, FVec2I( x, y + srcRect.h - shadeH ), Blend_Normal, Alpha_Normal, 0.5f, policy_mono_chunk, 1, &event_blend0, &event_blend1 );
+        ctx.Blend( blockOver, blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.75f, FSchedulePolicy::MonoChunk, 1, &event_copy, &event_blend0 );
+        ctx.Blend( blockShade, blockCanvas, srcRect, FVec2I( x, y + srcRect.h - shadeH ), Blend_Normal, Alpha_Normal, 0.5f, FSchedulePolicy::MonoChunk, 1, &event_blend0, &event_blend1 );
     }
     ctx.Finish();
 
@@ -90,7 +85,7 @@ main( int argc, char *argv[] ) {
         typedef std::codecvt_utf8<wchar_t> convert_type;
         std::wstring_convert<convert_type, wchar_t> converter;
         std::wstring wbm = converter.from_bytes(bm);
-        ctx.RasterText( blockCanvas, wbm, font, 16, FMat3F::MakeTranslationMatrix( x + 4, y + srcRect.h - 4 ), white, policy_mono_chunk );
+        ctx.RasterText( blockCanvas, wbm, font, 16, FMat3F::MakeTranslationMatrix( x + 4, y + srcRect.h - 4 ), white, FSchedulePolicy::MonoChunk );
         ctx.Finish();
     }
 

@@ -39,7 +39,7 @@ enum eEventStatus : uint8
 ///             \sa FContext
 ///             \sa FSchedulePolicy
 ///             \sa FThreadPool
-///             \sa FHardwareMetrics
+///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class ULIS_API FEvent
 {
