@@ -14,65 +14,85 @@
 #include "String/String.h"
 
 ULIS_NAMESPACE_BEGIN
-/*! Retrieve the full version string "major.minor.patch". */
-ULIS_API FString VersionString();
+/// @class      FLibInfo
+/// @brief      The FLibInfo class provides a mean to access information
+///             about the library.
+/// @details    FLibInfo allows the user to query informations such as
+///             the version of the library, the branch or commit it was
+///             compiled from, as well as other informations such as the
+///             compiler that was used and its version.
+class ULIS_API FLibInfo
+{
+private:
+    ~FLibInfo() = delete;
+    FLibInfo() = delete;
+    FLibInfo( const FLibInfo& ) = delete;
+    FLibInfo( FLibInfo&& ) = delete;
 
-/*! Retrieve the major version string. */
-ULIS_API FString VersionMajorString();
+public:
+    /*! Retrieve the full version string "major.minor.patch". */
+    static FString VersionString();
 
-/*! Retrieve the minor version string. */
-ULIS_API FString VersionMinorString();
+    /*! Retrieve the major version string. */
+    static FString VersionMajorString();
 
-/*! Retrieve the patch version string. */
-ULIS_API FString VersionPatchString();
+    /*! Retrieve the minor version string. */
+    static FString VersionMinorString();
 
-/*! Retrieve the major version number. */
-ULIS_API uint64 VersionMajor();
+    /*! Retrieve the patch version string. */
+    static FString VersionPatchString();
 
-/*! Retrieve the minor version number. */
-ULIS_API uint64 VersionMinor();
+    /*! Retrieve the major version number. */
+    static uint64 VersionMajor();
 
-/*! Retrieve the patch version number. */
-ULIS_API uint64 VersionPatch();
+    /*! Retrieve the minor version number. */
+    static uint64 VersionMinor();
 
-/*! Retrieve the built configuration ( Debug, Release, RelWithDebInfo ). */
-ULIS_API FString ConfigurationString();
+    /*! Retrieve the patch version number. */
+    static uint64 VersionPatch();
 
-/*! Retrieve the compilation date and time e.g: "Aug 15 2020, 15:12:04". */
-ULIS_API FString CompilationTimeStampString();
+    /*! Retrieve the built configuration ( Debug, Release, RelWithDebInfo ). */
+    static FString ConfigurationString();
 
-/*! Retrieve the compiler name string */
-ULIS_API FString CompilerNameString();
+    /*! Retrieve the compilation date and time e.g: "Aug 15 2020, 15:12:04". */
+    static FString CompilationTimeString();
 
-/*! Retrieve the compiler version string */
-ULIS_API FString CompilerVersionString();
+    /*! Retrieve the compiler name string */
+    static FString CompilerNameString();
 
-/*! Retrieve the full information string */
-ULIS_API FString CompilerInformationString();
+    /*! Retrieve the compiler version string */
+    static FString CompilerVersionString();
 
-/*! Retrieve the git branch from where it was compiled if available */
-ULIS_API FString BranchName();
+    /*! Retrieve the full information string */
+    static FString CompilerInformationString();
 
-/*! Retrieve the git commit hash from where it was compiled if available */
-ULIS_API FString CommitHash();
+    /*! Retrieve wether the library was compiled for x64 target */
+    static bool CompiledForx64();
 
-/*! Retrieve the git commit hash from where it was compiled if available */
-ULIS_API FString CommitAbbreviatedHash();
+    /*! Retrieve wether the library was compiled with AVX2 support */
+    static bool CompiledWithAVX2();
 
-/*! Retrieve wether the library was compiled for x64 target */
-ULIS_API bool CompiledFor64Bit();
+    /*! Retrieve wether the library was compiled with SSE42 support */
+    static bool CompiledWithSSE42();
 
-/*! Retrieve wether the library was compiled with AVX2 support */
-ULIS_API bool CompiledWithAVX2();
+    /*! Retrieve wether the library was built as a shared library ( true: shared, false: static ). */
+    static bool BuiltAsSharedLibrary();
 
-/*! Retrieve wether the library was compiled with SSE42 support */
-ULIS_API bool CompiledWithSSE42();
+    /*! Retrieve the git branch from where it was compiled if available */
+    static FString BranchNameString();
 
-/*! Retrieve wether the library was compiled with MT support */
-ULIS_API bool CompiledWithMT();
+    /*! Retrieve the git commit hash from where it was compiled if available */
+    static FString CommitHashString();
 
-/*! Retrieve the full library identification string */
-ULIS_API FString FullLibraryInformationString();
+    /*! Retrieve the git commit hash from where it was compiled if available */
+    static FString CommitAbbreviatedHashString();
+
+    /*! Retrieve wether the library was built with MT. */
+    static bool CompiledWithMT();
+
+    /*! Retrieve the full library identification string */
+    static FString LibraryInformationString();
+};
 
 ULIS_NAMESPACE_END
 

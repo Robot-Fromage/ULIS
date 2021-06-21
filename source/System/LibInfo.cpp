@@ -58,52 +58,58 @@
 #define ULIS_GIT_BRANCH_NAME_STR                ULIS_STRINGIFY( ULIS_GIT_BRANCH_NAME )
 
 ULIS_NAMESPACE_BEGIN
-// Help links:
-// https://blog.kowalczyk.info/article/j/guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html
+//static
 FString
-VersionString()
+FLibInfo::VersionString()
 {
     return  VersionMajorString() + "." + VersionMinorString() + "." + VersionPatchString();
 }
 
+//static
 FString
-VersionMajorString()
+FLibInfo::VersionMajorString()
 {
     return  FString( ULIS_VERSION_MAJOR_STR );
 }
 
+//static
 FString
-VersionMinorString()
+FLibInfo::VersionMinorString()
 {
     return  FString( ULIS_VERSION_MINOR_STR );
 }
 
+//static
 FString
-VersionPatchString()
+FLibInfo::VersionPatchString()
 {
     return  FString( ULIS_VERSION_PATCH_STR );
 }
 
+//static
 uint64
-VersionMajor()
+FLibInfo::VersionMajor()
 {
     return  ULIS_VERSION_MAJOR;
 }
 
+//static
 uint64
-VersionMinor()
+FLibInfo::VersionMinor()
 {
     return  ULIS_VERSION_MINOR;
 }
 
+//static
 uint64
-VersionPatch()
+FLibInfo::VersionPatch()
 {
     return  ULIS_VERSION_PATCH;
 }
 
+//static
 FString
-ConfigurationString()
+FLibInfo::ConfigurationString()
 {
 #if defined( ULIS_DEBUG )
     return  FString( "Debug" );
@@ -114,18 +120,18 @@ ConfigurationString()
 #endif
 }
 
+//static
 FString
-CompilationTimeStampString()
+FLibInfo::CompilationTimeString()
 {
     return  FString( __DATE__ ) + ", " + FString( __TIME__ );
 }
 
+//static
 FString
-CompilerNameString()
+FLibInfo::CompilerNameString()
 {
-#if defined( ULIS_EMSCRIPTEN )
-    return  FString( "EMSCRIPTEN" );
-#elif defined( ULIS_CLANG )
+#if defined( ULIS_CLANG )
     return  FString( "CLANG" );
 #elif defined( ULIS_GCC )
     return  FString( "GCC" );
@@ -133,13 +139,16 @@ CompilerNameString()
     return  FString( "MSVC" );
 #elif defined( ULIS_MINGW64 )
     return  FString( "MINGW64" );
+#elif defined( ULIS_EMSCRIPTEN )
+    return  FString( "EMSCRIPTEN" );
 #else
     return  FString( "UNKNOWN" );
 #endif
 }
 
+//static
 FString
-CompilerVersionString()
+FLibInfo::CompilerVersionString()
 {
 #if defined( ULIS_CLANG )
     return  FString( ULIS_STRINGIFY( __clang_major__ ) ) + "." + ULIS_STRINGIFY( __clang_minor__ ) + "." + ULIS_STRINGIFY( __clang_patchlevel__ );
@@ -154,22 +163,25 @@ CompilerVersionString()
 #endif
 }
 
+//static
 FString
-CompilerInformationString()
+FLibInfo::CompilerInformationString()
 {
     return  CompilerNameString() + " " + CompilerVersionString();
 }
 
+//static
 bool
-CompiledFor64Bit()
+FLibInfo::CompiledForx64()
 {
     // We just assume this to be always true for now.
     // Compilation for 32 bits should fail anyways.
     return  true;
 }
 
+//static
 bool
-CompiledWithAVX2()
+FLibInfo::CompiledWithAVX2()
 {
 #ifdef ULIS_COMPILETIME_AVX_SUPPORT
     return  true;
@@ -178,8 +190,9 @@ CompiledWithAVX2()
 #endif
 }
 
+//static
 bool
-CompiledWithSSE42()
+FLibInfo::CompiledWithSSE42()
 {
 #ifdef ULIS_COMPILETIME_SSE_SUPPORT
     return  true;
@@ -188,25 +201,41 @@ CompiledWithSSE42()
 #endif
 }
 
+//static
+bool
+FLibInfo::BuiltAsSharedLibrary()
+{
+#ifdef ULIS_BUILT_AS_SHARED_LIBRARY
+    return  true;
+#else
+    return  false;
+#endif
+}
+
+//static
 FString
-BranchName()
+FLibInfo::BranchNameString()
 {
     return  FString( ULIS_GIT_BRANCH_NAME_STR );
 }
 
+//static
 FString
-CommitHash()
+FLibInfo::CommitHashString()
 {
     return  FString( ULIS_GIT_COMMIT_HASH_STR );
 }
 
-FString CommitAbbreviatedHash()
+//static
+FString
+FLibInfo::CommitAbbreviatedHashString()
 {
     return  FString( ULIS_GIT_COMMIT_ABBREVIATED_HASH_STR );
 }
 
+//static
 bool
-CompiledWithMT() {
+FLibInfo::CompiledWithMT() {
 #ifdef ULIS_COMPILED_WITH_THREAD_SUPPORT
     return  true;
 #else
@@ -214,8 +243,10 @@ CompiledWithMT() {
 #endif
 }
 
+
+//static
 FString
-FullLibraryInformationString()
+FLibInfo::LibraryInformationString()
 {
     FString on( "on" );
     FString off( "off" );
@@ -224,7 +255,7 @@ FullLibraryInformationString()
     FString mt = CompiledWithMT() ? on : off;
     // 4.0.0 (Aug 15 2020, 15:12:04) [MSVC v.1916 x64] {Release}
     return  ConfigurationString() + " " + VersionString() + " "
-            + "(" + BranchName() + ":" + CommitAbbreviatedHash() + ", " + CompilationTimeStampString() + ") "
+            + "(" + BranchNameString() + ":" + CommitAbbreviatedHashString() + ", " + CompilationTimeString() + ") "
             + "[" + CompilerInformationString() + " x64] "
             + "{SSE4.2:" + sse + ", AVX2:" + avx + ", MT: " + mt + "};";
 }
