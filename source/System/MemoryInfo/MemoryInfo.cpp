@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "System/MemoryInfo/MemoryInfo.h"
+#include "String/String.h"
 
 // Most of the code displayed in the inl files is from here:
 // https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
@@ -21,6 +22,14 @@
 #include "System/MemoryInfo/MemoryInfo_Linux.inl"
 #else
 #include "System/MemoryInfo/MemoryInfo_Generic.inl"
+#endif
+
+#if ( defined( ULIS_GCC ) || defined( ULIS_MINGW ) ) && __GNUC__ < 8
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
 #endif
 
 ULIS_NAMESPACE_BEGIN
@@ -78,6 +87,33 @@ udouble
 FMemoryInfo::CPUCurrentlyUsedByProcess()
 {
     return  details::CPUCurrentlyUsedByProcess();
+}
+
+//static
+uint64
+FMemoryInfo::DiskCapacity( const FString& iDisk )
+{
+    std::error_code ec;
+    const std::filesystem::space_info si = std::filesystem::space( iDisk.Data(), ec );
+    return  si.capacity;
+}
+
+//static
+uint64
+FMemoryInfo::DiskSpaceAvailable( const FString& iDisk )
+{
+    std::error_code ec;
+    const std::filesystem::space_info si = std::filesystem::space( iDisk.Data(), ec );
+    return  si.available;
+}
+
+//static
+uint64
+FMemoryInfo::DiskSpaceFree( const FString& iDisk )
+{
+    std::error_code ec;
+    const std::filesystem::space_info si = std::filesystem::space( iDisk.Data(), ec );
+    return  si.free;
 }
 
 ULIS_NAMESPACE_END

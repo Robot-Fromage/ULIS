@@ -35,6 +35,10 @@ public:
 
     static udouble CPUCurrentlyUsed();
     static udouble CPUCurrentlyUsedByProcess();
+
+    static uint64 DiskCapacity( const FString& iDisk );
+    static uint64 DiskSpaceAvailable( const FString& iDisk );
+    static uint64 DiskSpaceFree( const FString& iDisk );
 };
 
 ULIS_NAMESPACE_END
