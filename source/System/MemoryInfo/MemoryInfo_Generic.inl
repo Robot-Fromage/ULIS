@@ -14,6 +14,39 @@
 
 ULIS_NAMESPACE_BEGIN
 namespace details {
+
+uint64 TotalVirtualMemory() {
+    return  0;
+}
+
+uint64 VirtualMemoryCurrentlyUsed() {
+    return  0;
+}
+
+uint64 VirtualMemoryCurrentlyUsedByProcess() {
+    return  0;
+}
+
+uint64 TotalRAM() {
+    return  0;
+}
+
+uint64 TotalRAMCurrentlyUsed() {
+    return  0;
+}
+
+uint64 TotalRAMCurrentlyUsedByProcess() {
+    return  0;
+}
+
+double CPUCurrentlyUsed(){
+    return  0;
+}
+
+double CPUCurrentlyUsedByProcess(){
+    return  0;
+}
+
 } // namespace details
 ULIS_NAMESPACE_END
 
