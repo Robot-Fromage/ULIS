@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         FixedAllocMemoryPool.h
+* @file         FixedAllocArena.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for FixedAllocArena.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
@@ -30,6 +30,7 @@ ULIS_NAMESPACE_BEGIN
 //  mNumCells = arenaSize / allocSize = 256
 //  metaPadSize = sizeof( ptr )
 class ULIS_API FFixedAllocArena {
+    friend class FFixedAllocMemoryPool;
 public:
     typedef uint8** tAlloc;
     typedef uint8* tData;
@@ -47,24 +48,30 @@ public:
     bool IsFull() const;
     bool IsEmpty() const;
     bool IsInRange( const uint8* iAlloc ) const;
+
     uint64 ArenaSize() const;
     uint32 AllocSize() const;
-    uint32 TotalCells() const;
+
+    uint32 NumCells() const;
     uint32 NumAvailableCells() const;
     uint32 NumUsedCells() const;
+
     uint8* Malloc();
     void Free( uint8* iAlloc );
     float LocalFragmentation() const;
 
-private:
     uint64 LowBlockAdress() const;
     uint64 HighBlockAdress() const;
-    uint64 BlockSize() const;
+
+private:
     uint32 LargestFreeChunk() const;
+    uint32 LargestUsedChunk() const;
+    uint64 BlockSize() const;
     uint8* Chunk( uint32 iIndex );
     const uint8* Chunk( uint32 iIndex ) const;
     bool IsChunkAvailable( const uint8* iChunk ) const;
-    void SetChunkData( uint8* iChunk, bool iValue = true );
+    uint8* FirstEmpty( uint32 iIndex = 0, uint32* oIndex = nullptr );
+    uint8* FirstFull( uint32 iIndex = 0, uint32* oIndex = nullptr );
 
 private:
     const uint64 mArenaSize;

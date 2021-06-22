@@ -11,6 +11,7 @@
 */
 #include "Memory/FixedAllocArena.h"
 #include "Memory/Memory.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 FFixedAllocArena::~FFixedAllocArena()
@@ -80,7 +81,7 @@ FFixedAllocArena::AllocSize() const
 }
 
 uint32
-FFixedAllocArena::TotalCells() const
+FFixedAllocArena::NumCells() const
 {
     return  mNumCells;
 }
@@ -104,13 +105,12 @@ FFixedAllocArena::Malloc()
         uint8* metaBase = Chunk( i );
         if( IsChunkAvailable( metaBase ) ) {
             // client alloc points to data
-            uint8** client = new uint8*;
             uint8* data = metaBase + smMetaPadSize;
-            client = &data;
+            uint8** client = new uint8*( data );
 
             // meta stores adress of client
             uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
-            client_ptr = &client;
+            *client_ptr = client;
             mNumAvailableCells--;
             return  data;
         }
@@ -129,7 +129,7 @@ FFixedAllocArena::Free( uint8* iAlloc )
     uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
     uint8** client = *client_ptr;
     delete client;
-    client_ptr = nullptr;
+    *client_ptr = nullptr;
     mNumAvailableCells++;
 }
 
@@ -140,7 +140,27 @@ FFixedAllocArena::LocalFragmentation() const
     if( mNumAvailableCells == 0 )
         return  0.f;
 
-    return  ( mNumAvailableCells - LargestFreeChunk() ) / static_cast< float >( mNumAvailableCells );
+    float frag = ( mNumAvailableCells - LargestFreeChunk() ) / static_cast< float >( mNumAvailableCells );
+
+    uint32 used = NumUsedCells();
+    if( used == 0 )
+        return  0.f;
+
+    float pack = ( used - LargestUsedChunk() ) / static_cast< float >( used );
+
+    return  ( frag + pack ) / 2;
+}
+
+uint64
+FFixedAllocArena::LowBlockAdress() const
+{
+    return  reinterpret_cast< uint64 >( mBlock );
+}
+
+uint64
+FFixedAllocArena::HighBlockAdress() const
+{
+    return  reinterpret_cast< uint64 >( mBlock ) + BlockSize();
 }
 
 uint32
@@ -155,16 +175,16 @@ FFixedAllocArena::LargestFreeChunk() const
     return  run;
 }
 
-uint64
-FFixedAllocArena::LowBlockAdress() const
+uint32
+FFixedAllocArena::LargestUsedChunk() const
 {
-    return  reinterpret_cast< uint64 >( mBlock );
-}
-
-uint64
-FFixedAllocArena::HighBlockAdress() const
-{
-    return  reinterpret_cast< uint64 >( mBlock ) + BlockSize();
+    int run = 0;
+    for( uint32 i = 0; i < mNumCells; ++i )
+        if( !IsChunkAvailable( Chunk( i ) ) )
+            ++run;
+        else
+            run = 0;
+    return  run;
 }
 
 uint64
@@ -189,6 +209,34 @@ bool
 FFixedAllocArena::IsChunkAvailable( const uint8* iChunk ) const
 {
     return  !iChunk;
+}
+
+uint8*
+FFixedAllocArena::FirstEmpty( uint32 iFrom, uint32* oIndex )
+{
+    for( uint32 i = iFrom; i < mNumCells; ++i ) {
+        uint8* metaBase = Chunk( i );
+        if( IsChunkAvailable( metaBase ) ) {
+            if( oIndex )
+                *oIndex = i;
+            return  metaBase;
+        }
+    }
+    return  nullptr;
+}
+
+uint8*
+FFixedAllocArena::FirstFull( uint32 iFrom, uint32* oIndex )
+{
+    for( uint32 i = iFrom; i < mNumCells; ++i ) {
+        uint8* metaBase = Chunk( i );
+        if( !IsChunkAvailable( metaBase ) ) {
+            if( oIndex )
+                *oIndex = i;
+            return  metaBase;
+        }
+    }
+    return  nullptr;
 }
 
 ULIS_NAMESPACE_END

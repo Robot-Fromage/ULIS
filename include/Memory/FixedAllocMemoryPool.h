@@ -11,13 +11,12 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Memory/ForwardList.h"
 #include "Memory/FixedAllocArena.h"
+#include <list>
 
 ULIS_NAMESPACE_BEGIN
-// Export
-template class ULIS_API TForwardList< FFixedAllocArena* >;
-
+#pragma warning(push)
+#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 class ULIS_API FFixedAllocMemoryPool {
 public:
     ~FFixedAllocMemoryPool();
@@ -25,6 +24,7 @@ public:
           uint64 iArenaSize
         , uint32 iAllocSize
         , uint64 iTargetMemoryUsage = 1
+        , float iDefragThreshold = 0.333f
     );
     FFixedAllocMemoryPool( const FFixedAllocMemoryPool& ) = delete;
     FFixedAllocMemoryPool& operator=( const FFixedAllocMemoryPool& ) = delete;
@@ -32,23 +32,37 @@ public:
 public:
     uint64 ArenaSize() const;
     uint32 AllocSize() const;
-    uint8* Malloc();
-    void Free( const uint8* iAlloc );
+
+    uint64 NumCells() const;
+    uint64 NumAvailableCells() const;
+    uint64 NumUsedCells() const;
+
     uint64 TotalMemory() const;
-    uint64 TotalCells() const;
     uint64 AvailableMemory() const;
     uint64 UsedMemory() const;
-    uint32 NumAvailableCells() const;
+
     uint64 TargetMemoryUsage() const;
     void SetTargetMemoryUsage( uint64 iValue );
-    bool AllocArenaIfNecessary();
-    bool FreeArenaIfNecessary();
+
+    float DefragThreshold() const;
+    void SetDefragThreshold( float iValue );
+
+    uint8* Malloc();
+    void Free( uint8* iAlloc );
+    float Fragmentation() const;
+    void DefragIfNecessary();
+    void DefragForce();
+
+    bool AllocOneArenaIfNecessary();
+    bool FreeOneArenaIfNecessary();
 
 private:
     const uint64 mArenaSize;
     const uint32 mAllocSize;
     uint64 mTargetMemoryUsage;
-    TForwardList< FFixedAllocArena* > mArenaPool;
+    float mDefragThreshold;
+    std::list< FFixedAllocArena* > mArenaPool;
 };
+#pragma warning(pop)
 ULIS_NAMESPACE_END
 
