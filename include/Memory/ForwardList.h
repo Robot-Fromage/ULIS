@@ -52,7 +52,7 @@ public:
         return  mValue;
     }
 
-private:
+public:
     TForwardListNode< T >* mNext;
     T mValue;
 };
@@ -338,7 +338,7 @@ public:
         Access node at front.
         The behaviour is undefined if the list is empty.
     */
-    tNode& NodeFront() {
+    tNode* NodeFront() {
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( mFront, "Bad state" );
         return  mFront;
@@ -348,7 +348,7 @@ public:
         Access const node at front.
         The behaviour is undefined if the list is empty.
     */
-    const tNode& NodeFront() const {
+    const tNode* NodeFront() const {
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( mFront, "Bad state" );
         return  mFront;
@@ -358,7 +358,7 @@ public:
         Access node at back.
         The behaviour is undefined if the list is empty.
     */
-    tNode& NodeBack() {
+    tNode* NodeBack() {
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( mBack, "Bad state" );
         return  mBack;
@@ -368,7 +368,7 @@ public:
         Access const node at back.
         The behaviour is undefined if the list is empty.
     */
-    const tNode& NodeBack() const {
+    const tNode* NodeBack() const {
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( mBack, "Bad state" );
         return  mBack;
@@ -377,7 +377,7 @@ public:
     /*!
         Access node  at index.
     */
-    T& NodeAt( uint64 iIndex ) {
+    tNode* NodeAt( uint64 iIndex ) {
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         tNode* node = mFront;
@@ -389,7 +389,7 @@ public:
     /*!
         Access node at index.
     */
-    const T& NodeAt( uint64 iIndex ) const {
+    const tNode* NodeAt( uint64 iIndex ) const {
         ULIS_ASSERT( mSize > 0, "Bad call, list is empty" );
         ULIS_ASSERT( iIndex < mSize, "Bad Index" );
         tNode* node = mFront;
