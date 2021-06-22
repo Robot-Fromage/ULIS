@@ -10,11 +10,23 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Memory/FixedAllocArena.h"
+#include "Memory/Memory.h"
 
 ULIS_NAMESPACE_BEGIN
 FFixedAllocArena::~FFixedAllocArena()
 {
-    delete  mBlock;
+    ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
+    for( uint32 i = 0; i < mNumCells; ++i ) {
+        uint8* metaBase = Chunk( i );
+        if( !IsChunkAvailable( metaBase ) ) {
+            uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
+            uint8** client = *client_ptr;
+            delete client;
+            client_ptr = nullptr;
+            mNumAvailableCells++;
+        }
+    }
+    XFree( mBlock );
 }
 
 FFixedAllocArena::FFixedAllocArena(
@@ -23,16 +35,17 @@ FFixedAllocArena::FFixedAllocArena(
 )
     : mArenaSize( iArenaSize )
     , mAllocSize( iAllocSize )
-    , mTotalCells( static_cast< uint32 >( mArenaSize / mAllocSize ) )
-    , mNumAvailableCells( mTotalCells )
-    , mBlock( new uint8[ iArenaSize ] )
-    , mUsed( mTotalCells, false )
+    , mNumCells( static_cast< uint32 >( mArenaSize / mAllocSize ) )
+    , mNumAvailableCells( mNumCells )
+    , mBlock( reinterpret_cast< uint8* >( XMalloc( BlockSize() ) ) )
 {
     ULIS_ASSERT( mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mAllocSize, "Bad Size !" );
-    ULIS_ASSERT( mTotalCells, "Bad Size !" );
+    ULIS_ASSERT( mNumCells, "Bad Size !" );
     ULIS_ASSERT( mNumAvailableCells, "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
+    for( uint64 i = 0; i < mNumCells; ++i )
+        memset( mBlock + i * mAllocSize, 0, smMetaPadSize );
 }
 
 bool
@@ -44,7 +57,14 @@ FFixedAllocArena::IsFull() const
 bool
 FFixedAllocArena::IsEmpty() const
 {
-    return  mNumAvailableCells == mTotalCells;
+    return  mNumAvailableCells == mNumCells;
+}
+
+bool
+FFixedAllocArena::IsInRange( const uint8* iAlloc ) const
+{
+    uint64 adress = reinterpret_cast< uint64 >( iAlloc );
+    return  adress >= LowBlockAdress() && adress < HighBlockAdress();
 }
 
 uint64
@@ -62,7 +82,7 @@ FFixedAllocArena::AllocSize() const
 uint32
 FFixedAllocArena::TotalCells() const
 {
-    return  mTotalCells;
+    return  mNumCells;
 }
 
 uint32
@@ -74,49 +94,101 @@ FFixedAllocArena::NumAvailableCells() const
 uint32
 FFixedAllocArena::NumUsedCells() const
 {
-    return  mTotalCells - mNumAvailableCells;
+    return  mNumCells - mNumAvailableCells;
 }
 
 uint8*
 FFixedAllocArena::Malloc()
 {
-    for( uint64 i = 0; i < mTotalCells; ++i ) {
-        if( !mUsed[i] ) {
-            mUsed[i] = true;
-            return  mBlock + i * mAllocSize;
+    for( uint32 i = 0; i < mNumCells; ++i ) {
+        uint8* metaBase = Chunk( i );
+        if( IsChunkAvailable( metaBase ) ) {
+            // client alloc points to data
+            uint8** client = new uint8*;
+            uint8* data = metaBase + smMetaPadSize;
+            client = &data;
+
+            // meta stores adress of client
+            uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
+            client_ptr = &client;
+            mNumAvailableCells--;
+            return  data;
         }
     }
-    // Alloc failed, return nullptr:
     return  nullptr;
 }
 
 void
-FFixedAllocArena::Free( const uint8* iAlloc )
+FFixedAllocArena::Free( uint8* iAlloc )
 {
-    ULIS_ASSERT( IsInRange( iAlloc ), "Bad alloc, not in this arena !" );
-    uint64 rel_adress = reinterpret_cast< uint64 >( iAlloc ) - LowAdress();
-    uint32 cell = static_cast< uint32 >( rel_adress / mAllocSize );
-    ULIS_ASSERT( mUsed[cell] == true, "Bad Free, already free !" );
-    mUsed[cell] = false;
+    ULIS_ASSERT( iAlloc, "Cannot free null alloc" );
+    uint8* metaBase = iAlloc - smMetaPadSize;
+    ULIS_ASSERT( IsInRange( metaBase ), "Bad alloc, not in this arena !" );
+
+    // Cleanup client
+    uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
+    uint8** client = *client_ptr;
+    delete client;
+    client_ptr = nullptr;
+    mNumAvailableCells++;
 }
 
-bool
-FFixedAllocArena::IsInRange( const uint8* iAlloc ) const
+float
+FFixedAllocArena::LocalFragmentation() const
 {
-    uint64 adress = reinterpret_cast< uint64 >( iAlloc );
-    return  adress >= LowAdress() && adress < HighAdress();
+    // Rough Estimate
+    if( mNumAvailableCells == 0 )
+        return  0.f;
+
+    return  ( mNumAvailableCells - LargestFreeChunk() ) / static_cast< float >( mNumAvailableCells );
+}
+
+uint32
+FFixedAllocArena::LargestFreeChunk() const
+{
+    int run = 0;
+    for( uint32 i = 0; i < mNumCells; ++i )
+        if( IsChunkAvailable( Chunk( i ) ) )
+            ++run;
+        else
+            run = 0;
+    return  run;
 }
 
 uint64
-FFixedAllocArena::LowAdress() const
+FFixedAllocArena::LowBlockAdress() const
 {
     return  reinterpret_cast< uint64 >( mBlock );
 }
 
 uint64
-FFixedAllocArena::HighAdress() const
+FFixedAllocArena::HighBlockAdress() const
 {
-    return  reinterpret_cast< uint64 >( mBlock ) + mArenaSize;
+    return  reinterpret_cast< uint64 >( mBlock ) + BlockSize();
+}
+
+uint64
+FFixedAllocArena::BlockSize() const
+{
+    return  static_cast< uint64 >( mArenaSize )+ static_cast< uint64 >( smMetaPadSize ) * static_cast< uint64 >( mNumCells );
+}
+
+uint8*
+FFixedAllocArena::Chunk( uint32 iIndex )
+{
+    return  mBlock + static_cast< uint64 >( iIndex ) * mAllocSize;
+}
+
+const uint8*
+FFixedAllocArena::Chunk( uint32 iIndex ) const
+{
+    return  mBlock + static_cast< uint64 >( iIndex ) * mAllocSize;
+}
+
+bool
+FFixedAllocArena::IsChunkAvailable( const uint8* iChunk ) const
+{
+    return  !iChunk;
 }
 
 ULIS_NAMESPACE_END

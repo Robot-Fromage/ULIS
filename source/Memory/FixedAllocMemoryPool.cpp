@@ -70,7 +70,7 @@ FFixedAllocMemoryPool::Free( const uint8* iAlloc )
     uint64 adress = reinterpret_cast< uint64 >( iAlloc );
     TForwardListNode< FFixedAllocArena* >* it = mArenaPool.NodeFront();
     while( it ) {
-        if( adress < it->mValue->LowAdress() ) {
+        if( adress < it->mValue->LowBlockAdress() ) {
             it = it->mNext;
             continue;
         }

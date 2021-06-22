@@ -11,12 +11,29 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include <vector>
 
 ULIS_NAMESPACE_BEGIN
-#pragma warning(push)
-#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
+/////////////////////////////////////////////////////
+// Format of Fixed Alloc
+//
+//          [meta][data]
+//          [data]: fixed size ( alloc size ), e.g: 16384 bytes for a 64² RGBA8 tile.
+//          [meta]: [adress of arena][adress of client alloc]
+//          [client alloc]: stores the adress of the [data]
+//                  e.g:
+//                  [0xf4f568654][0xf54ez4ae4][data]
+//                                |->[points do data]
+//
+//  Ex arena 1024² for 64² RGBA8:
+//  mArenaSize: 4194304 bytes
+//  mAllocSize: 16384 bytes
+//  mNumCells = arenaSize / allocSize = 256
+//  metaPadSize = sizeof( ptr )
 class ULIS_API FFixedAllocArena {
+public:
+    typedef uint8** tAlloc;
+    typedef uint8* tData;
+
 public:
     ~FFixedAllocArena();
     FFixedAllocArena(
@@ -29,26 +46,35 @@ public:
 public:
     bool IsFull() const;
     bool IsEmpty() const;
+    bool IsInRange( const uint8* iAlloc ) const;
     uint64 ArenaSize() const;
     uint32 AllocSize() const;
     uint32 TotalCells() const;
     uint32 NumAvailableCells() const;
     uint32 NumUsedCells() const;
     uint8* Malloc();
-    void Free( const uint8* iAlloc );
-    bool IsInRange( const uint8* iAlloc ) const;
-    uint64 LowAdress() const;
-    uint64 HighAdress() const;
+    void Free( uint8* iAlloc );
+    float LocalFragmentation() const;
+
+private:
+    uint64 LowBlockAdress() const;
+    uint64 HighBlockAdress() const;
+    uint64 BlockSize() const;
+    uint32 LargestFreeChunk() const;
+    uint8* Chunk( uint32 iIndex );
+    const uint8* Chunk( uint32 iIndex ) const;
+    bool IsChunkAvailable( const uint8* iChunk ) const;
+    void SetChunkData( uint8* iChunk, bool iValue = true );
 
 private:
     const uint64 mArenaSize;
     const uint32 mAllocSize;
-    const uint32 mTotalCells;
-    const uint32 mNumAvailableCells;
+    const uint32 mNumCells;
+    uint32 mNumAvailableCells;
     uint8* const mBlock;
-    std::vector< bool > mUsed;
+
+    static constexpr const uint8 smMetaPadSize = sizeof( tAlloc );
 };
-#pragma warning(pop)
 
 ULIS_NAMESPACE_END
 
