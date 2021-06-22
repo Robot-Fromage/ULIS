@@ -13,7 +13,30 @@
 #include <ULIS>
 
 int main( int argc, char *argv[] ) {
-    std::cout << ::ULIS::FLibInfo::LibraryInformationString().Data() << std::endl;
+    using namespace ::ULIS;
+    std::cout << FLibInfo::LibraryInformationString().Data() << std::endl;
+
+    constexpr int arenaSize = 90;
+    constexpr int numArenas = 50;
+    FFixedAllocMemoryPool mem( arenaSize, 1, arenaSize * numArenas );
+    for( int i = 0; i < numArenas-1; ++i )
+        mem.AllocOneArenaIfNecessary();
+
+    uint8* a[arenaSize][numArenas];
+    for( int i = 0; i < arenaSize; ++i )
+        for( int j = 0; j < numArenas; ++j )
+            a[i][j] = mem.Malloc();
+
+    int del = rand() % ( arenaSize * numArenas ) * 16;
+    for( int i = 0; i < del; ++i ) {
+        uint8* ptr = a[rand()%arenaSize][rand()%numArenas];
+        if( (*(uint8***)(ptr-8)) )
+            mem.Free( ptr );
+    }
+    mem.Print();
+    mem.DefragForce();
+    mem.Print();
+
     return  0;
 }
 

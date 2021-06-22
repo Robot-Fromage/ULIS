@@ -46,6 +46,8 @@ public:
 
     float DefragThreshold() const;
     void SetDefragThreshold( float iValue );
+    float ExpectedThresholdAfterDefrag();
+    void SetAutoDefragThreshold( float iValue );
 
     uint8* Malloc();
     void Free( uint8* iAlloc );
@@ -55,6 +57,8 @@ public:
 
     bool AllocOneArenaIfNecessary();
     bool FreeOneArenaIfNecessary();
+
+    void Print() const;
 
 private:
     const uint64 mArenaSize;

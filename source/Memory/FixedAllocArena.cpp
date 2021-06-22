@@ -16,7 +16,7 @@
 ULIS_NAMESPACE_BEGIN
 FFixedAllocArena::~FFixedAllocArena()
 {
-    ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
+    //ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
     for( uint32 i = 0; i < mNumCells; ++i ) {
         uint8* metaBase = Chunk( i );
         if( !IsChunkAvailable( metaBase ) ) {
@@ -46,7 +46,9 @@ FFixedAllocArena::FFixedAllocArena(
     ULIS_ASSERT( mNumAvailableCells, "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
     for( uint64 i = 0; i < mNumCells; ++i )
-        memset( mBlock + i * mAllocSize, 0, smMetaPadSize );
+        memset( mBlock + i * ( mAllocSize + smMetaPadSize ), 0, smMetaPadSize );
+
+    auto dummy = 0;
 }
 
 bool
@@ -163,6 +165,18 @@ FFixedAllocArena::HighBlockAdress() const
     return  reinterpret_cast< uint64 >( mBlock ) + BlockSize();
 }
 
+void
+FFixedAllocArena::Print() const
+{
+    std::cout << "[";
+    for( uint32 i = 0; i < mNumCells; ++i )
+        if( IsChunkAvailable( Chunk( i ) ) )
+            std::cout << "-";
+        else
+            std::cout << "+";
+    std::cout << "] " << FMath::CeilToInt( LocalFragmentation() * 100 ) <<"%\n";
+}
+
 uint32
 FFixedAllocArena::LargestFreeChunk() const
 {
@@ -190,25 +204,25 @@ FFixedAllocArena::LargestUsedChunk() const
 uint64
 FFixedAllocArena::BlockSize() const
 {
-    return  static_cast< uint64 >( mArenaSize )+ static_cast< uint64 >( smMetaPadSize ) * static_cast< uint64 >( mNumCells );
+    return  static_cast< uint64 >( mArenaSize ) + static_cast< uint64 >( smMetaPadSize ) * static_cast< uint64 >( mNumCells );
 }
 
 uint8*
 FFixedAllocArena::Chunk( uint32 iIndex )
 {
-    return  mBlock + static_cast< uint64 >( iIndex ) * mAllocSize;
+    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + smMetaPadSize );
 }
 
 const uint8*
 FFixedAllocArena::Chunk( uint32 iIndex ) const
 {
-    return  mBlock + static_cast< uint64 >( iIndex ) * mAllocSize;
+    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + smMetaPadSize );
 }
 
 bool
 FFixedAllocArena::IsChunkAvailable( const uint8* iChunk ) const
 {
-    return  !iChunk;
+    return  !(*(const uint8***)(iChunk));
 }
 
 uint8*

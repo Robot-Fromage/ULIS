@@ -72,7 +72,7 @@ FFixedAllocMemoryPool::NumUsedCells() const
 uint64
 FFixedAllocMemoryPool::TotalMemory() const
 {
-    return  mArenaPool.size() * mAllocSize;
+    return  mArenaPool.size() * mArenaSize;
 }
 
 uint64
@@ -113,12 +113,24 @@ FFixedAllocMemoryPool::SetDefragThreshold( float iValue )
     mDefragThreshold = FMath::Clamp( iValue, 0.f, 1.f );
 }
 
+float
+FFixedAllocMemoryPool::ExpectedThresholdAfterDefrag()
+{
+    return  1.f / mArenaPool.size();
+}
+
+void
+FFixedAllocMemoryPool::SetAutoDefragThreshold( float iValue )
+{
+    SetDefragThreshold( FMath::Clamp( ExpectedThresholdAfterDefrag() * 2, 0.f, 0.75f ) );
+}
+
 uint8*
 FFixedAllocMemoryPool::Malloc()
 {
     uint8* alloc = nullptr;
     for( auto it : mArenaPool ) {
-        it->Malloc();
+        alloc = it->Malloc();
         if( alloc )
             return  alloc;
     }
@@ -165,12 +177,17 @@ FFixedAllocMemoryPool::DefragForce()
     );
 
     auto left = mArenaPool.begin();
-    auto right = mArenaPool.end();
+    auto right = --mArenaPool.end();
     while( left != right ) {
         uint32 lindex = 0;
         uint32 rindex = 0;
         while( !(*right)->IsEmpty() ) {
-
+            if( (*left)->IsFull() ) {
+                ++left;
+                lindex = 0;
+                if( left == right )
+                    return;
+            }
             uint8* metaBaseFull = (*right)->FirstFull( rindex, &rindex );
             uint8* metaBaseEmpty = (*left)->FirstEmpty( lindex, &lindex );
             memcpy( metaBaseEmpty, metaBaseFull, mAllocSize + static_cast< uint64 >( FFixedAllocArena::smMetaPadSize ) );
@@ -179,20 +196,10 @@ FFixedAllocMemoryPool::DefragForce()
             uint8** client = *client_ptr;
             uint8* data = metaBaseEmpty + FFixedAllocArena::smMetaPadSize;
             *client = data;
-            (*right)->mNumAvailableCells--;
-            (*left)->mNumAvailableCells++;
-
-            if( (*left)->IsFull() ) {
-                ++left;
-                lindex = 0;
-            }
-
+            (*right)->mNumAvailableCells++;
+            (*left)->mNumAvailableCells--;
         }
-
-        if( (*right)->IsEmpty() ) {
-            --right;
-            rindex = 0;
-        }
+        --right;
     }
 }
 
@@ -218,6 +225,14 @@ FFixedAllocMemoryPool::FreeOneArenaIfNecessary()
         }
     }
     return  false;
+}
+
+void
+FFixedAllocMemoryPool::Print() const
+{
+    std::cout << "=== " << FMath::CeilToInt( Fragmentation() * 100 ) << "%\n";
+    for( auto it : mArenaPool )
+        it->Print();
 }
 
 ULIS_NAMESPACE_END

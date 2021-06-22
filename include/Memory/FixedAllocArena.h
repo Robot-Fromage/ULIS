@@ -63,6 +63,8 @@ public:
     uint64 LowBlockAdress() const;
     uint64 HighBlockAdress() const;
 
+    void Print() const;
+
 private:
     uint32 LargestFreeChunk() const;
     uint32 LargestUsedChunk() const;
