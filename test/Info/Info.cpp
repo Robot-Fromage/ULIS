@@ -27,12 +27,14 @@ int main( int argc, char *argv[] ) {
         for( int j = 0; j < numArenas; ++j )
             a[i][j] = mem.Malloc();
 
-    int del = rand() % ( arenaSize * numArenas ) * 16;
+    int del = ( arenaSize * numArenas ) / 2;
     for( int i = 0; i < del; ++i ) {
         uint8* ptr = a[rand()%arenaSize][rand()%numArenas];
-        if( (*(uint8***)(ptr-8)) )
-            mem.Free( ptr );
+        while( FFixedAllocArena::IsFree( ptr ) )
+            ptr = a[rand()%arenaSize][rand()%numArenas];
+        mem.Free( ptr );
     }
+
     mem.Print();
     mem.DefragForce();
     mem.Print();

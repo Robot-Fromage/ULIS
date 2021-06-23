@@ -171,7 +171,7 @@ FFixedAllocMemoryPool::DefragForce()
     auto right = --mArenaPool.end();
     while( left != right ) {
         uint32 lindex = 0;
-        uint32 rindex = 0;
+        uint32 rindex = ULIS_UINT32_MAX;
         while( !(*right)->IsEmpty() ) {
             if( (*left)->IsFull() ) {
                 ++left;
@@ -179,14 +179,7 @@ FFixedAllocMemoryPool::DefragForce()
                 if( left == right )
                     goto end;
             }
-            uint8* metaBaseFull = (*right)->FirstFull( rindex, &rindex );
-            uint8* metaBaseEmpty = (*left)->FirstEmpty( lindex, &lindex );
-            memcpy( metaBaseEmpty, metaBaseFull, mAllocSize + static_cast< uint64 >( FFixedAllocArena::smMetaPadSize ) );
-            memset( metaBaseFull, 0, FFixedAllocArena::smMetaPadSize );
-            uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBaseEmpty );
-            uint8** client = *client_ptr;
-            uint8* data = metaBaseEmpty + FFixedAllocArena::smMetaPadSize;
-            *client = data;
+            FFixedAllocArena::Swap( (*right)->LastFullChunkMetaBase( rindex, &rindex ), (*left)->FirstEmptyChunkMetaBase( lindex, &lindex ), mAllocSize );
             (*right)->mNumAvailableCells++;
             (*left)->mNumAvailableCells--;
         }

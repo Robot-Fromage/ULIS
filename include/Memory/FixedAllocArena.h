@@ -32,10 +32,6 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FFixedAllocArena {
     friend class FFixedAllocMemoryPool;
 public:
-    typedef uint8** tAlloc;
-    typedef uint8* tData;
-
-public:
     ~FFixedAllocArena();
     FFixedAllocArena(
           uint64 iArenaSize
@@ -66,16 +62,19 @@ public:
     void Print() const;
     void DefragSelf();
 
+    static bool IsFree( const uint8* iAlloc );
+    static void Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize );
+
 private:
     uint32 LargestFreeChunk() const;
     uint32 LargestUsedChunk() const;
     uint64 BlockSize() const;
-    uint8* Chunk( uint32 iIndex );
-    const uint8* Chunk( uint32 iIndex ) const;
-    bool IsChunkAvailable( const uint8* iChunk ) const;
-    uint8* FirstEmpty( uint32 iFrom = 0, uint32* oIndex = nullptr );
-    uint8* FirstFull( uint32 iFrom = 0, uint32* oIndex = nullptr );
-    uint8* LastFull( uint32 iFrom = ULIS_UINT32_MAX, uint32* oIndex = nullptr );
+    uint8* ChunkMetaBase( uint32 iIndex );
+    const uint8* ChunkMetaBase( uint32 iIndex ) const;
+    static bool IsChunkMetaBaseAvailable( const uint8* iChunk );
+    uint8* FirstEmptyChunkMetaBase( uint32 iFrom = 0, uint32* oIndex = nullptr );
+    uint8* FirstFullChunkMetaBase( uint32 iFrom = 0, uint32* oIndex = nullptr );
+    uint8* LastFullChunkMetaBase( uint32 iFrom = ULIS_UINT32_MAX, uint32* oIndex = nullptr );
 
 private:
     const uint64 mArenaSize;
@@ -84,7 +83,7 @@ private:
     uint32 mNumAvailableCells;
     uint8* const mBlock;
 
-    static constexpr const uint8 smMetaPadSize = sizeof( tAlloc );
+    static constexpr const uint8 smMetaPadSize = sizeof( uint8** );
 };
 
 ULIS_NAMESPACE_END
