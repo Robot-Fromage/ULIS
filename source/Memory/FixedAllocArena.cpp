@@ -100,7 +100,7 @@ FFixedAllocArena::NumUsedCells() const
     return  mNumCells - mNumAvailableCells;
 }
 
-uint8*
+FFixedAllocArena::tClient
 FFixedAllocArena::Malloc()
 {
     for( uint32 i = 0; i < mNumCells; ++i ) {
@@ -115,22 +115,25 @@ FFixedAllocArena::Malloc()
             uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
             *client_ptr = client;
             mNumAvailableCells--;
-            return  data;
+            return  client;
         }
     }
     return  nullptr;
 }
 
 void
-FFixedAllocArena::Free( uint8* iAlloc )
+FFixedAllocArena::Free( tClient iClient )
 {
-    ULIS_ASSERT( iAlloc, "Cannot free null alloc" );
-    uint8* metaBase = iAlloc - smMetaPadSize;
+    ULIS_ASSERT( iClient, "Cannot free null client" );
+    uint8* alloc = *iClient;
+    ULIS_ASSERT( alloc, "Cannot free null alloc" );
+    ULIS_ASSERT( !IsFree( alloc ), "Already Free" );
+    uint8* metaBase = alloc - smMetaPadSize;
     ULIS_ASSERT( IsInRange( metaBase ), "Bad alloc, not in this arena !" );
 
     // Cleanup client
-    uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
-    uint8** client = *client_ptr;
+    tClient* client_ptr = reinterpret_cast< tClient* >( metaBase );
+    tClient client = *client_ptr;
     delete client;
     *client_ptr = nullptr;
     mNumAvailableCells++;
@@ -191,7 +194,14 @@ FFixedAllocArena::DefragSelf()
 bool
 FFixedAllocArena::IsFree( const uint8* iAlloc )
 {
-    return  IsChunkMetaBaseAvailable( iAlloc - 8 ); 
+    return  IsChunkMetaBaseAvailable( iAlloc - smMetaPadSize ); 
+}
+
+//static
+bool
+FFixedAllocArena::IsFree( const tClient iClient )
+{
+    return  IsFree( *iClient );
 }
 
 //static

@@ -113,10 +113,10 @@ FFixedAllocMemoryPool::SetDefragThreshold( float iValue )
     mDefragThreshold = FMath::Clamp( iValue, 0.f, 1.f );
 }
 
-uint8*
+FFixedAllocArena::tClient
 FFixedAllocMemoryPool::Malloc()
 {
-    uint8* alloc = nullptr;
+    FFixedAllocArena::tClient alloc = nullptr;
     for( auto it : mArenaPool ) {
         alloc = it->Malloc();
         if( alloc )
@@ -127,14 +127,14 @@ FFixedAllocMemoryPool::Malloc()
 }
 
 void
-FFixedAllocMemoryPool::Free( uint8* iAlloc )
+FFixedAllocMemoryPool::Free( FFixedAllocArena::tClient iClient )
 {
-    uint64 adress = reinterpret_cast< uint64 >( iAlloc );
+    uint64 adress = reinterpret_cast< uint64 >( *iClient );
     for( auto it : mArenaPool )
         if( adress < it->LowBlockAdress() )
             continue;
         else if( adress < it->HighBlockAdress() )
-            return  it->Free( iAlloc );
+            return  it->Free( iClient );
     ULIS_ASSERT( false, "Bad alloc, not from this pool !" );
 }
 

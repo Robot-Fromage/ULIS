@@ -16,6 +16,7 @@ int main( int argc, char *argv[] ) {
     using namespace ::ULIS;
     std::cout << FLibInfo::LibraryInformationString().Data() << std::endl;
 
+    /*
     constexpr int arenaSize = 90;
     constexpr int numArenas = 50;
     FFixedAllocMemoryPool mem( arenaSize, 1, arenaSize * numArenas );
@@ -38,6 +39,38 @@ int main( int argc, char *argv[] ) {
     mem.Print();
     mem.DefragForce();
     mem.Print();
+    */
+
+    FFixedAllocMemoryPool mem( 10, 1, 10 );
+    uint8** a_client[10];
+
+    for( int i = 0; i < 5; ++i ) {
+        a_client[i] = mem.Malloc();
+        **a_client[i] = 0;
+    }
+
+    uint8** data_client = mem.Malloc();
+    **data_client = 5;
+
+    for( int i = 0; i < 5; ++i )
+        mem.Free( a_client[i] );
+
+    mem.Print();
+    std::cout << (int)**data_client << std::endl;
+    mem.DefragForce();
+    mem.Print();
+    std::cout << (int)**data_client << std::endl;
+
+    for( int i = 0; i < 5; ++i ) {
+        a_client[i] = mem.Malloc();
+        **a_client[i] = 0;
+    }
+    mem.Print();
+    std::cout << (int)**data_client << std::endl;
+
+    for( int i = 0; i < 5; ++i )
+        mem.Free( a_client[i] );
+    mem.Free( data_client );
 
     return  0;
 }

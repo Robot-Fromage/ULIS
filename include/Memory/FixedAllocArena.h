@@ -32,6 +32,11 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FFixedAllocArena {
     friend class FFixedAllocMemoryPool;
 public:
+    typedef uint8* tAlloc;
+    typedef uint8* tMetaBase;
+    typedef uint8** tClient;
+
+public:
     ~FFixedAllocArena();
     FFixedAllocArena(
           uint64 iArenaSize
@@ -52,8 +57,8 @@ public:
     uint32 NumAvailableCells() const;
     uint32 NumUsedCells() const;
 
-    uint8* Malloc();
-    void Free( uint8* iAlloc );
+    tClient Malloc();
+    void Free( tClient iClient );
     float LocalFragmentation() const;
 
     uint64 LowBlockAdress() const;
@@ -63,9 +68,10 @@ public:
     void DefragSelf();
 
     static bool IsFree( const uint8* iAlloc );
-    static void Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize );
+    static bool IsFree( const tClient iClient );
 
 private:
+    static void Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize );
     uint32 LargestFreeChunk() const;
     uint32 LargestUsedChunk() const;
     uint64 BlockSize() const;

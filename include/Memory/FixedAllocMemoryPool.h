@@ -47,8 +47,8 @@ public:
     float DefragThreshold() const;
     void SetDefragThreshold( float iValue );
 
-    uint8* Malloc();
-    void Free( uint8* iAlloc );
+    FFixedAllocArena::tClient Malloc();
+    void Free( FFixedAllocArena::tClient iAlloc );
     float Fragmentation() const;
     void DefragIfNecessary();
     void DefragForce();
