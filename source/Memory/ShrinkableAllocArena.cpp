@@ -3,18 +3,18 @@
 /*
 *   ULIS
 *__________________
-* @file         FixedAllocMemoryPool.cpp
+* @file         ShrinkableAllocArena.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for FixedAllocArena.
+* @brief        This file provides the definition for ShrinkableAllocArena.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Memory/FixedAllocArena.h"
+#include "Memory/ShrinkableAllocArena.h"
 #include "Memory/Memory.h"
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
-FFixedAllocArena::~FFixedAllocArena()
+FShrinkableAllocArena::~FShrinkableAllocArena()
 {
     //ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
     for( uint32 i = 0; i < mNumCells; ++i ) {
@@ -30,7 +30,7 @@ FFixedAllocArena::~FFixedAllocArena()
     XFree( mBlock );
 }
 
-FFixedAllocArena::FFixedAllocArena(
+FShrinkableAllocArena::FShrinkableAllocArena(
       uint64 iArenaSize
     , uint32 iAllocSize
 )
@@ -52,56 +52,56 @@ FFixedAllocArena::FFixedAllocArena(
 }
 
 bool
-FFixedAllocArena::IsFull() const
+FShrinkableAllocArena::IsFull() const
 {
     return  mNumAvailableCells == 0;
 }
 
 bool
-FFixedAllocArena::IsEmpty() const
+FShrinkableAllocArena::IsEmpty() const
 {
     return  mNumAvailableCells == mNumCells;
 }
 
 bool
-FFixedAllocArena::IsInRange( const uint8* iAlloc ) const
+FShrinkableAllocArena::IsInRange( const uint8* iAlloc ) const
 {
     uint64 adress = reinterpret_cast< uint64 >( iAlloc );
     return  adress >= LowBlockAdress() && adress < HighBlockAdress();
 }
 
 uint64
-FFixedAllocArena::ArenaSize() const
+FShrinkableAllocArena::ArenaSize() const
 {
     return  mArenaSize;
 }
 
 uint32
-FFixedAllocArena::AllocSize() const
+FShrinkableAllocArena::AllocSize() const
 {
     return  mAllocSize;
 }
 
 uint32
-FFixedAllocArena::NumCells() const
+FShrinkableAllocArena::NumCells() const
 {
     return  mNumCells;
 }
 
 uint32
-FFixedAllocArena::NumAvailableCells() const
+FShrinkableAllocArena::NumAvailableCells() const
 {
     return  mNumAvailableCells;
 }
 
 uint32
-FFixedAllocArena::NumUsedCells() const
+FShrinkableAllocArena::NumUsedCells() const
 {
     return  mNumCells - mNumAvailableCells;
 }
 
-FFixedAllocArena::tClient
-FFixedAllocArena::Malloc()
+FShrinkableAllocArena::tClient
+FShrinkableAllocArena::Malloc()
 {
     for( uint32 i = 0; i < mNumCells; ++i ) {
         uint8* metaBase = ChunkMetaBase( i );
@@ -122,7 +122,7 @@ FFixedAllocArena::Malloc()
 }
 
 void
-FFixedAllocArena::Free( tClient iClient )
+FShrinkableAllocArena::Free( tClient iClient )
 {
     ULIS_ASSERT( iClient, "Cannot free null client" );
     uint8* alloc = *iClient;
@@ -140,7 +140,7 @@ FFixedAllocArena::Free( tClient iClient )
 }
 
 float
-FFixedAllocArena::LocalFragmentation() const
+FShrinkableAllocArena::LocalFragmentation() const
 {
     // Rough Estimate
     if( mNumAvailableCells == 0 )
@@ -158,19 +158,19 @@ FFixedAllocArena::LocalFragmentation() const
 }
 
 uint64
-FFixedAllocArena::LowBlockAdress() const
+FShrinkableAllocArena::LowBlockAdress() const
 {
     return  reinterpret_cast< uint64 >( mBlock );
 }
 
 uint64
-FFixedAllocArena::HighBlockAdress() const
+FShrinkableAllocArena::HighBlockAdress() const
 {
     return  reinterpret_cast< uint64 >( mBlock ) + BlockSize();
 }
 
 void
-FFixedAllocArena::Print() const
+FShrinkableAllocArena::Print() const
 {
     std::cout << "[";
     for( uint32 i = 0; i < mNumCells; ++i )
@@ -182,7 +182,7 @@ FFixedAllocArena::Print() const
 }
 
 void
-FFixedAllocArena::DefragSelf()
+FShrinkableAllocArena::DefragSelf()
 {
     uint32 lindex = 0;
     uint32 rindex = ULIS_UINT32_MAX;
@@ -192,21 +192,21 @@ FFixedAllocArena::DefragSelf()
 
 //static
 bool
-FFixedAllocArena::IsFree( const uint8* iAlloc )
+FShrinkableAllocArena::IsFree( const uint8* iAlloc )
 {
     return  IsChunkMetaBaseAvailable( iAlloc - smMetaPadSize ); 
 }
 
 //static
 bool
-FFixedAllocArena::IsFree( const tClient iClient )
+FShrinkableAllocArena::IsFree( const tClient iClient )
 {
     return  IsFree( *iClient );
 }
 
 //static
 void
-FFixedAllocArena::Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize )
+FShrinkableAllocArena::Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize )
 {
     ULIS_ASSERT( !IsChunkMetaBaseAvailable( iFromMetaBase ), "Bad swap, iFrom should be unavailable !" );
     ULIS_ASSERT( IsChunkMetaBaseAvailable( iToMetaBase ), "Bad swap, iTo should be available !" );
@@ -219,7 +219,7 @@ FFixedAllocArena::Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocS
 }
 
 uint32
-FFixedAllocArena::LargestFreeChunk() const
+FShrinkableAllocArena::LargestFreeChunk() const
 {
     int run = 0;
     int max = 0;
@@ -235,7 +235,7 @@ FFixedAllocArena::LargestFreeChunk() const
 }
 
 uint32
-FFixedAllocArena::LargestUsedChunk() const
+FShrinkableAllocArena::LargestUsedChunk() const
 {
     int run = 0;
     int max = 0;
@@ -251,33 +251,33 @@ FFixedAllocArena::LargestUsedChunk() const
 }
 
 uint64
-FFixedAllocArena::BlockSize() const
+FShrinkableAllocArena::BlockSize() const
 {
     return  static_cast< uint64 >( mArenaSize ) + static_cast< uint64 >( smMetaPadSize ) * static_cast< uint64 >( mNumCells );
 }
 
 uint8*
-FFixedAllocArena::ChunkMetaBase( uint32 iIndex )
+FShrinkableAllocArena::ChunkMetaBase( uint32 iIndex )
 {
     return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + static_cast< uint64 >( smMetaPadSize ) );
 }
 
 const uint8*
-FFixedAllocArena::ChunkMetaBase( uint32 iIndex ) const
+FShrinkableAllocArena::ChunkMetaBase( uint32 iIndex ) const
 {
     return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + static_cast< uint64 >( smMetaPadSize ) );
 }
 
 //static
 bool
-FFixedAllocArena::IsChunkMetaBaseAvailable( const uint8* iChunk )
+FShrinkableAllocArena::IsChunkMetaBaseAvailable( const uint8* iChunk )
 {
     ULIS_ASSERT( iChunk, "Bad input" );
     return  !(*(const uint8***)(iChunk));
 }
 
 uint8*
-FFixedAllocArena::FirstEmptyChunkMetaBase( uint32 iFrom, uint32* oIndex )
+FShrinkableAllocArena::FirstEmptyChunkMetaBase( uint32 iFrom, uint32* oIndex )
 {
     for( uint32 i = iFrom; i < mNumCells; ++i ) {
         uint8* metaBase = ChunkMetaBase( i );
@@ -291,7 +291,7 @@ FFixedAllocArena::FirstEmptyChunkMetaBase( uint32 iFrom, uint32* oIndex )
 }
 
 uint8*
-FFixedAllocArena::FirstFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
+FShrinkableAllocArena::FirstFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
 {
     for( uint32 i = iFrom; i < mNumCells; ++i ) {
         uint8* metaBase = ChunkMetaBase( i );
@@ -305,7 +305,7 @@ FFixedAllocArena::FirstFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
 }
 
 uint8*
-FFixedAllocArena::LastFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
+FShrinkableAllocArena::LastFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
 {
     for( int32 i = FMath::Min( iFrom, mNumCells - 1 ); i >= 0; --i ) {
         uint8* metaBase = ChunkMetaBase( i );

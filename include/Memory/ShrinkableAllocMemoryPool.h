@@ -3,31 +3,31 @@
 /*
 *   ULIS
 *__________________
-* @file         FixedAllocMemoryPool.h
+* @file         ShrinkableAllocMemoryPool.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for FFixedAllocMemoryPool.
+* @brief        This file provides the declaration for FShrinkableAllocMemoryPool.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
-#include "Memory/FixedAllocArena.h"
+#include "Memory/ShrinkableAllocArena.h"
 #include <list>
 
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
 #pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
-class ULIS_API FFixedAllocMemoryPool {
+class ULIS_API FShrinkableAllocMemoryPool {
 public:
-    ~FFixedAllocMemoryPool();
-    FFixedAllocMemoryPool(
+    ~FShrinkableAllocMemoryPool();
+    FShrinkableAllocMemoryPool(
           uint64 iArenaSize
         , uint32 iAllocSize
         , uint64 iTargetMemoryUsage = 1
         , float iDefragThreshold = 0.333f
     );
-    FFixedAllocMemoryPool( const FFixedAllocMemoryPool& ) = delete;
-    FFixedAllocMemoryPool& operator=( const FFixedAllocMemoryPool& ) = delete;
+    FShrinkableAllocMemoryPool( const FShrinkableAllocMemoryPool& ) = delete;
+    FShrinkableAllocMemoryPool& operator=( const FShrinkableAllocMemoryPool& ) = delete;
 
 public:
     uint64 ArenaSize() const;
@@ -47,8 +47,8 @@ public:
     float DefragThreshold() const;
     void SetDefragThreshold( float iValue );
 
-    FFixedAllocArena::tClient Malloc();
-    void Free( FFixedAllocArena::tClient iAlloc );
+    FShrinkableAllocArena::tClient Malloc();
+    void Free( FShrinkableAllocArena::tClient iAlloc );
     float Fragmentation() const;
     void DefragIfNecessary();
     void DefragForce();
@@ -63,7 +63,7 @@ private:
     const uint32 mAllocSize;
     uint64 mTargetMemoryUsage;
     float mDefragThreshold;
-    std::list< FFixedAllocArena* > mArenaPool;
+    std::list< FShrinkableAllocArena* > mArenaPool;
 };
 #pragma warning(pop)
 ULIS_NAMESPACE_END

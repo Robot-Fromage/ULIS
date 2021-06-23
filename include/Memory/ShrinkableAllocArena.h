@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         FixedAllocArena.h
+* @file         ShrinkableAllocArena.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for FixedAllocArena.
+* @brief        This file provides the declaration for ShrinkableAllocArena.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -29,21 +29,21 @@ ULIS_NAMESPACE_BEGIN
 //  mAllocSize: 16384 bytes
 //  mNumCells = arenaSize / allocSize = 256
 //  metaPadSize = sizeof( ptr )
-class ULIS_API FFixedAllocArena {
-    friend class FFixedAllocMemoryPool;
+class ULIS_API FShrinkableAllocArena {
+    friend class FShrinkableAllocMemoryPool;
 public:
     typedef uint8* tAlloc;
     typedef uint8* tMetaBase;
     typedef uint8** tClient;
 
 public:
-    ~FFixedAllocArena();
-    FFixedAllocArena(
+    ~FShrinkableAllocArena();
+    FShrinkableAllocArena(
           uint64 iArenaSize
         , uint32 iAllocSize
     );
-    FFixedAllocArena( const FFixedAllocArena& ) = delete;
-    FFixedAllocArena& operator=( const FFixedAllocArena& ) = delete;
+    FShrinkableAllocArena( const FShrinkableAllocArena& ) = delete;
+    FShrinkableAllocArena& operator=( const FShrinkableAllocArena& ) = delete;
 
 public:
     bool IsFull() const;

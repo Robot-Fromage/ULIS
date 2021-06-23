@@ -3,23 +3,23 @@
 /*
 *   ULIS
 *__________________
-* @file         FixedAllocMemoryPool.cpp
+* @file         ShrinkableAllocMemoryPool.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for FFixedAllocMemoryPool.
+* @brief        This file provides the definition for FShrinkableAllocMemoryPool.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Memory/FixedAllocMemoryPool.h"
+#include "Memory/ShrinkableAllocMemoryPool.h"
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
-FFixedAllocMemoryPool::~FFixedAllocMemoryPool()
+FShrinkableAllocMemoryPool::~FShrinkableAllocMemoryPool()
 {
     for( auto it : mArenaPool )
         delete it;
 }
 
-FFixedAllocMemoryPool::FFixedAllocMemoryPool(
+FShrinkableAllocMemoryPool::FShrinkableAllocMemoryPool(
       uint64 iArenaSize
     , uint32 iAllocSize
     , uint64 iTargetMemoryUsage
@@ -34,28 +34,28 @@ FFixedAllocMemoryPool::FFixedAllocMemoryPool(
     mTargetMemoryUsage = static_cast< uint64 >( FMath::Ceil( static_cast< double >( FMath::Max( iTargetMemoryUsage, uint64( 1 ) ) ) / mArenaSize ) * mArenaSize );
     ULIS_ASSERT( mTargetMemoryUsage, "Bad Size !" );
     ULIS_ASSERT( mTargetMemoryUsage % mArenaSize == 0, "Bad Computation !" );
-    mArenaPool.push_back( new FFixedAllocArena( mArenaSize, mAllocSize ) );
+    mArenaPool.push_back( new FShrinkableAllocArena( mArenaSize, mAllocSize ) );
 }
 
 uint64
-FFixedAllocMemoryPool::ArenaSize() const
+FShrinkableAllocMemoryPool::ArenaSize() const
 {
     return  mArenaSize;
 }
 
 uint32
-FFixedAllocMemoryPool::AllocSize() const
+FShrinkableAllocMemoryPool::AllocSize() const
 {
     return  mAllocSize;
 }
 
 uint64
-FFixedAllocMemoryPool::NumCells() const
+FShrinkableAllocMemoryPool::NumCells() const
 {
     return  mArenaPool.size() * ( mArenaSize / mAllocSize );
 }
 uint64
-FFixedAllocMemoryPool::NumAvailableCells() const
+FShrinkableAllocMemoryPool::NumAvailableCells() const
 {
     uint32 avail = 0;
     for( auto it : mArenaPool )
@@ -64,37 +64,37 @@ FFixedAllocMemoryPool::NumAvailableCells() const
 }
 
 uint64
-FFixedAllocMemoryPool::NumUsedCells() const
+FShrinkableAllocMemoryPool::NumUsedCells() const
 {
     return  NumCells() - NumAvailableCells();
 }
 
 uint64
-FFixedAllocMemoryPool::TotalMemory() const
+FShrinkableAllocMemoryPool::TotalMemory() const
 {
     return  mArenaPool.size() * mArenaSize;
 }
 
 uint64
-FFixedAllocMemoryPool::AvailableMemory() const
+FShrinkableAllocMemoryPool::AvailableMemory() const
 {
     return  static_cast< uint64 >( NumAvailableCells() ) * mAllocSize;
 }
 
 uint64
-FFixedAllocMemoryPool::UsedMemory() const
+FShrinkableAllocMemoryPool::UsedMemory() const
 {
     return  TotalMemory() - AvailableMemory();
 }
 
 uint64
-FFixedAllocMemoryPool::TargetMemoryUsage() const
+FShrinkableAllocMemoryPool::TargetMemoryUsage() const
 {
     return  mTargetMemoryUsage;
 }
 
 void
-FFixedAllocMemoryPool::SetTargetMemoryUsage( uint64 iValue )
+FShrinkableAllocMemoryPool::SetTargetMemoryUsage( uint64 iValue )
 {
     mTargetMemoryUsage = static_cast< uint64 >( FMath::Ceil( static_cast< double >( FMath::Max( iValue, uint64( 1 ) ) ) / mArenaSize ) * mArenaSize );
     ULIS_ASSERT( mTargetMemoryUsage, "Bad Size !" );
@@ -102,21 +102,21 @@ FFixedAllocMemoryPool::SetTargetMemoryUsage( uint64 iValue )
 }
 
 float
-FFixedAllocMemoryPool::DefragThreshold() const
+FShrinkableAllocMemoryPool::DefragThreshold() const
 {
     return  mDefragThreshold;
 }
 
 void
-FFixedAllocMemoryPool::SetDefragThreshold( float iValue )
+FShrinkableAllocMemoryPool::SetDefragThreshold( float iValue )
 {
     mDefragThreshold = FMath::Clamp( iValue, 0.f, 1.f );
 }
 
-FFixedAllocArena::tClient
-FFixedAllocMemoryPool::Malloc()
+FShrinkableAllocArena::tClient
+FShrinkableAllocMemoryPool::Malloc()
 {
-    FFixedAllocArena::tClient alloc = nullptr;
+    FShrinkableAllocArena::tClient alloc = nullptr;
     for( auto it : mArenaPool ) {
         alloc = it->Malloc();
         if( alloc )
@@ -127,7 +127,7 @@ FFixedAllocMemoryPool::Malloc()
 }
 
 void
-FFixedAllocMemoryPool::Free( FFixedAllocArena::tClient iClient )
+FShrinkableAllocMemoryPool::Free( FShrinkableAllocArena::tClient iClient )
 {
     uint64 adress = reinterpret_cast< uint64 >( *iClient );
     for( auto it : mArenaPool )
@@ -139,7 +139,7 @@ FFixedAllocMemoryPool::Free( FFixedAllocArena::tClient iClient )
 }
 
 float
-FFixedAllocMemoryPool::Fragmentation() const
+FShrinkableAllocMemoryPool::Fragmentation() const
 {
     float sum = 0.f;
     for( auto it : mArenaPool )
@@ -148,7 +148,7 @@ FFixedAllocMemoryPool::Fragmentation() const
 }
 
 void
-FFixedAllocMemoryPool::DefragIfNecessary()
+FShrinkableAllocMemoryPool::DefragIfNecessary()
 {
     if( Fragmentation() < mDefragThreshold )
         return;
@@ -156,13 +156,13 @@ FFixedAllocMemoryPool::DefragIfNecessary()
 }
 
 void
-FFixedAllocMemoryPool::DefragForce()
+FShrinkableAllocMemoryPool::DefragForce()
 {
     if( mArenaPool.empty() )
         return;
 
     mArenaPool.sort(
-        []( FFixedAllocArena* iLhs, FFixedAllocArena* iRhs ) {
+        []( FShrinkableAllocArena* iLhs, FShrinkableAllocArena* iRhs ) {
             return  iLhs->LocalFragmentation() < iRhs->LocalFragmentation();
         }
     );
@@ -179,7 +179,7 @@ FFixedAllocMemoryPool::DefragForce()
                 if( left == right )
                     goto end;
             }
-            FFixedAllocArena::Swap( (*right)->LastFullChunkMetaBase( rindex, &rindex ), (*left)->FirstEmptyChunkMetaBase( lindex, &lindex ), mAllocSize );
+            FShrinkableAllocArena::Swap( (*right)->LastFullChunkMetaBase( rindex, &rindex ), (*left)->FirstEmptyChunkMetaBase( lindex, &lindex ), mAllocSize );
             (*right)->mNumAvailableCells++;
             (*left)->mNumAvailableCells--;
         }
@@ -191,17 +191,17 @@ end:
 }
 
 bool
-FFixedAllocMemoryPool::AllocOneArenaIfNecessary()
+FShrinkableAllocMemoryPool::AllocOneArenaIfNecessary()
 {
     if( TotalMemory() < TargetMemoryUsage() ) {
-        mArenaPool.push_back( new FFixedAllocArena( mArenaSize, mAllocSize ) );
+        mArenaPool.push_back( new FShrinkableAllocArena( mArenaSize, mAllocSize ) );
         return  true;
     }
     return  false;
 }
 
 bool
-FFixedAllocMemoryPool::FreeOneArenaIfNecessary()
+FShrinkableAllocMemoryPool::FreeOneArenaIfNecessary()
 {
     if( TotalMemory() > TargetMemoryUsage() ) {
         for( auto it = mArenaPool.begin(); it != mArenaPool.end(); ++it ) {
@@ -215,7 +215,7 @@ FFixedAllocMemoryPool::FreeOneArenaIfNecessary()
 }
 
 void
-FFixedAllocMemoryPool::Print() const
+FShrinkableAllocMemoryPool::Print() const
 {
     std::cout << "=== " << FMath::CeilToInt( Fragmentation() * 100 ) << "%\n";
     for( auto it : mArenaPool )
