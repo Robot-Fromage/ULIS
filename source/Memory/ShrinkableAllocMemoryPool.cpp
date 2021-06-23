@@ -57,10 +57,7 @@ FShrinkableAllocMemoryPool::NumCells() const
 uint64
 FShrinkableAllocMemoryPool::NumAvailableCells() const
 {
-    uint32 avail = 0;
-    for( auto it : mArenaPool )
-        avail += it->NumAvailableCells();
-    return  avail;
+    return  0;
 }
 
 uint64
@@ -158,36 +155,6 @@ FShrinkableAllocMemoryPool::DefragIfNecessary()
 void
 FShrinkableAllocMemoryPool::DefragForce()
 {
-    if( mArenaPool.empty() )
-        return;
-
-    mArenaPool.sort(
-        []( FShrinkableAllocArena* iLhs, FShrinkableAllocArena* iRhs ) {
-            return  iLhs->LocalFragmentation() < iRhs->LocalFragmentation();
-        }
-    );
-
-    auto left = mArenaPool.begin();
-    auto right = --mArenaPool.end();
-    while( left != right ) {
-        uint32 lindex = 0;
-        uint32 rindex = ULIS_UINT32_MAX;
-        while( !(*right)->IsEmpty() ) {
-            if( (*left)->IsFull() ) {
-                ++left;
-                lindex = 0;
-                if( left == right )
-                    goto end;
-            }
-            FShrinkableAllocArena::Swap( (*right)->LastFullChunkMetaBase( rindex, &rindex ), (*left)->FirstEmptyChunkMetaBase( lindex, &lindex ), mAllocSize );
-            (*right)->mNumAvailableCells++;
-            (*left)->mNumAvailableCells--;
-        }
-        --right;
-    }
-
-end:
-    (*left)->DefragSelf();
 }
 
 bool
@@ -203,15 +170,7 @@ FShrinkableAllocMemoryPool::AllocOneArenaIfNecessary()
 bool
 FShrinkableAllocMemoryPool::FreeOneArenaIfNecessary()
 {
-    if( TotalMemory() > TargetMemoryUsage() ) {
-        for( auto it = mArenaPool.begin(); it != mArenaPool.end(); ++it ) {
-            if( (*it)->IsEmpty() ) {
-                mArenaPool.erase( it );
-                return  true;
-            }
-        }
-    }
-    return  false;
+    return  true;
 }
 
 void

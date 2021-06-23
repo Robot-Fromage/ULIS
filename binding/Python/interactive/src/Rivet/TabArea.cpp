@@ -389,7 +389,6 @@ FTabArea::Reorder()
     for( int i = 0; i < mDomesticTabs.count(); ++i )
     {
         auto debug_geom = mDomesticTabs[i]->geometry();
-        auto dummy = 0;
 
         // setup animated movement
         mDomesticTabs[i]->SetAnimatedMovement( QPoint( i * ( GetTabWidth() - mOverlap ), 0 ) );

@@ -19,16 +19,10 @@ ULIS_NAMESPACE_BEGIN
 //          [meta][data]
 //          [data]: fixed size ( alloc size ), e.g: 16384 bytes for a 64² RGBA8 tile.
 //          [meta]: [adress of arena][adress of client alloc]
-//          [client alloc]: stores the adress of the [data]
+//          [client alloc][size]: stores the adress of the [data] and the size.
 //                  e.g:
-//                  [0xf4f568654][0xf54ez4ae4][data]
-//                                |->[points do data]
-//
-//  Ex arena 1024² for 64² RGBA8:
-//  mArenaSize: 4194304 bytes
-//  mAllocSize: 16384 bytes
-//  mNumCells = arenaSize / allocSize = 256
-//  metaPadSize = sizeof( ptr )
+//                  [0xf4f568654][45][data]
+//                  |->[points do data]
 class ULIS_API FShrinkableAllocArena {
     friend class FShrinkableAllocMemoryPool;
 public:
@@ -40,24 +34,23 @@ public:
     ~FShrinkableAllocArena();
     FShrinkableAllocArena(
           uint64 iArenaSize
-        , uint32 iAllocSize
+        , uint32 iMaxAllocSize
     );
     FShrinkableAllocArena( const FShrinkableAllocArena& ) = delete;
     FShrinkableAllocArena& operator=( const FShrinkableAllocArena& ) = delete;
 
 public:
-    bool IsFull() const;
     bool IsEmpty() const;
-    bool IsInRange( const uint8* iAlloc ) const;
+    bool IsInRange( const uint8* iPtr ) const;
 
     uint64 ArenaSize() const;
-    uint32 AllocSize() const;
+    uint32 MaxAllocSize() const;
 
-    uint32 NumCells() const;
-    uint32 NumAvailableCells() const;
-    uint32 NumUsedCells() const;
+    uint64 TotalMemory() const;
+    uint64 AvailableMemory() const;
+    uint64 UsedMemory() const;
 
-    tClient Malloc();
+    tClient Malloc( uint32 iSizeBytes = ULIS_UINT32_MAX ); // default max clamped to MaxAllocSize.
     void Free( tClient iClient );
     float LocalFragmentation() const;
 
@@ -68,28 +61,23 @@ public:
     void DefragSelf();
 
     static bool IsFree( const uint8* iAlloc );
-    static bool IsFree( const tClient iClient );
+    static bool IsFree( const uint8** iClient );
 
 private:
-    static void Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize );
-    uint32 LargestFreeChunk() const;
-    uint32 LargestUsedChunk() const;
-    uint64 BlockSize() const;
-    uint8* ChunkMetaBase( uint32 iIndex );
-    const uint8* ChunkMetaBase( uint32 iIndex ) const;
-    static bool IsChunkMetaBaseAvailable( const uint8* iChunk );
-    uint8* FirstEmptyChunkMetaBase( uint32 iFrom = 0, uint32* oIndex = nullptr );
-    uint8* FirstFullChunkMetaBase( uint32 iFrom = 0, uint32* oIndex = nullptr );
-    uint8* LastFullChunkMetaBase( uint32 iFrom = ULIS_UINT32_MAX, uint32* oIndex = nullptr );
+    static bool IsMetaBaseAvailable( const uint8* iChunk );
+    tMetaBase FirstEmptyMetaBaseMinAlloc( uint32 iMinimumSizeBytes = ULIS_UINT32_MAX, tMetaBase iFrom = nullptr ); // default max clamped to MaxAllocSize, default from to mBlock ( LowAdress )
+    static tMetaBase AdvanceMetaBase( const tMetaBase iMetaBase );
+    static uint32 MetaBaseSize( const tMetaBase iMetaBase );
 
 private:
     const uint64 mArenaSize;
-    const uint32 mAllocSize;
-    const uint32 mNumCells;
-    uint32 mNumAvailableCells;
+    const uint32 mMaxAllocSize;
+    uint64 mUsedMemory;
     uint8* const mBlock;
 
-    static constexpr const uint8 smMetaPadSize = sizeof( uint8** );
+    static constexpr const uint8 smMetaClientPadSize = sizeof( uint8** );
+    static constexpr const uint8 smMetaSizePadSize = sizeof( uint32 );
+    static constexpr const uint8 smMetaTotalPadSize = smMetaClientPadSize + smMetaSizePadSize;
 };
 
 ULIS_NAMESPACE_END

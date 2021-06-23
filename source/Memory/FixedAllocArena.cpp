@@ -47,8 +47,6 @@ FFixedAllocArena::FFixedAllocArena(
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
     for( uint64 i = 0; i < mNumCells; ++i )
         memset( mBlock + i * ( mAllocSize + smMetaPadSize ), 0, smMetaPadSize );
-
-    auto dummy = 0;
 }
 
 bool
@@ -194,7 +192,7 @@ FFixedAllocArena::DefragSelf()
 bool
 FFixedAllocArena::IsFree( const uint8* iAlloc )
 {
-    return  IsChunkMetaBaseAvailable( iAlloc - smMetaPadSize ); 
+    return  IsChunkMetaBaseAvailable( iAlloc - smMetaPadSize );
 }
 
 //static
