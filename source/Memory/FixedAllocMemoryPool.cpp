@@ -113,18 +113,6 @@ FFixedAllocMemoryPool::SetDefragThreshold( float iValue )
     mDefragThreshold = FMath::Clamp( iValue, 0.f, 1.f );
 }
 
-float
-FFixedAllocMemoryPool::ExpectedThresholdAfterDefrag()
-{
-    return  1.f / mArenaPool.size();
-}
-
-void
-FFixedAllocMemoryPool::SetAutoDefragThreshold( float iValue )
-{
-    SetDefragThreshold( FMath::Clamp( ExpectedThresholdAfterDefrag() * 2, 0.f, 0.75f ) );
-}
-
 uint8*
 FFixedAllocMemoryPool::Malloc()
 {
@@ -170,6 +158,9 @@ FFixedAllocMemoryPool::DefragIfNecessary()
 void
 FFixedAllocMemoryPool::DefragForce()
 {
+    if( mArenaPool.empty() )
+        return;
+
     mArenaPool.sort(
         []( FFixedAllocArena* iLhs, FFixedAllocArena* iRhs ) {
             return  iLhs->LocalFragmentation() < iRhs->LocalFragmentation();
@@ -186,7 +177,7 @@ FFixedAllocMemoryPool::DefragForce()
                 ++left;
                 lindex = 0;
                 if( left == right )
-                    return;
+                    goto end;
             }
             uint8* metaBaseFull = (*right)->FirstFull( rindex, &rindex );
             uint8* metaBaseEmpty = (*left)->FirstEmpty( lindex, &lindex );
@@ -201,6 +192,9 @@ FFixedAllocMemoryPool::DefragForce()
         }
         --right;
     }
+
+end:
+    (*left)->DefragSelf();
 }
 
 bool

@@ -64,6 +64,7 @@ public:
     uint64 HighBlockAdress() const;
 
     void Print() const;
+    void DefragSelf();
 
 private:
     uint32 LargestFreeChunk() const;
@@ -72,8 +73,9 @@ private:
     uint8* Chunk( uint32 iIndex );
     const uint8* Chunk( uint32 iIndex ) const;
     bool IsChunkAvailable( const uint8* iChunk ) const;
-    uint8* FirstEmpty( uint32 iIndex = 0, uint32* oIndex = nullptr );
-    uint8* FirstFull( uint32 iIndex = 0, uint32* oIndex = nullptr );
+    uint8* FirstEmpty( uint32 iFrom = 0, uint32* oIndex = nullptr );
+    uint8* FirstFull( uint32 iFrom = 0, uint32* oIndex = nullptr );
+    uint8* LastFull( uint32 iFrom = ULIS_UINT32_MAX, uint32* oIndex = nullptr );
 
 private:
     const uint64 mArenaSize;

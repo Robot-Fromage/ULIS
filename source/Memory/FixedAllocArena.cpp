@@ -177,28 +177,53 @@ FFixedAllocArena::Print() const
     std::cout << "] " << FMath::CeilToInt( LocalFragmentation() * 100 ) <<"%\n";
 }
 
+void
+FFixedAllocArena::DefragSelf()
+{
+    uint32 lindex = 0;
+    uint32 rindex = ULIS_UINT32_MAX;
+    while( LargestFreeChunk() != mNumAvailableCells ) {
+        uint8* metaBaseFull = LastFull( rindex, &rindex );
+        uint8* metaBaseEmpty = FirstEmpty( lindex, &lindex );
+        memcpy( metaBaseEmpty, metaBaseFull, mAllocSize + static_cast< uint64 >( smMetaPadSize ) );
+        memset( metaBaseFull, 0, smMetaPadSize );
+        uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBaseEmpty );
+        uint8** client = *client_ptr;
+        uint8* data = metaBaseEmpty + smMetaPadSize;
+        *client = data;
+    }
+}
+
 uint32
 FFixedAllocArena::LargestFreeChunk() const
 {
     int run = 0;
-    for( uint32 i = 0; i < mNumCells; ++i )
-        if( IsChunkAvailable( Chunk( i ) ) )
+    int max = 0;
+    for( uint32 i = 0; i < mNumCells; ++i ) {
+        if( IsChunkAvailable( Chunk( i ) ) ) {
             ++run;
-        else
+        } else {
             run = 0;
-    return  run;
+        }
+        max = FMath::Max( run, max );
+    }
+    return  max;
 }
 
 uint32
 FFixedAllocArena::LargestUsedChunk() const
 {
     int run = 0;
-    for( uint32 i = 0; i < mNumCells; ++i )
-        if( !IsChunkAvailable( Chunk( i ) ) )
+    int max = 0;
+    for( uint32 i = 0; i < mNumCells; ++i ) {
+        if( !IsChunkAvailable( Chunk( i ) ) ) {
             ++run;
-        else
+        } else {
             run = 0;
-    return  run;
+        }
+        max = FMath::Max( run, max );
+    }
+    return  max;
 }
 
 uint64
@@ -210,13 +235,13 @@ FFixedAllocArena::BlockSize() const
 uint8*
 FFixedAllocArena::Chunk( uint32 iIndex )
 {
-    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + smMetaPadSize );
+    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + static_cast< uint64 >( smMetaPadSize ) );
 }
 
 const uint8*
 FFixedAllocArena::Chunk( uint32 iIndex ) const
 {
-    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + smMetaPadSize );
+    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + static_cast< uint64 >( smMetaPadSize ) );
 }
 
 bool
@@ -243,6 +268,20 @@ uint8*
 FFixedAllocArena::FirstFull( uint32 iFrom, uint32* oIndex )
 {
     for( uint32 i = iFrom; i < mNumCells; ++i ) {
+        uint8* metaBase = Chunk( i );
+        if( !IsChunkAvailable( metaBase ) ) {
+            if( oIndex )
+                *oIndex = i;
+            return  metaBase;
+        }
+    }
+    return  nullptr;
+}
+
+uint8*
+FFixedAllocArena::LastFull( uint32 iFrom, uint32* oIndex )
+{
+    for( int32 i = FMath::Min( iFrom, mNumCells - 1 ); i >= 0; --i ) {
         uint8* metaBase = Chunk( i );
         if( !IsChunkAvailable( metaBase ) ) {
             if( oIndex )
