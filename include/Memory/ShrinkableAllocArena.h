@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Memory/Alloc.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////

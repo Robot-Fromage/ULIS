@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Memory/Alloc.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -34,6 +35,7 @@ class ULIS_API FFixedAllocArena {
 public:
     typedef uint8* tAlloc;
     typedef uint8* tMetaBase;
+    typedef const uint8* tConstMetaBase;
     typedef uint8** tClient;
 
 public:

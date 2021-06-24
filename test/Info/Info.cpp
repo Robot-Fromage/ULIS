@@ -79,7 +79,7 @@ int main( int argc, char *argv[] ) {
 
     // Test3: Basic Shrinkable
     // metapad = 12
-    int allocSize = 24;
+    int allocSize = 100;
     constexpr int numAllocs = 10;
     FShrinkableAllocArena mem( numAllocs * allocSize + numAllocs * 12, allocSize );
     mem.Print();
