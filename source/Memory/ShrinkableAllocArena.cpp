@@ -12,6 +12,7 @@
 #include "Memory/ShrinkableAllocArena.h"
 #include "Memory/Memory.h"
 #include "Math/Math.h"
+#include "Core/Constants.h"
 
 ULIS_NAMESPACE_BEGIN
 FShrinkableAllocArena::~FShrinkableAllocArena()
@@ -131,14 +132,20 @@ FShrinkableAllocArena::Free( tClient iClient )
     tClient client = *client_ptr;
     delete client;
     *client_ptr = nullptr;
-    mUsedMemory -= freeSize;
+    mUsedMemory -= freeSize + smMetaTotalPadSize;
+
+    uint8* followingMetaBase = AdvanceMetaBase( metaBase );
+    if( IsMetaBaseAvailable( followingMetaBase ) ) {
+        *((uint32*)(metaBase + smMetaClientPadSize)) += MetaBaseSize( followingMetaBase ) + smMetaTotalPadSize;
+    }
+
     tMetaBase previousMetaBase = PreviousMetaBase( metaBase );
     if( previousMetaBase == nullptr ) // Beginning of block
         return;
 
     // Notify previous alloc that space is available if it is free ( merge free )
     if( IsMetaBaseAvailable( previousMetaBase ) )
-        *((uint32*)(previousMetaBase + smMetaClientPadSize)) += static_cast< uint32 >( freeSize + smMetaTotalPadSize );
+        *((uint32*)(previousMetaBase + smMetaClientPadSize)) += static_cast< uint32 >( MetaBaseSize( metaBase ) + smMetaTotalPadSize );
 }
 
 float
@@ -193,21 +200,56 @@ FShrinkableAllocArena::HighBlockAdress() const
 }
 
 void
-FShrinkableAllocArena::Print() const
+FShrinkableAllocArena::Print( bool iShort, int iCol ) const
 {
-    std::cout << "[";
-    tMetaBase metaBase = mBlock;
-    while( IsInRange( metaBase ) ) {
-        bool avail = IsMetaBaseAvailable( metaBase );
-        uint32 size = MetaBaseSize( metaBase );
-        char disp = avail ? '-' : '+';
-        char beg = avail ? '0' : '@';
-        std::cout << beg;
-        for( uint32 i = 0; i < size + smMetaTotalPadSize - 1; ++i )
-            std::cout << disp;
-        metaBase = AdvanceMetaBase( metaBase );
+    if( iShort )
+    {
+        uint8* raw_buf = new uint8[mArenaSize];
+        int index = 0;
+        std::cout << "[";
+        tMetaBase metaBase = mBlock;
+        while( IsInRange( metaBase ) ) {
+            bool avail = IsMetaBaseAvailable( metaBase );
+            uint32 size = MetaBaseSize( metaBase );
+            uint8 disp = avail ? 0 : 1;
+            uint32 i = index;
+            for( ; i < index + ( size + smMetaTotalPadSize ); ++i )
+                raw_buf[i] = disp;
+            index = i;
+            metaBase = AdvanceMetaBase( metaBase );
+        }
+
+        int display_size = 100;
+        char* display_buf = new char[display_size];
+        for( int i = 0; i < display_size; ++i ) {
+            int j = (i / float(display_size)) * mArenaSize;
+            int k = (( i + 1 ) / float(display_size)) * mArenaSize;
+            float delta = k-j;
+            uint64 accum = 0;
+            for( j; j<k; ++j) {
+                accum += raw_buf[j];
+            }
+            float avg = (accum / delta);
+            std::cout << ( avg > 0.5f ? char( 219 ) : ' ' );
+        }
+        std::cout << "] " << FMath::CeilToInt( LocalFragmentation() * 100 ) <<"%\n";
     }
-    std::cout << "] " << FMath::CeilToInt( LocalFragmentation() * 100 ) <<"%\n";
+    else
+    {
+        std::cout << "[";
+        tMetaBase metaBase = mBlock;
+        while( IsInRange( metaBase ) ) {
+            bool avail = IsMetaBaseAvailable( metaBase );
+            uint32 size = MetaBaseSize( metaBase );
+            char disp = avail ? '-' : '+';
+            char beg = avail ? '0' : '@';
+            std::cout << beg;
+            for( uint32 i = 0; i < size + smMetaTotalPadSize - 1; ++i )
+                std::cout << disp;
+            metaBase = AdvanceMetaBase( metaBase );
+        }
+        std::cout << "] " << FMath::CeilToInt( LocalFragmentation() * 100 ) <<"%\n";
+    }
 }
 
 void
@@ -231,6 +273,30 @@ bool
 FShrinkableAllocArena::IsFree( const uint8** iClient )
 {
     return  IsFree( *iClient );
+}
+
+bool
+FShrinkableAllocArena::Shrink( uint8* iAlloc, uint32 iNewSizeBytes )
+{
+    ULIS_ASSERT( !IsFree( iAlloc ), "Don't shrink free parts !" );
+    ULIS_ASSERT( iNewSizeBytes, "New size cannot be 0" );
+    tMetaBase metaBase = iAlloc - smMetaTotalPadSize;
+    uint32 size = MetaBaseSize( metaBase );
+    ULIS_ASSERT( iNewSizeBytes <= size, "New size cannot be greater than current size." );
+    if( size > iNewSizeBytes + smMetaTotalPadSize ) {
+        *((uint32*)(metaBase + smMetaClientPadSize)) = static_cast< uint32 >( iNewSizeBytes );
+        uint8* nextMetaBase = AdvanceMetaBase( metaBase );
+        *((uint8***)(nextMetaBase)) = nullptr;
+        *((uint32*)(nextMetaBase + smMetaClientPadSize)) = static_cast< uint32 >( size - iNewSizeBytes - smMetaTotalPadSize );
+        mUsedMemory -= ( size - iNewSizeBytes ) + static_cast< uint64 >( smMetaTotalPadSize );
+        uint8* followingMetaBase = AdvanceMetaBase( nextMetaBase );
+        if( IsMetaBaseAvailable( followingMetaBase ) ) {
+            *((uint32*)(nextMetaBase + smMetaClientPadSize)) += MetaBaseSize( followingMetaBase ) + smMetaTotalPadSize;
+        }
+        return true;
+    } else {
+        return  false;
+    }
 }
 
 //static
@@ -274,8 +340,12 @@ FShrinkableAllocArena::PreviousMetaBase( const tMetaBase iMetaBase )
 
     tMetaBase previousMetaBase = mBlock;
     tMetaBase it = mBlock;
-    while( ( it = AdvanceMetaBase( it ) ) != iMetaBase )
+    while( true ) {
+        it = AdvanceMetaBase( it );
+        if( it == iMetaBase )
+            break;
         previousMetaBase = AdvanceMetaBase( previousMetaBase );
+    }
     return  previousMetaBase;
 }
 

@@ -57,12 +57,12 @@ public:
     uint64 LowBlockAdress() const;
     uint64 HighBlockAdress() const;
 
-    void Print() const;
+    void Print( bool iShort = true, int iCol = 100 ) const;
     void DefragSelf();
 
     static bool IsFree( const uint8* iAlloc );
     static bool IsFree( const uint8** iClient );
-
+    bool Shrink( uint8* iAlloc, uint32 iNewSizeBytes );
 private:
     static bool IsMetaBaseAvailable( const uint8* iChunk );
     tMetaBase FirstEmptyMetaBaseMinAlloc( uint32 iMinimumSizeBytes = ULIS_UINT32_MAX, tMetaBase iFrom = nullptr ); // default max clamped to MaxAllocSize, default from to mBlock ( LowAdress )

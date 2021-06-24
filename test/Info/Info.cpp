@@ -11,11 +11,12 @@
 */
 #include <iostream>
 #include <ULIS>
+#include <ctime>
 
 int main( int argc, char *argv[] ) {
     using namespace ::ULIS;
     std::cout << FLibInfo::LibraryInformationString().Data() << std::endl;
-
+    srand( time( NULL ) );
     // Test1: Many random allocs and degrag
     /*
     constexpr int arenaSize = 90;
@@ -78,21 +79,38 @@ int main( int argc, char *argv[] ) {
 
     // Test3: Basic Shrinkable
     // metapad = 12
-    FShrinkableAllocArena mem( 220, 10 );
-    uint8** a[10];
-    for( int i = 0; i < 10; ++i ) a[i] = mem.Malloc();
+    int allocSize = 24;
+    constexpr int numAllocs = 10;
+    FShrinkableAllocArena mem( numAllocs * allocSize + numAllocs * 12, allocSize );
     mem.Print();
 
-    mem.Free( a[0] );
-    mem.Free( a[2] );
-    mem.Free( a[4] );
-    mem.Free( a[6] );
-    mem.Free( a[8] );
+    uint8** a[numAllocs];
+    for( int i = 0; i < numAllocs; ++i ) {
+        a[i] = mem.Malloc();
+    }
     mem.Print();
 
-    //for( int i = 0; i < 10; ++i ) mem.Free( a[i] );
-    //    mem.Print();
+    for( int i = 0; i < numAllocs; ++i ) {
+        int s = ( rand()% ( allocSize / 2 - 2 ) ) + 1;
+        bool shrank = mem.Shrink( *a[i], s );
+        ULIS_ASSERT( shrank, "cool" );
+    }
+    mem.Print();
 
+    for( int i = 0; i < 10; ++i )
+        if( !FShrinkableAllocArena::IsFree( (const uint8**)a[i] ) )
+            mem.Free( a[i] );
+
+    for( int i = 0; i < numAllocs; ++i ) {
+        a[i] = mem.Malloc();
+    }
+
+    for( int i = 0; i < numAllocs; ++i ) {
+        int s = ( rand()% ( allocSize / 2 - 2 ) ) + 1;
+        bool shrank = mem.Shrink( *a[i], s );
+        ULIS_ASSERT( shrank, "cool" );
+    }
+    mem.Print();
     return  0;
 }
 
