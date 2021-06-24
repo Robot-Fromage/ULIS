@@ -145,28 +145,39 @@ float
 FShrinkableAllocArena::LocalFragmentation() const
 {
     tMetaBase metaBase = mBlock;
-    uint64 sumUsed = 0;
-    uint64 sumFree = 0;
-    uint32 numUsed = 0;
+    uint32 runFree = 0;
+    uint32 maxFree = 0;
     uint32 numFree = 0;
+    uint32 runUsed = 0;
+    uint32 maxUsed = 0;
     while( IsInRange( metaBase ) ) {
         bool avail = IsMetaBaseAvailable( metaBase );
         uint32 size = MetaBaseSize( metaBase );
         if( avail ) {
-            sumFree += size;
+            runFree += size;
+            runUsed = 0;
             numFree++;
         } else {
-            sumUsed += size + static_cast< uint64 >( smMetaTotalPadSize );
-            numUsed ++;
+            runUsed += size + static_cast< uint64 >( smMetaTotalPadSize );
+            runFree = 0;
         }
+        maxFree = FMath::Max( runFree, maxFree );
+        maxUsed = FMath::Max( runUsed, maxUsed );
         metaBase = AdvanceMetaBase( metaBase );
     }
-    sumUsed += smMetaTotalPadSize;
-    float averageUsed = numUsed == 0 ? 0 : sumUsed / float( numUsed );
-    float averageFree = numFree == 0 ? 0 : sumFree / float( numFree );
-    float fragUsed = UsedMemory() == 0 ? 0.f : ( UsedMemory() - averageUsed ) / static_cast< float >( UsedMemory() );
-    float fragFree = AvailableMemory() == 0 ? 0.f : ( AvailableMemory() - averageFree ) / static_cast< float >( AvailableMemory() );
-    return  ( fragUsed + fragFree ) / 2;
+    maxUsed = static_cast< uint32 >( FMath::Min( mUsedMemory, maxUsed + numFree * static_cast< uint64 >( smMetaTotalPadSize ) ) );
+
+    if( AvailableMemory() == 0 )
+        return  0.f;
+
+    float frag = ( AvailableMemory() - maxFree ) / static_cast< float >( AvailableMemory() );
+
+    if( UsedMemory() == 0 )
+        return  0.f;
+
+    float pack = ( UsedMemory() - maxUsed ) / static_cast< float >( UsedMemory() );
+
+    return  ( frag + pack ) / 2;
 }
 
 uint64
@@ -192,9 +203,8 @@ FShrinkableAllocArena::Print() const
         char disp = avail ? '-' : '+';
         char beg = avail ? '0' : '@';
         std::cout << beg;
-        for( uint32 i = 0; i < size + smMetaTotalPadSize - 2; ++i )
+        for( uint32 i = 0; i < size + smMetaTotalPadSize - 1; ++i )
             std::cout << disp;
-        std::cout << "}";
         metaBase = AdvanceMetaBase( metaBase );
     }
     std::cout << "] " << FMath::CeilToInt( LocalFragmentation() * 100 ) <<"%\n";

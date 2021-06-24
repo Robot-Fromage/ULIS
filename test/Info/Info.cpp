@@ -83,7 +83,11 @@ int main( int argc, char *argv[] ) {
     for( int i = 0; i < 10; ++i ) a[i] = mem.Malloc();
     mem.Print();
 
-    mem.Free( a[9] );
+    mem.Free( a[0] );
+    mem.Free( a[2] );
+    mem.Free( a[4] );
+    mem.Free( a[6] );
+    mem.Free( a[8] );
     mem.Print();
 
     //for( int i = 0; i < 10; ++i ) mem.Free( a[i] );
