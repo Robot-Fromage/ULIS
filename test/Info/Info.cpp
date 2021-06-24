@@ -16,6 +16,7 @@ int main( int argc, char *argv[] ) {
     using namespace ::ULIS;
     std::cout << FLibInfo::LibraryInformationString().Data() << std::endl;
 
+    // Test1: Many random allocs and degrag
     /*
     constexpr int arenaSize = 90;
     constexpr int numArenas = 50;
@@ -41,6 +42,8 @@ int main( int argc, char *argv[] ) {
     mem.Print();
     */
 
+    // Test2: Proper client update after defrag
+    /*
     FFixedAllocMemoryPool mem( 10, 1, 10 );
     uint8** a_client[10];
 
@@ -71,6 +74,20 @@ int main( int argc, char *argv[] ) {
     for( int i = 0; i < 5; ++i )
         mem.Free( a_client[i] );
     mem.Free( data_client );
+    */
+
+    // Test3: Basic Shrinkable
+    // metapad = 12
+    FShrinkableAllocArena mem( 220, 10 );
+    uint8** a[10];
+    for( int i = 0; i < 10; ++i ) a[i] = mem.Malloc();
+    mem.Print();
+
+    mem.Free( a[9] );
+    mem.Print();
+
+    //for( int i = 0; i < 10; ++i ) mem.Free( a[i] );
+    //    mem.Print();
 
     return  0;
 }

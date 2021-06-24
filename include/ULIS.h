@@ -48,6 +48,7 @@
 #include "Memory/Tree.h"
 #include "Memory/ContainerAlgorithms.h"
 #include "Memory/FixedAllocMemoryPool.h"
+#include "Memory/ShrinkableAllocMemoryPool.h"
 // String
 #include "String/String.h"
 #include "String/WString.h"

@@ -107,7 +107,6 @@ FFixedAllocArena::Malloc()
             // client alloc points to data
             uint8* data = metaBase + smMetaPadSize;
             uint8** client = new uint8*( data );
-            ULIS_ASSERT( *client == data, "Bad" );
 
             // meta stores adress of client
             uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );

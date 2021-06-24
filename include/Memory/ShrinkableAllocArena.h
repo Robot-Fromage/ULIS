@@ -67,6 +67,7 @@ private:
     static bool IsMetaBaseAvailable( const uint8* iChunk );
     tMetaBase FirstEmptyMetaBaseMinAlloc( uint32 iMinimumSizeBytes = ULIS_UINT32_MAX, tMetaBase iFrom = nullptr ); // default max clamped to MaxAllocSize, default from to mBlock ( LowAdress )
     static tMetaBase AdvanceMetaBase( const tMetaBase iMetaBase );
+    tMetaBase PreviousMetaBase( const tMetaBase iMetaBase );
     static uint32 MetaBaseSize( const tMetaBase iMetaBase );
 
 private:
