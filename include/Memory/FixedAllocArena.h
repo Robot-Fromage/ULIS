@@ -30,8 +30,40 @@ ULIS_NAMESPACE_BEGIN
 //  mAllocSize: 16384 bytes
 //  mNumCells = arenaSize / allocSize = 256
 //  metaPadSize = sizeof( ptr )
+/////////////////////////////////////////////////////
+/// @class      FFixedAllocArena
+/// @brief      The FFixedAllocArena class is a class that provides a single
+///             configurable Arena buffer that manages allocations of fixed
+///             size. It is meant to be used for tiles or any objects of fixed
+///             size.
+/// @details    FFixedAllocArena allocs fixed allocations inside its block, and
+///             returns "clients" to the allocation, that is, a pointer to an
+///             allocation.
+///             Using such clients allows us to regularly defragment the Arena,
+///             or multiple Arenas if used in a pool, without losing the data
+///             if moved to another memory sector.
+///
+///             The Arena block allocates extra bytes to store some information
+///             about the memory status and allocation status, to ensure a fixed
+///             number of fixed allocations cells are available.
+///
+///             The layout of the buffer is like so:
+///             - [meta][data]
+///             - [data] contains the real data used by the allocation or tile.
+///             - [meta] stores meta information about the allocation such as:
+///                 - [arena][client]
+///                 - [arena] is a pointer to the arena where the allocation resides
+///                 [client] is a pointer to the allocation, that allows tracking a moving alloc in case of a defrag
+///
+///             FFixedAllocArena has public methods to estimate the local
+///             fragmentation of the memory. To be precise, there is no issue
+///             with fragmentation within a single Arena, but it is still possible
+///             to measure the sparsity of the allocations. Fragmentation
+///             becomes a problem when many arenas are sparse, hence wasting a
+///             lot of space.
 class ULIS_API FFixedAllocArena {
     friend class FFixedAllocMemoryPool;
+
 public:
     typedef uint8* tAlloc;
     typedef uint8* tMetaBase;
