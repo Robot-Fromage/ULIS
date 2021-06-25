@@ -52,7 +52,7 @@ enum class eMetricSystemStandard {
 /// @class      TBinaryInformationUnit
 /// @brief      The TBinaryInformationUnit class allows the use of binary memory
 ///             units using any metric system standard defined in eMetricSystemStandard
-template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ = 1 >
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 struct TBinaryInformationUnit
 {
     /////////////////////////////////////////////////////
@@ -134,41 +134,49 @@ struct TBinaryInformationUnit
     template< typename T >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator+=( T iValue ) {
         value += static_cast< double >( iValue );
+        return  *this;
     }
 
     template< typename T >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator-=( T iValue ) {
         value -= static_cast< double >( iValue );
+        return  *this;
     }
 
     template< typename T >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator*=( T iValue ) {
         value *= static_cast< double >( iValue );
+        return  *this;
     }
 
     template< typename T >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator/=( T iValue ) {
         value /= static_cast< double >( iValue );
+        return  *this;
     }
 
     template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator+=( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
         value += TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).Value();
+        return  *this;
     }
 
     template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator-=( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
         value -= TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).Value();
+        return  *this;
     }
 
     template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator*=( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
         value *= TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).Value();
+        return  *this;
     }
 
     template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator/=( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
         value /= TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).Value();
+        return  *this;
     }
 
 private:
