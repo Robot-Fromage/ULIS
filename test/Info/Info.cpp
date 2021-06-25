@@ -15,6 +15,7 @@
 
 int main( int argc, char *argv[] ) {
     using namespace ::ULIS;
+    using namespace ::ULIS::units;
     std::cout << FLibInfo::LibraryInformationString().Data() << std::endl;
     srand( time( NULL ) );
     // Test1: Many random allocs and degrag
@@ -111,6 +112,27 @@ int main( int argc, char *argv[] ) {
         ULIS_ASSERT( shrank, "cool" );
     }
     mem.Print();
+
+    std::cout << (uint64)bit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (uint64)bit_t( kbit_t( 1 ) ) << std::endl;
+    std::cout << (uint64)bit_t( Mbit_t( 1 ) ) << std::endl;
+    std::cout << (uint64)bit_t( Gbit_t( 1 ) ) << std::endl;
+    std::cout << std::endl;
+    std::cout << (uint64)bit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (uint64)bit_t( Kibit_t( 1 ) ) << std::endl;
+    std::cout << (uint64)bit_t( Mibit_t( 1 ) ) << std::endl;
+    std::cout << (uint64)bit_t( Gibit_t( 1 ) ) << std::endl;
+    std::cout << std::endl;
+    std::cout << (double)bit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (double)kbit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (double)Mbit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (double)Gbit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << std::endl;
+    std::cout << (double)bit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (double)Kibit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (double)Mibit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << (double)Gibit_t( bit_t( 1 ) ) << std::endl;
+    std::cout << std::endl;
     return  0;
 }
 
