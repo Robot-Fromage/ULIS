@@ -13,7 +13,7 @@
 #include "System/MemoryInfo/MemoryInfo.h"
 
 ULIS_NAMESPACE_BEGIN
-namespace details {
+namespace detail {
 
 uint64 TotalVirtualMemory() {
     return  0;
@@ -47,6 +47,6 @@ double CPUCurrentlyUsedByProcess(){
     return  0;
 }
 
-} // namespace details
+} // namespace detail
 ULIS_NAMESPACE_END
 

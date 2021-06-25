@@ -24,7 +24,7 @@
 
 ULIS_NAMESPACE_BEGIN
 
-namespace details {
+namespace detail {
 
 static unsigned long long _previousTotalTicks = 0;
 static unsigned long long _previousIdleTicks = 0;
@@ -136,6 +136,6 @@ double CPUCurrentlyUsedByProcess(){
     return  GetCPULoad();
 }
 
-} // namespace details
+} // namespace detail
 ULIS_NAMESPACE_END
 

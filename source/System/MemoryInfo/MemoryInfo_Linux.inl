@@ -22,7 +22,7 @@
 
 
 ULIS_NAMESPACE_BEGIN
-namespace details {
+namespace detail {
 
 static unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTotalIdle;
 static clock_t lastCPU, lastSysCPU, lastUserCPU;
@@ -208,6 +208,6 @@ double CPUCurrentlyUsedByProcess() {
     return percent;
 }
 
-} // namespace details
+} // namespace detail
 ULIS_NAMESPACE_END
 

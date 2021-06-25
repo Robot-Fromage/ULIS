@@ -37,56 +37,56 @@ ULIS_NAMESPACE_BEGIN
 uint64
 FMemoryInfo::TotalVirtualMemory()
 {
-    return  details::TotalVirtualMemory();
+    return  detail::TotalVirtualMemory();
 }
 
 //static
 uint64
 FMemoryInfo::VirtualMemoryCurrentlyUsed()
 {
-    return  details::VirtualMemoryCurrentlyUsed();
+    return  detail::VirtualMemoryCurrentlyUsed();
 }
 
 //static
 uint64
 FMemoryInfo::VirtualMemoryCurrentlyUsedByProcess()
 {
-    return  details::VirtualMemoryCurrentlyUsedByProcess();
+    return  detail::VirtualMemoryCurrentlyUsedByProcess();
 }
 
 //static
 uint64
 FMemoryInfo::TotalRAM()
 {
-    return  details::TotalRAM();
+    return  detail::TotalRAM();
 }
 
 //static
 uint64
 FMemoryInfo::TotalRAMCurrentlyUsed()
 {
-    return  details::TotalRAMCurrentlyUsed();
+    return  detail::TotalRAMCurrentlyUsed();
 }
 
 //static
 uint64
 FMemoryInfo::TotalRAMCurrentlyUsedByProcess()
 {
-    return  details::TotalRAMCurrentlyUsedByProcess();
+    return  detail::TotalRAMCurrentlyUsedByProcess();
 }
 
 //static
 udouble
 FMemoryInfo::CPUCurrentlyUsed()
 {
-    return  details::CPUCurrentlyUsed();
+    return  detail::CPUCurrentlyUsed();
 }
 
 //static
 udouble
 FMemoryInfo::CPUCurrentlyUsedByProcess()
 {
-    return  details::CPUCurrentlyUsedByProcess();
+    return  detail::CPUCurrentlyUsedByProcess();
 }
 
 //static

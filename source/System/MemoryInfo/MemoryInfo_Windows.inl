@@ -20,7 +20,7 @@
 #pragma comment(lib, "pdh.lib")
 
 ULIS_NAMESPACE_BEGIN
-namespace details {
+namespace detail {
 
 static PDH_HQUERY cpuQuery;
 static PDH_HCOUNTER cpuTotal;
@@ -130,7 +130,7 @@ double CPUCurrentlyUsedByProcess(){
     return percent;
 }
 
-} // namespace details
+} // namespace detail
 
 ULIS_NAMESPACE_END
 
