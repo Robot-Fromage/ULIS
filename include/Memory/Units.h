@@ -15,6 +15,14 @@
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {
+
+constexpr const char* kwUnits[][9] = {
+      { "", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta" }
+    , { "", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi" }
+    , { "", "k", "M", "G", "T", "P", "E", "Z", "Y" }
+    , { "", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi" }
+};
+
 template< typename T, typename U >
 constexpr std::common_type_t< T, U > ConstexprPow_Imp(T iValue, U iExp )
 {
