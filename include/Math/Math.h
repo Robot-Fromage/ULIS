@@ -58,6 +58,11 @@ namespace FMath
         return  CeilToFloat( iValue );
     }
 
+    template< typename S, typename T, typename U >
+    static ULIS_FORCEINLINE S Pow( T iValue, U iExponent ) {
+        return  static_cast< S >( pow( static_cast< S >( iValue ), static_cast< S >( iExponent ) ) );
+    }
+
     template< typename T >
     static ULIS_FORCEINLINE T Min( T iA, T iB ) {
         return  iA < iB ? iA : iB;
