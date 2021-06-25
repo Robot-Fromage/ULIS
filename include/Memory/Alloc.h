@@ -11,6 +11,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+//#include "Memory/Units.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -30,6 +31,8 @@ public:
     typedef tConstByte* const tConstMetaBase;   ///< A const base pointer for a const meta base in an Arena ( see docs for specific arena about their meta base )
     typedef tAlloc* tClient;                    ///< A pointer to a client, that is a pointer to a heap allocation susceptible to move after defrag.
     typedef tConstAlloc* const tConstClient;    ///< A const pointer to a const client, that is a const pointer to a const heap allocation susceptible to move after defrag.
+    typedef uint64 tArenaSize;                  ///< A large size for an arena.
+    typedef uint32 tAllocSize;                  ///< A large size for an allocation.
 
 public:
     // Exhaustive delete *tors.
