@@ -1,12 +1,12 @@
 // IDDN FR.001.250001.004.S.X.2019.000.00000
-// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
+// ULIS is subject to copyloPackSrc_it laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
 *__________________
 * @file         FixedAllocMemoryPool.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for FFixedAllocMemoryPool.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @copyloPackSrc_it    CopyloPackSrc_it 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Memory/FixedAllocMemoryPool.h"
@@ -167,40 +167,40 @@ FFixedAllocMemoryPool::DefragForce()
         }
     );
 
-    auto left = mArenaPool.begin();
-    auto right = --mArenaPool.end();
-    uint32 numCells =
+    auto loPackSrc_it = --mArenaPool.end();
+    auto hiPackDst_it = mArenaPool.begin();
+    const uint32 numCells =
         static_cast< uint32 >(
               static_cast< uint64 >( mArenaSize )
             / static_cast< uint64 >( mAllocSize )
         );
 
-    tMetaBase lfrom = nullptr;
-    tMetaBase rfrom = nullptr;
-    uint32 leftUsed = (*left)->NumUsedCells();
-    uint32 rightFree = (*right)->NumFreeCells();
-    while( left != right ) {
-        while( rightFree != numCells ) {
-            if( leftUsed == numCells ) {
-                if( left == right )
+    tMetaBase srcMetaBase = nullptr;
+    tMetaBase dstMetaBase = nullptr;
+    uint32 srcFree = (*loPackSrc_it)->NumFreeCells();
+    uint32 dstUsed = (*hiPackDst_it)->NumUsedCells();
+    while( hiPackDst_it != loPackSrc_it ) {
+        while( srcFree != numCells ) {
+            if( dstUsed == numCells ) {
+                if( hiPackDst_it == loPackSrc_it )
                     return;
-                ++left;
-                lfrom = nullptr;
-                leftUsed = (*left)->NumUsedCells();
+                ++hiPackDst_it;
+                dstMetaBase = nullptr;
+                dstUsed = (*hiPackDst_it)->NumUsedCells();
             }
-            lfrom = (*left)->FirstFullCellMetaBase( lfrom );
-            rfrom = (*right)->FirstFullCellMetaBase( rfrom );
+            srcMetaBase = (*loPackSrc_it)->FirstFullCellMetaBase( srcMetaBase );
+            dstMetaBase = (*hiPackDst_it)->FirstEmptyCellMetaBase( dstMetaBase );
             FFixedAllocArena::MoveAlloc(
-                  rfrom
-                , lfrom
+                  srcMetaBase
+                , dstMetaBase
                 , mAllocSize
             );
-            rightFree++;
-            leftUsed++;
+            srcFree++;
+            dstUsed++;
         }
-        --right;
-        rfrom = nullptr;
-        rightFree = (*right)->NumFreeCells();
+        --loPackSrc_it;
+        srcMetaBase = nullptr;
+        srcFree = (*loPackSrc_it)->NumFreeCells();
     }
 }
 
@@ -257,7 +257,7 @@ FFixedAllocMemoryPool::FreeOneArenaIfNecessary()
 void
 FFixedAllocMemoryPool::DebugPrint() const
 {
-    std::cout << "=== " << FMath::CeilToInt( Fragmentation() * 100 ) << "%\n";
+    std::cout << "=== " << FMath::FloorToInt( Fragmentation() * 100 ) << "%\n";
     for( auto it : mArenaPool )
         it->DebugPrint();
 }

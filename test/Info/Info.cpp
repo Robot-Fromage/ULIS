@@ -25,24 +25,36 @@ int main( int argc, char *argv[] ) {
         mem.AllocOneArenaIfNecessary();
 
     tClient a[elems][numArenas];
-    for( int i = 0; i < elems; ++i )
-        for( int j = 0; j < numArenas; ++j )
+    bool b[elems][numArenas];
+    for( int i = 0; i < elems; ++i ) {
+        for( int j = 0; j < numArenas; ++j ) {
             a[i][j] = mem.Malloc();
+            b[i][j] = true;
+        }
+    }
+    mem.DebugPrint();
 
     int del = ( elems * numArenas ) / 2;
     for( int i = 0; i < del; ++i ) {
-        int x = rand() % ( elems - 1 );
-        int y = rand() % ( numArenas - 1 );
+        int x = rand() % ( elems );
+        int y = rand() % ( numArenas );
         tClient client = a[x][y];
-        while( FFixedAllocArena::IsFree( client ) ) {
-            rand() % ( elems - 1 );
-            rand() % ( numArenas - 1 );
-            client = a[rand()%elems][rand()%numArenas];
+        while( b[x][y] == false ) {
+            x = rand() % ( elems - 1 );
+            y = rand() % ( numArenas - 1 );
+            client = a[x][y];
         }
+        mem.Free( client );
+        b[x][y] = false;
     }
 
     mem.DebugPrint();
+    mem.DefragForce();
+    mem.DebugPrint();
     mem.UnsafeFreeAll();
+    //std::cout << mem.NumFreeCells();
+    //mem.UnsafeFreeAll();
+    //mem.DebugPrint();
     //mem.DefragForce();
     //mem.Print();
 

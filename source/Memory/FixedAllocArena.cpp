@@ -106,9 +106,9 @@ uint32
 FFixedAllocArena::NumFreeCells() const
 {
     uint32 numFreeCells = 0;
-    uint8 const * const highAdress = HighBlockAdress();
-    const uint64 cellPadding = CellPadding();
-    for( tMetaBase metaBase = (tMetaBase)LowBlockAdress(); metaBase < highAdress; metaBase += cellPadding )
+    uint8 const * const hi = HighBlockAdress();
+    uint64 const cpad = CellPadding();
+    for( tMetaBase metaBase = (tMetaBase)LowBlockAdress(); metaBase < hi; metaBase += cpad )
         if( IsCellMetaBaseFree( metaBase ) )
             numFreeCells++;
 
@@ -137,26 +137,14 @@ tClient
 FFixedAllocArena::Malloc()
 {
     tMetaBase metaBase = FirstEmptyCellMetaBase();
-    if( !metaBase )
-        return  nullptr;
-
-    tClient client = new tAlloc();
-    *client = reinterpret_cast< tAlloc >( metaBase + smMetaPadSize );
-    memcpy( metaBase, &client, smMetaPadSize );
-    return  client;
+    return  metaBase ? *(tClient*)metaBase = new tAlloc( metaBase + smMetaPadSize ) : nullptr;
 }
 
 // static
 void
 FFixedAllocArena::Free( tClient iClient )
 {
-#ifdef ULIS_ASSERT_ENABLED
     ULIS_ASSERT( iClient, "Cannot free null client." );
-    ULIS_ASSERT( !IsFree( iClient ), "Cannot free already free client." );
-    uint8* alloc = *iClient;
-    ULIS_ASSERT( alloc, "Null alloc, corrupted state, bad client" );
-#endif // ULIS_ASSERT_ENABLED
-
     memset( ( *iClient ) - smMetaPadSize, 0, smMetaPadSize );
     delete iClient;
 }
@@ -164,14 +152,16 @@ FFixedAllocArena::Free( tClient iClient )
 void
 FFixedAllocArena::UnsafeFreeAll()
 {
-    uint8 const * const highAdress = HighBlockAdress();
-    const uint64 cellPadding = CellPadding();
-    for( tMetaBase metaBase = LowBlockAdress(); metaBase < highAdress; metaBase += cellPadding ) {
+    uint8 const * const hi = HighBlockAdress();
+    uint64 const cpad = CellPadding();
+    for( tMetaBase metaBase = LowBlockAdress(); metaBase < hi; metaBase += cpad ) {
         if( !IsCellMetaBaseFree( metaBase ) ) {
-            delete reinterpret_cast< tClient >( metaBase );
+            delete  *(tClient*)metaBase;
             memset( metaBase, 0, smMetaPadSize );
         }
     }
+    // simon
+    // canada
 }
 
 ufloat
@@ -183,18 +173,18 @@ FFixedAllocArena::OccupationRate() const
 void
 FFixedAllocArena::DebugPrint() const
 {
-    uint8 const * const highAdress = HighBlockAdress();
-    const uint64 cellPadding = CellPadding();
+    uint8 const * const hi = HighBlockAdress();
+    uint64 const cpad = CellPadding();
     tMetaBase metaBase = (tMetaBase)LowBlockAdress();
     std::cout << "[";
-    for( ; metaBase < highAdress; metaBase += cellPadding ) {
+    for( ; metaBase < hi; metaBase += cpad ) {
         if( IsCellMetaBaseFree( metaBase ) ) {
             std::cout << "-";
         } else {
             std::cout << "+";
         }
     }
-    std::cout << "] " << FMath::CeilToInt( OccupationRate() * 100 ) <<"%\n";
+    std::cout << "] " << FMath::FloorToInt( OccupationRate() * 100 ) <<"%\n";
 }
 
 bool
@@ -238,30 +228,26 @@ FFixedAllocArena::CellPadding() const
 tMetaBase
 FFixedAllocArena::FirstEmptyCellMetaBase( tMetaBase iFromMetaBase )
 {
-    uint8 const * const highAdress = HighBlockAdress();
-    const uint64 cellPadding = CellPadding();
+    uint8 const * const hi = HighBlockAdress();
+    uint64 const cpad = CellPadding();
     tMetaBase metaBase = iFromMetaBase ? iFromMetaBase : LowBlockAdress();
     ULIS_ASSERT( IsCellMetaBaseResident( metaBase ), "Not Resident From" );
-    for( ; metaBase < highAdress; metaBase += cellPadding ) {
-        if( IsCellMetaBaseFree( metaBase ) ) {
+    for(; metaBase < hi; metaBase += cpad )
+        if( IsCellMetaBaseFree( metaBase ) )
             return  metaBase;
-        }
-    }
     return  nullptr;
 }
 
 tMetaBase
 FFixedAllocArena::FirstFullCellMetaBase( tMetaBase iFromMetaBase )
 {
-    uint8 const * const highAdress = HighBlockAdress();
-    const uint64 cellPadding = CellPadding();
+    uint8 const * const hi = HighBlockAdress();
+    uint64 const cpad = CellPadding();
     tMetaBase metaBase = iFromMetaBase ? iFromMetaBase : LowBlockAdress();
     ULIS_ASSERT( IsCellMetaBaseResident( metaBase ), "Not Resident From" );
-    for( ; metaBase < highAdress; metaBase += cellPadding ) {
-        if( !IsCellMetaBaseFree( metaBase ) ) {
+    for(; metaBase < hi; metaBase += cpad )
+        if( !IsCellMetaBaseFree( metaBase ) )
             return  metaBase;
-        }
-    }
     return  nullptr;
 }
 
@@ -271,18 +257,17 @@ FFixedAllocArena::MoveAlloc( tMetaBase iSrcMetaBase, tMetaBase iDstMetaBase, byt
 {
     ULIS_ASSERT( !IsCellMetaBaseFree( iSrcMetaBase ), "Bad move, source should not be free !" );
     ULIS_ASSERT( IsCellMetaBaseFree( iDstMetaBase ), "Bad move, destination should be free !" );
-    memcpy( iDstMetaBase + smMetaPadSize, iSrcMetaBase + smMetaPadSize, iAllocSize );
+    memcpy( iDstMetaBase, iSrcMetaBase, static_cast< uint64 >( iAllocSize ) + static_cast< uint64 >( smMetaPadSize ) );
     memset( iSrcMetaBase, 0, smMetaPadSize );
-    tClient client = reinterpret_cast< tClient >( iDstMetaBase );
-    *client = reinterpret_cast< tAlloc >( iDstMetaBase + smMetaPadSize );
+    **(tClient*)iDstMetaBase = iDstMetaBase + smMetaPadSize;
 }
 
 void
 FFixedAllocArena::InitializeCleanCellsMetaBase()
 {
-    uint8 const * const highAdress = HighBlockAdress();
-    const uint64 cellPadding = CellPadding();
-    for( tMetaBase metaBase = LowBlockAdress(); metaBase < highAdress; metaBase += cellPadding )
+    uint8 const * const hi = HighBlockAdress();
+    uint64 const cpad = CellPadding();
+    for( tMetaBase metaBase = LowBlockAdress(); metaBase < hi; metaBase += cpad )
         memset( metaBase, 0, smMetaPadSize );
 }
 
