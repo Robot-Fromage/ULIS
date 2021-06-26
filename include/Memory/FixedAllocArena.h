@@ -170,7 +170,7 @@ public:
         are efficiently packed, whereas a low occupation rate indicates it's possiblle to concatenate arenas together and hence
         save space in a pool.
     */
-    float OccupationRate() const;
+    ufloat OccupationRate() const;
 
     // Debug API
     /*! Get a textual representation of the arena for debug purposes. */

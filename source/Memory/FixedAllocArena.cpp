@@ -174,10 +174,10 @@ FFixedAllocArena::UnsafeFreeAll()
     }
 }
 
-float
+ufloat
 FFixedAllocArena::OccupationRate() const
 {
-    return  static_cast< float >( NumUsedCells() ) / NumCells();
+    return  static_cast< ufloat >( NumUsedCells() ) / NumCells();
 }
 
 void

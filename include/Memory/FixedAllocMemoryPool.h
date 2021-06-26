@@ -35,14 +35,45 @@ ULIS_NAMESPACE_BEGIN
 ///             algorithms to drive them efficiently.
 class ULIS_API FFixedAllocMemoryPool {
 public:
+    /*!
+        Destructor, destroy the arenas pages.
+        Cleanup the underlying arenas block.
+        Make sure all allocations are free before destroying a pool, or it will trigger an assert in debug builds.
+        You can use UnsafeFreeAll() before destruction to ensure it doesn't crash, but only if you know what you're doing.
+        It is possible to do so before program termination, but if clients don't expect this, they will all be deleted
+        without notification and induce a corrupted state within the program.
+    */
     ~FFixedAllocMemoryPool();
+
+    /*!
+        Constructor from arena size and alloc size.
+        Make sure to chose an arena size that is greater than the alloc size and that can fit an expected number of
+        fixed cells allocations.
+        It is best to chose an alloc size that is a divisor of arena size, the behaviour is undefined otherwise.
+    */
     FFixedAllocMemoryPool(
-          uint64 iArenaSize
-        , uint32 iAllocSize
-        , uint64 iTargetMemoryUsage = 0
-        , float iDefragThreshold = 1/3.f
+          byte_t iArenaSize
+        , byte_t iAllocSize
+        , byte_t iTargetMemoryUsage = 0
+        , ufloat iDefragThreshold = 1/3.f
     );
+
+    /*!
+        Constructor from alloc size and number of expected cells or allocs.
+        An arena size will be coomputed so that it can fit an expected number of
+        fixed cells allocations.
+    */
+    FFixedAllocMemoryPool(
+          byte_t iAllocSize
+        , uint32 iNumCellPerArena
+        , byte_t iTargetMemoryUsage = 0
+        , ufloat iDefragThreshold = 1/3.f
+    );
+
+    /*! Explicitely deleted copy constructor */
     FFixedAllocMemoryPool( const FFixedAllocMemoryPool& ) = delete;
+
+    /*! Explicitely deleted copy assignment operator */
     FFixedAllocMemoryPool& operator=( const FFixedAllocMemoryPool& ) = delete;
 
 public:
@@ -84,13 +115,13 @@ public:
 
     // Fragmentation API
     /*! Get the defrag theshold. */
-    float DefragThreshold() const;
+    ufloat DefragThreshold() const;
 
     /*! Set the defrag theshold. */
-    void SetDefragThreshold( float iValue );
+    void SetDefragThreshold( ufloat iValue );
 
     /*! Arbitrary heuristic to estimate fragmentation of the pool. */
-    float Fragmentation() const;
+    ufloat Fragmentation() const;
 
     /*! Trigger a defrag only if the threshold is reached. */
     void DefragIfNecessary();
@@ -116,7 +147,7 @@ private:
     const uint64 mArenaSize; ///< Arena Size in bytes, without extra meta pad for each cell
     const uint64 mAllocSize; ///< Allocation Size in bytes, without extra meta pad for cell
     uint64 mTargetMemoryUsage; ///< approximate target memory to reach with arena pages, actual behaviour depends on policy.
-    float mDefragThreshold; ///< A threshold that, if reached, allows to trigger a defrag.
+    ufloat mDefragThreshold; ///< A threshold that, if reached, allows to trigger a defrag.
     std::list< FFixedAllocArena* > mArenaPool; ///< The arenas pages, in a list.
 };
 #pragma warning(pop)
