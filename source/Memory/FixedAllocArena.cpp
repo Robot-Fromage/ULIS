@@ -16,56 +16,68 @@
 ULIS_NAMESPACE_BEGIN
 FFixedAllocArena::~FFixedAllocArena()
 {
-    //ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
-    for( uint32 i = 0; i < mNumCells; ++i ) {
-        uint8* metaBase = ChunkMetaBase( i );
-        if( !IsChunkMetaBaseAvailable( metaBase ) ) {
-            uint8*** client_ptr = reinterpret_cast< uint8*** >( metaBase );
-            uint8** client = *client_ptr;
-            delete client;
-            client_ptr = nullptr;
-            mNumAvailableCells++;
-        }
-    }
+    ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
     XFree( mBlock );
 }
 
 FFixedAllocArena::FFixedAllocArena(
-      uint64 iArenaSize
-    , uint32 iAllocSize
+      byte_t iArenaSize
+    , byte_t iAllocSize
 )
     : mArenaSize( iArenaSize )
     , mAllocSize( iAllocSize )
-    , mNumCells( static_cast< uint32 >( mArenaSize / mAllocSize ) )
-    , mNumAvailableCells( mNumCells )
-    , mBlock( reinterpret_cast< uint8* >( XMalloc( BlockSize() ) ) )
+    , mBlock(
+        reinterpret_cast< uint8* >( XMalloc( BlockSize() ) )
+    )
 {
-    ULIS_ASSERT( mArenaSize, "Bad Size !" );
-    ULIS_ASSERT( mAllocSize, "Bad Size !" );
-    ULIS_ASSERT( mNumCells, "Bad Size !" );
-    ULIS_ASSERT( mNumAvailableCells, "Bad Size !" );
+    ULIS_ASSERT( mArenaSize > 0, "Bad Size !" );
+    ULIS_ASSERT( mAllocSize > 0 && mAllocSize <= mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
-    for( uint64 i = 0; i < mNumCells; ++i )
-        memset( mBlock + i * ( mAllocSize + smMetaPadSize ), 0, smMetaPadSize );
+    InitializeCleanCellsMetaBase();
+}
+
+FFixedAllocArena::FFixedAllocArena(
+      byte_t iAllocSize
+    , uint32 iNumCells
+)
+    : mArenaSize(
+          static_cast< uint64 >( iAllocSize )
+        * static_cast< uint64 >( iNumCells )
+    )
+    , mAllocSize( iAllocSize )
+    , mBlock(
+        reinterpret_cast< uint8* >( XMalloc( BlockSize() ) )
+    )
+{
+    ULIS_ASSERT( mArenaSize > 0, "Bad Size !" );
+    ULIS_ASSERT( mAllocSize > 0 && mAllocSize <= mArenaSize, "Bad Size !" );
+    ULIS_ASSERT( mBlock, "Bad Alloc !" );
+    InitializeCleanCellsMetaBase();
 }
 
 bool
 FFixedAllocArena::IsFull() const
 {
-    return  mNumAvailableCells == 0;
+    return  NumFreeCells() == 0;
 }
 
 bool
 FFixedAllocArena::IsEmpty() const
 {
-    return  mNumAvailableCells == mNumCells;
+    return  NumFreeCells() == NumCells();
 }
 
 bool
-FFixedAllocArena::IsInRange( const uint8* iAlloc ) const
+FFixedAllocArena::IsResident( tConstClient iClient ) const
 {
-    uint64 adress = reinterpret_cast< uint64 >( iAlloc );
-    return  adress >= LowBlockAdress() && adress < HighBlockAdress();
+    return  IsResident( *iClient );
+}
+
+//static
+bool
+FFixedAllocArena::IsFree( tConstClient iClient )
+{
+    return  IsFree( *iClient );
 }
 
 uint64
@@ -83,19 +95,35 @@ FFixedAllocArena::AllocSize() const
 uint32
 FFixedAllocArena::NumCells() const
 {
-    return  mNumCells;
+    return
+        static_cast< uint32 >(
+              static_cast< uint64 >( mArenaSize )
+            / static_cast< uint64 >( mAllocSize )
+        );
 }
 
 uint32
-FFixedAllocArena::NumAvailableCells() const
+FFixedAllocArena::NumFreeCells() const
 {
-    return  mNumAvailableCells;
+    return  0;
 }
 
 uint32
 FFixedAllocArena::NumUsedCells() const
 {
-    return  mNumCells - mNumAvailableCells;
+    return  NumCells() - NumFreeCells();
+}
+
+const uint8*
+FFixedAllocArena::LowBlockAdress() const
+{
+    return  mBlock;
+}
+
+const uint8*
+FFixedAllocArena::HighBlockAdress() const
+{
+    return  mBlock + BlockSize();
 }
 
 FFixedAllocArena::tClient
@@ -103,7 +131,7 @@ FFixedAllocArena::Malloc()
 {
     for( uint32 i = 0; i < mNumCells; ++i ) {
         uint8* metaBase = ChunkMetaBase( i );
-        if( IsChunkMetaBaseAvailable( metaBase ) ) {
+        if( IsCellMetaBaseFree( metaBase ) ) {
             // client alloc points to data
             uint8* data = metaBase + smMetaPadSize;
             uint8** client = new uint8*( data );
@@ -118,6 +146,7 @@ FFixedAllocArena::Malloc()
     return  nullptr;
 }
 
+// static
 void
 FFixedAllocArena::Free( tClient iClient )
 {
@@ -136,34 +165,23 @@ FFixedAllocArena::Free( tClient iClient )
     mNumAvailableCells++;
 }
 
+void
+FFixedAllocArena::UnsafeFreeAll()
+{
+    uint8 const * const highAdress = HighBlockAdress();
+    const uint64 cellPadding = CellPadding();
+    for( tMetaBase metaBase = LowBlockAdress(); metaBase < highAdress; metaBase += cellPadding; ) {
+        if( !IsCellMetaBaseFree( metaBase ) ) {
+            delete reinterpret_cast< tClient >( metaBase );
+            memset( metaBase, 0, smMetaPadSize );
+        }
+    }
+}
+
 float
-FFixedAllocArena::LocalFragmentation() const
+FFixedAllocArena::OccupationRate() const
 {
-    // Rough Estimate
-    if( mNumAvailableCells == 0 )
-        return  0.f;
-
-    float frag = ( mNumAvailableCells - LargestFreeChunk() ) / static_cast< float >( mNumAvailableCells );
-
-    uint32 used = NumUsedCells();
-    if( used == 0 )
-        return  0.f;
-
-    float pack = ( used - LargestUsedChunk() ) / static_cast< float >( used );
-
-    return  ( frag + pack ) / 2;
-}
-
-uint64
-FFixedAllocArena::LowBlockAdress() const
-{
-    return  reinterpret_cast< uint64 >( mBlock );
-}
-
-uint64
-FFixedAllocArena::HighBlockAdress() const
-{
-    return  reinterpret_cast< uint64 >( mBlock ) + BlockSize();
+    return  NumUsedCells() / NumCells();
 }
 
 void
@@ -171,114 +189,51 @@ FFixedAllocArena::Print() const
 {
     std::cout << "[";
     for( uint32 i = 0; i < mNumCells; ++i )
-        if( IsChunkMetaBaseAvailable( ChunkMetaBase( i ) ) )
+        if( IsCellMetaBaseFree( ChunkMetaBase( i ) ) )
             std::cout << "-";
         else
             std::cout << "+";
-    std::cout << "] " << FMath::CeilToInt( LocalFragmentation() * 100 ) <<"%\n";
-}
-
-void
-FFixedAllocArena::DefragSelf()
-{
-    uint32 lindex = 0;
-    uint32 rindex = ULIS_UINT32_MAX;
-    while( LargestFreeChunk() != mNumAvailableCells )
-        Swap( LastFullChunkMetaBase( rindex, &rindex ), FirstEmptyChunkMetaBase( lindex, &lindex ), mAllocSize );
+    std::cout << "] " << FMath::CeilToInt( OccupationRate() * 100 ) <<"%\n";
 }
 
 //static
 bool
-FFixedAllocArena::IsFree( const uint8* iAlloc )
+FFixedAllocArena::IsCellMetaBaseFree( tConstMetaBase iMetaBase )
 {
-    return  IsChunkMetaBaseAvailable( iAlloc - smMetaPadSize );
+    ULIS_ASSERT( iMetaBase, "Bad input" );
+    return  *reinterpret_cast< tConstClient* >( iMetaBase ) == nullptr;
 }
 
-//static
-bool
-FFixedAllocArena::IsFree( const tClient iClient )
+uint8*
+FFixedAllocArena::LowBlockAdress()
 {
-    return  IsFree( *iClient );
+    return  mBlock;
 }
 
-//static
-void
-FFixedAllocArena::Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize )
+uint8*
+FFixedAllocArena::HighBlockAdress()
 {
-    ULIS_ASSERT( !IsChunkMetaBaseAvailable( iFromMetaBase ), "Bad swap, iFrom should be unavailable !" );
-    ULIS_ASSERT( IsChunkMetaBaseAvailable( iToMetaBase ), "Bad swap, iTo should be available !" );
-    memcpy( iToMetaBase, iFromMetaBase, iAllocSize + static_cast< uint64 >( smMetaPadSize ) );
-    memset( iFromMetaBase, 0, smMetaPadSize );
-    uint8*** client_ptr = reinterpret_cast< uint8*** >( iToMetaBase );
-    uint8** client = *client_ptr;
-    uint8* data = iToMetaBase + smMetaPadSize;
-    *client = data;
-}
-
-uint32
-FFixedAllocArena::LargestFreeChunk() const
-{
-    int run = 0;
-    int max = 0;
-    for( uint32 i = 0; i < mNumCells; ++i ) {
-        if( IsChunkMetaBaseAvailable( ChunkMetaBase( i ) ) ) {
-            ++run;
-        } else {
-            run = 0;
-        }
-        max = FMath::Max( run, max );
-    }
-    return  max;
-}
-
-uint32
-FFixedAllocArena::LargestUsedChunk() const
-{
-    int run = 0;
-    int max = 0;
-    for( uint32 i = 0; i < mNumCells; ++i ) {
-        if( !IsChunkMetaBaseAvailable( ChunkMetaBase( i ) ) ) {
-            ++run;
-        } else {
-            run = 0;
-        }
-        max = FMath::Max( run, max );
-    }
-    return  max;
+    return  mBlock + BlockSize();
 }
 
 uint64
 FFixedAllocArena::BlockSize() const
 {
-    return  static_cast< uint64 >( mArenaSize ) + static_cast< uint64 >( smMetaPadSize ) * static_cast< uint64 >( mNumCells );
+    return  mArenaSize + static_cast< uint64 >( smMetaPadSize ) * static_cast< uint64 >( NumCells() );
 }
 
-uint8*
-FFixedAllocArena::ChunkMetaBase( uint32 iIndex )
+uint64
+FFixedAllocArena::CellPadding() const
 {
-    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + static_cast< uint64 >( smMetaPadSize ) );
+    return  static_cast< uint64 >( mAllocSize ) + static_cast< uint64 >( smMetaPadSize );
 }
 
-const uint8*
-FFixedAllocArena::ChunkMetaBase( uint32 iIndex ) const
-{
-    return  mBlock + static_cast< uint64 >( iIndex ) * ( mAllocSize + static_cast< uint64 >( smMetaPadSize ) );
-}
-
-//static
-bool
-FFixedAllocArena::IsChunkMetaBaseAvailable( const uint8* iChunk )
-{
-    ULIS_ASSERT( iChunk, "Bad input" );
-    return  !(*(const uint8***)(iChunk));
-}
-
-uint8*
+FFixedAllocArena::tMetaBase
 FFixedAllocArena::FirstEmptyChunkMetaBase( uint32 iFrom, uint32* oIndex )
 {
     for( uint32 i = iFrom; i < mNumCells; ++i ) {
         uint8* metaBase = ChunkMetaBase( i );
-        if( IsChunkMetaBaseAvailable( metaBase ) ) {
+        if( IsCellMetaBaseFree( metaBase ) ) {
             if( oIndex )
                 *oIndex = i;
             return  metaBase;
@@ -287,12 +242,12 @@ FFixedAllocArena::FirstEmptyChunkMetaBase( uint32 iFrom, uint32* oIndex )
     return  nullptr;
 }
 
-uint8*
+FFixedAllocArena::tMetaBase
 FFixedAllocArena::FirstFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
 {
     for( uint32 i = iFrom; i < mNumCells; ++i ) {
         uint8* metaBase = ChunkMetaBase( i );
-        if( !IsChunkMetaBaseAvailable( metaBase ) ) {
+        if( !IsCellMetaBaseFree( metaBase ) ) {
             if( oIndex )
                 *oIndex = i;
             return  metaBase;
@@ -301,18 +256,39 @@ FFixedAllocArena::FirstFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
     return  nullptr;
 }
 
-uint8*
+FFixedAllocArena::tMetaBase
 FFixedAllocArena::LastFullChunkMetaBase( uint32 iFrom, uint32* oIndex )
 {
     for( int32 i = FMath::Min( iFrom, mNumCells - 1 ); i >= 0; --i ) {
         uint8* metaBase = ChunkMetaBase( i );
-        if( !IsChunkMetaBaseAvailable( metaBase ) ) {
+        if( !IsCellMetaBaseFree( metaBase ) ) {
             if( oIndex )
                 *oIndex = i;
             return  metaBase;
         }
     }
     return  nullptr;
+}
+
+//static
+void
+FFixedAllocArena::MoveAlloc( tMetaBase iSrcMetaBase, tMetaBase iDstMetaBase, byte_t iAllocSize )
+{
+    ULIS_ASSERT( !IsCellMetaBaseFree( iSrcMetaBase ), "Bad move, source should not be free !" );
+    ULIS_ASSERT( IsCellMetaBaseFree( iDstMetaBase ), "Bad move, destination should be free !" );
+    memcpy( iDstMetaBase, iSrcMetaBase, static_cast< uint64 >( iAllocSize ) + static_cast< uint64 >( smMetaPadSize ) );
+    memset( iSrcMetaBase, 0, smMetaPadSize );
+    tClient* clientPtr = reinterpret_cast< tClient* >( iDstMetaBase );
+    **clientPtr = iDstMetaBase + smMetaPadSize;
+}
+
+void
+FFixedAllocArena::InitializeCleanCellsMetaBase()
+{
+    uint8 const * const highAdress = HighBlockAdress();
+    const uint64 cellPadding = CellPadding();
+    for( tMetaBase metaBase = LowBlockAdress(); metaBase < highAdress; metaBase += cellPadding; )
+        memset( metaBase, 0, smMetaPadSize );
 }
 
 ULIS_NAMESPACE_END
