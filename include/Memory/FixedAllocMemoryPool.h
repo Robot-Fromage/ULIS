@@ -88,7 +88,7 @@ public:
     uint64 NumCells() const;
 
     /*! Obtain the number of currently free cells in the pool. */
-    uint64 NumFree() const;
+    uint64 NumFreeCells() const;
 
     /*! Obtain the number of currently used cells in the pool. */
     uint64 NumUsedCells() const;
@@ -132,9 +132,33 @@ public:
 
 
     // Alloc API
+    /*!
+        Obtain an client to an allocation within this arena.
+        If full or a failure occurs, returns nullptr.
+    */
     tClient Malloc();
-    void Free( tClient iClient );
+
+    /*!
+        Free an allocation and its associated client.
+        It doesn't need to be resident in this pool.
+    */
+    static void Free( tClient iClient );
+
+    /*!
+        Free all resident allocations in this pool.
+        Clients are deleted and not notified about their status.
+        This is unsafe and dangerous, unless you're done with all clients.
+    */
+    void UnsafeFreeAll();
+
+    /*!
+        Alloc empty arena page if target memory isn't reached.
+    */
     bool AllocOneArenaIfNecessary();
+
+    /*!
+        Delete empty arena page if target memory is reached.
+    */
     bool FreeOneArenaIfNecessary();
 
 
