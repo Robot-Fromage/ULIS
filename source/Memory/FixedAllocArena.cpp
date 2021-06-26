@@ -236,7 +236,7 @@ FFixedAllocArena::CellPadding() const
 }
 
 tMetaBase
-FFixedAllocArena::FirstEmptyCellMetaBase( tMetaBase iFromMetaBase, tMetaBase* oFoundMetaBase )
+FFixedAllocArena::FirstEmptyCellMetaBase( tMetaBase iFromMetaBase )
 {
     uint8 const * const highAdress = HighBlockAdress();
     const uint64 cellPadding = CellPadding();
@@ -244,8 +244,6 @@ FFixedAllocArena::FirstEmptyCellMetaBase( tMetaBase iFromMetaBase, tMetaBase* oF
     ULIS_ASSERT( IsCellMetaBaseResident( metaBase ), "Not Resident From" );
     for( ; metaBase < highAdress; metaBase += cellPadding ) {
         if( IsCellMetaBaseFree( metaBase ) ) {
-            if( oFoundMetaBase )
-                *oFoundMetaBase = metaBase;
             return  metaBase;
         }
     }
@@ -253,7 +251,7 @@ FFixedAllocArena::FirstEmptyCellMetaBase( tMetaBase iFromMetaBase, tMetaBase* oF
 }
 
 tMetaBase
-FFixedAllocArena::FirstFullCellMetaBase( tMetaBase iFromMetaBase, tMetaBase* oFoundMetaBase )
+FFixedAllocArena::FirstFullCellMetaBase( tMetaBase iFromMetaBase )
 {
     uint8 const * const highAdress = HighBlockAdress();
     const uint64 cellPadding = CellPadding();
@@ -261,8 +259,6 @@ FFixedAllocArena::FirstFullCellMetaBase( tMetaBase iFromMetaBase, tMetaBase* oFo
     ULIS_ASSERT( IsCellMetaBaseResident( metaBase ), "Not Resident From" );
     for( ; metaBase < highAdress; metaBase += cellPadding ) {
         if( !IsCellMetaBaseFree( metaBase ) ) {
-            if( oFoundMetaBase )
-                *oFoundMetaBase = metaBase;
             return  metaBase;
         }
     }

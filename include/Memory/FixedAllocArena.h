@@ -188,8 +188,8 @@ private:
     uint64 CellPadding() const;
 
     // Private Memory API
-    tMetaBase FirstEmptyCellMetaBase( tMetaBase iFromMetaBase = nullptr, tMetaBase* oFoundMetaBase = nullptr );
-    tMetaBase FirstFullCellMetaBase( tMetaBase iFromMetaBase = nullptr, tMetaBase* oFoundMetaBase = nullptr );
+    tMetaBase FirstEmptyCellMetaBase( tMetaBase iFromMetaBase = nullptr );
+    tMetaBase FirstFullCellMetaBase( tMetaBase iFromMetaBase = nullptr );
     static void MoveAlloc( tMetaBase iFrom, tMetaBase iTo, byte_t iAllocSize );
     void InitializeCleanCellsMetaBase();
 

@@ -188,9 +188,11 @@ FFixedAllocMemoryPool::DefragForce()
                 lfrom = nullptr;
                 leftUsed = (*left)->NumUsedCells();
             }
+            lfrom = (*left)->FirstFullCellMetaBase( lfrom );
+            rfrom = (*right)->FirstFullCellMetaBase( rfrom );
             FFixedAllocArena::MoveAlloc(
-                  (*right)->FirstFullCellMetaBase( rfrom, &rfrom )
-                , (*left)->FirstFullCellMetaBase( lfrom, &lfrom )
+                  rfrom
+                , lfrom
                 , mAllocSize
             );
             rightFree++;
@@ -232,7 +234,7 @@ bool
 FFixedAllocMemoryPool::AllocOneArenaIfNecessary()
 {
     if( uint64(TotalMemory()) < uint64(TargetMemoryUsage()) ) {
-        mArenaPool.push_back( new FFixedAllocArena( mArenaSize, mAllocSize ) );
+        mArenaPool.push_back( new FFixedAllocArena( byte_t( mArenaSize ), byte_t( mAllocSize ) ) );
         return  true;
     }
     return  false;
