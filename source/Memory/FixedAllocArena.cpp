@@ -140,10 +140,10 @@ FFixedAllocArena::Malloc()
     if( !metaBase )
         return  nullptr;
 
-    tClient* clientPtr = new tClient;
-    **clientPtr = reinterpret_cast< tAlloc >( metaBase + smMetaPadSize );
-    memcpy( metaBase, clientPtr, smMetaPadSize );
-    return  *clientPtr;
+    tClient client = new tAlloc();
+    *client = reinterpret_cast< tAlloc >( metaBase + smMetaPadSize );
+    memcpy( metaBase, &client, smMetaPadSize );
+    return  client;
 }
 
 // static
@@ -208,7 +208,7 @@ bool
 FFixedAllocArena::IsCellMetaBaseFree( tMetaBase iMetaBase )
 {
     ULIS_ASSERT( iMetaBase, "Bad input" );
-    return  *reinterpret_cast< tClient >( iMetaBase ) == nullptr;
+    return  *reinterpret_cast< tClient* >( iMetaBase ) == nullptr;
 }
 
 uint8*
@@ -277,8 +277,8 @@ FFixedAllocArena::MoveAlloc( tMetaBase iSrcMetaBase, tMetaBase iDstMetaBase, byt
     ULIS_ASSERT( IsCellMetaBaseFree( iDstMetaBase ), "Bad move, destination should be free !" );
     memcpy( iDstMetaBase + smMetaPadSize, iSrcMetaBase + smMetaPadSize, iAllocSize );
     memset( iSrcMetaBase, 0, smMetaPadSize );
-    tClient* clientPtr = reinterpret_cast< tClient* >( iDstMetaBase );
-    **clientPtr = reinterpret_cast< tAlloc >( iDstMetaBase + smMetaPadSize );
+    tClient client = reinterpret_cast< tClient >( iDstMetaBase );
+    *client = reinterpret_cast< tAlloc >( iDstMetaBase + smMetaPadSize );
 }
 
 void
