@@ -12,17 +12,8 @@
 #include <iostream>
 #include <ULIS>
 using namespace ::ULIS;
-using namespace ::ULIS::units;
-
-FAlloc::tAlloc Malloc( units::byte_t iSize ) {
-    return  (FAlloc::tAlloc)malloc( iSize );
-}
 
 int main( int argc, char *argv[] ) {
-    auto size = 1024_KiB;
-    size += 32_Mio;
-    FAlloc::tAlloc buffer = Malloc( size );
-
     //srand( time( NULL ) );
     // Test1: Many random allocs and degrag
     /*
@@ -86,6 +77,7 @@ int main( int argc, char *argv[] ) {
 
     // Test3: Basic Shrinkable
     // metapad = 12
+    /*
     int allocSize = 100;
     constexpr int numAllocs = 10;
     FShrinkableAllocArena mem( numAllocs * allocSize + numAllocs * 12, allocSize );
@@ -118,6 +110,7 @@ int main( int argc, char *argv[] ) {
         ULIS_ASSERT( shrank, "cool" );
     }
     mem.Print();
+    */
     return  0;
 }
 

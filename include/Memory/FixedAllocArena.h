@@ -11,25 +11,9 @@
 */
 #pragma once
 #include "Core/Core.h"
-#include "Memory/Alloc.h"
+#include "Memory/Units.h"
 
 ULIS_NAMESPACE_BEGIN
-/////////////////////////////////////////////////////
-// Format of Fixed Alloc
-//
-//          [meta][data]
-//          [data]: fixed size ( alloc size ), e.g: 16384 bytes for a 64² RGBA8 tile.
-//          [meta]: [adress of arena][adress of client alloc]
-//          [client alloc]: stores the adress of the [data]
-//                  e.g:
-//                  [0xf4f568654][0xf54ez4ae4][data]
-//                                |->[points do data]
-//
-//  Ex arena 1024² for 64² RGBA8:
-//  mArenaSize: 4194304 bytes
-//  mAllocSize: 16384 bytes
-//  mNumCells = arenaSize / allocSize = 256
-//  metaPadSize = sizeof( ptr )
 /////////////////////////////////////////////////////
 /// @class      FFixedAllocArena
 /// @brief      The FFixedAllocArena class is a class that provides a single
@@ -61,20 +45,24 @@ ULIS_NAMESPACE_BEGIN
 ///             to measure the sparsity of the allocations. Fragmentation
 ///             becomes a problem when many arenas are sparse, hence wasting a
 ///             lot of space.
+///
+///             Terminology:
+///             byte_t,     a size in bytes
+///             tByte,      a byte value ( uint8 )
+///             tAlloc,     an allocation ( uint8* )
+///             Arena,      the whole system
+///             block,      the underlying page buffer
+///             metaBase,   the meta info before an alloc
+///             client,     a pointer to an alloc that can change position
+///             cell,       a fixed element in the area that can host an alloc
+///             chunk,      a collection of cells, either free or used
 class ULIS_API FFixedAllocArena {
     friend class FFixedAllocMemoryPool;
-
-public:
-    typedef uint8* tAlloc;
-    typedef uint8* tMetaBase;
-    typedef const uint8* tConstMetaBase;
-    typedef uint8** tClient;
-
 public:
     ~FFixedAllocArena();
     FFixedAllocArena(
-          uint64 iArenaSize
-        , uint32 iAllocSize
+          byte_t iArenaSize
+        , byte_t iAllocSize
     );
     FFixedAllocArena( const FFixedAllocArena& ) = delete;
     FFixedAllocArena& operator=( const FFixedAllocArena& ) = delete;
@@ -84,19 +72,19 @@ public:
     bool IsEmpty() const;
     bool IsInRange( const uint8* iAlloc ) const;
 
-    uint64 ArenaSize() const;
-    uint32 AllocSize() const;
+    byte_t ArenaSize() const;
+    byte_t AllocSize() const;
 
     uint32 NumCells() const;
-    uint32 NumAvailableCells() const;
+    uint32 NumFreeCells() const;
     uint32 NumUsedCells() const;
 
     tClient Malloc();
     void Free( tClient iClient );
     float LocalFragmentation() const;
 
-    uint64 LowBlockAdress() const;
-    uint64 HighBlockAdress() const;
+    byte_t LowBlockAdress() const;
+    byte_t HighBlockAdress() const;
 
     void Print() const;
     void DefragSelf();
@@ -105,25 +93,25 @@ public:
     static bool IsFree( const tClient iClient );
 
 private:
-    static void Swap( uint8* iFromMetaBase, uint8* iToMetaBase, uint32 iAllocSize );
-    uint32 LargestFreeChunk() const;
-    uint32 LargestUsedChunk() const;
-    uint64 BlockSize() const;
-    uint8* ChunkMetaBase( uint32 iIndex );
-    const uint8* ChunkMetaBase( uint32 iIndex ) const;
-    static bool IsChunkMetaBaseAvailable( const uint8* iChunk );
-    uint8* FirstEmptyChunkMetaBase( uint32 iFrom = 0, uint32* oIndex = nullptr );
-    uint8* FirstFullChunkMetaBase( uint32 iFrom = 0, uint32* oIndex = nullptr );
-    uint8* LastFullChunkMetaBase( uint32 iFrom = ULIS_UINT32_MAX, uint32* oIndex = nullptr );
+    static void Swap( tMetaBase iFrom, tMetaBase iTo, byte_t iAllocSize );
+    byte_t LargestFreeChunk() const;
+    byte_t LargestUsedChunk() const;
+    byte_t BlockSize() const;
+    tMetaBase ChunkMetaBase( uint32 iCellIndex );
+    tConstMetaBase CellMetaBase( uint32 iCellIndex ) const;
+    static bool IsCellMetaBaseAvailable( tConstMetaBase iChunk );
+    tMetaBase FirstEmptyCellMetaBase( uint32 iFromCellIndex = 0, uint32* oFoundCellIndex = nullptr );
+    tMetaBase FirstFullCellMetaBase( uint32 iFromCellIndex = 0, uint32* oFoundCellIndex = nullptr );
+    tMetaBase LastFullCellMetaBase( uint32 iFromCellIndex = ULIS_UINT32_MAX, uint32* oFoundCellIndex = nullptr );
 
 private:
-    const uint64 mArenaSize;
-    const uint32 mAllocSize;
+    const byte_t mArenaSize;
+    const byte_t mAllocSize;
     const uint32 mNumCells;
-    uint32 mNumAvailableCells;
-    uint8* const mBlock;
+    uint32 mNumFreeCells;
+    tByte* const mBlock;
 
-    static constexpr const uint8 smMetaPadSize = sizeof( uint8** );
+    static constexpr const uint8 smMetaPadSize = sizeof( tClient );
 };
 
 ULIS_NAMESPACE_END
