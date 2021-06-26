@@ -14,32 +14,34 @@
 using namespace ::ULIS;
 
 int main( int argc, char *argv[] ) {
+
     //srand( time( NULL ) );
     // Test1: Many random allocs and degrag
-    /*
-    constexpr int arenaSize = 90;
-    constexpr int numArenas = 50;
-    FFixedAllocMemoryPool mem( arenaSize, 1, arenaSize * numArenas );
-    for( int i = 0; i < numArenas-1; ++i )
+    using namespace ULIS::units_literals;
+    constexpr uint64 elems = 10;
+    constexpr uint64 numArenas = 10;
+    FFixedAllocMemoryPool mem( 8_B, elems, 200_MB );
+    for( int i = 0; i < numArenas; ++i )
         mem.AllocOneArenaIfNecessary();
 
-    uint8* a[arenaSize][numArenas];
-    for( int i = 0; i < arenaSize; ++i )
+    tClient a[elems][numArenas];
+    for( int i = 0; i < elems; ++i )
         for( int j = 0; j < numArenas; ++j )
             a[i][j] = mem.Malloc();
 
-    int del = ( arenaSize * numArenas ) / 2;
+    /*
+    int del = ( elems * numArenas ) / 2;
     for( int i = 0; i < del; ++i ) {
-        uint8* ptr = a[rand()%arenaSize][rand()%numArenas];
+        uint8* ptr = a[rand()%elems][rand()%numArenas];
         while( FFixedAllocArena::IsFree( ptr ) )
-            ptr = a[rand()%arenaSize][rand()%numArenas];
+            ptr = a[rand()%elems][rand()%numArenas];
         mem.Free( ptr );
     }
-
-    mem.Print();
-    mem.DefragForce();
-    mem.Print();
     */
+
+    mem.DebugPrint();
+    //mem.DefragForce();
+    //mem.Print();
 
     // Test2: Proper client update after defrag
     /*
