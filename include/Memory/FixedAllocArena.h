@@ -195,7 +195,7 @@ private:
 
 private:
     // Private Data Members
-    const uint64 mArenaSize; ///< Arena Size in bytes, with extra meta pad for each cell
+    const uint64 mArenaSize; ///< Arena Size in bytes, without extra meta pad for cell
     const uint64 mAllocSize; ///< Allocation Size in bytes, without extra meta pad for cell
     tByte* const mBlock; ///< Underlying arena storage buffer with allocation data and meta infos [meta][data] ...
 
