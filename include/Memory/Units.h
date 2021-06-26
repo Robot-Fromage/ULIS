@@ -429,13 +429,9 @@ Yio_t operator "" _Yio( uint64 i ) { return  Yio_t( ( i ) ); }
 
 // Alloc units
 typedef uint8 tByte;                        ///< A byte or octet value, 8bits
-typedef uint8 const tConstByte;             ///< A const byte
-typedef tByte* tAlloc;                      ///< A base pointer for a heap allocation
-typedef tConstByte* const tConstAlloc;      ///< A const base pointer for a const heap allocation
-typedef tByte* tMetaBase;                   ///< A base pointer for a meta base in an Arena ( see docs for specific arena about their meta base )
-typedef tConstByte* const tConstMetaBase;   ///< A const base pointer for a const meta base in an Arena ( see docs for specific arena about their meta base )
-typedef tAlloc* tClient;                    ///< A pointer to a client, that is a pointer to a heap allocation susceptible to move after defrag.
-typedef tConstAlloc* const tConstClient;    ///< A const pointer to a const client, that is a const pointer to a const heap allocation susceptible to move after defrag.
+typedef uint8* tAlloc;                      ///< A base pointer for a heap allocation
+typedef uint8* tMetaBase;                   ///< A base pointer for a meta base in an Arena ( see docs for specific arena about their meta base )
+typedef uint8** tClient;                    ///< A pointer to a client, that is a pointer to a heap allocation susceptible to move after defrag.
 typedef uint64 tArenaSize;                  ///< A large size for an arena.
 typedef uint32 tAllocSize;                  ///< A large size for an allocation.
 

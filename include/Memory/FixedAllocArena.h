@@ -106,10 +106,10 @@ public:
     bool IsEmpty() const;
 
     /*! Checks wether a client resides in this arena. */
-    bool IsResident( tConstClient iClient ) const;
+    bool IsResident( tClient iClient ) const;
 
     /*! Checks wether a client is free or not. */
-    static bool IsFree( tConstClient iClient );
+    static bool IsFree( tClient iClient );
 
 
 
@@ -161,6 +161,9 @@ public:
 
     // Occupation API
     /*!
+        From 0 to 1.
+        0: empty
+        1: full
         Determine the local occupation rate of the the allocations within the arena.
         Local fragmentation within a single arena is irrelevant, but the ability to determine the Occupation of fixed allocations
         within an arena matters when used in a pool, with many arenas. A high global average occupation rate indicates the allocs
@@ -171,22 +174,22 @@ public:
 
     // Debug API
     /*! Get a textual representation of the arena for debug purposes. */
-    void Print() const;
+    void DebugPrint() const;
 
 private:
     // Private Check API
-    static bool IsCellMetaBaseFree( tConstMetaBase iMetaBase );
+    bool IsCellMetaBaseResident( tMetaBase iMetaBase ) const;
+    static bool IsCellMetaBaseFree( tMetaBase iMetaBase );
 
     // Private Size API
     uint8* LowBlockAdress();
     uint8* HighBlockAdress();
-    byte_t BlockSize() const;
+    uint64 BlockSize() const;
     uint64 CellPadding() const;
 
     // Private Memory API
-    tMetaBase FirstEmptyCellMetaBase( uint32 iFromCellIndex = 0, uint32* oFoundCellIndex = nullptr );
-    tMetaBase FirstFullCellMetaBase( uint32 iFromCellIndex = 0, uint32* oFoundCellIndex = nullptr );
-    tMetaBase LastFullCellMetaBase( uint32 iFromCellIndex = ULIS_UINT32_MAX, uint32* oFoundCellIndex = nullptr );
+    tMetaBase FirstEmptyCellMetaBase( tMetaBase iFromMetaBase = nullptr, tMetaBase* oFoundMetaBase = nullptr );
+    tMetaBase FirstFullCellMetaBase( tMetaBase iFromMetaBase = nullptr, tMetaBase* oFoundMetaBase = nullptr );
     static void MoveAlloc( tMetaBase iFrom, tMetaBase iTo, byte_t iAllocSize );
     void InitializeCleanCellsMetaBase();
 
