@@ -29,17 +29,20 @@ int main( int argc, char *argv[] ) {
         for( int j = 0; j < numArenas; ++j )
             a[i][j] = mem.Malloc();
 
-    /*
     int del = ( elems * numArenas ) / 2;
     for( int i = 0; i < del; ++i ) {
-        uint8* ptr = a[rand()%elems][rand()%numArenas];
-        while( FFixedAllocArena::IsFree( ptr ) )
-            ptr = a[rand()%elems][rand()%numArenas];
-        mem.Free( ptr );
+        int x = rand() % ( elems - 1 );
+        int y = rand() % ( numArenas - 1 );
+        tClient client = a[x][y];
+        while( FFixedAllocArena::IsFree( client ) ) {
+            rand() % ( elems - 1 );
+            rand() % ( numArenas - 1 );
+            client = a[rand()%elems][rand()%numArenas];
+        }
     }
-    */
 
     mem.DebugPrint();
+    mem.UnsafeFreeAll();
     //mem.DefragForce();
     //mem.Print();
 
