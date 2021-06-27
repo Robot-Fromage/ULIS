@@ -12,60 +12,74 @@
 #include <iostream>
 #include <ULIS>
 using namespace ::ULIS;
+using namespace ULIS::units_literals;
 
-int main( int argc, char *argv[] ) {
-
-    //srand( time( NULL ) );
-    // Test1: Many random allocs and degrag
-    using namespace ULIS::units_literals;
-    constexpr uint64 elems = 10;
+void TestFixedDefragRate() {
+    // Test1: Many random allocs / deallocs and degraf
+    // Bake constants and variables
+    byte_t allocSize = 8_B;
+    byte_t targetMemory = 200_MB;
+    constexpr uint64 numCellsPerArena = 10;
     constexpr uint64 numArenas = 10;
-    FFixedAllocMemoryPool mem( 8_B, elems, 200_MB );
+    tClient a[numCellsPerArena][numArenas];
+    bool b[numCellsPerArena][numArenas];
+
+    // Init pool
+    FFixedAllocMemoryPool mem( 8_B, numCellsPerArena, 200_MB );
     for( int i = 0; i < numArenas; ++i )
         mem.AllocOneArenaIfNecessary();
 
-    tClient a[elems][numArenas];
-    bool b[elems][numArenas];
-    for( int i = 0; i < elems; ++i ) {
+    // Fill with allocs
+    for( int i = 0; i < numCellsPerArena; ++i ) {
         for( int j = 0; j < numArenas; ++j ) {
             a[i][j] = mem.Malloc();
             b[i][j] = true;
         }
     }
+
+    // Print
     mem.DebugPrint();
 
-    int del = ( elems * numArenas ) / 2;
+    // Free half of allocs at random positions.
+    int del = ( numCellsPerArena * numArenas ) / 2;
     for( int i = 0; i < del; ++i ) {
-        int x = rand() % ( elems );
+        int x = rand() % ( numCellsPerArena );
         int y = rand() % ( numArenas );
         tClient client = a[x][y];
         while( b[x][y] == false ) {
-            x = rand() % ( elems - 1 );
-            y = rand() % ( numArenas - 1 );
+            x = rand() % ( numCellsPerArena );
+            y = rand() % ( numArenas );
             client = a[x][y];
         }
         mem.Free( client );
         b[x][y] = false;
     }
 
+    // Print
     mem.DebugPrint();
-    mem.DefragForce();
-    mem.DebugPrint();
-    mem.UnsafeFreeAll();
-    //std::cout << mem.NumFreeCells();
-    //mem.UnsafeFreeAll();
-    //mem.DebugPrint();
-    //mem.DefragForce();
-    //mem.Print();
 
+    // Trigger Defrag
+    mem.DefragForce();
+
+    // Print
+    mem.DebugPrint();
+
+    // Free all remaining unsafe but it's ok because we're done.
+    mem.UnsafeFreeAll();
+
+    // Print
+    mem.DebugPrint();
+}
+
+void TestFixedClientUpdateAfterDefrag() {
     // Test2: Proper client update after defrag
-    /*
-    FFixedAllocMemoryPool mem( 10, 1, 10 );
+    FFixedAllocMemoryPool mem( 10_B, 10, 1_MB );
+    mem.AllocOneArenaIfNecessary();
     uint8** a_client[10];
 
     for( int i = 0; i < 5; ++i ) {
         a_client[i] = mem.Malloc();
-        **a_client[i] = 0;
+        **(a_client[i]) = 0;
     }
 
     uint8** data_client = mem.Malloc();
@@ -74,24 +88,32 @@ int main( int argc, char *argv[] ) {
     for( int i = 0; i < 5; ++i )
         mem.Free( a_client[i] );
 
-    mem.Print();
+    mem.DebugPrint();
     std::cout << (int)**data_client << std::endl;
     mem.DefragForce();
-    mem.Print();
+    mem.DebugPrint();
     std::cout << (int)**data_client << std::endl;
 
     for( int i = 0; i < 5; ++i ) {
         a_client[i] = mem.Malloc();
         **a_client[i] = 0;
     }
-    mem.Print();
+    mem.DebugPrint();
     std::cout << (int)**data_client << std::endl;
 
     for( int i = 0; i < 5; ++i )
         mem.Free( a_client[i] );
     mem.Free( data_client );
-    */
+    mem.DebugPrint();
+}
 
+int main( int argc, char *argv[] ) {
+    srand( time( NULL ) );
+
+    //TestFixedDefragRate();
+    TestFixedClientUpdateAfterDefrag();
+
+    /*
     // Test3: Basic Shrinkable
     // metapad = 12
     /*

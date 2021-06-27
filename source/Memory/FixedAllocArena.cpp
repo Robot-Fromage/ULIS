@@ -73,13 +73,6 @@ FFixedAllocArena::IsResident( tClient iClient ) const
     return  IsCellMetaBaseResident( ( *iClient ) - smMetaPadSize );
 }
 
-//static
-bool
-FFixedAllocArena::IsFree( tClient iClient )
-{
-    return  IsCellMetaBaseFree( ( *iClient ) - smMetaPadSize );
-}
-
 byte_t
 FFixedAllocArena::ArenaSize() const
 {

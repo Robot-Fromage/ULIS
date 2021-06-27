@@ -97,7 +97,7 @@ public:
     FFixedAllocArena& operator=( const FFixedAllocArena& ) = delete;
 
 
-
+public:
     // Public Check API
     /*! Checks wether the arena is full or not. */
     bool IsFull() const;
@@ -107,9 +107,6 @@ public:
 
     /*! Checks wether a client resides in this arena. */
     bool IsResident( tClient iClient ) const;
-
-    /*! Checks wether a client is free or not. */
-    static bool IsFree( tClient iClient );
 
 
 
