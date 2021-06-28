@@ -241,6 +241,8 @@ namespace ULIS_NAMESPACE_NAME {}
 /////////////////////////////////////////////////////
 // Assert Behaviours
 
+#define ULIS_WARNING( cond, log )
+
 #if ( !defined( ULIS_EMSCRIPTEN ) ) && ( defined( ULIS_DEBUG ) || defined( ULIS_RELWITHDEBINFO ) || defined( ULIS_FORCE_ASSERT ) )
     #define ULIS_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS_CRASH; }
     #define ULIS_ASSERT_RETURN_ERROR( cond, log, ret )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS_CRASH; return  ret; }
