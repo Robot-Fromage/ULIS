@@ -68,11 +68,8 @@ private:
     class FIterator
     {
     public:
-        /*! Constructor from metaBase */
-        BufferIterator( tMetaBase* iMetaBase );
-
-        /*! Constructor from client*/
-        BufferIterator( tClient* iClient );
+        FIterator( tMetaBase* iMetaBase );
+        FIterator( tClient* iClient );
 
     public:
         // Public Methods
@@ -84,22 +81,22 @@ private:
         void SetPrevSize( uint32 iSize );
         void SetNextSize( uint32 iSize );
         void SetClient( tClient iClient );
-        bool HasReachedEndSentinel();
-        bool HasReachedBeginSentinel();
-        bool IsFree();
-        bool IsUsed();
+        bool HasReachedEndSentinel() const;
+        bool HasReachedBeginSentinel() const;
+        bool IsFree() const;
+        bool IsUsed() const;
         tData Allocation();
         const tData Allocation() const;
 
     private:
         /*!
-            This mCarriage member of type uint8_t* will point to parts of the buffer that is passed as an argument
+            This mMetaBase member of type uint8_t* will point to parts of the buffer that is passed as an argument
             to the constructor of the FIterator instance. Although the type is uint8_t*, it will remaine valid as
             a way to iterate through any buffer initially passed as a void* type. The uint8_t* type allows to use
             pointer arithmetics directly on it without additional reinterpret casts, and uint8_t* increments in steps
             of one byte.
         */
-        tMetaBase mCarriage; ///< carret for metaBase.
+        tMetaBase mMetaBase; ///< carret for metaBase.
     };
 
 public:

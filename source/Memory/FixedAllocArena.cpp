@@ -14,6 +14,71 @@
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
+FFixedAllocArena::FIterator::FIterator( tMetaBase* iMetaBase );
+FFixedAllocArena::FIterator::FIterator( tClient* iClient );
+FFixedAllocArena::FIterator&
+FFixedAllocArena::FIterator::operator++();
+FFixedAllocArena::FIterator&
+FFixedAllocArena::FIterator::operator--();
+uint32_t
+FFixedAllocArena::FIterator::PrevSize() const {
+    return  *( uint32* )( mMetaBase + smMetaClientPadSize );
+}
+
+uint32_t
+FFixedAllocArena::FIterator::NextSize() const {
+    return  *( uint32* )( mMetaBase + smMetaClientPadSize );
+}
+
+tClient
+FFixedAllocArena::FIterator::Client() const {
+    return  *( tClient* )( mMetaBase );
+}
+
+void
+FFixedAllocArena::FIterator::SetPrevSize( uint32 iSize ) {
+    *( uint32* )( mMetaBase + smMetaClientPadSize ) = iSize;
+}
+
+void
+FFixedAllocArena::FIterator::SetNextSize( uint32 iSize ) {
+    *( uint32* )( mMetaBase + smMetaClientPadSize ) = iSize;
+}
+
+void
+FFixedAllocArena::FIterator::SetClient( tClient iClient ) {
+    *( iClient* )( mMetaBase ) = iClient;
+}
+
+bool
+FFixedAllocArena::FIterator::HasReachedEndSentinel() const {
+    return  NextSize() == 0;
+}
+
+bool
+FFixedAllocArena::FIterator::HasReachedBeginSentinel() const {
+    return  PrevSize() == 0;
+}
+
+bool
+FFixedAllocArena::FIterator::IsFree() const {
+    return  *( iClient* )( mMetaBase ) == nullptr;
+}
+
+bool
+FFixedAllocArena::FIterator::IsUsed() const {
+    return  *( iClient* )( mMetaBase ) != nullptr;
+}
+
+tData
+FFixedAllocArena::FIterator::Allocation() {
+    return  IsUsed() ? *iClient : nullptr;
+}
+
+const tData Allocation() const {
+    return  IsUsed() ? *iClient : nullptr;
+}
+
 FFixedAllocArena::~FFixedAllocArena()
 {
     ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
