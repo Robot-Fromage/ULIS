@@ -246,12 +246,42 @@ FFixedAllocMemoryPool::FreeOneArenaIfNecessary()
     if( uint64(TotalMemory()) > uint64(TargetMemoryUsage()) ) {
         for( auto it = mArenaPool.begin(); it != mArenaPool.end(); ++it ) {
             if( (*it)->IsEmpty() ) {
+                delete (*it);
                 mArenaPool.erase( it );
                 return  true;
             }
         }
     }
     return  false;
+}
+
+uint32
+FFixedAllocMemoryPool::AllocArenasToReachMemoryTarget()
+{
+    // Serious overflow risk on count.
+    uint32 count = 0;
+    while( uint64(TotalMemory()) < uint64(TargetMemoryUsage()) ) {
+        mArenaPool.push_back( new FFixedAllocArena( byte_t( mArenaSize ), byte_t( mAllocSize ) ) );
+        count++;
+    }
+    return  count;
+}
+
+uint32
+FFixedAllocMemoryPool::FreeEmptyArenas()
+{
+    std::list< FFixedAllocArena* > toDelete;
+    for( auto it = mArenaPool.begin(); it != mArenaPool.end(); ++it ) {
+        if( (*it)->IsEmpty() ) {
+            toDelete.push_back( (*it) );
+        }
+    }
+    uint32 count = static_cast< uint32 >( toDelete.size() );
+    while( toDelete.size() ) {
+        delete (*(toDelete.begin()));
+        toDelete.erase( toDelete.begin() );
+    }
+    return  count;
 }
 
 void

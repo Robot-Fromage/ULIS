@@ -161,7 +161,16 @@ public:
     */
     bool FreeOneArenaIfNecessary();
 
+    /*!
+        Alloc N empty arenas until memory target is reached.
+        Return the number of allocated arenas.
+    */
+    uint32 AllocArenasToReachMemoryTarget();
 
+    /*!
+        Free all arenas that are empty.
+    */
+    uint32 FreeEmptyArenas();
 
     // Debug API
     void DebugPrint() const;
