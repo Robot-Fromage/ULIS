@@ -40,15 +40,9 @@ ULIS_NAMESPACE_BEGIN
 ///                 - [client] is a pointer to the allocation, that allows tracking a moving alloc in case of a defrag
 ///                 - [prev] is a delta in bytes to the prev metabase
 ///                 - [next] is a delta in bytes to the next metabase
-///             The very first element of the buffer should have a prev delta of zero.
-///             We also need a way to identify the case when we reach the end of the arena.
-///             We could either:
-///                 Store the total arena size at the very beginning of the buffer, but this will require to iterate all prevs      NO
-///                 Store pointers to prev / next instead of uint32 deltas, but this will double the meta pad size.                 MAYBE
-///                 Store extra 1 bit for every meta, but this will shift all allocs and nothing will be aligned                    NO
-///                 Store prev delta uint32 and next as pointer, but this will require 50% more meta pad size and desync prev/next  NO
-///                 Have FShrinkableAllocArena be a template class with a template arena size param accessible from static func     MAYBE
-///                 Always have a sentinel at the very end of the buffer, with a next meta size of ZERO                             [YES]
+///             The very first element of the buffer should have a prev delta of zero, it acts as a sentinel.
+///             We also need a way to identify the case when we reach the end of the arena, so we add another sentinel at the end
+///             with a next meta size of 0. No other allocation can have a next meta size of 0.
 ///
 ///             FShrinkableAllocArena has public methods to estimate the local
 ///             fragmentation of the memory. Fragmentation matters here is an arena with
@@ -191,6 +185,8 @@ private:
     // Private Check API
     bool IsMetaBaseResident( tMetaBase iMetaBase ) const;
     static bool IsMetaBaseFree( tMetaBase iMetaBase );
+    static bool IsBeginSentinel( tMetaBase iMetaBase );
+    static bool IsEndSentinel( tMetaBase iMetaBase );
 
 
 

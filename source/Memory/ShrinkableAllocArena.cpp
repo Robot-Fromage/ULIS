@@ -37,9 +37,19 @@ FShrinkableAllocArena::FShrinkableAllocArena(
     ULIS_ASSERT( mMaxAllocSize > 0, "Bad Size !" );
     ULIS_ASSERT( static_cast< uint64 >( mMaxAllocSize ) + static_cast< uint64 >( smMetaTotalPadSize ) < static_cast< uint64 >( mArenaSize ), "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
-    memset( mBlock, 0, smMetaClientPadSize );
-    *( uint32* )( mBlock + smMetaClientPadSize ) = 0;
-    *( uint32* )( mBlock + smMetaClientPadSize + smMetaPrevDeltaPadSize ) = static_cast< uint32 >( mArenaSize ) - static_cast< uint32 >( smMetaTotalPadSize );
+    uint32 initialFreeBufferSize = static_cast< uint32 >( mArenaSize ) - static_cast< uint32 >( smMetaTotalPadSize ) * 2;
+    tMetaBase beginSentinel = mBlock;
+    tMetaBase endSentinel = mBlock + initialFreeBufferSize;
+
+    // Begin Sentinel
+    memset( beginSentinel, 0, smMetaClientPadSize );
+    *( uint32* )( beginSentinel + smMetaClientPadSize ) = 0;
+    *( uint32* )( beginSentinel + smMetaClientPadSize + smMetaPrevDeltaPadSize ) = initialFreeBufferSize;
+
+    // End Sentinel
+    memset( endSentinel, 0, smMetaClientPadSize );
+    *( uint32* )( endSentinel + smMetaClientPadSize ) = initialFreeBufferSize;
+    *( uint32* )( endSentinel + smMetaClientPadSize + smMetaPrevDeltaPadSize ) = 0;
 }
 
 FShrinkableAllocArena::FShrinkableAllocArena(
@@ -361,6 +371,21 @@ FShrinkableAllocArena::IsMetaBaseFree( tMetaBase iMetaBase )
     ULIS_ASSERT( iMetaBase, "Bad input" );
     return  *reinterpret_cast< tClient* >( iMetaBase ) == nullptr;
 }
+
+//static
+bool
+FShrinkableAllocArena::IsBeginSentinel( tMetaBase iMetaBase )
+{
+    return  *(uint32*)( iMetaBase + smMetaClientPadSize ) == 0;
+}
+
+//static
+bool
+FShrinkableAllocArena::IsEndSentinel( tMetaBase iMetaBase )
+{
+    return  *(uint32*)( iMetaBase + smMetaClientPadSize + smMetaPrevDeltaPadSize ) == 0;
+}
+
 
 tMetaBase
 FShrinkableAllocArena::FirstEmptyMetaBaseMinAlloc( byte_t iMinimumSizeBytes, tMetaBase iFrom )
