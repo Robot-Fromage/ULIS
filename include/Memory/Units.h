@@ -196,28 +196,28 @@ private:
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator+( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iValue + iUnit.Value();
+          iValue + iUnit.Value()
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator-( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iValue - iUnit.Value();
+          iValue - iUnit.Value()
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator*( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iValue * iUnit.Value();
+          iValue * iUnit.Value()
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iValue / iUnit.Value();
+          iValue / iUnit.Value()
     );
 }
 
@@ -225,28 +225,28 @@ TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( double iValue,
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator+( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iUnit.Value() + iValue;
+          iUnit.Value() + iValue
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator-( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iUnit.Value() - iValue;
+          iUnit.Value() - iValue
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator*( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iUnit.Value() * iValue;
+          iUnit.Value() * iValue
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iUnit.Value() / iValue;
+          iUnit.Value() / iValue
     );
 }
 
@@ -254,28 +254,28 @@ TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( const TBinaryI
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator+( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iA.Value() + iB.Value();
+          iA.Value() + iB.Value()
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator-( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iA.Value() - iB.Value();
+          iA.Value() - iB.Value()
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator*( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iA.Value() * iB.Value();
+          iA.Value() * iB.Value()
     );
 }
 
 template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
 TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
     return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
-          iA.Value() / iB.Value();
+          iA.Value() / iB.Value()
     );
 }
 
