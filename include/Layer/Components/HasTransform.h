@@ -108,8 +108,8 @@ public:
 
 public:
     // Advanced Positioning
-    void TargetLocal( const FVec2F& iTarget );  // From local
-    void Target( const FVec2F& iTarget );       // From external
+    void TargetLocal( const FVec2F& iTarget );  // target local from input local point
+    void Target( const FVec2F& iTarget );       // target local from input external point
 
 public:
     // Frame of ref API

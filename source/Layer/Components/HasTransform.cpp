@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/Components/HasTransform.h"
+#include <cmath>
 
 ULIS_NAMESPACE_BEGIN
 
@@ -156,12 +157,12 @@ IHasTransform::TranslateY( float iDelta ) {
 
 void
 IHasTransform::Move( const FVec2F& iDelta ) {
-    mInfo.translation += VecFromLocal( iDelta );
+    mInfo.translation += Right() * iDelta.x + Down() * iDelta.y;
 }
 
 void
 IHasTransform::Move( float iDeltaRight, float iDeltaDown ) {
-    mInfo.translation += VecFromLocal( FVec2F( iDeltaRight, iDeltaDown ) );
+    mInfo.translation += Right() * iDeltaRight + Down() * iDeltaDown;
     Invoke( mInfo );
 }
 
@@ -350,15 +351,17 @@ IHasTransform::ScaleY() const {
 // Advanced Positioning
 void
 IHasTransform::TargetLocal( const FVec2F& iTarget ) {
-
+    if( iTarget != FVec2F(0) )
+    {
+        float angle = acos( ( FVec3F( 1, 0, 0 ).DotProduct( FVec3F( iTarget, 0 ) ) / iTarget.Distance() ) );
+        if (iTarget.y > 0) SetRotation( abs(angle) );
+        if (iTarget.y < 0) SetRotation( -abs(angle) );
+    }
 }
 
 void
 IHasTransform::Target( const FVec2F& iTarget ) {
-    if( iTarget != FVec2F(0) )
-    {
-    // produit scalaire & vecto à chercher dans FVec2F
-    }
+    TargetLocal( PointToLocal( iTarget ) );
 }
 
 // Frame of ref API
@@ -395,32 +398,32 @@ IHasTransform::ExternalYAxis() const {
 // Conversion API
 FVec3F
 IHasTransform::ToLocal( const  FVec3F& iHPoint ) const {
-    return FVec3F( Matrix() * iHPoint );
+    return FVec3F( InverseMatrix() * iHPoint );
 }
 
 FVec3F
 IHasTransform::FromLocal( const  FVec3F& iHPoint ) const {
-    return FVec3F( InverseMatrix() * iHPoint );
+    return FVec3F( Matrix() * iHPoint );
 }
 
 FVec2F
 IHasTransform::PointToLocal( const FVec2F& iPoint ) const {
-    return FVec2F( Matrix() * FVec3F( iPoint, 1 ) );
-}
-
-FVec2F
-IHasTransform::PointFromLocal( const FVec2F& iPoint ) const {
     return FVec2F( InverseMatrix() * FVec3F( iPoint, 1 ) );
 }
 
 FVec2F
+IHasTransform::PointFromLocal( const FVec2F& iPoint ) const {
+    return FVec2F( Matrix() * FVec3F( iPoint, 1 ) );
+}
+
+FVec2F
 IHasTransform::VecToLocal( const FVec2F& iVec ) const {
-    return FVec2F( Matrix() * FVec3F( iVec, 0 ) );
+    return FVec2F( InverseMatrix() * FVec3F( iVec, 0 ) );
 }
 
 FVec2F
 IHasTransform::VecFromLocal( const FVec2F& iVec ) const {
-    return FVec2F( InverseMatrix() * FVec3F( iVec, 0 ) );
+    return FVec2F( Matrix() * FVec3F( iVec, 0 ) );
 }
 
 // Intermediate Matrix API
