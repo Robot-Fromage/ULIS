@@ -171,7 +171,7 @@ public:
     float LocalFragmentation() const;
 
     /*! Trigger local defragmentation. */
-    void DefragSelf();
+    void DefragSelfForce();
 
 
 

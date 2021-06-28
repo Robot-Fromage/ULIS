@@ -248,12 +248,34 @@ FShrinkableAllocArena::LocalFragmentation() const
 }
 
 void
-FShrinkableAllocArena::DefragSelf()
+FShrinkableAllocArena::DefragSelfForce()
 {
-    //uint32 lindex = 0;
-    //uint32 rindex = ULIS_UINT32_MAX;
-    //while( LargestFreeChunk() != mNumAvailableCells )
-    //    Swap( LastFullChunkMetaBase( rindex, &rindex ), FirstEmptyChunkMetaBase( lindex, &lindex ), mAllocSize );
+    // Align all allocs to the left of the buffer.
+    // Use memmove to avoid overlapping self sector.
+    // pass contiguous blocks.
+    // first find a src ( first empty after contiguous used ).
+    // then find a dst ( first [next] used after src. ).
+    tMetaBase metaBase = mBlock;
+    tMetaBase src = nullptr;
+    tMetaBase dst = nullptr;
+    while( IsInRange( metaBase ) ) {
+        bool bFree = IsMetaBaseFree( metaBase );
+        if( bFree ) {
+            dst = metaBase;
+            src = metaBase;
+            uint32 dstChunkSize = *(uint32*)( dst + smMetaClientPadSize + smMetaPrevDeltaPadSize );
+            uint32 ctgRun = 0;
+            while( IsInRange( src ) ) {
+                ctgRun += MetaBaseSize( src ) + smMetaTotalPadSize;
+                src = NextMetaBase( src );
+            }
+            memmove( dst, src, ctgRun + smMetaTotalPadSize );
+            *(uint32*)( src + smMetaClientPadSize + smMetaPprevDeltaPadSize ) += dstChunkSize;
+            metaBase = src;
+        } else {
+            metaBase = NextMetaBase( metaBase );
+        }
+    }
 }
 
 void
@@ -267,13 +289,13 @@ FShrinkableAllocArena::DebugPrint( bool iShort, int iCol ) const
         int index = 0;
         tMetaBase metaBase = mBlock;
         while( IsInRange( metaBase ) ) {
-            bool avail = IsMetaBaseFree( metaBase );
+            bool bFree = IsMetaBaseFree( metaBase );
             uint32 size = MetaBaseSize( metaBase );
             uint32 i = index;
             for( ; i < index + ( size + smMetaTotalPadSize ); ++i )
-                raw_buf[i] = avail;
+                raw_buf[i] = bFree;
             index = i;
-            metaBase = AdvanceMetaBase( metaBase );
+            metaBase = NextMetaBase( metaBase );
         }
 
         char* display_buf = new char[iCol];
@@ -295,10 +317,10 @@ FShrinkableAllocArena::DebugPrint( bool iShort, int iCol ) const
         std::cout << "[";
         tMetaBase metaBase = mBlock;
         while( IsInRange( metaBase ) ) {
-            bool avail = IsMetaBaseFree( metaBase );
+            bool bFree = IsMetaBaseFree( metaBase );
             uint32 size = MetaBaseSize( metaBase );
-            char disp   = avail ? '-' : '+';
-            char beg    = avail ? '0' : '@';
+            char disp   = bFree ? '-' : '+';
+            char beg    = bFree ? '0' : '@';
             std::cout << beg;
             for( uint32 i = 0; i < size + smMetaTotalPadSize - 1; ++i )
                 std::cout << disp;
