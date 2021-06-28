@@ -76,7 +76,7 @@ FFixedAllocArena::IsResident( tClient iClient ) const
 byte_t
 FFixedAllocArena::ArenaSize() const
 {
-    return  mArenaSize;
+    return  byte_t( static_cast< double >( mArenaSize ) );
 }
 
 byte_t
