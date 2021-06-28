@@ -150,7 +150,7 @@ public:
         Obtain an client to an allocation within this arena.
         If full or a failure occurs, returns nullptr.
     */
-    tClient Malloc();
+    tClient Malloc( byte_t iAllocSize );
 
     /*!
         Free an allocation and its associated client.
@@ -191,7 +191,6 @@ private:
     static tMetaBase NextMetaBase( const tMetaBase iMetaBase );
     static tMetaBase PrevMetaBase( const tMetaBase iMetaBase );
     static uint64 MetaBaseSize( const tMetaBase iMetaBase );
-    void InitializeCleanCellsMetaBase();
 
 private:
     // Private Data Members
