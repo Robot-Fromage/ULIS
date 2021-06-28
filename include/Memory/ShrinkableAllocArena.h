@@ -33,14 +33,22 @@ ULIS_NAMESPACE_BEGIN
 ///             about the memory status and allocation status, to ensure a fixed
 ///             number of fixed allocations cells are available.
 ///
-///             The layout of the buffer is like so:
+///             The layout of the buffer is defined as follows:
 ///             - [meta][data]
 ///             - [data] contains the real data used by the allocation or tile.
 ///             - [meta] stores meta information about the allocation such as [client][prev][next]:
 ///                 - [client] is a pointer to the allocation, that allows tracking a moving alloc in case of a defrag
 ///                 - [prev] is a delta in bytes to the prev metabase
 ///                 - [next] is a delta in bytes to the next metabase
-///             The very first elem ent of the buffer also has a prev delta of zero.
+///             The very first element of the buffer should have a prev delta of zero.
+///             We also need a way to identify the case when we reach the end of the arena.
+///             We could either:
+///                 Store the total arena size at the very beginning of the buffer, but this will require to iterate all prevs      NO
+///                 Store pointers to prev / next instead of uint32 deltas, but this will double the meta pad size.                 MAYBE
+///                 Store extra 1 bit for every meta, but this will shift all allocs and nothing will be aligned                    NO
+///                 Store prev delta uint32 and next as pointer, but this will require 50% more meta pad size and desync prev/next  NO
+///                 Have FShrinkableAllocArena be a template class with a template arena size param accessible from static func     MAYBE
+///                 Always have a sentinel at the very end of the buffer, with a next meta size of ZERO                             [YES]
 ///
 ///             FShrinkableAllocArena has public methods to estimate the local
 ///             fragmentation of the memory. Fragmentation matters here is an arena with
@@ -95,7 +103,7 @@ public:
         fixed cells allocations, that is a proper arena size for the buffers plus extra meta pad size.
     */
     FShrinkableAllocArena(
-          byte_t iAllocSize
+          byte_t iMaxAllocSize
         , uint32 iExpectedNumMaxAllocs
     );
 
@@ -187,7 +195,7 @@ private:
 
 
     // Private Memory API
-    tMetaBase FirstEmptyMetaBaseMinAlloc( byte_t iMinimumSizeBytes = ULIS_UINT64_MAX, tMetaBase iFrom = nullptr ); // default max clamped to MaxAllocSize, default from to mBlock ( LowAdress )
+    tMetaBase FirstEmptyMetaBaseMinAlloc( byte_t iMinimumSizeBytes = static_cast< double >( ULIS_UINT64_MAX ), tMetaBase iFrom = nullptr ); // default max clamped to MaxAllocSize, default from to mBlock ( LowAdress )
     static tMetaBase NextMetaBase( const tMetaBase iMetaBase );
     static tMetaBase PrevMetaBase( const tMetaBase iMetaBase );
     static uint64 MetaBaseSize( const tMetaBase iMetaBase );
