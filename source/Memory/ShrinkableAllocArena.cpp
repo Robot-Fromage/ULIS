@@ -47,7 +47,7 @@ FShrinkableAllocArena::FShrinkableAllocArena(
     *( uint32* )( beginSentinel + smMetaClientPadSize + smMetaPrevDeltaPadSize ) = initialFreeBufferSize;
 
     // End Sentinel
-    memset( endSentinel, 0, smMetaClientPadSize );
+    *( uint64* )( endSentinel ) = ULIS_UINT64_MAX; // Should not register as a free alloc.
     *( uint32* )( endSentinel + smMetaClientPadSize ) = initialFreeBufferSize;
     *( uint32* )( endSentinel + smMetaClientPadSize + smMetaPrevDeltaPadSize ) = 0;
 }
@@ -81,7 +81,7 @@ FShrinkableAllocArena::FShrinkableAllocArena(
     *( uint32* )( beginSentinel + smMetaClientPadSize + smMetaPrevDeltaPadSize ) = initialFreeBufferSize;
 
     // End Sentinel
-    memset( endSentinel, 0, smMetaClientPadSize );
+    *( uint64* )( endSentinel ) = ULIS_UINT64_MAX; // Should not register as a free alloc.
     *( uint32* )( endSentinel + smMetaClientPadSize ) = initialFreeBufferSize;
     *( uint32* )( endSentinel + smMetaClientPadSize + smMetaPrevDeltaPadSize ) = 0;
 }
