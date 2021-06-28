@@ -194,7 +194,7 @@ private:
     tMetaBase FirstEmptyMetaBaseMinAlloc( byte_t iMinimumSizeBytes = static_cast< double >( ULIS_UINT64_MAX ), tMetaBase iFrom = nullptr ); // default max clamped to MaxAllocSize, default from to mBlock ( LowAdress )
     static tMetaBase NextMetaBase( const tMetaBase iMetaBase );
     static tMetaBase PrevMetaBase( const tMetaBase iMetaBase );
-    static uint64 MetaBaseSize( const tMetaBase iMetaBase );
+    static uint32 MetaBaseSize( const tMetaBase iMetaBase );
 
 private:
     // Private Data Members
