@@ -125,6 +125,11 @@ struct TBinaryInformationUnit
         return  static_cast< uint64 >( FMath::Ceil( value ) );
     }
 
+    operator uint32() const {
+        ULIS_WARNING( true, "Warning: cast to 32 bits may overflow" );
+        return  static_cast< uint32 >( FMath::Ceil( value ) );
+    }
+
     template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
     bool operator==( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
         return  *this == TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther );
@@ -139,26 +144,22 @@ struct TBinaryInformationUnit
         return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( -value );
     }
 
-    template< typename T >
-    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator+=( T iValue ) {
+    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator+=( double iValue ) {
         value += static_cast< double >( iValue );
         return  *this;
     }
 
-    template< typename T >
-    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator-=( T iValue ) {
+    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator-=( double iValue ) {
         value -= static_cast< double >( iValue );
         return  *this;
     }
 
-    template< typename T >
-    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator*=( T iValue ) {
+    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator*=( double iValue ) {
         value *= static_cast< double >( iValue );
         return  *this;
     }
 
-    template< typename T >
-    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator/=( T iValue ) {
+    TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& operator/=( double iValue ) {
         value /= static_cast< double >( iValue );
         return  *this;
     }
@@ -190,6 +191,93 @@ struct TBinaryInformationUnit
 private:
     double value;
 };
+
+// Binary Operators with scalar on left hand side
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator+( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iValue + iUnit.Value();
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator-( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iValue - iUnit.Value();
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator*( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iValue * iUnit.Value();
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( double iValue, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iValue / iUnit.Value();
+    );
+}
+
+// Binary Operators with scalar on right hand side
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator+( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iUnit.Value() + iValue;
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator-( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iUnit.Value() - iValue;
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator*( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iUnit.Value() * iValue;
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iUnit, double iValue ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iUnit.Value() / iValue;
+    );
+}
+
+// Binary Operators with self type
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator+( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iA.Value() + iB.Value();
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator-( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iA.Value() - iB.Value();
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator*( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iA.Value() * iB.Value();
+    );
+}
+
+template< eMetricSystemStandard SELF_STD, uint8 SELF_POW, uint8 SELF_SEQ >
+TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator/( const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iA, const TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >& iB ) {
+    return  TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >(
+          iA.Value() / iB.Value();
+    );
+}
 
 /////////////////////////////////////////////////////
 /// Typedefs
