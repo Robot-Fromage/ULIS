@@ -162,7 +162,7 @@ public:
         Shrink an alloc and return if succesful or not.
         If not succesfull, the alloc remains as before and is still valid, it just didn't shrink.
     */
-    static bool Shrink( uint8* iAlloc, byte_t iNewSizeBytes );
+    static void Shrink( tClient iClient, byte_t iNewSize );
 
 
 
