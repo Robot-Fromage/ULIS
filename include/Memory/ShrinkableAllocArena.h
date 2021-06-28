@@ -18,11 +18,11 @@ ULIS_NAMESPACE_BEGIN
 /// @class      FShrinkableAllocArena
 /// @brief      The FShrinkableAllocArena provides a  configurable Arena buffer that manages
 ///             allocations with a maximal size, that can shrink over time.
-///             It is meant to be used for RLE tiles or any objects with a know maximal size
+///             It is meant to be used for RLE tiles or any objects with a known maximal size
 ///             that can shrink. It is perfect for RLE because we know the max size of an
 ///             incompressible tile, but we don't know the min size until the compression is done.
 ///             A collection of such shrinkable allocs is subject to a high fragmentation rate.
-/// @details    FShrinkableAllocArena allocs initially fixed max size allocations inside its block,*
+/// @details    FShrinkableAllocArena allocs initially fixed max size allocations inside its block,
 ///             and returns "clients" to the allocation, that is, a pointer to an
 ///             allocation.
 ///             Using such clients allows us to regularly defragment the Arena,
@@ -45,7 +45,7 @@ ULIS_NAMESPACE_BEGIN
 ///             with a next meta size of 0. No other allocation can have a next meta size of 0.
 ///
 ///             FShrinkableAllocArena has public methods to estimate the local
-///             fragmentation of the memory. Fragmentation matters here is an arena with
+///             fragmentation of the memory. Fragmentation matters here in an arena with
 ///             variable size even within a single Arena. The method used to determine
 ///             fragmentation is arbitrary but serves the purpose of estimating when a
 ///             defragmentation pass is necessary. It is not as straightforward as for
