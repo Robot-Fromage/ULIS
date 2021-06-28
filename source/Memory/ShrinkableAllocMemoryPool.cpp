@@ -110,10 +110,10 @@ FShrinkableAllocMemoryPool::SetDefragThreshold( float iValue )
     mDefragThreshold = FMath::Clamp( iValue, 0.f, 1.f );
 }
 
-FShrinkableAllocArena::tClient
+tClient
 FShrinkableAllocMemoryPool::Malloc()
 {
-    FShrinkableAllocArena::tClient alloc = nullptr;
+    tClient alloc = nullptr;
     for( auto it : mArenaPool ) {
         alloc = it->Malloc();
         if( alloc )
@@ -124,7 +124,7 @@ FShrinkableAllocMemoryPool::Malloc()
 }
 
 void
-FShrinkableAllocMemoryPool::Free( FShrinkableAllocArena::tClient iClient )
+FShrinkableAllocMemoryPool::Free( tClient iClient )
 {
     uint64 adress = reinterpret_cast< uint64 >( *iClient );
     for( auto it : mArenaPool )
