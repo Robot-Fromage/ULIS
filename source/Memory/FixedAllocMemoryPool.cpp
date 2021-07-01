@@ -1,12 +1,12 @@
 // IDDN FR.001.250001.004.S.X.2019.000.00000
-// ULIS is subject to copyloPackSrc_it laws and is the legal and intellectual property of Praxinos,Inc
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
 *__________________
 * @file         FixedAllocMemoryPool.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for FFixedAllocMemoryPool.
-* @copyloPackSrc_it    CopyloPackSrc_it 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Memory/FixedAllocMemoryPool.h"
@@ -40,7 +40,7 @@ FFixedAllocMemoryPool::FFixedAllocMemoryPool(
 
 FFixedAllocMemoryPool::FFixedAllocMemoryPool(
       byte_t iAllocSize
-    , uint32 iNumCellPerArena
+    , uint64 iNumCellPerArena
     , byte_t iTargetMemoryUsage
     , ufloat iDefragThreshold
 )
@@ -80,10 +80,10 @@ FFixedAllocMemoryPool::NumCells() const
 uint64
 FFixedAllocMemoryPool::NumFreeCells() const
 {
-    uint32 avail = 0;
+    uint64 numFree = 0;
     for( auto it : mArenaPool )
-        avail += it->NumFreeCells();
-    return  avail;
+        numFree += it->NumFreeCells();
+    return  numFree;
 }
 
 uint64
@@ -107,7 +107,7 @@ FFixedAllocMemoryPool::FreeMemory() const
 byte_t
 FFixedAllocMemoryPool::UsedMemory() const
 {
-    return  double(TotalMemory()) - double(FreeMemory());
+    return  TotalMemory() - FreeMemory();
 }
 
 byte_t
@@ -139,6 +139,9 @@ FFixedAllocMemoryPool::SetDefragThreshold( ufloat iValue )
 ufloat
 FFixedAllocMemoryPool::Fragmentation() const
 {
+    if( mArenaPool.size() <= 1 )
+        return 0.f;
+
     ufloat sum = 0.f;
     for( auto it : mArenaPool )
         sum += it->OccupationRate();
@@ -161,46 +164,49 @@ FFixedAllocMemoryPool::DefragForce()
     if( mArenaPool.size() <= 1 )
         return;
 
+    // Sort: in decreasing occupation rate:
+    // High occupation rates are at the beginning
+    // Low occupation rates are at the end
+    // That way we minimize the moves and skip full.
     mArenaPool.sort(
         []( FFixedAllocArena* iLhs, FFixedAllocArena* iRhs ) {
             return  iLhs->OccupationRate() > iRhs->OccupationRate();
         }
     );
 
-    auto loPackSrc_it = --mArenaPool.end();
-    auto hiPackDst_it = mArenaPool.begin();
-    const uint32 numCells =
-        static_cast< uint32 >(
+    auto highArena = mArenaPool.begin();
+    auto lowArena = --mArenaPool.end();
+    const uint64 numCells =
+        static_cast< uint64 >(
               static_cast< uint64 >( mArenaSize )
             / static_cast< uint64 >( mAllocSize )
         );
 
-    tMetaBase srcMetaBase = nullptr;
-    tMetaBase dstMetaBase = nullptr;
-    uint32 srcFree = (*loPackSrc_it)->NumFreeCells();
-    uint32 dstUsed = (*hiPackDst_it)->NumUsedCells();
-    while( hiPackDst_it != loPackSrc_it ) {
+    FFixedAllocArena::FIterator src_it = FFixedAllocArena::FIterator::MakeNull();
+    FFixedAllocArena::FIterator dst_it = FFixedAllocArena::FIterator::MakeNull();
+    uint64 srcFree = (*lowArena)->NumFreeCells();
+    uint64 dstUsed = (*highArena)->NumUsedCells();
+    while( highArena != lowArena ) {
         while( srcFree != numCells ) {
             if( dstUsed == numCells ) {
-                if( hiPackDst_it == loPackSrc_it )
+                if( highArena == lowArena )
                     return;
-                ++hiPackDst_it;
-                dstMetaBase = nullptr;
-                dstUsed = (*hiPackDst_it)->NumUsedCells();
+
+                ++highArena;
+                dst_it = FFixedAllocArena::FIterator::MakeNull();
+                dstUsed = (*highArena)->NumUsedCells();
             }
-            srcMetaBase = (*loPackSrc_it)->FirstFullCellMetaBase( srcMetaBase );
-            dstMetaBase = (*hiPackDst_it)->FirstEmptyCellMetaBase( dstMetaBase );
-            FFixedAllocArena::MoveAlloc(
-                  srcMetaBase
-                , dstMetaBase
-                , mAllocSize
-            );
+
+            src_it = (*lowArena)->FindFirst( true, src_it );
+            dst_it = (*highArena)->FindFirst( false, dst_it );
+            FFixedAllocArena::MoveAlloc( src_it, dst_it );
             srcFree++;
             dstUsed++;
         }
-        --loPackSrc_it;
-        srcMetaBase = nullptr;
-        srcFree = (*loPackSrc_it)->NumFreeCells();
+
+        --lowArena;
+        src_it = FFixedAllocArena::FIterator::MakeNull();
+        srcFree = (*lowArena)->NumFreeCells();
     }
 }
 
@@ -233,7 +239,7 @@ FFixedAllocMemoryPool::UnsafeFreeAll()
 bool
 FFixedAllocMemoryPool::AllocOneArenaIfNecessary()
 {
-    if( uint64(TotalMemory()) < uint64(TargetMemoryUsage()) ) {
+    if( TotalMemory() < TargetMemoryUsage() ) {
         mArenaPool.push_back( new FFixedAllocArena( byte_t( mArenaSize ), byte_t( mAllocSize ) ) );
         return  true;
     }
@@ -243,7 +249,7 @@ FFixedAllocMemoryPool::AllocOneArenaIfNecessary()
 bool
 FFixedAllocMemoryPool::FreeOneArenaIfNecessary()
 {
-    if( uint64(TotalMemory()) > uint64(TargetMemoryUsage()) ) {
+    if( TotalMemory() > TargetMemoryUsage() ) {
         for( auto it = mArenaPool.begin(); it != mArenaPool.end(); ++it ) {
             if( (*it)->IsEmpty() ) {
                 delete (*it);
@@ -255,29 +261,38 @@ FFixedAllocMemoryPool::FreeOneArenaIfNecessary()
     return  false;
 }
 
-uint32
-FFixedAllocMemoryPool::AllocArenasToReachMemoryTarget()
+uint64
+FFixedAllocMemoryPool::AllocArenasToReachTargetMemory()
 {
-    // Serious overflow risk on count.
     uint32 count = 0;
-    while( uint64(TotalMemory()) < uint64(TargetMemoryUsage()) ) {
-        mArenaPool.push_back( new FFixedAllocArena( byte_t( mArenaSize ), byte_t( mAllocSize ) ) );
+    while( TotalMemory() < TargetMemoryUsage() ) {
+        mArenaPool.push_back( new FFixedAllocArena( mArenaSize, mAllocSize ) );
         count++;
     }
     return  count;
 }
 
-uint32
-FFixedAllocMemoryPool::FreeEmptyArenas()
-{
+uint64
+FFixedAllocMemoryPool::FreeEmptyArenasToReachTargetMemory() {
+    return  FreeEmptyArenasAccordingToPredicate( [this](){ return  TotalMemory() > TargetMemoryUsage(); } );
+}
+
+uint64
+FFixedAllocMemoryPool::FreeAllEmptyArenas() {
+    return  FreeEmptyArenasAccordingToPredicate( [](){ return  true; } );
+}
+
+uint64
+FFixedAllocMemoryPool::FreeEmptyArenasAccordingToPredicate( std::function< bool() > iPredicate ) {
     std::list< FFixedAllocArena* > toDelete;
     for( auto it = mArenaPool.begin(); it != mArenaPool.end(); ++it ) {
         if( (*it)->IsEmpty() ) {
             toDelete.push_back( (*it) );
         }
     }
-    uint32 count = static_cast< uint32 >( toDelete.size() );
-    while( toDelete.size() ) {
+
+    uint64 count = static_cast< uint64 >( toDelete.size() );
+    while( toDelete.size() && iPredicate() ) {
         delete (*(toDelete.begin()));
         toDelete.erase( toDelete.begin() );
     }

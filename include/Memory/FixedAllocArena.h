@@ -73,13 +73,15 @@ private:
         // Ctors
         FIterator(
               tMetaBase iMetaBase
-            , FFixedAllocArena const * const iArena
+            , FFixedAllocArena const * iArena
         );
 
         FIterator(
               tClient iClient
-            , FFixedAllocArena const * const iArena
+            , FFixedAllocArena const * iArena
         );
+
+        FIterator& operator=( const FIterator& iOther );
 
     public:
         // Static makers
@@ -119,7 +121,7 @@ private:
             of one byte.
         */
         mutable tMetaBase mMetaBase; ///< Pointer in arena block.
-        FFixedAllocArena const * const mArena; ///< Pointer to associated arena.
+        FFixedAllocArena const * mArena; ///< Pointer to associated arena.
     };
 
 public:
@@ -152,7 +154,7 @@ public:
     */
     FFixedAllocArena(
           byte_t iAllocSize
-        , uint32 iNumCells
+        , uint64 iNumCells
     );
 
     /*! Explicitely deleted copy constructor */
@@ -170,9 +172,6 @@ public:
     /*! Checks wether the arena is empty or not. */
     bool IsEmpty() const;
 
-    /*! Checks wether a client resides in this arena. */
-    bool IsResident( tClient iClient ) const;
-
 
 
     // Size API
@@ -183,13 +182,13 @@ public:
     byte_t AllocSize() const;
 
     /*! Obtain the number of total possible cells in the arena. */
-    uint32 NumCells() const;
+    uint64 NumCells() const;
 
     /*! Obtain the number of currently free cells in the arena. */
-    uint32 NumFreeCells() const;
+    uint64 NumFreeCells() const;
 
     /*! Obtain the number of currently used cells in the arena. */
-    uint32 NumUsedCells() const;
+    uint64 NumUsedCells() const;
 
 
 

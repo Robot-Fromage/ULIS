@@ -19,7 +19,7 @@ static constexpr const uint8 sgMetaPadSize = sizeof( tClient ); ///< Constant pa
 
 FFixedAllocArena::FIterator::FIterator(
       tMetaBase iMetaBase
-    , FFixedAllocArena const * const iArena
+    , FFixedAllocArena const * iArena
 )
     : mMetaBase( iMetaBase )
     , mArena( iArena )
@@ -27,11 +27,18 @@ FFixedAllocArena::FIterator::FIterator(
 
 FFixedAllocArena::FIterator::FIterator(
       tClient iClient
-    , FFixedAllocArena const * const iArena
+    , FFixedAllocArena const * iArena
 )
     : mMetaBase( ( *iClient ) - sgMetaPadSize )
     , mArena( iArena )
 {}
+
+FFixedAllocArena::FIterator&
+FFixedAllocArena::FIterator::operator=( const FIterator& iOther ) {
+    mMetaBase = iOther.mMetaBase;
+    mArena = iOther.mArena;
+    return  *this;
+}
 
 //static
 FFixedAllocArena::FIterator
@@ -76,14 +83,12 @@ FFixedAllocArena::FIterator::operator!=( const FIterator& iOther ) const {
 tClient
 FFixedAllocArena::FIterator::Client() {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
     return  *( tClient* )( mMetaBase );
 }
 
 const tClient
 FFixedAllocArena::FIterator::Client() const {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
     return  *( const tClient* )( mMetaBase );
 }
 
@@ -100,28 +105,24 @@ FFixedAllocArena::FIterator::MetaBase() const {
 tAlloc
 FFixedAllocArena::FIterator::Allocation() {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
     return  ( tAlloc )( mMetaBase + sgMetaPadSize );
 }
 
 const tAlloc
 FFixedAllocArena::FIterator::Allocation() const {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
     return  ( tAlloc )( mMetaBase + sgMetaPadSize );
 }
 
 bool
 FFixedAllocArena::FIterator::IsFree() const {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
     return  *( tClient* )( mMetaBase ) == nullptr;
 }
 
 bool
 FFixedAllocArena::FIterator::IsUsed() const {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
     return  *( tClient* )( mMetaBase ) != nullptr;
 }
 
@@ -187,7 +188,7 @@ FFixedAllocArena::FFixedAllocArena(
 
 FFixedAllocArena::FFixedAllocArena(
       byte_t iAllocSize
-    , uint32 iNumCells
+    , uint64 iNumCells
 )
     : mArenaSize(
           static_cast< uint64 >( iAllocSize )
@@ -217,7 +218,7 @@ FFixedAllocArena::IsEmpty() const
 byte_t
 FFixedAllocArena::ArenaSize() const
 {
-    return  byte_t( static_cast< double >( mArenaSize ) );
+    return  mArenaSize;
 }
 
 byte_t
@@ -226,16 +227,16 @@ FFixedAllocArena::AllocSize() const
     return  mAllocSize;
 }
 
-uint32
+uint64
 FFixedAllocArena::NumCells() const
 {
-    return  uint32( mArenaSize / mAllocSize );
+    return  mArenaSize / mAllocSize;
 }
 
-uint32
+uint64
 FFixedAllocArena::NumFreeCells() const
 {
-    uint32 numFreeCells = 0;
+    uint64 numFreeCells = 0;
     const FIterator it = Begin();
     const FIterator end = End();
     while( it != end ) {
@@ -246,7 +247,7 @@ FFixedAllocArena::NumFreeCells() const
     return  numFreeCells;
 }
 
-uint32
+uint64
 FFixedAllocArena::NumUsedCells() const
 {
     return  NumCells() - NumFreeCells();
@@ -356,7 +357,7 @@ FFixedAllocArena::FindFirst( bool iUsed, const FIterator& iFrom )
     ULIS_ASSERT( it.IsResident(), "Non resident from param" );
     const FIterator end = End();
     while( it != end ) {
-        if( it.IsFree() == iUsed )
+        if( it.IsUsed() == iUsed )
             return  it;
         ++it;
     }
@@ -377,25 +378,25 @@ FFixedAllocArena::Initialize()
 FFixedAllocArena::FIterator
 FFixedAllocArena::Begin() {
     // reinterpret_cast
-    return  FIterator( ( tMetaBase* )LowBlockAdress(), this );
+    return  FIterator( ( tMetaBase )LowBlockAdress(), this );
 }
 
 FFixedAllocArena::FIterator
 FFixedAllocArena::End() {
     // const_cast
-    return  FIterator( ( tMetaBase* )HighBlockAdress(), this );
+    return  FIterator( ( tMetaBase )HighBlockAdress(), this );
 }
 
 const FFixedAllocArena::FIterator
 FFixedAllocArena::Begin() const {
     // const_cast + reinterpret_cast
-    return  FIterator( ( tMetaBase* )LowBlockAdress(), this );
+    return  FIterator( ( tMetaBase )LowBlockAdress(), this );
 }
 
 const FFixedAllocArena::FIterator
 FFixedAllocArena::End() const {
     // const_cast + reinterpret_cast
-    return  FIterator( ( tMetaBase* )HighBlockAdress(), this );
+    return  FIterator( ( tMetaBase )HighBlockAdress(), this );
 }
 
 ULIS_NAMESPACE_END

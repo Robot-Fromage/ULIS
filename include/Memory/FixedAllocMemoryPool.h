@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 #include "Memory/FixedAllocArena.h"
 #include <list>
+#include <functional>
 
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
@@ -60,12 +61,12 @@ public:
 
     /*!
         Constructor from alloc size and number of expected cells or allocs.
-        An arena size will be coomputed so that it can fit an expected number of
+        An arena size will be computed so that it can fit an expected number of
         fixed cells allocations.
     */
     FFixedAllocMemoryPool(
           byte_t iAllocSize
-        , uint32 iNumCellPerArena
+        , uint64 iNumCellPerArena
         , byte_t iTargetMemoryUsage = 0
         , ufloat iDefragThreshold = 1/3.f
     );
@@ -165,12 +166,24 @@ public:
         Alloc N empty arenas until memory target is reached.
         Return the number of allocated arenas.
     */
-    uint32 AllocArenasToReachMemoryTarget();
+    uint64 AllocArenasToReachTargetMemory();
 
     /*!
         Free all arenas that are empty.
     */
-    uint32 FreeEmptyArenas();
+    uint64 FreeEmptyArenasToReachTargetMemory();
+
+    /*!
+        Free all arenas that are empty.
+    */
+    uint64 FreeAllEmptyArenas();
+
+    /*!
+        Free arenas according to predicate.
+    */
+    uint64 FreeEmptyArenasAccordingToPredicate( std::function< bool() > iPredicate );
+
+
 
     // Debug API
     void DebugPrint() const;

@@ -132,12 +132,32 @@ struct TBinaryInformationUnit
 
     template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
     bool operator==( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
-        return  *this == TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther );
+        return  this->value == TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).value;
     }
 
     template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
     bool operator!=( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
         !( operator==( iOther ) );
+    }
+
+    template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
+    bool operator<( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
+        return  this->value < TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).value;
+    }
+
+    template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
+    bool operator<=( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
+        return  this->value <= TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).value;
+    }
+
+    template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
+    bool operator>( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
+        return  this->value > TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).value;
+    }
+
+    template< eMetricSystemStandard OTHER_STD, uint8 OTHER_POW, uint8 OTHER_SEQ >
+    bool operator>=( const TBinaryInformationUnit< OTHER_STD, OTHER_POW, OTHER_SEQ >& iOther ) {
+        return  this->value >= TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ >( iOther ).value;
     }
 
     TBinaryInformationUnit< SELF_STD, SELF_POW, SELF_SEQ > operator-() const {
