@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         FixedAllocMemoryPool.cpp
+* @file         FixedAllocArena.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for FixedAllocArena.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
@@ -14,65 +14,155 @@
 #include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
-FFixedAllocArena::FIterator::FIterator( tMetaBase* iMetaBase );
-FFixedAllocArena::FIterator::FIterator( tClient* iClient );
-FFixedAllocArena::FIterator&
-FFixedAllocArena::FIterator::operator++();
-FFixedAllocArena::FIterator&
-FFixedAllocArena::FIterator::operator--();
+// Static Meta Spec
+static constexpr const uint8 sgMetaPadSize = sizeof( tClient ); ///< Constant padding for meta base storage.
 
-uint32_t
-FFixedAllocArena::FIterator::NextSize() const {
-    return  *( uint32* )( mMetaBase + smMetaClientPadSize );
+FFixedAllocArena::FIterator::FIterator(
+      tMetaBase iMetaBase
+    , FFixedAllocArena const * const iArena
+)
+    : mMetaBase( iMetaBase )
+    , mArena( iArena )
+{}
+
+FFixedAllocArena::FIterator::FIterator(
+      tClient iClient
+    , FFixedAllocArena const * const iArena
+)
+    : mMetaBase( ( *iClient ) - sgMetaPadSize )
+    , mArena( iArena )
+{}
+
+//static
+FFixedAllocArena::FIterator
+FFixedAllocArena::FIterator::MakeNull() {
+    return  FIterator( tMetaBase( nullptr ), nullptr );
+}
+
+FFixedAllocArena::FIterator&
+FFixedAllocArena::FIterator::operator++() {
+    mMetaBase += mArena->CellSize();
+    return  *this;
+}
+
+FFixedAllocArena::FIterator&
+FFixedAllocArena::FIterator::operator--() {
+    mMetaBase -= mArena->CellSize();
+    return  *this;
+}
+
+const FFixedAllocArena::FIterator&
+FFixedAllocArena::FIterator::operator++() const {
+    mMetaBase += mArena->CellSize();
+    return  *this;
+}
+
+const FFixedAllocArena::FIterator&
+FFixedAllocArena::FIterator::operator--() const {
+    mMetaBase -= mArena->CellSize();
+    return  *this;
+}
+
+bool
+FFixedAllocArena::FIterator::operator==( const FIterator& iOther ) const {
+    return  mMetaBase == iOther.mMetaBase;
+}
+
+bool
+FFixedAllocArena::FIterator::operator!=( const FIterator& iOther ) const {
+    return  mMetaBase != iOther.mMetaBase;
 }
 
 tClient
-FFixedAllocArena::FIterator::Client() const {
+FFixedAllocArena::FIterator::Client() {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
     return  *( tClient* )( mMetaBase );
 }
 
-void
-FFixedAllocArena::FIterator::SetPrevSize( uint32 iSize ) {
-    *( uint32* )( mMetaBase + smMetaClientPadSize ) = iSize;
+const tClient
+FFixedAllocArena::FIterator::Client() const {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
+    return  *( const tClient* )( mMetaBase );
 }
 
-void
-FFixedAllocArena::FIterator::SetNextSize( uint32 iSize ) {
-    *( uint32* )( mMetaBase + smMetaClientPadSize ) = iSize;
+tMetaBase
+FFixedAllocArena::FIterator::MetaBase() {
+    return  mMetaBase;
 }
 
-void
-FFixedAllocArena::FIterator::SetClient( tClient iClient ) {
-    *( iClient* )( mMetaBase ) = iClient;
+const tMetaBase
+FFixedAllocArena::FIterator::MetaBase() const {
+    return  mMetaBase;
 }
 
-bool
-FFixedAllocArena::FIterator::HasReachedEndSentinel() const {
-    return  NextSize() == 0;
+tAlloc
+FFixedAllocArena::FIterator::Allocation() {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
+    return  ( tAlloc )( mMetaBase + sgMetaPadSize );
 }
 
-bool
-FFixedAllocArena::FIterator::HasReachedBeginSentinel() const {
-    return  PrevSize() == 0;
+const tAlloc
+FFixedAllocArena::FIterator::Allocation() const {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
+    return  ( tAlloc )( mMetaBase + sgMetaPadSize );
 }
 
 bool
 FFixedAllocArena::FIterator::IsFree() const {
-    return  *( iClient* )( mMetaBase ) == nullptr;
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
+    return  *( tClient* )( mMetaBase ) == nullptr;
 }
 
 bool
 FFixedAllocArena::FIterator::IsUsed() const {
-    return  *( iClient* )( mMetaBase ) != nullptr;
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    ULIS_ASSERT( IsResident(), "dereferencing non resident metabase" )
+    return  *( tClient* )( mMetaBase ) != nullptr;
 }
 
-tData
-FFixedAllocArena::FIterator::Allocation() {
-    return  IsUsed() ? *iClient : nullptr;
+bool
+FFixedAllocArena::FIterator::IsValid() const {
+    return  mMetaBase != nullptr;
 }
 
-const tData Allocation() const {
-    return  IsUsed() ? *iClient : nullptr;
+bool
+FFixedAllocArena::FIterator::IsResident() const {
+    return  mMetaBase >= mArena->LowBlockAdress() && mMetaBase < mArena->HighBlockAdress();
+}
+
+uint64
+FFixedAllocArena::FIterator::AllocSize() const {
+    return  mArena->AllocSize();
+}
+
+uint64
+FFixedAllocArena::FIterator::CellSize() const {
+    return  mArena->CellSize();
+}
+
+void
+FFixedAllocArena::FIterator::CleanupMetaBase() {
+    memset( mMetaBase, 0, sgMetaPadSize );
+}
+
+void
+FFixedAllocArena::FIterator::FreeClient() {
+    delete  Client();
+}
+
+void
+FFixedAllocArena::FIterator::ResyncClient() {
+    *Client() = Allocation();
+}
+
+tClient
+FFixedAllocArena::FIterator::AllocClient() {
+    return  IsValid() ? *(tClient*)( mMetaBase ) = new tAlloc( Allocation() ) : nullptr;
 }
 
 FFixedAllocArena::~FFixedAllocArena()
@@ -87,14 +177,12 @@ FFixedAllocArena::FFixedAllocArena(
 )
     : mArenaSize( iArenaSize )
     , mAllocSize( iAllocSize )
-    , mBlock(
-        reinterpret_cast< uint8* >( XMalloc( BlockSize() ) )
-    )
+    , mBlock( ( uint8* )( XMalloc( BlockSize() ) ) )
 {
     ULIS_ASSERT( mArenaSize > 0, "Bad Size !" );
     ULIS_ASSERT( mAllocSize > 0 && mAllocSize <= mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
-    InitializeCleanCellsMetaBase();
+    Initialize();
 }
 
 FFixedAllocArena::FFixedAllocArena(
@@ -106,14 +194,12 @@ FFixedAllocArena::FFixedAllocArena(
         * static_cast< uint64 >( iNumCells )
     )
     , mAllocSize( iAllocSize )
-    , mBlock(
-        reinterpret_cast< uint8* >( XMalloc( BlockSize() ) )
-    )
+    , mBlock( ( uint8* )( XMalloc( BlockSize() ) ) )
 {
     ULIS_ASSERT( mArenaSize > 0, "Bad Size !" );
     ULIS_ASSERT( mAllocSize > 0 && mAllocSize <= mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
-    InitializeCleanCellsMetaBase();
+    Initialize();
 }
 
 bool
@@ -126,12 +212,6 @@ bool
 FFixedAllocArena::IsEmpty() const
 {
     return  NumFreeCells() == NumCells();
-}
-
-bool
-FFixedAllocArena::IsResident( tClient iClient ) const
-{
-    return  IsCellMetaBaseResident( ( *iClient ) - smMetaPadSize );
 }
 
 byte_t
@@ -149,22 +229,19 @@ FFixedAllocArena::AllocSize() const
 uint32
 FFixedAllocArena::NumCells() const
 {
-    return
-        static_cast< uint32 >(
-              static_cast< uint64 >( mArenaSize )
-            / static_cast< uint64 >( mAllocSize )
-        );
+    return  uint32( mArenaSize / mAllocSize );
 }
 
 uint32
 FFixedAllocArena::NumFreeCells() const
 {
     uint32 numFreeCells = 0;
-    uint8 const * const hi = HighBlockAdress();
-    uint64 const cpad = CellPadding();
-    for( tMetaBase metaBase = (tMetaBase)LowBlockAdress(); metaBase < hi; metaBase += cpad )
-        if( IsCellMetaBaseFree( metaBase ) )
-            numFreeCells++;
+    const FIterator it = Begin();
+    const FIterator end = End();
+    while( it != end ) {
+        numFreeCells += it.IsFree();
+        ++it;
+    }
 
     return  numFreeCells;
 }
@@ -175,23 +252,11 @@ FFixedAllocArena::NumUsedCells() const
     return  NumCells() - NumFreeCells();
 }
 
-const uint8*
-FFixedAllocArena::LowBlockAdress() const
-{
-    return  mBlock;
-}
-
-const uint8*
-FFixedAllocArena::HighBlockAdress() const
-{
-    return  mBlock + BlockSize();
-}
-
 tClient
 FFixedAllocArena::Malloc()
 {
-    tMetaBase metaBase = FirstEmptyCellMetaBase();
-    return  metaBase ? *(tClient*)metaBase = new tAlloc( metaBase + smMetaPadSize ) : nullptr;
+    FIterator it = FindFirst( false );
+    return  it.AllocClient();
 }
 
 // static
@@ -199,23 +264,21 @@ void
 FFixedAllocArena::Free( tClient iClient )
 {
     ULIS_ASSERT( iClient, "Cannot free null client." );
-    memset( ( *iClient ) - smMetaPadSize, 0, smMetaPadSize );
-    delete iClient;
+    FIterator it( iClient, nullptr );
+    it.FreeClient();
+    it.CleanupMetaBase();
 }
 
 void
 FFixedAllocArena::UnsafeFreeAll()
 {
-    uint8 const * const hi = HighBlockAdress();
-    uint64 const cpad = CellPadding();
-    for( tMetaBase metaBase = LowBlockAdress(); metaBase < hi; metaBase += cpad ) {
-        if( !IsCellMetaBaseFree( metaBase ) ) {
-            delete  *(tClient*)metaBase;
-            memset( metaBase, 0, smMetaPadSize );
-        }
+    FIterator it = Begin();
+    const FIterator end = End();
+    while( it != end ) {
+        it.FreeClient();
+        it.CleanupMetaBase();
+        ++it;
     }
-    // simon
-    // canada
 }
 
 ufloat
@@ -227,32 +290,16 @@ FFixedAllocArena::OccupationRate() const
 void
 FFixedAllocArena::DebugPrint() const
 {
-    uint8 const * const hi = HighBlockAdress();
-    uint64 const cpad = CellPadding();
-    tMetaBase metaBase = (tMetaBase)LowBlockAdress();
+    FIterator it = Begin();
+    const FIterator end = End();
+    char c[2] = { '+', '-' };
     std::cout << "[";
-    for( ; metaBase < hi; metaBase += cpad ) {
-        if( IsCellMetaBaseFree( metaBase ) ) {
-            std::cout << "-";
-        } else {
-            std::cout << "+";
-        }
+    while( it != end ) {
+        std::cout << c[ it.IsFree() ];
+        ++it;
     }
-    std::cout << "] " << FMath::FloorToInt( OccupationRate() * 100 ) <<"%\n";
-}
-
-bool
-FFixedAllocArena::IsCellMetaBaseResident( tMetaBase iMetaBase ) const
-{
-    return  iMetaBase >= LowBlockAdress() && iMetaBase < HighBlockAdress();
-}
-
-//static
-bool
-FFixedAllocArena::IsCellMetaBaseFree( tMetaBase iMetaBase )
-{
-    ULIS_ASSERT( iMetaBase, "Bad input" );
-    return  *reinterpret_cast< tClient* >( iMetaBase ) == nullptr;
+    std::cout << "]";
+    std::cout << " " << FMath::FloorToInt( OccupationRate() * 100 ) <<"%\n";
 }
 
 uint8*
@@ -267,62 +314,88 @@ FFixedAllocArena::HighBlockAdress()
     return  mBlock + BlockSize();
 }
 
+const uint8*
+FFixedAllocArena::LowBlockAdress() const
+{
+    return  mBlock;
+}
+
+const uint8*
+FFixedAllocArena::HighBlockAdress() const
+{
+    return  mBlock + BlockSize();
+}
+
 uint64
 FFixedAllocArena::BlockSize() const
 {
-    return  mArenaSize + static_cast< uint64 >( smMetaPadSize ) * static_cast< uint64 >( NumCells() );
+    return  mArenaSize + static_cast< uint64 >( sgMetaPadSize ) * static_cast< uint64 >( NumCells() );
 }
 
 uint64
-FFixedAllocArena::CellPadding() const
-{
-    return  static_cast< uint64 >( mAllocSize ) + static_cast< uint64 >( smMetaPadSize );
-}
-
-tMetaBase
-FFixedAllocArena::FirstEmptyCellMetaBase( tMetaBase iFromMetaBase )
-{
-    uint8 const * const hi = HighBlockAdress();
-    uint64 const cpad = CellPadding();
-    tMetaBase metaBase = iFromMetaBase ? iFromMetaBase : LowBlockAdress();
-    ULIS_ASSERT( IsCellMetaBaseResident( metaBase ), "Not Resident From" );
-    for(; metaBase < hi; metaBase += cpad )
-        if( IsCellMetaBaseFree( metaBase ) )
-            return  metaBase;
-    return  nullptr;
-}
-
-tMetaBase
-FFixedAllocArena::FirstFullCellMetaBase( tMetaBase iFromMetaBase )
-{
-    uint8 const * const hi = HighBlockAdress();
-    uint64 const cpad = CellPadding();
-    tMetaBase metaBase = iFromMetaBase ? iFromMetaBase : LowBlockAdress();
-    ULIS_ASSERT( IsCellMetaBaseResident( metaBase ), "Not Resident From" );
-    for(; metaBase < hi; metaBase += cpad )
-        if( !IsCellMetaBaseFree( metaBase ) )
-            return  metaBase;
-    return  nullptr;
+FFixedAllocArena::CellSize() const {
+    return  mAllocSize + uint64( sgMetaPadSize );
 }
 
 //static
 void
-FFixedAllocArena::MoveAlloc( tMetaBase iSrcMetaBase, tMetaBase iDstMetaBase, byte_t iAllocSize )
+FFixedAllocArena::MoveAlloc( FIterator& iFrom, FIterator& iTo )
 {
-    ULIS_ASSERT( !IsCellMetaBaseFree( iSrcMetaBase ), "Bad move, source should not be free !" );
-    ULIS_ASSERT( IsCellMetaBaseFree( iDstMetaBase ), "Bad move, destination should be free !" );
-    memcpy( iDstMetaBase, iSrcMetaBase, static_cast< uint64 >( iAllocSize ) + static_cast< uint64 >( smMetaPadSize ) );
-    memset( iSrcMetaBase, 0, smMetaPadSize );
-    **(tClient*)iDstMetaBase = iDstMetaBase + smMetaPadSize;
+    ULIS_ASSERT( iFrom.IsUsed(), "Bad move, source should be used !" );
+    ULIS_ASSERT( iTo.IsFree(), "Bad move, destination should be free !" );
+    ULIS_ASSERT( iFrom.CellSize() == iTo.CellSize(), "Bad move, cells should be in arenas with equivalent cell sizes" );
+    memcpy( iTo.MetaBase(), iFrom.MetaBase(), iFrom.CellSize() );
+    iFrom.CleanupMetaBase();
+    iTo.ResyncClient();
+}
+
+FFixedAllocArena::FIterator
+FFixedAllocArena::FindFirst( bool iUsed, const FIterator& iFrom )
+{
+    FIterator it = iFrom.IsValid() ? iFrom : Begin();
+    ULIS_ASSERT( it.IsResident(), "Non resident from param" );
+    const FIterator end = End();
+    while( it != end ) {
+        if( it.IsFree() == iUsed )
+            return  it;
+        ++it;
+    }
+    return  FIterator::MakeNull();
 }
 
 void
-FFixedAllocArena::InitializeCleanCellsMetaBase()
+FFixedAllocArena::Initialize()
 {
-    uint8 const * const hi = HighBlockAdress();
-    uint64 const cpad = CellPadding();
-    for( tMetaBase metaBase = LowBlockAdress(); metaBase < hi; metaBase += cpad )
-        memset( metaBase, 0, smMetaPadSize );
+    FIterator it = Begin();
+    const FIterator end = End();
+    while( it != end ) {
+        memset( it.MetaBase(), 0, sgMetaPadSize );
+        ++it;
+    }
+}
+
+FFixedAllocArena::FIterator
+FFixedAllocArena::Begin() {
+    // reinterpret_cast
+    return  FIterator( ( tMetaBase* )LowBlockAdress(), this );
+}
+
+FFixedAllocArena::FIterator
+FFixedAllocArena::End() {
+    // const_cast
+    return  FIterator( ( tMetaBase* )HighBlockAdress(), this );
+}
+
+const FFixedAllocArena::FIterator
+FFixedAllocArena::Begin() const {
+    // const_cast + reinterpret_cast
+    return  FIterator( ( tMetaBase* )LowBlockAdress(), this );
+}
+
+const FFixedAllocArena::FIterator
+FFixedAllocArena::End() const {
+    // const_cast + reinterpret_cast
+    return  FIterator( ( tMetaBase* )HighBlockAdress(), this );
 }
 
 ULIS_NAMESPACE_END

@@ -519,8 +519,6 @@ typedef uint8 tByte;                        ///< A byte or octet value, 8bits
 typedef uint8* tAlloc;                      ///< A base pointer for a heap allocation
 typedef uint8* tMetaBase;                   ///< A base pointer for a meta base in an Arena ( see docs for specific arena about their meta base )
 typedef uint8** tClient;                    ///< A pointer to a client, that is a pointer to a heap allocation susceptible to move after defrag.
-typedef uint64 tArenaSize;                  ///< A large size for an arena.
-typedef uint32 tAllocSize;                  ///< A large size for an allocation.
 
 ULIS_NAMESPACE_END
 

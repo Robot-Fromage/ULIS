@@ -32,7 +32,9 @@ ULIS_NAMESPACE_BEGIN
 ///             number of fixed allocations cells are available.
 ///
 ///             The layout of the buffer is like so:
-///             - [meta][data]
+///             - [         chunk        ]
+///             - [   cell   ][   cell   ]
+///             - [meta][data][meta][data]
 ///             - [data] contains the real data used by the allocation or tile.
 ///             - [meta] stores meta information about the allocation such as [client]:
 ///                 - [client] is a pointer to the allocation, that allows tracking a moving alloc in case of a defrag
@@ -68,38 +70,60 @@ private:
     class FIterator
     {
     public:
-        FIterator( tMetaBase* iMetaBase );
-        FIterator( tClient* iClient );
+        // Ctors
+        FIterator(
+              tMetaBase iMetaBase
+            , FFixedAllocArena const * const iArena
+        );
+
+        FIterator(
+              tClient iClient
+            , FFixedAllocArena const * const iArena
+        );
+
+    public:
+        // Static makers
+        static FIterator MakeNull();
 
     public:
         // Public Methods
         FIterator& operator++();
         FIterator& operator--();
-        uint32_t PrevSize() const;
-        uint32_t NextSize() const;
-        tClient Client() const;
-        void SetPrevSize( uint32 iSize );
-        void SetNextSize( uint32 iSize );
-        void SetClient( tClient iClient );
-        bool HasReachedEndSentinel() const;
-        bool HasReachedBeginSentinel() const;
-        bool IsFree() const;
-        bool IsUsed() const;
+        const FIterator& operator++() const;
+        const FIterator& operator--() const;
+        bool operator==( const FIterator& iOther ) const;
+        bool operator!=( const FIterator& iOther ) const;
+        tClient Client();
+        const tClient Client() const;
+        tMetaBase MetaBase();
+        const tMetaBase MetaBase() const;
         tAlloc Allocation();
         const tAlloc Allocation() const;
+        bool IsFree() const;
+        bool IsUsed() const;
+        bool IsValid() const;
+        bool IsResident() const;
+        uint64 AllocSize() const;
+        uint64 CellSize() const;
+        void CleanupMetaBase();
+        void FreeClient();
+        void ResyncClient();
+        tClient AllocClient();
 
     private:
         /*!
-            This mMetaBase member of type uint8_t* will point to parts of the buffer that is passed as an argument
+            This mMetaBase member of type tMetaBase ( uint8* ) will point to parts of the buffer that is passed as an argument
             to the constructor of the FIterator instance. Although the type is uint8_t*, it will remaine valid as
             a way to iterate through any buffer initially passed as a void* type. The uint8_t* type allows to use
             pointer arithmetics directly on it without additional reinterpret casts, and uint8_t* increments in steps
             of one byte.
         */
-        tMetaBase mMetaBase; ///< carret for metaBase.
+        mutable tMetaBase mMetaBase; ///< Pointer in arena block.
+        FFixedAllocArena const * const mArena; ///< Pointer to associated arena.
     };
 
 public:
+    // FFixedAllocArena *-tors
     /*!
         Destructor, destroy the arena.
         Cleanup the underlying arena block.
@@ -167,12 +191,6 @@ public:
     /*! Obtain the number of currently used cells in the arena. */
     uint32 NumUsedCells() const;
 
-    /*! Get the low adress of the arena block. */
-    const uint8* LowBlockAdress() const;
-
-    /*! Get the high adress of the arena block. */
-    const uint8* HighBlockAdress() const;
-
 
 
     // Memory API
@@ -214,31 +232,32 @@ public:
     /*! Get a textual representation of the arena for debug purposes. */
     void DebugPrint() const;
 
-private:
-    // Private Check API
-    bool IsCellMetaBaseResident( tMetaBase iMetaBase ) const;
-    static bool IsCellMetaBaseFree( tMetaBase iMetaBase );
 
+private:
     // Private Size API
     uint8* LowBlockAdress();
     uint8* HighBlockAdress();
+    const uint8* LowBlockAdress() const;
+    const uint8* HighBlockAdress() const;
     uint64 BlockSize() const;
-    uint64 CellPadding() const;
+    uint64 CellSize() const;
 
     // Private Memory API
-    tMetaBase FirstEmptyCellMetaBase( tMetaBase iFromMetaBase = nullptr );
-    tMetaBase FirstFullCellMetaBase( tMetaBase iFromMetaBase = nullptr );
-    static void MoveAlloc( tMetaBase iFrom, tMetaBase iTo, byte_t iAllocSize );
-    void InitializeCleanCellsMetaBase();
+    static void MoveAlloc( FIterator& iFrom, FIterator& iTo );
+    FIterator FindFirst( bool iUsed, const FIterator& iFrom = FIterator::MakeNull() );
+    void Initialize();
+
+    // Iterator API
+    FIterator Begin();
+    FIterator End();
+    const FIterator Begin() const;
+    const FIterator End() const;
 
 private:
     // Private Data Members
     const uint64 mArenaSize; ///< Arena Size in bytes, without extra meta pad for cell
     const uint64 mAllocSize; ///< Allocation Size in bytes, without extra meta pad for cell
     tByte* const mBlock; ///< Underlying arena storage buffer with allocation data and meta infos [meta][data] ...
-
-    // Private static Data Members
-    static constexpr const uint8 smMetaPadSize = sizeof( tClient ); ///< Constant padding for meta base storage.
 };
 
 ULIS_NAMESPACE_END
