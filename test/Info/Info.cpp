@@ -14,6 +14,7 @@
 using namespace ::ULIS;
 using namespace ULIS::units_literals;
 
+/*
 void TestFixedDefragRate() {
     // Test1: Many random allocs / deallocs and degraf
     // Bake constants and variables
@@ -106,12 +107,12 @@ void TestFixedClientUpdateAfterDefrag() {
     mem.Free( data_client );
     mem.DebugPrint();
 }
-
+*/
 int main( int argc, char *argv[] ) {
-    srand( time( NULL ) );
-
+    //srand( time( NULL ) );
+    std::cout << FLibInfo::LibraryInformationString().Data();
     //TestFixedDefragRate();
-    TestFixedClientUpdateAfterDefrag();
+    //TestFixedClientUpdateAfterDefrag();
 
     /*
     // Test3: Basic Shrinkable
