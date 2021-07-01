@@ -85,8 +85,8 @@ private:
         bool HasReachedBeginSentinel() const;
         bool IsFree() const;
         bool IsUsed() const;
-        tData Allocation();
-        const tData Allocation() const;
+        tAlloc Allocation();
+        const tAlloc Allocation() const;
 
     private:
         /*!

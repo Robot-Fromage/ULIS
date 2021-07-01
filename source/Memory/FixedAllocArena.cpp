@@ -20,10 +20,6 @@ FFixedAllocArena::FIterator&
 FFixedAllocArena::FIterator::operator++();
 FFixedAllocArena::FIterator&
 FFixedAllocArena::FIterator::operator--();
-uint32_t
-FFixedAllocArena::FIterator::PrevSize() const {
-    return  *( uint32* )( mMetaBase + smMetaClientPadSize );
-}
 
 uint32_t
 FFixedAllocArena::FIterator::NextSize() const {
