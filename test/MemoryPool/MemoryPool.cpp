@@ -76,9 +76,10 @@ void TestFixedClientUpdateAfterDefrag() {
     // Test2: Proper client update after defrag
     FFixedAllocMemoryPool mem( 10_B, 10, 1_MB );
     mem.AllocOneArenaIfNecessary();
-    uint8** a_client[10];
+    mem.AllocOneArenaIfNecessary();
+    uint8** a_client[20];
 
-    for( int i = 0; i < 5; ++i ) {
+    for( int i = 0; i < 15; ++i ) {
         a_client[i] = mem.Malloc();
         **(a_client[i]) = 0;
     }
@@ -86,7 +87,7 @@ void TestFixedClientUpdateAfterDefrag() {
     uint8** data_client = mem.Malloc();
     **data_client = 5;
 
-    for( int i = 0; i < 5; ++i )
+    for( int i = 0; i < 15; ++i )
         mem.Free( a_client[i] );
 
     mem.DebugPrint();
@@ -95,14 +96,14 @@ void TestFixedClientUpdateAfterDefrag() {
     mem.DebugPrint();
     std::cout << (int)**data_client << std::endl;
 
-    for( int i = 0; i < 5; ++i ) {
+    for( int i = 0; i < 15; ++i ) {
         a_client[i] = mem.Malloc();
         **a_client[i] = 0;
     }
     mem.DebugPrint();
     std::cout << (int)**data_client << std::endl;
 
-    for( int i = 0; i < 5; ++i )
+    for( int i = 0; i < 15; ++i )
         mem.Free( a_client[i] );
     mem.Free( data_client );
     mem.DebugPrint();
@@ -110,8 +111,8 @@ void TestFixedClientUpdateAfterDefrag() {
 
 int main( int argc, char *argv[] ) {
     srand( time( NULL ) );
-    TestFixedDefragRate();
-    //TestFixedClientUpdateAfterDefrag();
+    //TestFixedDefragRate();
+    TestFixedClientUpdateAfterDefrag();
 
     /*
     // Test3: Basic Shrinkable
