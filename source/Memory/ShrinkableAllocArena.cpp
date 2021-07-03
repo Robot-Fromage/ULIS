@@ -15,9 +15,136 @@
 #include "Core/Constants.h"
 
 ULIS_NAMESPACE_BEGIN
-namespace details {
+static constexpr const uint8 sgMetaPrevDeltaPad = sizeof( tClient ); ///< Constant padding for meta base storage: prev delta pad.
+static constexpr const uint8 sgMetaNextDeltaPad = sgMetaPrevDeltaPad + sizeof( uint32 ); ///< Constant padding for meta base storage: next delta pad.
+static constexpr const uint8 sgMetaTotalPad = sgMetaNextDeltaPad + + sizeof( uint32 ); ///< Constant padding for meta base storag: total pad.
 static constexpr char sgBlockChar = char( 219 );
-} // namespace details
+
+FShrinkableAllocArena::FIterator::FIterator(
+    tMetaBase iMetaBase
+)
+    : mMetaBase( iMetaBase )
+{}
+
+FShrinkableAllocArena::FIterator::FIterator(
+    tClient iClient
+)
+    : mMetaBase( ( *iClient ) - sgMetaTotalPad )
+{}
+
+FShrinkableAllocArena::FIterator&
+FShrinkableAllocArena::FIterator::operator=( const FIterator& iOther ) {
+    mMetaBase = iOther.mMetaBase;
+}
+
+//static
+FShrinkableAllocArena::FIterator
+FShrinkableAllocArena::FIterator::MakeNull() {
+    return  FIterator( tMetaBase( nullptr ) );
+}
+
+FShrinkableAllocArena::FIterator&
+FShrinkableAllocArena::FIterator::operator++() {
+    mMetaBase += sgMetaTotalPad + NextSize();
+    return  *this;
+}
+
+FShrinkableAllocArena::FIterator&
+FShrinkableAllocArena::FIterator::operator--() {
+    mMetaBase -= sgMetaTotalPad + PrevSize();
+    return  *this;
+}
+
+const FShrinkableAllocArena::FIterator&
+FShrinkableAllocArena::FIterator::operator++() const {
+    mMetaBase += sgMetaTotalPad + NextSize();
+    return  *this;
+}
+
+const FShrinkableAllocArena::FIterator&
+FShrinkableAllocArena::FIterator::operator--() const {
+    mMetaBase -= sgMetaTotalPad + PrevSize();
+    return  *this;
+}
+
+bool
+FShrinkableAllocArena::FIterator::operator==( const FIterator& iOther ) const {
+    return  mMetaBase == iOther.mMetaBase;
+}
+
+bool
+FShrinkableAllocArena::FIterator::operator!=( const FIterator& iOther ) const {
+    return  mMetaBase != iOther.mMetaBase;
+}
+
+uint32_t
+FShrinkableAllocArena::FIterator::PrevSize() const {
+    return  *(uint32*)( mMetaBase + sgMetaPrevDeltaPad );
+}
+
+uint32_t
+FShrinkableAllocArena::FIterator::NextSize() const {
+    return  *(uint32*)( mMetaBase + sgMetaNextDeltaPad );
+}
+
+tClient
+FShrinkableAllocArena::FIterator::Client() {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    return  *( tClient* )( mMetaBase );
+}
+
+const tClient
+FShrinkableAllocArena::FIterator::Client() const {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    return  *( tClient* )( mMetaBase );
+}
+
+tMetaBase
+FShrinkableAllocArena::FIterator::MetaBase() {
+    return  mMetaBase;
+}
+const tMetaBase
+FShrinkableAllocArena::FIterator::MetaBase() const {
+    return  mMetaBase;
+}
+
+tAlloc
+FShrinkableAllocArena::FIterator::Allocation() {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    return  ( tAlloc )( mMetaBase + sgMetaTotalPad );
+}
+
+const tAlloc
+FShrinkableAllocArena::FIterator::Allocation() const {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    return  ( tAlloc )( mMetaBase + sgMetaTotalPad );
+}
+bool
+FShrinkableAllocArena::FIterator::IsFree() const {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    return  *( tClient* )( mMetaBase ) == nullptr;
+}
+
+bool
+FShrinkableAllocArena::FIterator::IsUsed() const {
+    ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
+    return  *( tClient* )( mMetaBase ) != nullptr;
+}
+
+bool
+FShrinkableAllocArena::FIterator::IsValid() const {
+    return  mMetaBase != nullptr;
+}
+
+void
+FShrinkableAllocArena::FIterator::SetPrevSize( uint32 iSize ) {
+    *(uint32*)( mMetaBase + sgMetaPrevDeltaPad ) = iSize;
+}
+
+void
+FShrinkableAllocArena::FIterator::SetNextSize( uint32 iSize ) {
+    *(uint32*)( mMetaBase + sgMetaNextDeltaPad ) = iSize;
+}
 
 FShrinkableAllocArena::~FShrinkableAllocArena()
 {

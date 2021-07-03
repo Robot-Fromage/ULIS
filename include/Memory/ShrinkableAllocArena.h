@@ -74,25 +74,36 @@ private:
     class FIterator
     {
     public:
-        FIterator( tMetaBase* iMetaBase );
-        FIterator( tClient* iClient );
+        // Ctors
+        FIterator( tMetaBase iMetaBase );
+        FIterator( tClient iClient );
+        FIterator& operator=( const FIterator& iOther );
+
+    public:
+        // Static makers
+        static FIterator MakeNull();
 
     public:
         // Public Methods
         FIterator& operator++();
         FIterator& operator--();
+        const FIterator& operator++() const;
+        const FIterator& operator--() const;
+        bool operator==( const FIterator& iOther ) const;
+        bool operator!=( const FIterator& iOther ) const;
         uint32_t PrevSize() const;
         uint32_t NextSize() const;
-        tClient Client() const;
-        void SetPrevSize( uint32 iSize );
-        void SetNextSize( uint32 iSize );
-        void SetClient( tClient iClient );
-        bool HasReachedEndSentinel() const;
-        bool HasReachedBeginSentinel() const;
-        bool IsFree() const;
-        bool IsUsed() const;
+        tClient Client();
+        const tClient Client() const;
+        tMetaBase MetaBase();
+        const tMetaBase MetaBase() const;
         tAlloc Allocation();
         const tAlloc Allocation() const;
+        bool IsFree() const;
+        bool IsUsed() const;
+        bool IsValid() const;
+        void SetPrevSize( uint32 iSize );
+        void SetNextSize( uint32 iSize );
 
     private:
         /*!
@@ -102,7 +113,7 @@ private:
             pointer arithmetics directly on it without additional reinterpret casts, and uint8_t* increments in steps
             of one byte.
         */
-        tMetaBase mMetaBase; ///< carret for metaBase.
+        mutable tMetaBase mMetaBase; ///< Pointer in arena block.
     };
 
 public:
@@ -146,6 +157,8 @@ public:
 
     /*! Explicitely deleted copy assignment operator */
     FShrinkableAllocArena& operator=( const FShrinkableAllocArena& ) = delete;
+
+
 
 public:
     // Public Check API
@@ -240,12 +253,7 @@ private:
     // Private Data Members
     const uint64 mArenaSize; ///< Arena Size in bytes, with extra meta pad for cell
     const uint32 mMaxAllocSize; ///< Max allocation Size in bytes, without extra meta pad for cell
-    uint8* const mBlock; ///< Underlying arena storage buffer with allocation data and meta infos [meta][data] ...
-
-    static constexpr const uint8 smMetaClientPadSize = sizeof( tClient ); ///< Constant padding for meta base storage: client pad.
-    static constexpr const uint8 smMetaPrevDeltaPadSize = sizeof( uint32 ); ///< Constant padding for meta base storage: prev delta pad.
-    static constexpr const uint8 smMetaNextDeltaPadSize = sizeof( uint32 ); ///< Constant padding for meta base storage: next delta pad.
-    static constexpr const uint8 smMetaTotalPadSize = smMetaClientPadSize + smMetaPrevDeltaPadSize + smMetaNextDeltaPadSize; ///< Constant padding for meta base storag: total pad.
+    tByte* const mBlock; ///< Underlying arena storage buffer with allocation data and meta infos [meta][data] ...
 };
 
 ULIS_NAMESPACE_END

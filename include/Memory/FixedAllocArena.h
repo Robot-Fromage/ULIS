@@ -73,12 +73,12 @@ private:
         // Ctors
         FIterator(
               tMetaBase iMetaBase
-            , FFixedAllocArena const * iArena
+            , uint64 iCellSize
         );
 
         FIterator(
               tClient iClient
-            , FFixedAllocArena const * iArena
+            , uint64 iCellSize
         );
 
         FIterator& operator=( const FIterator& iOther );
@@ -104,13 +104,11 @@ private:
         bool IsFree() const;
         bool IsUsed() const;
         bool IsValid() const;
-        bool IsResident() const;
-        uint64 AllocSize() const;
-        uint64 CellSize() const;
         void CleanupMetaBase();
         void FreeClient();
         void ResyncClient();
         tClient AllocClient();
+        uint64 CellSize() const;
 
     private:
         /*!
@@ -121,7 +119,7 @@ private:
             of one byte.
         */
         mutable tMetaBase mMetaBase; ///< Pointer in arena block.
-        FFixedAllocArena const * mArena; ///< Pointer to associated arena.
+        uint64 mCellSize; ///< Arena cell size.
     };
 
 public:
@@ -162,6 +160,7 @@ public:
 
     /*! Explicitely deleted copy assignment operator */
     FFixedAllocArena& operator=( const FFixedAllocArena& ) = delete;
+
 
 
 public:
@@ -216,10 +215,10 @@ public:
 
     // Occupation API
     /*!
+        Determine the local occupation rate of the the allocations within the arena.
         From 0 to 1.
         0: empty
         1: full
-        Determine the local occupation rate of the the allocations within the arena.
         Local fragmentation within a single arena is irrelevant, but the ability to determine the Occupation of fixed allocations
         within an arena matters when used in a pool, with many arenas. A high global average occupation rate indicates the allocs
         are efficiently packed, whereas a low occupation rate indicates it's possiblle to concatenate arenas together and hence
@@ -240,6 +239,7 @@ private:
     const uint8* HighBlockAdress() const;
     uint64 BlockSize() const;
     uint64 CellSize() const;
+    bool IsResident( tMetaBase iMetaBase );
 
     // Private Memory API
     static void MoveAlloc( FIterator& iFrom, FIterator& iTo );
