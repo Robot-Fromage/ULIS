@@ -104,6 +104,8 @@ private:
         bool IsValid() const;
         void SetPrevSize( uint32 iSize );
         void SetNextSize( uint32 iSize );
+        bool IsBegin() const;
+        bool IsEnd() const;
 
     private:
         /*!
@@ -149,7 +151,7 @@ public:
     */
     FShrinkableAllocArena(
           byte_t iMaxAllocSize
-        , uint32 iExpectedNumMaxAllocs
+        , uint64 iNumCells
     );
 
     /*! Explicitely deleted copy constructor */
@@ -168,9 +170,6 @@ public:
     /*! Checks wether the arena is empty or not. */
     bool IsEmpty() const;
 
-    /*! Checks wether a client resides in this arena. */
-    bool IsResident( tClient iClient ) const;
-
 
 
     // Size API
@@ -179,12 +178,6 @@ public:
 
     /*! Obtain the max alloc size in bytes */
     byte_t MaxAllocSize() const;
-
-    /*! Get the low adress of the arena block. */
-    const uint8* LowBlockAdress() const;
-
-    /*! Get the high adress of the arena block. */
-    const uint8* HighBlockAdress() const;
 
 
 
@@ -235,19 +228,28 @@ public:
     void DebugPrint( bool iShort = true, int iCol = 100 ) const;
 
 private:
-    // Private Check API
-    bool IsMetaBaseResident( tMetaBase iMetaBase ) const;
-    static bool IsMetaBaseFree( tMetaBase iMetaBase );
-    static bool IsBeginSentinel( tMetaBase iMetaBase );
-    static bool IsEndSentinel( tMetaBase iMetaBase );
+    // Private Size API
+    uint8* LowBlockAdress();
+    uint8* HighBlockAdress();
+    const uint8* LowBlockAdress() const;
+    const uint8* HighBlockAdress() const;
+    uint64 BlockSize() const;
+    bool IsResident( tMetaBase iMetaBase );
 
 
 
     // Private Memory API
-    tMetaBase FirstEmptyMetaBaseMinAlloc( byte_t iMinimumSizeBytes = static_cast< double >( ULIS_UINT64_MAX ), tMetaBase iFrom = nullptr ); // default max clamped to MaxAllocSize, default from to mBlock ( LowAdress )
-    static tMetaBase NextMetaBase( const tMetaBase iMetaBase );
-    static tMetaBase PrevMetaBase( const tMetaBase iMetaBase );
-    static uint32 MetaBaseSize( const tMetaBase iMetaBase );
+    // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
+    FIterator FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = static_cast< double >( ULIS_UINT64_MAX ), const FIterator& iFrom = FIterator::MakeNull() );
+    void Initialize();
+
+
+
+    // Iterator API
+    FIterator Begin();
+    FIterator End();
+    const FIterator Begin() const;
+    const FIterator End() const;
 
 private:
     // Private Data Members

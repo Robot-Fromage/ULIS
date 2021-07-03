@@ -17,7 +17,7 @@
 ULIS_NAMESPACE_BEGIN
 static constexpr const uint8 sgMetaPrevDeltaPad = sizeof( tClient ); ///< Constant padding for meta base storage: prev delta pad.
 static constexpr const uint8 sgMetaNextDeltaPad = sgMetaPrevDeltaPad + sizeof( uint32 ); ///< Constant padding for meta base storage: next delta pad.
-static constexpr const uint8 sgMetaTotalPad = sgMetaNextDeltaPad + + sizeof( uint32 ); ///< Constant padding for meta base storag: total pad.
+static constexpr const uint8 sgMetaTotalPad = sgMetaNextDeltaPad + sizeof( uint32 ); ///< Constant padding for meta base storag: total pad.
 static constexpr char sgBlockChar = char( 219 );
 
 FShrinkableAllocArena::FIterator::FIterator(
@@ -146,6 +146,16 @@ FShrinkableAllocArena::FIterator::SetNextSize( uint32 iSize ) {
     *(uint32*)( mMetaBase + sgMetaNextDeltaPad ) = iSize;
 }
 
+bool
+FShrinkableAllocArena::FIterator::IsBegin() const {
+    return  PrevSize() == 0;
+}
+
+bool
+FShrinkableAllocArena::FIterator::IsEnd() const {
+    return  NextSize() == 0;
+}
+
 FShrinkableAllocArena::~FShrinkableAllocArena()
 {
     ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
@@ -181,7 +191,7 @@ FShrinkableAllocArena::FShrinkableAllocArena(
 
 FShrinkableAllocArena::FShrinkableAllocArena(
       byte_t iMaxAllocSize
-    , uint32 iNumCells
+    , uint64 iNumCells
 )
     : mArenaSize(
           static_cast< uint64 >( iMaxAllocSize )
