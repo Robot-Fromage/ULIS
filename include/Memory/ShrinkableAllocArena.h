@@ -89,6 +89,11 @@ private:
         FIterator& operator--();
         const FIterator& operator++() const;
         const FIterator& operator--() const;
+        // Deviation from  The Three Basic Rules of Operator Overloading in C++
+        // The Decision between Member and Non-member
+        // Cause: compactness and private imp
+        FIterator operator+( const FIterator& iT, uint64 iValue );
+        FIterator operator-( const FIterator& iT, uint64 iValue );
         bool operator==( const FIterator& iOther ) const;
         bool operator!=( const FIterator& iOther ) const;
         uint32 PrevSize() const;
@@ -111,6 +116,7 @@ private:
         void FreeClient();
         void ResyncClient();
         tClient AllocClient();
+        static void MergeFree( const FIterator& iA, const FIterator& iB );
 
     private:
         /*!

@@ -45,26 +45,46 @@ FShrinkableAllocArena::FIterator::MakeNull() {
 
 FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator++() {
+    ULIS_ASSERT( !IsEnd(), "Bad" );
     mMetaBase += sgMetaTotalPad + NextSize();
     return  *this;
 }
 
 FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator--() {
+    ULIS_ASSERT( !IsBegin(), "Bad" );
     mMetaBase -= sgMetaTotalPad + PrevSize();
     return  *this;
 }
 
 const FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator++() const {
+    ULIS_ASSERT( !IsEnd(), "Bad" );
     mMetaBase += sgMetaTotalPad + NextSize();
     return  *this;
 }
 
 const FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator--() const {
+    ULIS_ASSERT( !IsBegin(), "Bad" );
     mMetaBase -= sgMetaTotalPad + PrevSize();
     return  *this;
+}
+
+FShrinkableAllocArena::FIterator
+FShrinkableAllocArena::FIterator::operator+( const FIterator& iT, uint64 iValue ) {
+    FIterator it( iT );
+    for( uint64 i = 0; i < iValue; ++i )
+        ++it;
+    return it;
+}
+
+FShrinkableAllocArena::FIterator
+FShrinkableAllocArena::FIterator::operator-( const FIterator& iT, uint64 iValue ) {
+    FIterator it( iT );
+    for( uint64 i = 0; i < iValue; ++i )
+        --it;
+    return it;
 }
 
 bool
@@ -183,6 +203,20 @@ FShrinkableAllocArena::FIterator::AllocClient() {
     return  IsValid() ? *(tClient*)( mMetaBase ) = new tAlloc( Allocation() ) : nullptr;
 }
 
+//static
+void
+FShrinkableAllocArena::FIterator::MergeFree( const FIterator& iA, const FIterator& iB ) {
+    ULIS_ASSERT( iA + 1 == iB, "Bad" );
+    if( iA.IsUsed() || iB.IsUsed() )
+        return;
+
+    FIterator n0 = iA;
+    FIterator n1 = iB + 1;
+    uint64 mergeSize = n0.NextSize() + sgMetaTotalPad + n1.PrevSize();
+    n0.SetNextSize( mergeSize );
+    n1.SetPrevSize( mergeSize );
+}
+
 FShrinkableAllocArena::~FShrinkableAllocArena()
 {
     ULIS_ASSERT( IsEmpty(), "Error, trying to delete a non empty arena !" );
@@ -288,6 +322,7 @@ FShrinkableAllocArena::Malloc( byte_t iSize )
     FIterator it = FindFirstMinAlloc( false, req );
 
     if( !it.IsValid() )
+        // None found, no space
         return  nullptr;
 
     it.AllocClient();
@@ -297,13 +332,13 @@ FShrinkableAllocArena::Malloc( byte_t iSize )
     if( rem == 0 )
         return it.Client();
 
-    FIterator nextit = it; nextit++;
-    it.SetNextSize( req ); // current meta next
-    FIterator remit = it; remit++;
-    remit.CleanupMetaBase();
-    remit.SetPrevSize( req ); // next meta prev
-    remit.SetNextSize( rem ); // next meta next
-    nextit.SetPrevSize( rem ); // notify following about rem free sector
+    it.SetNextSize( req );
+    FIterator sec = it + 1;
+    sec.CleanupMetaBase();
+    sec.SetPrevSize( req );
+    sec.SetNextSize( rem );
+    FIterator::MergeFree( sec, sec + 1 );
+
     return it.Client();
 }
 
@@ -313,15 +348,10 @@ FShrinkableAllocArena::Free( tClient iClient )
 {
     ULIS_ASSERT( iClient, "Cannot free null client" );
     FIterator it( iClient );
-    FIterator prev = it; prev--;
-    FIterator next = it; next++;
     it.FreeClient();
     it.CleanupMetaBase();
-    if( next.IsFree() )
-        it.SetNextSize( it.NextSize() + next.NextSize() + sgMetaTotalPad );
-
-    if( prev.IsFree() )
-        prev.SetNextSize( prev.NextSize() + it.NextSize() + sgMetaTotalPad );
+    FIterator::MergeFree( it, it + 1 );
+    FIterator::MergeFree( it - 1, it );
 }
 
 void
@@ -523,17 +553,12 @@ FShrinkableAllocArena::Shrink( tClient iClient, byte_t iNewSize )
     if( rem == 0 )
         return false;
 
-    FIterator nextit = it; nextit++;
-    it.SetNextSize( req ); // current meta next
-    FIterator remit = it; remit++;
-    remit.CleanupMetaBase();
-    remit.SetPrevSize( req ); // next meta prev
-    remit.SetNextSize( rem ); // next meta next
-    nextit.SetPrevSize( rem ); // notify following about rem free sector
-
-    if( nextit.IsFree() ) // extend rem sector to next if free
-        remit.SetNextSize( remit.NextSize() + nextit.NextSize() + sgMetaTotalPad );
-
+    it.SetNextSize( req );
+    FIterator sec = it + 1;
+    sec.CleanupMetaBase();
+    sec.SetPrevSize( req );
+    sec.SetNextSize( rem );
+    FIterator::MergeFree( sec, sec + 1 );
     return  true;
 }
 
