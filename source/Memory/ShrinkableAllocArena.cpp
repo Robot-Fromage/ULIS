@@ -244,13 +244,13 @@ FShrinkableAllocArena::FShrinkableAllocArena(
 )
     : mArenaSize(
         // Room for allocs
-          static_cast< uint64 >( iMaxAllocSize )
-        * static_cast< uint64 >( iNumCells )
-        // Room for metaBases, including begin sentinel
-        + static_cast< uint64 >( sgMetaTotalPad )
-        * static_cast< uint64 >( iNumCells )
+          uint64( iMaxAllocSize )
+        * uint64( iNumCells )
+        // Room for meta Bases, including begin sentinel
+        + uint64( sgMetaTotalPad )
+        * uint64( iNumCells )
         // Room for end sentinel
-        + static_cast< uint64 >( sgMetaTotalPad )
+        + uint64( sgMetaTotalPad )
     )
     , mMaxAllocSize( iMaxAllocSize )
     , mBlock( ( uint8* )( XMalloc( BlockSize() ) ) )
@@ -322,7 +322,6 @@ FShrinkableAllocArena::Malloc( byte_t iSize )
     FIterator it = FindFirstMinAlloc( false, req );
 
     if( !it.IsValid() )
-        // None found, no space
         return  nullptr;
 
     it.AllocClient();
@@ -369,13 +368,12 @@ FShrinkableAllocArena::UnsafeFreeAll() {
 float
 FShrinkableAllocArena::LocalFragmentation() const
 {
-    tMetaBase metaBase = mBlock;
     uint32 runFree, maxFree, numFree, runUsed, maxUsed, totalFree, totalUsed;
     runFree = maxFree = numFree = runUsed = maxUsed = totalFree = totalUsed = 0;
-
-    while( IsMetaBaseResident( metaBase ) ) {
-        uint32 size = ( MetaBaseSize( metaBase ) );
-        if( IsMetaBaseFree( metaBase ) ) {
+    const FIterator it = Begin();
+    const FIterator end = End();
+    while( it != end ) {
+        if( it.IsFree() ) {
             runFree += size;
             totalFree += size;
             runUsed = 0;
@@ -387,7 +385,7 @@ FShrinkableAllocArena::LocalFragmentation() const
         }
         maxFree = FMath::Max( runFree, maxFree );
         maxUsed = FMath::Max( runUsed, maxUsed );
-        metaBase = NextMetaBase( metaBase );
+        ++it;
     }
     maxUsed += numFree * sgMetaTotalPad;
     totalUsed += numFree * sgMetaTotalPad;
