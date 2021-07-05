@@ -73,8 +73,8 @@ public:
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnLayerParentChanged& iOnParentChanged = FOnLayerParentChanged()
+        , const FOnLayerSelfChanged& iOnSelfChanged = FOnLayerSelfChanged()
 
         , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
         , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
@@ -100,8 +100,8 @@ public:
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnLayerParentChanged& iOnParentChanged = FOnParentChanged()
+        , const FOnLayerSelfChanged& iOnSelfChanged = FOnSelfChanged()
 
         , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
         , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()

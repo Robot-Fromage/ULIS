@@ -58,9 +58,9 @@ public:
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
-        , const FOnNodeAdded& iOnLayerAdded = FOnNodeAdded()
-        , const FOnNodeRemoved& iOnLayerRemoved = FOnNodeRemoved()
+        , const FOnLayerSelfChanged& iOnSelfChanged = FOnLayerSelfChanged()
+        , const FOnLayerNodeAdded& iOnLayerAdded = FOnLayerNodeAdded()
+        , const FOnLayerNodeRemoved& iOnLayerRemoved = FOnLayerNodeRemoved()
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
@@ -79,9 +79,9 @@ public:
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
         , const FColorSpace* iColorSpace = nullptr
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
-        , const FOnNodeAdded& iOnLayerAdded = FOnNodeAdded()
-        , const FOnNodeRemoved& iOnLayerRemoved = FOnNodeRemoved()
+        , const FOnLayerSelfChanged& iOnSelfChanged = FOnLayerSelfChanged()
+        , const FOnLayerNodeAdded& iOnLayerAdded = FOnLayerNodeAdded()
+        , const FOnLayerNodeRemoved& iOnLayerRemoved = FOnLayerNodeRemoved()
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()

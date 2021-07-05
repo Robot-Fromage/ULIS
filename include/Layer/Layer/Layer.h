@@ -37,10 +37,10 @@ template class ULIS_API TNode< ILayer >;
 template class ULIS_API TArray< TNode< ILayer >* >;
 template class ULIS_API TRoot< ILayer >;
 typedef FOn_bool_Changed FOnBoolChanged;
-typedef TOnParentChanged< ILayer > FOnParentChanged;
-typedef TOnSelfChanged< ILayer > FOnSelfChanged;
-typedef TOnNodeAdded< ILayer > FOnNodeAdded;
-typedef TOnNodeRemoved< ILayer > FOnNodeRemoved;
+typedef TOnParentChanged< ILayer > FOnLayerParentChanged;
+typedef TOnSelfChanged< ILayer > FOnLayerSelfChanged;
+typedef TOnNodeAdded< ILayer > FOnLayerNodeAdded;
+typedef TOnNodeRemoved< ILayer > FOnLayerNodeRemoved;
 /*
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerCreated, void, ILayer* )
 ULIS_DECLARE_SIMPLE_DELEGATE( FOnLayerDeleted, void, ILayer* )
@@ -84,8 +84,8 @@ public:
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnLayerParentChanged& iOnParentChanged = FOnLayerParentChanged()
+        , const FOnLayerSelfChanged& iOnSelfChanged = FOnLayerSelfChanged()
     );
 };
 

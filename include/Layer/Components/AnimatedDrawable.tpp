@@ -15,22 +15,27 @@
 ULIS_NAMESPACE_BEGIN
 template< class BlockType >
 TAnimatedDrawable< BlockType >::TAnimatedDrawable()
-    : mCacheValid( false )
+    : mCacheValid()
 {}
 
 template< class BlockType >
 bool
-TAnimatedDrawable< BlockType >::IsImageCacheValid() const {
-    return  mCacheValid;
+TAnimatedDrawable< BlockType >::IsImageCacheValid( uint32 iFrame ) const {
+    for (uint64 i = 0; i < mCacheValid.Size(); i++)
+    {
+        if (mCacheValid[i] == iFrame)
+            return true;
+    }
+    return false;
 }
 
 template< class BlockType >
 FEvent
-TAnimatedDrawable< BlockType >::RenderImageCache( FContext& iCtx ) {
-    if( IsImageCacheValid() )
+TAnimatedDrawable< BlockType >::RenderImageCache( FContext& iCtx, uint32 iFrame ) {
+    if( IsImageCacheValid( iFrame ) )
         return  FEvent::NoOP();
 
-    ValidateImageCache();
+    ValidateImageCache( iFrame );
     return  FEvent::NoOP();
 }
 
@@ -47,20 +52,24 @@ TAnimatedDrawable< BlockType >::RenderImage(
     , const FEvent* iWaitList
 )
 {
-    RenderImageCache( iCtx );
+    RenderImageCache( iCtx, iFrame );
     return  FEvent::NoOP();
 }
 
 template< class BlockType >
 void
-TAnimatedDrawable< BlockType >::InvalidImageCache() {
-    mCacheValid = false;
+TAnimatedDrawable< BlockType >::InvalidImageCache(uint32 iFrame) {
+    for (uint64 i = mCacheValid.Size() - 1; i >= 0 ; i--)
+    {
+        if (mCacheValid[i] == iFrame)
+            mCacheValid.Erase(i, 1);
+    }
 }
 
 template< class BlockType >
 void
-TAnimatedDrawable< BlockType >::ValidateImageCache() {
-    mCacheValid = true;
+TAnimatedDrawable< BlockType >::ValidateImageCache(uint32 iFrame) {
+    mCacheValid.PushBack(iFrame);
 }
 
 

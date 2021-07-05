@@ -45,10 +45,10 @@ CLASS::TLayerFolder(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
-    , const FOnNodeAdded& iOnLayerAdded
-    , const FOnNodeRemoved& iOnLayerRemoved
+    , const FOnLayerParentChanged& iOnLayerParentChanged
+    , const FOnLayerSelfChanged& iOnLayerSelfChanged
+    , const FOnLayerNodeAdded& iOnLayerAdded
+    , const FOnLayerNodeRemoved& iOnLayerRemoved
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
@@ -56,8 +56,8 @@ CLASS::TLayerFolder(
 )
     : TNode< ILayer >(
           iParent
-        , iOnParentChanged
-        , iOnSelfChanged
+        , iOnLayerParentChanged
+        , iOnLayerSelfChanged
     )
     , ILayer(
           iName
@@ -73,8 +73,8 @@ CLASS::TLayerFolder(
         , iOnUserDataAdded
         , iOnUserDataChanged
         , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
+        , iOnLayerParentChanged
+        , iOnLayerSelfChanged
     )
     , tAbstractLayerDrawable(
           iName
@@ -90,8 +90,8 @@ CLASS::TLayerFolder(
         , iOnUserDataAdded
         , iOnUserDataChanged
         , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
+        , iOnLayerParentChanged
+        , iOnLayerSelfChanged
     )
     , tRasterizable()
     , tHasBlock(
@@ -135,10 +135,10 @@ CLASS::TLayerFolder(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
-    , const FOnNodeAdded& iOnLayerAdded
-    , const FOnNodeRemoved& iOnLayerRemoved
+    , const FOnLayerParentChanged& iOnLayerParentChanged
+    , const FOnLayerSelfChanged& iOnLayerSelfChanged
+    , const FOnLayerNodeAdded& iOnLayerAdded
+    , const FOnLayerNodeRemoved& iOnLayerRemoved
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
@@ -146,8 +146,8 @@ CLASS::TLayerFolder(
 )
     : TNode< ILayer >(
           iParent
-        , iOnParentChanged
-        , iOnSelfChanged
+        , iOnLayerParentChanged
+        , iOnLayerSelfChanged
     )
     , ILayer(
           iName
@@ -163,8 +163,8 @@ CLASS::TLayerFolder(
         , iOnUserDataAdded
         , iOnUserDataChanged
         , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
+        , iOnLayerParentChanged
+        , iOnLayerSelfChanged
     )
     , tAbstractLayerDrawable(
           iName
@@ -180,8 +180,8 @@ CLASS::TLayerFolder(
         , iOnUserDataAdded
         , iOnUserDataChanged
         , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
+        , iOnLayerParentChanged
+        , iOnLayerSelfChanged
     )
     , tRasterizable()
     , tHasBlock(

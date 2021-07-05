@@ -12,5 +12,58 @@
 #include "Layer/AnimatedLayer/AnimatedLayer.h"
 
 ULIS_NAMESPACE_BEGIN
+IAnimatedLayer::~IAnimatedLayer()
+{
+    ULIS_DEBUG_PRINTF("IAnimatedLayer Destroyed")
+}
+
+IAnimatedLayer::IAnimatedLayer(
+    const FString& iName
+    , bool iLocked
+    , bool iVisible
+    , const FColor& iPrettyColor
+    , const TRoot< IAnimatedLayer >* iParent
+
+    , const FOnNameChanged& iOnNameChanged
+    , const FOnBoolChanged& iOnLockChanged
+    , const FOnBoolChanged& iOnVisibleChanged
+    , const FOnColorChanged& iOnColorChanged
+    , const FOnUserDataAdded& iOnUserDataAdded
+    , const FOnUserDataChanged& iOnUserDataChanged
+    , const FOnUserDataRemoved& iOnUserDataRemoved
+    , const FOnAnimatedLayerParentChanged& iOnParentChanged
+    , const FOnAnimatedLayerSelfChanged& iOnSelfChanged
+)
+    : TNode< IAnimatedLayer >(
+        iParent
+        , iOnParentChanged
+        , iOnSelfChanged
+        )
+    , ITypeIdentifiable()
+    , IHasUserData(
+        iOnUserDataAdded
+        , iOnUserDataChanged
+        , iOnUserDataRemoved
+    )
+    , IHasName(
+        iName
+        , iOnNameChanged
+    )
+    , IHasLock(
+        iLocked
+        , iOnLockChanged
+    )
+    , IHasVisibility(
+        iVisible
+        , iOnVisibleChanged
+    )
+    , IHasPrettyColor(
+        iPrettyColor
+        , iOnColorChanged
+    )
+{
+    ULIS_DEBUG_PRINTF("ILayer Created")
+}
+
 ULIS_NAMESPACE_END
 

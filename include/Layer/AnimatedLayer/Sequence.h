@@ -4,7 +4,7 @@
 *   ULIS
 *__________________
 * @file         Sequence.h
-* @author       Clement Berthaud
+* @author       Clement Berthaud, Eric Scholl
 * @brief        This file provides the declaration for a basic animation Sequence.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
@@ -31,21 +31,21 @@ public:
     void
     Reset()
     {
-        for( uint64 i = 0; i < mInstances.Size(); ++i )
-            delete  mInstances[i];
-        mInstances.Clear();
+        for( uint64 i = 0; i < mCels.Size(); ++i )
+            delete  mCels[i];
+        mCels.Clear();
     }
 
-    TArray< TCel< Type >* >& Instances() {
-        return  mInstances;
+    TArray< TCel< Type >* >& Cels() {
+        return  mCels;
     }
 
-    const TArray< TCel< Type >* >& Instances() const {
-        return  mInstances;
+    const TArray< TCel< Type >* >& Cels() const {
+        return  mCels;
     }
 
 private:
-    TArray< TCel< Type >* > mInstances;
+    TArray< TCel< Type >* > mCels;
 };
 
 ULIS_NAMESPACE_END

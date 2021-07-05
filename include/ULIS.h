@@ -29,6 +29,13 @@
 #include "Layer/Layer/LayerStack.h"
 #include "Layer/Layer/LayerTypedefs.h"
 #include "Layer/Layer/LayerBuilder.h"
+// AnimatedLayer
+#include "Layer/AnimatedLayer/AnimatedLayer.h"
+#include "Layer/AnimatedLayer/AnimatedLayerFolder.h"
+#include "Layer/AnimatedLayer/AnimatedLayerImage.h"
+#include "Layer/AnimatedLayer/AnimatedLayerStack.h"
+#include "Layer/AnimatedLayer/AnimatedLayerTypedefs.h"
+#include "Layer/AnimatedLayer/AnimatedLayerBuilder.h"
 // Font
 #include "Font/Font.h"
 #include "Font/FontEngine.h"

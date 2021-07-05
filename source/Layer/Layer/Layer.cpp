@@ -31,8 +31,8 @@ ILayer::ILayer(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
+    , const FOnLayerParentChanged& iOnParentChanged
+    , const FOnLayerSelfChanged& iOnSelfChanged
 )
     : TNode< ILayer >(
           iParent

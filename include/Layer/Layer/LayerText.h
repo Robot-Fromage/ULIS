@@ -82,8 +82,8 @@ public:
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnLayerParentChanged& iOnParentChanged = FOnLayerParentChanged()
+        , const FOnLayerSelfChanged& iOnSelfChanged = FOnLayerSelfChanged()
 
         , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
         , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
@@ -115,8 +115,8 @@ public:
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnLayerParentChanged& iOnParentChanged = FOnLayerParentChanged()
+        , const FOnLayerSelfChanged& iOnSelfChanged = FOnLayerSelfChanged()
 
         , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
         , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
@@ -145,7 +145,7 @@ public:
     ) override;
 
     // TRasterizable Interface
-    tSelf* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) override;
+    tSiblingImage* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) override;
 
 private:
     // TNode< ILayer > Interface

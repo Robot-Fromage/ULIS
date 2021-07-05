@@ -28,7 +28,7 @@ protected:
     TAnimatedDrawable();
 
 public:
-    virtual FEvent RenderImageCache( FContext& iCtx );
+    virtual FEvent RenderImageCache( FContext& iCtx, uint32 iFrame );
     virtual FEvent RenderImage(
           FContext& iCtx
         , BlockType& ioBlock
@@ -41,14 +41,14 @@ public:
     ) = 0;
 
 
-    bool IsImageCacheValid() const;
-    virtual void InvalidImageCache();
+    bool IsImageCacheValid(uint32 iFrame) const;
+    virtual void InvalidImageCache(uint32 iFrame);
 
 protected:
-    void ValidateImageCache();
+    void ValidateImageCache(uint32 iFrame);
 
 private:
-    bool mCacheValid;
+    TArray<uint32> mCacheValid;
 };
 
 ULIS_NAMESPACE_END

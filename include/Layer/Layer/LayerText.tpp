@@ -50,8 +50,8 @@ CLASS::TLayerText(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
+    , const FOnLayerParentChanged& iOnParentChanged
+    , const FOnLayerSelfChanged& iOnSelfChanged
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
@@ -155,8 +155,8 @@ CLASS::TLayerText(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
+    , const FOnLayerParentChanged& iOnParentChanged
+    , const FOnLayerSelfChanged& iOnSelfChanged
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
@@ -287,15 +287,16 @@ CLASS::RenderImage(
 
 // TRasterizable Interface
 TEMPLATE
-typename CLASS::tSelf*
+typename CLASS::tSiblingImage*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
+    FEvent ev = RenderImageCache( iCtx );
     const BlockType* ref = Block();
     if( !ref )
         return  nullptr;
 
     // Actual Deep Copy with Event.
-    tSelf* rasterized = new tSelf(
+    tSiblingImage* rasterized = new tSiblingImage(
           Name()
         , IsLocked()
         , IsVisible()
@@ -325,7 +326,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnBoolChanged::GetDelegate()
     );
 
-    iCtx.Copy( *Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
+    iCtx.Copy( *Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, &ev, oEvent );
     return  rasterized;
 }
 

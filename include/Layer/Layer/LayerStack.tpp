@@ -32,9 +32,9 @@ CLASS::TLayerStack(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
-    , const FOnSelfChanged& iOnSelfChanged
-    , const FOnNodeAdded& iOnLayerAdded
-    , const FOnNodeRemoved& iOnLayerRemoved
+    , const FOnLayerSelfChanged& iOnSelfChanged
+    , const FOnLayerNodeAdded& iOnLayerAdded
+    , const FOnLayerNodeRemoved& iOnLayerRemoved
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
@@ -101,9 +101,9 @@ CLASS::Reset(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
-    , const FOnSelfChanged& iOnSelfChanged
-    , const FOnNodeAdded& iOnLayerAdded
-    , const FOnNodeRemoved& iOnLayerRemoved
+    , const FOnLayerSelfChanged& iOnSelfChanged
+    , const FOnLayerNodeAdded& iOnLayerAdded
+    , const FOnLayerNodeRemoved& iOnLayerRemoved
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved

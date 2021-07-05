@@ -45,8 +45,8 @@ CLASS::TLayerImage(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
+    , const FOnLayerParentChanged& iOnParentChanged
+    , const FOnLayerSelfChanged& iOnSelfChanged
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
@@ -133,8 +133,8 @@ CLASS::TLayerImage(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
+    , const FOnLayerParentChanged& iOnParentChanged
+    , const FOnLayerSelfChanged& iOnSelfChanged
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
