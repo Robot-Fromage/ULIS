@@ -148,6 +148,7 @@ FFixedAllocArena::FIterator::ResyncClient() {
 
 tClient
 FFixedAllocArena::FIterator::AllocClient() {
+    ULIS_ASSERT( IsValid() && IsFree(), "Bad" );
     return  IsValid() ? *(tClient*)( mMetaBase ) = new tAlloc( Allocation() ) : nullptr;
 }
 

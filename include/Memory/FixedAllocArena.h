@@ -226,6 +226,8 @@ public:
     */
     ufloat OccupationRate() const;
 
+
+
     // Debug API
     /*! Get a textual representation of the arena for debug purposes. */
     void DebugPrint() const;

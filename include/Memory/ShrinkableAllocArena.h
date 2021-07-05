@@ -91,8 +91,8 @@ private:
         const FIterator& operator--() const;
         bool operator==( const FIterator& iOther ) const;
         bool operator!=( const FIterator& iOther ) const;
-        uint32_t PrevSize() const;
-        uint32_t NextSize() const;
+        uint32 PrevSize() const;
+        uint32 NextSize() const;
         tClient Client();
         const tClient Client() const;
         tMetaBase MetaBase();
@@ -102,10 +102,15 @@ private:
         bool IsFree() const;
         bool IsUsed() const;
         bool IsValid() const;
-        void SetPrevSize( uint32 iSize );
-        void SetNextSize( uint32 iSize );
         bool IsBegin() const;
         bool IsEnd() const;
+        void CleanupMetaBase();
+        void FillMetaBase();
+        void SetPrevSize( uint32 iValue );
+        void SetNextSize( uint32 iValue );
+        void FreeClient();
+        void ResyncClient();
+        tClient AllocClient();
 
     private:
         /*!
@@ -207,10 +212,11 @@ public:
     static void Free( tClient iClient );
 
     /*!
-        Shrink an alloc and return if succesful or not.
-        If not succesfull, the alloc remains as before and is still valid, it just didn't shrink.
+        Free all resident allocations in this arena.
+        Clients are deleted and not notified about their status.
+        This is unsafe and dangerous, unless you're done with all clients.
     */
-    static void Shrink( tClient iClient, byte_t iNewSize );
+    void UnsafeFreeAll();
 
 
 
@@ -227,6 +233,8 @@ public:
     /*! Get a textual representation of the arena for debug purposes. */
     void DebugPrint( bool iShort = true, int iCol = 100 ) const;
 
+
+
 private:
     // Private Size API
     uint8* LowBlockAdress();
@@ -236,14 +244,10 @@ private:
     uint64 BlockSize() const;
     bool IsResident( tMetaBase iMetaBase );
 
-
-
     // Private Memory API
-    // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
-    FIterator FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = static_cast< double >( ULIS_UINT64_MAX ), const FIterator& iFrom = FIterator::MakeNull() );
+    FIterator FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = ULIS_UINT64_MAX, const FIterator& iFrom = FIterator::MakeNull() ); // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
+    static bool Shrink( tClient iClient, byte_t iNewSize ); // Shrink an alloc and return if succesful or not. If not succesfull, the alloc remains as before and is still valid, it just didn't shrink.
     void Initialize();
-
-
 
     // Iterator API
     FIterator Begin();
