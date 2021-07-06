@@ -71,11 +71,13 @@ private:
     {
     public:
         // Ctors
+        explicit
         FIterator(
               tMetaBase iMetaBase
             , uint64 iCellSize
         );
 
+        explicit
         FIterator(
               tClient iClient
             , uint64 iCellSize
@@ -140,6 +142,7 @@ public:
         fixed cells allocations.
         It is best to chose an alloc size that is a divisor of arena size, the behaviour is undefined otherwise.
     */
+    explicit
     FFixedAllocArena(
           byte_t iArenaSize
         , byte_t iAllocSize
@@ -150,6 +153,7 @@ public:
         An arena size will be coomputed so that it can fit an expected number of
         fixed cells allocations.
     */
+    explicit
     FFixedAllocArena(
           byte_t iAllocSize
         , uint64 iNumCells

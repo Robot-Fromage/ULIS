@@ -75,8 +75,8 @@ private:
     {
     public:
         // Ctors
-        FIterator( tMetaBase iMetaBase );
-        FIterator( tClient iClient );
+        explicit FIterator( tMetaBase iMetaBase );
+        explicit FIterator( tClient iClient );
         FIterator& operator=( const FIterator& iOther );
 
     public:
@@ -150,6 +150,7 @@ public:
         paddings applied for a given number of objects with dedicated methods or see other constructors that will meet these
         expectations.
     */
+    explicit
     FShrinkableAllocArena(
           byte_t iArenaSize
         , byte_t iMaxAllocSize
@@ -160,6 +161,7 @@ public:
         An arena size will be coomputed so that it can fit an expected number of
         fixed cells allocations, that is a proper arena size for the buffers plus extra meta pad size.
     */
+    explicit
     FShrinkableAllocArena(
           byte_t iMaxAllocSize
         , uint64 iNumCells

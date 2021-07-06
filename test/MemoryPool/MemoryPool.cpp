@@ -19,15 +19,14 @@ void TestFixedDefragRate() {
     // Test1: Many random allocs / deallocs and degraf
     // Bake constants and variables
     byte_t allocSize = 8_B;
-    byte_t targetMemory = 200_MB;
     constexpr uint64 numCellsPerArena = 10;
     constexpr uint64 numArenas = 10;
     tClient a[numCellsPerArena][numArenas];
     bool b[numCellsPerArena][numArenas];
 
     // Init pool
-    FFixedAllocMemoryPool mem( 8_B, numCellsPerArena, 200_MB );
-    for( int i = 0; i < numArenas; ++i )
+    FFixedAllocMemoryPool mem( allocSize, numCellsPerArena, 200_MB );
+    for( int i = 0; i < 10; ++i )
         mem.AllocOneArenaIfNecessary();
 
     // Fill with allocs
@@ -103,15 +102,24 @@ void TestFixedClientUpdateAfterDefrag() {
     mem.DebugPrint();
     std::cout << (int)**data_client << std::endl;
 
-    for( int i = 0; i < 15; ++i )
+    for( int i = 0; i < 10; ++i )
         mem.Free( a_client[i] );
+    mem.DebugPrint();
+    std::cout << (int)**data_client << std::endl;
+
+    mem.DefragForce();
+    mem.DebugPrint();
+    std::cout << (int)**data_client << std::endl;
+
     mem.Free( data_client );
+    mem.DebugPrint();
+    mem.UnsafeFreeAll();
     mem.DebugPrint();
 }
 
 int main( int argc, char *argv[] ) {
     srand( time( NULL ) );
-    TestFixedDefragRate();
+    //TestFixedDefragRate();
     //TestFixedClientUpdateAfterDefrag();
 
     /*

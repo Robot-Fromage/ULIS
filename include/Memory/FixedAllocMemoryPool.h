@@ -52,6 +52,7 @@ public:
         fixed cells allocations.
         It is best to chose an alloc size that is a divisor of arena size, the behaviour is undefined otherwise.
     */
+    explicit
     FFixedAllocMemoryPool(
           byte_t iArenaSize
         , byte_t iAllocSize
@@ -64,6 +65,7 @@ public:
         An arena size will be computed so that it can fit an expected number of
         fixed cells allocations.
     */
+    explicit
     FFixedAllocMemoryPool(
           byte_t iAllocSize
         , uint64 iNumCellPerArena

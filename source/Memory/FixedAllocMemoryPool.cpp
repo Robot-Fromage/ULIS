@@ -151,6 +151,8 @@ FFixedAllocMemoryPool::Fragmentation() const
             count++;
         }
     }
+    if( count <= 1 )
+        return  0.f;
 
     float globalOccupationRate = count == 0 ? 0.f : sum / count;
     return  globalOccupationRate;
@@ -209,7 +211,8 @@ FFixedAllocMemoryPool::DefragForce()
             srcFree++;
             dstUsed++;
         }
-
+        if( highArena == lowArena )
+            return;
         --lowArena;
         src_it = FFixedAllocArena::FIterator::MakeNull();
         srcFree = (*lowArena)->NumFreeCells();
@@ -272,7 +275,7 @@ FFixedAllocMemoryPool::AllocArenasToReachTargetMemory()
 {
     uint32 count = 0;
     while( TotalMemory() < TargetMemoryUsage() ) {
-        mArenaPool.push_back( new FFixedAllocArena( mArenaSize, mAllocSize ) );
+        mArenaPool.push_back( new FFixedAllocArena( byte_t( mArenaSize ), byte_t( mAllocSize ) ) );
         count++;
     }
     return  count;
