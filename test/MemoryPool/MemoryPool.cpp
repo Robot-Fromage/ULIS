@@ -111,8 +111,8 @@ void TestFixedClientUpdateAfterDefrag() {
 
 int main( int argc, char *argv[] ) {
     srand( time( NULL ) );
-    //TestFixedDefragRate();
-    TestFixedClientUpdateAfterDefrag();
+    TestFixedDefragRate();
+    //TestFixedClientUpdateAfterDefrag();
 
     /*
     // Test3: Basic Shrinkable

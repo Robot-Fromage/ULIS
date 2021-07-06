@@ -143,17 +143,23 @@ FFixedAllocMemoryPool::Fragmentation() const
         return 0.f;
 
     ufloat sum = 0.f;
-    for( auto it : mArenaPool )
-        sum += it->OccupationRate();
+    uint64 count = 0;
+    for( auto it : mArenaPool ) {
+        float rate = it->OccupationRate();
+        if( rate != 1.f ) {
+            sum += rate;
+            count++;
+        }
+    }
 
-    float globalOccupationRate = sum / mArenaPool.size();
-    return  1.f - globalOccupationRate;
+    float globalOccupationRate = count == 0 ? 0.f : sum / count;
+    return  globalOccupationRate;
 }
 
 void
 FFixedAllocMemoryPool::DefragIfNecessary()
 {
-    if( Fragmentation() < mDefragThreshold )
+    if( Fragmentation() > mDefragThreshold )
         return;
     DefragForce();
 }

@@ -92,8 +92,8 @@ private:
         // Deviation from  The Three Basic Rules of Operator Overloading in C++
         // The Decision between Member and Non-member
         // Cause: compactness and private imp
-        FIterator operator+( const FIterator& iT, uint64 iValue );
-        FIterator operator-( const FIterator& iT, uint64 iValue );
+        FIterator operator+( int iValue ) const;
+        FIterator operator-( int iValue ) const;
         bool operator==( const FIterator& iOther ) const;
         bool operator!=( const FIterator& iOther ) const;
         uint32 PrevSize() const;
