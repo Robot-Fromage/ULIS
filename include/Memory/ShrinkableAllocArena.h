@@ -211,7 +211,7 @@ public:
         Obtain an client to an allocation within this arena.
         If full or a failure occurs, returns nullptr.
     */
-    tClient Malloc( byte_t iAllocSize );
+    tClient Malloc( byte_t iAllocSize = ULIS_UINT32_MAX );
 
     /*!
         Free an allocation and its associated client.
@@ -226,6 +226,10 @@ public:
     */
     void UnsafeFreeAll();
 
+    /*!
+        Shrink an alloc and return if succesful or not. If not succesfull, the alloc remains as before and is still valid, it just didn't shrink.
+    */
+    static bool Shrink( tClient iClient, byte_t iNewSize );
 
 
     // Fragmentation API
@@ -239,7 +243,7 @@ public:
 
     // Debug API
     /*! Get a textual representation of the arena for debug purposes. */
-    void DebugPrint( bool iShort = true, int iCol = 100 ) const;
+    void DebugPrint( int iType = 0, int iCol = 100 ) const;
 
 
 
@@ -253,8 +257,7 @@ private:
     bool IsResident( tMetaBase iMetaBase );
 
     // Private Memory API
-    FIterator FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = ULIS_UINT64_MAX, const FIterator& iFrom = FIterator::MakeNull() ); // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
-    static bool Shrink( tClient iClient, byte_t iNewSize ); // Shrink an alloc and return if succesful or not. If not succesfull, the alloc remains as before and is still valid, it just didn't shrink.
+    FIterator FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = ULIS_UINT32_MAX, const FIterator& iFrom = FIterator::MakeNull() ); // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
     void Initialize();
 
     // Iterator API

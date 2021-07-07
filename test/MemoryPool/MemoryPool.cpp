@@ -117,48 +117,50 @@ void TestFixedClientUpdateAfterDefrag() {
     mem.DebugPrint();
 }
 
+void TestBasicShrinkable() {
+    // Test3: Basic Shrinkable
+    // metapad = 12
+    byte_t allocSize = 32_B;
+    constexpr int numAllocs = 10;
+    FShrinkableAllocArena mem( allocSize, numAllocs );
+    mem.DebugPrint();
+
+    uint8** a[numAllocs+1];
+    for( int i = 0; i < numAllocs; ++i ) {
+        a[i] = mem.Malloc();
+    }
+    mem.DebugPrint();
+
+    for( int i = 0; i < numAllocs; ++i ) {
+        int s = ( rand()% ( uint64(allocSize) / 2 - 2 ) ) + 1;
+        bool shrank = FShrinkableAllocArena::Shrink( a[i], s );
+        ULIS_ASSERT( shrank, "cool" );
+    }
+    mem.DebugPrint();
+
+    for( int i = 0; i < numAllocs; ++i ) {
+        mem.Free( a[i] );
+        mem.DebugPrint();
+    }
+
+    for( int i = 0; i < numAllocs; ++i ) {
+        a[i] = mem.Malloc();
+    }
+
+    for( int i = 0; i < numAllocs; ++i ) {
+        int s = ( rand()% ( uint64(allocSize) / 2 - 2 ) ) + 1;
+        bool shrank = mem.Shrink( a[i], s );
+        ULIS_ASSERT( shrank, "cool" );
+    }
+    mem.DebugPrint();
+    mem.UnsafeFreeAll();
+}
 int main( int argc, char *argv[] ) {
     srand( time( NULL ) );
     //TestFixedDefragRate();
     //TestFixedClientUpdateAfterDefrag();
+    TestBasicShrinkable();
 
-    /*
-    // Test3: Basic Shrinkable
-    // metapad = 12
-    /*
-    int allocSize = 100;
-    constexpr int numAllocs = 10;
-    FShrinkableAllocArena mem( numAllocs * allocSize + numAllocs * 12, allocSize );
-    mem.Print();
-
-    uint8** a[numAllocs];
-    for( int i = 0; i < numAllocs; ++i ) {
-        a[i] = mem.Malloc();
-    }
-    mem.Print();
-
-    for( int i = 0; i < numAllocs; ++i ) {
-        int s = ( rand()% ( allocSize / 2 - 2 ) ) + 1;
-        bool shrank = mem.Shrink( *a[i], s );
-        ULIS_ASSERT( shrank, "cool" );
-    }
-    mem.Print();
-
-    for( int i = 0; i < 10; ++i )
-        if( !FShrinkableAllocArena::IsFree( (const uint8**)a[i] ) )
-            mem.Free( a[i] );
-
-    for( int i = 0; i < numAllocs; ++i ) {
-        a[i] = mem.Malloc();
-    }
-
-    for( int i = 0; i < numAllocs; ++i ) {
-        int s = ( rand()% ( allocSize / 2 - 2 ) ) + 1;
-        bool shrank = mem.Shrink( *a[i], s );
-        ULIS_ASSERT( shrank, "cool" );
-    }
-    mem.Print();
-    */
     return  0;
 }
 

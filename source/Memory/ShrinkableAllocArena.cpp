@@ -154,7 +154,7 @@ FShrinkableAllocArena::FIterator::IsUsed() const {
 
 bool
 FShrinkableAllocArena::FIterator::IsValid() const {
-    return  ( mMetaBase != nullptr ) && ( *( uint64* )( mMetaBase ) != ULIS_UINT64_MAX );
+    return  mMetaBase != nullptr;
 }
 
 bool
@@ -169,7 +169,7 @@ FShrinkableAllocArena::FIterator::IsEnd() const {
 
 void
 FShrinkableAllocArena::FIterator::CleanupMetaBase() {
-    memset( mMetaBase, 0, sgMetaTotalPad );
+    memset( mMetaBase, 0, sizeof( tClient ) );
 }
 
 void
@@ -207,6 +207,7 @@ FShrinkableAllocArena::FIterator::AllocClient() {
 void
 FShrinkableAllocArena::FIterator::MergeFree( const FIterator& iA, const FIterator& iB ) {
     ULIS_ASSERT( ( iA + 1 ) == iB, "Bad" );
+
     if( iA.IsUsed() || iB.IsUsed() )
         return;
 
@@ -336,7 +337,9 @@ FShrinkableAllocArena::Malloc( byte_t iSize )
     sec.CleanupMetaBase();
     sec.SetPrevSize( req );
     sec.SetNextSize( rem );
-    FIterator::MergeFree( sec, sec + 1 );
+    FIterator tir = sec + 1;
+    tir.SetPrevSize( rem );
+    FIterator::MergeFree( sec, tir );
 
     return it.Client();
 }
@@ -350,7 +353,8 @@ FShrinkableAllocArena::Free( tClient iClient )
     it.FreeClient();
     it.CleanupMetaBase();
     FIterator::MergeFree( it, it + 1 );
-    FIterator::MergeFree( it - 1, it );
+    if( !it.IsBegin() )
+        FIterator::MergeFree( it - 1, it );
 }
 
 void
@@ -388,7 +392,7 @@ FShrinkableAllocArena::LocalFragmentation() const
         ++it;
     }
 
-    if( totalFree == 0 )
+    if( totalFree == 0 || totalUsed == 0 )
         return  0.f;
 
     float frag = ( totalFree - maxFree ) / static_cast< float >( totalFree );
@@ -429,13 +433,13 @@ FShrinkableAllocArena::DefragSelfForce()
 }
 
 void
-FShrinkableAllocArena::DebugPrint( bool iShort, int iCol ) const
+FShrinkableAllocArena::DebugPrint( int iType, int iCol ) const
 {
-    if( iShort )
+    if( iType == 0 )
     {
         // Print short version, scaled down with rough estimate of sector status.
         std::cout << "[";
-        uint8* raw_buf = new uint8[mArenaSize];
+        uint8* raw_buf = new uint8[mArenaSize - sgMetaTotalPad ];
         int index = 0;
         FIterator it = Begin();
         const FIterator end = End();
@@ -444,15 +448,15 @@ FShrinkableAllocArena::DebugPrint( bool iShort, int iCol ) const
             const uint32 size = it.NextSize();
             uint32 i = index;
             for( ; i < index + ( size + sgMetaTotalPad ); ++i )
-                raw_buf[i] = bFree;
+                raw_buf[i] = !bFree;
             index = i;
             ++it;
         }
 
         char* display_buf = new char[iCol];
         for( int i = 0; i < iCol; ++i ) {
-            int j = static_cast< int >( ( i / float( iCol ) ) * mArenaSize );
-            int k = static_cast< int >( ( ( i + 1 ) / float( iCol ) ) * mArenaSize );
+            int j = static_cast< int >( ( i / float( iCol ) ) * ( mArenaSize - sgMetaTotalPad ) );
+            int k = static_cast< int >( ( ( i + 1 ) / float( iCol ) ) * ( mArenaSize - sgMetaTotalPad ) );
             float delta = static_cast< float >( k-j );
             uint64 sum = 0;
             for( j; j<k; ++j) {
@@ -462,7 +466,7 @@ FShrinkableAllocArena::DebugPrint( bool iShort, int iCol ) const
         }
         std::cout << "] " << LocalFragmentation() * 100 <<"%\n";
     }
-    else
+    else if( iType == 1 )
     {
         // Print long version with all octets and initial sector status char.
         std::cout << "[";
@@ -478,6 +482,21 @@ FShrinkableAllocArena::DebugPrint( bool iShort, int iCol ) const
                 std::cout << disp;
             ++it;
         }
+        std::cout << "] " << LocalFragmentation() * 100 <<"%\n";
+    }
+    else
+    {
+        // Print individual allocs states
+        std::cout << "[\n";
+        FIterator it = Begin();
+        const FIterator end = End();
+        while( it != end ) {
+            char free = it.IsFree() ? 'Y' : 'N';
+            std::cout << "[ Free: " << free << " Prev: " << it.PrevSize() << " Next: " << it.NextSize() << " Adress: " << (intptr_t)(it.MetaBase()) << " ] " << std::endl;
+            ++it;
+        }
+        char free = it.IsFree() ? 'Y' : 'N';
+        std::cout << "[ Free: " << free << " Prev: " << it.PrevSize() << " Next: " << it.NextSize() << " Adress: " << (intptr_t)(it.MetaBase()) << " ] " << std::endl;
         std::cout << "] " << LocalFragmentation() * 100 <<"%\n";
     }
 }
@@ -557,7 +576,10 @@ FShrinkableAllocArena::Shrink( tClient iClient, byte_t iNewSize )
     sec.CleanupMetaBase();
     sec.SetPrevSize( req );
     sec.SetNextSize( rem );
-    FIterator::MergeFree( sec, sec + 1 );
+    FIterator tir = sec + 1;
+    tir.SetPrevSize( rem );
+    FIterator::MergeFree( sec, tir );
+
     return  true;
 }
 
