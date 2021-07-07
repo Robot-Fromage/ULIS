@@ -155,11 +155,40 @@ void TestBasicShrinkable() {
     mem.DebugPrint();
     mem.UnsafeFreeAll();
 }
+
+
+void TestShrinkableDefrag() {
+    // Test4: Shrinkable Defrag
+    byte_t allocSize = 32_B;
+    constexpr int numAllocs = 10;
+    FShrinkableAllocArena mem( allocSize, numAllocs );
+    mem.DebugPrint();
+
+    uint8** a[numAllocs+1];
+    for( int i = 0; i < numAllocs; ++i ) {
+        a[i] = mem.Malloc();
+    }
+    mem.DebugPrint();
+
+    for( int i = 0; i < numAllocs; ++i ) {
+        int s = ( rand()% ( uint64(allocSize) / 2 - 2 ) ) + 1;
+        bool shrank = FShrinkableAllocArena::Shrink( a[i], s );
+        ULIS_ASSERT( shrank, "cool" );
+    }
+    mem.DebugPrint();
+
+    mem.DefragSelfForce();
+    mem.DebugPrint();
+
+    mem.UnsafeFreeAll();
+}
+
 int main( int argc, char *argv[] ) {
-    srand( time( NULL ) );
+    //srand( time( NULL ) );
     //TestFixedDefragRate();
     //TestFixedClientUpdateAfterDefrag();
-    TestBasicShrinkable();
+    //TestBasicShrinkable();
+    TestShrinkableDefrag();
 
     return  0;
 }

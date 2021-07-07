@@ -415,20 +415,28 @@ FShrinkableAllocArena::DefragSelfForce()
             uint32 backup_prev = it.PrevSize();
             uint32 backup_next = it.NextSize();
             FIterator src = FindFirstMinAlloc( true, 1, it );
+            if( !src.IsValid() )
+                break;
             tMetaBase base = src.MetaBase();
             uint64 run = 0;
             while( src.IsValid() && src.IsUsed() && src != end ) {
                 run += src.NextSize() + sgMetaTotalPad;
                 ++src;
             }
+            uint32 bd = ( src - 1 ).NextSize();
             memmove( it.MetaBase(), base, run );
             it.SetPrevSize( backup_prev );
-            FIterator last = src - 1;
-            last.SetNextSize( last.NextSize() + backup_next );
-            it = src;
+            FIterator last( it.MetaBase() + run );
+            last.CleanupMetaBase();
+            last.SetPrevSize( bd );
+            last.SetNextSize( backup_next );
+            src.SetPrevSize( backup_next );
+            FIterator::MergeFree( last, src );
+            it = last;
         } else {
             ++it;
         }
+        DebugPrint( 2 );
     }
 }
 
