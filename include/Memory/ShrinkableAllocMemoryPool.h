@@ -17,6 +17,22 @@
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
 #pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
+/////////////////////////////////////////////////////
+/// @class      FShrinkableAllocMemoryPool
+/// @brief      The FShrinkableAllocMemoryPool class is a class that provides a
+///             configurable pool of fixed alloc arenas buffer to manages
+///             allocations of fixed size data efficiently and optimize memory
+///             consumption by evaluating sparsity, occupation and fragmentation
+///             of the various arena pages and concatenate them if neccessary.
+///             It is meant to be used for tiles or any objects of fixed
+///             size, and can be driven asynchronously by a larger system if
+///             necessary.
+/// @details    FShrinkableAllocMemoryPool allows to obtain fixed allocations inside that
+///             are resident of one arena page underlying block. It returns  "clients"
+///             of the allocation, that is, a pointer to an allocation.
+///             The API is mostly similar to FFixedAllocArena, but the pool aggregates
+///             them in a list and manages fragmentation and higher level systems and
+///             algorithms to drive them efficiently.
 class ULIS_API FShrinkableAllocMemoryPool {
 public:
     ~FShrinkableAllocMemoryPool();

@@ -436,7 +436,6 @@ FShrinkableAllocArena::DefragSelfForce()
         } else {
             ++it;
         }
-        DebugPrint( 2 );
     }
 }
 
