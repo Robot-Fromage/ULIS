@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         Array.h
+* @file         LimitedArray.h
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TArray class.
+* @brief        This file provides the definition for the TLimitedArray class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -16,37 +16,39 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TArray
-/// @brief      The TArray class provides a simple dynamic array or vector
-///             class for ULIS interfaces.
-/// @details    The need of a custom TArray class rose from the fact that std::
+/// @class      TLimitedArray
+/// @brief      The TLimitedArray class provides a simple dynamic array or vector
+///             class for ULIS interfaces, with a maximum capacity or limit.
+/// @details    The need of a custom TLimitedArray class rose from the fact that std::
 ///             classes cannot be exported easily accross dll boundaries when
 ///             ULIS is compiled as a shared library.
 template< typename T >
-class TArray
+class TLimitedArray
 {
 public:
     /*! Destroy the Array and cleanup memory. */
-    ~TArray< T >()
+    ~TLimitedArray< T >()
     {
         CleanupBulk();
     }
 
     /*! Default constructor with size 0, capicity 0, uninitialized. */
-    TArray< T >()
+    TLimitedArray< T >( uint64 iLimit )
         : mBulk( nullptr )
         , mCapacity( 0 )
         , mSize( 0 )
+        , mLimit( iLimit )
     {}
 
     /*!
         Constructor with known size, both capacity and size will match the requested size.
         The array will have a size of iSize and the elements are default constructed.
     */
-    TArray< T >( uint64 iSize )
+    TLimitedArray< T >( uint64 iSize, uint64 iLimit )
         : mBulk( nullptr )
         , mCapacity( iSize )
         , mSize( iSize )
+        , mLimit( iLimit )
     {
         if( iSize > 0 ) {
             mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iSize ) );
@@ -57,27 +59,29 @@ public:
     }
 
     /*! Copy constructor, explicitly removed. */
-    TArray< T >( const TArray< T >& iOther ) = delete;
+    TLimitedArray< T >( const TLimitedArray< T >& iOther ) = delete;
 
     /*! Copy Assignment Operator, explicitly removed. */
-    TArray< T >& operator=( const TArray< T >& iOther ) = delete;
+    TLimitedArray< T >& operator=( const TLimitedArray< T >& iOther ) = delete;
 
     /*! Move Assignment Operator, explicitly removed. */
-    TArray< T >& operator=( TArray< T >&& iOther ) = delete;
+    TLimitedArray< T >& operator=( TLimitedArray< T >&& iOther ) = delete;
 
     /*!
         Move constructor.
         The first object is left in a valid but empty state.
         The second object steals the buffer and the state ( size and capacity ).
     */
-    TArray< T >( TArray< T >&& iOther ) noexcept
+    TLimitedArray< T >( TLimitedArray< T >&& iOther ) noexcept
         : mBulk( iOther.mBulk )
         , mCapacity( iOther.mCapacity )
         , mSize( iOther.mSize )
+        , mLimit( iOther.mLimit )
     {
         iOther.mBulk = nullptr;
         iOther.mSize = 0;
         iOther.mCapacity = 0;
+        iOther.mLimit = 0;
     }
 
     /*! Returns the raw bits. */
@@ -203,6 +207,11 @@ public:
         return  mSize;
     }
 
+    /*! Returns the array limit. */
+    uint64 Limit() const {
+        return  mLimit;
+    }
+
     /*!
         Reserve some capacity for future usage, if iCapacity is bigger than the
         current capacity.
@@ -214,6 +223,7 @@ public:
         The size doesn't change.
     */
     void Reserve( uint64 iCapacity ) {
+        ULIS_ASSERT( iCapacity <= mLimit, "Cannot reserve more than limit" );
         // Only if requested a bigger capacity
         if( iCapacity > mCapacity )
             ReallocBulk( iCapacity );
@@ -238,6 +248,7 @@ public:
         It has no effect if the requested size is the same as the current size.
     */
     void Resize( uint64 iSize ) {
+        ULIS_ASSERT( iSize <= mLimit, "Cannot reserve more than limit" );
         // If requested size equal to size, do nothing.
         if( iSize == mSize ) {
             // The buffer references remain valid.
@@ -441,13 +452,14 @@ private:
     */
     void CheckGrowBulk() {
         if( mSize == mCapacity )
-            ReallocBulk( FMath::Max( uint64(1), static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ) ) );
+            ReallocBulk( FMath::Clamp( static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ), uint64(1), mLimit ) );
     }
 
 private:
     T* mBulk; ///< The main buffer storage.
     uint64 mCapacity; ///< The array capacity, may be bigger than size.
     uint64 mSize; ///< The array usage size.
+    const uint64 mLimit; ///< The capacity limit, cannot be exceeded.
 };
 
 ULIS_NAMESPACE_END

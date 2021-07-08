@@ -161,7 +161,7 @@ FShrinkableAllocMemoryPool::Malloc()
 void
 FShrinkableAllocMemoryPool::Free( tClient iClient )
 {
-    FShrinkableAllocMemoryPool::Free( iClient );
+    FShrinkableAllocArena::Free( iClient );
 }
 
 void
