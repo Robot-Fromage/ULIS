@@ -12,6 +12,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Memory/ShrinkableAllocArena.h"
+#include "Memory/MemoryPoolPolicy.h"
 #include <list>
 #include <functional>
 
@@ -57,6 +58,7 @@ public:
         , byte_t iMaxAllocSize
         , byte_t iTargetMemoryUsage = 1
         , ufloat iDefragThreshold = 1/3.f
+        , const FMemoryPoolPolicy& iPolicy = FMemoryPoolPolicy::PermissiveGrowth
     );
 
     /*!
@@ -70,6 +72,7 @@ public:
         , uint64 iNumCellPerArena
         , byte_t iTargetMemoryUsage = 1
         , ufloat iDefragThreshold = 1/3.f
+        , const FMemoryPoolPolicy& iPolicy = FMemoryPoolPolicy::PermissiveGrowth
     );
 
     /*! Explicitely deleted copy constructor */
@@ -129,7 +132,7 @@ public:
         Obtain an client to an allocation within this pool.
         If full or a failure occurs, returns nullptr.
     */
-    tClient Malloc();
+    tClient Malloc( byte_t iSize );
 
     /*!
         Free an allocation and its associated client.
@@ -182,11 +185,12 @@ public:
     void DebugPrint( int iType = 0, int iCol = 100 ) const;
 
 private:
-    const uint64 mArenaSize;
-    const uint64 mMaxAllocSize;
-    uint64 mTargetMemoryUsage;
-    ufloat mDefragThreshold;
-    std::list< FShrinkableAllocArena* > mArenaPool;
+    const uint64 mArenaSize; ///< Arena Size in bytes, with extra meta pad for cell
+    const uint64 mMaxAllocSize; ///< Max allocation Size in bytes, without extra meta pad for cell
+    uint64 mTargetMemoryUsage; ///< approximate target memory to reach with arena pages, actual behaviour depends on policy.
+    ufloat mDefragThreshold; ///< A threshold that, if reached, allows to trigger a defrag.
+    std::list< FShrinkableAllocArena* > mArenaPool; ///< The arenas pages, in a list.
+    FMemoryPoolPolicy mPolicy; ///< The memory policy
 };
 #pragma warning(pop)
 ULIS_NAMESPACE_END

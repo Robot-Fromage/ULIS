@@ -12,6 +12,7 @@
 #pragma once
 #include "Core/Core.h"
 #include "Memory/FixedAllocArena.h"
+#include "Memory/MemoryPoolPolicy.h"
 #include <list>
 #include <functional>
 
@@ -58,6 +59,7 @@ public:
         , byte_t iAllocSize
         , byte_t iTargetMemoryUsage = 1
         , ufloat iDefragThreshold = 1/3.f
+        , const FMemoryPoolPolicy& iPolicy = FMemoryPoolPolicy::PermissiveGrowth
     );
 
     /*!
@@ -71,6 +73,7 @@ public:
         , uint64 iNumCellPerArena
         , byte_t iTargetMemoryUsage = 1
         , ufloat iDefragThreshold = 1/3.f
+        , const FMemoryPoolPolicy& iPolicy = FMemoryPoolPolicy::PermissiveGrowth
     );
 
     /*! Explicitely deleted copy constructor */
@@ -198,6 +201,7 @@ private:
     uint64 mTargetMemoryUsage; ///< approximate target memory to reach with arena pages, actual behaviour depends on policy.
     ufloat mDefragThreshold; ///< A threshold that, if reached, allows to trigger a defrag.
     std::list< FFixedAllocArena* > mArenaPool; ///< The arenas pages, in a list.
+    FMemoryPoolPolicy mPolicy; ///< The memory policy
 };
 #pragma warning(pop)
 

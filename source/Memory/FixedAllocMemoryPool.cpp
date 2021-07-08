@@ -24,10 +24,12 @@ FFixedAllocMemoryPool::FFixedAllocMemoryPool(
     , byte_t iAllocSize
     , byte_t iTargetMemoryUsage
     , ufloat iDefragThreshold
+    , const FMemoryPoolPolicy& iPolicy
 )
     : mArenaSize( iArenaSize )
     , mAllocSize( iAllocSize )
     , mDefragThreshold( FMath::Clamp( iDefragThreshold, 0.f, 1.f ) )
+    , mPolicy( iPolicy )
 {
     ULIS_ASSERT( mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mAllocSize, "Bad Size !" );
@@ -43,6 +45,7 @@ FFixedAllocMemoryPool::FFixedAllocMemoryPool(
     , uint64 iNumCellPerArena
     , byte_t iTargetMemoryUsage
     , ufloat iDefragThreshold
+    , const FMemoryPoolPolicy& iPolicy
 )
     : mArenaSize(
           static_cast< uint64 >( iAllocSize )
@@ -50,6 +53,7 @@ FFixedAllocMemoryPool::FFixedAllocMemoryPool(
     )
     , mAllocSize( iAllocSize )
     , mDefragThreshold( FMath::Clamp( iDefragThreshold, 0.f, 1.f ) )
+    , mPolicy( iPolicy )
 {
     ULIS_ASSERT( mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mAllocSize, "Bad Size !" );
@@ -223,11 +227,19 @@ tClient
 FFixedAllocMemoryPool::Malloc()
 {
     tClient alloc = nullptr;
-    for( auto it : mArenaPool ) {
-        alloc = it->Malloc();
+    // Reverse iteration, because after a defrag, arenas with a lot of free space are likely to be at the end
+    for ( auto it = mArenaPool.rbegin(); it != mArenaPool.rend(); ++it ) {
+        alloc = (*it)->Malloc();
         if( alloc )
             return  alloc;
     }
+
+    if( mPolicy.AllocPageIfOutOfSpace() ) {
+        FFixedAllocArena* page = new FFixedAllocArena( byte_t( mArenaSize ), byte_t( mAllocSize ) );
+        mArenaPool.push_back( page );
+        return  page->Malloc();
+    }
+
     return  nullptr;
 }
 

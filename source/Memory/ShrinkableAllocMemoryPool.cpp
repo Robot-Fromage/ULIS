@@ -24,10 +24,12 @@ FShrinkableAllocMemoryPool::FShrinkableAllocMemoryPool(
     , byte_t iMaxAllocSize
     , byte_t iTargetMemoryUsage
     , ufloat iDefragThreshold
+    , const FMemoryPoolPolicy& iPolicy
 )
     : mArenaSize( iArenaSize )
     , mMaxAllocSize( iMaxAllocSize )
     , mDefragThreshold( FMath::Clamp( iDefragThreshold, 0.f, 1.f ) )
+    , mPolicy( iPolicy )
 {
     ULIS_ASSERT( mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mMaxAllocSize, "Bad Size !" );
@@ -41,6 +43,7 @@ FShrinkableAllocMemoryPool::FShrinkableAllocMemoryPool(
     , uint64 iNumCellPerArena
     , byte_t iTargetMemoryUsage
     , ufloat iDefragThreshold
+    , const FMemoryPoolPolicy& iPolicy
 )
     : mArenaSize(
           // Room for allocs
@@ -54,6 +57,7 @@ FShrinkableAllocMemoryPool::FShrinkableAllocMemoryPool(
     )
     , mMaxAllocSize( iMaxAllocSize )
     , mDefragThreshold( FMath::Clamp( iDefragThreshold, 0.f, 1.f ) )
+    , mPolicy( iPolicy )
 {
     ULIS_ASSERT( mArenaSize, "Bad Size !" );
     ULIS_ASSERT( mMaxAllocSize, "Bad Size !" );
@@ -146,14 +150,22 @@ FShrinkableAllocMemoryPool::DefragForce()
 }
 
 tClient
-FShrinkableAllocMemoryPool::Malloc()
+FShrinkableAllocMemoryPool::Malloc( byte_t iSize )
 {
     tClient alloc = nullptr;
-    for( auto it : mArenaPool ) {
-        alloc = it->Malloc();
+    // Reverse iteration, because after a defrag, arenas with a lot of free space are likely to be at the end
+    for ( auto it = mArenaPool.rbegin(); it != mArenaPool.rend(); ++it ) {
+        alloc = (*it)->Malloc( iSize );
         if( alloc )
             return  alloc;
     }
+
+    if( mPolicy.AllocPageIfOutOfSpace() ) {
+        FShrinkableAllocArena* page = new FShrinkableAllocArena( byte_t( mArenaSize ), byte_t( mMaxAllocSize ) );
+        mArenaPool.push_back( page );
+        return  page->Malloc( iSize );
+    }
+
     return  nullptr;
 }
 
