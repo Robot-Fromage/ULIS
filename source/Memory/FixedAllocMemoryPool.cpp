@@ -128,6 +128,16 @@ FFixedAllocMemoryPool::SetTargetMemoryUsage( byte_t iValue )
     ULIS_ASSERT( mTargetMemoryUsage % mArenaSize == 0, "Bad Computation !" );
 }
 
+FMemoryPoolPolicy&
+FFixedAllocMemoryPool::MemoryPolicy() {
+    return  mPolicy;
+}
+
+const FMemoryPoolPolicy&
+FFixedAllocMemoryPool::MemoryPolicy() const {
+    return  mPolicy;
+}
+
 ufloat
 FFixedAllocMemoryPool::DefragThreshold() const
 {

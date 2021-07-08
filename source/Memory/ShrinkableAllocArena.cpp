@@ -270,7 +270,7 @@ bool
 FShrinkableAllocArena::IsEmpty() const
 {
     FIterator begin = Begin();
-    uint64 initialFreeBufferSize = uint64( mArenaSize ) - uint64( smMetaTotalPad ) * 2;
+    uint64 initialFreeBufferSize = InitialFreeMemory( mArenaSize );
     return begin.IsFree() && begin.NextSize() == initialFreeBufferSize;
 }
 
@@ -589,7 +589,7 @@ FShrinkableAllocArena::Shrink( tClient iClient, byte_t iNewSize )
 
 void
 FShrinkableAllocArena::Initialize() {
-    uint32 initialFreeBufferSize = uint32( mArenaSize ) - uint32( smMetaTotalPad ) * 2;
+    uint32 initialFreeBufferSize = InitialFreeMemory( mArenaSize );
     FIterator begin = Begin();
     begin.CleanupMetaBase();
     begin.SetPrevSize( 0 );
@@ -598,6 +598,12 @@ FShrinkableAllocArena::Initialize() {
     end.FillMetaBase();
     end.SetPrevSize( initialFreeBufferSize );
     end.SetNextSize( 0 );
+}
+
+// static
+uint64
+FShrinkableAllocArena::InitialFreeMemory( uint64 iArenaSize ) {
+    return  uint64( iArenaSize ) - uint64( smMetaTotalPad ) * 2;
 }
 
 FShrinkableAllocArena::FIterator

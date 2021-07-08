@@ -115,6 +115,16 @@ FShrinkableAllocMemoryPool::SetTargetMemoryUsage( byte_t iValue )
     ULIS_ASSERT( mTargetMemoryUsage % mArenaSize == 0, "Bad Computation !" );
 }
 
+FMemoryPoolPolicy&
+FShrinkableAllocMemoryPool::MemoryPolicy() {
+    return  mPolicy;
+}
+
+const FMemoryPoolPolicy&
+FShrinkableAllocMemoryPool::MemoryPolicy() const {
+    return  mPolicy;
+}
+
 float
 FShrinkableAllocMemoryPool::DefragThreshold() const
 {
@@ -147,6 +157,33 @@ FShrinkableAllocMemoryPool::DefragIfNecessary()
 void
 FShrinkableAllocMemoryPool::DefragForce()
 {
+    if( mArenaPool.size() < 1 )
+        return;
+
+    // Sort: in decreasing frag rate:
+    // High frag rates are at the beginning
+    // Low frag rates are at the end
+    // That way we minimize the moves and skip full.
+    // High work Self Defrag in beginning
+    // Low work Self Defrag in end
+    mArenaPool.sort(
+        []( FShrinkableAllocArena* iLhs, FShrinkableAllocArena* iRhs ) {
+            return  iLhs->LocalFragmentation() < iRhs->LocalFragmentation();
+        }
+    );
+
+    // Defrag Self All to make room
+    for( auto it : mArenaPool ) {
+        it->DefragSelfForce();
+    }
+
+    auto highArena = mArenaPool.begin();
+    auto lowArena = --mArenaPool.end();
+    FShrinkableAllocArena::FIterator src_it = FShrinkableAllocArena::FIterator::MakeNull();
+    FShrinkableAllocArena::FIterator dst_it = FShrinkableAllocArena::FIterator::MakeNull();
+    uint64 initialFreeBufferSize = FShrinkableAllocArena::InitialFreeMemory( mArenaSize );
+    uint64 srcFree = (*lowArena)->FreeMemory();
+    uint64 dstUsed = (*highArena)->UsedMemory();
 }
 
 tClient

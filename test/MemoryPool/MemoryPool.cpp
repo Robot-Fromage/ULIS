@@ -16,7 +16,7 @@ using namespace ::ULIS;
 using namespace ULIS::units_literals;
 
 void TestFixedDefragRate() {
-    // Test1: Many random allocs / deallocs and degraf
+    // Test1: Many random allocs / deallocs and defrag
     // Bake constants and variables
     byte_t allocSize = 8_B;
     constexpr uint64 numCellsPerArena = 10;

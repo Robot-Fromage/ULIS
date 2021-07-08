@@ -259,6 +259,7 @@ private:
     // Private Memory API
     FIterator FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = ULIS_UINT32_MAX, const FIterator& iFrom = FIterator::MakeNull() ); // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
     void Initialize();
+    static uint64 InitialFreeMemory( uint64 iArenaSize );
 
     // Iterator API
     FIterator Begin();

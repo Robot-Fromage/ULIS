@@ -107,6 +107,12 @@ public:
     /*! Set the target memory usage as bytes. */
     void SetTargetMemoryUsage( byte_t iValue );
 
+    /*! Get modifiable Memory Policy. */
+    FMemoryPoolPolicy& MemoryPolicy();
+
+    /*! Get const Memory Policy. */
+    const FMemoryPoolPolicy& MemoryPolicy() const;
+
 
 
     // Fragmentation API
