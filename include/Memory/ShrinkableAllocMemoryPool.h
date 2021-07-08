@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 #include "Memory/ShrinkableAllocArena.h"
 #include <list>
+#include <functional>
 
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
@@ -20,65 +21,171 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FShrinkableAllocMemoryPool
 /// @brief      The FShrinkableAllocMemoryPool class is a class that provides a
-///             configurable pool of fixed alloc arenas buffer to manages
-///             allocations of fixed size data efficiently and optimize memory
+///             configurable pool of shrinkable alloc arenas buffer to manages
+///             allocations with known maximum size data efficiently and optimize memory
 ///             consumption by evaluating sparsity, occupation and fragmentation
 ///             of the various arena pages and concatenate them if neccessary.
-///             It is meant to be used for tiles or any objects of fixed
-///             size, and can be driven asynchronously by a larger system if
+///             It is meant to be used for RLE Compressed tiles or any objects of known maximal
+///             size, potentialy shrinkable, and can be driven asynchronously by a larger system if
 ///             necessary.
-/// @details    FShrinkableAllocMemoryPool allows to obtain fixed allocations inside that
+/// @details    FShrinkableAllocMemoryPool allows to obtain shrinkable allocations that
 ///             are resident of one arena page underlying block. It returns  "clients"
 ///             of the allocation, that is, a pointer to an allocation.
-///             The API is mostly similar to FFixedAllocArena, but the pool aggregates
+///             The API is mostly similar to FShrinkableAllocArena, but the pool aggregates
 ///             them in a list and manages fragmentation and higher level systems and
 ///             algorithms to drive them efficiently.
 class ULIS_API FShrinkableAllocMemoryPool {
 public:
+    /*!
+        Destructor, destroy the arenas pages.
+        Cleanup the underlying arenas block.
+        Make sure all allocations are free before destroying a pool, or it will trigger an assert in debug builds.
+        You can use UnsafeFreeAll() before destruction to ensure it doesn't crash, but only if you know what you're doing.
+        It is possible to do so before program termination, but if clients don't expect this, they will all be deleted
+        without notification and induce a corrupted state within the program.
+    */
     ~FShrinkableAllocMemoryPool();
+
+    /*!
+        Constructor from arena size and max alloc size.
+        Make sure to chose an arena size that is greater than the alloc size and that can fit an expected number of
+        fixed cells allocations.
+    */
+    explicit
     FShrinkableAllocMemoryPool(
-          uint64 iArenaSize
-        , uint32 iAllocSize
-        , uint64 iTargetMemoryUsage = 1
-        , float iDefragThreshold = 0.333f
+          byte_t iArenaSize
+        , byte_t iMaxAllocSize
+        , byte_t iTargetMemoryUsage = 1
+        , ufloat iDefragThreshold = 1/3.f
     );
+
+    /*!
+        Constructor from alloc size and number of expected cells or allocs.
+        An arena size will be computed so that it can fit an expected number of
+        max size cells allocations.
+    */
+    explicit
+    FShrinkableAllocMemoryPool(
+          byte_t iMaxAllocSize
+        , uint64 iNumCellPerArena
+        , byte_t iTargetMemoryUsage = 1
+        , ufloat iDefragThreshold = 1/3.f
+    );
+
+    /*! Explicitely deleted copy constructor */
     FShrinkableAllocMemoryPool( const FShrinkableAllocMemoryPool& ) = delete;
+
+    /*! Explicitely deleted copy assignment operator */
     FShrinkableAllocMemoryPool& operator=( const FShrinkableAllocMemoryPool& ) = delete;
 
 public:
-    uint64 ArenaSize() const;
-    uint32 AllocSize() const;
+    // Size API
+    /*! Obtain the arena size in bytes */
+    byte_t ArenaSize() const;
 
-    uint64 NumCells() const;
-    uint64 NumAvailableCells() const;
-    uint64 NumUsedCells() const;
+    /*! Obtain the alloc size in bytes */
+    byte_t MaxAllocSize() const;
 
-    uint64 TotalMemory() const;
-    uint64 AvailableMemory() const;
-    uint64 UsedMemory() const;
 
-    uint64 TargetMemoryUsage() const;
-    void SetTargetMemoryUsage( uint64 iValue );
 
+    // Memory API
+    /*! Obtain the total theoretical memory for this pool as bytes, given the current number or arenas. */
+    byte_t TotalMemory() const;
+
+    /*! Obtain current free memory as bytes. */
+    byte_t FreeMemory() const;
+
+    /*! Obtain current used memory as bytes. */
+    byte_t UsedMemory() const;
+
+    /*! Obtain the target memory usage as bytes. */
+    byte_t TargetMemoryUsage() const;
+
+    /*! Set the target memory usage as bytes. */
+    void SetTargetMemoryUsage( byte_t iValue );
+
+
+
+    // Fragmentation API
+    /*! Get the defrag theshold. */
     float DefragThreshold() const;
-    void SetDefragThreshold( float iValue );
 
-    tClient Malloc();
-    void Free( tClient iAlloc );
-    float Fragmentation() const;
+    /*! Set the defrag theshold. */
+    void SetDefragThreshold( ufloat iValue );
+
+    /*! Arbitrary heuristic to estimate fragmentation of the pool. */
+    ufloat Fragmentation() const;
+
+    /*! Trigger a defrag only if the threshold is reached. */
     void DefragIfNecessary();
+
+    /*! Force trigger a defrag. */
     void DefragForce();
 
+
+
+    // Alloc API
+    /*!
+        Obtain an client to an allocation within this pool.
+        If full or a failure occurs, returns nullptr.
+    */
+    tClient Malloc();
+
+    /*!
+        Free an allocation and its associated client.
+        It doesn't need to be resident in this pool.
+    */
+    static void Free( tClient iClient );
+
+    /*!
+        Free all resident allocations in this pool.
+        Clients are deleted and not notified about their status.
+        This is unsafe and dangerous, unless you're done with all clients.
+    */
+    void UnsafeFreeAll();
+
+    /*!
+        Alloc empty arena page if target memory isn't reached.
+    */
     bool AllocOneArenaIfNecessary();
+
+    /*!
+        Delete empty arena page if target memory is reached.
+    */
     bool FreeOneArenaIfNecessary();
 
-    void Print() const;
+    /*!
+        Alloc N empty arenas until memory target is reached.
+        Return the number of allocated arenas.
+    */
+    uint64 AllocArenasToReachTargetMemory();
+
+    /*!
+        Free all arenas that are empty.
+    */
+    uint64 FreeEmptyArenasToReachTargetMemory();
+
+    /*!
+        Free all arenas that are empty.
+    */
+    uint64 FreeAllEmptyArenas();
+
+    /*!
+        Free arenas according to predicate.
+    */
+    uint64 FreeEmptyArenasAccordingToPredicate( std::function< bool() > iPredicate );
+
+
+
+    // Debug API
+    /*! Get a textual representation of the arena for debug purposes. */
+    void DebugPrint( int iType = 0, int iCol = 100 ) const;
 
 private:
     const uint64 mArenaSize;
-    const uint32 mAllocSize;
+    const uint64 mMaxAllocSize;
     uint64 mTargetMemoryUsage;
-    float mDefragThreshold;
+    ufloat mDefragThreshold;
     std::list< FShrinkableAllocArena* > mArenaPool;
 };
 #pragma warning(pop)

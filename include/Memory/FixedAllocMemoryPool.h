@@ -56,7 +56,7 @@ public:
     FFixedAllocMemoryPool(
           byte_t iArenaSize
         , byte_t iAllocSize
-        , byte_t iTargetMemoryUsage = 0
+        , byte_t iTargetMemoryUsage = 1
         , ufloat iDefragThreshold = 1/3.f
     );
 
@@ -69,7 +69,7 @@ public:
     FFixedAllocMemoryPool(
           byte_t iAllocSize
         , uint64 iNumCellPerArena
-        , byte_t iTargetMemoryUsage = 0
+        , byte_t iTargetMemoryUsage = 1
         , ufloat iDefragThreshold = 1/3.f
     );
 
@@ -136,7 +136,7 @@ public:
 
     // Alloc API
     /*!
-        Obtain an client to an allocation within this arena.
+        Obtain an client to an allocation within this pool.
         If full or a failure occurs, returns nullptr.
     */
     tClient Malloc();
@@ -188,6 +188,7 @@ public:
 
 
     // Debug API
+    /*! Get a textual representation of the arena for debug purposes. */
     void DebugPrint() const;
 
 private:

@@ -271,6 +271,10 @@ private:
     const uint64 mArenaSize; ///< Arena Size in bytes, with extra meta pad for cell
     const uint32 mMaxAllocSize; ///< Max allocation Size in bytes, without extra meta pad for cell
     tByte* const mBlock; ///< Underlying arena storage buffer with allocation data and meta infos [meta][data] ...
+
+    static constexpr const uint8 smMetaPrevDeltaPad = sizeof( tClient ); ///< Constant padding for meta base storage: prev delta pad.
+    static constexpr const uint8 smMetaNextDeltaPad = smMetaPrevDeltaPad + sizeof( uint32 ); ///< Constant padding for meta base storage: next delta pad.
+    static constexpr const uint8 smMetaTotalPad = smMetaNextDeltaPad + sizeof( uint32 ); ///< Constant padding for meta base storag: total pad.
 };
 
 ULIS_NAMESPACE_END

@@ -15,9 +15,6 @@
 #include "Core/Constants.h"
 
 ULIS_NAMESPACE_BEGIN
-static constexpr const uint8 sgMetaPrevDeltaPad = sizeof( tClient ); ///< Constant padding for meta base storage: prev delta pad.
-static constexpr const uint8 sgMetaNextDeltaPad = sgMetaPrevDeltaPad + sizeof( uint32 ); ///< Constant padding for meta base storage: next delta pad.
-static constexpr const uint8 sgMetaTotalPad = sgMetaNextDeltaPad + sizeof( uint32 ); ///< Constant padding for meta base storag: total pad.
 static constexpr char sgBlockChar = char( 219 );
 
 FShrinkableAllocArena::FIterator::FIterator(
@@ -29,7 +26,7 @@ FShrinkableAllocArena::FIterator::FIterator(
 FShrinkableAllocArena::FIterator::FIterator(
     tClient iClient
 )
-    : mMetaBase( ( *iClient ) - sgMetaTotalPad )
+    : mMetaBase( ( *iClient ) - smMetaTotalPad )
 {}
 
 FShrinkableAllocArena::FIterator&
@@ -47,28 +44,28 @@ FShrinkableAllocArena::FIterator::MakeNull() {
 FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator++() {
     ULIS_ASSERT( !IsEnd(), "Bad" );
-    mMetaBase += sgMetaTotalPad + NextSize();
+    mMetaBase += smMetaTotalPad + NextSize();
     return  *this;
 }
 
 FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator--() {
     ULIS_ASSERT( !IsBegin(), "Bad" );
-    mMetaBase -= sgMetaTotalPad + PrevSize();
+    mMetaBase -= smMetaTotalPad + PrevSize();
     return  *this;
 }
 
 const FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator++() const {
     ULIS_ASSERT( !IsEnd(), "Bad" );
-    mMetaBase += sgMetaTotalPad + NextSize();
+    mMetaBase += smMetaTotalPad + NextSize();
     return  *this;
 }
 
 const FShrinkableAllocArena::FIterator&
 FShrinkableAllocArena::FIterator::operator--() const {
     ULIS_ASSERT( !IsBegin(), "Bad" );
-    mMetaBase -= sgMetaTotalPad + PrevSize();
+    mMetaBase -= smMetaTotalPad + PrevSize();
     return  *this;
 }
 
@@ -100,12 +97,12 @@ FShrinkableAllocArena::FIterator::operator!=( const FIterator& iOther ) const {
 
 uint32
 FShrinkableAllocArena::FIterator::PrevSize() const {
-    return  *(uint32*)( mMetaBase + sgMetaPrevDeltaPad );
+    return  *(uint32*)( mMetaBase + smMetaPrevDeltaPad );
 }
 
 uint32
 FShrinkableAllocArena::FIterator::NextSize() const {
-    return  *(uint32*)( mMetaBase + sgMetaNextDeltaPad );
+    return  *(uint32*)( mMetaBase + smMetaNextDeltaPad );
 }
 
 tClient
@@ -132,13 +129,13 @@ FShrinkableAllocArena::FIterator::MetaBase() const {
 tAlloc
 FShrinkableAllocArena::FIterator::Allocation() {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    return  ( tAlloc )( mMetaBase + sgMetaTotalPad );
+    return  ( tAlloc )( mMetaBase + smMetaTotalPad );
 }
 
 const tAlloc
 FShrinkableAllocArena::FIterator::Allocation() const {
     ULIS_ASSERT( IsValid(), "dereferencing invalid metabase" )
-    return  ( tAlloc )( mMetaBase + sgMetaTotalPad );
+    return  ( tAlloc )( mMetaBase + smMetaTotalPad );
 }
 bool
 FShrinkableAllocArena::FIterator::IsFree() const {
@@ -180,12 +177,12 @@ FShrinkableAllocArena::FIterator::FillMetaBase() {
 
 void
 FShrinkableAllocArena::FIterator::SetPrevSize( uint32 iValue ) {
-    *( uint32* )( mMetaBase + sgMetaPrevDeltaPad ) = iValue;
+    *( uint32* )( mMetaBase + smMetaPrevDeltaPad ) = iValue;
 }
 
 void
 FShrinkableAllocArena::FIterator::SetNextSize( uint32 iValue ) {
-    *( uint32* )( mMetaBase + sgMetaNextDeltaPad ) = iValue;
+    *( uint32* )( mMetaBase + smMetaNextDeltaPad ) = iValue;
 }
 
 void
@@ -213,7 +210,7 @@ FShrinkableAllocArena::FIterator::MergeFree( const FIterator& iA, const FIterato
 
     FIterator n0 = iA;
     FIterator n1 = iB + 1;
-    uint32 mergeSize = n0.NextSize() + sgMetaTotalPad + n1.PrevSize();
+    uint32 mergeSize = n0.NextSize() + smMetaTotalPad + n1.PrevSize();
     n0.SetNextSize( mergeSize );
     n1.SetPrevSize( mergeSize );
 }
@@ -234,7 +231,7 @@ FShrinkableAllocArena::FShrinkableAllocArena(
 {
     ULIS_ASSERT( mArenaSize > 0, "Bad Size !" );
     ULIS_ASSERT( mMaxAllocSize > 0, "Bad Size !" );
-    ULIS_ASSERT( uint64( mMaxAllocSize ) + uint64( sgMetaTotalPad ) < uint64( mArenaSize ), "Bad Size !" );
+    ULIS_ASSERT( uint64( mMaxAllocSize ) + uint64( smMetaTotalPad ) < uint64( mArenaSize ), "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
     Initialize();
 }
@@ -248,17 +245,17 @@ FShrinkableAllocArena::FShrinkableAllocArena(
           uint64( iMaxAllocSize )
         * uint64( iNumCells )
         // Room for meta Bases, including begin sentinel
-        + uint64( sgMetaTotalPad )
+        + uint64( smMetaTotalPad )
         * uint64( iNumCells )
         // Room for end sentinel
-        + uint64( sgMetaTotalPad )
+        + uint64( smMetaTotalPad )
     )
     , mMaxAllocSize( iMaxAllocSize )
     , mBlock( ( uint8* )( XMalloc( BlockSize() ) ) )
 {
     ULIS_ASSERT( mArenaSize > 0, "Bad Size !" );
     ULIS_ASSERT( mMaxAllocSize > 0, "Bad Size !" );
-    ULIS_ASSERT( uint64( mMaxAllocSize ) + uint64( sgMetaTotalPad ) < uint64( mArenaSize ), "Bad Size !" );
+    ULIS_ASSERT( uint64( mMaxAllocSize ) + uint64( smMetaTotalPad ) < uint64( mArenaSize ), "Bad Size !" );
     ULIS_ASSERT( mBlock, "Bad Alloc !" );
     Initialize();
 }
@@ -273,7 +270,7 @@ bool
 FShrinkableAllocArena::IsEmpty() const
 {
     FIterator begin = Begin();
-    uint64 initialFreeBufferSize = uint64( mArenaSize ) - uint64( sgMetaTotalPad ) * 2;
+    uint64 initialFreeBufferSize = uint64( mArenaSize ) - uint64( smMetaTotalPad ) * 2;
     return begin.IsFree() && begin.NextSize() == initialFreeBufferSize;
 }
 
@@ -327,7 +324,7 @@ FShrinkableAllocArena::Malloc( byte_t iSize )
 
     it.AllocClient();
     uint32 chunkSize = it.NextSize();
-    uint32 rem = chunkSize > req + sgMetaTotalPad ? chunkSize - ( req + sgMetaTotalPad ) : 0;
+    uint32 rem = chunkSize > req + smMetaTotalPad ? chunkSize - ( req + smMetaTotalPad ) : 0;
 
     if( rem == 0 )
         return it.Client();
@@ -406,8 +403,8 @@ FShrinkableAllocArena::DefragSelfForce()
     // Align all allocs to the left of the buffer.
     // Use memmove to avoid overlapping self sector.
     // pass contiguous blocks.
-    // first find a src ( first empty after contiguous used ).
-    // then find a dst ( first [next] used after src. ).
+    // first find a dst(it) ( first empty after contiguous used ).
+    // then find a src ( first [next] used after dst. ).
     FIterator it = Begin();
     const FIterator end = End();
     while( it != end ) {
@@ -420,7 +417,7 @@ FShrinkableAllocArena::DefragSelfForce()
             tMetaBase base = src.MetaBase();
             uint64 run = 0;
             while( src.IsValid() && src.IsUsed() && src != end ) {
-                run += src.NextSize() + sgMetaTotalPad;
+                run += src.NextSize() + uint32( smMetaTotalPad );
                 ++src;
             }
             uint32 bd = ( src - 1 ).NextSize();
@@ -446,7 +443,7 @@ FShrinkableAllocArena::DebugPrint( int iType, int iCol ) const
     {
         // Print short version, scaled down with rough estimate of sector status.
         std::cout << "[";
-        uint8* raw_buf = new uint8[mArenaSize - sgMetaTotalPad ];
+        uint8* raw_buf = new uint8[mArenaSize - smMetaTotalPad ];
         int index = 0;
         FIterator it = Begin();
         const FIterator end = End();
@@ -454,7 +451,7 @@ FShrinkableAllocArena::DebugPrint( int iType, int iCol ) const
             const bool bFree = it.IsFree();
             const uint32 size = it.NextSize();
             uint32 i = index;
-            for( ; i < index + ( size + sgMetaTotalPad ); ++i )
+            for( ; i < index + ( size + smMetaTotalPad ); ++i )
                 raw_buf[i] = !bFree;
             index = i;
             ++it;
@@ -462,8 +459,8 @@ FShrinkableAllocArena::DebugPrint( int iType, int iCol ) const
 
         char* display_buf = new char[iCol];
         for( int i = 0; i < iCol; ++i ) {
-            int j = static_cast< int >( ( i / float( iCol ) ) * ( mArenaSize - sgMetaTotalPad ) );
-            int k = static_cast< int >( ( ( i + 1 ) / float( iCol ) ) * ( mArenaSize - sgMetaTotalPad ) );
+            int j = static_cast< int >( ( i / float( iCol ) ) * ( mArenaSize - smMetaTotalPad ) );
+            int k = static_cast< int >( ( ( i + 1 ) / float( iCol ) ) * ( mArenaSize - smMetaTotalPad ) );
             float delta = static_cast< float >( k-j );
             uint64 sum = 0;
             for( j; j<k; ++j) {
@@ -485,7 +482,7 @@ FShrinkableAllocArena::DebugPrint( int iType, int iCol ) const
             char disp   = bFree ? '-' : '+';
             char beg    = bFree ? '0' : '@';
             std::cout << beg;
-            for( uint32 i = 0; i < size + sgMetaTotalPad - 1; ++i )
+            for( uint32 i = 0; i < size + smMetaTotalPad - 1; ++i )
                 std::cout << disp;
             ++it;
         }
@@ -573,7 +570,7 @@ FShrinkableAllocArena::Shrink( tClient iClient, byte_t iNewSize )
     uint32 chunkSize = it.NextSize();
     ULIS_ASSERT( req <= chunkSize, "New size cannot be greater than current size." );
 
-    uint32 rem = chunkSize > req + sgMetaTotalPad ? chunkSize - ( req + sgMetaTotalPad ) : 0;
+    uint32 rem = chunkSize > req + smMetaTotalPad ? chunkSize - ( req + smMetaTotalPad ) : 0;
 
     if( rem == 0 )
         return false;
@@ -592,7 +589,7 @@ FShrinkableAllocArena::Shrink( tClient iClient, byte_t iNewSize )
 
 void
 FShrinkableAllocArena::Initialize() {
-    uint32 initialFreeBufferSize = uint32( mArenaSize ) - uint32( sgMetaTotalPad ) * 2;
+    uint32 initialFreeBufferSize = uint32( mArenaSize ) - uint32( smMetaTotalPad ) * 2;
     FIterator begin = Begin();
     begin.CleanupMetaBase();
     begin.SetPrevSize( 0 );
@@ -610,7 +607,7 @@ FShrinkableAllocArena::Begin() {
 
 FShrinkableAllocArena::FIterator
 FShrinkableAllocArena::End() {
-    return  FIterator( ( tMetaBase )( mBlock + uint64( mArenaSize ) - uint64( sgMetaTotalPad ) ) );
+    return  FIterator( ( tMetaBase )( mBlock + uint64( mArenaSize ) - uint64( smMetaTotalPad ) ) );
 }
 
 const FShrinkableAllocArena::FIterator
@@ -620,7 +617,7 @@ FShrinkableAllocArena::Begin() const {
 
 const FShrinkableAllocArena::FIterator
 FShrinkableAllocArena::End() const {
-    return  FIterator( ( tMetaBase )( mBlock + uint64( mArenaSize ) - uint64( sgMetaTotalPad ) ) );
+    return  FIterator( ( tMetaBase )( mBlock + uint64( mArenaSize ) - uint64( smMetaTotalPad ) ) );
 }
 
 ULIS_NAMESPACE_END
