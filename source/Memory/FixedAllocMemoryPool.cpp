@@ -210,7 +210,7 @@ FFixedAllocMemoryPool::DefragForce()
     uint64 dstUsed = (*highArena)->NumUsedCells();
     while( highArena != lowArena ) {
         while( srcFree != numCells ) {
-            if( dstUsed == numCells ) {
+            while( dstUsed == numCells ) {
                 if( highArena == lowArena )
                     return;
 
@@ -225,8 +225,6 @@ FFixedAllocMemoryPool::DefragForce()
             srcFree++;
             dstUsed++;
         }
-        if( highArena == lowArena )
-            return;
         --lowArena;
         src_it = FFixedAllocArena::FIterator::MakeNull();
         srcFree = (*lowArena)->NumFreeCells();

@@ -185,9 +185,9 @@ void TestShrinkableDefrag() {
 
 int main( int argc, char *argv[] ) {
     //srand( time( NULL ) );
-    //TestFixedDefragRate();
-    //TestFixedClientUpdateAfterDefrag();
-    //TestBasicShrinkable();
+    TestFixedDefragRate();
+    TestFixedClientUpdateAfterDefrag();
+    TestBasicShrinkable();
     TestShrinkableDefrag();
 
     return  0;

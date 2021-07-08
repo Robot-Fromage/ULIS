@@ -201,18 +201,19 @@ FShrinkableAllocArena::FIterator::AllocClient() {
 }
 
 //static
-void
+bool
 FShrinkableAllocArena::FIterator::MergeFree( const FIterator& iA, const FIterator& iB ) {
     ULIS_ASSERT( ( iA + 1 ) == iB, "Bad" );
 
     if( iA.IsUsed() || iB.IsUsed() )
-        return;
+        return false;
 
     FIterator n0 = iA;
     FIterator n1 = iB + 1;
     uint32 mergeSize = n0.NextSize() + smMetaTotalPad + n1.PrevSize();
     n0.SetNextSize( mergeSize );
     n1.SetPrevSize( mergeSize );
+    return  true;
 }
 
 FShrinkableAllocArena::~FShrinkableAllocArena()
@@ -556,6 +557,27 @@ FShrinkableAllocArena::FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes, 
     return  FIterator::MakeNull();
 }
 
+FShrinkableAllocArena::FIterator
+FShrinkableAllocArena::FindLastMinAlloc( bool iUsed, byte_t iMinimumSizeBytes, const FIterator& iFrom )
+{
+    uint64 size = FMath::Min( uint64( MaxAllocSize() ), uint64( iMinimumSizeBytes ) );
+    ULIS_ASSERT( size > 0, "Cannot alloc 0 bytes" );
+
+    FIterator it = iFrom.IsValid() ? iFrom : End() - 1;
+    ULIS_ASSERT( IsResident( it.MetaBase() ), "Non resident from param" );
+    const FIterator begin = End();
+    while( it != begin ) {
+        if( it.IsUsed() == iUsed && it.NextSize() >= size )
+            return  it;
+
+        if( it == begin )
+            break;
+
+        --it;
+    }
+    return  FIterator::MakeNull();
+}
+
 //static
 bool
 FShrinkableAllocArena::Shrink( tClient iClient, byte_t iNewSize )
@@ -604,6 +626,54 @@ FShrinkableAllocArena::Initialize() {
 uint64
 FShrinkableAllocArena::InitialFreeMemory( uint64 iArenaSize ) {
     return  uint64( iArenaSize ) - uint64( smMetaTotalPad ) * 2;
+}
+
+//static
+void
+FShrinkableAllocArena::MoveAlloc( FIterator& iFrom, FIterator& iTo, uint64* oFreed, uint64* oUsed ) {
+    ULIS_ASSERT( iFrom.IsUsed(), "Bad move, source should be used !" );
+    ULIS_ASSERT( iTo.IsFree(), "Bad move, destination should be free !" );
+    ULIS_ASSERT( iTo.NextSize() >= iFrom.NextSize(), "Bad move, destination should have enough room" );
+
+    uint64 lf = 0; // Dummy
+    uint64 lu = 0; // Dummy
+    uint64& freed = oFreed ? *oFreed : lf;
+    uint64& used = oUsed ? *oUsed : lu;
+    uint32 backup_src_next = iFrom.NextSize();
+    uint32 backup_src_prev = iFrom.PrevSize();
+    uint32 backup_dst_next = iTo.NextSize();
+    uint32 backup_dst_prev = iTo.PrevSize();
+
+    memcpy( iTo.MetaBase(), iFrom.MetaBase(), iFrom.NextSize() );
+
+    // Simply mark source as free, and notify neighbours for potential merge free
+    iFrom.CleanupMetaBase();
+    freed += iFrom.NextSize();
+    freed += FIterator::MergeFree( iFrom, iFrom + 1 ) * uint64( smMetaTotalPad );
+    if( !iFrom.IsBegin() )
+        freed += FIterator::MergeFree( iFrom - 1, iFrom ) * uint64( smMetaTotalPad );
+
+    // Same as malloc but without alloc client, resync instead
+    iTo.ResyncClient();
+
+    uint32 req = backup_src_next;
+    uint32 chunkSize = backup_dst_next;
+    uint32 rem = chunkSize > req + smMetaTotalPad ? chunkSize - ( req + smMetaTotalPad ) : 0;
+
+    if( rem == 0 ) {
+        used = chunkSize;
+        return;
+    }
+
+    used = req + uint64( smMetaTotalPad );
+    iTo.SetNextSize( req );
+    FIterator sec = iTo + 1;
+    sec.CleanupMetaBase();
+    sec.SetPrevSize( req );
+    sec.SetNextSize( rem );
+    FIterator tir = sec + 1;
+    tir.SetPrevSize( rem );
+    used -= FIterator::MergeFree( sec, tir ) * uint64( smMetaTotalPad );
 }
 
 FShrinkableAllocArena::FIterator

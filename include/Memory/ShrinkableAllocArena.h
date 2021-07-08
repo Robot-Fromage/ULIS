@@ -116,7 +116,7 @@ private:
         void FreeClient();
         void ResyncClient();
         tClient AllocClient();
-        static void MergeFree( const FIterator& iA, const FIterator& iB );
+        static bool MergeFree( const FIterator& iA, const FIterator& iB );
 
     private:
         /*!
@@ -258,8 +258,10 @@ private:
 
     // Private Memory API
     FIterator FindFirstMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = ULIS_UINT32_MAX, const FIterator& iFrom = FIterator::MakeNull() ); // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
+    FIterator FindLastMinAlloc( bool iUsed, byte_t iMinimumSizeBytes = ULIS_UINT32_MAX, const FIterator& iFrom = FIterator::MakeNull() ); // default max clamped to MaxAllocSize, default from at mBlock ( LowAdress )
     void Initialize();
     static uint64 InitialFreeMemory( uint64 iArenaSize );
+    static void MoveAlloc( FIterator& iFrom, FIterator& iTo,  uint64* oFreed = nullptr, uint64* oUsed = nullptr );
 
     // Iterator API
     FIterator Begin();

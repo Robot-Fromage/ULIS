@@ -157,7 +157,7 @@ FShrinkableAllocMemoryPool::DefragIfNecessary()
 void
 FShrinkableAllocMemoryPool::DefragForce()
 {
-    if( mArenaPool.size() < 1 )
+    if( mArenaPool.empty() < 1 )
         return;
 
     // Sort: in decreasing frag rate:
@@ -183,7 +183,44 @@ FShrinkableAllocMemoryPool::DefragForce()
     FShrinkableAllocArena::FIterator dst_it = FShrinkableAllocArena::FIterator::MakeNull();
     uint64 initialFreeBufferSize = FShrinkableAllocArena::InitialFreeMemory( mArenaSize );
     uint64 srcFree = (*lowArena)->FreeMemory();
-    uint64 dstUsed = (*highArena)->UsedMemory();
+    uint64 dstFree = (*highArena)->FreeMemory();
+    // We stop when the two ends meet
+    while( highArena != lowArena ) {
+        // While the identified source isn't completely free
+        while( srcFree != initialFreeBufferSize ) {
+            // Skip identified destinations that don't have enough room
+            while( dstFree < mMaxAllocSize ) {
+                // Since we increment identified high destination, check for eq
+                if( highArena == lowArena )
+                    return;
+
+                // Decrease the identified destination
+                ++highArena;
+                dst_it = FShrinkableAllocArena::FIterator::MakeNull();
+                dstFree = (*highArena)->FreeMemory();
+            }
+
+            // Find Last used source of any size
+            src_it = (*lowArena)->FindLastMinAlloc( true, 1, src_it );
+
+            // Find First free with room for src
+            dst_it = (*highArena)->FindFirstMinAlloc( false, src_it.NextSize(), dst_it );
+
+            // Should never happen, but i'm not sure.
+            if( !dst_it.IsValid() )
+                ULIS_ASSERT( false, "CRASHBOOUUM" );
+
+            uint64 freed, used;
+            FShrinkableAllocArena::MoveAlloc( src_it, dst_it, &freed, &used );
+            srcFree += freed;
+            dstFree -= used;
+        }
+
+        // Decrease the identified source
+        --lowArena;
+        src_it = FShrinkableAllocArena::FIterator::MakeNull();
+        srcFree = (*lowArena)->FreeMemory();
+    }
 }
 
 tClient
