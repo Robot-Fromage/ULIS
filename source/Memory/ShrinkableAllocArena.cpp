@@ -565,7 +565,7 @@ FShrinkableAllocArena::FindLastMinAlloc( bool iUsed, byte_t iMinimumSizeBytes, c
 
     FIterator it = iFrom.IsValid() ? iFrom : End() - 1;
     ULIS_ASSERT( IsResident( it.MetaBase() ), "Non resident from param" );
-    const FIterator begin = End();
+    const FIterator begin = Begin();
     while( it != begin ) {
         if( it.IsUsed() == iUsed && it.NextSize() >= size )
             return  it;
@@ -639,12 +639,14 @@ FShrinkableAllocArena::MoveAlloc( FIterator& iFrom, FIterator& iTo, uint64* oFre
     uint64 lu = 0; // Dummy
     uint64& freed = oFreed ? *oFreed : lf;
     uint64& used = oUsed ? *oUsed : lu;
+    freed = 0;
+    used = 0;
     uint32 backup_src_next = iFrom.NextSize();
     uint32 backup_src_prev = iFrom.PrevSize();
     uint32 backup_dst_next = iTo.NextSize();
     uint32 backup_dst_prev = iTo.PrevSize();
 
-    memcpy( iTo.MetaBase(), iFrom.MetaBase(), iFrom.NextSize() );
+    memcpy( iTo.MetaBase(), iFrom.MetaBase(), iFrom.NextSize() + uint64( smMetaTotalPad ) );
 
     // Simply mark source as free, and notify neighbours for potential merge free
     iFrom.CleanupMetaBase();
@@ -666,6 +668,7 @@ FShrinkableAllocArena::MoveAlloc( FIterator& iFrom, FIterator& iTo, uint64* oFre
     }
 
     used = req + uint64( smMetaTotalPad );
+    iTo.SetPrevSize( backup_dst_prev );
     iTo.SetNextSize( req );
     FIterator sec = iTo + 1;
     sec.CleanupMetaBase();

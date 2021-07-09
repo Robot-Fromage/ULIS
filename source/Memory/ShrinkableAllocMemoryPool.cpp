@@ -140,6 +140,9 @@ FShrinkableAllocMemoryPool::SetDefragThreshold( ufloat iValue )
 ufloat
 FShrinkableAllocMemoryPool::Fragmentation() const
 {
+    if( mArenaPool.empty() )
+        return  0.f;
+
     float sum = 0.f;
     for( auto it : mArenaPool )
         sum += it->LocalFragmentation();
@@ -157,7 +160,7 @@ FShrinkableAllocMemoryPool::DefragIfNecessary()
 void
 FShrinkableAllocMemoryPool::DefragForce()
 {
-    if( mArenaPool.empty() < 1 )
+    if( mArenaPool.empty() )
         return;
 
     // Sort: in decreasing frag rate:
@@ -168,7 +171,7 @@ FShrinkableAllocMemoryPool::DefragForce()
     // Low work Self Defrag in end
     mArenaPool.sort(
         []( FShrinkableAllocArena* iLhs, FShrinkableAllocArena* iRhs ) {
-            return  iLhs->LocalFragmentation() < iRhs->LocalFragmentation();
+            return  iLhs->LocalFragmentation() > iRhs->LocalFragmentation();
         }
     );
 
@@ -176,7 +179,6 @@ FShrinkableAllocMemoryPool::DefragForce()
     for( auto it : mArenaPool ) {
         it->DefragSelfForce();
     }
-
     auto highArena = mArenaPool.begin();
     auto lowArena = --mArenaPool.end();
     FShrinkableAllocArena::FIterator src_it = FShrinkableAllocArena::FIterator::MakeNull();
@@ -190,15 +192,16 @@ FShrinkableAllocMemoryPool::DefragForce()
         while( srcFree != initialFreeBufferSize ) {
             // Skip identified destinations that don't have enough room
             while( dstFree < mMaxAllocSize ) {
-                // Since we increment identified high destination, check for eq
-                if( highArena == lowArena )
-                    return;
-
                 // Decrease the identified destination
                 ++highArena;
                 dst_it = FShrinkableAllocArena::FIterator::MakeNull();
                 dstFree = (*highArena)->FreeMemory();
             }
+            // Since we increment identified high destination, check for eq
+            if( highArena == lowArena )
+                return;
+            uint64 debugsrcfree = (*lowArena)->FreeMemory();
+            uint64 debugdstfree = (*highArena)->FreeMemory();
 
             // Find Last used source of any size
             src_it = (*lowArena)->FindLastMinAlloc( true, 1, src_it );

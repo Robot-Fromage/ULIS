@@ -138,7 +138,7 @@ public:
         Obtain an client to an allocation within this pool.
         If full or a failure occurs, returns nullptr.
     */
-    tClient Malloc( byte_t iSize );
+    tClient Malloc( byte_t iAllocSize = ULIS_UINT32_MAX );
 
     /*!
         Free an allocation and its associated client.

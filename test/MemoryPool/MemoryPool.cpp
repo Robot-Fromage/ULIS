@@ -183,12 +183,43 @@ void TestShrinkableDefrag() {
     mem.UnsafeFreeAll();
 }
 
+void TestShrinkableAdvanced() {
+    // Test5: Shrinkable Pool
+    // Construct
+    byte_t allocSize = 32_B;
+    constexpr int numAllocsPerArena = 10;
+    constexpr int numPages = 2;
+    constexpr int totalAllocs = numAllocsPerArena * numPages;
+    FShrinkableAllocMemoryPool mem( allocSize, numAllocsPerArena );
+    mem.DebugPrint();
+
+    // Alloc
+    tClient clients[ totalAllocs ];
+    for( int i = 0; i < totalAllocs; ++i ) {
+        clients[i] = mem.Malloc();
+    }
+    mem.DebugPrint();
+
+    for( int i = 0; i < totalAllocs; ++i ) {
+        int s = ( rand()% ( uint64(allocSize) / 2 - 2 ) ) + 1;
+        bool shrank = FShrinkableAllocArena::Shrink( clients[i], s );
+        ULIS_ASSERT( shrank, "cool" );
+    }
+    mem.DebugPrint();
+
+    mem.DefragForce();
+    mem.DebugPrint();
+    mem.DebugPrint(2);
+    mem.UnsafeFreeAll();
+}
+
 int main( int argc, char *argv[] ) {
     //srand( time( NULL ) );
     TestFixedDefragRate();
     TestFixedClientUpdateAfterDefrag();
     TestBasicShrinkable();
     TestShrinkableDefrag();
+    TestShrinkableAdvanced();
 
     return  0;
 }
