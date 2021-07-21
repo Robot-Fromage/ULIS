@@ -9,7 +9,7 @@
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Memory/LinearQuadtree.h"
+#include "Sparse/LinearQuadtree.h"
 #include "Math/Geometry/Morton.h"
 
 ULIS_NAMESPACE_BEGIN

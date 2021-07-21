@@ -13,9 +13,10 @@
 #include "Core/Core.h"
 #include "Math/Math.h"
 #include "Memory/LimitedArray.h"
+#include "Sparse/Tile.h"
 
 ULIS_NAMESPACE_BEGIN
-template class ULIS_API TLimitedArray< void*, 256 >;
+template class ULIS_API TLimitedArray< FTile*, 256 >;
 /////////////////////////////////////////////////////
 /// @class      FLQTree
 /// @brief      The FLQTree class provides a quadtree that uses an
@@ -55,11 +56,21 @@ public:
 
 public:
     // Public API
+    /*
+    const uint8* QueryConstClientDataAtPixelCoordinates( const FVec2I& iPos ) const;
+    FTile** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( void* iPool, const FVec2I& iPos );
+    void SanitizeNow( void* iPool );
+    FRectI GetRoughLeafGeometry( const FVec2I& iPos ) const;
+    bool CheckUniformDistributedValue( FTile** oElem );
+    void PerformElementSubdivisionForImminentMutableChangeIfNeeded( uint8 iIndex, void* iPool );
+    void ReplaceElement( uint8 iIndex, void* iValue );
+    void PerformDataCopyForImminentMutableChangeIfNeeded( void* iPool );
+    */
 
 private:
     // Private Data Members
     const uint8 mBulk[256];
-    TLimitedArray< void*, 256 > mAttributes;
+    TLimitedArray< FTile*, 256 > mAttributes;
 
     //static constexpr uint8 sm_num_types = 3; // Empty, Filled, Data, RLE, Disk
     static constexpr uint8 sm_leaf_threshold = 6; // 2^6 = 64
