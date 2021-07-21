@@ -16,7 +16,7 @@
 #include "Sparse/Tile.h"
 
 ULIS_NAMESPACE_BEGIN
-template class ULIS_API TLimitedArray< FTile*, 256 >;
+//template class ULIS_API TLimitedArray< FTile*, 256 >;
 /////////////////////////////////////////////////////
 /// @class      FLQTree
 /// @brief      The FLQTree class provides a quadtree that uses an
@@ -66,11 +66,19 @@ public:
     void ReplaceElement( uint8 iIndex, void* iValue );
     void PerformDataCopyForImminentMutableChangeIfNeeded( void* iPool );
     */
+    FTile* TileAtLeafCoordinates( uint8 iX, uint8 iY );
+    const FTile* TileAtLeafCoordinates( uint8 iX, uint8 iY ) const;
+    FTile* TileAtPixelCoordinates( uint16 iX, uint16 iY );
+    const FTile* TileAtPixelCoordinates( uint16 iX, uint16 iY ) const;
+    FTile* TileAtMortonKey( uint8 iMortonKey );
+    const FTile* TileAtMortonKey( uint8 iMortonKey ) const;
+    void SetTileAtLeafCoordinates( uint8 iX, uint8 iY, FTile* iTile );
+    void SetTileAtPixelCoordinates( uint16 iX, uint16 iY, FTile* iTile );
+    void SetTileAtMortonKey( uint8 iMortonKey, FTile* iTile );
 
 private:
     // Private Data Members
-    const uint8 mBulk[256];
-    TLimitedArray< FTile*, 256 > mAttributes;
+    FTile* mBulk[256];
 
     //static constexpr uint8 sm_num_types = 3; // Empty, Filled, Data, RLE, Disk
     static constexpr uint8 sm_leaf_threshold = 6; // 2^6 = 64
@@ -80,7 +88,7 @@ private:
     static constexpr uint32 sm_root_size_as_pixels = sm_leaf_size_as_pixels * sm_root_size_as_leafs; // 1024
     static constexpr uint32 sm_num_leafs = sm_root_size_as_leafs * sm_root_size_as_leafs; // 256
     //static constexpr uint8 sm_type_span = FMath::ConstexprINeededBitsForRange( sm_num_types ); // 2
-    static constexpr uint8 sm_attribute_span = static_cast< uint8 >( FMath::ConstexprINeededBitsForRange( sm_num_leafs ) ); // 8
+    //static constexpr uint8 sm_attribute_span = static_cast< uint8 >( FMath::ConstexprINeededBitsForRange( sm_num_leafs ) ); // 8
 };
 
 ULIS_NAMESPACE_END

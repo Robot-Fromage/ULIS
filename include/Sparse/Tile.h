@@ -19,7 +19,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      FTile
 /// @brief      The FTile class provides a mean of keeping track of tile data
 ///             in a sparse image context.
-class ULIS_API FTile
+struct ULIS_API FTile
 {
     ~FTile();
     FTile();

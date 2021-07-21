@@ -19,5 +19,80 @@ constexpr TMortonEncodeKeys8bit< 16, 1 > sgMortonEncodeKeys8bit_2D_16_Y; // 16 b
 constexpr TMortonDecodeKeys8bit2D< 256 > sgMortonDecodeKeys8bit_2D_16_XY; // 256 bytes
 } // namespace details
 
+
+FLQTree::~FLQTree() {
+    for( uint16 i = 0; i < 256; ++i )
+        mBulk[ i ]->DecreaseRefCount();
+}
+
+FLQTree::FLQTree()
+    : mBulk { 0 }
+{
+}
+
+
+FTile*
+FLQTree::TileAtLeafCoordinates( uint8 iX, uint8 iY ) {
+    return  mBulk[
+                  details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ]
+                | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ]
+    ];
+}
+
+const FTile*
+FLQTree::TileAtLeafCoordinates( uint8 iX, uint8 iY ) const {
+    return  mBulk[
+                  details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ]
+                | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ]
+    ];
+}
+
+FTile*
+FLQTree::TileAtPixelCoordinates( uint16 iX, uint16 iY ) {
+    return  TileAtLeafCoordinates( iX / sm_leaf_size_as_pixels, iY / sm_leaf_size_as_pixels );
+}
+const FTile*
+FLQTree::TileAtPixelCoordinates( uint16 iX, uint16 iY ) const {
+    return  TileAtLeafCoordinates( iX / sm_leaf_size_as_pixels, iY / sm_leaf_size_as_pixels );
+}
+
+FTile*
+FLQTree::TileAtMortonKey( uint8 iMortonKey ) {
+    return  mBulk[ iMortonKey ];
+}
+
+const FTile*
+FLQTree::TileAtMortonKey( uint8 iMortonKey ) const {
+    return  mBulk[ iMortonKey ];
+}
+
+void
+FLQTree::SetTileAtLeafCoordinates( uint8 iX, uint8 iY, FTile* iTile ) {
+    uint8 key =
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ]
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ];
+    mBulk[ key ]->DecreaseRefCount();
+    mBulk[ key ] = iTile;
+    mBulk[ key ]->IncreaseRefCount();
+}
+
+
+void
+FLQTree::SetTileAtPixelCoordinates( uint16 iX, uint16 iY, FTile* iTile ) {
+    uint8 key =
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ] / sm_leaf_size_as_pixels;
+    mBulk[ key ]->DecreaseRefCount();
+    mBulk[ key ] = iTile;
+    mBulk[ key ]->IncreaseRefCount();
+}
+
+void
+FLQTree::SetTileAtMortonKey( uint8 iMortonKey, FTile* iTile ) {
+    mBulk[ iMortonKey ]->DecreaseRefCount();
+    mBulk[ iMortonKey ] = iTile;
+    mBulk[ iMortonKey ]->IncreaseRefCount();
+}
+
 ULIS_NAMESPACE_END
 
