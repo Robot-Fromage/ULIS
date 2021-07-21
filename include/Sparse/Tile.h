@@ -15,6 +15,8 @@
 #include <atomic>
 
 ULIS_NAMESPACE_BEGIN
+#pragma warning(push)
+#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 /////////////////////////////////////////////////////
 /// @class      FTile
 /// @brief      The FTile class provides a mean of keeping track of tile data
@@ -32,6 +34,7 @@ struct ULIS_API FTile
     std::atomic< uint32 >   mRefCount;
     std::atomic< bool >     mDirty;
 };
+#pragma warning(pop)
 
 ULIS_NAMESPACE_END
 
