@@ -15,36 +15,12 @@
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {
-
-constexpr const char* kwUnits[][9] = {
-      { "", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta" }
-    , { "", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi" }
-    , { "", "k", "M", "G", "T", "P", "E", "Z", "Y" }
-    , { "", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi" }
-};
-
-template< typename T, typename U >
-constexpr std::common_type_t< T, U > ConstexprPow_Imp( T iValue, U iExp )
-{
-    return    ( iExp == 0) ? 1
-            : ( iExp % 2 == 0 ) ? ConstexprPow_Imp( iValue * iValue, iExp / 2 ) 
-            : iValue * ConstexprPow_Imp( iValue * iValue, ( iExp - 1 ) / 2 );
-}
-
-template< typename T, typename U >
-constexpr std::common_type_t< T, U > ContexprPow( T iValue, U iExp )
-{
-    static_assert( std::is_integral< U >::value, "Only integer exponents !" );
-    return    ( iExp == 0) ? 1
-            : ( iExp > 0 ) ? ConstexprPow_Imp( iValue, iExp )
-            : 1 / ConstexprPow_Imp( iValue, -iExp );
-}
-
-template< typename T >
-constexpr T ConstexprMin( T iA, T iB ) {
-    return  iA < iB ? iA : iB;
-}
-
+//constexpr const char* kwUnits[][9] = {
+//      { "", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta" }
+//    , { "", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi" }
+//    , { "", "k", "M", "G", "T", "P", "E", "Z", "Y" }
+//    , { "", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi" }
+//};
 } // namespace detail
 
 /////////////////////////////////////////////////////
@@ -89,8 +65,8 @@ struct TBinaryInformationUnit
     template< eMetricSystemStandard FROM_STD, uint8 FROM_POW, uint8 FROM_SEQ, eMetricSystemStandard TO_STD, uint8 TO_POW, uint8 TO_SEQ >
     struct TUnitConversionFactor {
         static constexpr double value = 1
-            * detail::ContexprPow< double, int16 >( TMetricSystemStandardSpecs< FROM_STD >::multiplier, FROM_POW )
-            / detail::ContexprPow< double, int16 >( TMetricSystemStandardSpecs< TO_STD >::multiplier, TO_POW )
+            * FMath::ContexprPow< double, int16 >( TMetricSystemStandardSpecs< FROM_STD >::multiplier, FROM_POW )
+            / FMath::ContexprPow< double, int16 >( TMetricSystemStandardSpecs< TO_STD >::multiplier, TO_POW )
             * static_cast< double >( FROM_SEQ ) / TO_SEQ;
     };
 
