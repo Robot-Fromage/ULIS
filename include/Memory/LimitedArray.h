@@ -22,34 +22,33 @@ ULIS_NAMESPACE_BEGIN
 /// @details    The need of a custom TLimitedArray class rose from the fact that std::
 ///             classes cannot be exported easily accross dll boundaries when
 ///             ULIS is compiled as a shared library.
-template< typename T >
+template< typename T, uint64 _LIMIT >
 class TLimitedArray
 {
 public:
     /*! Destroy the Array and cleanup memory. */
-    ~TLimitedArray< T >()
+    ~TLimitedArray< T, _LIMIT >()
     {
         CleanupBulk();
     }
 
     /*! Default constructor with size 0, capicity 0, uninitialized. */
-    TLimitedArray< T >( uint64 iLimit )
+    TLimitedArray< T, _LIMIT >()
         : mBulk( nullptr )
         , mCapacity( 0 )
         , mSize( 0 )
-        , mLimit( iLimit )
     {}
 
     /*!
         Constructor with known size, both capacity and size will match the requested size.
         The array will have a size of iSize and the elements are default constructed.
     */
-    TLimitedArray< T >( uint64 iSize, uint64 iLimit )
+    TLimitedArray< T, _LIMIT >( uint64 iSize )
         : mBulk( nullptr )
         , mCapacity( iSize )
         , mSize( iSize )
-        , mLimit( iLimit )
     {
+        ULIS_ASSERT( mSize <= _LIMIT, "Cannot have size larger than limit" );
         if( iSize > 0 ) {
             mBulk = reinterpret_cast< T* >( XMalloc( sizeof( T ) * iSize ) );
             for( uint64 i = 0; i < mSize; ++i ) {
@@ -59,29 +58,27 @@ public:
     }
 
     /*! Copy constructor, explicitly removed. */
-    TLimitedArray< T >( const TLimitedArray< T >& iOther ) = delete;
+    TLimitedArray< T, _LIMIT >( const TLimitedArray< T, _LIMIT >& iOther ) = delete;
 
     /*! Copy Assignment Operator, explicitly removed. */
-    TLimitedArray< T >& operator=( const TLimitedArray< T >& iOther ) = delete;
+    TLimitedArray< T, _LIMIT >& operator=( const TLimitedArray< T, _LIMIT >& iOther ) = delete;
 
     /*! Move Assignment Operator, explicitly removed. */
-    TLimitedArray< T >& operator=( TLimitedArray< T >&& iOther ) = delete;
+    TLimitedArray< T, _LIMIT >& operator=( TLimitedArray< T, _LIMIT >&& iOther ) = delete;
 
     /*!
         Move constructor.
         The first object is left in a valid but empty state.
         The second object steals the buffer and the state ( size and capacity ).
     */
-    TLimitedArray< T >( TLimitedArray< T >&& iOther ) noexcept
+    TLimitedArray< T, _LIMIT >( TLimitedArray< T, _LIMIT >&& iOther ) noexcept
         : mBulk( iOther.mBulk )
         , mCapacity( iOther.mCapacity )
         , mSize( iOther.mSize )
-        , mLimit( iOther.mLimit )
     {
         iOther.mBulk = nullptr;
         iOther.mSize = 0;
         iOther.mCapacity = 0;
-        iOther.mLimit = 0;
     }
 
     /*! Returns the raw bits. */
@@ -209,7 +206,7 @@ public:
 
     /*! Returns the array limit. */
     uint64 Limit() const {
-        return  mLimit;
+        return  _LIMIT;
     }
 
     /*!
@@ -223,7 +220,7 @@ public:
         The size doesn't change.
     */
     void Reserve( uint64 iCapacity ) {
-        ULIS_ASSERT( iCapacity <= mLimit, "Cannot reserve more than limit" );
+        ULIS_ASSERT( iCapacity <= _LIMIT, "Cannot reserve more than limit" );
         // Only if requested a bigger capacity
         if( iCapacity > mCapacity )
             ReallocBulk( iCapacity );
@@ -248,7 +245,7 @@ public:
         It has no effect if the requested size is the same as the current size.
     */
     void Resize( uint64 iSize ) {
-        ULIS_ASSERT( iSize <= mLimit, "Cannot reserve more than limit" );
+        ULIS_ASSERT( iSize <= _LIMIT, "Cannot reserve more than limit" );
         // If requested size equal to size, do nothing.
         if( iSize == mSize ) {
             // The buffer references remain valid.
@@ -452,14 +449,13 @@ private:
     */
     void CheckGrowBulk() {
         if( mSize == mCapacity )
-            ReallocBulk( FMath::Clamp( static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ), uint64(1), mLimit ) );
+            ReallocBulk( FMath::Clamp( static_cast< uint64 >( FMath::Ceil( mCapacity * FMath::kGoldenRatio ) ), uint64(1), _LIMIT ) );
     }
 
 private:
     T* mBulk; ///< The main buffer storage.
     uint64 mCapacity; ///< The array capacity, may be bigger than size.
     uint64 mSize; ///< The array usage size.
-    const uint64 mLimit; ///< The capacity limit, cannot be exceeded.
 };
 
 ULIS_NAMESPACE_END
