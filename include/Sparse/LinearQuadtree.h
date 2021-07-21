@@ -12,6 +12,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Math/Math.h"
+#include "Math/Geometry/Rectangle.h"
+#include "Math/Geometry/Vector.h"
 #include "Memory/LimitedArray.h"
 #include "Sparse/Tile.h"
 
@@ -56,28 +58,37 @@ public:
 
 public:
     // Public API
-    /*
-    const uint8* QueryConstClientDataAtPixelCoordinates( const FVec2I& iPos ) const;
-    FTile** QueryOneMutableTileElementForImminentDirtyOperationAtPixelCoordinates( void* iPool, const FVec2I& iPos );
-    void SanitizeNow( void* iPool );
-    FRectI GetRoughLeafGeometry( const FVec2I& iPos ) const;
-    bool CheckUniformDistributedValue( FTile** oElem );
-    void PerformElementSubdivisionForImminentMutableChangeIfNeeded( uint8 iIndex, void* iPool );
-    void ReplaceElement( uint8 iIndex, void* iValue );
-    void PerformDataCopyForImminentMutableChangeIfNeeded( void* iPool );
-    */
-    FTile* TileAtLeafCoordinates( uint8 iX, uint8 iY );
-    const FTile* TileAtLeafCoordinates( uint8 iX, uint8 iY ) const;
-    FTile* TileAtPixelCoordinates( uint16 iX, uint16 iY );
-    const FTile* TileAtPixelCoordinates( uint16 iX, uint16 iY ) const;
-    FTile* TileAtMortonKey( uint8 iMortonKey );
-    const FTile* TileAtMortonKey( uint8 iMortonKey ) const;
-    void SetTileAtLeafCoordinates( uint8 iX, uint8 iY, FTile* iTile );
-    void SetTileAtPixelCoordinates( uint16 iX, uint16 iY, FTile* iTile );
-    void SetTileAtMortonKey( uint8 iMortonKey, FTile* iTile );
+    const FTile* Leaf( uint16 iX, uint16 iY ) const;
+
+    /*! Erase tile at pixel coordinates */
+    void Erase( uint16 iX, uint16 iY );
+
+    /*! Clear all of this QTree*/
+    void Clear();
+
+    /*! Rough leaf geometry in local QTree referential as leaf coordinates */
+    FRectI GetRoughLeafGeometry() const;
+
+    /*! Rough leaf geometry in local QTree referential as pixel sizes */
+    FRectI GetRoughPixelGeometry() const;
+
+    /*! Query const client data at pixel coordinates ( Read-only ) */
+    const uint8* QueryConst( void* iPool, uint8 iX, uint8 iY ) const;
+
+    /*! Query one mutable tile element for imminent dirty operation at pixel coordinates */
+    FTile** QueryMutable( void* iPool, uint8 iX, uint8 iY );
 
 private:
     // Private Data Members
+    // Bulk:
+    // constant size 2048o
+    // still better than worst-case in pointer-based implementation
+    // using direct pointers to avoid using a hash map or attribute array
+    // more perf, at the cost of some memory cost
+    // the trade off is good enough, i'm more interested in perf than memory here.
+    // a 2Kio per quadtree chunk still leaves plenty of room
+    // for a 299 008² image,
+    // 292² chunks, 85 264 * 2Kio = 170 528Kio = ~166Mio of storage
     FTile* mBulk[256];
 
     //static constexpr uint8 sm_num_types = 3; // Empty, Filled, Data, RLE, Disk

@@ -14,11 +14,17 @@
 
 ULIS_NAMESPACE_BEGIN
 namespace details {
+// Using LUT Encode / Decode Keys seems to be the simplest efficient option.
+// Computing the bitshifts on the fly could be inneficient
+// Using MBI intrinsics is a pain if we have to check support for the intrinsic set
+// The LUT are small enough with the hardcoded tree size to allow embedding them within the program.
+// IF we need larger trees, then going for a more complex solution could be more relevant.
+// Either: MBI or AVX shuffle with fallback to manual magic bits shuffle in 64bits keys.
+// Or: Computing cached LUTs at Runtime.
 constexpr TMortonEncodeKeys8bit< 16, 0 > sgMortonEncodeKeys8bit_2D_16_X; // 16 bytes
 constexpr TMortonEncodeKeys8bit< 16, 1 > sgMortonEncodeKeys8bit_2D_16_Y; // 16 bytes
 constexpr TMortonDecodeKeys8bit2D< 256 > sgMortonDecodeKeys8bit_2D_16_XY; // 256 bytes
 } // namespace details
-
 
 FLQTree::~FLQTree() {
     for( uint16 i = 0; i < 256; ++i )
@@ -30,68 +36,71 @@ FLQTree::FLQTree()
 {
 }
 
-
-FTile*
-FLQTree::TileAtLeafCoordinates( uint8 iX, uint8 iY ) {
+const FTile*
+FLQTree::Leaf( uint16 iX, uint16 iY ) const {
     return  mBulk[
-                  details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ]
-                | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ]
+                  details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
+                | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels
     ];
 }
 
-const FTile*
-FLQTree::TileAtLeafCoordinates( uint8 iX, uint8 iY ) const {
-    return  mBulk[
-                  details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ]
-                | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ]
-    ];
-}
-
-FTile*
-FLQTree::TileAtPixelCoordinates( uint16 iX, uint16 iY ) {
-    return  TileAtLeafCoordinates( iX / sm_leaf_size_as_pixels, iY / sm_leaf_size_as_pixels );
-}
-const FTile*
-FLQTree::TileAtPixelCoordinates( uint16 iX, uint16 iY ) const {
-    return  TileAtLeafCoordinates( iX / sm_leaf_size_as_pixels, iY / sm_leaf_size_as_pixels );
-}
-
-FTile*
-FLQTree::TileAtMortonKey( uint8 iMortonKey ) {
-    return  mBulk[ iMortonKey ];
-}
-
-const FTile*
-FLQTree::TileAtMortonKey( uint8 iMortonKey ) const {
-    return  mBulk[ iMortonKey ];
-}
-
 void
-FLQTree::SetTileAtLeafCoordinates( uint8 iX, uint8 iY, FTile* iTile ) {
-    uint8 key =
-          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ]
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ];
-    mBulk[ key ]->DecreaseRefCount();
-    mBulk[ key ] = iTile;
-    mBulk[ key ]->IncreaseRefCount();
-}
-
-
-void
-FLQTree::SetTileAtPixelCoordinates( uint16 iX, uint16 iY, FTile* iTile ) {
+FLQTree::Erase( uint16 iX, uint16 iY ) {
     uint8 key =
           details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iX ] / sm_leaf_size_as_pixels;
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
     mBulk[ key ]->DecreaseRefCount();
-    mBulk[ key ] = iTile;
-    mBulk[ key ]->IncreaseRefCount();
+    mBulk[ key ] = nullptr;
 }
 
 void
-FLQTree::SetTileAtMortonKey( uint8 iMortonKey, FTile* iTile ) {
-    mBulk[ iMortonKey ]->DecreaseRefCount();
-    mBulk[ iMortonKey ] = iTile;
-    mBulk[ iMortonKey ]->IncreaseRefCount();
+FLQTree::Clear() {
+    for( uint16 i = 0; i < 256; ++i ) {
+        mBulk[ i ]->DecreaseRefCount();
+        mBulk[ i ] = nullptr;
+    }
+}
+
+FRectI
+FLQTree::GetRoughLeafGeometry() const {
+    FRectI ret;
+    for( uint16 i = 0; i < 256; ++i ) {
+        if( mBulk[ i ] ) {
+            int x = details::sgMortonDecodeKeys8bit_2D_16_XY.keys[i].x;
+            int y = details::sgMortonDecodeKeys8bit_2D_16_XY.keys[i].y;
+            ret = ret.UnionLeaveEmpty( FRectI( x, y, 1, 1 ) );
+        }
+    }
+    return  ret;
+}
+
+FRectI
+FLQTree::GetRoughPixelGeometry() const {
+    FRectI ret = GetRoughLeafGeometry();
+    ret.x *= sm_leaf_size_as_pixels;
+    ret.y *= sm_leaf_size_as_pixels;
+    ret.w *= sm_leaf_size_as_pixels;
+    ret.h *= sm_leaf_size_as_pixels;
+    return  ret;
+}
+
+const uint8*
+FLQTree::QueryConst( void* iPool, uint8 iX, uint8 iY ) const {
+    uint8 key =
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+    return  mBulk[ key ] ? /*iPool->EmptyTile()*/nullptr : *( mBulk[ key ]->mClient );
+}
+
+FTile**
+FLQTree::QueryMutable( void* iPool, uint8 iX, uint8 iY ) {
+    uint8 key =
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+    // Perform data copy for imminent mutable change if needed
+    //mBulk[ key ] = iPool->XPerformDataCopyForImminentMutableChangeIfNeeded( mBulk[ key ] );
+    //mBulk[ key ]->mDirty = true;
+    return  &( mBulk[ key ] );
 }
 
 ULIS_NAMESPACE_END
