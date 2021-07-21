@@ -10,7 +10,14 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Memory/LinearQuadtree.h"
+#include "Math/Geometry/Morton.h"
 
 ULIS_NAMESPACE_BEGIN
+namespace details {
+constexpr TMortonEncodeKeys8bit< 16, 0 > sgMortonEncodeKeys8bit_2D_16_X; // 16 bytes
+constexpr TMortonEncodeKeys8bit< 16, 1 > sgMortonEncodeKeys8bit_2D_16_Y; // 16 bytes
+constexpr TMortonDecodeKeys8bit2D< 256 > sgMortonDecodeKeys8bit_2D_16_XY; // 256 bytes
+} // namespace details
+
 ULIS_NAMESPACE_END
 

@@ -58,7 +58,7 @@ public:
 
 private:
     // Private Data Members
-    const uint8 mBulk[2556];
+    const uint8 mBulk[256];
     TLimitedArray< void*, 256 > mAttributes;
 
     //static constexpr uint8 sm_num_types = 3; // Empty, Filled, Data, RLE, Disk
@@ -69,7 +69,7 @@ private:
     static constexpr uint32 sm_root_size_as_pixels = sm_leaf_size_as_pixels * sm_root_size_as_leafs; // 1024
     static constexpr uint32 sm_num_leafs = sm_root_size_as_leafs * sm_root_size_as_leafs; // 256
     //static constexpr uint8 sm_type_span = FMath::ConstexprINeededBitsForRange( sm_num_types ); // 2
-    static constexpr uint8 sm_attribute_span = FMath::ConstexprINeededBitsForRange( sm_num_leafs ); // 8
+    static constexpr uint8 sm_attribute_span = static_cast< uint8 >( FMath::ConstexprINeededBitsForRange( sm_num_leafs ) ); // 8
 };
 
 ULIS_NAMESPACE_END

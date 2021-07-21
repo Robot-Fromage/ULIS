@@ -36,6 +36,7 @@
 #include "Math/Geometry/Matrix.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
+#include "Math/Geometry/Morton.h"
 #include "Math/Interpolation/Bezier.h"
 #include "Math/Interpolation/CatmullRom.h"
 #include "Math/Interpolation/Spline.h"
