@@ -13,7 +13,7 @@
 #include <ULIS>
 
 int main( int argc, char *argv[] ) {
-    std::cout << ::ULIS::FLibInfo::LibraryInformationString().Data();
+    std::cout << ::ULIS::FLibInfo::LibraryInformationString().Data() << std::endl;
     return  0;
 }
 
