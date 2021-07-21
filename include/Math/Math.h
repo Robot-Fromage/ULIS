@@ -280,6 +280,41 @@ namespace FMath
         return Sqrt( std::pow( x2 - x1, 2 ) + std::pow( y2 - y1, 2 ) );
     }
 
+
+
+    // Constexpr
+    template< typename T, typename U >
+    constexpr std::common_type_t< T, U > ConstexprPow_Imp( T iValue, U iExp )
+    {
+        return    ( iExp == 0) ? 1
+                : ( iExp % 2 == 0 ) ? ConstexprPow_Imp( iValue * iValue, iExp / 2 )
+                : iValue * ConstexprPow_Imp( iValue * iValue, ( iExp - 1 ) / 2 );
+    }
+
+    template< typename T, typename U >
+    constexpr std::common_type_t< T, U > ContexprPow( T iValue, U iExp )
+    {
+        static_assert( std::is_integral< U >::value, "Only integer exponents !" );
+        return    ( iExp == 0) ? 1
+                : ( iExp > 0 ) ? ConstexprPow_Imp( iValue, iExp )
+                : 1 / ConstexprPow_Imp( iValue, -iExp );
+    }
+
+    template< typename T >
+    constexpr T ConstexprMin( T iA, T iB ) {
+        return  iA < iB ? iA : iB;
+    }
+
+    constexpr int64 ConstexprILog2( int64 iValue )
+    {
+        return iValue < 2 ? 0 : 1 + ConstexprILog2( iValue / 2 );
+    }
+
+    constexpr int64 ConstexprINeededBitsForRange( int64 iValue )
+    {
+        return  ContexprPow( 2, ConstexprILog2( iValue ) ) == iValue ? ConstexprILog2( iValue ) : ConstexprILog2( iValue ) + 1;
+    }
+
 } // namespace FMath
 
 ULIS_NAMESPACE_END
