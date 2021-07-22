@@ -11,7 +11,83 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Math/Geometry/Rectangle.h"
+#include <unordered_map>
+#include <mutex>
+#include <atomic>
+#include <thread>
 
 ULIS_NAMESPACE_BEGIN
+class FTilePool;
+class FLQTree;
+#pragma warning(push)
+#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
+/////////////////////////////////////////////////////
+/// @class      FTiledBlock
+/// @brief      The FTiledBlock class provides a mean of storing very large tiled images,
+///             powered by a large number of complex algorithms allowing efficient memory
+///             usage and performances, as well as disk streaming facilities, compression
+///             systems, redundant data reuse by hashing pixel data, low overall rates in
+///             memory fragmentation, infinite or unbounded images in space and time, within
+///             reasonable range ( depends on the user available disk space and ram space ),
+///             and multithreaded operations.
+class ULIS_API FTiledBlock
+{
+public:
+    ~FTiledBlock();
+    FTiledBlock( FTilePool* iTilePool );
+
+public:
+    // Core API
+    uint64 NumChunks() const;
+    void GatherChunks( TArray< FLQTree* >* oVec );
+    bool IsValidPixelCoordRange( int64 iValue ) const;
+    FVec2I ChunkCoordinatesFromPixelCoordinates( const FVec2I& iPos ) const;
+    FVec2I PixelCoordinatesFromChunkCoordinates( const FVec2I& iPos ) const;
+    uint64 KeyFromChunkCoordinates( const FVec2I& iPos ) const;
+    uint64 KeyFromPixelCoordinates( const FVec2I& iPos ) const;
+    FVec2I ChunkCoordinatesFromKey( uint64 iKey ) const;
+    FVec2I PixelCoordinatesFromKey( uint64 iKey ) const;
+
+public:
+    // Block API
+    const FRectI& OperativeGeometry() const;
+    const FRectI& RoughRootGeometry() const;
+    const FRectI& RoughLeafGeometry() const;
+    void ExtendOperativeGeometryAfterMutableChange( const FRectI& iRect );
+    void SubstractOperativeGeometryAfterMutableChange( const FRectI& iRect );
+    void RecomputeRoughRootGeometry();
+    void RecomputeRoughLeafGeometry();
+
+private:
+    // Private API
+    FLQTree* QueryChunkRW( const FVec2I& iPos );
+    const FLQTree* QueryChunkR( const FVec2I& iPos ) const;
+
+public:
+    // Tile API
+    const uint8* QueryConstTile( const FVec2I& iPos ) const;
+    FTile** QueryMutableTile( const FVec2I& iPos );
+    void Clear();
+    void SanitizeNow();
+
+private:
+    // Private Data Members
+    // key uint64
+    // 1) 32bits: packed int32 Y
+    // 2) 32bits: packed int32 X
+    std::unordered_map< uint64, FLQTree* > mChunks;
+    FTilePool* mTilePool;
+    FRectI mOperativeGeometry;
+    FRectI mRoughRootGeometry;
+    FRectI mRoughLeafGeometry;
+
+    static constexpr int32 sm_chunk_min_coord = std::numeric_limits< int32 >::min();
+    static constexpr int32 sm_chunk_max_coord = std::numeric_limits< int32 >::max();
+    static constexpr int64 sm_pixel_min_coord = static_cast< int64 >( sm_chunk_min_coord ) * 1024;
+    static constexpr int64 sm_pixel_max_coord = static_cast< int64 >( sm_chunk_max_coord ) * 1024;
+};
+#pragma warning(pop)
+
 ULIS_NAMESPACE_END
 
