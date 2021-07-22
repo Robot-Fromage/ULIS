@@ -58,16 +58,11 @@ public:
 
 public:
     // Public API
-    const FTile* Leaf( uint16 iX, uint16 iY ) const;
-
     /*! Erase tile at pixel coordinates */
     void Erase( uint16 iX, uint16 iY );
 
     /*! Clear all of this QTree*/
     void Clear();
-
-    /*! Rough leaf geometry in local QTree referential as leaf coordinates */
-    FRectI GetRoughLeafGeometry() const;
 
     /*! Rough leaf geometry in local QTree referential as pixel sizes */
     FRectI GetRoughPixelGeometry() const;
@@ -91,6 +86,7 @@ private:
     // 292² chunks, 85 264 * 2Kio = 170 528Kio = ~166Mio of storage
     FTile* mBulk[256];
 
+public:
     //static constexpr uint8 sm_num_types = 3; // Empty, Filled, Data, RLE, Disk
     static constexpr uint8 sm_leaf_threshold = 6; // 2^6 = 64
     static constexpr uint8 sm_root_threshold = 4; // 2^4 = 16

@@ -36,14 +36,6 @@ FLQTree::FLQTree()
 {
 }
 
-const FTile*
-FLQTree::Leaf( uint16 iX, uint16 iY ) const {
-    return  mBulk[
-                  details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-                | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels
-    ];
-}
-
 void
 FLQTree::Erase( uint16 iX, uint16 iY ) {
     uint8 key =
@@ -62,7 +54,7 @@ FLQTree::Clear() {
 }
 
 FRectI
-FLQTree::GetRoughLeafGeometry() const {
+FLQTree::GetRoughPixelGeometry() const {
     FRectI ret;
     for( uint16 i = 0; i < 256; ++i ) {
         if( mBulk[ i ] ) {
@@ -71,12 +63,6 @@ FLQTree::GetRoughLeafGeometry() const {
             ret = ret.UnionLeaveEmpty( FRectI( x, y, 1, 1 ) );
         }
     }
-    return  ret;
-}
-
-FRectI
-FLQTree::GetRoughPixelGeometry() const {
-    FRectI ret = GetRoughLeafGeometry();
     ret.x *= sm_leaf_size_as_pixels;
     ret.y *= sm_leaf_size_as_pixels;
     ret.w *= sm_leaf_size_as_pixels;
