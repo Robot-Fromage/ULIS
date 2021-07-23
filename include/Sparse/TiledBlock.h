@@ -12,10 +12,8 @@
 #pragma once
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
+#include "Sparse/LinearQuadtree.h"
 #include <unordered_map>
-#include <mutex>
-#include <atomic>
-#include <thread>
 
 ULIS_NAMESPACE_BEGIN
 class FTilePool;
@@ -52,12 +50,12 @@ public:
 public:
     // Block API
     const FRectI& OperativeGeometry() const;
-    const FRectI& RoughRootGeometry() const;
-    const FRectI& RoughLeafGeometry() const;
+    const FRectI& RootGeometry() const;
+    const FRectI& LeafGeometry() const;
     void ExtendOperativeGeometryAfterMutableChange( const FRectI& iRect );
     void SubstractOperativeGeometryAfterMutableChange( const FRectI& iRect );
-    void RecomputeRoughRootGeometry();
-    void RecomputeRoughLeafGeometry();
+    void RecomputeRootGeometry();
+    void RecomputeLeafGeometry();
 
 private:
     // Private API
@@ -79,13 +77,13 @@ private:
     std::unordered_map< uint64, FLQTree* > mChunks;
     FTilePool* mTilePool;
     FRectI mOperativeGeometry;
-    FRectI mRoughRootGeometry;
-    FRectI mRoughLeafGeometry;
+    FRectI mRootGeometry;
+    FRectI mLeafGeometry;
 
     static constexpr int32 sm_chunk_min_coord = std::numeric_limits< int32 >::min();
     static constexpr int32 sm_chunk_max_coord = std::numeric_limits< int32 >::max();
-    static constexpr int64 sm_pixel_min_coord = static_cast< int64 >( sm_chunk_min_coord ) * 1024;
-    static constexpr int64 sm_pixel_max_coord = static_cast< int64 >( sm_chunk_max_coord ) * 1024;
+    static constexpr int64 sm_pixel_min_coord = static_cast< int64 >( sm_chunk_min_coord ) * FLQTree::sm_root_size_as_pixels;
+    static constexpr int64 sm_pixel_max_coord = static_cast< int64 >( sm_chunk_max_coord ) * FLQTree::sm_root_size_as_pixels;
 };
 #pragma warning(pop)
 

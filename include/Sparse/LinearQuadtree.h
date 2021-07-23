@@ -65,7 +65,7 @@ public:
     void Clear();
 
     /*! Rough leaf geometry in local QTree referential as pixel sizes */
-    FRectI GetRoughPixelGeometry() const;
+    FRectI LeafGeometry() const;
 
     /*! Query const client data at pixel coordinates ( Read-only ) */
     const uint8* QueryConst( void* iPool, uint8 iX, uint8 iY ) const;

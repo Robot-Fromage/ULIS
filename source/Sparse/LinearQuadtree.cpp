@@ -54,7 +54,7 @@ FLQTree::Clear() {
 }
 
 FRectI
-FLQTree::GetRoughPixelGeometry() const {
+FLQTree::LeafGeometry() const {
     FRectI ret;
     for( uint16 i = 0; i < 256; ++i ) {
         if( mBulk[ i ] ) {
