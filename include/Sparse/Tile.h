@@ -26,6 +26,8 @@ struct ULIS_API FTile
     ~FTile();
     FTile();
     FTile( tClient iPtr );
+    FTile( const FTile& ) = delete;
+    FTile& operator=( const FTile& ) = delete;
     void DecreaseRefCount();
     void IncreaseRefCount();
 

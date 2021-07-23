@@ -32,41 +32,90 @@ class FLQTree;
 class ULIS_API FTiledBlock
 {
 public:
+    /*! Destructor, cleanup chunks. */
     ~FTiledBlock();
+
+    /*! Constructor, initialize with zero chunks. */
     FTiledBlock( FTilePool* iTilePool );
+
+    /*! Explicitely deleted copy constructor */
+    FTiledBlock( const FTiledBlock& ) = delete;
+
+    /*! Explicitely deleted copy assignment operator */
+    FTiledBlock& operator=( const FTiledBlock& ) = delete;
 
 public:
     // Core API
+    /*! Get the number of chunk entries in the map */
     uint64 NumChunks() const;
+
+    /*! Gather all chunks in an array */
     void GatherChunks( TArray< FLQTree* >* oVec );
-    bool IsValidPixelCoordRange( int64 iValue ) const;
+
+    /*! check wether the input coordinate is in a valid range */
+    static bool IsValidPixelCoordRange( int64 iValue );
+
+    /*! Coordinates */
     FVec2I ChunkCoordinatesFromPixelCoordinates( const FVec2I& iPos ) const;
+
+    /*! Coordinates */
     FVec2I PixelCoordinatesFromChunkCoordinates( const FVec2I& iPos ) const;
+
+    /*! Coordinates */
     uint64 KeyFromChunkCoordinates( const FVec2I& iPos ) const;
+
+    /*! Coordinates */
     uint64 KeyFromPixelCoordinates( const FVec2I& iPos ) const;
+
+    /*! Coordinates */
     FVec2I ChunkCoordinatesFromKey( uint64 iKey ) const;
+
+    /*! Coordinates */
     FVec2I PixelCoordinatesFromKey( uint64 iKey ) const;
 
 public:
     // Block API
+    /*! Return the operative geometry */
     const FRectI& OperativeGeometry() const;
+
+    /*! Return the rough root geometry made up from chunks */
     const FRectI& RootGeometry() const;
+
+    /*! Return the rough leaf geometry built from all leafs */
     const FRectI& LeafGeometry() const;
+
+    /*! Process operative geometry */
     void ExtendOperativeGeometryAfterMutableChange( const FRectI& iRect );
+
+    /*! Process operative geometry */
     void SubstractOperativeGeometryAfterMutableChange( const FRectI& iRect );
+
+    /*! Manual recompute cached root geometry */
     void RecomputeRootGeometry();
+
+    /*! Manual recompute cached leaf geometry */
     void RecomputeLeafGeometry();
 
 private:
     // Private API
+    /*! Internal Query Chunk for Read / Write, create chunk if not exist */
     FLQTree* QueryChunkRW( const FVec2I& iPos );
+
+    /*! Internal Query Chunk for Read only, return nullptr if not exist */
     const FLQTree* QueryChunkR( const FVec2I& iPos ) const;
 
 public:
     // Tile API
+    /*! Query a tile for Read only */
     const uint8* QueryConstTile( const FVec2I& iPos ) const;
+
+    /*! Query a tile for Read Write */
     FTile** QueryMutableTile( const FVec2I& iPos );
+
+    /*! Clear all map */
     void Clear();
+
+    /*! Sanitize map, removing pure empty chunks */
     void SanitizeNow();
 
 private:
