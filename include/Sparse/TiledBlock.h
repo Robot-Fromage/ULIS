@@ -13,6 +13,8 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Sparse/LinearQuadtree.h"
+#include "Image/Format.h"
+#include "Image/ColorSpace.h"
 #include <unordered_map>
 
 ULIS_NAMESPACE_BEGIN
@@ -32,6 +34,7 @@ class FLQTree;
 class ULIS_API FTiledBlock
 {
 public:
+    // Construction / Destruction
     /*! Destructor, cleanup chunks. */
     ~FTiledBlock();
 

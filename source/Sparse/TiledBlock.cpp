@@ -165,7 +165,7 @@ FTiledBlock::RecomputeLeafGeometry() {
 
 FLQTree*
 FTiledBlock::QueryChunkRW( const FVec2I& iPos ) {
-    uint64 key = KeyFromChunkCoordinates( iPos );
+    uint64 key = KeyFromPixelCoordinates( iPos );
     auto it = mChunks.find( key );
 
     if( it != mChunks.end() )
@@ -178,7 +178,7 @@ FTiledBlock::QueryChunkRW( const FVec2I& iPos ) {
 
 const FLQTree*
 FTiledBlock::QueryChunkR( const FVec2I& iPos ) const {
-    auto it = mChunks.find( KeyFromChunkCoordinates( iPos ) );
+    auto it = mChunks.find( KeyFromPixelCoordinates( iPos ) );
     return  it != mChunks.end() ? it->second : nullptr;
     if( it != mChunks.end() )
         return  it->second;
@@ -212,7 +212,7 @@ FTiledBlock::SanitizeNow() {
     std::vector< std::unordered_map< uint64, FLQTree* >::iterator > to_delete;
     typename std::unordered_map< uint64, FLQTree* >::iterator it = mChunks.begin();
     while( it != mChunks.end() ) {
-        if( true /*it->second->IsEmpty()*/ )
+        if( it->second->IsEmpty() )
             to_delete.push_back( it );
         ++it;
     }
