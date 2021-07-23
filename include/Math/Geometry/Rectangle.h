@@ -281,9 +281,10 @@ struct TRectangle
     }
 
     /*! Shift x and y coordinates by input vector. */
-    void Shift( const TVector2< T >& iVec ) {
+    TRectangle< T >& Shift( const TVector2< T >& iVec ) {
         x += iVec.x;
         y += iVec.y;
+        return  *this;
     }
 
     /*! Get x and y coordinates as vector. */

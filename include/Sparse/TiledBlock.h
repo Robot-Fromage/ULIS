@@ -36,7 +36,7 @@ public:
     ~FTiledBlock();
 
     /*! Constructor, initialize with zero chunks. */
-    FTiledBlock( FTilePool* iTilePool );
+    FTiledBlock( FTilePool& iTilePool );
 
     /*! Explicitely deleted copy constructor */
     FTiledBlock( const FTiledBlock& ) = delete;
@@ -124,7 +124,7 @@ private:
     // 1) 32bits: packed int32 Y
     // 2) 32bits: packed int32 X
     std::unordered_map< uint64, FLQTree* > mChunks;
-    FTilePool* mTilePool;
+    FTilePool& mTilePool;
     FRectI mOperativeGeometry;
     FRectI mRootGeometry;
     FRectI mLeafGeometry;

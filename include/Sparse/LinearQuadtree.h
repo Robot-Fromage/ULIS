@@ -18,6 +18,7 @@
 #include "Sparse/Tile.h"
 
 ULIS_NAMESPACE_BEGIN
+class FTilePool;
 //template class ULIS_API TLimitedArray< FTile*, 256 >;
 /////////////////////////////////////////////////////
 /// @class      FLQTree
@@ -68,10 +69,10 @@ public:
     FRectI LeafGeometry() const;
 
     /*! Query const client data at pixel coordinates ( Read-only ) */
-    const uint8* QueryConst( void* iPool, uint8 iX, uint8 iY ) const;
+    const uint8* QueryConst( FTilePool& iPool, uint8 iX, uint8 iY ) const;
 
     /*! Query one mutable tile element for imminent dirty operation at pixel coordinates */
-    FTile** QueryMutable( void* iPool, uint8 iX, uint8 iY );
+    FTile** QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY );
 
 private:
     // Private Data Members

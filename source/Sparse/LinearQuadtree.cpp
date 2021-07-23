@@ -71,15 +71,18 @@ FLQTree::LeafGeometry() const {
 }
 
 const uint8*
-FLQTree::QueryConst( void* iPool, uint8 iX, uint8 iY ) const {
+FLQTree::QueryConst( FTilePool& iPool, uint8 iX, uint8 iY ) const {
     uint8 key =
           details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
         | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
-    return  mBulk[ key ] ? /*iPool->EmptyTile()*/nullptr : *( mBulk[ key ]->mClient );
+    if( mBulk[ key ] )
+        return  *( mBulk[ key ]->mClient );
+    else
+        return  iPool.EmptyTile();
 }
 
 FTile**
-FLQTree::QueryMutable( void* iPool, uint8 iX, uint8 iY ) {
+FLQTree::QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY ) {
     uint8 key =
           details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
         | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
