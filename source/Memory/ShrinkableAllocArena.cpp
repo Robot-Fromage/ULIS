@@ -611,7 +611,7 @@ FShrinkableAllocArena::Shrink( tClient iClient, byte_t iNewSize )
 
 void
 FShrinkableAllocArena::Initialize() {
-    uint32 initialFreeBufferSize = InitialFreeMemory( mArenaSize );
+    uint32 initialFreeBufferSize = static_cast< uint32 >( InitialFreeMemory( mArenaSize ) );
     FIterator begin = Begin();
     begin.CleanupMetaBase();
     begin.SetPrevSize( 0 );

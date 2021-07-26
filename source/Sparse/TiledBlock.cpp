@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Sparse/TiledBlock.h"
+#include "Sparse/TilePool.h"
 #include "Math/Math.h"
 
 #define ULIS_SPARSE_MASK_X 0x00000000FFFFFFFF
@@ -186,15 +187,15 @@ FTiledBlock::QueryChunkR( const FVec2I& iPos ) const {
 
 const uint8*
 FTiledBlock::QueryConstTile( const FVec2I& iPos ) const {
-    FVec2I mod = FMath::PyModulo( iPos, FVec2I( static_cast< int64 >( FLQTree::sm_root_size_as_pixels ) ) );
+    FVec2I mod = FVec2I::PyModulo( iPos, FVec2I( static_cast< int64 >( FLQTree::sm_root_size_as_pixels ) ) );
     const FLQTree* chunk = QueryChunkR( iPos );
     return  chunk ? mTilePool.EmptyTile() : chunk->QueryConst( mTilePool, mod.x, mod.y );
 }
 
 FTile**
 FTiledBlock::QueryMutableTile( const FVec2I& iPos ) {
-    FVec2I mod = FMath::PyModulo( iPos, FVec2I( static_cast< int64 >( FLQTree::sm_root_size_as_pixels ) ) );
-    QueryChunkRW( iPos )->QueryMutable( mTilePool, mod.x, mod.y );
+    FVec2I mod = FVec2I::PyModulo( iPos, FVec2I( static_cast< int64 >( FLQTree::sm_root_size_as_pixels ) ) );
+    return  QueryChunkRW( iPos )->QueryMutable( mTilePool, mod.x, mod.y );
 }
 
 void

@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Sparse/LinearQuadtree.h"
+#include "Sparse/TilePool.h"
 #include "Math/Geometry/Morton.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -94,7 +95,7 @@ FLQTree::QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY ) {
     // Perform data copy for imminent mutable change if needed
     if( !mBulk[ key ] )
         ++numEntries;
-    mBulk[ key ] = iPool->XPerformDataCopyForImminentMutableChangeIfNeeded( mBulk[ key ] );
+    mBulk[ key ] = iPool.XPerformDataCopyForImminentMutableChangeIfNeeded( mBulk[ key ] );
     mBulk[ key ]->mDirty = true;
     return  &( mBulk[ key ] );
 }

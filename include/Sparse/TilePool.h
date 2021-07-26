@@ -25,6 +25,8 @@
 #include <unordered_map>
 
 ULIS_NAMESPACE_BEGIN
+#pragma warning(push)
+#pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 class ULIS_API FTilePool
     : public IHasFormat
     , public IHasColorSpace
@@ -48,9 +50,6 @@ public:
     const FVec2I& TileSize() const;
     uint32 EmptyCRC32Hash() const;
     const uint8* EmptyTile() const;
-    eFormat TileFormat() const;
-    const FFormatMetrics& TileFormatMetrics() const;
-    const FColorSpace* TileColorProfile() const;
     uint64 CurrentRAMUsage() const;
     uint64 CurrentSwapUsage() const;
     uint64 RAMUsageCapTarget() const;
@@ -126,6 +125,7 @@ private:
     std::thread * const mThreadDeallocatorAllocatorCleanerBackgroundWorker;
     std::thread * const mThreadHasherGarbageCollectorBackgroundWorker;
 };
+#pragma warning(pop)
 
 ULIS_NAMESPACE_END
 

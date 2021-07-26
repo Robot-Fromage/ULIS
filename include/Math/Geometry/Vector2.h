@@ -158,6 +158,9 @@ struct TVector2
 
     // Swizzle declaration
     ULIS_DECLARE_ALL_SWIZZLE_FUNCTIONS_VEC2
+
+    // Vec2 PyModulo
+    static TVector2 PyModulo( const TVector2& iA, const TVector2& iB );
 };
 
 
@@ -329,7 +332,7 @@ ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator*=(const TVector2< T >& i
 }
 
 template< typename T >
-ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator/=(const TVector2& iOther ) {
+ULIS_VECTOR_FUNC TVector2< T >& TVector2< T >::operator/=(const TVector2< T >& iOther ) {
     ULIS_ASSERT( iOther.x != 0, "Division by zero" );
     ULIS_ASSERT( iOther.y != 0, "Division by zero" );
     x /= iOther.x;
@@ -352,6 +355,14 @@ ULIS_VECTOR_FUNC const T& TVector2< T >::operator[]( int iIndex ) const {
     return  ( &x )[ iIndex ];
 }
 
+//static
+template< typename T >
+TVector2< T > TVector2< T >::PyModulo( const TVector2< T >& iA, const TVector2< T >& iB ) {
+    return  TVector2< T >(
+          FMath::PyModulo( iA.x, iB.x )
+        , FMath::PyModulo( iA.y, iB.y )
+    );
+}
 
 
 
