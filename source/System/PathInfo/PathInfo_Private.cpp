@@ -26,6 +26,10 @@ FPathInfo_Private::FPathInfo_Private()
     , diskPaths()
     , homePath()
 {
+    detail::GetFontPaths( fontPaths );
+    appDataPath = detail::GetAppDataPath();
+    detail::GetDiskPaths( diskPaths );
+    homePath = detail::GetHomePath();
 }
 
 ULIS_NAMESPACE_END
