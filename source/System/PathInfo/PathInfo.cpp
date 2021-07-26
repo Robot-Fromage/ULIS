@@ -10,7 +10,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include "System/PathInfo/PathInfo.h"
-#include "System/PathInfo/PathInfoHelpers.h"
 #include "System/PathInfo/PathInfo_Private.h"
 #include "Memory/Array.h"
 
@@ -22,28 +21,28 @@ extern FPathInfo_Private sgPathInfo_private_instance;
 //static
 FString
 FPathInfo::FontPath() {
-    return  sgPathInfo_private_instance.fontPath;
+    return  detail::sgPathInfo_private_instance.fontPath;
 }
 
 //static
 FString
 FPathInfo::AppDataPath() {
-    return  sgPathInfo_private_instance.appDataPath;
+    return  detail::sgPathInfo_private_instance.appDataPath;
 }
 
 //static
 void
 FPathInfo::LogicalDisksPaths( TArray< FString >& oDisks ) {
     oDisks.Clear();
-    oDisks.Resize( sgPathInfo_private_instance.logicalDisksPaths.Size() );
-    for( int i = 0; i < sgPathInfo_private_instance.logicalDisksPaths.Size(); ++i )
-        oDisks[i] = sgPathInfo_private_instance.logicalDisksPaths[ i ];
+    oDisks.Resize( detail::sgPathInfo_private_instance.logicalDisksPaths.Size() );
+    for( int i = 0; i < detail::sgPathInfo_private_instance.logicalDisksPaths.Size(); ++i )
+        oDisks[i] = detail::sgPathInfo_private_instance.logicalDisksPaths[ i ];
 }
 
 //static
 FString
 FPathInfo::HomePath() {
-    return  sgPathInfo_private_instance.homePath;
+    return  detail::sgPathInfo_private_instance.homePath;
 }
 
 

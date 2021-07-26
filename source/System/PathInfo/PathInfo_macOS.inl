@@ -11,10 +11,27 @@
 */
 #pragma once
 #include "System/PathInfo/PathInfo.h"
-#include "System/PathInfo/PathInfoHelpers.h"
+#include "String/String.h"
+#include "Memory/Array.h"
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {
+FString GetFontPath() {
+    return  FString();
+}
+
+FString GetAppDataPath() {
+    return  FString();
+}
+
+void GetLogicalDisksPaths( TArray< FString >& oDisks ) {
+    oDisks.Clear();
+}
+
+FString GetHomePath() {
+    return  FString();
+}
+
 } // namespace detail
 
 ULIS_NAMESPACE_END

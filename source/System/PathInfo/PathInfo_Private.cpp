@@ -8,7 +8,6 @@
 * @license      Please refer to LICENSE.md
 */
 #include "System/PathInfo/PathInfo_Private.h"
-#include "System/PathInfo/PathInfoHelpers.h"
 
 #if defined( ULIS_WIN )
 #include "System/PathInfo/PathInfo_Windows.inl"
