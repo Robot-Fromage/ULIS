@@ -19,9 +19,12 @@ extern FPathInfo_Private sgPathInfo_private_instance;
 } // namespace detail
 
 //static
-FString
-FPathInfo::FontPath() {
-    return  detail::sgPathInfo_private_instance.fontPath;
+void
+FPathInfo::FontPaths( TArray< FString >& oPaths ) {
+    oPaths.Clear();
+    oPaths.Resize( detail::sgPathInfo_private_instance.fontPaths.Size() );
+    for( int i = 0; i < detail::sgPathInfo_private_instance.fontPaths.Size(); ++i )
+        oPaths[i] = detail::sgPathInfo_private_instance.fontPaths[ i ];
 }
 
 //static
@@ -32,11 +35,11 @@ FPathInfo::AppDataPath() {
 
 //static
 void
-FPathInfo::LogicalDisksPaths( TArray< FString >& oDisks ) {
-    oDisks.Clear();
-    oDisks.Resize( detail::sgPathInfo_private_instance.logicalDisksPaths.Size() );
-    for( int i = 0; i < detail::sgPathInfo_private_instance.logicalDisksPaths.Size(); ++i )
-        oDisks[i] = detail::sgPathInfo_private_instance.logicalDisksPaths[ i ];
+FPathInfo::DiskPaths( TArray< FString >& oPaths ) {
+    oPaths.Clear();
+    oPaths.Resize( detail::sgPathInfo_private_instance.diskPaths.Size() );
+    for( int i = 0; i < detail::sgPathInfo_private_instance.diskPaths.Size(); ++i )
+        oPaths[i] = detail::sgPathInfo_private_instance.diskPaths[ i ];
 }
 
 //static

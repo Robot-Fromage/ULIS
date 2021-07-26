@@ -26,9 +26,9 @@ private:
     FPathInfo( FPathInfo&& ) = delete;
 
 public:
-    static FString FontPath();
+    static void FontPaths( TArray< FString >& oPaths );
     static FString AppDataPath();
-    static void LogicalDisksPaths( TArray< FString >& oDisks );
+    static void DiskPaths( TArray< FString >& oPaths );
     static FString HomePath();
 };
 

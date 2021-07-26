@@ -21,9 +21,9 @@
 
 ULIS_NAMESPACE_BEGIN
 FPathInfo_Private::FPathInfo_Private()
-    : fontPath()
+    : fontPaths()
     , appDataPath()
-    , logicalDisksPaths()
+    , diskPaths()
     , homePath()
 {
 }

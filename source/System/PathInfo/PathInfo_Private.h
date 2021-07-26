@@ -23,9 +23,9 @@ ULIS_NAMESPACE_BEGIN
 struct FPathInfo_Private
 {
     FPathInfo_Private();
-    FString fontPath;
+    TArray< FString > fontPaths;
     FString appDataPath;
-    TArray< FString > logicalDisksPaths;
+    TArray< FString > diskPaths;
     FString homePath;
 };
 

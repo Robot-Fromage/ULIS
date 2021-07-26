@@ -16,16 +16,16 @@
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {
-FString GetFontPath() {
-    return  FString();
+void GetFontPaths( TArray< FString >& oPaths ) {
+    oPaths.Clear();
 }
 
 FString GetAppDataPath() {
     return  FString();
 }
 
-void GetLogicalDisksPaths( TArray< FString >& oDisks ) {
-    oDisks.Clear();
+void GetDiskPaths( TArray< FString >& oPaths ) {
+    oPaths.Clear();
 }
 
 FString GetHomePath() {

@@ -12,24 +12,75 @@
 #pragma once
 #include "System/PathInfo/PathInfo.h"
 #include "String/String.h"
+#include "String/Utils.h"
 #include "Memory/Array.h"
+
+#include <string>
+
+#include <Windows.h>
+#include <shlwapi.h>
+#pragma comment(lib,"shlwapi.lib")
+#include <shlobj.h>
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {
-FString GetFontPath() {
-    return  FString();
+void GetFontPaths( TArray< FString >& oPaths ) {
+    oPaths.Clear();
+
+    std::string sysfpath;
+    CHAR windir[MAX_PATH];
+    auto err = GetWindowsDirectoryA( windir, MAX_PATH );
+    ULIS_ASSERT( err, "Error loading Windows directory path during font retrieval." );
+    sysfpath = std::string( windir );
+    ReplaceAllOccurences( sysfpath, "\\", "/" );
+    sysfpath += "/Fonts/";
+    oPaths.PushBack( FString( sysfpath.c_str() ) );
 }
 
 FString GetAppDataPath() {
-    return  FString();
+    CHAR chpath[ MAX_PATH ];
+    if( SUCCEEDED( SHGetFolderPathA( NULL, CSIDL_COMMON_APPDATA, NULL, 0, chpath ) ) )
+    {
+        std::string path = std::string( chpath );
+        ReplaceAllOccurences( path, "\\", "/" );
+        return  FString( path.c_str() );
+    }
+    else
+    {
+        ULIS_ASSERT( false, "Error retrieving App Data path" );
+        return  FString();
+    }
 }
 
-void GetLogicalDisksPaths( TArray< FString >& oDisks ) {
-    oDisks.Clear();
+void GetDiskPaths( TArray< FString >& oPaths ) {
+    oPaths.Clear();
+    uint32 mask = static_cast< uint32 >( GetLogicalDrives() );
+    ULIS_ASSERT( mask, "Error occured while finding available drives" );
+    for( int i = 0; i < sizeof( uint32 ) * 8; ++i ) {
+        if( mask & ( 1 << i ) ) {
+            FString str;
+            str.Append( 'A' + i );
+            str.Append( ":/" );
+            oPaths.PushBack( str );
+        }
+    }
 }
+
+constexpr auto a = sizeof( uint32 );
 
 FString GetHomePath() {
-    return  FString();
+    CHAR chpath[ MAX_PATH ];
+    if( SUCCEEDED( SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, chpath ) ) )
+    {
+        std::string path = std::string( chpath );
+        ReplaceAllOccurences( path, "\\", "/" );
+        return  FString( path.c_str() );
+    }
+    else
+    {
+        ULIS_ASSERT( false, "Error retrieving App Data path" );
+        return  FString();
+    }
 }
 
 } // namespace detail
