@@ -527,6 +527,11 @@ public:
         , const FOnCleanupData& iOnCleanup = FOnCleanupData()
     );
 
+    /*!
+    Get CRC32 Hash for Tile
+    */
+    uint32 CRC32() const;
+
 protected:
     uint8* mBitmap; ///< Contiguous memory storage buffer for the block.
     uint32 mBytesPerScanline; ///< Cached number of bytes per scanline.

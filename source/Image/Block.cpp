@@ -10,6 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Image/Block.h"
+#include "String/CRC32.h"
 #include <new>
 
 ULIS_NAMESPACE_BEGIN
@@ -358,6 +359,12 @@ FBlock::ReallocInternalData(
     mBytesPerScanline = Width() * FormatMetrics().BPP;
     mBytesPerPlane = Planar() ? Area() * BytesPerSample() : BytesPerSample();
     mBytesTotal = Height() * mBytesPerScanline;
+}
+
+uint32
+FBlock::CRC32() const
+{
+    return  ULIS::CRC32( mBitmap, mBytesTotal );
 }
 
 ULIS_NAMESPACE_END

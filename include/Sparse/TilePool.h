@@ -16,6 +16,8 @@
 #include "Sparse/TiledBlock.h"
 #include "Image/Format.h"
 #include "Image/ColorSpace.h"
+#include "Memory/FixedAllocMemoryPool.h"
+#include "Memory/ShrinkableAllocMemoryPool.h"
 
 #include <atomic>
 #include <forward_list>
@@ -27,43 +29,38 @@
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
 #pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
+/////////////////////////////////////////////////////
+/// @class      FTilePool
+/// @brief      The FTilePool class stores redundant tiles and manages tiled blocks.
 class ULIS_API FTilePool
     : public IHasFormat
     , public IHasColorSpace
 {
 public:
     // Construction / Destruction
-    /*! Destructor, cleanup chunks. */
+    /*! Destructor. */
     ~FTilePool();
 
-    /*! Constructor, initialize with zero chunks. */
-    FTilePool( eFormat iFormat, FColorSpace* iProfile );
+    /*! Constructor. */
+    FTilePool(
+          eFormat iFormat = eFormat::Format_RGBA8
+        , FColorSpace* iColorSpace = nullptr
+    );
 
     /*! Explicitely deleted copy constructor */
-    FTilePool( const FTiledBlock& ) = delete;
+    FTilePool( const FTilePool& ) = delete;
 
     /*! Explicitely deleted copy assignment operator */
-    FTilePool& operator=( const FTiledBlock& ) = delete;
+    FTilePool& operator=( const FTilePool& ) = delete;
 
 public:
     // Public API
-    const FVec2I& TileSize() const;
+    FVec2I TileSize() const;
     uint32 EmptyCRC32Hash() const;
     const uint8* EmptyTile() const;
-    uint64 CurrentRAMUsage() const;
-    uint64 CurrentSwapUsage() const;
-    uint64 RAMUsageCapTarget() const;
-    uint64 SWAPUsageCapTarget() const;
-    uint64 CurrentTotalMemoryUsage() const;
-    uint64 NumTilesScheduledForClear() const;
-    uint64 NumFreshTilesAvailableForQuery() const;
-    uint64 NumDirtyHashedTilesCurrentlyInUse();
-    uint64 NumCorrectlyHashedTilesCurrentlyInUse();
-    uint64 NumRegisteredTiledBlocks();
-    FTiledBlock* CreateNewTiledBlock();
-    void RequestTiledBlockDeletion( FTiledBlock* iBlock );
-    void SetRAMUsageCapTarget( uint64 iValue );
-    void SetSWAPUsageCapTarget( uint64 iValue );
+
+    FTiledBlock* XNewTiledBlock();
+    void XDeleteTiledBlock( FTiledBlock* iBlock );
 
 public:
     // Core API
@@ -88,42 +85,35 @@ private:
     void ThreadedDeallocatorAllocatorCleanerBackgroundWorker();
     void ThreadedHasherGarbageCollectorBackgroundWorker();
 
-    // Empty Tile Ref
+private:
+    // Private Data Members
+    // Registered Blocks
+    std::list< FTiledBlock* > mRegisteredTiledBlocks;
+
+    // Empty Tile
     FBlock* const mEmptyTile;
     uint32 mEmptyCRC32Hash;
     const uint64 mBytesPerTile;
 
-    // Atomic memory Intent
-    std::atomic< uint64 > mSWAPUsageCapTargetAtomic;
-    std::atomic< uint64 > mRAMUsageCapTargetAtomic;
-    std::atomic< uint64 > mCurrentRAMUsageAtomic;
-
     // Memory Pools
-    std::forward_list< FBlock* > mTilesScheduledForClear;
-    std::forward_list< FBlock* > mFreshTilesAvailableForQuery;
+    // Uncompressed
+    FFixedAllocMemoryPool mUncompressedTilesMemoryPool;
+    std::forward_list< tClient > mUncompressedTilesAvailableForQuery;
+    std::mutex mMutexUncompressedTilesAvailableForQuery;
 
     // Usage Pools
     std::list< FTile* > mDirtyHashedTilesCurrentlyInUse;
     std::unordered_map< uint32, FTile* > mCorrectlyHashedTilesCurrentlyInUse;
 
-    // Registered Blocks
-    std::list< FTiledBlock* > mRegisteredTiledBlocks;
-
     // Parallel Concurrency Tools Mutex
-    std::mutex mMutexTilesScheduledForClearLock;
-    std::mutex mMutexFreshTilesAvailableForQueryLock;
     std::mutex mMutexDirtyHashedTilesCurrentlyInUseLock;
     std::mutex mMutexCorrectlyHashedTilesCurrentlyInUseLock;
     std::mutex mMutexRegisteredTiledBlocksLock;
 
-    // Atomic Hack for Memory Pools Sizing
-    std::atomic< uint32 > mNumTilesScheduledForClearAtomic;
-    std::atomic< uint32 > mNumFreshTilesAvailableForQueryAtomic;
-
     // Threading Workers Tools
     std::atomic< bool > bRequestWorkersTerminationAtomic;
-    std::thread * const mThreadDeallocatorAllocatorCleanerBackgroundWorker;
-    std::thread * const mThreadHasherGarbageCollectorBackgroundWorker;
+    std::thread* const mMemoryDriverWorker;
+    std::thread* const mSanitizationDriverWorker;
 };
 #pragma warning(pop)
 
