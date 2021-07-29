@@ -13,9 +13,9 @@
 #include "Core/Core.h"
 #include "Memory/FixedAllocMemoryPool.h"
 
+#include <atomic>
 #include <forward_list>
 #include <mutex>
-#include <atomic>
 
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
@@ -68,7 +68,7 @@ private:
     const uint8* mBackground;
     FFixedAllocMemoryPool mAllocPool;
     std::forward_list< tClient > mAvailableTiles;
-    std::mutex mAvailableTilesMutex;
+    std::mutex mMutexAvailableTilesLock;
     const uint64 mBytesPerTile;
     std::atomic< bool > bStopWorker;
     std::thread* const mWorker;

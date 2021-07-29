@@ -17,6 +17,7 @@
 #include "Image/Format.h"
 #include "Image/ColorSpace.h"
 #include "Sparse/UncompressedMemoryDriver.h"
+#include "Sparse/BusyMemoryDriver.h"
 
 #include <atomic>
 #include <forward_list>
@@ -94,21 +95,9 @@ private:
     uint32 mEmptyCRC32Hash;
     const uint64 mBytesPerTile;
 
-    // Memory Pools
+    // Drivers
     FUncompressedMemoryDriver mUncompressedMemoryDriver;
-
-    // Usage Pools
-    std::list< FTile* > mDirtyHashedTilesCurrentlyInUse;
-    std::unordered_map< uint32, FTile* > mCorrectlyHashedTilesCurrentlyInUse;
-
-    // Parallel Concurrency Tools Mutex
-    std::mutex mMutexDirtyHashedTilesCurrentlyInUseLock;
-    std::mutex mMutexCorrectlyHashedTilesCurrentlyInUseLock;
-
-    // Threading Workers Tools
-    std::atomic< bool > bRequestWorkersTerminationAtomic;
-    std::thread* const mMemoryDriverWorker;
-    std::thread* const mSanitizationDriverWorker;
+    FBusyMemoryDriver mBusyMemoryDriver;
 };
 #pragma warning(pop)
 
