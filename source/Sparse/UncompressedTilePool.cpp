@@ -19,7 +19,8 @@ FUncompressedTilePool::~FUncompressedTilePool() {
 }
 
 FUncompressedTilePool::FUncompressedTilePool(
-      byte_t iTileSize
+      const uint8* iBackground
+    , byte_t iTileSize
     , uint64 iNumCellPerArena
     , byte_t iTargetMemoryUsage
     , ufloat iDefragThreshold
@@ -27,7 +28,8 @@ FUncompressedTilePool::FUncompressedTilePool(
     , uint32 iDeallocBatchSize
     , uint32 iAllocBatchSize
 )
-    : mAllocPool(
+    : mBackground( iBackground )
+    , mAllocPool(
           iTileSize
         , iNumCellPerArena
         , iTargetMemoryUsage
@@ -43,6 +45,7 @@ FUncompressedTilePool::FUncompressedTilePool(
     , mDeallocBatchSize( iDeallocBatchSize )
     , mAllocBatchSize( iAllocBatchSize )
 {
+    ULIS_ASSERT( mBackground, "Bad background data" );
     mAllocPool.AllocArenasToReachTargetMemory();
 }
 
@@ -72,13 +75,19 @@ FUncompressedTilePool::QueryOne() {
     std::lock_guard< std::mutex > lock( mAvailableTilesMutex );
     if( mAvailableTiles.empty() ) {
         tClient cli = mAllocPool.Malloc();
-        memset( (*cli), 0, mBytesPerTile );
+        memcpy( (*cli), mBackground, mBytesPerTile );
         return  cli;
     }
 
     tClient cli = mAvailableTiles.front();
     mAvailableTiles.pop_front();
     return  cli;
+}
+
+void
+FUncompressedTilePool::SetBackground( const uint8* iBackground ) {
+    ULIS_ASSERT( mBackground, "Bad background data" );
+    mBackground = iBackground;
 }
 
 void
@@ -89,7 +98,7 @@ FUncompressedTilePool::AllocBatch() {
     for( uint32 i = 0; i < mAllocBatchSize; ++i ) {
         if( ( used < target ) ) {
             tClient cli = mAllocPool.Malloc();
-            memset( (*cli), 0, mBytesPerTile );
+            memcpy( (*cli), mBackground, mBytesPerTile );
             mAvailableTiles.push_front( cli );
             used += mBytesPerTile;
         } else {

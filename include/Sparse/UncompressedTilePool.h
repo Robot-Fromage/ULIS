@@ -33,7 +33,8 @@ public:
 
     /*! Constructor. */
     FUncompressedTilePool(
-          byte_t iTileSize
+          const uint8* iBackground
+        , byte_t iTileSize
         , uint64 iNumCellPerArena
         , byte_t iTargetMemoryUsage
         , ufloat iDefragThreshold = 1/3.f
@@ -53,6 +54,7 @@ public:
     void PurgeAllNow();
     void SanitizeNow();
     tClient QueryOne();
+    void SetBackground( const uint8* iBackground );
 
 private:
     // Private Workers API
@@ -63,6 +65,7 @@ private:
     void WorkProcess();
 
 private:
+    const uint8* mBackground;
     FFixedAllocMemoryPool mAllocPool;
     std::forward_list< tClient > mAvailableTiles;
     std::mutex mAvailableTilesMutex;
