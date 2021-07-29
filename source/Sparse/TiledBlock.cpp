@@ -215,6 +215,8 @@ FTiledBlock::SanitizeNow() {
     while( it != mChunks.end() ) {
         if( it->second->IsEmpty() )
             to_delete.push_back( it );
+        else
+            it->second->SanitizeNow( mTilePool );
         ++it;
     }
 

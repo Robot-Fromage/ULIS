@@ -77,6 +77,9 @@ public:
     /*! Check if the LQT is empty, might be deleted if so. */
     bool IsEmpty() const;
 
+    /*! Sanitize. */
+    void SanitizeNow( FTilePool& iPool );
+
 private:
     // Private Data Members
     // Bulk:
@@ -91,7 +94,7 @@ private:
     FTile* mBulk[256];
 
 public:
-    uint8 numEntries;
+    uint8 mNumEntries;
     //static constexpr uint8 sm_num_types = 3; // Empty, Filled, Data, RLE, Disk
     static constexpr uint8 sm_leaf_threshold = 6; // 2^6 = 64
     static constexpr uint8 sm_root_threshold = 4; // 2^4 = 16

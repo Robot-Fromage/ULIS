@@ -34,7 +34,7 @@ FLQTree::~FLQTree() {
 
 FLQTree::FLQTree()
     : mBulk { 0 }
-    , numEntries( 0 )
+    , mNumEntries( 0 )
 {
 }
 
@@ -44,7 +44,7 @@ FLQTree::Erase( uint16 iX, uint16 iY ) {
           details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
         | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
     if( mBulk[ key ] ) {
-        --numEntries;
+        --mNumEntries;
         mBulk[ key ]->DecreaseRefCount();
         mBulk[ key ] = nullptr;
     }
@@ -52,7 +52,7 @@ FLQTree::Erase( uint16 iX, uint16 iY ) {
 
 void
 FLQTree::Clear() {
-    numEntries = 0;
+    mNumEntries = 0;
     for( uint16 i = 0; i < 256; ++i ) {
         mBulk[ i ]->DecreaseRefCount();
         mBulk[ i ] = nullptr;
@@ -94,7 +94,7 @@ FLQTree::QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY ) {
         | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
     // Perform data copy for imminent mutable change if needed
     if( !mBulk[ key ] )
-        ++numEntries;
+        ++mNumEntries;
     mBulk[ key ] = iPool.XPerformDataCopyForImminentMutableChangeIfNeeded( mBulk[ key ] );
     mBulk[ key ]->mDirty = true;
     return  &( mBulk[ key ] );
@@ -102,7 +102,12 @@ FLQTree::QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY ) {
 
 bool
 FLQTree::IsEmpty() const {
-    return  numEntries == 0;
+    return  mNumEntries == 0;
+}
+
+void
+FLQTree::SanitizeNow( FTilePool& iPool ) {
+    // TODO
 }
 
 ULIS_NAMESPACE_END

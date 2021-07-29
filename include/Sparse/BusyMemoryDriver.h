@@ -11,9 +11,11 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Memory/Units.h"
 
 #include <atomic>
 #include <list>
+#include <forward_list>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
@@ -33,7 +35,13 @@ public:
     ~FBusyMemoryDriver();
 
     /*! Constructor. */
-    FBusyMemoryDriver();
+    FBusyMemoryDriver(
+          uint32 iBackgroundHash
+        , byte_t iTileSize
+        , double iWorkerRelaxTime_ms = 0.0
+        , uint32 iDirtyHashedBatchSize = 0
+        , uint32 iCorrectlyHashedBatchSize = 0
+    );
 
     /*! Explicitely deleted copy constructor */
     FBusyMemoryDriver( const FBusyMemoryDriver& ) = delete;
@@ -43,7 +51,14 @@ public:
 
 public:
     // Core API
+    void PurgeAllNow();
+    void SanitizeNow();
     void Submit( FTile* iTile );
+    FTile* RedundantHashMerge( FTile* iTile );
+    void SetBackgroundHash( uint32 iBackgroundHash );
+    std::list< tClient >& ClientsScheduledForRelease();
+    void LockScheduleRelease();
+    void UnlockScheduleRelease();
 
 private:
     // Private Workers API
@@ -55,15 +70,19 @@ private:
 
 private:
     // Private Data Members
+    uint32 mBackgroundHash;
+    std::list< tClient > mClientsScheduledForRelease;
     std::list< FTile* > mDirtyHashedTiles;
     std::unordered_map< uint32, FTile* > mCorrectlyHashedTiles;
+    std::mutex mMutexClientsScheduledForReleaseLock;
     std::mutex mMutexDirtyHashedTilesLock;
     std::mutex mMutexCorrectlyHashedTilesLock;
+    const uint64 mBytesPerTile;
     std::atomic< bool > bStopWorker;
     std::thread* const mWorker;
     double mWorkerRelaxTime_ms;
-    uint32 mDirtyHashedBatchSize;
     uint32 mCorrectlyHashedBatchSize;
+    uint32 mDirtyHashedBatchSize;
 };
 #pragma warning(pop)
 

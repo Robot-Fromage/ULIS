@@ -127,11 +127,7 @@ FTilePool::XQueryFreshTile() {
     // use the tile without it being deleted.
     FTile* tile = new FTile( mUncompressedMemoryDriver.QueryOne() );
     tile->IncreaseRefCount();
-
-    mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
-    mDirtyHashedTilesCurrentlyInUse.push_back( tile );
-    mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
-
+    mBusyMemoryDriver.Submit( tile );
     return  tile;
 }
 
