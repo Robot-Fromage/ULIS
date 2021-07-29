@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         UncompressedTilePool.h
+* @file         UncompressedMemoryDriver.h
 * @author       Clement Berthaud
-* @brief        This file provides declaration for the UncompressedTilePool class.
+* @brief        This file provides declaration for the UncompressedMemoryDriver class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -21,18 +21,18 @@ ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
 #pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 /////////////////////////////////////////////////////
-/// @class      FUncompressedTilePool
+/// @class      FUncompressedMemoryDriver
 /// @brief      The is a subcomponent of FTilePool that manages uncompressed tile
 ///             memory.
-class ULIS_API FUncompressedTilePool
+class ULIS_API FUncompressedMemoryDriver
 {
 public:
     // Construction / Destruction
     /*! Destructor. */
-    ~FUncompressedTilePool();
+    ~FUncompressedMemoryDriver();
 
     /*! Constructor. */
-    FUncompressedTilePool(
+    FUncompressedMemoryDriver(
           const uint8* iBackground
         , byte_t iTileSize
         , uint64 iNumCellPerArena
@@ -44,10 +44,10 @@ public:
     );
 
     /*! Explicitely deleted copy constructor */
-    FUncompressedTilePool( const FUncompressedTilePool& ) = delete;
+    FUncompressedMemoryDriver( const FUncompressedMemoryDriver& ) = delete;
 
     /*! Explicitely deleted copy assignment operator */
-    FUncompressedTilePool& operator=( const FUncompressedTilePool& ) = delete;
+    FUncompressedMemoryDriver& operator=( const FUncompressedMemoryDriver& ) = delete;
 
 public:
     // Core API

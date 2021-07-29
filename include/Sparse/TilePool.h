@@ -16,8 +16,7 @@
 #include "Sparse/TiledBlock.h"
 #include "Image/Format.h"
 #include "Image/ColorSpace.h"
-#include "Memory/FixedAllocMemoryPool.h"
-#include "Memory/ShrinkableAllocMemoryPool.h"
+#include "Sparse/UncompressedMemoryDriver.h"
 
 #include <atomic>
 #include <forward_list>
@@ -96,10 +95,7 @@ private:
     const uint64 mBytesPerTile;
 
     // Memory Pools
-    // Uncompressed
-    FFixedAllocMemoryPool mUncompressedTilesMemoryPool;
-    std::forward_list< tClient > mUncompressedTilesAvailableForQuery;
-    std::mutex mMutexUncompressedTilesAvailableForQuery;
+    FUncompressedMemoryDriver mUncompressedMemoryDriver;
 
     // Usage Pools
     std::list< FTile* > mDirtyHashedTilesCurrentlyInUse;
@@ -108,7 +104,6 @@ private:
     // Parallel Concurrency Tools Mutex
     std::mutex mMutexDirtyHashedTilesCurrentlyInUseLock;
     std::mutex mMutexCorrectlyHashedTilesCurrentlyInUseLock;
-    std::mutex mMutexRegisteredTiledBlocksLock;
 
     // Threading Workers Tools
     std::atomic< bool > bRequestWorkersTerminationAtomic;

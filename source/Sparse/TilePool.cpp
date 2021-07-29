@@ -121,20 +121,11 @@ FTilePool::PurgeAllNow() {
 
 FTile*
 FTilePool::XQueryFreshTile() {
-    mMutexUncompressedTilesAvailableForQuery.lock();
-
-    if( mUncompressedTilesAvailableForQuery.empty() )
-        ClearNowDirect_Unsafe( 1 );
-
-    tClient data = mUncompressedTilesAvailableForQuery.front();
-    mUncompressedTilesAvailableForQuery.pop_front();
-    mMutexUncompressedTilesAvailableForQuery.unlock();
-
-    FTile* tile = new FTile( data );
     // Here we increase the refcount before inserting in the Dirty list,
     // so that parallel sanitize operation beetwen the allocation here,
     // and return from this function or ulterior usage can still safely
     // use the tile without it being deleted.
+    FTile* tile = new FTile( mUncompressedMemoryDriver.QueryOne() );
     tile->IncreaseRefCount();
 
     mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
