@@ -18,7 +18,7 @@
 
 ULIS_NAMESPACE_BEGIN
 // Forward-declarations
-template< class BlockType, class RendererType, class SuperStackExtra > class TLayerStack;
+template< class BlockType, class RendererType, class TSuperStackExtra > class TLayerStack;
 template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType, class LayerStackType > class TLayerFolder;
 
 /////////////////////////////////////////////////////

@@ -13,8 +13,8 @@
 #include "Layer/Layer/LayerStack.h"
 
 // Template Macro Utility
-#define TEMPLATE template< class BlockType, class RendererType, class SuperStackExtra >
-#define CLASS TLayerStack< BlockType, RendererType, SuperStackExtra >
+#define TEMPLATE template< class BlockType, class RendererType, class TSuperStackExtra >
+#define CLASS TLayerStack< BlockType, RendererType, TSuperStackExtra >
 
 ULIS_NAMESPACE_BEGIN
 // DTor
@@ -87,7 +87,7 @@ CLASS::TLayerStack(
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
-    , SuperStackExtra( args ... )
+    , TSuperStackExtra( args ... )
 {
     ULIS_DEBUG_PRINTF( "TLayerStack Created" )
 }

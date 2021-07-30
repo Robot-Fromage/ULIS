@@ -36,7 +36,7 @@ struct ULIS_API FDummySuperStack {
 template<
       class BlockType
     , class RendererType
-    , class SuperStackExtra
+    , class TSuperStackExtra
 >
 class TLayerStack final
     : public TAbstractLayerDrawable< BlockType >
@@ -45,7 +45,7 @@ class TLayerStack final
     , public IHasSize2D
     , public IHasFormat
     , public IHasColorSpace
-    , public SuperStackExtra
+    , public TSuperStackExtra
 {
 public:
     // DTor
