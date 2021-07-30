@@ -95,7 +95,7 @@ FLQTree::QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY ) {
     // Perform data copy for imminent mutable change if needed
     if( !mBulk[ key ] )
         ++mNumEntries;
-    mBulk[ key ] = iPool.XPerformDataCopyForImminentMutableChangeIfNeeded( mBulk[ key ] );
+    mBulk[ key ] = iPool.SplitMutable( mBulk[ key ] );
     mBulk[ key ]->mDirty = true;
     return  &( mBulk[ key ] );
 }

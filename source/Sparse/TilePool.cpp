@@ -13,37 +13,42 @@
 #include "Image/Block.h"
 
 ULIS_NAMESPACE_BEGIN
+using namespace units_literals;
 // Construction / Destruction
 FTilePool::~FTilePool() {
-    bRequestWorkersTerminationAtomic = true;
-    mMemoryDriverWorker->join();
-    mSanitizationDriverWorker->join();
-    delete  mMemoryDriverWorker;
-    delete  mSanitizationDriverWorker;
     PurgeAllNow();
+    delete  mMemoryDriver;
     delete  mEmptyTile;
 }
 
 FTilePool::FTilePool(
           eFormat iFormat
-        , FColorSpace* iColorSpace = nullptr
+        , FColorSpace* iColorSpace
     )
     : IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
-    , mEmptyTile( new FBlock( FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels, iFormat, iColorSpace ) )
-    , mBytesPerTile( mEmptyTile->BytesTotal() )
-    , mDirtyHashedTilesCurrentlyInUse( std::list< FTile* >() )
-    , mCorrectlyHashedTilesCurrentlyInUse( std::unordered_map< uint32, FTile* >() )
     , mRegisteredTiledBlocks( std::list< FTiledBlock* >() )
-    , mMutexDirtyHashedTilesCurrentlyInUseLock()
-    , mMutexCorrectlyHashedTilesCurrentlyInUseLock()
-    , mMutexRegisteredTiledBlocksLock()
-    , bRequestWorkersTerminationAtomic( false )
-    , mMemoryDriverWorker( new std::thread( &FTilePool::ThreadedDeallocatorAllocatorCleanerBackgroundWorker, this ) )
-    , mSanitizationDriverWorker( new std::thread( &FTilePool::ThreadedHasherGarbageCollectorBackgroundWorker, this ) )
+    , mEmptyTile( new FBlock( FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels, iFormat, iColorSpace ) )
+    , mEmptyCRC32Hash( 0 )
+    , mBytesPerTile( mEmptyTile->BytesTotal() )
+    , mMemoryDriver( nullptr )
 {
     memset( mEmptyTile->Bits(), 0, mBytesPerTile );
     mEmptyCRC32Hash = mEmptyTile->CRC32();
+    mMemoryDriver = new FMemoryDriver(
+          mEmptyTile->Bits()
+        , mEmptyCRC32Hash
+        , mBytesPerTile
+        , 256
+        , 1_Gio
+        , 1/3.f
+        , 0.0
+        , 1
+        , 1
+        , 5.0
+        , 0
+        , 0
+    );
 }
 
 
@@ -61,127 +66,31 @@ FTilePool::EmptyCRC32Hash() const {
 
 const uint8*
 FTilePool::EmptyTile() const {
-    mEmptyTile;
+    return  mEmptyTile->Bits();
 }
-
-FTiledBlock*
-FTilePool::XNewTiledBlock() {
-    const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
-    FTiledBlock* block = new FTiledBlock( *this );
-    mRegisteredTiledBlocks.emplace_back( block );
-    return  block;
-}
-
-void
-FTilePool::XDeleteTiledBlock( FTiledBlock* iBlock ) {
-    const std::lock_guard<std::mutex> lock( mMutexRegisteredTiledBlocksLock );
-    ULIS_ASSERT( iBlock, "Bad TiledBlock Deletion Request, this tiledblock is not the right type !" );
-    auto it = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
-    ULIS_ASSERT( it != mRegisteredTiledBlocks.end(), "Bad TiledBlock Deletion Request, this tiledblock is not in this pool or has already been deleted !" );
-    if( it != mRegisteredTiledBlocks.end() ) {
-        mRegisteredTiledBlocks.erase( it );
-        delete *it;
-    }
-}
-
-
 
 // Core API
 void
 FTilePool::PurgeAllNow() {
-    mMutexUncompressedTilesAvailableForQuery.lock();
-    mMutexDirtyHashedTilesCurrentlyInUseLock.lock();
-    mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
-    mMutexRegisteredTiledBlocksLock.lock();
-
-    for( auto& it : mRegisteredTiledBlocks ) {
+    for( auto& it : mRegisteredTiledBlocks )
         delete it;
-    }
-
-    for( auto& it : mDirtyHashedTilesCurrentlyInUse ) {
-        delete it;
-    }
-
-    for( auto& it : mCorrectlyHashedTilesCurrentlyInUse ) {
-        delete it.second;
-    }
-
-    mUncompressedTilesMemoryPool.UnsafeFreeAll();
-
     mRegisteredTiledBlocks.clear();
-    mDirtyHashedTilesCurrentlyInUse.clear();
-    mCorrectlyHashedTilesCurrentlyInUse.clear();
-    mUncompressedTilesAvailableForQuery.clear();
-
-    mMutexUncompressedTilesAvailableForQuery.unlock();
-    mMutexDirtyHashedTilesCurrentlyInUseLock.unlock();
-    mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
-    mMutexRegisteredTiledBlocksLock.unlock();
+    mMemoryDriver->PurgeAllNow();
 }
 
 FTile*
-FTilePool::XQueryFreshTile() {
-    // Here we increase the refcount before inserting in the Dirty list,
-    // so that parallel sanitize operation beetwen the allocation here,
-    // and return from this function or ulterior usage can still safely
-    // use the tile without it being deleted.
-    FTile* tile = new FTile( mUncompressedMemoryDriver.QueryOne() );
-    tile->IncreaseRefCount();
-    mBusyMemoryDriver.Submit( tile );
-    return  tile;
+FTilePool::QueryOne() {
+    return  mMemoryDriver->QueryOne();
 }
 
 FTile*
-FTilePool::PerformRedundantHashMergeReturnCorrect( FTile* iElem ) {
-    ULIS_ASSERT( iElem, "Bad Elem Query during Hash Merge Check" );
-
-    // If the hashed tile is empty we return null ptr and decrease refcount
-    if( iElem->mHash == mEmptyCRC32Hash ) {
-        iElem->DecreaseRefCount();
-        return  nullptr;
-    }
-
-    // Find the hashed tile in the map if not empty
-    mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
-    std::unordered_map< uint32, FTile* >::iterator it = mCorrectlyHashedTilesCurrentlyInUse.find( iElem->mHash );
-    std::unordered_map< uint32, FTile* >::iterator end = mCorrectlyHashedTilesCurrentlyInUse.end();
-    mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
-
-    if( it == end ) {
-        mMutexUncompressedTilesAvailableForQuery.lock();
-        if( mUncompressedTilesAvailableForQuery.empty() ) {
-            tClient data = mUncompressedTilesMemoryPool.Malloc();
-            memset( mEmptyTile->Bits(), 0, mBytesPerTile );
-            mUncompressedTilesAvailableForQuery.emplace_front( data );
-        }
-
-        tClient data = mUncompressedTilesAvailableForQuery.front();
-        mUncompressedTilesAvailableForQuery.pop_front();
-        mMutexUncompressedTilesAvailableForQuery.unlock();
-        FTile* tile = new FTile( data );
-        tile->mDirty = false;
-        tile->mHash = iElem->mHash;
-        memcpy( *(iElem->mClient), *(tile->mClient), mBytesPerTile );
-
-        mMutexCorrectlyHashedTilesCurrentlyInUseLock.lock();
-        mCorrectlyHashedTilesCurrentlyInUse[ tile->mHash ] = tile;
-        mMutexCorrectlyHashedTilesCurrentlyInUseLock.unlock();
-
-        iElem->DecreaseRefCount();
-        tile->IncreaseRefCount();
-        return  tile;
-    }
-
-    if( it->second == iElem )
-        return  iElem;
-
-    it->second->IncreaseRefCount();
-    iElem->DecreaseRefCount();
-    return  it->second;
+FTilePool::RedundantHashMerge( FTile* iElem ) {
+    return  mMemoryDriver->RedundantHashMerge( iElem );
 }
 
 FTile*
-FTilePool::XPerformDataCopyForImminentMutableChangeIfNeeded( FTile* iElem ) {
+FTilePool::SplitMutable( FTile* iElem ) {
+    return  nullptr;
 }
 
 ULIS_NAMESPACE_END

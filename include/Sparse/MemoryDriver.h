@@ -3,15 +3,16 @@
 /*
 *   ULIS
 *__________________
-* @file         UncompressedMemoryDriver.h
+* @file         UncompressedMemoryPool.h
 * @author       Clement Berthaud
-* @brief        This file provides declaration for the BusyMemoryDriver class.
+* @brief        This file provides declaration for the MemoryDriver class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 #include "Memory/Units.h"
+#include "Sparse/UncompressedMemoryPool.h"
 
 #include <atomic>
 #include <list>
@@ -21,44 +22,49 @@
 #include <unordered_map>
 
 ULIS_NAMESPACE_BEGIN
+class FUncompressedMemoryPool;
 #pragma warning(push)
 #pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 /////////////////////////////////////////////////////
-/// @class      FBusyMemoryDriver
+/// @class      FMemoryDriver
 /// @brief      The is a subcomponent of FTilePool that manages busy tile
 ///             memory.
-class ULIS_API FBusyMemoryDriver
+class ULIS_API FMemoryDriver
 {
 public:
     // Construction / Destruction
     /*! Destructor. */
-    ~FBusyMemoryDriver();
+    ~FMemoryDriver();
 
     /*! Constructor. */
-    FBusyMemoryDriver(
-          uint32 iBackgroundHash
+    FMemoryDriver(
+          const uint8* iBackground
+        , uint32 iBackgroundHash
         , byte_t iTileSize
+        , uint64 iNumCellPerArena
+        , byte_t iTargetMemoryUsage
+        , ufloat iDefragThreshold = 1/3.f
+        , double iUncompressedMemoryPoolRelaxTime = 0.0
+        , uint32 iDeallocBatchSize = 1
+        , uint32 iAllocBatchSize = 1
         , double iWorkerRelaxTime_ms = 0.0
         , uint32 iDirtyHashedBatchSize = 0
         , uint32 iCorrectlyHashedBatchSize = 0
     );
 
     /*! Explicitely deleted copy constructor */
-    FBusyMemoryDriver( const FBusyMemoryDriver& ) = delete;
+    FMemoryDriver( const FMemoryDriver& ) = delete;
 
     /*! Explicitely deleted copy assignment operator */
-    FBusyMemoryDriver& operator=( const FBusyMemoryDriver& ) = delete;
+    FMemoryDriver& operator=( const FMemoryDriver& ) = delete;
 
 public:
     // Core API
     void PurgeAllNow();
     void SanitizeNow();
-    void Submit( FTile* iTile );
+    FTile* QueryOne();
     FTile* RedundantHashMerge( FTile* iTile );
-    void SetBackgroundHash( uint32 iBackgroundHash );
-    std::list< tClient >& ClientsScheduledForRelease();
-    void LockScheduleRelease();
-    void UnlockScheduleRelease();
+    void SetBackground( const uint8* iBackground, uint32 iBackgroundHash );
 
 private:
     // Private Workers API
@@ -70,13 +76,12 @@ private:
 
 private:
     // Private Data Members
+    FUncompressedMemoryPool mUncompressedMemoryPool;
     uint32 mBackgroundHash;
-    std::list< tClient > mClientsScheduledForRelease;
     std::list< FTile* > mDirtyHashedTiles;
     std::unordered_map< uint32, FTile* > mCorrectlyHashedTiles;
-    std::mutex mMutexClientsScheduledForReleaseLock;
-    std::mutex mMutexDirtyHashedTilesLock;
     std::mutex mMutexCorrectlyHashedTilesLock;
+    std::mutex mMutexDirtyHashedTilesLock;
     const uint64 mBytesPerTile;
     std::atomic< bool > bStopWorker;
     std::thread* const mWorker;

@@ -364,7 +364,7 @@ FBlock::ReallocInternalData(
 uint32
 FBlock::CRC32() const
 {
-    return  ULIS::CRC32( mBitmap, mBytesTotal );
+    return  ULIS::CRC32( mBitmap, static_cast< int >( mBytesTotal ) );
 }
 
 ULIS_NAMESPACE_END

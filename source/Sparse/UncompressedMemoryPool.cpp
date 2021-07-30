@@ -3,22 +3,22 @@
 /*
 *   ULIS
 *__________________
-* @file         UncompressedMemoryDriver.cpp
+* @file         UncompressedMemoryPool.cpp
 * @author       Clement Berthaud
-* @brief        This file provides declaration for the UncompressedMemoryDriver class.
+* @brief        This file provides declaration for the UncompressedMemoryPool class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include "Sparse/UncompressedMemoryDriver.h"
+#include "Sparse/UncompressedMemoryPool.h"
 
 ULIS_NAMESPACE_BEGIN
-FUncompressedMemoryDriver::~FUncompressedMemoryDriver() {
+FUncompressedMemoryPool::~FUncompressedMemoryPool() {
     bStopWorker = true;
     mWorker->join();
     PurgeAllNow();
 }
 
-FUncompressedMemoryDriver::FUncompressedMemoryDriver(
+FUncompressedMemoryPool::FUncompressedMemoryPool(
       const uint8* iBackground
     , byte_t iTileSize
     , uint64 iNumCellPerArena
@@ -40,7 +40,7 @@ FUncompressedMemoryDriver::FUncompressedMemoryDriver(
     , mMutexAvailableTilesLock()
     , mBytesPerTile( iTileSize )
     , bStopWorker( false )
-    , mWorker( new std::thread( &FUncompressedMemoryDriver::WorkProcess, this ) )
+    , mWorker( new std::thread( &FUncompressedMemoryPool::WorkProcess, this ) )
     , mWorkerRelaxTime_ms( iWorkerRelaxTime_ms )
     , mDeallocBatchSize( iDeallocBatchSize )
     , mAllocBatchSize( iAllocBatchSize )
@@ -51,14 +51,14 @@ FUncompressedMemoryDriver::FUncompressedMemoryDriver(
 }
 
 void
-FUncompressedMemoryDriver::PurgeAllNow() {
+FUncompressedMemoryPool::PurgeAllNow() {
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
     for( auto it : mAvailableTiles )
         FFixedAllocMemoryPool::Free( it );
 }
 
 void
-FUncompressedMemoryDriver::SanitizeNow() {
+FUncompressedMemoryPool::SanitizeNow() {
     uint64 used = mAllocPool.UsedMemory();
     const uint64 target = mAllocPool.TargetMemoryUsage();
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
@@ -72,7 +72,7 @@ FUncompressedMemoryDriver::SanitizeNow() {
 }
 
 tClient
-FUncompressedMemoryDriver::QueryOne() {
+FUncompressedMemoryPool::QueryOne() {
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
     if( mAvailableTiles.empty() ) {
         tClient cli = mAllocPool.Malloc();
@@ -86,14 +86,27 @@ FUncompressedMemoryDriver::QueryOne() {
 }
 
 void
-FUncompressedMemoryDriver::SetBackground( const uint8* iBackground ) {
+FUncompressedMemoryPool::SetBackground( const uint8* iBackground ) {
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
     ULIS_ASSERT( mBackground, "Bad background data" );
     mBackground = iBackground;
 }
 
 void
-FUncompressedMemoryDriver::AllocBatch() {
+FUncompressedMemoryPool::Release( tClient iClient ) {
+    std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
+    FFixedAllocMemoryPool::Free( iClient );
+}
+
+void
+FUncompressedMemoryPool::Release( const std::list< tClient > iList ) {
+    std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
+    for( auto it : iList )
+        FFixedAllocMemoryPool::Free( it );
+}
+
+void
+FUncompressedMemoryPool::AllocBatch() {
     uint64 used = mAllocPool.UsedMemory();
     const uint64 target = mAllocPool.TargetMemoryUsage();
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
@@ -110,7 +123,7 @@ FUncompressedMemoryDriver::AllocBatch() {
 }
 
 void
-FUncompressedMemoryDriver::DeallocBatch() {
+FUncompressedMemoryPool::DeallocBatch() {
     uint64 used = mAllocPool.UsedMemory();
     const uint64 target = mAllocPool.TargetMemoryUsage();
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
@@ -127,7 +140,7 @@ FUncompressedMemoryDriver::DeallocBatch() {
 }
 
 void
-FUncompressedMemoryDriver::WorkProcess() {
+FUncompressedMemoryPool::WorkProcess() {
     while( !bStopWorker ) {
         DeallocBatch();
         mAllocPool.FreeOneArenaIfNecessary();

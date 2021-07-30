@@ -3,9 +3,9 @@
 /*
 *   ULIS
 *__________________
-* @file         UncompressedMemoryDriver.h
+* @file         UncompressedMemoryPool.h
 * @author       Clement Berthaud
-* @brief        This file provides declaration for the UncompressedMemoryDriver class.
+* @brief        This file provides declaration for the UncompressedMemoryPool class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
@@ -21,18 +21,18 @@ ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
 #pragma warning(disable : 4251) // Shut warning C4251 dll export of stl classes
 /////////////////////////////////////////////////////
-/// @class      FUncompressedMemoryDriver
+/// @class      FUncompressedMemoryPool
 /// @brief      The is a subcomponent of FTilePool that manages uncompressed tile
 ///             memory.
-class ULIS_API FUncompressedMemoryDriver
+class ULIS_API FUncompressedMemoryPool
 {
 public:
     // Construction / Destruction
     /*! Destructor. */
-    ~FUncompressedMemoryDriver();
+    ~FUncompressedMemoryPool();
 
     /*! Constructor. */
-    FUncompressedMemoryDriver(
+    FUncompressedMemoryPool(
           const uint8* iBackground
         , byte_t iTileSize
         , uint64 iNumCellPerArena
@@ -44,10 +44,10 @@ public:
     );
 
     /*! Explicitely deleted copy constructor */
-    FUncompressedMemoryDriver( const FUncompressedMemoryDriver& ) = delete;
+    FUncompressedMemoryPool( const FUncompressedMemoryPool& ) = delete;
 
     /*! Explicitely deleted copy assignment operator */
-    FUncompressedMemoryDriver& operator=( const FUncompressedMemoryDriver& ) = delete;
+    FUncompressedMemoryPool& operator=( const FUncompressedMemoryPool& ) = delete;
 
 public:
     // Core API
@@ -55,6 +55,8 @@ public:
     void SanitizeNow();
     tClient QueryOne();
     void SetBackground( const uint8* iBackground );
+    void Release( tClient iClient );
+    void Release( const std::list< tClient > iList );
 
 private:
     // Private Workers API

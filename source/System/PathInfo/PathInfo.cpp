@@ -15,7 +15,7 @@
 
 ULIS_NAMESPACE_BEGIN
 namespace detail {
-extern FPathInfo_Private sgPathInfo_private_instance;
+FPathInfo_Private sgPathInfo_private_instance;
 } // namespace detail
 
 //static

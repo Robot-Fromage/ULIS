@@ -16,15 +16,10 @@
 #include "Sparse/TiledBlock.h"
 #include "Image/Format.h"
 #include "Image/ColorSpace.h"
-#include "Sparse/UncompressedMemoryDriver.h"
-#include "Sparse/BusyMemoryDriver.h"
+#include "Sparse/MemoryDriver.h"
+#include "Memory/Units.h"
 
-#include <atomic>
-#include <forward_list>
 #include <list>
-#include <mutex>
-#include <thread>
-#include <unordered_map>
 
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
@@ -36,6 +31,10 @@ class ULIS_API FTilePool
     : public IHasFormat
     , public IHasColorSpace
 {
+private:
+    friend class FTiledBlock;
+    friend class FLQTree;
+
 public:
     // Construction / Destruction
     /*! Destructor. */
@@ -59,31 +58,18 @@ public:
     uint32 EmptyCRC32Hash() const;
     const uint8* EmptyTile() const;
 
-    FTiledBlock* XNewTiledBlock();
-    void XDeleteTiledBlock( FTiledBlock* iBlock );
+private:
+    void RegisterTiledBlock( FTiledBlock* iBlock );
+    void UnregisterTiledBlock( FTiledBlock* iBlock );
 
 public:
     // Core API
+
+private:
     void PurgeAllNow();
-    FTile* XQueryFreshTile();
-    FTile* PerformRedundantHashMergeReturnCorrect( FTile* iElem );
-    FTile* XPerformDataCopyForImminentMutableChangeIfNeeded( FTile* iElem );
-
-private:
-    // Internal API
-    void AllocateNow_Unsafe( int32 iNum );
-    void ClearNowDirect_Unsafe( int32 iNum );
-    void DeallocOneInTilesScheduledForClearIfRAMOverflowsTarget();
-    void DeallocOneInFreshTilesAvailableForQueryIfRAMOverflowsTargetAndTilesScheduledForClearIsEmptyImprecise();
-    void AllocOneInTilesScheduledForClearIfRAMUnderflowsTarget();
-    void ClearOneInTilesScheduledForClearAndMoveToFreshTilesAvailableForQueryIfNeeded();
-    void SanitizeAllDirtyTilesCurrentlyInUse();
-    void SanitizeAllCorrectlyHashedTilesCurrentlyInUse();
-
-private:
-    // Private Workers API
-    void ThreadedDeallocatorAllocatorCleanerBackgroundWorker();
-    void ThreadedHasherGarbageCollectorBackgroundWorker();
+    FTile* QueryOne();
+    FTile* RedundantHashMerge( FTile* iElem );
+    FTile* SplitMutable( FTile* iElem );
 
 private:
     // Private Data Members
@@ -96,8 +82,7 @@ private:
     const uint64 mBytesPerTile;
 
     // Drivers
-    FUncompressedMemoryDriver mUncompressedMemoryDriver;
-    FBusyMemoryDriver mBusyMemoryDriver;
+    FMemoryDriver* mMemoryDriver;
 };
 #pragma warning(pop)
 
