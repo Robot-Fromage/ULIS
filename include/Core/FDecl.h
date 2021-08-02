@@ -44,7 +44,6 @@ class   FTexture;
 #endif // ULIS_FEATURE_GPU_ENABLED
 class   FThreadPool;
 struct  FTile;
-class   FTransformation2D;
 class   FWString;
 class   IHasColorSpace;
 class   IHasFormat;
