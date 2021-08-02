@@ -16,6 +16,10 @@ function( AddExampleModule iModuleName )
         return()
     endif()
 
+    if( NOT ${ULIS_USE_CURSES} )
+        return()
+    endif()
+
     # ADD PROJECT
     add_executable( ${iModuleName} )
     set_target_properties( ${iModuleName} PROPERTIES FOLDER ULIS/example )
@@ -52,6 +56,7 @@ function( AddExampleModule iModuleName )
         Qt5::Core
         Qt5::Widgets
         Qt5::Gui
+        PDCurses
     )
 
 endfunction()

@@ -22,6 +22,7 @@ option( ULIS_BUILD_TESTS            "Build the library test modules"            
 option( ULIS_BUILD_EXAMPLES         "Build the library example modules"                 OFF )
 SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries"            )
 SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package"                )
+SET( ULIS_CURSES_CMAKE_PATH         "" CACHE STRING "Indicates the path to Curses cmake package"            )
 
 # Setup
 message( "Starting environnement setup before generation." )
@@ -57,6 +58,7 @@ if( ${ULIS_BUILD_TESTS} )
 endif()
 
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindQt.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindCurses.cmake )
 
 if( ${ULIS_BUILD_EXAMPLES} )
     include(${CMAKE_CURRENT_SOURCE_DIR}/example/CMakeLists.txt)
