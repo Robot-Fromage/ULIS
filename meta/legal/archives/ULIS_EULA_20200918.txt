@@ -1,0 +1,363 @@
+﻿End User License Agreement
+Utility Library for Imaging System (ULIS)
+September the 18th 2020
+
+Please read this End User License Agreement (”EULA” or “Agreement”) carefully. It is a legal document that explains your rights and obligations related to your use of Utility Library for Imaging System (”ULIS”) and related content. By downloading or using this library or any related content, You are agreeing to be bound by the terms of this EULA. If You do not or cannot agree to the terms of this EULA, please do not download or use ULIS or any related content.
+
+This EULA may be periodically updated; the most current version is posted at https://github.com/Praxinos/ULIS. Your continued use of ULIS following such posting constitutes your acceptance of its terms.
+
+Article 1.  Application
+
+	1.1. ULIS is a virtual library combining a set of algorithms that is aimed at software rasterization and digital image processing (the “Product” or “ULIS”). This set of algorithms are expressed as source codes (“Source Codes”), which means the human readable form of the library, including all modules it contains, plus any associated interface definition files, scripts used to control compilation, and installation of an executable (object code).
+
+	1.2. Before accessing ULIS and use related Source Codes, please read carefully this EULA and its conditions. This EULA is solely between Praxinos SCOP ARL (“Praxinos” or “Licensor”) and You, as a natural person, acting or not in a business or professional capacity, on your own behalf, or on behalf of the company or other legal entity (“Licensee”, “User” or “You”) on whose behalf You are acting; 
+
+	1.3. This EULA is a license agreement for the Source Codes, and not a sales agreement for Product and/or Source Codes.
+
+	1.4. By accessing ULIS, You represent and warrant:
+    • You are a natural person who has attained the age of eighteen (18) years, or the age of legal majority according to the law of your primary country of residence, or be officially declared as an emancipated minor in your primary country of residence;
+    • You have the legal capacity to commit yourself, or the company or other legal entity that employs You to agree this EULA;
+    • You have read and agreed without reservation all the articles of this EULA;
+    • You consent expressly the use of the Product in accordance with the terms of the EULA;
+    • You currently reside in the country that has been indicated in the billing address.
+
+	1.5. IF YOU DISAGREE WITH THE TERMS OF THIS EULA, PLEASE DO NOT ACCESS OR DOWNLOAD ULIS AND ITS SOURCE CODES.
+
+All rights granted hereunder are limited by this EULA, provided that all terms and conditions set out in the  Agreement are adhered to by You.
+
+	1.6. This EULA supplements the general terms and conditions of the platform "GitHub" on which ULIS is officially available at the following address: https://github.com/Praxinos/ULIS. By accessing this platform operated by GitHub Inc. You represent and warrant that You are subject to the terms and conditions of use available here: https://docs.github.com/en/github/site-policy/github-terms-of-service or any other document that may supersede them in the future.
+
+Article 2. Object
+
+This EULA is a legal document that explains the conditions in which Praxinos grants You a non-exclusive right to operate the Source Codes related to ULIS, either as a Standard License or an Extended License, as defined hereunder.
+
+Standard License
+• Free of charge
+• Unlimited seat access
+• Can be digitally reproduced on any media
+• Non-commercial purposes
+• No Professional Activities
+• For the entire duration of the intellectual properties rights of the Source Codes. 
+
+
+Extended License
+• Monthly or yearly Subscription fees
+• Limited seat access (1 workstation per license)
+•  Can be digitally and physically reproduced on any media
+• For Commercial and non-Commercial Purposes
+• For Professional Activities
+• For the entire duration of the Subscription
+Article 3. Definitions
+
+Subscription: refers to the User subscription to the Services for a certain period and a limited quantity of authorized and determined accesses. 
+
+Services: refers to the access of Source Codes related to ULIS for the duration of the Subscription, and to a  technical assistance service.
+
+Commercial Purpose: refers to the direct and indirect use of the Source Codes:
+    • by a natural person or legal entity that is making profit;
+    • in a way to integrate them in a final product to be sold and/or distributed and/or promoted;
+    • giving rise to a consideration, financial or otherwise, in any form, for any reason and regardless of the beneficiary;
+    • for promotional purposes, or in connection with the promotion, and whoever the recipient may be;
+    • by an entity as part of, or in connection with, revenue-generating activities;
+    • as part of an online exchange or otherwise for another work protected by an intellectual property right, but only when direct or indirect advertising or sponsorship revenue is generated, or when a payment is made by anyone in connection with such exchange.
+
+Professional Activities: refers as any commercial, industrial, artisanal, liberal, agricultural activity, as well as any activity carried out by a non-profit organization (foundation, association…) acting in the common interest of a professional public.
+
+Standard License: refers to ULIS Source Codes license that is granted to You by Praxinos, free of charge, in accordance with the conditions and under the restrictions set forth in Article 4 of this EULA.
+
+Extended License: refers to ULIS Source Codes license that is granted to You by Praxinos, in return for payment, in accordance with the conditions and under the restrictions set forth in Article 5 of this EULA.
+
+Right of use: refers to the right to copy, reproduce, modify, edit, desynchronize, produce, display, distribute, publish or make any other use of one or more Source Codes.
+
+Parties: means Praxinos and the User collectively or individually.
+
+ARTICLE 4. STANDARD LICENSE CONDITIONS 
+
+	4.1. Under the terms of the Standard License, Praxinos grants You, free of charge, a non-exclusive, personal, permanent, worldwide, non-transferable and non-transferable Right to use the Source Codes present on ULIS: 
+    • As a digital reproduction on any media;
+    • For any use outside of any Professional Activity;
+    • For non-Commercial Purposes.
+
+	4.2. This Standard License is granted to You for the entire duration of the intellectual property rights attached to the Source Codes and recognized by French legislation and international conventions related to intellectual property.
+
+	4.3. Any act of exploitation for other purposes is expressly excluded from the scope of the Standard License and requires an Extended License or, failing this, the prior written consent of Praxinos.
+
+	4.4. By the nature of the non-exclusive concession, You understand that You do not have any exclusive rights to the Source Codes, which may therefore be granted to other users. If You want to benefit from an exclusive right on the Source Codes, please contact Praxinos.
+
+Article 5. Extended License Conditions
+
+	5.1. Under the terms of the Extended License, Praxinos grants You the right to access the Services after subscribing to a monthly or yearly fee-based Subscription.
+
+	5.2. Subscription to the Extended License and duration of the Subscription
+
+The Extended License is available only after purchasing a Subscription directly from Praxinos. 
+
+By subscribing an Extended License, the User accepts the terms and conditions of this EULA, insofar as they are presented to the User prior any Subscription. In this respect, the User acknowledges having read them and having expressly accepted them unreservedly before validating the Subscription.
+
+Acceptance of this EULA constitutes acceptance of the stated price upon receipt of a commercial proposal from Praxinos. 
+
+The effective date of the Subscription is the date appearing on the Subscription invoices sent to the User and corresponds to the day of Subscription validated by Praxinos.
+
+At the time of Subscription, the User has the choice between a monthly or annual Subscription. To know more about the price policy, please check ULIS fare on this website: https://praxinos.coop/ulis.php
+
+    • Monthly Subscription
+
+The Subscription is for a period of one (1) month from the date of Subscription, tacitly renewable by successive periods of one (1) month. However, the User may terminate the monthly Subscription at any time, up to ten (10) calendar days before the expiry date of the current Subscription period, by registered letter with acknowledgement of receipt addressed to Praxinos (at the postal address provided in article 18) or by electronic mail to the address provided in the same article. 
+
+Any request to terminate the Subscription will be confirmed by e-mail, to the address communicated by the User at the time of Subscription. Termination of the Monthly Subscription will only take effect on the last day of Subscription
+
+    • Yearly Subscription
+
+The Subscription is for a period of twelve (12) months from the date of Subscription, tacitly renewable by successive periods of the same duration (i.e., 12 months). However, the User may terminate the Yearly Subscription at any time, up to two (2) calendar months before the expiry date of the current Subscription period, by registered letter with acknowledgement of receipt addressed to Praxinos (at the postal address provided in Article 18) or by electronic mail to the address provided in the same article.
+
+Any request for termination of the Subscription will be confirmed by e-mail to the address communicated by the User at the time of Subscription. Termination of the Yearly Subscription will only take effect as of the Subscription's anniversary date. 
+
+	5.3. Description of the Extended License
+
+The Extended License provides access to the Services which include: 
+
+    • The right to use the Source Codes present on ULIS: 
+    • In all ways permitted under the Standard License (see article 4.1) and physical reproductions on any media; 
+    • As part of a Professional Activity;
+    • For Commercial Purposes;
+    • For a limited number of accesses to one workstation per license
+
+    • A technical assistance service by electronic mail and/or via a dedicated server on the platform "Discord" with a guaranteed response time of forty-eight (48) hours, from Monday nine (9) am to Friday six (6) pm, except on public holidays in France. This technical support service is limited to one referrer per license. The name of the referring person will then be obligatorily mentioned on the invoice.
+
+Any act of exploitation not included in the Services is expressly excluded from the scope of the Extended License and requires the prior written consent of Praxinos. 
+
+The User undertakes to make every effort to ensure that the authorized persons having access to the Source Codes keep the identifiers secret and that they are not disclosed in any form whatsoever to unauthorized persons. 
+
+Any use of the User's access by an unauthorized person engages the User's responsibility.
+
+The User is entirely responsible for the use and conservation of the identifiers. The User is responsible for the security of individual workstations accessing the Services. The loan, sharing, transfer or sale of identifiers is prohibited and will not be opposable to Praxinos.
+
+	5.4. Financial terms
+
+	• Rates and review
+
+The price of the Subscriptions is indicated in euros, excluding taxes. The amount of taxes is indicated at the time of Subscription, and takes into account the VAT applicable on the day of Subscription. 
+
+The price of the Subscriptions may be revised and will give rise to prior notification of information sent to the User within a reasonable period of time before the new rates come into force. In the absence of a response from the User before the new rates come into force, the User will be deemed to have accepted them as of the renewal of his or her Subscription. In the event of disagreement with the new rates before they come into force, the User will have the option of cancelling the Subscription within the time limits and under the conditions set forth in Article 5.2. 
+
+	• Terms and conditions of payment
+
+Invoices are sent exclusively in electronic format to the address communicated by the User when subscribing.
+
+Regarding the Monthly Subscription, all invoices are payable by the User in full on the day of Subscription and at a monthly frequency.
+
+Regarding the Yearly Subscription, any invoice is payable in full within thirty (30) days following its issuance by Praxinos. 
+ 
+	• Default of payment
+
+If the User is delinquent in making payment of any sum due, and unless more favorable provisions are applicable, the User will be applied, ipso jure, without prior notice: 
+
+    • Late payment penalties calculated according to the interest rate applied by the European Central Bank to its most recent refinancing operation, increased by (10) percentage points, calculated on a monthly basis;
+    • Either an expense allowance of forty (40) euros for collection costs (per invoice in default of payment), or all charges incurred to collect all unpaid invoices, upon presentation of supporting documents and if the expense allowance of forty (40) euros is exceeded.
+
+If the User continues to be delinquent for a period of thirty (30) days following notice of delinquency, Praxinos shall have the right to terminate this Agreement immediately, by providing written notice of such election to the User, without prejudice to any damages that may be claimed by the User.
+
+In addition, in case of non-compliance with the terms of payment appearing above, Praxinos reserves the right to suspend in whole or in part the access to the Services. 
+
+	5.5. Refund policy
+
+Unless required by law, Praxinos is under no obligation to make refunds. All fees payable under the Subscription are non-refundable, even if your Subscription terminates prior to its expiration. You authorize Praxinoqs to charge the full Subscription fee for the period agreed to at the time of subscription. 
+
+However, if under applicable law You are entitled to receive a refund for some or all of the amounts You paid for the Subscription, such refund may be made using the payment method You originally used to make your Subscription. If You reside in the European Union, act for non-commercial purposes and terminate your Subscription within fourteen (14) days of payment to Praxinos, and provided that You have not yet downloaded the Source Codes, Praxinos will refund You the full amount You paid in connection with said terminated Subscription.
+
+Article 6. General Restrictions
+
+The rights granted by Praxinos under a Standard License or an Extended License do not permit You to:
+    • Use the Source Codes for defamatory purposes or any illegal manner whatsoever
+    • Use the Source Codes in a way that allows others to download, extract or redistribute the Source Codes as a stand-alone file (i.e., only the Source Codes themselves, separate from the project or end use);
+    • To declare that You are the original creator of a work composed largely of licensed Source Codes. Thus, You may not create works based solely on licensed Source Codes and declare that You are the author;
+    • To use the Source Codes (in whole or in part) and/or to register and/or attempt to register the Source Codes as an innovative element of an underlying patentable process and/or as an innovative element that can be appropriated by a patent title (in any country). In addition, You are not entitled to register (in any jurisdiction whatsoever) the Source Codes (in whole or in part) with a body authorized to receive the deposit of source codes (i.e. Agency for the Protection of Programs (APP) in France);
+    • To use the Source Codes (including caption information, keywords or other metadata associated with said Source Codes) for machine learning and/or artificial intelligence purposes, or for any technology designed or intended for the identification of individuals, unless expressly authorized by Praxinos;
+    • Use the caption information, keywords, accompanying text or other metadata associated with the Source Codes separately and independently of the Source Codes, nor allow third parties to access or use this information associated with the Source Codes, unless expressly authorized by Praxinos;
+
+
+Article 7. Authorized persons
+
+	7.1. The rights granted to You under a Standard License or an Extended License are non-transferable and therefore cannot be sub-licensed. These rights may not be transferred to third parties.
+	
+	7.2. However, in cases where You are acting on behalf of your employer or a legal entity (legal person), the latter may use the Source Codes under license. In such case, You represent and warrant that You have the ability to bind your employer/legal entity under this EULA. Otherwise, your employer/legal entity will not be able to use the said Source Codes.
+
+The Rights may only be granted to You or your employer (or legal entity), but not both, according to the Licensee designated at the time of Subscription. 
+
+In addition, You may authorize subcontractors or distributors to use the Source Codes in any production or distribution process related to your final project. However, such subcontractors agree to abide by the terms of this EULA. As such, You are responsible for the proper execution of the EULA by your authorized subcontractors and will remain fully liable to Praxinos in the event of non-compliance. 
+
+	7.3. With respect to the Extended License:
+Pursuant to Section 5.3. of this EULA, only a specified number of authorized persons may use the Source Codes.
+
+An increase in the number of authorized persons may be requested from Praxinos by any written means and would give rise to an additional charge and a modification of this EULA by way of an amendment. 
+
+Article 8. Properties – Attribution
+
+	8.1. The Source Codes granted under Standard License or Extended License are the property of Praxinos and its partners (developers). As such, all rights not expressly granted by this EULA are retained by Praxinos and its partners.
+
+	8.2. In cases of use of Source Codes under a Standard License, You are required to include a credit to Praxinos in a reasonable size and in a reasonably visible location. In cases of use of Source Codes under an Extended License, You are not required to include a credit to Praxinos.
+
+	8.3. You are authorized to use the name "Praxinos" for the sole purpose of attribution under the conditions set forth above. Consequently, You may in no case use the distinctive signs belonging to Praxinos (names, brands, logos...) without its prior written authorization.
+
+Article 9. “Open-source” licenses
+
+Certain Source Codes may, in whole or in part, be part of so-called "free" or "open-source" licenses ("Open Source Codes"). These open-source elements are defined as elements distributed with all of its source programs, so that all users who use it can enrich it and redistribute it in turn. 
+
+As such, it means that the owners of said open-source programs and Open-Source Codes have chosen to grant users rights such as the right to copy, modify and redistribute the Open-Source Codes. The extent of the rights granted to users is determined within more or less permissive license types.  NB: So-called "free" and “open-source” licenses are not necessarily synonymous with free-of-charge technologies.
+
+Examples of "free" or "open-source" licenses can be found below:  
+    • The MIT License: https://opensource.org/licenses/MIT
+    • The FTL License :https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT 
+    • The Apache 2.0 License: https://www.apache.org/licenses/LICENSE-2.0
+
+The Open-Source Codes belong to third parties and are not governed by the terms of this EULA, but by the terms of the license type associated with them. It is thus up to You to consult the said licenses type to know the contents and the extent of the rights granted to You on the Open-Source Codes.
+
+Nothing in this EULA limits your rights or grants You any rights that replace the terms of the license type associated with the Open-Source Codes.
+
+Article 10. Termination
+
+	10.1. Termination of the Standard License
+
+			10.1.1. By the User
+
+The User can terminate the Standard License at any moment. Termination requires You to:
+	(i) Destroy all copies of the Source Codes, as well as any associated material;
+	(ii) Cease the use of the Source Codes for any purposes;
+
+			10.1.2. By Praxinos
+
+Praxinos may terminate the Standard License if You breach provisions of following Articles: 1.3; 4; 6; 7; 8.
+
+	10.2. Termination of the Extended License
+
+			10.2.1. Term of Subscription
+
+This Extended License is concluded for the initial duration of the Subscription You subscribed to, and is tacitly renewed for equivalent durations. The User is entitled to terminate the Subscription in accordance with the provisions of Article 5.2.
+
+			10.2.2. Obligation breach
+
+Both parties reserve the right to terminate this Extended License in the event of obligation breaches after prior written notice to perform by registered letter with acknowledgment of receipt (or its equivalent existing in the country of residence of the User) which has remained unsuccessful for a period of thirty (30) days from its receipt.
+
+The formal notice must refer to this article to produce all its effects. 
+
+Non-fulfillment of the following obligations set out in this Agreement will result in the termination of the Extended License:
+
+Obligation of Praxinos
+Articles 5.5 ; 11
+
+
+Obligations of the User
+Articles 1.3 ; 5.3 ; 5.4 ; 6 ; 7 ; 8
+
+In all cases, the injured party may claim damages from the defaulting party as compensation for the prejudice suffered and caused by the non-fulfillment of the obligations. 
+
+	10.3. Consequences
+
+Upon termination of this EULA, You must immediately (i) cease the use of Source Codes and any projects containing the Source Codes for any purposes; (ii) destroy or delete all copies and archives of the Source Codes and any projects containing the Source Codes or related documents; and (iii) if requested to do so, confirm with a written note to Praxinos that You have complied with these requirements.
+
+Article 11. WARRANTIES
+
+	11.1. Praxinos warrants solely for the benefit of User that: (i) Praxinos is the owner of the intellectual property rights of the Source Codes; (ii) it has the full right, power, legal capacity, and authority to enter into this Agreement and to carry out the terms and conditions hereof and thereof; (iii) that this Agreement is not likely to infringe the rights of third parties; and (iv) the Source Codes are entirely original and do not constitute, in whole or in part, either an infringement or unfair competition.
+
+	11.2. In this respect, Praxinos shall be required to compensate You for all the financial consequences of any action for counterfeiting or any other action that would be directed against You due to the use of the Source Codes. Consequently, if all or part of the Source Codes is recognized as constituting an infringement or another violation of intellectual property rights, Praxinos shall, at the User's choice, either provide another Source Codes having the same functions, within a time frame compatible with the User's activity, or obtain at its expense the right for the User to continue to use the said Source Codes, or reimburse the User for all or part of the price received for the Subscription, notwithstanding the User's right to claim compensation for damages.
+
+	11.3. For its part, the User commits to advise Praxinos in writing promptly of the existence of any counterfeiting of the Source Codes. Praxinos shall have the sole right to control the defense and/or settlement of such claim.
+
+Article 12. Responsibilities
+
+	12.1. Praxinos is subject to an obligation of means. It guarantees the conformity of the Source Codes to the specifications described in its documentation. In this respect, the User assumes all responsibilities other than the conformity of the Source Codes to the specifications, and in particular those concerning:
+    • the adequacy of the Source Codes to the User’s needs,
+    • the exploitation of Source Codes,
+    • the qualification and skills of the User’s personnel for the use and exploitation of the Source Codes.
+
+	12.2. Furthermore, the User is responsible for the protection of the recorded data and the repair of the databases, the results obtained, the conformity of the use of the Source Codes to the applicable legislation. It is the User's responsibility to develop operating procedures and to set up the appropriate control points and security mechanisms for saving and restoring data in the event of anomalies in the running of the programs.
+
+	12.3. The User is solely responsible for any possible malfunctions and damages due to a modification of the Source Codes, even minimal, made with or without the authorization of Praxinos. The User expressly acknowledges having received from Praxinos all the necessary information allowing him to assess the adequacy of the Source Codes to his/her needs and to take all useful precautions for their implementation and their exploitation. Praxinos will in no case be held to repair possible direct or indirect damages, even if it has been informed of such damages. The User will be solely responsible for the use of the Source Codes.
+
+	12.4. As part of the Standard License, it is specified that the Source Codes are provided "as is", without any warranty, to the extent permitted by applicable law.
+
+	12.5. In the context of the Extended License, in the event that Praxinos is convicted, its liability shall be limited to the amount of the Yearly Subscription.
+
+	12.6. Nothing in this EULA, and in particular this clause is intended to exclude liabilities that cannot be excluded or limited under applicable law.
+
+Article 13. CONFIDENTIALITY
+
+	13.1. Confidential Information may consist of information in any medium, whether oral, printed, in machine-readable form or otherwise, including information disclosed orally and reduced to tangible or written form at any time during the term of this Agreement. The foregoing restrictions shall not apply to any portion of the disclosing party’s Confidential Information which:
+    (a) was previously known to the receiving party without restriction on disclosure or use, as proven by written documentation of the receiving party; or
+    (b) is legitimately becomes part of the public domain through no fault of the receiving party or its employees or contractors; or
+    (c) were communicated to You by a third party in its full right and without restriction on disclosure; or
+    (d) is generated by You and is not related to the Confidential Information.
+
+	13.2. You shall use your best efforts to preserve and protect the confidentiality of the Confidential Information at all times, both during the term of this EULA and for a minimum of three (3) years after its termination or cessation, regardless of the cause. 
+
+In addition, the confidentiality of any Source Codes that You have received pursuant to this EULA shall survive the expiration or termination of this Agreement for any reason.
+
+	13.3. You may not disclose, disseminate, publish or communicate the Confidential Information to third parties, companies, firms or any other party without the prior written consent of Praxinos. You may only use the Confidential Information in connection with the activities permitted by this EULA.
+
+	13.4. In the case the User is aware that Confidential Information has been used or disclosed in an unauthorized manner or that this EULA has been violated, the User commits to advise Praxinos in writing promptly, and to cooperate with Praxinos in every possible and reasonable way to regain possession of such Confidential Information and prevent any further unauthorized use. 
+
+	13.5. In cases where You would be legally required to disclose Confidential Information for administrative or judicial action, You must must promptly (i) notify Praxinos to give it the maximum opportunity to seek any other legal remedies to maintain such Confidential Information in confidence as herein provided, (ii) You must attempt to maintain the confidentiality of such Confidential Information by asserting in such action the restrictions set forth in this Agreement, and (iii) You must cooperate fully with Praxinos to prevent such disclosure and/or obtain a protective order restricting the scope of the information to be disclosed and/or its use.
+
+If such protection is not possible, You shall disclose Confidential Information only to the extent required by applicable law.
+
+Article 14. Transfer
+
+	14.1. Notwithstanding the provisions of Article 7, since this EULA is concluded intuitu personae, the Parties shall refrain, on the one hand, from transferring, for any reason and in any form whatsoever, whether for consideration or free of charge, this EULA or any of their rights and obligations to a third party and, on the other hand, from entrusting a third party with the performance of all or part of their contractual obligations.
+
+	14.2. However, these prohibitions may not be opposed to legal obligations of public order, nor to the prior written authorization of the Parties.
+
+ARTICLE 15. DIVISIBILITY – MODIFICATION – INTEGRAL
+
+	15.1. The invalidity or unenforceability of any provision of this EULA shall not invalidate the other provisions, which shall retain their full force and effect.
+
+However, the Parties may, by mutual agreement, agree to replace the invalid provision(s).
+
+	15.2. This EULA may only be amended by an amendment signed by all Parties to the Agreement.
+
+	15.3. This EULA represents the entire agreement between the Parties. It supersedes and cancels any prior oral or written undertakings relating to the subject matter of this EULA.
+
+ARTICLE 16. TOLERANCES
+
+It is expressly agreed that any tolerance or waiver by either Party in the application of all or part of the commitments provided for in this EULA, regardless of the frequency and duration thereof, shall not be deemed to constitute a modification of this EULA or to create any right whatsoever.
+
+ARTICLE 17. INJUNCTIVE RELIEF
+
+	17.1. You acknowledge that the Source Codes consist of valuable trade secrets and information belonging to Praxinos, and that any actual or potential violation of Article 6 (General Restrictions) of this EULA shall constitute immediate and irreparable damage against Praxinos for which damages would constitute insufficient compensation.
+
+	17.2. As such, You acknowledge that Praxinos has the right to seek injunctive relief (or equivalent legal relief) in any jurisdiction, without prior notice to You or any possibility of redress.
+
+ARTICLE 18. LEGAL ADDRESS – NOTIFICATION
+
+	18.1. Except as otherwise provided in this EULA, for the purposes of this EULA and for any eventual proceedings that may result from it or as a consequence of it, the Parties elect domicile at the following addresses:
+    • For Praxinos: 7 Avenue de Blida 5700 METZ – France
+    • For the User: Postal address used for billing at the time of Subscription or, failing this, any other postal address communicated upon request by Praxinos.
+
+Any change of domicile will be enforceable only upon receipt of its notification by registered letter with acknowledgement of receipt (or its equivalent in the country of residence of the issuing Party) by the other Party.
+
+        18.2. For any notification of a customary nature (questions, technical support service, details about this EULA), the Parties will exchange information electronically at the following e-mail addresses: 
+    • For Praxinos: contact@praxinos.coop or Discord : https://discord.gg/gEd6pj7 
+    • For the User: e-mail address communicated at the time of subscription to a Subscription or, failing that, any other e-mail address communicated upon request by Praxinos.
+
+The User undertakes to provide a valid e-mail address and to consult it regularly.
+
+ARTICLE 19. CONVENTION OF PROOF
+
+	19.1. The communications carried out by means of electronic mail are modes of communication validly admitted as proof by the User and Praxinos.
+
+	19.2. All information recorded in the digital databases of Praxinos related in particular to Subscriptions and payments of invoices have, until proof to the contrary, the same probative force as a signed written document on a paper medium, both as regards their content and as regards the date and time at which they were made and/or received. These unalterable, secure and reliable traces are engraved and stored in the computer systems of Praxinos.
+
+	19.3. Praxinos documents reproducing this information, as well as copies or reproductions of documents produced by Praxinos have the same probative value as the original, until proven otherwise.
+         
+ARTICLE 20. LANGUAGE OF THE CONTRACT
+
+The Parties submit this Agreement to French Law, which is written in the French language. Should an English version of this contract be made, the French version shall prevail in the event of a conflict of interpretation.
+
+ARTICLE 21. APPLICABLE LAW – DISPUTES
+
+	21.1. By express agreement between the Parties, this EULA is subject to French law, to the exclusion of all other legislation to the extent possible. It is expressly agreed between the Parties that the Vienna Convention on Contracts for the International Sale of Goods (CISG) does not apply to this EULA.
+
+	21.2. With a view to jointly resolving any dispute that may arise in connection with the conclusion, interpretation, performance and/or termination of this EULA, the Parties will first attempt to resolve it amicably.
+
+This amicable settlement procedure is a mandatory prerequisite to the institution of legal proceedings between the Parties. Any legal action brought in violation of this clause will be declared inadmissible.
+
+	21.3. IN THE EVENT OF FAILURE TO RESOLVE THE DISPUTE AMICABLY WITHIN 30 DAYS OF ITS OCCURRENCE, AND EXCEPT IN THE EVENT OF IMPERATIVES PROVISIONS MORE FAVORABLE TO THE USER, ALL CLAIMS ARISING OUT OF OR RELATED TO THIS AGREEMENT WILL BE GOVERNED BY FRENCH LAW, AND WILL BE LITIGATED EXCLUSIVELY IN THE COMPETENT COURTS OF METZ (FRANCE); THE PARTIES CONSENT TO PERSONAL JURISDICTION IN THOSE COURTS.

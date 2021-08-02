@@ -1,0 +1,180 @@
+:root {
+    --titleHeight: 40px;
+    --consoleHeight: 300px;
+    --controlsHeight: 50px;
+}
+
+html
+{
+    width:100%;
+    height:100%;
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    width:100%;
+    height:100%;
+    margin: 0;
+    padding: 0;
+    background-color: #222222;
+    color: #EEEEEE;
+    font-family: Arial;
+    overflow: clip;
+}
+
+#main-container
+{
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+    width: 65%;
+    height: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+#title
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: var( --titleHeight );
+    display: table;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #222222;
+    font-family: Arial Black;
+}
+
+#title span
+{
+    margin: 0;
+    padding: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#contents
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: calc( 100% - ( var( --titleHeight ) + var( --consoleHeight ) ) );
+    display: block;
+    box-sizing: border-box;
+    overflow: clip;
+    background: #101010;
+}
+
+#canvas-container
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: calc( 100% - var( --controlsHeight ) );
+    display: table;
+    box-sizing: border-box;
+    text-align: center;
+    overflow: clip;
+    background: #050505;
+}
+
+#canvas-container span
+{
+    margin: 0;
+    padding: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#viewport
+{
+    border: 1px solid #444444;
+}
+
+#controls-container
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: var( --controlsHeight );
+    display: table;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #111111;
+}
+
+#controls-container span
+{
+    margin: 0;
+    padding: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.control
+{
+    margin: 4px;
+    padding: 5px;
+    display: inline-block;
+    box-sizing: border-box;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    cursor: pointer;
+    background: #222222;
+    width: 30px;
+    height: 30px;
+}
+
+.control:hover
+{
+    background-color: #444444;
+}
+
+.control:active
+{
+    background-color: #010101;
+}
+
+#console
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: var( --consoleHeight );
+    display: block;
+    box-sizing: border-box;
+    background: #111111;
+    overflow: scroll;
+}
+
+#console > div {
+    padding: 5px;
+}
+
+#console > div:nth-of-type( odd ) {
+  background: #212121;
+}
+
+#monaco-supercontainer
+{
+    margin: 0;
+    padding: 0;
+    width: 35%;
+    height: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    overflow: clip;
+}
+
+#monaco-container
+{
+    width: 100%;
+    height: 100%;
+}
+

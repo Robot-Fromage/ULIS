@@ -11,7 +11,7 @@ file(
     "src/*"
 )
 
-add_library( lcms2 ${source_list} )
+add_library( lcms2 STATIC ${source_list} )
 
 target_compile_definitions( lcms2 PUBLIC UNICODE )
 

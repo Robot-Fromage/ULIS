@@ -1,49 +1,73 @@
-// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
-// IDDN FR.001.250001.002.S.P.2019.000.00000
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
-*
-*   ULIS3
+*   ULIS
 *__________________
-*
 * @file         FDecl.h
 * @author       Clement Berthaud
-* @brief        This file provides core forward declarations for the ULIS3 library.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        This file provides core forward declarations for the ULIS library.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Platform.h"
 
-/////////////////////////////////////////////////////
-// FDecl Typedefs and enums
-ULIS3_NAMESPACE_BEGIN
+ULIS_NAMESPACE_BEGIN
 class   FBlock;
-class   IPixel;
-class   FPixelValue;
-class   FPixelProxy;
-class   FProfileRegistry;
-class   FColorProfile;
-class   FThreadPool;
-class   FFontRegistry;
-class   FFontEngine;
+struct  FCatmullRomSpline;
+class   FColor;
+class   FColorSpace;
+class   FCommandQueue;
+class   FContext;
+struct  FCubicBezierControlPoint;
+class   FEvent;
+class   FFilePathRegistry;
 class   FFont;
-class   FTransform2D;
-class   ITiledBlock;
+class   FFontEngine;
+class   FFontFamilyEntry;
+class   FFontRegistry;
+class   FFontStyleEntry;
+struct  FFormatMetrics;
+class   FGradient;
+class   FSanitizedGradient;
+class   FCPUInfo;
 class   FKernel;
 class   FStructuringElement;
-struct  FRect;
-struct  FPerfInfo;
-struct  FHostDeviceInfo;
-struct  FFormatInfo;
-struct  FTileElement;
-class   ITiledBlock;
-class   ITilePool;
+//struct  FMath;
+class   FPixel;
+class   FSchedulePolicy;
+struct  FSplineLinearSample;
+struct  FSplineParametricSample;
+class   FString;
+#ifdef ULIS_FEATURE_GPU_ENABLED
+class   FTexture;
+#endif // ULIS_FEATURE_GPU_ENABLED
+class   FThreadPool;
+struct  FTile;
+class   FTransformation2D;
+class   FWString;
+class   IHasColorSpace;
+class   IHasFormat;
+class   ISample;
+template< typename T > class    TArray;
+template< typename T > struct   TVector2;
+typedef TVector2< int >         FVec2I;
+typedef TVector2< float >       FVec2F;
+template< typename T > struct   TVector3;
+typedef TVector3< int >         FVec3I;
+typedef TVector3< float >       FVec3F;
+template< typename T > struct   TVector4;
+typedef TVector4< int >         FVec4I;
+typedef TVector4< float >       FVec4F;
+template< typename T > struct   TRectangle;
+typedef TRectangle< int >       FRectI;
+typedef TRectangle< float >     FRectF;
+template< typename T > class    TMatrix2;
+typedef TMatrix2< float >       FMat2F;
+template< typename T > class    TMatrix3;
+typedef TMatrix3< float >       FMat3F;
+template< typename T > class    TMatrix4;
+typedef TMatrix4< float >       FMat4F;
 
-template< typename T > struct   TVec2;
-typedef TVec2< int >            FVec2I;
-typedef TVec2< float >          FVec2F;
-typedef TVec2< int64 >          FVec2I64;
-typedef TVec2< int32 >          FVec2I32;
-
-ULIS3_NAMESPACE_END
+ULIS_NAMESPACE_END
 

@@ -10,4 +10,7 @@ pushd %~dp0
 cd ..
 
 doxygen %~dp0Doxyfile
-PAUSE
+
+cd documentation
+python postprocess_doc.py
+

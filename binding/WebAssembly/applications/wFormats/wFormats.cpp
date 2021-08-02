@@ -1,0 +1,197 @@
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+/**
+*
+*   ULIS
+*__________________
+*
+* @file         wFormats.cpp
+* @author       Clement Berthaud
+* @brief        Formats application for wasm ULIS.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
+* @license      Please refer to LICENSE.md
+*/
+#include <ULIS>
+using namespace ::ULIS;
+
+int main() {
+    std::cout << "Format_G8                             : " << Format_G8                             << std::endl;
+    std::cout << "Format_GA8                            : " << Format_GA8                            << std::endl;
+    std::cout << "Format_AG8                            : " << Format_AG8                            << std::endl;
+    std::cout << "Format_G16                            : " << Format_G16                            << std::endl;
+    std::cout << "Format_GA16                           : " << Format_GA16                           << std::endl;
+    std::cout << "Format_AG16                           : " << Format_AG16                           << std::endl;
+    std::cout << "Format_GF                             : " << Format_GF                             << std::endl;
+    std::cout << "Format_GAF                            : " << Format_GAF                            << std::endl;
+    std::cout << "Format_AGF                            : " << Format_AGF                            << std::endl;
+    std::cout << "Format_RGB8                           : " << Format_RGB8                           << std::endl;
+    std::cout << "Format_BGR8                           : " << Format_BGR8                           << std::endl;
+    std::cout << "Format_RGBA8                          : " << Format_RGBA8                          << std::endl;
+    std::cout << "Format_ABGR8                          : " << Format_ABGR8                          << std::endl;
+    std::cout << "Format_ARGB8                          : " << Format_ARGB8                          << std::endl;
+    std::cout << "Format_BGRA8                          : " << Format_BGRA8                          << std::endl;
+    std::cout << "Format_RGB16                          : " << Format_RGB16                          << std::endl;
+    std::cout << "Format_BGR16                          : " << Format_BGR16                          << std::endl;
+    std::cout << "Format_RGBA16                         : " << Format_RGBA16                         << std::endl;
+    std::cout << "Format_ABGR16                         : " << Format_ABGR16                         << std::endl;
+    std::cout << "Format_ARGB16                         : " << Format_ARGB16                         << std::endl;
+    std::cout << "Format_BGRA16                         : " << Format_BGRA16                         << std::endl;
+    std::cout << "Format_RGBF                           : " << Format_RGBF                           << std::endl;
+    std::cout << "Format_BGRF                           : " << Format_BGRF                           << std::endl;
+    std::cout << "Format_RGBAF                          : " << Format_RGBAF                          << std::endl;
+    std::cout << "Format_ABGRF                          : " << Format_ABGRF                          << std::endl;
+    std::cout << "Format_ARGBF                          : " << Format_ARGBF                          << std::endl;
+    std::cout << "Format_BGRAF                          : " << Format_BGRAF                          << std::endl;
+    std::cout << "Format_HSV8                           : " << Format_HSV8                           << std::endl;
+    std::cout << "Format_VSH8                           : " << Format_VSH8                           << std::endl;
+    std::cout << "Format_HSVA8                          : " << Format_HSVA8                          << std::endl;
+    std::cout << "Format_AVSH8                          : " << Format_AVSH8                          << std::endl;
+    std::cout << "Format_AHSV8                          : " << Format_AHSV8                          << std::endl;
+    std::cout << "Format_VSHA8                          : " << Format_VSHA8                          << std::endl;
+    std::cout << "Format_HSV16                          : " << Format_HSV16                          << std::endl;
+    std::cout << "Format_VSH16                          : " << Format_VSH16                          << std::endl;
+    std::cout << "Format_HSVA16                         : " << Format_HSVA16                         << std::endl;
+    std::cout << "Format_AVSH16                         : " << Format_AVSH16                         << std::endl;
+    std::cout << "Format_AHSV16                         : " << Format_AHSV16                         << std::endl;
+    std::cout << "Format_VSHA16                         : " << Format_VSHA16                         << std::endl;
+    std::cout << "Format_HSVF                           : " << Format_HSVF                           << std::endl;
+    std::cout << "Format_VSHF                           : " << Format_VSHF                           << std::endl;
+    std::cout << "Format_HSVAF                          : " << Format_HSVAF                          << std::endl;
+    std::cout << "Format_AVSHF                          : " << Format_AVSHF                          << std::endl;
+    std::cout << "Format_AHSVF                          : " << Format_AHSVF                          << std::endl;
+    std::cout << "Format_VSHAF                          : " << Format_VSHAF                          << std::endl;
+    std::cout << "Format_HSL8                           : " << Format_HSL8                           << std::endl;
+    std::cout << "Format_LSH8                           : " << Format_LSH8                           << std::endl;
+    std::cout << "Format_HSLA8                          : " << Format_HSLA8                          << std::endl;
+    std::cout << "Format_ALSH8                          : " << Format_ALSH8                          << std::endl;
+    std::cout << "Format_AHSL8                          : " << Format_AHSL8                          << std::endl;
+    std::cout << "Format_LSHA8                          : " << Format_LSHA8                          << std::endl;
+    std::cout << "Format_HSL16                          : " << Format_HSL16                          << std::endl;
+    std::cout << "Format_LSH16                          : " << Format_LSH16                          << std::endl;
+    std::cout << "Format_HSLA16                         : " << Format_HSLA16                         << std::endl;
+    std::cout << "Format_ALSH16                         : " << Format_ALSH16                         << std::endl;
+    std::cout << "Format_AHSL16                         : " << Format_AHSL16                         << std::endl;
+    std::cout << "Format_LSHA16                         : " << Format_LSHA16                         << std::endl;
+    std::cout << "Format_HSLF                           : " << Format_HSLF                           << std::endl;
+    std::cout << "Format_LSHF                           : " << Format_LSHF                           << std::endl;
+    std::cout << "Format_HSLAF                          : " << Format_HSLAF                          << std::endl;
+    std::cout << "Format_ALSHF                          : " << Format_ALSHF                          << std::endl;
+    std::cout << "Format_AHSLF                          : " << Format_AHSLF                          << std::endl;
+    std::cout << "Format_LSHAF                          : " << Format_LSHAF                          << std::endl;
+    std::cout << "Format_CMY8                           : " << Format_CMY8                           << std::endl;
+    std::cout << "Format_YMC8                           : " << Format_YMC8                           << std::endl;
+    std::cout << "Format_CMYA8                          : " << Format_CMYA8                          << std::endl;
+    std::cout << "Format_AYMC8                          : " << Format_AYMC8                          << std::endl;
+    std::cout << "Format_ACMY8                          : " << Format_ACMY8                          << std::endl;
+    std::cout << "Format_YMCA8                          : " << Format_YMCA8                          << std::endl;
+    std::cout << "Format_CMY16                          : " << Format_CMY16                          << std::endl;
+    std::cout << "Format_YMC16                          : " << Format_YMC16                          << std::endl;
+    std::cout << "Format_CMYA16                         : " << Format_CMYA16                         << std::endl;
+    std::cout << "Format_AYMC16                         : " << Format_AYMC16                         << std::endl;
+    std::cout << "Format_ACMY16                         : " << Format_ACMY16                         << std::endl;
+    std::cout << "Format_YMCA16                         : " << Format_YMCA16                         << std::endl;
+    std::cout << "Format_CMYF                           : " << Format_CMYF                           << std::endl;
+    std::cout << "Format_YMCF                           : " << Format_YMCF                           << std::endl;
+    std::cout << "Format_CMYAF                          : " << Format_CMYAF                          << std::endl;
+    std::cout << "Format_AYMCF                          : " << Format_AYMCF                          << std::endl;
+    std::cout << "Format_ACMYF                          : " << Format_ACMYF                          << std::endl;
+    std::cout << "Format_YMCAF                          : " << Format_YMCAF                          << std::endl;
+    std::cout << "Format_CMYK8                          : " << Format_CMYK8                          << std::endl;
+    std::cout << "Format_KCMY8                          : " << Format_KCMY8                          << std::endl;
+    std::cout << "Format_KYMC8                          : " << Format_KYMC8                          << std::endl;
+    std::cout << "Format_YMCK8                          : " << Format_YMCK8                          << std::endl;
+    std::cout << "Format_CMYKA8                         : " << Format_CMYKA8                         << std::endl;
+    std::cout << "Format_ACMYK8                         : " << Format_ACMYK8                         << std::endl;
+    std::cout << "Format_AKYMC8                         : " << Format_AKYMC8                         << std::endl;
+    std::cout << "Format_KYMCA8                         : " << Format_KYMCA8                         << std::endl;
+    std::cout << "Format_CMYK16                         : " << Format_CMYK16                         << std::endl;
+    std::cout << "Format_KCMY16                         : " << Format_KCMY16                         << std::endl;
+    std::cout << "Format_KYMC16                         : " << Format_KYMC16                         << std::endl;
+    std::cout << "Format_YMCK16                         : " << Format_YMCK16                         << std::endl;
+    std::cout << "Format_CMYKA16                        : " << Format_CMYKA16                        << std::endl;
+    std::cout << "Format_ACMYK16                        : " << Format_ACMYK16                        << std::endl;
+    std::cout << "Format_AKYMC16                        : " << Format_AKYMC16                        << std::endl;
+    std::cout << "Format_KYMCA16                        : " << Format_KYMCA16                        << std::endl;
+    std::cout << "Format_CMYKF                          : " << Format_CMYKF                          << std::endl;
+    std::cout << "Format_KCMYF                          : " << Format_KCMYF                          << std::endl;
+    std::cout << "Format_KYMCF                          : " << Format_KYMCF                          << std::endl;
+    std::cout << "Format_YMCKF                          : " << Format_YMCKF                          << std::endl;
+    std::cout << "Format_CMYKAF                         : " << Format_CMYKAF                         << std::endl;
+    std::cout << "Format_ACMYKF                         : " << Format_ACMYKF                         << std::endl;
+    std::cout << "Format_AKYMCF                         : " << Format_AKYMCF                         << std::endl;
+    std::cout << "Format_KYMCAF                         : " << Format_KYMCAF                         << std::endl;
+    std::cout << "Format_YUV8                           : " << Format_YUV8                           << std::endl;
+    std::cout << "Format_VUY8                           : " << Format_VUY8                           << std::endl;
+    std::cout << "Format_YUVA8                          : " << Format_YUVA8                          << std::endl;
+    std::cout << "Format_AVUY8                          : " << Format_AVUY8                          << std::endl;
+    std::cout << "Format_AYUV8                          : " << Format_AYUV8                          << std::endl;
+    std::cout << "Format_VUYA8                          : " << Format_VUYA8                          << std::endl;
+    std::cout << "Format_YUV16                          : " << Format_YUV16                          << std::endl;
+    std::cout << "Format_VUY16                          : " << Format_VUY16                          << std::endl;
+    std::cout << "Format_YUVA16                         : " << Format_YUVA16                         << std::endl;
+    std::cout << "Format_AVUY16                         : " << Format_AVUY16                         << std::endl;
+    std::cout << "Format_AYUV16                         : " << Format_AYUV16                         << std::endl;
+    std::cout << "Format_VUYA16                         : " << Format_VUYA16                         << std::endl;
+    std::cout << "Format_YUVF                           : " << Format_YUVF                           << std::endl;
+    std::cout << "Format_VUYF                           : " << Format_VUYF                           << std::endl;
+    std::cout << "Format_YUVAF                          : " << Format_YUVAF                          << std::endl;
+    std::cout << "Format_AVUYF                          : " << Format_AVUYF                          << std::endl;
+    std::cout << "Format_AYUVF                          : " << Format_AYUVF                          << std::endl;
+    std::cout << "Format_VUYAF                          : " << Format_VUYAF                          << std::endl;
+    std::cout << "Format_Lab8                           : " << Format_Lab8                           << std::endl;
+    std::cout << "Format_baL8                           : " << Format_baL8                           << std::endl;
+    std::cout << "Format_LabA8                          : " << Format_LabA8                          << std::endl;
+    std::cout << "Format_AbaL8                          : " << Format_AbaL8                          << std::endl;
+    std::cout << "Format_ALab8                          : " << Format_ALab8                          << std::endl;
+    std::cout << "Format_baLA8                          : " << Format_baLA8                          << std::endl;
+    std::cout << "Format_Lab16                          : " << Format_Lab16                          << std::endl;
+    std::cout << "Format_baL16                          : " << Format_baL16                          << std::endl;
+    std::cout << "Format_LabA16                         : " << Format_LabA16                         << std::endl;
+    std::cout << "Format_AbaL16                         : " << Format_AbaL16                         << std::endl;
+    std::cout << "Format_ALab16                         : " << Format_ALab16                         << std::endl;
+    std::cout << "Format_baLA16                         : " << Format_baLA16                         << std::endl;
+    std::cout << "Format_LabF                           : " << Format_LabF                           << std::endl;
+    std::cout << "Format_baLF                           : " << Format_baLF                           << std::endl;
+    std::cout << "Format_LabAF                          : " << Format_LabAF                          << std::endl;
+    std::cout << "Format_AbaLF                          : " << Format_AbaLF                          << std::endl;
+    std::cout << "Format_ALabF                          : " << Format_ALabF                          << std::endl;
+    std::cout << "Format_baLAF                          : " << Format_baLAF                          << std::endl;
+    std::cout << "Format_XYZ8                           : " << Format_XYZ8                           << std::endl;
+    std::cout << "Format_ZYX8                           : " << Format_ZYX8                           << std::endl;
+    std::cout << "Format_XYZA8                          : " << Format_XYZA8                          << std::endl;
+    std::cout << "Format_AZYX8                          : " << Format_AZYX8                          << std::endl;
+    std::cout << "Format_AXYZ8                          : " << Format_AXYZ8                          << std::endl;
+    std::cout << "Format_ZYXA8                          : " << Format_ZYXA8                          << std::endl;
+    std::cout << "Format_XYZ16                          : " << Format_XYZ16                          << std::endl;
+    std::cout << "Format_ZYX16                          : " << Format_ZYX16                          << std::endl;
+    std::cout << "Format_XYZA16                         : " << Format_XYZA16                         << std::endl;
+    std::cout << "Format_AZYX16                         : " << Format_AZYX16                         << std::endl;
+    std::cout << "Format_AXYZ16                         : " << Format_AXYZ16                         << std::endl;
+    std::cout << "Format_ZYXA16                         : " << Format_ZYXA16                         << std::endl;
+    std::cout << "Format_XYZF                           : " << Format_XYZF                           << std::endl;
+    std::cout << "Format_ZYXF                           : " << Format_ZYXF                           << std::endl;
+    std::cout << "Format_XYZAF                          : " << Format_XYZAF                          << std::endl;
+    std::cout << "Format_AZYXF                          : " << Format_AZYXF                          << std::endl;
+    std::cout << "Format_AXYZF                          : " << Format_AXYZF                          << std::endl;
+    std::cout << "Format_ZYXAF                          : " << Format_ZYXAF                          << std::endl;
+    std::cout << "Format_Yxy8                           : " << Format_Yxy8                           << std::endl;
+    std::cout << "Format_yxY8                           : " << Format_yxY8                           << std::endl;
+    std::cout << "Format_YxyA8                          : " << Format_YxyA8                          << std::endl;
+    std::cout << "Format_AyxY8                          : " << Format_AyxY8                          << std::endl;
+    std::cout << "Format_AYxy8                          : " << Format_AYxy8                          << std::endl;
+    std::cout << "Format_yxYA8                          : " << Format_yxYA8                          << std::endl;
+    std::cout << "Format_Yxy16                          : " << Format_Yxy16                          << std::endl;
+    std::cout << "Format_yxY16                          : " << Format_yxY16                          << std::endl;
+    std::cout << "Format_YxyA16                         : " << Format_YxyA16                         << std::endl;
+    std::cout << "Format_AyxY16                         : " << Format_AyxY16                         << std::endl;
+    std::cout << "Format_AYxy16                         : " << Format_AYxy16                         << std::endl;
+    std::cout << "Format_yxYA16                         : " << Format_yxYA16                         << std::endl;
+    std::cout << "Format_YxyF                           : " << Format_YxyF                           << std::endl;
+    std::cout << "Format_yxYF                           : " << Format_yxYF                           << std::endl;
+    std::cout << "Format_YxyAF                          : " << Format_YxyAF                          << std::endl;
+    std::cout << "Format_AyxYF                          : " << Format_AyxYF                          << std::endl;
+    std::cout << "Format_AYxyF                          : " << Format_AYxyF                          << std::endl;
+    std::cout << "Format_yxYAF                          : " << Format_yxYAF                          << std::endl;
+
+    return  0;
+}
+

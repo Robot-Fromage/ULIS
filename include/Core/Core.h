@@ -1,14 +1,12 @@
-// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
-// IDDN FR.001.250001.002.S.P.2019.000.00000
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
-*
-*   ULIS3
+*   ULIS
 *__________________
-*
 * @file         Core.h
 * @author       Clement Berthaud
-* @brief        This file gathers core definitions for the ULIS3 library.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        This file gathers core definitions for the ULIS library.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -17,5 +15,5 @@
 #include "Core/Platform.h"
 #include "Core/Types.h"
 #include "Core/FDecl.h"
-#include "Core/Utils.h"
-#include "Core/Format.h"
+#include "Core/Formats.h"
+

@@ -1,0 +1,3132 @@
+On branch release
+Your branch is up to date with 'origin/release'.
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	new file:   .github/FUNDING.yml
+	modified:   .gitignore
+	new file:   .temp/Sparse/TilePool.h
+	new file:   .temp/Sparse/TilePool.ipp
+	deleted:    3rdparty/FeatureDetector/CREDITS
+	deleted:    3rdparty/FeatureDetector/LICENSE
+	deleted:    3rdparty/FeatureDetector/cpu_x86.cpp
+	deleted:    3rdparty/FeatureDetector/cpu_x86.h
+	deleted:    3rdparty/FeatureDetector/cpu_x86_Linux.ipp
+	deleted:    3rdparty/FeatureDetector/cpu_x86_Windows.ipp
+	modified:   3rdparty/Little-CMS/CMakeLists.txt
+	deleted:    3rdparty/OCL-SDK/include/CL/cl.h
+	deleted:    3rdparty/OCL-SDK/include/CL/cl.hpp
+	deleted:    3rdparty/OCL-SDK/include/CL/cl_d3d10.h
+	deleted:    3rdparty/OCL-SDK/include/CL/cl_d3d11.h
+	deleted:    3rdparty/OCL-SDK/include/CL/cl_dx9_media_sharing.h
+	deleted:    3rdparty/OCL-SDK/include/CL/cl_ext.h
+	deleted:    3rdparty/OCL-SDK/include/CL/cl_gl.h
+	deleted:    3rdparty/OCL-SDK/include/CL/cl_gl_ext.h
+	deleted:    3rdparty/OCL-SDK/include/CL/cl_platform.h
+	deleted:    3rdparty/OCL-SDK/include/CL/opencl.h
+	deleted:    3rdparty/OCL-SDK/lib/x86/OpenCL.lib
+	deleted:    3rdparty/OCL-SDK/lib/x86_64/OpenCL.lib
+	deleted:    3rdparty/clip/CMakeLists.txt
+	deleted:    3rdparty/clip/LICENSE.txt
+	deleted:    3rdparty/clip/README.md
+	deleted:    3rdparty/clip/clip.cpp
+	deleted:    3rdparty/clip/clip.h
+	deleted:    3rdparty/clip/clip_lock_impl.h
+	deleted:    3rdparty/clip/clip_none.cpp
+	deleted:    3rdparty/clip/clip_osx.mm
+	deleted:    3rdparty/clip/clip_win.cpp
+	deleted:    3rdparty/clip/clip_x11.cpp
+	deleted:    3rdparty/clip/clip_x11_png.h
+	deleted:    3rdparty/clip/examples/CMakeLists.txt
+	deleted:    3rdparty/clip/examples/copy.cpp
+	deleted:    3rdparty/clip/examples/helloworld.cpp
+	deleted:    3rdparty/clip/examples/int_format.cpp
+	deleted:    3rdparty/clip/examples/paste.cpp
+	deleted:    3rdparty/clip/examples/put_image.cpp
+	deleted:    3rdparty/clip/examples/random.h
+	deleted:    3rdparty/clip/examples/show_image.cpp
+	deleted:    3rdparty/clip/image.cpp
+	deleted:    3rdparty/clip/tests/CMakeLists.txt
+	deleted:    3rdparty/clip/tests/image_tests.cpp
+	deleted:    3rdparty/clip/tests/test.h
+	deleted:    3rdparty/clip/tests/text_tests.cpp
+	deleted:    3rdparty/clip/tests/user_format_tests.cpp
+	deleted:    3rdparty/cppfs/.gitignore
+	deleted:    3rdparty/cppfs/.ignore
+	deleted:    3rdparty/cppfs/.travis.yml
+	deleted:    3rdparty/cppfs/AUTHORS
+	deleted:    3rdparty/cppfs/CMakeLists.txt
+	deleted:    3rdparty/cppfs/LICENSE
+	deleted:    3rdparty/cppfs/README.md
+	deleted:    3rdparty/cppfs/appveyor.yml
+	deleted:    3rdparty/cppfs/cmake/CheckTemplate.cmake
+	deleted:    3rdparty/cppfs/cmake/ClangTidy.cmake
+	deleted:    3rdparty/cppfs/cmake/CompileOptions.cmake
+	deleted:    3rdparty/cppfs/cmake/ComponentInstall.cmake
+	deleted:    3rdparty/cppfs/cmake/Cppcheck.cmake
+	deleted:    3rdparty/cppfs/cmake/Custom.cmake
+	deleted:    3rdparty/cppfs/cmake/FindASSIMP.cmake
+	deleted:    3rdparty/cppfs/cmake/FindFFMPEG.cmake
+	deleted:    3rdparty/cppfs/cmake/FindGLEW.cmake
+	deleted:    3rdparty/cppfs/cmake/FindGLFW.cmake
+	deleted:    3rdparty/cppfs/cmake/FindGLM.cmake
+	deleted:    3rdparty/cppfs/cmake/FindLibCrypto.cmake
+	deleted:    3rdparty/cppfs/cmake/FindLibSSH2.cmake
+	deleted:    3rdparty/cppfs/cmake/Findclang_tidy.cmake
+	deleted:    3rdparty/cppfs/cmake/Findcppcheck.cmake
+	deleted:    3rdparty/cppfs/cmake/Findnodejs.cmake
+	deleted:    3rdparty/cppfs/cmake/GetGitRevisionDescription.cmake
+	deleted:    3rdparty/cppfs/cmake/GetGitRevisionDescription.cmake.in
+	deleted:    3rdparty/cppfs/cmake/HealthCheck.cmake
+	deleted:    3rdparty/cppfs/cmake/RuntimeDependencies.cmake
+	deleted:    3rdparty/cppfs/configure
+	deleted:    3rdparty/cppfs/cppfs-config.cmake
+	deleted:    3rdparty/cppfs/cppfs-logo.png
+	deleted:    3rdparty/cppfs/cppfs-logo.svg
+	deleted:    3rdparty/cppfs/deploy/CMakeLists.txt
+	deleted:    3rdparty/cppfs/deploy/packages/pack-cppfs.cmake
+	deleted:    3rdparty/cppfs/deploy/ubuntu-ppa/debian/changelog
+	deleted:    3rdparty/cppfs/deploy/ubuntu-ppa/debian/compat
+	deleted:    3rdparty/cppfs/deploy/ubuntu-ppa/debian/control
+	deleted:    3rdparty/cppfs/deploy/ubuntu-ppa/debian/copyright
+	deleted:    3rdparty/cppfs/deploy/ubuntu-ppa/debian/rules
+	deleted:    3rdparty/cppfs/deploy/ubuntu-ppa/debian/source/format
+	deleted:    3rdparty/cppfs/deploy/ubuntu-ppa/recipe.txt
+	deleted:    3rdparty/cppfs/docs/CMakeLists.txt
+	deleted:    3rdparty/cppfs/docs/api-docs/CMakeLists.txt
+	deleted:    3rdparty/cppfs/docs/api-docs/doxyfile.in
+	deleted:    3rdparty/cppfs/source/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/cppfs/3rdparty/basen/LICENSE
+	deleted:    3rdparty/cppfs/source/cppfs/3rdparty/basen/README.md
+	deleted:    3rdparty/cppfs/source/cppfs/3rdparty/basen/basen.hpp
+	deleted:    3rdparty/cppfs/source/cppfs/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/AbstractFileHandleBackend.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/AbstractFileIteratorBackend.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/AbstractFileSystem.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/AbstractFileWatcherBackend.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/Change.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/Diff.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FileEventHandler.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FileHandle.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FileIterator.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FilePath.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FileVisitor.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FileWatcher.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FunctionalFileEventHandler.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/FunctionalFileVisitor.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/InputStream.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/LoginCredentials.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/OutputStream.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/Tree.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/Url.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/cppfs.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/fs.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/linux/LocalFileWatcher.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/posix/LocalFileHandle.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/posix/LocalFileIterator.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/posix/LocalFileSystem.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/ssh/SshFileHandle.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/ssh/SshFileIterator.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/ssh/SshFileSystem.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/ssh/SshInputStreamBuffer.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/ssh/SshOutputStreamBuffer.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/system.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/units.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/windows/LocalFileHandle.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/windows/LocalFileIterator.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/windows/LocalFileSystem.h
+	deleted:    3rdparty/cppfs/source/cppfs/include/cppfs/windows/LocalFileWatcher.h
+	deleted:    3rdparty/cppfs/source/cppfs/source/AbstractFileHandleBackend.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/AbstractFileIteratorBackend.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/AbstractFileSystem.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/AbstractFileWatcherBackend.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/Change.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/Diff.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FileEventHandler.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FileHandle.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FileIterator.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FilePath.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FileVisitor.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FileWatcher.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FunctionalFileEventHandler.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/FunctionalFileVisitor.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/InputStream.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/LoginCredentials.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/OutputStream.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/Tree.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/Url.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/fs.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/linux/LocalFileWatcher.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/posix/LocalFileHandle.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/posix/LocalFileIterator.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/posix/LocalFileSystem.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/ssh/SshFileHandle.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/ssh/SshFileIterator.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/ssh/SshFileSystem.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/ssh/SshInputStreamBuffer.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/ssh/SshOutputStreamBuffer.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/system.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/windows/LocalFileHandle.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/windows/LocalFileIterator.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/windows/LocalFileSystem.cpp
+	deleted:    3rdparty/cppfs/source/cppfs/source/windows/LocalFileWatcher.cpp
+	deleted:    3rdparty/cppfs/source/examples/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-cat/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-cat/main.cpp
+	deleted:    3rdparty/cppfs/source/examples/cppfs-cp/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-cp/main.cpp
+	deleted:    3rdparty/cppfs/source/examples/cppfs-ln/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-ln/main.cpp
+	deleted:    3rdparty/cppfs/source/examples/cppfs-ls/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-ls/main.cpp
+	deleted:    3rdparty/cppfs/source/examples/cppfs-sync/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-sync/main.cpp
+	deleted:    3rdparty/cppfs/source/examples/cppfs-tree/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-tree/main.cpp
+	deleted:    3rdparty/cppfs/source/examples/cppfs-watch/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/examples/cppfs-watch/main.cpp
+	deleted:    3rdparty/cppfs/source/scripts/CMakeLists.txt
+	deleted:    3rdparty/cppfs/source/scripts/check_template.sh
+	deleted:    3rdparty/cppfs/source/version.h.in
+	deleted:    3rdparty/eigen/COPYING.BSD
+	deleted:    3rdparty/eigen/COPYING.GPL
+	deleted:    3rdparty/eigen/COPYING.LGPL
+	deleted:    3rdparty/eigen/COPYING.MINPACK
+	deleted:    3rdparty/eigen/COPYING.MPL2
+	deleted:    3rdparty/eigen/COPYING.README
+	deleted:    3rdparty/eigen/Eigen/Cholesky
+	deleted:    3rdparty/eigen/Eigen/CholmodSupport
+	deleted:    3rdparty/eigen/Eigen/Core
+	deleted:    3rdparty/eigen/Eigen/Dense
+	deleted:    3rdparty/eigen/Eigen/Eigen
+	deleted:    3rdparty/eigen/Eigen/Eigenvalues
+	deleted:    3rdparty/eigen/Eigen/Geometry
+	deleted:    3rdparty/eigen/Eigen/Householder
+	deleted:    3rdparty/eigen/Eigen/IterativeLinearSolvers
+	deleted:    3rdparty/eigen/Eigen/Jacobi
+	deleted:    3rdparty/eigen/Eigen/KLUSupport
+	deleted:    3rdparty/eigen/Eigen/LU
+	deleted:    3rdparty/eigen/Eigen/MetisSupport
+	deleted:    3rdparty/eigen/Eigen/OrderingMethods
+	deleted:    3rdparty/eigen/Eigen/PaStiXSupport
+	deleted:    3rdparty/eigen/Eigen/PardisoSupport
+	deleted:    3rdparty/eigen/Eigen/QR
+	deleted:    3rdparty/eigen/Eigen/QtAlignedMalloc
+	deleted:    3rdparty/eigen/Eigen/SPQRSupport
+	deleted:    3rdparty/eigen/Eigen/SVD
+	deleted:    3rdparty/eigen/Eigen/Sparse
+	deleted:    3rdparty/eigen/Eigen/SparseCholesky
+	deleted:    3rdparty/eigen/Eigen/SparseCore
+	deleted:    3rdparty/eigen/Eigen/SparseLU
+	deleted:    3rdparty/eigen/Eigen/SparseQR
+	deleted:    3rdparty/eigen/Eigen/StdDeque
+	deleted:    3rdparty/eigen/Eigen/StdList
+	deleted:    3rdparty/eigen/Eigen/StdVector
+	deleted:    3rdparty/eigen/Eigen/SuperLUSupport
+	deleted:    3rdparty/eigen/Eigen/UmfPackSupport
+	deleted:    3rdparty/eigen/Eigen/src/Cholesky/LDLT.h
+	deleted:    3rdparty/eigen/Eigen/src/Cholesky/LLT.h
+	deleted:    3rdparty/eigen/Eigen/src/Cholesky/LLT_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/CholmodSupport/CholmodSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/ArithmeticSequence.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Array.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/ArrayBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/ArrayWrapper.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Assign.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/AssignEvaluator.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Assign_MKL.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/BandMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Block.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/BooleanRedux.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CommaInitializer.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/ConditionEstimator.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CoreEvaluators.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CoreIterators.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CwiseBinaryOp.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CwiseNullaryOp.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CwiseTernaryOp.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CwiseUnaryOp.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/CwiseUnaryView.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/DenseBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/DenseCoeffsBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/DenseStorage.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Diagonal.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/DiagonalMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/DiagonalProduct.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Dot.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/EigenBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/ForceAlignedAccess.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Fuzzy.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/GeneralProduct.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/GenericPacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/GlobalFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/IO.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/IndexedView.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Inverse.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Map.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/MapBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/MathFunctionsImpl.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Matrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/MatrixBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/NestByValue.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/NoAlias.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/NumTraits.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/PartialReduxEvaluator.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/PermutationMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/PlainObjectBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Product.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/ProductEvaluators.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Random.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Redux.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Ref.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Replicate.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Reshaped.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/ReturnByValue.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Reverse.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Select.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/SelfAdjointView.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/SelfCwiseBinaryOp.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Solve.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/SolveTriangular.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/SolverBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/StableNorm.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/StlIterators.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Stride.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Swap.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Transpose.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Transpositions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/TriangularMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/VectorBlock.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/VectorwiseOp.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/Visitor.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX/TypeCasting.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX512/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX512/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX512/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AVX512/TypeCasting.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AltiVec/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AltiVec/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/AltiVec/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/CUDA/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/Default/ConjHelper.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/Default/Half.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/Default/Settings.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/Default/TypeCasting.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/GPU/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/GPU/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/GPU/TypeCasting.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/HIP/hcc/math_constants.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/MSA/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/MSA/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/MSA/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/NEON/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/NEON/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/NEON/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/NEON/TypeCasting.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SSE/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SSE/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SSE/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SSE/TypeCasting.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SYCL/InteropHeaders.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SYCL/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SYCL/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SYCL/SyclMemoryModel.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/SYCL/TypeCasting.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/ZVector/Complex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/ZVector/MathFunctions.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/arch/ZVector/PacketMath.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/functors/AssignmentFunctors.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/functors/BinaryFunctors.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/functors/NullaryFunctors.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/functors/StlFunctors.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/functors/TernaryFunctors.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/functors/UnaryFunctors.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/GeneralBlockPanelKernel.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/GeneralMatrixMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/GeneralMatrixMatrixTriangular_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/GeneralMatrixMatrix_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/GeneralMatrixVector.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/GeneralMatrixVector_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/Parallelizer.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/SelfadjointMatrixMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/SelfadjointMatrixMatrix_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/SelfadjointMatrixVector.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/SelfadjointMatrixVector_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/SelfadjointProduct.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/SelfadjointRank2Update.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/TriangularMatrixMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/TriangularMatrixMatrix_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/TriangularMatrixVector.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/TriangularMatrixVector_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/TriangularSolverMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/TriangularSolverMatrix_BLAS.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/products/TriangularSolverVector.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/BlasUtil.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/ConfigureVectorization.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/Constants.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/DisableStupidWarnings.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/ForwardDeclarations.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/IndexedViewHelper.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/IntegralConstant.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/MKL_support.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/Macros.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/Memory.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/Meta.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/NonMPL2.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/ReenableStupidWarnings.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/ReshapedHelper.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/StaticAssert.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/SymbolicIndex.h
+	deleted:    3rdparty/eigen/Eigen/src/Core/util/XprHelper.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/ComplexEigenSolver.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/ComplexSchur.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/ComplexSchur_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/EigenSolver.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/HessenbergDecomposition.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/RealQZ.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/RealSchur.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/RealSchur_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/Eigenvalues/Tridiagonalization.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/AlignedBox.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/AngleAxis.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/EulerAngles.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Homogeneous.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Hyperplane.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/OrthoMethods.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/ParametrizedLine.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Quaternion.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Rotation2D.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/RotationBase.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Scaling.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Transform.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Translation.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/Umeyama.h
+	deleted:    3rdparty/eigen/Eigen/src/Geometry/arch/Geometry_SSE.h
+	deleted:    3rdparty/eigen/Eigen/src/Householder/BlockHouseholder.h
+	deleted:    3rdparty/eigen/Eigen/src/Householder/Householder.h
+	deleted:    3rdparty/eigen/Eigen/src/Householder/HouseholderSequence.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/BasicPreconditioners.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/BiCGSTAB.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/ConjugateGradient.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/IncompleteCholesky.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/IncompleteLUT.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/IterativeSolverBase.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/LeastSquareConjugateGradient.h
+	deleted:    3rdparty/eigen/Eigen/src/IterativeLinearSolvers/SolveWithGuess.h
+	deleted:    3rdparty/eigen/Eigen/src/Jacobi/Jacobi.h
+	deleted:    3rdparty/eigen/Eigen/src/KLUSupport/KLUSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/LU/Determinant.h
+	deleted:    3rdparty/eigen/Eigen/src/LU/FullPivLU.h
+	deleted:    3rdparty/eigen/Eigen/src/LU/InverseImpl.h
+	deleted:    3rdparty/eigen/Eigen/src/LU/PartialPivLU.h
+	deleted:    3rdparty/eigen/Eigen/src/LU/PartialPivLU_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/LU/arch/Inverse_SSE.h
+	deleted:    3rdparty/eigen/Eigen/src/MetisSupport/MetisSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/OrderingMethods/Amd.h
+	deleted:    3rdparty/eigen/Eigen/src/OrderingMethods/Eigen_Colamd.h
+	deleted:    3rdparty/eigen/Eigen/src/OrderingMethods/Ordering.h
+	deleted:    3rdparty/eigen/Eigen/src/PaStiXSupport/PaStiXSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/PardisoSupport/PardisoSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/QR/ColPivHouseholderQR.h
+	deleted:    3rdparty/eigen/Eigen/src/QR/ColPivHouseholderQR_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/QR/CompleteOrthogonalDecomposition.h
+	deleted:    3rdparty/eigen/Eigen/src/QR/FullPivHouseholderQR.h
+	deleted:    3rdparty/eigen/Eigen/src/QR/HouseholderQR.h
+	deleted:    3rdparty/eigen/Eigen/src/QR/HouseholderQR_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/SPQRSupport/SuiteSparseQRSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/SVD/BDCSVD.h
+	deleted:    3rdparty/eigen/Eigen/src/SVD/JacobiSVD.h
+	deleted:    3rdparty/eigen/Eigen/src/SVD/JacobiSVD_LAPACKE.h
+	deleted:    3rdparty/eigen/Eigen/src/SVD/SVDBase.h
+	deleted:    3rdparty/eigen/Eigen/src/SVD/UpperBidiagonalization.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCholesky/SimplicialCholesky.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCholesky/SimplicialCholesky_impl.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/AmbiVector.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/CompressedStorage.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/ConservativeSparseSparseProduct.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/MappedSparseMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseAssign.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseBlock.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseColEtree.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseCompressedBase.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseCwiseBinaryOp.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseCwiseUnaryOp.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseDenseProduct.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseDiagonalProduct.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseDot.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseFuzzy.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseMap.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseMatrixBase.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparsePermutation.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseProduct.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseRedux.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseRef.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseSelfAdjointView.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseSolverBase.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseSparseProductWithPruning.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseTranspose.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseTriangularView.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseUtil.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseVector.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/SparseView.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseCore/TriangularSolver.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLUImpl.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_Memory.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_Structs.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_SupernodalMatrix.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_Utils.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_column_bmod.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_column_dfs.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_copy_to_ucol.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_gemm_kernel.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_kernel_bmod.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_panel_bmod.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_panel_dfs.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_pivotL.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_pruneL.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseLU/SparseLU_relax_snode.h
+	deleted:    3rdparty/eigen/Eigen/src/SparseQR/SparseQR.h
+	deleted:    3rdparty/eigen/Eigen/src/StlSupport/StdDeque.h
+	deleted:    3rdparty/eigen/Eigen/src/StlSupport/StdList.h
+	deleted:    3rdparty/eigen/Eigen/src/StlSupport/StdVector.h
+	deleted:    3rdparty/eigen/Eigen/src/StlSupport/details.h
+	deleted:    3rdparty/eigen/Eigen/src/SuperLUSupport/SuperLUSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/UmfPackSupport/UmfPackSupport.h
+	deleted:    3rdparty/eigen/Eigen/src/misc/Image.h
+	deleted:    3rdparty/eigen/Eigen/src/misc/Kernel.h
+	deleted:    3rdparty/eigen/Eigen/src/misc/RealSvd2x2.h
+	deleted:    3rdparty/eigen/Eigen/src/misc/blas.h
+	deleted:    3rdparty/eigen/Eigen/src/misc/lapack.h
+	deleted:    3rdparty/eigen/Eigen/src/misc/lapacke.h
+	deleted:    3rdparty/eigen/Eigen/src/misc/lapacke_mangling.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/ArrayCwiseBinaryOps.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/ArrayCwiseUnaryOps.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/BlockMethods.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/CommonCwiseBinaryOps.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/CommonCwiseUnaryOps.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/IndexedViewMethods.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+	deleted:    3rdparty/eigen/Eigen/src/plugins/ReshapedMethods.h
+	deleted:    3rdparty/eigen/INSTALL
+	deleted:    3rdparty/eigen/README.md
+	deleted:    3rdparty/eigen/eigen3.pc.in
+	deleted:    3rdparty/eigen/signature_of_eigen3_matrix_library
+	new file:   3rdparty/glew-cmake/.gitattributes
+	new file:   3rdparty/glew-cmake/.gitignore
+	new file:   3rdparty/glew-cmake/.lgtm.yml
+	new file:   3rdparty/glew-cmake/.travis.yml
+	new file:   3rdparty/glew-cmake/CMakeLists.txt
+	new file:   3rdparty/glew-cmake/GeneratePkgConfig.cmake
+	new file:   3rdparty/glew-cmake/LICENSE.txt
+	new file:   3rdparty/glew-cmake/Makefile
+	new file:   3rdparty/glew-cmake/README.md
+	new file:   3rdparty/glew-cmake/auto/Makefile
+	new file:   3rdparty/glew-cmake/auto/bin/filter_gl_ext.sh
+	new file:   3rdparty/glew-cmake/auto/bin/filter_gles_ext.sh
+	new file:   3rdparty/glew-cmake/auto/bin/filter_spec.py
+	new file:   3rdparty/glew-cmake/auto/bin/make.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_def_fun.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_def_var.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_enable_index.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_header.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_html.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_index.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_info.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_info_list.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_init.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_initd.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_list.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_list2.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_str.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_struct_fun.pl
+	new file:   3rdparty/glew-cmake/auto/bin/make_struct_var.pl
+	new file:   3rdparty/glew-cmake/auto/bin/parse_spec.pl
+	new file:   3rdparty/glew-cmake/auto/bin/parse_xml.py
+	new file:   3rdparty/glew-cmake/auto/bin/update_ext.sh
+	new file:   3rdparty/glew-cmake/auto/blacklist
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_EXT_device_base
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_KHR_fence_sync
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_KHR_image_base
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_KHR_lock_surface3
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_VERSION_1_0
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_VERSION_1_1
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_VERSION_1_2
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_VERSION_1_3
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_VERSION_1_4
+	new file:   3rdparty/glew-cmake/auto/core/gl/EGL_VERSION_1_5
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_ARB_get_proc_address
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_ATI_pixel_format_float
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_ATI_render_texture
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_EXT_scene_marker
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_NV_vertex_array_range
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_SGIS_color_range
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_SGIX_hyperpipe
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_SUN_video_resize
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_VERSION_1_2
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_VERSION_1_3
+	new file:   3rdparty/glew-cmake/auto/core/gl/GLX_VERSION_1_4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_APPLE_float_pixels
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_APPLE_pixel_buffer
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_APPLE_texture_range
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_draw_instanced
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_imaging
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_instanced_arrays
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_internalformat_query2
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_matrix_palette
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_multitexture
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_robustness
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_separate_shader_objects
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_vertex_attrib_64bit
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ARB_vertex_blend
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATIX_point_sprites
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATIX_texture_env_combine3
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATIX_texture_env_route
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATIX_vertex_shader_output_point_size
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATI_envmap_bumpmap
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATI_map_object_buffer
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATI_pn_triangles
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATI_separate_stencil
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATI_shader_texture_lod
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATI_texture_compression_3dc
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_ATI_vertex_streams
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_Cg_shader
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_bindable_uniform
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_debug_marker
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_depth_bounds_test
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_draw_instanced
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_draw_range_elements
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_external_buffer
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_fog_coord
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_framebuffer_sRGB
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_geometry_shader4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_gpu_program_parameters
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_gpu_shader4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_memory_object
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_memory_object_fd
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_memory_object_win32
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_packed_float
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_pixel_buffer_object
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_scene_marker
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_secondary_color
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_semaphore
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_semaphore_fd
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_semaphore_win32
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_array
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_buffer_object
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_compression_latc
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_compression_rgtc
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_cube_map
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_edge_clamp
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_integer
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_rectangle
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_texture_shared_exponent
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_timer_query
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_EXT_vertex_shader
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_KHR_context_flush_control
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_KTX_buffer_region
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NVX_gpu_memory_info
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_depth_buffer_float
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_depth_range_unclamped
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_fragment_program2
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_fragment_program4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_fragment_program_option
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_framebuffer_multisample_coverage
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_geometry_program4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_geometry_shader4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_gpu_program4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_gpu_program5
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_parameter_buffer_object
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_present_video
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_sample_locations
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_tessellation_program5
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_transform_feedback
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_vdpau_interop
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_vertex_program2_option
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_vertex_program3
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_NV_vertex_program4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_SGIX_shadow
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_SUN_read_video_pixels
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_1_2
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_1_2_1
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_1_3
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_1_4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_1_5
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_2_0
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_2_1
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_3_0
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_3_1
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_3_2
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_3_3
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_4_0
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_4_1
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_4_2
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_4_3
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_4_4
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_4_5
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_VERSION_4_6
+	new file:   3rdparty/glew-cmake/auto/core/gl/GL_WIN_swap_hint
+	new file:   3rdparty/glew-cmake/auto/core/gl/WGL_NV_gpu_affinity
+	new file:   3rdparty/glew-cmake/auto/custom.txt
+	new file:   3rdparty/glew-cmake/auto/doc/advanced.html
+	new file:   3rdparty/glew-cmake/auto/doc/basic.html
+	new file:   3rdparty/glew-cmake/auto/doc/build.html
+	new file:   3rdparty/glew-cmake/auto/doc/credits.html
+	new file:   3rdparty/glew-cmake/auto/doc/index.html
+	new file:   3rdparty/glew-cmake/auto/doc/install.html
+	new file:   3rdparty/glew-cmake/auto/doc/log.html
+	new file:   3rdparty/glew-cmake/auto/src/eglew_head.h
+	new file:   3rdparty/glew-cmake/auto/src/eglew_mid.h
+	new file:   3rdparty/glew-cmake/auto/src/eglew_tail.h
+	new file:   3rdparty/glew-cmake/auto/src/footer.html
+	new file:   3rdparty/glew-cmake/auto/src/glew.rc
+	new file:   3rdparty/glew-cmake/auto/src/glew_head.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_head.h
+	new file:   3rdparty/glew-cmake/auto/src/glew_init_egl.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_init_gl.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_init_glx.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_init_tail.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_init_wgl.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_license.h
+	new file:   3rdparty/glew-cmake/auto/src/glew_str_egl.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_str_glx.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_str_head.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_str_tail.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_str_wgl.c
+	new file:   3rdparty/glew-cmake/auto/src/glew_tail.h
+	new file:   3rdparty/glew-cmake/auto/src/glewinfo.rc
+	new file:   3rdparty/glew-cmake/auto/src/glewinfo_egl.c
+	new file:   3rdparty/glew-cmake/auto/src/glewinfo_gl.c
+	new file:   3rdparty/glew-cmake/auto/src/glewinfo_glx.c
+	new file:   3rdparty/glew-cmake/auto/src/glewinfo_head.c
+	new file:   3rdparty/glew-cmake/auto/src/glewinfo_tail.c
+	new file:   3rdparty/glew-cmake/auto/src/glewinfo_wgl.c
+	new file:   3rdparty/glew-cmake/auto/src/glxew_head.h
+	new file:   3rdparty/glew-cmake/auto/src/glxew_mid.h
+	new file:   3rdparty/glew-cmake/auto/src/glxew_tail.h
+	new file:   3rdparty/glew-cmake/auto/src/header.html
+	new file:   3rdparty/glew-cmake/auto/src/khronos_license.h
+	new file:   3rdparty/glew-cmake/auto/src/mesa_license.h
+	new file:   3rdparty/glew-cmake/auto/src/visualinfo.rc
+	new file:   3rdparty/glew-cmake/auto/src/wglew_head.h
+	new file:   3rdparty/glew-cmake/auto/src/wglew_mid.h
+	new file:   3rdparty/glew-cmake/auto/src/wglew_tail.h
+	new file:   3rdparty/glew-cmake/azure-pipelines.yml
+	new file:   3rdparty/glew-cmake/build/cmake/CMakeLists.txt
+	new file:   3rdparty/glew-cmake/build/cmake/CopyImportedTargetProperties.cmake
+	new file:   3rdparty/glew-cmake/build/cmake/cmake_uninstall.cmake.in
+	new file:   3rdparty/glew-cmake/build/cmake/glew-config.cmake
+	new file:   3rdparty/glew-cmake/build/cmake/testbuild/CMakeLists.txt
+	new file:   3rdparty/glew-cmake/build/cmake/testbuild/main.c
+	new file:   3rdparty/glew-cmake/build/glew.rc
+	new file:   3rdparty/glew-cmake/build/glewinfo.rc
+	new file:   3rdparty/glew-cmake/build/vc10/common.props
+	new file:   3rdparty/glew-cmake/build/vc10/glew.sln
+	new file:   3rdparty/glew-cmake/build/vc10/glew_shared.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc10/glew_static.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc10/glewinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc10/visualinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc12/common.props
+	new file:   3rdparty/glew-cmake/build/vc12/glew.sln
+	new file:   3rdparty/glew-cmake/build/vc12/glew_shared.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc12/glew_static.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc12/glewinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc12/visualinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc14/common.props
+	new file:   3rdparty/glew-cmake/build/vc14/glew.sln
+	new file:   3rdparty/glew-cmake/build/vc14/glew_shared.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc14/glew_static.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc14/glewinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc14/visualinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc15/common.props
+	new file:   3rdparty/glew-cmake/build/vc15/glew.sln
+	new file:   3rdparty/glew-cmake/build/vc15/glew_shared.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc15/glew_static.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc15/glewinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc15/visualinfo.vcxproj
+	new file:   3rdparty/glew-cmake/build/vc6/Makefile
+	new file:   3rdparty/glew-cmake/build/vc6/glew.dsw
+	new file:   3rdparty/glew-cmake/build/vc6/glew_shared.dsp
+	new file:   3rdparty/glew-cmake/build/vc6/glew_static.dsp
+	new file:   3rdparty/glew-cmake/build/vc6/glewinfo.dsp
+	new file:   3rdparty/glew-cmake/build/vc6/visualinfo.dsp
+	new file:   3rdparty/glew-cmake/build/visualinfo.rc
+	new file:   3rdparty/glew-cmake/cmake-testbuild.sh
+	new file:   3rdparty/glew-cmake/config/Makefile.cygming
+	new file:   3rdparty/glew-cmake/config/Makefile.cygwin
+	new file:   3rdparty/glew-cmake/config/Makefile.cygwin-x11
+	new file:   3rdparty/glew-cmake/config/Makefile.darwin
+	new file:   3rdparty/glew-cmake/config/Makefile.darwin-gcc6
+	new file:   3rdparty/glew-cmake/config/Makefile.darwin-ppc
+	new file:   3rdparty/glew-cmake/config/Makefile.darwin-universal
+	new file:   3rdparty/glew-cmake/config/Makefile.darwin-x86_64
+	new file:   3rdparty/glew-cmake/config/Makefile.fedora-mingw32
+	new file:   3rdparty/glew-cmake/config/Makefile.flatpak-32
+	new file:   3rdparty/glew-cmake/config/Makefile.freebsd
+	new file:   3rdparty/glew-cmake/config/Makefile.gnu
+	new file:   3rdparty/glew-cmake/config/Makefile.haiku
+	new file:   3rdparty/glew-cmake/config/Makefile.irix
+	new file:   3rdparty/glew-cmake/config/Makefile.kfreebsd
+	new file:   3rdparty/glew-cmake/config/Makefile.linux
+	new file:   3rdparty/glew-cmake/config/Makefile.linux-clang
+	new file:   3rdparty/glew-cmake/config/Makefile.linux-clang-egl
+	new file:   3rdparty/glew-cmake/config/Makefile.linux-egl
+	new file:   3rdparty/glew-cmake/config/Makefile.linux-mingw32
+	new file:   3rdparty/glew-cmake/config/Makefile.linux-mingw64
+	new file:   3rdparty/glew-cmake/config/Makefile.linux-osmesa
+	new file:   3rdparty/glew-cmake/config/Makefile.mingw
+	new file:   3rdparty/glew-cmake/config/Makefile.mingw-win32
+	new file:   3rdparty/glew-cmake/config/Makefile.msys
+	new file:   3rdparty/glew-cmake/config/Makefile.msys-win32
+	new file:   3rdparty/glew-cmake/config/Makefile.msys-win64
+	new file:   3rdparty/glew-cmake/config/Makefile.nacl-32
+	new file:   3rdparty/glew-cmake/config/Makefile.nacl-64
+	new file:   3rdparty/glew-cmake/config/Makefile.netbsd
+	new file:   3rdparty/glew-cmake/config/Makefile.openbsd
+	new file:   3rdparty/glew-cmake/config/Makefile.solaris
+	new file:   3rdparty/glew-cmake/config/Makefile.solaris-gcc
+	new file:   3rdparty/glew-cmake/config/config.guess
+	new file:   3rdparty/glew-cmake/config/version
+	new file:   3rdparty/glew-cmake/doc/advanced.html
+	new file:   3rdparty/glew-cmake/doc/basic.html
+	new file:   3rdparty/glew-cmake/doc/build.html
+	new file:   3rdparty/glew-cmake/doc/credits.html
+	new file:   3rdparty/glew-cmake/doc/github.png
+	new file:   3rdparty/glew-cmake/doc/glew.css
+	new file:   3rdparty/glew-cmake/doc/glew.html
+	new file:   3rdparty/glew-cmake/doc/glew.png
+	new file:   3rdparty/glew-cmake/doc/glew.txt
+	new file:   3rdparty/glew-cmake/doc/glxew.html
+	new file:   3rdparty/glew-cmake/doc/gpl.txt
+	new file:   3rdparty/glew-cmake/doc/index.html
+	new file:   3rdparty/glew-cmake/doc/install.html
+	new file:   3rdparty/glew-cmake/doc/khronos.txt
+	new file:   3rdparty/glew-cmake/doc/log.html
+	new file:   3rdparty/glew-cmake/doc/mesa.txt
+	new file:   3rdparty/glew-cmake/doc/new.png
+	new file:   3rdparty/glew-cmake/doc/ogl_sm.jpg
+	new file:   3rdparty/glew-cmake/doc/travis.png
+	new file:   3rdparty/glew-cmake/doc/wglew.html
+	new file:   3rdparty/glew-cmake/glew-cmake/Dockerfile
+	new file:   3rdparty/glew-cmake/glew-cmake/cmake-install-test.cmake
+	new file:   3rdparty/glew-cmake/glew-cmake/maintain.sh
+	new file:   3rdparty/glew-cmake/glew-cmake/sub-directory-test.cmake
+	new file:   3rdparty/glew-cmake/glew.pc.in
+	new file:   3rdparty/glew-cmake/include/GL/eglew.h
+	new file:   3rdparty/glew-cmake/include/GL/glew.h
+	new file:   3rdparty/glew-cmake/include/GL/glxew.h
+	new file:   3rdparty/glew-cmake/include/GL/wglew.h
+	new file:   3rdparty/glew-cmake/src/glew.c
+	new file:   3rdparty/glew-cmake/src/glewinfo.c
+	new file:   3rdparty/glew-cmake/src/visualinfo.c
+	deleted:    3rdparty/glm/CMakeLists.txt
+	deleted:    3rdparty/glm/copying.txt
+	deleted:    3rdparty/glm/glm/common.hpp
+	deleted:    3rdparty/glm/glm/detail/_features.hpp
+	deleted:    3rdparty/glm/glm/detail/_fixes.hpp
+	deleted:    3rdparty/glm/glm/detail/_noise.hpp
+	deleted:    3rdparty/glm/glm/detail/_swizzle.hpp
+	deleted:    3rdparty/glm/glm/detail/_swizzle_func.hpp
+	deleted:    3rdparty/glm/glm/detail/_vectorize.hpp
+	deleted:    3rdparty/glm/glm/detail/compute_common.hpp
+	deleted:    3rdparty/glm/glm/detail/compute_vector_relational.hpp
+	deleted:    3rdparty/glm/glm/detail/func_common.inl
+	deleted:    3rdparty/glm/glm/detail/func_common_simd.inl
+	deleted:    3rdparty/glm/glm/detail/func_exponential.inl
+	deleted:    3rdparty/glm/glm/detail/func_exponential_simd.inl
+	deleted:    3rdparty/glm/glm/detail/func_geometric.inl
+	deleted:    3rdparty/glm/glm/detail/func_geometric_simd.inl
+	deleted:    3rdparty/glm/glm/detail/func_integer.inl
+	deleted:    3rdparty/glm/glm/detail/func_integer_simd.inl
+	deleted:    3rdparty/glm/glm/detail/func_matrix.inl
+	deleted:    3rdparty/glm/glm/detail/func_matrix_simd.inl
+	deleted:    3rdparty/glm/glm/detail/func_packing.inl
+	deleted:    3rdparty/glm/glm/detail/func_packing_simd.inl
+	deleted:    3rdparty/glm/glm/detail/func_trigonometric.inl
+	deleted:    3rdparty/glm/glm/detail/func_vector_relational.inl
+	deleted:    3rdparty/glm/glm/detail/func_vector_relational_simd.inl
+	deleted:    3rdparty/glm/glm/detail/glm.cpp
+	deleted:    3rdparty/glm/glm/detail/qualifier.hpp
+	deleted:    3rdparty/glm/glm/detail/setup.hpp
+	deleted:    3rdparty/glm/glm/detail/type_float.hpp
+	deleted:    3rdparty/glm/glm/detail/type_half.hpp
+	deleted:    3rdparty/glm/glm/detail/type_half.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat2x2.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat2x2.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat2x3.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat2x3.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat2x4.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat2x4.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat3x2.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat3x2.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat3x3.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat3x3.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat3x4.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat3x4.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat4x2.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat4x2.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat4x3.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat4x3.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat4x4.hpp
+	deleted:    3rdparty/glm/glm/detail/type_mat4x4.inl
+	deleted:    3rdparty/glm/glm/detail/type_mat4x4_simd.inl
+	deleted:    3rdparty/glm/glm/detail/type_quat.hpp
+	deleted:    3rdparty/glm/glm/detail/type_quat.inl
+	deleted:    3rdparty/glm/glm/detail/type_quat_simd.inl
+	deleted:    3rdparty/glm/glm/detail/type_vec1.hpp
+	deleted:    3rdparty/glm/glm/detail/type_vec1.inl
+	deleted:    3rdparty/glm/glm/detail/type_vec2.hpp
+	deleted:    3rdparty/glm/glm/detail/type_vec2.inl
+	deleted:    3rdparty/glm/glm/detail/type_vec3.hpp
+	deleted:    3rdparty/glm/glm/detail/type_vec3.inl
+	deleted:    3rdparty/glm/glm/detail/type_vec4.hpp
+	deleted:    3rdparty/glm/glm/detail/type_vec4.inl
+	deleted:    3rdparty/glm/glm/detail/type_vec4_simd.inl
+	deleted:    3rdparty/glm/glm/exponential.hpp
+	deleted:    3rdparty/glm/glm/ext.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_clip_space.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_clip_space.inl
+	deleted:    3rdparty/glm/glm/ext/matrix_common.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_common.inl
+	deleted:    3rdparty/glm/glm/ext/matrix_double2x2.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double2x2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double2x3.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double2x3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double2x4.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double2x4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double3x2.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double3x2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double3x3.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double3x3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double3x4.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double3x4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double4x2.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double4x2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double4x3.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double4x3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double4x4.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_double4x4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float2x2.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float2x2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float2x3.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float2x3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float2x4.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float2x4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float3x2.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float3x2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float3x3.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float3x3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float3x4.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float3x4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float4x2.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float4x2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float4x3.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float4x3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float4x4.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_float4x4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_projection.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_projection.inl
+	deleted:    3rdparty/glm/glm/ext/matrix_relational.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_relational.inl
+	deleted:    3rdparty/glm/glm/ext/matrix_transform.hpp
+	deleted:    3rdparty/glm/glm/ext/matrix_transform.inl
+	deleted:    3rdparty/glm/glm/ext/quaternion_common.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_common.inl
+	deleted:    3rdparty/glm/glm/ext/quaternion_common_simd.inl
+	deleted:    3rdparty/glm/glm/ext/quaternion_double.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_double_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_exponential.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_exponential.inl
+	deleted:    3rdparty/glm/glm/ext/quaternion_float.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_float_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_geometric.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_geometric.inl
+	deleted:    3rdparty/glm/glm/ext/quaternion_relational.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_relational.inl
+	deleted:    3rdparty/glm/glm/ext/quaternion_transform.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_transform.inl
+	deleted:    3rdparty/glm/glm/ext/quaternion_trigonometric.hpp
+	deleted:    3rdparty/glm/glm/ext/quaternion_trigonometric.inl
+	deleted:    3rdparty/glm/glm/ext/scalar_common.hpp
+	deleted:    3rdparty/glm/glm/ext/scalar_common.inl
+	deleted:    3rdparty/glm/glm/ext/scalar_constants.hpp
+	deleted:    3rdparty/glm/glm/ext/scalar_constants.inl
+	deleted:    3rdparty/glm/glm/ext/scalar_int_sized.hpp
+	deleted:    3rdparty/glm/glm/ext/scalar_integer.hpp
+	deleted:    3rdparty/glm/glm/ext/scalar_integer.inl
+	deleted:    3rdparty/glm/glm/ext/scalar_relational.hpp
+	deleted:    3rdparty/glm/glm/ext/scalar_relational.inl
+	deleted:    3rdparty/glm/glm/ext/scalar_uint_sized.hpp
+	deleted:    3rdparty/glm/glm/ext/scalar_ulp.hpp
+	deleted:    3rdparty/glm/glm/ext/scalar_ulp.inl
+	deleted:    3rdparty/glm/glm/ext/vector_bool1.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_bool1_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_bool2.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_bool2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_bool3.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_bool3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_bool4.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_bool4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_common.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_common.inl
+	deleted:    3rdparty/glm/glm/ext/vector_double1.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_double1_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_double2.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_double2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_double3.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_double3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_double4.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_double4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float1.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float1_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float2.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float3.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float4.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_float4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int1.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int1_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int2.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int3.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int4.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_int4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_integer.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_integer.inl
+	deleted:    3rdparty/glm/glm/ext/vector_relational.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_relational.inl
+	deleted:    3rdparty/glm/glm/ext/vector_uint1.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_uint1_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_uint2.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_uint2_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_uint3.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_uint3_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_uint4.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_uint4_precision.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_ulp.hpp
+	deleted:    3rdparty/glm/glm/ext/vector_ulp.inl
+	deleted:    3rdparty/glm/glm/fwd.hpp
+	deleted:    3rdparty/glm/glm/geometric.hpp
+	deleted:    3rdparty/glm/glm/glm.hpp
+	deleted:    3rdparty/glm/glm/gtc/bitfield.hpp
+	deleted:    3rdparty/glm/glm/gtc/bitfield.inl
+	deleted:    3rdparty/glm/glm/gtc/color_space.hpp
+	deleted:    3rdparty/glm/glm/gtc/color_space.inl
+	deleted:    3rdparty/glm/glm/gtc/constants.hpp
+	deleted:    3rdparty/glm/glm/gtc/constants.inl
+	deleted:    3rdparty/glm/glm/gtc/epsilon.hpp
+	deleted:    3rdparty/glm/glm/gtc/epsilon.inl
+	deleted:    3rdparty/glm/glm/gtc/integer.hpp
+	deleted:    3rdparty/glm/glm/gtc/integer.inl
+	deleted:    3rdparty/glm/glm/gtc/matrix_access.hpp
+	deleted:    3rdparty/glm/glm/gtc/matrix_access.inl
+	deleted:    3rdparty/glm/glm/gtc/matrix_integer.hpp
+	deleted:    3rdparty/glm/glm/gtc/matrix_inverse.hpp
+	deleted:    3rdparty/glm/glm/gtc/matrix_inverse.inl
+	deleted:    3rdparty/glm/glm/gtc/matrix_transform.hpp
+	deleted:    3rdparty/glm/glm/gtc/matrix_transform.inl
+	deleted:    3rdparty/glm/glm/gtc/noise.hpp
+	deleted:    3rdparty/glm/glm/gtc/noise.inl
+	deleted:    3rdparty/glm/glm/gtc/packing.hpp
+	deleted:    3rdparty/glm/glm/gtc/packing.inl
+	deleted:    3rdparty/glm/glm/gtc/quaternion.hpp
+	deleted:    3rdparty/glm/glm/gtc/quaternion.inl
+	deleted:    3rdparty/glm/glm/gtc/random.hpp
+	deleted:    3rdparty/glm/glm/gtc/random.inl
+	deleted:    3rdparty/glm/glm/gtc/reciprocal.hpp
+	deleted:    3rdparty/glm/glm/gtc/reciprocal.inl
+	deleted:    3rdparty/glm/glm/gtc/round.hpp
+	deleted:    3rdparty/glm/glm/gtc/round.inl
+	deleted:    3rdparty/glm/glm/gtc/type_aligned.hpp
+	deleted:    3rdparty/glm/glm/gtc/type_precision.hpp
+	deleted:    3rdparty/glm/glm/gtc/type_precision.inl
+	deleted:    3rdparty/glm/glm/gtc/type_ptr.hpp
+	deleted:    3rdparty/glm/glm/gtc/type_ptr.inl
+	deleted:    3rdparty/glm/glm/gtc/ulp.hpp
+	deleted:    3rdparty/glm/glm/gtc/ulp.inl
+	deleted:    3rdparty/glm/glm/gtc/vec1.hpp
+	deleted:    3rdparty/glm/glm/gtx/associated_min_max.hpp
+	deleted:    3rdparty/glm/glm/gtx/associated_min_max.inl
+	deleted:    3rdparty/glm/glm/gtx/bit.hpp
+	deleted:    3rdparty/glm/glm/gtx/bit.inl
+	deleted:    3rdparty/glm/glm/gtx/closest_point.hpp
+	deleted:    3rdparty/glm/glm/gtx/closest_point.inl
+	deleted:    3rdparty/glm/glm/gtx/color_encoding.hpp
+	deleted:    3rdparty/glm/glm/gtx/color_encoding.inl
+	deleted:    3rdparty/glm/glm/gtx/color_space.hpp
+	deleted:    3rdparty/glm/glm/gtx/color_space.inl
+	deleted:    3rdparty/glm/glm/gtx/color_space_YCoCg.hpp
+	deleted:    3rdparty/glm/glm/gtx/color_space_YCoCg.inl
+	deleted:    3rdparty/glm/glm/gtx/common.hpp
+	deleted:    3rdparty/glm/glm/gtx/common.inl
+	deleted:    3rdparty/glm/glm/gtx/compatibility.hpp
+	deleted:    3rdparty/glm/glm/gtx/compatibility.inl
+	deleted:    3rdparty/glm/glm/gtx/component_wise.hpp
+	deleted:    3rdparty/glm/glm/gtx/component_wise.inl
+	deleted:    3rdparty/glm/glm/gtx/dual_quaternion.hpp
+	deleted:    3rdparty/glm/glm/gtx/dual_quaternion.inl
+	deleted:    3rdparty/glm/glm/gtx/easing.hpp
+	deleted:    3rdparty/glm/glm/gtx/easing.inl
+	deleted:    3rdparty/glm/glm/gtx/euler_angles.hpp
+	deleted:    3rdparty/glm/glm/gtx/euler_angles.inl
+	deleted:    3rdparty/glm/glm/gtx/extend.hpp
+	deleted:    3rdparty/glm/glm/gtx/extend.inl
+	deleted:    3rdparty/glm/glm/gtx/extended_min_max.hpp
+	deleted:    3rdparty/glm/glm/gtx/extended_min_max.inl
+	deleted:    3rdparty/glm/glm/gtx/exterior_product.hpp
+	deleted:    3rdparty/glm/glm/gtx/exterior_product.inl
+	deleted:    3rdparty/glm/glm/gtx/fast_exponential.hpp
+	deleted:    3rdparty/glm/glm/gtx/fast_exponential.inl
+	deleted:    3rdparty/glm/glm/gtx/fast_square_root.hpp
+	deleted:    3rdparty/glm/glm/gtx/fast_square_root.inl
+	deleted:    3rdparty/glm/glm/gtx/fast_trigonometry.hpp
+	deleted:    3rdparty/glm/glm/gtx/fast_trigonometry.inl
+	deleted:    3rdparty/glm/glm/gtx/float_notmalize.inl
+	deleted:    3rdparty/glm/glm/gtx/functions.hpp
+	deleted:    3rdparty/glm/glm/gtx/functions.inl
+	deleted:    3rdparty/glm/glm/gtx/gradient_paint.hpp
+	deleted:    3rdparty/glm/glm/gtx/gradient_paint.inl
+	deleted:    3rdparty/glm/glm/gtx/handed_coordinate_space.hpp
+	deleted:    3rdparty/glm/glm/gtx/handed_coordinate_space.inl
+	deleted:    3rdparty/glm/glm/gtx/hash.hpp
+	deleted:    3rdparty/glm/glm/gtx/hash.inl
+	deleted:    3rdparty/glm/glm/gtx/integer.hpp
+	deleted:    3rdparty/glm/glm/gtx/integer.inl
+	deleted:    3rdparty/glm/glm/gtx/intersect.hpp
+	deleted:    3rdparty/glm/glm/gtx/intersect.inl
+	deleted:    3rdparty/glm/glm/gtx/io.hpp
+	deleted:    3rdparty/glm/glm/gtx/io.inl
+	deleted:    3rdparty/glm/glm/gtx/log_base.hpp
+	deleted:    3rdparty/glm/glm/gtx/log_base.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_cross_product.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_cross_product.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_decompose.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_decompose.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_factorisation.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_factorisation.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_interpolation.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_interpolation.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_major_storage.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_major_storage.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_operation.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_operation.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_query.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_query.inl
+	deleted:    3rdparty/glm/glm/gtx/matrix_transform_2d.hpp
+	deleted:    3rdparty/glm/glm/gtx/matrix_transform_2d.inl
+	deleted:    3rdparty/glm/glm/gtx/mixed_product.hpp
+	deleted:    3rdparty/glm/glm/gtx/mixed_product.inl
+	deleted:    3rdparty/glm/glm/gtx/norm.hpp
+	deleted:    3rdparty/glm/glm/gtx/norm.inl
+	deleted:    3rdparty/glm/glm/gtx/normal.hpp
+	deleted:    3rdparty/glm/glm/gtx/normal.inl
+	deleted:    3rdparty/glm/glm/gtx/normalize_dot.hpp
+	deleted:    3rdparty/glm/glm/gtx/normalize_dot.inl
+	deleted:    3rdparty/glm/glm/gtx/number_precision.hpp
+	deleted:    3rdparty/glm/glm/gtx/number_precision.inl
+	deleted:    3rdparty/glm/glm/gtx/optimum_pow.hpp
+	deleted:    3rdparty/glm/glm/gtx/optimum_pow.inl
+	deleted:    3rdparty/glm/glm/gtx/orthonormalize.hpp
+	deleted:    3rdparty/glm/glm/gtx/orthonormalize.inl
+	deleted:    3rdparty/glm/glm/gtx/perpendicular.hpp
+	deleted:    3rdparty/glm/glm/gtx/perpendicular.inl
+	deleted:    3rdparty/glm/glm/gtx/polar_coordinates.hpp
+	deleted:    3rdparty/glm/glm/gtx/polar_coordinates.inl
+	deleted:    3rdparty/glm/glm/gtx/projection.hpp
+	deleted:    3rdparty/glm/glm/gtx/projection.inl
+	deleted:    3rdparty/glm/glm/gtx/quaternion.hpp
+	deleted:    3rdparty/glm/glm/gtx/quaternion.inl
+	deleted:    3rdparty/glm/glm/gtx/range.hpp
+	deleted:    3rdparty/glm/glm/gtx/raw_data.hpp
+	deleted:    3rdparty/glm/glm/gtx/raw_data.inl
+	deleted:    3rdparty/glm/glm/gtx/rotate_normalized_axis.hpp
+	deleted:    3rdparty/glm/glm/gtx/rotate_normalized_axis.inl
+	deleted:    3rdparty/glm/glm/gtx/rotate_vector.hpp
+	deleted:    3rdparty/glm/glm/gtx/rotate_vector.inl
+	deleted:    3rdparty/glm/glm/gtx/scalar_multiplication.hpp
+	deleted:    3rdparty/glm/glm/gtx/scalar_relational.hpp
+	deleted:    3rdparty/glm/glm/gtx/scalar_relational.inl
+	deleted:    3rdparty/glm/glm/gtx/spline.hpp
+	deleted:    3rdparty/glm/glm/gtx/spline.inl
+	deleted:    3rdparty/glm/glm/gtx/std_based_type.hpp
+	deleted:    3rdparty/glm/glm/gtx/std_based_type.inl
+	deleted:    3rdparty/glm/glm/gtx/string_cast.hpp
+	deleted:    3rdparty/glm/glm/gtx/string_cast.inl
+	deleted:    3rdparty/glm/glm/gtx/texture.hpp
+	deleted:    3rdparty/glm/glm/gtx/texture.inl
+	deleted:    3rdparty/glm/glm/gtx/transform.hpp
+	deleted:    3rdparty/glm/glm/gtx/transform.inl
+	deleted:    3rdparty/glm/glm/gtx/transform2.hpp
+	deleted:    3rdparty/glm/glm/gtx/transform2.inl
+	deleted:    3rdparty/glm/glm/gtx/type_aligned.hpp
+	deleted:    3rdparty/glm/glm/gtx/type_aligned.inl
+	deleted:    3rdparty/glm/glm/gtx/type_trait.hpp
+	deleted:    3rdparty/glm/glm/gtx/type_trait.inl
+	deleted:    3rdparty/glm/glm/gtx/vec_swizzle.hpp
+	deleted:    3rdparty/glm/glm/gtx/vector_angle.hpp
+	deleted:    3rdparty/glm/glm/gtx/vector_angle.inl
+	deleted:    3rdparty/glm/glm/gtx/vector_query.hpp
+	deleted:    3rdparty/glm/glm/gtx/vector_query.inl
+	deleted:    3rdparty/glm/glm/gtx/wrap.hpp
+	deleted:    3rdparty/glm/glm/gtx/wrap.inl
+	deleted:    3rdparty/glm/glm/integer.hpp
+	deleted:    3rdparty/glm/glm/mat2x2.hpp
+	deleted:    3rdparty/glm/glm/mat2x3.hpp
+	deleted:    3rdparty/glm/glm/mat2x4.hpp
+	deleted:    3rdparty/glm/glm/mat3x2.hpp
+	deleted:    3rdparty/glm/glm/mat3x3.hpp
+	deleted:    3rdparty/glm/glm/mat3x4.hpp
+	deleted:    3rdparty/glm/glm/mat4x2.hpp
+	deleted:    3rdparty/glm/glm/mat4x3.hpp
+	deleted:    3rdparty/glm/glm/mat4x4.hpp
+	deleted:    3rdparty/glm/glm/matrix.hpp
+	deleted:    3rdparty/glm/glm/packing.hpp
+	deleted:    3rdparty/glm/glm/simd/common.h
+	deleted:    3rdparty/glm/glm/simd/exponential.h
+	deleted:    3rdparty/glm/glm/simd/geometric.h
+	deleted:    3rdparty/glm/glm/simd/integer.h
+	deleted:    3rdparty/glm/glm/simd/matrix.h
+	deleted:    3rdparty/glm/glm/simd/neon.h
+	deleted:    3rdparty/glm/glm/simd/packing.h
+	deleted:    3rdparty/glm/glm/simd/platform.h
+	deleted:    3rdparty/glm/glm/simd/trigonometric.h
+	deleted:    3rdparty/glm/glm/simd/vector_relational.h
+	deleted:    3rdparty/glm/glm/trigonometric.hpp
+	deleted:    3rdparty/glm/glm/vec2.hpp
+	deleted:    3rdparty/glm/glm/vec3.hpp
+	deleted:    3rdparty/glm/glm/vec4.hpp
+	deleted:    3rdparty/glm/glm/vector_relational.hpp
+	deleted:    3rdparty/glm/manual.md
+	deleted:    3rdparty/glm/readme.md
+	new file:   3rdparty/pybind11-2.6.2/.appveyor.yml
+	new file:   3rdparty/pybind11-2.6.2/.clang-format
+	new file:   3rdparty/pybind11-2.6.2/.clang-tidy
+	new file:   3rdparty/pybind11-2.6.2/.cmake-format.yaml
+	new file:   3rdparty/pybind11-2.6.2/.github/CONTRIBUTING.md
+	new file:   3rdparty/pybind11-2.6.2/.github/ISSUE_TEMPLATE/bug-report.md
+	new file:   3rdparty/pybind11-2.6.2/.github/ISSUE_TEMPLATE/config.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/ISSUE_TEMPLATE/feature-request.md
+	new file:   3rdparty/pybind11-2.6.2/.github/ISSUE_TEMPLATE/question.md
+	new file:   3rdparty/pybind11-2.6.2/.github/dependabot.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/labeler.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/labeler_merged.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/pull_request_template.md
+	new file:   3rdparty/pybind11-2.6.2/.github/workflows/ci.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/workflows/configure.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/workflows/format.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/workflows/labeler.yml
+	new file:   3rdparty/pybind11-2.6.2/.github/workflows/pip.yml
+	new file:   3rdparty/pybind11-2.6.2/.gitignore
+	new file:   3rdparty/pybind11-2.6.2/.pre-commit-config.yaml
+	new file:   3rdparty/pybind11-2.6.2/.readthedocs.yml
+	new file:   3rdparty/pybind11-2.6.2/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/LICENSE
+	new file:   3rdparty/pybind11-2.6.2/MANIFEST.in
+	new file:   3rdparty/pybind11-2.6.2/README.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/Doxyfile
+	new file:   3rdparty/pybind11-2.6.2/docs/_static/theme_overrides.css
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/chrono.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/custom.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/eigen.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/functional.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/index.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/overview.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/stl.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/cast/strings.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/classes.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/embedding.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/exceptions.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/functions.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/misc.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/pycpp/index.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/pycpp/numpy.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/pycpp/object.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/pycpp/utilities.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/advanced/smart_ptrs.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/basics.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/benchmark.py
+	new file:   3rdparty/pybind11-2.6.2/docs/benchmark.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/changelog.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/classes.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/cmake/index.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/compiling.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/conf.py
+	new file:   3rdparty/pybind11-2.6.2/docs/faq.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/index.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/installing.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/limitations.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/pybind11-logo.png
+	new file:   3rdparty/pybind11-2.6.2/docs/pybind11_vs_boost_python1.png
+	new file:   3rdparty/pybind11-2.6.2/docs/pybind11_vs_boost_python1.svg
+	new file:   3rdparty/pybind11-2.6.2/docs/pybind11_vs_boost_python2.png
+	new file:   3rdparty/pybind11-2.6.2/docs/pybind11_vs_boost_python2.svg
+	new file:   3rdparty/pybind11-2.6.2/docs/reference.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/release.rst
+	new file:   3rdparty/pybind11-2.6.2/docs/requirements.txt
+	new file:   3rdparty/pybind11-2.6.2/docs/upgrade.rst
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/attr.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/buffer_info.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/cast.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/chrono.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/common.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/complex.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/detail/class.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/detail/common.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/detail/descr.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/detail/init.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/detail/internals.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/detail/typeid.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/eigen.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/embed.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/eval.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/functional.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/iostream.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/numpy.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/operators.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/options.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/pybind11.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/pytypes.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/stl.h
+	new file:   3rdparty/pybind11-2.6.2/include/pybind11/stl_bind.h
+	new file:   3rdparty/pybind11-2.6.2/pybind11/__init__.py
+	new file:   3rdparty/pybind11-2.6.2/pybind11/__main__.py
+	new file:   3rdparty/pybind11-2.6.2/pybind11/_version.py
+	new file:   3rdparty/pybind11-2.6.2/pybind11/_version.pyi
+	new file:   3rdparty/pybind11-2.6.2/pybind11/commands.py
+	renamed:    3rdparty/glm/glm/detail/func_trigonometric_simd.inl -> 3rdparty/pybind11-2.6.2/pybind11/py.typed
+	new file:   3rdparty/pybind11-2.6.2/pybind11/setup_helpers.py
+	new file:   3rdparty/pybind11-2.6.2/pybind11/setup_helpers.pyi
+	new file:   3rdparty/pybind11-2.6.2/pyproject.toml
+	new file:   3rdparty/pybind11-2.6.2/setup.cfg
+	new file:   3rdparty/pybind11-2.6.2/setup.py
+	new file:   3rdparty/pybind11-2.6.2/tests/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/conftest.py
+	new file:   3rdparty/pybind11-2.6.2/tests/constructor_stats.h
+	new file:   3rdparty/pybind11-2.6.2/tests/cross_module_gil_utils.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/env.py
+	renamed:    3rdparty/glm/glm/gtc/quaternion_simd.inl -> 3rdparty/pybind11-2.6.2/tests/extra_python_package/pytest.ini
+	new file:   3rdparty/pybind11-2.6.2/tests/extra_python_package/test_files.py
+	new file:   3rdparty/pybind11-2.6.2/tests/extra_setuptools/pytest.ini
+	new file:   3rdparty/pybind11-2.6.2/tests/extra_setuptools/test_setuphelper.py
+	new file:   3rdparty/pybind11-2.6.2/tests/local_bindings.h
+	new file:   3rdparty/pybind11-2.6.2/tests/object.h
+	new file:   3rdparty/pybind11-2.6.2/tests/pybind11_cross_module_tests.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/pybind11_tests.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/pybind11_tests.h
+	new file:   3rdparty/pybind11-2.6.2/tests/pytest.ini
+	new file:   3rdparty/pybind11-2.6.2/tests/requirements.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_async.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_async.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_buffers.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_buffers.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_builtin_casters.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_builtin_casters.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_call_policies.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_call_policies.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_callbacks.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_callbacks.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_chrono.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_chrono.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_class.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_class.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/embed.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/installed_embed/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/installed_function/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/installed_target/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/main.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/subdirectory_embed/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/subdirectory_function/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/subdirectory_target/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_cmake_build/test.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_constants_and_functions.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_constants_and_functions.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_copy_move.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_copy_move.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_custom_type_casters.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_custom_type_casters.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_docstring_options.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_docstring_options.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_eigen.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_eigen.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_embed/CMakeLists.txt
+	new file:   3rdparty/pybind11-2.6.2/tests/test_embed/catch.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_embed/external_module.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_embed/test_interpreter.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_embed/test_interpreter.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_enum.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_enum.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_eval.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_eval.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_eval_call.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_exceptions.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_exceptions.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_factory_constructors.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_factory_constructors.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_gil_scoped.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_gil_scoped.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_iostream.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_iostream.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_kwargs_and_defaults.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_kwargs_and_defaults.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_local_bindings.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_local_bindings.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_methods_and_attributes.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_methods_and_attributes.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_modules.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_modules.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_multiple_inheritance.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_multiple_inheritance.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_numpy_array.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_numpy_array.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_numpy_dtypes.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_numpy_dtypes.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_numpy_vectorize.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_numpy_vectorize.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_opaque_types.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_opaque_types.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_operator_overloading.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_operator_overloading.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_pickling.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_pickling.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_pytypes.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_pytypes.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_sequences_and_iterators.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_sequences_and_iterators.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_smart_ptr.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_smart_ptr.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_stl.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_stl.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_stl_binders.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_stl_binders.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_tagbased_polymorphic.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_tagbased_polymorphic.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_union.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_union.py
+	new file:   3rdparty/pybind11-2.6.2/tests/test_virtual_functions.cpp
+	new file:   3rdparty/pybind11-2.6.2/tests/test_virtual_functions.py
+	new file:   3rdparty/pybind11-2.6.2/tests/valgrind-numpy-scipy.supp
+	new file:   3rdparty/pybind11-2.6.2/tests/valgrind-python.supp
+	new file:   3rdparty/pybind11-2.6.2/tools/FindCatch.cmake
+	new file:   3rdparty/pybind11-2.6.2/tools/FindEigen3.cmake
+	new file:   3rdparty/pybind11-2.6.2/tools/FindPythonLibsNew.cmake
+	new file:   3rdparty/pybind11-2.6.2/tools/check-style.sh
+	new file:   3rdparty/pybind11-2.6.2/tools/cmake_uninstall.cmake.in
+	new file:   3rdparty/pybind11-2.6.2/tools/libsize.py
+	new file:   3rdparty/pybind11-2.6.2/tools/make_changelog.py
+	new file:   3rdparty/pybind11-2.6.2/tools/pybind11Common.cmake
+	new file:   3rdparty/pybind11-2.6.2/tools/pybind11Config.cmake.in
+	new file:   3rdparty/pybind11-2.6.2/tools/pybind11NewTools.cmake
+	new file:   3rdparty/pybind11-2.6.2/tools/pybind11Tools.cmake
+	new file:   3rdparty/pybind11-2.6.2/tools/pyproject.toml
+	new file:   3rdparty/pybind11-2.6.2/tools/setup_global.py.in
+	new file:   3rdparty/pybind11-2.6.2/tools/setup_main.py.in
+	deleted:    3rdparty/static_math/.gitignore
+	deleted:    3rdparty/static_math/.travis.yml
+	deleted:    3rdparty/static_math/CMakeLists.txt
+	deleted:    3rdparty/static_math/README.md
+	deleted:    3rdparty/static_math/include/static_math/bit.h
+	deleted:    3rdparty/static_math/include/static_math/cmath.h
+	deleted:    3rdparty/static_math/include/static_math/complex.h
+	deleted:    3rdparty/static_math/include/static_math/constant.h
+	deleted:    3rdparty/static_math/include/static_math/constants.h
+	deleted:    3rdparty/static_math/include/static_math/detail/bit.inl
+	deleted:    3rdparty/static_math/include/static_math/detail/can_fit.h
+	deleted:    3rdparty/static_math/include/static_math/detail/cmath.inl
+	deleted:    3rdparty/static_math/include/static_math/detail/complex.inl
+	deleted:    3rdparty/static_math/include/static_math/detail/constant.inl
+	deleted:    3rdparty/static_math/include/static_math/detail/core.h
+	deleted:    3rdparty/static_math/include/static_math/detail/formula.inl
+	deleted:    3rdparty/static_math/include/static_math/detail/logical_traits.h
+	deleted:    3rdparty/static_math/include/static_math/detail/parse.h
+	deleted:    3rdparty/static_math/include/static_math/detail/rational.inl
+	deleted:    3rdparty/static_math/include/static_math/detail/trigonometry.inl
+	deleted:    3rdparty/static_math/include/static_math/detail/vector.inl
+	deleted:    3rdparty/static_math/include/static_math/formula.h
+	deleted:    3rdparty/static_math/include/static_math/rational.h
+	deleted:    3rdparty/static_math/include/static_math/static_math.h
+	deleted:    3rdparty/static_math/include/static_math/trigonometry.h
+	deleted:    3rdparty/static_math/include/static_math/vector.h
+	deleted:    3rdparty/static_math/license.txt
+	deleted:    3rdparty/static_math/test/bit.cpp
+	deleted:    3rdparty/static_math/test/cmath.cpp
+	deleted:    3rdparty/static_math/test/complex.cpp
+	deleted:    3rdparty/static_math/test/constant.cpp
+	deleted:    3rdparty/static_math/test/formula.cpp
+	deleted:    3rdparty/static_math/test/rational.cpp
+	deleted:    3rdparty/static_math/test/trigonometry.cpp
+	deleted:    3rdparty/static_math/test/vector.cpp
+	new file:   3rdparty/stb/LICENSE
+	new file:   3rdparty/zlib/CMakeLists.txt
+	new file:   3rdparty/zlib/ChangeLog
+	new file:   3rdparty/zlib/FAQ
+	new file:   3rdparty/zlib/INDEX
+	new file:   3rdparty/zlib/Makefile
+	new file:   3rdparty/zlib/Makefile.in
+	new file:   3rdparty/zlib/README
+	new file:   3rdparty/zlib/adler32.c
+	new file:   3rdparty/zlib/amiga/Makefile.pup
+	new file:   3rdparty/zlib/amiga/Makefile.sas
+	new file:   3rdparty/zlib/compress.c
+	new file:   3rdparty/zlib/configure
+	new file:   3rdparty/zlib/contrib/README.contrib
+	new file:   3rdparty/zlib/contrib/ada/buffer_demo.adb
+	new file:   3rdparty/zlib/contrib/ada/mtest.adb
+	new file:   3rdparty/zlib/contrib/ada/read.adb
+	new file:   3rdparty/zlib/contrib/ada/readme.txt
+	new file:   3rdparty/zlib/contrib/ada/test.adb
+	new file:   3rdparty/zlib/contrib/ada/zlib-streams.adb
+	new file:   3rdparty/zlib/contrib/ada/zlib-streams.ads
+	new file:   3rdparty/zlib/contrib/ada/zlib-thin.adb
+	new file:   3rdparty/zlib/contrib/ada/zlib-thin.ads
+	new file:   3rdparty/zlib/contrib/ada/zlib.adb
+	new file:   3rdparty/zlib/contrib/ada/zlib.ads
+	new file:   3rdparty/zlib/contrib/ada/zlib.gpr
+	new file:   3rdparty/zlib/contrib/amd64/amd64-match.S
+	new file:   3rdparty/zlib/contrib/asm686/README.686
+	new file:   3rdparty/zlib/contrib/asm686/match.S
+	new file:   3rdparty/zlib/contrib/blast/Makefile
+	new file:   3rdparty/zlib/contrib/blast/README
+	new file:   3rdparty/zlib/contrib/blast/blast.c
+	new file:   3rdparty/zlib/contrib/blast/blast.h
+	new file:   3rdparty/zlib/contrib/blast/test.pk
+	new file:   3rdparty/zlib/contrib/blast/test.txt
+	new file:   3rdparty/zlib/contrib/delphi/ZLib.pas
+	new file:   3rdparty/zlib/contrib/delphi/ZLibConst.pas
+	new file:   3rdparty/zlib/contrib/delphi/readme.txt
+	new file:   3rdparty/zlib/contrib/delphi/zlibd32.mak
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib.build
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib.chm
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib.sln
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/AssemblyInfo.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/ChecksumImpl.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/CircularBuffer.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/CodecBase.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/Deflater.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/DotZLib.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/DotZLib.csproj
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/GZipStream.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/Inflater.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/DotZLib/UnitTests.cs
+	new file:   3rdparty/zlib/contrib/dotzlib/LICENSE_1_0.txt
+	new file:   3rdparty/zlib/contrib/dotzlib/readme.txt
+	new file:   3rdparty/zlib/contrib/gcc_gvmat64/gvmat64.S
+	new file:   3rdparty/zlib/contrib/infback9/README
+	new file:   3rdparty/zlib/contrib/infback9/infback9.c
+	new file:   3rdparty/zlib/contrib/infback9/infback9.h
+	new file:   3rdparty/zlib/contrib/infback9/inffix9.h
+	new file:   3rdparty/zlib/contrib/infback9/inflate9.h
+	new file:   3rdparty/zlib/contrib/infback9/inftree9.c
+	new file:   3rdparty/zlib/contrib/infback9/inftree9.h
+	new file:   3rdparty/zlib/contrib/inflate86/inffas86.c
+	new file:   3rdparty/zlib/contrib/inflate86/inffast.S
+	new file:   3rdparty/zlib/contrib/iostream/test.cpp
+	new file:   3rdparty/zlib/contrib/iostream/zfstream.cpp
+	new file:   3rdparty/zlib/contrib/iostream/zfstream.h
+	new file:   3rdparty/zlib/contrib/iostream2/zstream.h
+	new file:   3rdparty/zlib/contrib/iostream2/zstream_test.cpp
+	new file:   3rdparty/zlib/contrib/iostream3/README
+	new file:   3rdparty/zlib/contrib/iostream3/TODO
+	new file:   3rdparty/zlib/contrib/iostream3/test.cc
+	new file:   3rdparty/zlib/contrib/iostream3/zfstream.cc
+	new file:   3rdparty/zlib/contrib/iostream3/zfstream.h
+	new file:   3rdparty/zlib/contrib/masmx64/bld_ml64.bat
+	new file:   3rdparty/zlib/contrib/masmx64/gvmat64.asm
+	new file:   3rdparty/zlib/contrib/masmx64/inffas8664.c
+	new file:   3rdparty/zlib/contrib/masmx64/inffasx64.asm
+	new file:   3rdparty/zlib/contrib/masmx64/readme.txt
+	new file:   3rdparty/zlib/contrib/masmx86/bld_ml32.bat
+	new file:   3rdparty/zlib/contrib/masmx86/inffas32.asm
+	new file:   3rdparty/zlib/contrib/masmx86/match686.asm
+	new file:   3rdparty/zlib/contrib/masmx86/readme.txt
+	new file:   3rdparty/zlib/contrib/minizip/Makefile
+	new file:   3rdparty/zlib/contrib/minizip/Makefile.am
+	new file:   3rdparty/zlib/contrib/minizip/MiniZip64_Changes.txt
+	new file:   3rdparty/zlib/contrib/minizip/MiniZip64_info.txt
+	new file:   3rdparty/zlib/contrib/minizip/configure.ac
+	new file:   3rdparty/zlib/contrib/minizip/crypt.h
+	new file:   3rdparty/zlib/contrib/minizip/ioapi.c
+	new file:   3rdparty/zlib/contrib/minizip/ioapi.h
+	new file:   3rdparty/zlib/contrib/minizip/iowin32.c
+	new file:   3rdparty/zlib/contrib/minizip/iowin32.h
+	new file:   3rdparty/zlib/contrib/minizip/make_vms.com
+	new file:   3rdparty/zlib/contrib/minizip/miniunz.c
+	new file:   3rdparty/zlib/contrib/minizip/miniunzip.1
+	new file:   3rdparty/zlib/contrib/minizip/minizip.1
+	new file:   3rdparty/zlib/contrib/minizip/minizip.c
+	new file:   3rdparty/zlib/contrib/minizip/minizip.pc.in
+	new file:   3rdparty/zlib/contrib/minizip/mztools.c
+	new file:   3rdparty/zlib/contrib/minizip/mztools.h
+	new file:   3rdparty/zlib/contrib/minizip/unzip.c
+	new file:   3rdparty/zlib/contrib/minizip/unzip.h
+	new file:   3rdparty/zlib/contrib/minizip/zip.c
+	new file:   3rdparty/zlib/contrib/minizip/zip.h
+	new file:   3rdparty/zlib/contrib/pascal/example.pas
+	new file:   3rdparty/zlib/contrib/pascal/readme.txt
+	new file:   3rdparty/zlib/contrib/pascal/zlibd32.mak
+	new file:   3rdparty/zlib/contrib/pascal/zlibpas.pas
+	new file:   3rdparty/zlib/contrib/puff/Makefile
+	new file:   3rdparty/zlib/contrib/puff/README
+	new file:   3rdparty/zlib/contrib/puff/puff.c
+	new file:   3rdparty/zlib/contrib/puff/puff.h
+	new file:   3rdparty/zlib/contrib/puff/pufftest.c
+	new file:   3rdparty/zlib/contrib/puff/zeros.raw
+	new file:   3rdparty/zlib/contrib/testzlib/testzlib.c
+	new file:   3rdparty/zlib/contrib/testzlib/testzlib.txt
+	new file:   3rdparty/zlib/contrib/untgz/Makefile
+	new file:   3rdparty/zlib/contrib/untgz/Makefile.msc
+	new file:   3rdparty/zlib/contrib/untgz/untgz.c
+	new file:   3rdparty/zlib/contrib/vstudio/readme.txt
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/miniunz.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/miniunz.vcxproj.filters
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/minizip.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/minizip.vcxproj.filters
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/testzlib.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/testzlib.vcxproj.filters
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/testzlibdll.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/testzlibdll.vcxproj.filters
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/zlib.rc
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/zlibstat.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/zlibstat.vcxproj.filters
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/zlibvc.def
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/zlibvc.sln
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/zlibvc.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc10/zlibvc.vcxproj.filters
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/miniunz.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/minizip.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/testzlib.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/testzlibdll.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/zlib.rc
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/zlibstat.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/zlibvc.def
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/zlibvc.sln
+	new file:   3rdparty/zlib/contrib/vstudio/vc11/zlibvc.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/miniunz.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/minizip.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/testzlib.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/testzlibdll.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/zlib.rc
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/zlibstat.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/zlibvc.def
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/zlibvc.sln
+	new file:   3rdparty/zlib/contrib/vstudio/vc12/zlibvc.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/miniunz.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/minizip.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/testzlib.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/testzlibdll.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/zlib.rc
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/zlibstat.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/zlibvc.def
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/zlibvc.sln
+	new file:   3rdparty/zlib/contrib/vstudio/vc14/zlibvc.vcxproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/miniunz.vcproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/minizip.vcproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/testzlib.vcproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/testzlibdll.vcproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/zlib.rc
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/zlibstat.vcproj
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/zlibvc.def
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/zlibvc.sln
+	new file:   3rdparty/zlib/contrib/vstudio/vc9/zlibvc.vcproj
+	new file:   3rdparty/zlib/crc32.c
+	new file:   3rdparty/zlib/crc32.h
+	new file:   3rdparty/zlib/deflate.c
+	new file:   3rdparty/zlib/deflate.h
+	new file:   3rdparty/zlib/doc/algorithm.txt
+	new file:   3rdparty/zlib/doc/rfc1950.txt
+	new file:   3rdparty/zlib/doc/rfc1951.txt
+	new file:   3rdparty/zlib/doc/rfc1952.txt
+	new file:   3rdparty/zlib/doc/txtvsbin.txt
+	new file:   3rdparty/zlib/examples/README.examples
+	new file:   3rdparty/zlib/examples/enough.c
+	new file:   3rdparty/zlib/examples/fitblk.c
+	new file:   3rdparty/zlib/examples/gun.c
+	new file:   3rdparty/zlib/examples/gzappend.c
+	new file:   3rdparty/zlib/examples/gzjoin.c
+	new file:   3rdparty/zlib/examples/gzlog.c
+	new file:   3rdparty/zlib/examples/gzlog.h
+	new file:   3rdparty/zlib/examples/zlib_how.html
+	new file:   3rdparty/zlib/examples/zpipe.c
+	new file:   3rdparty/zlib/examples/zran.c
+	new file:   3rdparty/zlib/gzclose.c
+	new file:   3rdparty/zlib/gzguts.h
+	new file:   3rdparty/zlib/gzlib.c
+	new file:   3rdparty/zlib/gzread.c
+	new file:   3rdparty/zlib/gzwrite.c
+	new file:   3rdparty/zlib/infback.c
+	new file:   3rdparty/zlib/inffast.c
+	new file:   3rdparty/zlib/inffast.h
+	new file:   3rdparty/zlib/inffixed.h
+	new file:   3rdparty/zlib/inflate.c
+	new file:   3rdparty/zlib/inflate.h
+	new file:   3rdparty/zlib/inftrees.c
+	new file:   3rdparty/zlib/inftrees.h
+	new file:   3rdparty/zlib/make_vms.com
+	new file:   3rdparty/zlib/msdos/Makefile.bor
+	new file:   3rdparty/zlib/msdos/Makefile.dj2
+	new file:   3rdparty/zlib/msdos/Makefile.emx
+	new file:   3rdparty/zlib/msdos/Makefile.msc
+	new file:   3rdparty/zlib/msdos/Makefile.tc
+	new file:   3rdparty/zlib/nintendods/Makefile
+	new file:   3rdparty/zlib/nintendods/README
+	new file:   3rdparty/zlib/old/Makefile.emx
+	new file:   3rdparty/zlib/old/Makefile.riscos
+	new file:   3rdparty/zlib/old/README
+	new file:   3rdparty/zlib/old/descrip.mms
+	new file:   3rdparty/zlib/old/os2/Makefile.os2
+	new file:   3rdparty/zlib/old/os2/zlib.def
+	new file:   3rdparty/zlib/old/visual-basic.txt
+	new file:   3rdparty/zlib/os400/README400
+	new file:   3rdparty/zlib/os400/bndsrc
+	new file:   3rdparty/zlib/os400/make.sh
+	new file:   3rdparty/zlib/os400/zlib.inc
+	new file:   3rdparty/zlib/qnx/package.qpg
+	new file:   3rdparty/zlib/test/example.c
+	new file:   3rdparty/zlib/test/infcover.c
+	new file:   3rdparty/zlib/test/minigzip.c
+	new file:   3rdparty/zlib/treebuild.xml
+	new file:   3rdparty/zlib/trees.c
+	new file:   3rdparty/zlib/trees.h
+	new file:   3rdparty/zlib/uncompr.c
+	new file:   3rdparty/zlib/watcom/watcom_f.mak
+	new file:   3rdparty/zlib/watcom/watcom_l.mak
+	new file:   3rdparty/zlib/win32/DLL_FAQ.txt
+	new file:   3rdparty/zlib/win32/Makefile.bor
+	new file:   3rdparty/zlib/win32/Makefile.gcc
+	new file:   3rdparty/zlib/win32/Makefile.msc
+	new file:   3rdparty/zlib/win32/README-WIN32.txt
+	new file:   3rdparty/zlib/win32/VisualC.txt
+	new file:   3rdparty/zlib/win32/zlib.def
+	new file:   3rdparty/zlib/win32/zlib1.rc
+	new file:   3rdparty/zlib/zconf.h.cmakein
+	new file:   3rdparty/zlib/zconf.h.in
+	new file:   3rdparty/zlib/zconf.h.included
+	new file:   3rdparty/zlib/zlib.3
+	new file:   3rdparty/zlib/zlib.3.pdf
+	new file:   3rdparty/zlib/zlib.h
+	new file:   3rdparty/zlib/zlib.map
+	new file:   3rdparty/zlib/zlib.pc.cmakein
+	new file:   3rdparty/zlib/zlib.pc.in
+	new file:   3rdparty/zlib/zlib2ansi
+	new file:   3rdparty/zlib/zutil.c
+	new file:   3rdparty/zlib/zutil.h
+	new file:   AUTHORS
+	modified:   CMakeLists.txt
+	deleted:    CodingRules.md
+	modified:   LICENSE.md
+	modified:   README.md
+	new file:   ULIS_CLUF.txt
+	new file:   ULIS_EULA.txt
+	new file:   VERSION
+	new file:   binding/Python/CMakeLists.txt
+	new file:   binding/Python/interactive/res/samples/blackHole.py
+	new file:   binding/Python/interactive/res/samples/hairSpriteSheet.py
+	new file:   binding/Python/interactive/res/samples/loading.py
+	new file:   binding/Python/interactive/res/samples/particles.py
+	new file:   binding/Python/interactive/res/samples/transform.py
+	new file:   binding/Python/interactive/res/style/style.qss
+	new file:   binding/Python/interactive/src/Caption.cpp
+	new file:   binding/Python/interactive/src/Caption.h
+	new file:   binding/Python/interactive/src/Code.cpp
+	new file:   binding/Python/interactive/src/Code.h
+	new file:   binding/Python/interactive/src/Console.cpp
+	new file:   binding/Python/interactive/src/Console.h
+	new file:   binding/Python/interactive/src/HardwareMetrics.cpp
+	new file:   binding/Python/interactive/src/HardwareMetrics.h
+	new file:   binding/Python/interactive/src/MainWindow.cpp
+	new file:   binding/Python/interactive/src/MainWindow.h
+	new file:   binding/Python/interactive/src/Rivet/ASyncJS_PPFramework.h
+	new file:   binding/Python/interactive/src/Rivet/CustomButton.cpp
+	new file:   binding/Python/interactive/src/Rivet/CustomButton.h
+	new file:   binding/Python/interactive/src/Rivet/CustomCaption.cpp
+	new file:   binding/Python/interactive/src/Rivet/CustomCaption.h
+	new file:   binding/Python/interactive/src/Rivet/CustomMainWindow.cpp
+	new file:   binding/Python/interactive/src/Rivet/CustomMainWindow.h
+	new file:   binding/Python/interactive/src/Rivet/CustomMainWindowBase.cpp
+	new file:   binding/Python/interactive/src/Rivet/CustomMainWindowBase.h
+	new file:   binding/Python/interactive/src/Rivet/DefaultCaption.cpp
+	new file:   binding/Python/interactive/src/Rivet/DefaultCaption.h
+	new file:   binding/Python/interactive/src/Rivet/DockingCallbackLibrary.cpp
+	new file:   binding/Python/interactive/src/Rivet/DockingCallbackLibrary.h
+	new file:   binding/Python/interactive/src/Rivet/DockingManager.cpp
+	new file:   binding/Python/interactive/src/Rivet/DockingManager.h
+	new file:   binding/Python/interactive/src/Rivet/ForwardNC.h
+	new file:   binding/Python/interactive/src/Rivet/FramelessTranslucentBlurBehindWindow.cpp
+	new file:   binding/Python/interactive/src/Rivet/FramelessTranslucentBlurBehindWindow.h
+	new file:   binding/Python/interactive/src/Rivet/GeometryUtils.cpp
+	new file:   binding/Python/interactive/src/Rivet/GeometryUtils.h
+	new file:   binding/Python/interactive/src/Rivet/Tab.cpp
+	new file:   binding/Python/interactive/src/Rivet/Tab.h
+	new file:   binding/Python/interactive/src/Rivet/TabArea.cpp
+	new file:   binding/Python/interactive/src/Rivet/TabArea.h
+	new file:   binding/Python/interactive/src/Rivet/WinExtras.cpp
+	new file:   binding/Python/interactive/src/Rivet/WinExtras.h
+	new file:   binding/Python/interactive/src/SlateQtAdapter.h
+	new file:   binding/Python/interactive/src/SyntaxHighlight.cpp
+	new file:   binding/Python/interactive/src/SyntaxHighlight.h
+	new file:   binding/Python/interactive/src/ULISLoader.cpp
+	new file:   binding/Python/interactive/src/ULISLoader.h
+	new file:   binding/Python/interactive/src/Viewport.cpp
+	new file:   binding/Python/interactive/src/Viewport.h
+	new file:   binding/Python/interactive/src/main.cpp
+	new file:   binding/Python/module/demo.py
+	new file:   binding/Python/module/documentation/.gitignore
+	new file:   binding/Python/module/documentation/Makefile
+	new file:   binding/Python/module/documentation/conf.py
+	new file:   binding/Python/module/documentation/index.rst
+	new file:   binding/Python/module/documentation/make.bat
+	new file:   binding/Python/module/documentation/pyULIS4.rst
+	new file:   binding/Python/module/src/pyULIS.cpp
+	new file:   binding/UnrealEngine4/README.md
+	new file:   binding/UnrealEngine4/ULIS.Build.cs
+	new file:   binding/WebAssembly/CMakeLists.txt
+	renamed:    bindings/wasm/3rdparty/imgui/imconfig.h -> binding/WebAssembly/applications/3rdparty/imgui/imconfig.h
+	renamed:    bindings/wasm/3rdparty/imgui/imgui.cpp -> binding/WebAssembly/applications/3rdparty/imgui/imgui.cpp
+	renamed:    bindings/wasm/3rdparty/imgui/imgui.h -> binding/WebAssembly/applications/3rdparty/imgui/imgui.h
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_demo.cpp -> binding/WebAssembly/applications/3rdparty/imgui/imgui_demo.cpp
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_draw.cpp -> binding/WebAssembly/applications/3rdparty/imgui/imgui_draw.cpp
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_impl_opengl3.cpp -> binding/WebAssembly/applications/3rdparty/imgui/imgui_impl_opengl3.cpp
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_impl_opengl3.h -> binding/WebAssembly/applications/3rdparty/imgui/imgui_impl_opengl3.h
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_impl_sdl.cpp -> binding/WebAssembly/applications/3rdparty/imgui/imgui_impl_sdl.cpp
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_impl_sdl.h -> binding/WebAssembly/applications/3rdparty/imgui/imgui_impl_sdl.h
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_internal.h -> binding/WebAssembly/applications/3rdparty/imgui/imgui_internal.h
+	renamed:    bindings/wasm/3rdparty/imgui/imgui_widgets.cpp -> binding/WebAssembly/applications/3rdparty/imgui/imgui_widgets.cpp
+	renamed:    bindings/wasm/3rdparty/imgui/imstb_rectpack.h -> binding/WebAssembly/applications/3rdparty/imgui/imstb_rectpack.h
+	renamed:    bindings/wasm/3rdparty/imgui/imstb_textedit.h -> binding/WebAssembly/applications/3rdparty/imgui/imstb_textedit.h
+	renamed:    bindings/wasm/3rdparty/imgui/imstb_truetype.h -> binding/WebAssembly/applications/3rdparty/imgui/imstb_truetype.h
+	new file:   binding/WebAssembly/applications/CMakeLists.txt
+	renamed:    bindings/wasm/resources/fonts/Cousine-Regular.ttf -> binding/WebAssembly/applications/resources/fonts/Cousine-Regular.ttf
+	renamed:    bindings/wasm/resources/fonts/DroidSans.ttf -> binding/WebAssembly/applications/resources/fonts/DroidSans.ttf
+	renamed:    bindings/wasm/resources/fonts/Karla-Regular.ttf -> binding/WebAssembly/applications/resources/fonts/Karla-Regular.ttf
+	renamed:    bindings/wasm/resources/fonts/ProggyClean.ttf -> binding/WebAssembly/applications/resources/fonts/ProggyClean.ttf
+	renamed:    bindings/wasm/resources/fonts/ProggyTiny.ttf -> binding/WebAssembly/applications/resources/fonts/ProggyTiny.ttf
+	renamed:    bindings/wasm/resources/fonts/Roboto-Medium.ttf -> binding/WebAssembly/applications/resources/fonts/Roboto-Medium.ttf
+	renamed:    bindings/wasm/resources/fonts/binary_to_compressed_c.cpp -> binding/WebAssembly/applications/resources/fonts/binary_to_compressed_c.cpp
+	renamed:    bindings/wasm/resources/img/airbrush160.png -> binding/WebAssembly/applications/resources/img/airbrush160.png
+	renamed:    bindings/wasm/resources/img/crayon160.png -> binding/WebAssembly/applications/resources/img/crayon160.png
+	renamed:    bindings/wasm/resources/img/normalbase160.png -> binding/WebAssembly/applications/resources/img/normalbase160.png
+	renamed:    bindings/wasm/resources/img/normalover160.png -> binding/WebAssembly/applications/resources/img/normalover160.png
+	renamed:    bindings/wasm/resources/img/paintstain160.png -> binding/WebAssembly/applications/resources/img/paintstain160.png
+	renamed:    bindings/wasm/resources/img/ulis_icon160.png -> binding/WebAssembly/applications/resources/img/ulis_icon160.png
+	renamed:    bindings/wasm/resources/img/watercolor160.png -> binding/WebAssembly/applications/resources/img/watercolor160.png
+	new file:   binding/WebAssembly/applications/wBlendDemo/CMakeLists.txt
+	new file:   binding/WebAssembly/applications/wBlendDemo/src/wBlendDemo.cpp
+	renamed:    bindings/wasm/wBlendDemo/wBlendDemo.html -> binding/WebAssembly/applications/wBlendDemo/wBlendDemo.html
+	new file:   binding/WebAssembly/applications/wFormats/CMakeLists.txt
+	new file:   binding/WebAssembly/applications/wFormats/wFormats.cpp
+	new file:   binding/WebAssembly/applications/wInfo/CMakeLists.txt
+	new file:   binding/WebAssembly/applications/wInfo/wInfo.cpp
+	new file:   binding/WebAssembly/applications/wimgui_interop/CMakeLists.txt
+	renamed:    bindings/wasm/wimgui_interop/src/wimgui_interop.cpp -> binding/WebAssembly/applications/wimgui_interop/src/wimgui_interop.cpp
+	renamed:    bindings/wasm/wimgui_interop/wimgui_interop.html -> binding/WebAssembly/applications/wimgui_interop/wimgui_interop.html
+	new file:   binding/WebAssembly/module/CMakeLists.txt
+	new file:   binding/WebAssembly/module/demo/.htaccess
+	new file:   binding/WebAssembly/module/demo/demo.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/LICENSE-details
+	new file:   binding/WebAssembly/module/demo/monaco-editor/LICENSE.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/browser-script-editor/index.html
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/async/CHANGELOG.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/async/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/async/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/async/dist/async.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/async/dist/async.min.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/async/lib/async.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/async/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/MIT-LICENSE.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/ReadMe.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/examples/normal-usage.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/examples/safe-string.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/colors.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/custom/trap.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/custom/zalgo.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/extendStringPrototype.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/maps/america.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/maps/rainbow.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/maps/random.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/maps/zebra.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/styles.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/lib/system/supports-colors.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/safe.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/screenshots/colors.png
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/tests/basic-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/tests/safe-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/colors/themes/generic-logging.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/corser/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/corser/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/corser/lib/corser.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/corser/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/CHANGELOG.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/Makefile
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/component.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/karma.conf.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/node.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/src/browser.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/src/debug.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/src/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/src/inspector-log.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/debug/src/node.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/CHANGELOG.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/CONTRIBUTING.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/CONTRIBUTORS.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/LICENSE.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/example/cli.sh
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/example/core.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/example/express.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/example/public/beep/index.html
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/example/public/hello.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/example/public/subdir/world.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/example/public/turtle.png
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/aliases.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/defaults.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/etag.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/opts.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/show-dir/icons.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/show-dir/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/show-dir/perms-to-string.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/show-dir/size-to-string.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/show-dir/sort-files.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/show-dir/styles.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/lib/ecstatic/status-handlers.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ecstatic/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/eventemitter3/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/eventemitter3/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/eventemitter3/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/eventemitter3/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/he/LICENSE-MIT.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/he/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/he/bin/he
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/he/he.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/he/man/he.1
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/he/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/lib/http-proxy.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/lib/http-proxy/common.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/lib/http-proxy/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/lib/http-proxy/passes/web-incoming.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/lib/http-proxy/passes/web-outgoing.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/lib/http-proxy/passes/ws-incoming.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-proxy/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-server/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-server/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-server/bin/http-server
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-server/lib/http-server.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/http-server/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/CHANGELOG.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/cli.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/mime.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/src/build.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/src/test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mime/types.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/example/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/readme.markdown
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/all_bool.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/bool.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/dash.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/default_bool.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/dotted.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/kv_short.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/long.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/num.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/parse_modified.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/short.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/stop_early.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/unknown.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/minimist/test/whitespace.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/bin/cmd.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/bin/usage.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/examples/pow.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/example/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/readme.markdown
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/dash.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/default_bool.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/dotted.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/long.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/parse_modified.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/short.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/node_modules/minimist/test/whitespace.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/readme.markdown
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/chmod.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/clobber.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/mkdirp.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/opts_fs.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/opts_fs_sync.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/perm.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/perm_sync.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/race.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/rel.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/return.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/return_sync.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/root.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/sync.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/umask.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/mkdirp/test/umask_sync.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/ThirdPartyNotices.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/base/worker/workerMain.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/bat/bat.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/coffee/coffee.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/cpp/cpp.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/csharp/csharp.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/csp/csp.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/css/css.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/dockerfile/dockerfile.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/fsharp/fsharp.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/go/go.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/handlebars/handlebars.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/html/html.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/ini/ini.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/java/java.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/less/less.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/lua/lua.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/markdown/markdown.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/msdax/msdax.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/mysql/mysql.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/objective-c/objective-c.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/pgsql/pgsql.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/php/php.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/postiats/postiats.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/powershell/powershell.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/pug/pug.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/python/python.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/r/r.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/razor/razor.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/redis/redis.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/redshift/redshift.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/ruby/ruby.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/rust/rust.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/sb/sb.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/scss/scss.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/solidity/solidity.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/sql/sql.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/swift/swift.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/vb/vb.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/xml/xml.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/basic-languages/yaml/yaml.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/contrib/suggest/media/String_16x.svg
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/contrib/suggest/media/String_inverse_16x.svg
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.css
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.de.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.es.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.fr.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.it.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.ja.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.ko.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.ru.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.zh-cn.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.zh-tw.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/editor/standalone/browser/quickOpen/symbol-sprite.svg
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/css/cssMode.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/css/cssWorker.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/html/htmlMode.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/html/htmlWorker.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/json/jsonMode.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/json/jsonWorker.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/typescript/lib/typescriptServices.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/typescript/tsMode.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/language/typescript/tsWorker.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/monaco-editor/min/vs/loader.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ms/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ms/license.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ms/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/ms/readme.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/opener/LICENSE.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/opener/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/opener/opener.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/opener/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/bool.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/boolean_double.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/boolean_single.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/default_hash.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/default_singles.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/divide.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/line_count.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/line_count_options.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/line_count_wrap.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/nonopt.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/reflect.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/short.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/string.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/usage-options.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/example/xup.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/example/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/readme.markdown
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/bool.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/dash.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/default_bool.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/dotted.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/long.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/num.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/parse_modified.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/short.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/node_modules/minimist/test/whitespace.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/readme.markdown
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/_.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/_/argv.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/_/bin.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/dash.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/parse_modified.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/short.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/usage.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/optimist/test/whitespace.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/portfinder/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/portfinder/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/portfinder/lib/portfinder.d.ts
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/portfinder/lib/portfinder.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/portfinder/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/CHANGELOG.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/CONTRIBUTING.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/Makefile
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/lib/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/lib/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/lib/stringify.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/lib/utils.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/test/parse.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/qs/test/stringify.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/requires-port/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/requires-port/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/requires-port/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/requires-port/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/requires-port/test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/CHANGELOG.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/after/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/simple/favicon.png
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/simple/middleware/favicon.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/simple/middleware/gzip-decode.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/simple/middleware/gzip-encode.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/simple/simple.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/simple/spdy.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/socketio/README
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/socketio/index.html
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/examples/socketio/server.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/lib/buffered-stream.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/lib/core.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/lib/http-stream.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/lib/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/lib/request-stream.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/lib/response-stream.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/lib/routing-stream.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/after-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/body-parser-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/double-write-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/ecstatic-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/fixtures/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/fixtures/static/some-file.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/header-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/helpers/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/helpers/macros.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/prop-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/simple-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/status-code-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/test/streaming-test.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/union/union.png
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/url-join/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/url-join/README.md
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/url-join/bower.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/url-join/lib/url-join.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/url-join/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/url-join/test/tests.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/LICENSE
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/README.markdown
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/example/center.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/example/meat.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/index.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/package.json
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/test/break.js
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/test/idleness.txt
+	new file:   binding/WebAssembly/module/demo/monaco-editor/node_modules/wordwrap/test/wrap.js
+	new file:   binding/WebAssembly/module/demo/style.css
+	new file:   binding/WebAssembly/module/demo/wULIS4.html
+	new file:   binding/WebAssembly/module/src/wULIS.cpp
+	deleted:    bindings/python/CMakeLists.txt
+	deleted:    bindings/python/CPython-module/PyULIS3.cpp
+	deleted:    bindings/python/CPython-module/Types/AbstractPixel.ipp
+	deleted:    bindings/python/CPython-module/Types/Block.ipp
+	deleted:    bindings/python/CPython-module/Types/PixelProxy.ipp
+	deleted:    bindings/python/CPython-module/Types/PixelValue.ipp
+	deleted:    bindings/python/CPython-module/macros.h
+	deleted:    bindings/python/PyULIS3/Formats.py
+	deleted:    bindings/python/PyULIS3/Types.py
+	deleted:    bindings/python/PyULIS3/__init__.py
+	deleted:    bindings/wasm/CMakeLists.txt
+	deleted:    bindings/wasm/wBlendDemo/CMakeLists.txt
+	deleted:    bindings/wasm/wBlendDemo/src/wBlendDemo.cpp
+	deleted:    bindings/wasm/wFormats/CMakeLists.txt
+	deleted:    bindings/wasm/wFormats/wFormats.cpp
+	deleted:    bindings/wasm/wimgui_interop/CMakeLists.txt
+	modified:   documentation/.gitignore
+	modified:   documentation/Doxyfile
+	modified:   documentation/Layoutfile.xml
+	new file:   documentation/README.md
+	modified:   documentation/build_documentation.bat
+	deleted:    documentation/custom_style.css
+	new file:   documentation/fixed_svgpan.js
+	new file:   documentation/image/doc.png
+	new file:   documentation/image/folderclosed.png
+	new file:   documentation/image/folderopen.png
+	new file:   documentation/image/graph_bg.png
+	new file:   documentation/manual/AnatomyOfAFeature.md
+	new file:   documentation/manual/Architecture.md
+	new file:   documentation/manual/AsynchronousModelAndDispatchGuidelines.md
+	new file:   documentation/manual/Bibliography.md
+	new file:   documentation/manual/Bindings.md
+	new file:   documentation/manual/BuildAndInstallStepByStep.md
+	new file:   documentation/manual/BuildFromSource.md
+	new file:   documentation/manual/CodingRules.md
+	new file:   documentation/manual/Dependencies.md
+	new file:   documentation/manual/DocumentationGuidelines.md
+	new file:   documentation/manual/Formats.md
+	new file:   documentation/manual/GitWorkflow.md
+	new file:   documentation/manual/INDEX.md
+	new file:   documentation/manual/LegalLicense.md
+	new file:   documentation/manual/OperatorOverloading.md
+	new file:   documentation/manual/Others.md
+	new file:   documentation/manual/SparseRasterImage.md
+	new file:   documentation/manual/Usage.md
+	new file:   documentation/manual/Versioning.md
+	new file:   documentation/manual/resource/image/async/policy.png
+	new file:   documentation/manual/resource/image/async/stalling.png
+	new file:   documentation/manual/resource/image/build_install_step/0.png
+	new file:   documentation/manual/resource/image/build_install_step/1.png
+	new file:   documentation/manual/resource/image/build_install_step/10.png
+	new file:   documentation/manual/resource/image/build_install_step/11.png
+	new file:   documentation/manual/resource/image/build_install_step/12.png
+	new file:   documentation/manual/resource/image/build_install_step/13.png
+	new file:   documentation/manual/resource/image/build_install_step/14.png
+	new file:   documentation/manual/resource/image/build_install_step/2.png
+	new file:   documentation/manual/resource/image/build_install_step/3.png
+	new file:   documentation/manual/resource/image/build_install_step/4.png
+	new file:   documentation/manual/resource/image/build_install_step/5.png
+	new file:   documentation/manual/resource/image/build_install_step/6.png
+	new file:   documentation/manual/resource/image/build_install_step/7.png
+	new file:   documentation/manual/resource/image/build_install_step/8.png
+	new file:   documentation/manual/resource/image/build_install_step/9.png
+	new file:   documentation/postprocess_doc.py
+	new file:   documentation/snippet/Math/Geometry/vectorswizzle_snippet.h
+	new file:   documentation/snippet/data/block_snippet.h
+	new file:   documentation/snippet/data/sample_snippet.h
+	new file:   documentation/snippet/snippet.h
+	new file:   documentation/style.css
+	new file:   example/All/main.cpp
+	new file:   example/AnimatedBezier/AnimatedBezier.cpp
+	new file:   example/AnimatedBezier/AnimatedBezier.h
+	new file:   example/AnimatedBezier/main.cpp
+	new file:   example/Bezier/Bezier.cpp
+	new file:   example/Blend/Blend.cpp
+	new file:   example/BlendShowcase/BlendShowcase.cpp
+	new file:   example/CMakeLists.txt
+	new file:   example/ClearFillCopy/ClearFillCopy.cpp
+	new file:   example/Context/Context.cpp
+	new file:   example/Conversion/Conversion.cpp
+	new file:   example/Convolution/Convolution.cpp
+	new file:   example/Extract/Extract.cpp
+	new file:   example/Gradient/main.cpp
+	new file:   example/InteractiveDrawing/Canvas.cpp
+	new file:   example/InteractiveDrawing/Canvas.h
+	new file:   example/InteractiveDrawing/MainWindow.cpp
+	new file:   example/InteractiveDrawing/MainWindow.h
+	new file:   example/InteractiveDrawing/ToolBar.cpp
+	new file:   example/InteractiveDrawing/ToolBar.h
+	new file:   example/InteractiveDrawing/ULISLoader.cpp
+	new file:   example/InteractiveDrawing/ULISLoader.h
+	new file:   example/InteractiveDrawing/main.cpp
+	new file:   example/LayerStack/LayerStack.cpp
+	new file:   example/LoadSaveDisk/LoadSaveDisk.cpp
+	new file:   example/MipMap/main.cpp
+	new file:   example/Noise/main.cpp
+	new file:   example/PSD/PSD.cpp
+	new file:   example/Particles/Particles.cpp
+	new file:   example/Particles/Particles.h
+	new file:   example/Particles/main.cpp
+	new file:   example/README.md
+	new file:   example/Raster/Raster.cpp
+	new file:   example/SimpleFluid/SimpleFluid.cpp
+	new file:   example/SimpleFluid/SimpleFluid.h
+	new file:   example/SimpleFluid/main.cpp
+	new file:   example/Sparse/main.cpp
+	new file:   example/Test/main.cpp
+	new file:   example/Text/Text.cpp
+	new file:   example/TextShowcase/TextShowcase.cpp
+	new file:   example/TiledBlend/TiledBlend.cpp
+	new file:   example/TiledBlock/Canvas.cpp
+	new file:   example/TiledBlock/Canvas.h
+	new file:   example/TiledBlock/ULISLoader.cpp
+	new file:   example/TiledBlock/ULISLoader.h
+	new file:   example/TiledBlock/main.cpp
+	new file:   example/Transform/Transform.cpp
+	new file:   example/Transform2/Transform2.cpp
+	deleted:    include/Base/Callbacks.h
+	deleted:    include/Base/FilePathRegistry.h
+	deleted:    include/Base/HostDeviceInfo.h
+	deleted:    include/Base/PRNG.h
+	deleted:    include/Blend/Blend.h
+	deleted:    include/Blend/Modes.h
+	deleted:    include/Clear/Clear.h
+	new file:   include/Context/Context.h
+	deleted:    include/Conv/Conv.h
+	deleted:    include/Conv/ConvBuffer.h
+	deleted:    include/Copy/Copy.h
+	new file:   include/Core/Callback.h
+	new file:   include/Core/CallbackCapable.h
+	modified:   include/Core/Core.h
+	modified:   include/Core/FDecl.h
+	new file:   include/Core/Formats.h
+	modified:   include/Core/Platform.h
+	modified:   include/Core/Types.h
+	deleted:    include/Data/Block.h
+	deleted:    include/Data/FormatInfo.h
+	deleted:    include/Data/Kernel.h
+	deleted:    include/Data/Pixel.h
+	deleted:    include/Data/Sparse/Tile.h
+	deleted:    include/Data/Sparse/TilePool.h
+	deleted:    include/Data/Sparse/TiledBlock.h
+	deleted:    include/Data/StructuringElement.h
+	deleted:    include/FX/Convolution/Convolution.h
+	deleted:    include/Fill/Fill.h
+	deleted:    include/Fill/FillPreserveAlpha.h
+	new file:   include/Font/Font.h
+	new file:   include/Font/FontEngine.h
+	new file:   include/GPU/Texture.h
+	deleted:    include/IO/Clipboard.h
+	deleted:    include/IO/Disk.h
+	new file:   include/Image/Block.h
+	new file:   include/Image/Color.h
+	new file:   include/Image/ColorSpace.h
+	new file:   include/Image/Format.h
+	new file:   include/Image/Gradient.h
+	new file:   include/Image/Kernel.h
+	new file:   include/Image/Pixel.h
+	new file:   include/Image/Sample.h
+	new file:   include/Image/Size2D.h
+	new file:   include/Image/StructuringElement.h
+	new file:   include/Layer/AnimatedLayer/AbstractAnimatedLayerDrawable.h
+	new file:   include/Layer/AnimatedLayer/AbstractAnimatedLayerDrawable.tpp
+	new file:   include/Layer/AnimatedLayer/AnimatedLayer.h
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerBuilder.h
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerFolder.h
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerFolder.tpp
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerImage.h
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerImage.tpp
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerStack.h
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerStack.tpp
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerText.h
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerText.tpp
+	new file:   include/Layer/AnimatedLayer/AnimatedLayerTypedefs.h
+	new file:   include/Layer/AnimatedLayer/Cel.h
+	new file:   include/Layer/AnimatedLayer/Cel.tpp
+	new file:   include/Layer/AnimatedLayer/Sequence.h
+	new file:   include/Layer/AnimatedLayer/Sequence.tpp
+	new file:   include/Layer/Common/LayerUtils.h
+	new file:   include/Layer/Common/RegularBlockAllocator.h
+	new file:   include/Layer/Common/RegularBlockRenderer.h
+	new file:   include/Layer/Components/AnimatedDrawable.h
+	new file:   include/Layer/Components/AnimatedDrawable.tpp
+	new file:   include/Layer/Components/BlendInfo.h
+	new file:   include/Layer/Components/Drawable.h
+	new file:   include/Layer/Components/Drawable.tpp
+	new file:   include/Layer/Components/HasBlendInfo.h
+	new file:   include/Layer/Components/HasBlock.h
+	new file:   include/Layer/Components/HasBlock.tpp
+	new file:   include/Layer/Components/HasCollapse.h
+	new file:   include/Layer/Components/HasLock.h
+	new file:   include/Layer/Components/HasName.h
+	new file:   include/Layer/Components/HasPrettyColor.h
+	new file:   include/Layer/Components/HasText.h
+	new file:   include/Layer/Components/HasTimeSettings.h
+	new file:   include/Layer/Components/HasTransform.h
+	new file:   include/Layer/Components/HasUserData.h
+	new file:   include/Layer/Components/HasVisibility.h
+	new file:   include/Layer/Components/Rasterizable.h
+	new file:   include/Layer/Components/Rasterizable.tpp
+	new file:   include/Layer/Components/Searchable.h
+	new file:   include/Layer/Components/TextInfo.h
+	new file:   include/Layer/Components/TimeSettings.h
+	new file:   include/Layer/Components/TransformInfo.h
+	new file:   include/Layer/Components/TypeIdentifiable.h
+	new file:   include/Layer/Components/UserData.h
+	new file:   include/Layer/Layer/AbstractLayerDrawable.h
+	new file:   include/Layer/Layer/AbstractLayerDrawable.tpp
+	new file:   include/Layer/Layer/Layer.h
+	new file:   include/Layer/Layer/LayerBuilder.h
+	new file:   include/Layer/Layer/LayerFolder.h
+	new file:   include/Layer/Layer/LayerFolder.tpp
+	new file:   include/Layer/Layer/LayerImage.h
+	new file:   include/Layer/Layer/LayerImage.tpp
+	new file:   include/Layer/Layer/LayerStack.h
+	new file:   include/Layer/Layer/LayerStack.tpp
+	new file:   include/Layer/Layer/LayerText.h
+	new file:   include/Layer/Layer/LayerText.tpp
+	new file:   include/Layer/Layer/LayerTypedefs.h
+	new file:   include/Math/Geometry/Matrix.h
+	new file:   include/Math/Geometry/Matrix2.h
+	new file:   include/Math/Geometry/Matrix3.h
+	new file:   include/Math/Geometry/Matrix4.h
+	new file:   include/Math/Geometry/MatrixFunc.h
+	new file:   include/Math/Geometry/MatrixN.h
+	new file:   include/Math/Geometry/Morton.h
+	new file:   include/Math/Geometry/Rectangle.h
+	new file:   include/Math/Geometry/Vector.h
+	new file:   include/Math/Geometry/Vector2.h
+	new file:   include/Math/Geometry/Vector3.h
+	new file:   include/Math/Geometry/Vector4.h
+	new file:   include/Math/Geometry/VectorFunc.h
+	new file:   include/Math/Geometry/VectorN.h
+	new file:   include/Math/Geometry/VectorSwizzle.h
+	new file:   include/Math/Interpolation/Bezier.h
+	new file:   include/Math/Interpolation/CatmullRom.h
+	new file:   include/Math/Interpolation/Spline.h
+	new file:   include/Math/Math.h
+	new file:   include/Math/ShapeGeneration/Arc.h
+	new file:   include/Math/ShapeGeneration/Circle.h
+	new file:   include/Math/ShapeGeneration/Ellipse.h
+	new file:   include/Math/ShapeGeneration/Line.h
+	new file:   include/Math/ShapeGeneration/Polygon.h
+	new file:   include/Math/ShapeGeneration/QuadraticBezier.h
+	new file:   include/Math/ShapeGeneration/Rectangle.h
+	new file:   include/Math/ShapeGeneration/RotatedEllipse.h
+	deleted:    include/Maths/Bezier.h
+	deleted:    include/Maths/CatmullRom.h
+	deleted:    include/Maths/Geometry.h
+	deleted:    include/Maths/Maths.h
+	deleted:    include/Maths/Transform2D.h
+	new file:   include/Memory/Array.h
+	new file:   include/Memory/ContainerAlgorithms.h
+	new file:   include/Memory/FixedAllocArena.h
+	new file:   include/Memory/FixedAllocMemoryPool.h
+	new file:   include/Memory/ForwardList.h
+	new file:   include/Memory/LimitedArray.h
+	new file:   include/Memory/Memory.h
+	new file:   include/Memory/MemoryPoolPolicy.h
+	new file:   include/Memory/Queue.h
+	new file:   include/Memory/ShrinkableAllocArena.h
+	new file:   include/Memory/ShrinkableAllocMemoryPool.h
+	new file:   include/Memory/Tree.h
+	new file:   include/Memory/Units.h
+	deleted:    include/Misc/Extract.h
+	deleted:    include/Misc/Filter.h
+	deleted:    include/Misc/GammaCompress.h
+	deleted:    include/Misc/Premult.h
+	deleted:    include/Misc/Sanitize.h
+	deleted:    include/Misc/SummedAreaTable.h
+	deleted:    include/Misc/Swap.h
+	deleted:    include/Misc/Trim.h
+	deleted:    include/Mix/Mix.h
+	deleted:    include/Raster/Draw.h
+	deleted:    include/Raster/Sparse/DrawSparse.h
+	new file:   include/Scheduling/CommandQueue.h
+	new file:   include/Scheduling/Event.h
+	new file:   include/Scheduling/SchedulePolicy.h
+	new file:   include/Sparse/LinearQuadtree.h
+	new file:   include/Sparse/MemoryDriver.h
+	new file:   include/Sparse/Tile.h
+	new file:   include/Sparse/TilePool.h
+	new file:   include/Sparse/TiledBlock.h
+	new file:   include/Sparse/UncompressedMemoryPool.h
+	new file:   include/String/CRC32.h
+	new file:   include/String/String.h
+	new file:   include/String/Utils.h
+	new file:   include/String/WString.h
+	new file:   include/System/CPUInfo/CPUInfo.h
+	new file:   include/System/FilePathRegistry.h
+	new file:   include/System/LibInfo.h
+	new file:   include/System/MemoryInfo/MemoryInfo.h
+	new file:   include/System/PathInfo/PathInfo.h
+	new file:   include/System/ThreadPool/ThreadPool.h
+	deleted:    include/Text/Font.h
+	deleted:    include/Text/FontEngine.h
+	deleted:    include/Text/FontRegistry.h
+	deleted:    include/Text/Text.h
+	deleted:    include/Thread/ThreadInterface.h
+	deleted:    include/Transform/Methods.h
+	deleted:    include/Transform/Transform.h
+	new file:   include/ULIS
+	new file:   include/ULIS.h
+	deleted:    include/ULIS3
+	deleted:    include/ULIS3.h
+	new file:   meta/git/workflow.png
+	new file:   meta/image/logo/big.png
+	new file:   meta/image/logo/documentation.png
+	new file:   meta/image/logo/github.png
+	new file:   meta/image/logo/icon.ico
+	new file:   meta/image/logo/vector.svg
+	new file:   meta/image/sample/All.png
+	renamed:    samples/Benchmark.png -> meta/image/sample/Benchmark.png
+	new file:   meta/image/sample/BezierDeform.png
+	renamed:    samples/BlendNormals.png -> meta/image/sample/BlendNormals.png
+	new file:   meta/image/sample/BrownianNoise.png
+	new file:   meta/image/sample/Gradient.png
+	new file:   meta/image/sample/Interactive.png
+	new file:   meta/image/sample/MipMap.png
+	new file:   meta/image/sample/Raster.png
+	renamed:    samples/RasterText.png -> meta/image/sample/RasterText.png
+	new file:   meta/image/sample/Test.png
+	new file:   meta/image/sample/Text.png
+	renamed:    samples/TiledBlock.png -> meta/image/sample/TiledBlock.png
+	new file:   meta/image/sample/Transforms.png
+	new file:   meta/image/sample/Unicode.png
+	new file:   meta/image/sample/VoronoiNoise.png
+	new file:   meta/legal/ULIS_CLUF.txt
+	new file:   meta/legal/ULIS_EULA.txt
+	new file:   meta/legal/archives/ULIS_CLUF_20200918.txt
+	new file:   meta/legal/archives/ULIS_EULA_20200918.txt
+	deleted:    samples/AnimatedBezier/AnimatedBezier.cpp
+	deleted:    samples/AnimatedBezier/AnimatedBezier.h
+	deleted:    samples/AnimatedBezier/CMakeLists.txt
+	deleted:    samples/AnimatedBezier/main.cpp
+	deleted:    samples/Bezier/Bezier.cpp
+	deleted:    samples/Bezier/CMakeLists.txt
+	deleted:    samples/BezierDeform.png
+	deleted:    samples/Blend/Blend.cpp
+	deleted:    samples/Blend/CMakeLists.txt
+	deleted:    samples/BlendShowcase/BlendShowcase.cpp
+	deleted:    samples/BlendShowcase/CMakeLists.txt
+	deleted:    samples/CMakeLists.txt
+	deleted:    samples/ClearFillCopy/CMakeLists.txt
+	deleted:    samples/ClearFillCopy/ClearFillCopy.cpp
+	deleted:    samples/Conversion/CMakeLists.txt
+	deleted:    samples/Conversion/Conversion.cpp
+	deleted:    samples/Extract/CMakeLists.txt
+	deleted:    samples/Extract/Extract.cpp
+	deleted:    samples/Kernel/CMakeLists.txt
+	deleted:    samples/Kernel/Kernel.cpp
+	deleted:    samples/LoadSaveClipboard/CMakeLists.txt
+	deleted:    samples/LoadSaveClipboard/LoadSaveClipboard.cpp
+	deleted:    samples/LoadSaveDisk/CMakeLists.txt
+	deleted:    samples/LoadSaveDisk/LoadSaveDisk.cpp
+	deleted:    samples/Particles/CMakeLists.txt
+	deleted:    samples/Particles/Particles.cpp
+	deleted:    samples/Particles/Particles.h
+	deleted:    samples/Particles/main.cpp
+	deleted:    samples/Pixels/CMakeLists.txt
+	deleted:    samples/Pixels/Pixels.cpp
+	deleted:    samples/README.md
+	deleted:    samples/Raster/CMakeLists.txt
+	deleted:    samples/Raster/Raster.cpp
+	deleted:    samples/SimpleFluid/CMakeLists.txt
+	deleted:    samples/SimpleFluid/SimpleFluid.cpp
+	deleted:    samples/SimpleFluid/SimpleFluid.h
+	deleted:    samples/SimpleFluid/main.cpp
+	deleted:    samples/Splash.png
+	deleted:    samples/SummedAreaTable/CMakeLists.txt
+	deleted:    samples/SummedAreaTable/SummedAreaTable.cpp
+	deleted:    samples/Text/CMakeLists.txt
+	deleted:    samples/Text/Text.cpp
+	deleted:    samples/TextShowcase/CMakeLists.txt
+	deleted:    samples/TextShowcase/TextShowcase.cpp
+	deleted:    samples/TiledBlend/CMakeLists.txt
+	deleted:    samples/TiledBlend/TiledBlend.cpp
+	deleted:    samples/TiledBlock/CMakeLists.txt
+	deleted:    samples/TiledBlock/Canvas.cpp
+	deleted:    samples/TiledBlock/Canvas.h
+	deleted:    samples/TiledBlock/main.cpp
+	deleted:    samples/Transform/CMakeLists.txt
+	deleted:    samples/Transform/Transform.cpp
+	deleted:    samples/Transform2/CMakeLists.txt
+	deleted:    samples/Transform2/Transform2.cpp
+	deleted:    samples/Transforms.png
+	deleted:    scripts/MacOS/Generate_Xcode.sh.Sample
+	deleted:    scripts/UnrealEngine4/README.txt
+	deleted:    scripts/UnrealEngine4/ULIS.Build.cs
+	deleted:    scripts/UnrealEngine4/ULIS3_UE4_build_redist.bat
+	deleted:    scripts/UnrealEngine4/ULIS3_UE4_build_redist.sh
+	deleted:    scripts/Windows/Gen_WIN_PY_QT_SAMPLES_MSVC2019.bat.Sample
+	deleted:    scripts/Windows/code_statistics.bat
+	deleted:    scripts/emscripten/Generate_Emscripten.bat
+	deleted:    scripts/emscripten/commands.txt
+	deleted:    source/Base/CRC32.cpp
+	deleted:    source/Base/CRC32.h
+	deleted:    source/Base/Callbacks.cpp
+	deleted:    source/Base/FilePathRegistry.cpp
+	deleted:    source/Base/HostDeviceInfo.cpp
+	deleted:    source/Base/MD5.cpp
+	deleted:    source/Base/MD5.h
+	deleted:    source/Base/PRNG.cpp
+	deleted:    source/Base/StringUtils.cpp
+	deleted:    source/Base/StringUtils.h
+	deleted:    source/Base/UUID.cpp
+	deleted:    source/Base/UUID.h
+	deleted:    source/Base/cpu_x86.cpp
+	deleted:    source/Blend/Blend.cpp
+	deleted:    source/Blend/BlendArgs.h
+	deleted:    source/Blend/BlendDispatch.ipp
+	deleted:    source/Blend/BlendHelpers.h
+	deleted:    source/Blend/Func/AlphaFuncAVX.ipp
+	deleted:    source/Blend/Func/AlphaFuncF.ipp
+	deleted:    source/Blend/Func/AlphaFuncSSEF.ipp
+	deleted:    source/Blend/Func/NonSeparableBlendFuncF.ipp
+	deleted:    source/Blend/Func/NonSeparableBlendFuncSSEF.ipp
+	deleted:    source/Blend/Func/SeparableBlendFuncAVXF.ipp
+	deleted:    source/Blend/Func/SeparableBlendFuncF.ipp
+	deleted:    source/Blend/Func/SeparableBlendFuncSSEF.ipp
+	deleted:    source/Blend/Generic/AlphaBlendMT_MEM_Generic.ipp
+	deleted:    source/Blend/Generic/BlendMT_Misc_MEM_Generic.ipp
+	deleted:    source/Blend/Generic/BlendMT_NonSeparable_MEM_Generic.ipp
+	deleted:    source/Blend/Generic/BlendMT_Separable_MEM_Generic.ipp
+	deleted:    source/Blend/Generic/TiledBlendMT_Misc_MEM_Generic.ipp
+	deleted:    source/Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.ipp
+	deleted:    source/Blend/Generic/TiledBlendMT_Separable_MEM_Generic.ipp
+	deleted:    source/Blend/RGBA8/AlphaBlendMT_AVX_RGBA8.ipp
+	deleted:    source/Blend/RGBA8/AlphaBlendMT_SSE_RGBA8.ipp
+	deleted:    source/Blend/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.ipp
+	deleted:    source/Blend/RGBA8/BlendMT_Separable_AVX_RGBA8.ipp
+	deleted:    source/Blend/RGBA8/BlendMT_Separable_SSE_RGBA8.ipp
+	deleted:    source/Blend/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.ipp
+	deleted:    source/Blend/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.ipp
+	deleted:    source/Clear/Clear.cpp
+	new file:   source/Context/Commands/Context.Analysis.cpp
+	new file:   source/Context/Commands/Context.Blend.cpp
+	new file:   source/Context/Commands/Context.Clear.cpp
+	new file:   source/Context/Commands/Context.Conv.cpp
+	new file:   source/Context/Commands/Context.Convolution.cpp
+	new file:   source/Context/Commands/Context.Copy.cpp
+	new file:   source/Context/Commands/Context.Fill.cpp
+	new file:   source/Context/Commands/Context.Gradient.cpp
+	new file:   source/Context/Commands/Context.IO.cpp
+	new file:   source/Context/Commands/Context.Layer.cpp
+	new file:   source/Context/Commands/Context.Misc.cpp
+	new file:   source/Context/Commands/Context.Noise.cpp
+	new file:   source/Context/Commands/Context.Raster.cpp
+	new file:   source/Context/Commands/Context.SAT.cpp
+	new file:   source/Context/Commands/Context.Text.cpp
+	new file:   source/Context/Commands/Context.Transform.cpp
+	new file:   source/Context/Context.cpp
+	new file:   source/Context/ContextualDispatchTable.cpp
+	new file:   source/Context/ContextualDispatchTable.h
+	deleted:    source/Conv/Conv.cpp
+	deleted:    source/Conv/ConvBuffer.cpp
+	deleted:    source/Conv/ConvDispatch.ipp
+	deleted:    source/Conv/ConvHelpers.h
+	deleted:    source/Conv/Generic/ToCMY.ipp
+	deleted:    source/Conv/Generic/ToCMYK.ipp
+	deleted:    source/Conv/Generic/ToGrey.ipp
+	deleted:    source/Conv/Generic/ToHSL.ipp
+	deleted:    source/Conv/Generic/ToHSV.ipp
+	deleted:    source/Conv/Generic/ToLab.ipp
+	deleted:    source/Conv/Generic/ToRGB.ipp
+	deleted:    source/Conv/Generic/ToXYZ.ipp
+	deleted:    source/Conv/Generic/ToYUV.ipp
+	deleted:    source/Conv/Generic/ToYxy.ipp
+	deleted:    source/Conv/srgb2linear.cpp
+	deleted:    source/Conv/srgb2linear.h
+	deleted:    source/Copy/Copy.cpp
+	new file:   source/Core/Callback.cpp
+	new file:   source/Core/Constants.h
+	deleted:    source/Data/Block.cpp
+	deleted:    source/Data/FormatInfo.cpp
+	deleted:    source/Data/Kernel.cpp
+	deleted:    source/Data/Pixel.cpp
+	deleted:    source/Data/Sparse/Chunk_Private.h
+	deleted:    source/Data/Sparse/TilePool.cpp
+	deleted:    source/Data/Sparse/TilePool_Private.h
+	deleted:    source/Data/Sparse/TilePool_Private.ipp
+	deleted:    source/Data/Sparse/TiledBlock_Private.h
+	deleted:    source/Data/Sparse/TiledBlock_Private.ipp
+	deleted:    source/Data/StructuringElement.cpp
+	deleted:    source/Dispatch/Dispatch.h
+	deleted:    source/FX/Convolution/Convolution.cpp
+	deleted:    source/FX/Convolution/KernelSSE.cpp
+	deleted:    source/FX/Convolution/KernelSSE.h
+	deleted:    source/Fill/Fill.cpp
+	deleted:    source/Fill/FillPreserveAlpha.cpp
+	new file:   source/Font/Font.cpp
+	new file:   source/Font/FontEngine.cpp
+	new file:   source/GPU/Texture.cpp
+	new file:   source/GPU/Texture_Private.cpp
+	new file:   source/GPU/Texture_Private.h
+	deleted:    source/IO/Clipboard.cpp
+	deleted:    source/IO/Clipboard_imp/Clipboard_GenericPlatform.ipp
+	deleted:    source/IO/Clipboard_imp/Clipboard_LinuxPlatform.ipp
+	deleted:    source/IO/Clipboard_imp/Clipboard_MacOSPlatform.ipp
+	deleted:    source/IO/Clipboard_imp/Clipboard_WindowsPlatform.ipp
+	deleted:    source/IO/Disk.cpp
+	new file:   source/Image/Block.cpp
+	new file:   source/Image/Color.cpp
+	new file:   source/Image/ColorSpace.cpp
+	new file:   source/Image/Format.cpp
+	new file:   source/Image/Gradient.cpp
+	new file:   source/Image/Kernel.cpp
+	new file:   source/Image/Pixel.cpp
+	new file:   source/Image/Sample.cpp
+	new file:   source/Image/Size2D.cpp
+	new file:   source/Image/StructuringElement.cpp
+	new file:   source/Kernel/OpenCL/Clear.cl
+	new file:   source/Layer/AnimatedLayer/AnimatedLayer.cpp
+	new file:   source/Layer/AnimatedLayer/Cel.cpp
+	new file:   source/Layer/Common/RegularBlockAllocator.cpp
+	new file:   source/Layer/Common/RegularBlockRenderer.cpp
+	new file:   source/Layer/Components/BlendInfo.cpp
+	new file:   source/Layer/Components/HasBlendInfo.cpp
+	new file:   source/Layer/Components/HasCollapse.cpp
+	new file:   source/Layer/Components/HasLock.cpp
+	new file:   source/Layer/Components/HasName.cpp
+	new file:   source/Layer/Components/HasPrettyColor.cpp
+	new file:   source/Layer/Components/HasText.cpp
+	new file:   source/Layer/Components/HasTimeSettings.cpp
+	new file:   source/Layer/Components/HasTransform.cpp
+	new file:   source/Layer/Components/HasUserData.cpp
+	new file:   source/Layer/Components/HasVisibility.cpp
+	new file:   source/Layer/Components/TextInfo.cpp
+	new file:   source/Layer/Components/TimeSettings.cpp
+	new file:   source/Layer/Components/TransformInfo.cpp
+	new file:   source/Layer/Components/TypeIdentifiable.cpp
+	new file:   source/Layer/Components/UserData.cpp
+	new file:   source/Layer/Layer/Layer.cpp
+	new file:   source/Math/Geometry/Morton.cpp
+	deleted:    source/Maths/Geometry.cpp
+	deleted:    source/Maths/Transform2D.cpp
+	deleted:    source/Maths/Transform2D_Private.cpp
+	deleted:    source/Maths/Transform2D_Private.h
+	new file:   source/Memory/FixedAllocArena.cpp
+	new file:   source/Memory/FixedAllocMemoryPool.cpp
+	new file:   source/Memory/Memory.cpp
+	new file:   source/Memory/MemoryPoolPolicy.cpp
+	new file:   source/Memory/ShrinkableAllocArena.cpp
+	new file:   source/Memory/ShrinkableAllocMemoryPool.cpp
+	new file:   source/Memory/Units.cpp
+	deleted:    source/Misc/Dispatch/Dispatch_PremultipliedSAT.ipp
+	deleted:    source/Misc/Dispatch/Dispatch_SAT.ipp
+	deleted:    source/Misc/Extract.cpp
+	deleted:    source/Misc/Filter.cpp
+	deleted:    source/Misc/GammaCompress.cpp
+	deleted:    source/Misc/Premult.cpp
+	deleted:    source/Misc/Sanitize.cpp
+	deleted:    source/Misc/Swap.cpp
+	deleted:    source/Misc/Trim.cpp
+	deleted:    source/Mix/Mix.cpp
+	new file:   source/Process/Analysis/AccumulativeSampling.cpp
+	new file:   source/Process/Analysis/AccumulativeSampling.h
+	new file:   source/Process/Analysis/AnalyzeSmallestVisibleRect.cpp
+	new file:   source/Process/Analysis/AnalyzeSmallestVisibleRect.h
+	new file:   source/Process/Blend/Blend.cpp
+	new file:   source/Process/Blend/Blend.h
+	new file:   source/Process/Blend/BlendArgs.h
+	new file:   source/Process/Blend/Func/AlphaFuncAVX.h
+	new file:   source/Process/Blend/Func/AlphaFuncF.h
+	new file:   source/Process/Blend/Func/AlphaFuncSSEF.h
+	new file:   source/Process/Blend/Func/NonSeparableBlendFuncF.h
+	new file:   source/Process/Blend/Func/NonSeparableBlendFuncSSEF.h
+	new file:   source/Process/Blend/Func/SeparableBlendFuncAVXF.h
+	new file:   source/Process/Blend/Func/SeparableBlendFuncF.h
+	new file:   source/Process/Blend/Func/SeparableBlendFuncSSEF.h
+	new file:   source/Process/Blend/Generic/AlphaBlendMT_MEM_Generic.h
+	new file:   source/Process/Blend/Generic/BlendMT_Misc_MEM_Generic.h
+	new file:   source/Process/Blend/Generic/BlendMT_NonSeparable_MEM_Generic.h
+	new file:   source/Process/Blend/Generic/BlendMT_Separable_MEM_Generic.h
+	new file:   source/Process/Blend/Generic/TiledBlendMT_Misc_MEM_Generic.h
+	new file:   source/Process/Blend/Generic/TiledBlendMT_NonSeparable_MEM_Generic.h
+	new file:   source/Process/Blend/Generic/TiledBlendMT_Separable_MEM_Generic.h
+	new file:   source/Process/Blend/PRNG.cpp
+	new file:   source/Process/Blend/PRNG.h
+	new file:   source/Process/Blend/RGBA8/AlphaBlendMT_AVX_RGBA8.cpp
+	new file:   source/Process/Blend/RGBA8/AlphaBlendMT_AVX_RGBA8.h
+	new file:   source/Process/Blend/RGBA8/AlphaBlendMT_SSE_RGBA8.cpp
+	new file:   source/Process/Blend/RGBA8/AlphaBlendMT_SSE_RGBA8.h
+	new file:   source/Process/Blend/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.cpp
+	new file:   source/Process/Blend/RGBA8/BlendMT_NonSeparable_SSE_RGBA8.h
+	new file:   source/Process/Blend/RGBA8/BlendMT_Separable_AVX_RGBA8.cpp
+	new file:   source/Process/Blend/RGBA8/BlendMT_Separable_AVX_RGBA8.h
+	new file:   source/Process/Blend/RGBA8/BlendMT_Separable_SSE_RGBA8.cpp
+	new file:   source/Process/Blend/RGBA8/BlendMT_Separable_SSE_RGBA8.h
+	new file:   source/Process/Blend/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.cpp
+	new file:   source/Process/Blend/RGBA8/TiledBlendMT_NonSeparable_SSE_RGBA8.h
+	new file:   source/Process/Blend/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.cpp
+	new file:   source/Process/Blend/RGBA8/TiledBlendMT_Separable_SSE_RGBA8.h
+	new file:   source/Process/Clear/Clear.cpp
+	new file:   source/Process/Clear/Clear.h
+	new file:   source/Process/Conv/Conv.cpp
+	new file:   source/Process/Conv/Conv.h
+	new file:   source/Process/Conv/Generic/ToCMY.h
+	new file:   source/Process/Conv/Generic/ToCMYK.h
+	new file:   source/Process/Conv/Generic/ToGrey.h
+	new file:   source/Process/Conv/Generic/ToHSL.h
+	new file:   source/Process/Conv/Generic/ToHSV.h
+	new file:   source/Process/Conv/Generic/ToLab.h
+	new file:   source/Process/Conv/Generic/ToRGB.h
+	new file:   source/Process/Conv/Generic/ToXYZ.h
+	new file:   source/Process/Conv/Generic/ToYUV.h
+	new file:   source/Process/Conv/Generic/ToYxy.h
+	new file:   source/Process/Conv/srgb2linear.cpp
+	new file:   source/Process/Conv/srgb2linear.h
+	new file:   source/Process/Convolution/Convolution.cpp
+	new file:   source/Process/Convolution/Convolution.h
+	new file:   source/Process/Convolution/Morpho.cpp
+	new file:   source/Process/Convolution/Morpho.h
+	new file:   source/Process/Copy/Copy.cpp
+	new file:   source/Process/Copy/Copy.h
+	new file:   source/Process/Custom/Generic_OP.cpp
+	new file:   source/Process/Custom/Generic_OP.h
+	new file:   source/Process/Custom/No_OP.cpp
+	new file:   source/Process/Custom/No_OP.h
+	new file:   source/Process/Fill/Fill.cpp
+	new file:   source/Process/Fill/Fill.h
+	new file:   source/Process/Gradient/Func/GradientFunc.h
+	new file:   source/Process/Gradient/Generic/GradientAngularMT_MEM_Generic.h
+	new file:   source/Process/Gradient/Generic/GradientDiamondMT_MEM_Generic.h
+	new file:   source/Process/Gradient/Generic/GradientLinearMT_MEM_Generic.h
+	new file:   source/Process/Gradient/Generic/GradientRadialMT_MEM_Generic.h
+	new file:   source/Process/Gradient/Generic/GradientReflectedMT_MEM_Generic.h
+	new file:   source/Process/Gradient/Gradient.cpp
+	new file:   source/Process/Gradient/Gradient.h
+	new file:   source/Process/Gradient/GradientArgs.h
+	new file:   source/Process/IO/Disk.cpp
+	new file:   source/Process/IO/Disk.h
+	new file:   source/Process/Layer/PSD.cpp
+	new file:   source/Process/Layer/PSD.h
+	new file:   source/Process/Misc/Alloc.cpp
+	new file:   source/Process/Misc/Alloc.h
+	new file:   source/Process/Misc/Extract.cpp
+	new file:   source/Process/Misc/Extract.h
+	new file:   source/Process/Misc/Filter.cpp
+	new file:   source/Process/Misc/Filter.h
+	new file:   source/Process/Misc/GammaCompress.cpp
+	new file:   source/Process/Misc/GammaCompress.h
+	new file:   source/Process/Misc/Premult.cpp
+	new file:   source/Process/Misc/Premult.h
+	new file:   source/Process/Misc/Sanitize.cpp
+	new file:   source/Process/Misc/Sanitize.h
+	new file:   source/Process/Misc/Swap.cpp
+	new file:   source/Process/Misc/Swap.h
+	new file:   source/Process/Noise/Func/NoiseFunc.h
+	new file:   source/Process/Noise/Generic/BrownianNoiseMT_MEM_Generic.h
+	new file:   source/Process/Noise/Generic/ValueNoiseMT_MEM_Generic.h
+	new file:   source/Process/Noise/Generic/VoronoiNoiseMT_MEM_Generic.h
+	new file:   source/Process/Noise/Generic/WhiteNoiseMT_MEM_Generic.h
+	new file:   source/Process/Noise/Noise.cpp
+	new file:   source/Process/Noise/Noise.h
+	new file:   source/Process/Noise/NoiseArgs.h
+	new file:   source/Process/Raster/RasterArc.cpp
+	new file:   source/Process/Raster/RasterArc.h
+	new file:   source/Process/Raster/RasterCircle.cpp
+	new file:   source/Process/Raster/RasterCircle.h
+	new file:   source/Process/Raster/RasterEllipse.cpp
+	new file:   source/Process/Raster/RasterEllipse.h
+	new file:   source/Process/Raster/RasterInvocations.cpp
+	new file:   source/Process/Raster/RasterInvocations.h
+	new file:   source/Process/Raster/RasterLine.cpp
+	new file:   source/Process/Raster/RasterLine.h
+	new file:   source/Process/Raster/RasterPolygon.cpp
+	new file:   source/Process/Raster/RasterPolygon.h
+	new file:   source/Process/Raster/RasterQuadraticBezier.cpp
+	new file:   source/Process/Raster/RasterQuadraticBezier.h
+	new file:   source/Process/Raster/RasterRectangle.cpp
+	new file:   source/Process/Raster/RasterRectangle.h
+	new file:   source/Process/Raster/RasterRotatedEllipse.cpp
+	new file:   source/Process/Raster/RasterRotatedEllipse.h
+	new file:   source/Process/Raster/RasterUtils.cpp
+	new file:   source/Process/Raster/RasterUtils.h
+	new file:   source/Process/SAT/Generic/SATMT_MEM_Generic.h
+	new file:   source/Process/SAT/RGBA8/SATMT_SSE_RGBA8.cpp
+	new file:   source/Process/SAT/RGBA8/SATMT_SSE_RGBA8.h
+	new file:   source/Process/SAT/SAT.cpp
+	new file:   source/Process/SAT/SAT.h
+	new file:   source/Process/Text/Generic/RasterTextMono_Generic.h
+	new file:   source/Process/Text/Text.cpp
+	new file:   source/Process/Text/Text.h
+	new file:   source/Process/Text/TextArgs.h
+	new file:   source/Process/Transform/Generic/ResizeMT_Area_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/ResizeMT_Bicubic_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/ResizeMT_Bilinear_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/ResizeMT_NN_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformAffineMT_Bicubic_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformAffineMT_Bilinear_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformAffineMT_NN_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformAffineTiledMT_Bicubic_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformAffineTiledMT_Bilinear_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformAffineTiledMT_NN_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformBezier_Bicubic_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformBezier_Bilinear_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformBezier_NN_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformPerspectiveMT_Bicubic_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformPerspectiveMT_Bilinear_MEM_Generic.h
+	new file:   source/Process/Transform/Generic/TransformPerspectiveMT_NN_MEM_Generic.h
+	new file:   source/Process/Transform/RGBA8/ResizeMT_Area_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/ResizeMT_Area_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/ResizeMT_Bicubic_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/ResizeMT_Bicubic_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/ResizeMT_Bilinear_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/ResizeMT_Bilinear_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/ResizeMT_NN_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/ResizeMT_NN_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformAffineMT_Bicubic_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformAffineMT_Bicubic_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformAffineMT_NN_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformAffineMT_NN_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformAffineTiledMT_Bicubic_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformAffineTiledMT_Bicubic_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformAffineTiledMT_Bilinear_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformAffineTiledMT_Bilinear_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformAffineTiledMT_NN_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformAffineTiledMT_NN_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformBezier_Bicubic_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformBezier_Bicubic_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformBezier_Bilinear_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformBezier_Bilinear_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformBezier_NN_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformBezier_NN_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformPerspectiveMT_Bicubic_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformPerspectiveMT_Bicubic_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformPerspectiveMT_Bilinear_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformPerspectiveMT_Bilinear_SSE_RGBA8.h
+	new file:   source/Process/Transform/RGBA8/TransformPerspectiveMT_NN_SSE_RGBA8.cpp
+	new file:   source/Process/Transform/RGBA8/TransformPerspectiveMT_NN_SSE_RGBA8.h
+	new file:   source/Process/Transform/Transform.cpp
+	new file:   source/Process/Transform/Transform.h
+	new file:   source/Process/Transform/TransformArgs.h
+	new file:   source/Process/Transform/TransformHelpers.h
+	deleted:    source/Raster/Draw.cpp
+	deleted:    source/Raster/Sparse/DrawSparse.cpp
+	new file:   source/Scheduling/Command.cpp
+	new file:   source/Scheduling/Command.h
+	new file:   source/Scheduling/CommandQueue.cpp
+	new file:   source/Scheduling/CommandQueue_Private.cpp
+	new file:   source/Scheduling/CommandQueue_Private.h
+	new file:   source/Scheduling/Dispatcher.h
+	new file:   source/Scheduling/DualBufferArgs.h
+	new file:   source/Scheduling/Event.cpp
+	new file:   source/Scheduling/Event_Private.cpp
+	new file:   source/Scheduling/Event_Private.h
+	new file:   source/Scheduling/InternalEvent.cpp
+	new file:   source/Scheduling/InternalEvent.h
+	new file:   source/Scheduling/Job.cpp
+	new file:   source/Scheduling/Job.h
+	new file:   source/Scheduling/RangeBasedPolicyScheduler.h
+	new file:   source/Scheduling/ScheduleArgs.cpp
+	new file:   source/Scheduling/ScheduleArgs.h
+	new file:   source/Scheduling/SchedulePolicy.cpp
+	new file:   source/Scheduling/SimpleBufferArgs.h
+	new file:   source/Scheduling/SpecializationCondition.cpp
+	new file:   source/Scheduling/SpecializationCondition.h
+	new file:   source/Sparse/LinearQuadtree.cpp
+	new file:   source/Sparse/MemoryDriver.cpp
+	new file:   source/Sparse/Tile.cpp
+	new file:   source/Sparse/TilePool.cpp
+	new file:   source/Sparse/TiledBlock.cpp
+	new file:   source/Sparse/UncompressedMemoryPool.cpp
+	new file:   source/String/CRC32.cpp
+	new file:   source/String/MD5.cpp
+	new file:   source/String/MD5.h
+	new file:   source/String/String.cpp
+	new file:   source/String/UUID.cpp
+	new file:   source/String/UUID.h
+	new file:   source/String/Utils.cpp
+	new file:   source/String/WString.cpp
+	new file:   source/System/CPUInfo/CPUInfo.cpp
+	new file:   source/System/CPUInfo/CPUInfoHelpers.h
+	new file:   source/System/CPUInfo/CPUInfo_Generic.inl
+	new file:   source/System/CPUInfo/CPUInfo_Linux.inl
+	new file:   source/System/CPUInfo/CPUInfo_Private.cpp
+	new file:   source/System/CPUInfo/CPUInfo_Private.h
+	new file:   source/System/CPUInfo/CPUInfo_Windows.inl
+	new file:   source/System/CPUInfo/CPUInfo_macOS.inl
+	new file:   source/System/FilePathRegistry.cpp
+	new file:   source/System/LibInfo.cpp
+	new file:   source/System/MemoryInfo/MemoryInfo.cpp
+	new file:   source/System/MemoryInfo/MemoryInfo_Generic.inl
+	new file:   source/System/MemoryInfo/MemoryInfo_Linux.inl
+	new file:   source/System/MemoryInfo/MemoryInfo_Windows.inl
+	new file:   source/System/MemoryInfo/MemoryInfo_macOS.inl
+	new file:   source/System/PathInfo/PathInfo.cpp
+	new file:   source/System/PathInfo/PathInfo_Generic.inl
+	new file:   source/System/PathInfo/PathInfo_Linux.inl
+	new file:   source/System/PathInfo/PathInfo_Private.cpp
+	new file:   source/System/PathInfo/PathInfo_Private.h
+	new file:   source/System/PathInfo/PathInfo_Windows.inl
+	new file:   source/System/PathInfo/PathInfo_macOS.inl
+	new file:   source/System/ThreadPool/ThreadPool.cpp
+	new file:   source/System/ThreadPool/ThreadPool_Private.cpp
+	new file:   source/System/ThreadPool/ThreadPool_Private.h
+	new file:   source/System/ThreadPool/ThreadPool_Private_Mono.h
+	new file:   source/System/ThreadPool/ThreadPool_Private_Mono.inl
+	new file:   source/System/ThreadPool/ThreadPool_Private_Multi.h
+	new file:   source/System/ThreadPool/ThreadPool_Private_Multi.inl
+	deleted:    source/Text/Dispatch/Dispatch.ipp
+	deleted:    source/Text/Dispatch/Generic/TraceTextMono_Generic.ipp
+	deleted:    source/Text/Dispatch/TextInfo.h
+	deleted:    source/Text/Font.cpp
+	deleted:    source/Text/FontEngine.cpp
+	deleted:    source/Text/FontRegistry.cpp
+	deleted:    source/Text/Text.cpp
+	deleted:    source/Thread/ThreadInterface.cpp
+	deleted:    source/Thread/ThreadPool.h
+	deleted:    source/Thread/ThreadPool_dummy.ipp
+	deleted:    source/Thread/ThreadPool_imp.ipp
+	deleted:    source/Transform/Generic/ResizeMT_Area_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/ResizeMT_Bicubic_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/ResizeMT_Bilinear_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/ResizeMT_NN_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformAffineMT_Bicubic_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformAffineMT_Bilinear_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformAffineMT_NN_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformAffineTiledMT_Bicubic_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformAffineTiledMT_Bilinear_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformAffineTiledMT_NN_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformBezier_Bicubic_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformBezier_Bilinear_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformBezier_NN_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformPerspectiveMT_Bicubic_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformPerspectiveMT_Bilinear_MEM_Generic.ipp
+	deleted:    source/Transform/Generic/TransformPerspectiveMT_NN_MEM_Generic.ipp
+	deleted:    source/Transform/RGBA8/ResizeMT_Area_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/ResizeMT_Bicubic_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/ResizeMT_Bilinear_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/ResizeMT_NN_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformAffineMT_Bicubic_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformAffineMT_Bilinear_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformAffineMT_NN_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformAffineTiledMT_Bicubic_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformAffineTiledMT_Bilinear_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformAffineTiledMT_NN_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformBezier_Bicubic_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformBezier_Bilinear_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformBezier_NN_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformPerspectiveMT_Bicubic_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformPerspectiveMT_Bilinear_SSE_RGBA8.ipp
+	deleted:    source/Transform/RGBA8/TransformPerspectiveMT_NN_SSE_RGBA8.ipp
+	deleted:    source/Transform/Transform.cpp
+	deleted:    source/Transform/TransformArgs.h
+	deleted:    source/Transform/TransformDispatch.ipp
+	deleted:    source/Transform/TransformHelpers.h
+	new file:   test/Benchmark/Benchmark.cpp
+	new file:   test/CMakeLists.txt
+	new file:   test/EnumFormats/EnumFormats.cpp
+	new file:   test/HardwareMetrics/HardwareMetrics.cpp
+	new file:   test/Info/Info.cpp
+	new file:   test/MemoryPool/MemoryPool.cpp
+	new file:   test/Profiling/Profiling.cpp
+	new file:   test/README.md
+	new file:   test/Sandbox/Sandbox.cpp
+	deleted:    tests/ASM/ASM.cpp
+	deleted:    tests/ASM/CMakeLists.txt
+	deleted:    tests/Benchmark/Benchmark.cpp
+	deleted:    tests/Benchmark/CMakeLists.txt
+	deleted:    tests/CMakeLists.txt
+	deleted:    tests/CPUDeviceInfo/CMakeLists.txt
+	deleted:    tests/CPUDeviceInfo/CPUDeviceInfo.cpp
+	deleted:    tests/Dispatch/CMakeLists.txt
+	deleted:    tests/Dispatch/Dispatch.cpp
+	deleted:    tests/Formats/CMakeLists.txt
+	deleted:    tests/Formats/Formats.cpp
+	deleted:    tests/GPUDeviceInfo/CMakeLists.txt
+	deleted:    tests/GPUDeviceInfo/GPUDeviceInfo.cpp
+	deleted:    tests/OpenCLInterop/CMakeLists.txt
+	deleted:    tests/OpenCLInterop/OpenCLInterop.cpp
+	deleted:    tests/Profiling/CMakeLists.txt
+	deleted:    tests/Profiling/Profiling.cpp
+	deleted:    tests/PyTest/test.py
+	deleted:    tests/QtInterop/CMakeLists.txt
+	deleted:    tests/QtInterop/QtInterop.cpp
+	deleted:    tests/README.md
+	deleted:    tests/SIMD/CMakeLists.txt
+	deleted:    tests/SIMD/SIMD.cpp
+	deleted:    tests/Test/CMakeLists.txt
+	deleted:    tests/Test/Test.cpp
+	new file:   tool/CMake/AddExampleModule.cmake
+	new file:   tool/CMake/AddTestModule.cmake
+	new file:   tool/CMake/ConfigureGeneration.cmake
+	new file:   tool/CMake/DetectCompiler.cmake
+	new file:   tool/CMake/DetectGit.cmake
+	new file:   tool/CMake/DetectTimestamp.cmake
+	new file:   tool/CMake/DetectVersion.cmake
+	new file:   tool/CMake/FindCurses.cmake
+	new file:   tool/CMake/FindFreetype2.cmake
+	new file:   tool/CMake/FindGlew.cmake
+	new file:   tool/CMake/FindLCMS2.cmake
+	new file:   tool/CMake/FindOpenGL.cmake
+	new file:   tool/CMake/FindQt.cmake
+	new file:   tool/CMake/FindZLib.cmake
+	new file:   tool/CMake/Install.cmake
+	new file:   tool/CMake/Main.cmake
+	new file:   tool/CMake/SetCompilerFlags.cmake
+	new file:   tool/CMake/SubdirList.cmake
+	new file:   tool/Emscripten/Generate_Emscripten.bat.Sample
+	renamed:    scripts/emscripten/runtime/htaccess-sample -> tool/Emscripten/htaccess-sample
+	renamed:    scripts/Linux/Generate_SublimeText_Project_GNU_GCC.sh.Sample -> tool/Linux/Generate_SublimeText_Project_GNU_GCC.sh.Sample
+	renamed:    scripts/Little-CMS/CMakeLists.txt -> tool/Little-CMS/CMakeLists.txt
+	renamed:    scripts/Little-CMS/README.txt -> tool/Little-CMS/README.txt
+	new file:   tool/README.md
+	renamed:    scripts/Windows/Gen_WIN_PY_QT.bat.Sample -> tool/Windows/Gen_WIN_PY_QT.bat.Sample
+	new file:   tool/Windows/Gen_WIN_PY_QT_SAMPLES_MSVC2019.bat.Sample
+	renamed:    scripts/Windows/GenerateMinGW_Makefile_GCC.bat.Sample -> tool/Windows/GenerateMinGW_Makefile_GCC.bat.Sample
+	renamed:    scripts/Windows/GenerateVisualStudio_Solution_CLANG_LLVM.bat.Sample -> tool/Windows/GenerateVisualStudio_Solution_CLANG_LLVM.bat.Sample
+	renamed:    scripts/Windows/GenerateVisualStudio_Solution_MSVC.bat.Sample -> tool/Windows/GenerateVisualStudio_Solution_MSVC.bat.Sample
+	new file:   tool/Windows/code_statistics.bat
+	new file:   tool/Windows/code_statistics.ps1
+	renamed:    scripts/Windows/diagnosis.bat -> tool/Windows/diagnosis.bat
+	renamed:    scripts/Windows/vswhere.exe -> tool/Windows/vswhere.exe
+	renamed:    scripts/Benchmark/README.md -> tool/benchmark/README.md
+	renamed:    scripts/Benchmark/run_benchmark.py -> tool/benchmark/run_benchmark.py
+	renamed:    scripts/gource/show_gource.bat -> tool/gource/show_gource.bat
+	new file:   tool/macOS/Generate_Xcode.sh.Sample
+
+Unmerged paths:
+  (use "git reset HEAD <file>..." to unstage)
+  (use "git add/rm <file>..." as appropriate to mark resolution)
+
+	deleted by them: include/Core/Format.h
+	deleted by them: include/Core/Utils.h
+	deleted by them: source/Misc/SummedAreaTable.cpp
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	out.txt
+
