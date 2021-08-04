@@ -28,10 +28,6 @@ CLASS::TAnimatedLayerImage(
     , bool iLocked
     , bool iVisible
     , const FColor& iPrettyColor
-    , uint16 iWidth
-    , uint16 iHeight
-    , eFormat iFormat
-    , const FColorSpace* iColorSpace
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
@@ -49,6 +45,7 @@ CLASS::TAnimatedLayerImage(
     , const FOnAnimatedLayerSelfChanged& iOnSelfChanged
 
     , const TOnBlockChanged< BlockType >& iOnBlockChanged
+    , const TOnSequenceChanged< BlockType >& iOnSequenceChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
     , const FOnBoolChanged& iOnPaintLockChanged
 )
@@ -99,90 +96,9 @@ CLASS::TAnimatedLayerImage(
         , iColorSpace
         , iOnBlockChanged
     )
-    , IHasBlendInfo(
-          iBlendMode
-        , iAlphaMode
-        , iOpacity
-        , iOnBlendInfoChanged
-    )
-    , IHasPaintLock(
-          iAlphaLocked
-        , iOnPaintLockChanged
-    )
-{
-    ULIS_DEBUG_PRINTF( "TAnimatedLayerImage Created" )
-}
-
-TEMPLATE
-CLASS::TAnimatedLayerImage(
-      BlockType* iBlock
-    , const FString& iName
-    , bool iLocked
-    , bool iVisible
-    , const FColor& iPrettyColor
-    , eBlendMode iBlendMode
-    , eAlphaMode iAlphaMode
-    , ufloat iOpacity
-    , bool iAlphaLocked
-    , const TRoot< IAnimatedLayer >* iParent
-
-    , const FOnNameChanged& iOnNameChanged
-    , const FOnBoolChanged& iOnLockChanged
-    , const FOnBoolChanged& iOnVisibleChanged
-    , const FOnColorChanged& iOnColorChanged
-    , const FOnUserDataAdded& iOnUserDataAdded
-    , const FOnUserDataChanged& iOnUserDataChanged
-    , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnAnimatedLayerParentChanged& iOnParentChanged
-    , const FOnAnimatedLayerSelfChanged& iOnSelfChanged
-
-    , const TOnBlockChanged< BlockType >& iOnBlockChanged
-    , const FOnBlendInfoChanged& iOnBlendInfoChanged
-    , const FOnBoolChanged& iOnPaintLockChanged
-)
-    : TNode< IAnimatedLayer >(
-          iParent
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , IAnimatedLayer(
-          iName
-        , iLocked
-        , iVisible
-        , iPrettyColor
-        , iParent
-
-        , iOnNameChanged
-        , iOnLockChanged
-        , iOnVisibleChanged
-        , iOnColorChanged
-        , iOnUserDataAdded
-        , iOnUserDataChanged
-        , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , tAbstractAnimatedLayerDrawable(
-          iName
-        , iLocked
-        , iVisible
-        , iPrettyColor
-        , iParent
-
-        , iOnNameChanged
-        , iOnLockChanged
-        , iOnVisibleChanged
-        , iOnColorChanged
-        , iOnUserDataAdded
-        , iOnUserDataChanged
-        , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , tRasterizable()
-    , tHasBlock(
-          iBlock
-        , iOnBlockChanged
+    , tHasSequence(
+          nullptr
+        , iOnSequenceChanged
     )
     , IHasBlendInfo(
           iBlendMode
@@ -213,8 +129,32 @@ CLASS::RenderImage(
 ) // override
 {
     FEvent ev;
-    /*ulError err = iCtx.Blend(
-          *Block()
+    iCtx.Clear( *Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &ev );
+    uint32 currentFrame = mSequence->FirstFrame();
+
+    if (iFrame < currentFrame)
+        return ev;
+
+    BlockType* ref = nullptr;
+
+    for (int i = 0; i < mSequence->Cels().Size(); i++)
+    {
+        //TODO: manage Faux-fixe and pre/post behaviour
+        if (currentFrame >= currentFrame + mSequence->Cels()[i].Exposure() )
+        {
+            currentFrame += mSequence->Cels()[i].Exposure();
+            continue;
+        }
+
+        ref = mSequence->Cels()[i].Block();
+        break;
+    }
+
+    if (!ref)
+        return  ev;
+
+    ulError err = iCtx.Blend(
+          *ref
         , ioBlock
         , iRect
         , iPos
@@ -226,7 +166,7 @@ CLASS::RenderImage(
         , iWaitList
         , &ev
     );
-    ULIS_ASSERT( !err, "Error during layer image blend" );*/
+    ULIS_ASSERT( !err, "Error during layer image blend" );
     return  ev;
 }
 
@@ -235,24 +175,18 @@ TEMPLATE
 typename CLASS::tSelf*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
-    /* const BlockType* ref = Block();
-    if( !ref )
-        return  nullptr;
+    uint32 firstFrame = 0;
+    const TArray<FCelInfo> celInfos = GetDrawableCelInfos(&firstFrame);
 
-    // Actual Deep Copy with Event.
-    tSelf* rasterized = new tSelf(
-          Name()
+    tSiblingImage* rasterized = new tSiblingImage(
+        Name()
         , IsLocked()
-        , IsVisible()
+        , IsVisible() 
         , PrettyColor()
-        , ref->Width()
-        , ref->Height()
-        , ref->Format()
-        , ref->ColorSpace()
         , BlendMode()
         , AlphaMode()
         , Opacity()
-        , IsPaintLocked()
+        , false
         , nullptr
 
         , FOnNameChanged::GetDelegate()
@@ -270,10 +204,32 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnBoolChanged::GetDelegate()
     );
 
-    iCtx.Copy( *Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
-    return  rasterized;*/
+    rasterized->InitFromParent(Parent());
 
-    return nullptr;
+    TSequence<BlockType>* sequence = rasterized->Sequence();
+
+    sequence->FirstFrame(firstFrame);
+    uint32 currentFrame = firstFrame;
+    for (int i = 0; i < celInfos.Size(); i++)
+    {
+        sequence->AddCel(celInfos[i]);
+        //This is not optimal, as RenderImage will run through mSequence->Cels()
+        //We should directly navigate mSequence here instead  
+        FEvent ev = RenderImage( iCtx, *( sequence->Cels()[i]->Block() ), currentFrame, FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 1, &ev, oEvent);
+        currentFrame += celInfos[i].Exposure();
+    }
+}
+
+TEMPLATE
+const TArray<FCelInfo>
+CLASS::GetDrawableCelInfos(uint32* oFirstFrame) const
+{
+    *oFirstFrame = Sequence()->FirstFrame();
+    TArray<FCelInfo> celInfos;
+    for (int i = 0; i < Sequence()->Cels().Size(); i++)
+        celInfos.PushBack(Sequence()->Cels()[i].Info());
+
+    return celInfos;
 }
 
 // TNode< IAnimatedLayer > Interface
@@ -294,6 +250,7 @@ CLASS::InitFromParent( const TRoot< IAnimatedLayer >* iParent ) // override
                 const LayerStackType* stack = dynamic_cast< const LayerStackType* >( layer );
                 ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
                 Realloc( stack->Width(), stack->Height(), stack->Format(), stack->ColorSpace() );
+                ReallocSequence( stack->Width(), stack->Height(), stack->Format(), stack->ColorSpace() );
                 break;
             }
             case tSiblingFolder::StaticTypeID(): {
@@ -303,6 +260,7 @@ CLASS::InitFromParent( const TRoot< IAnimatedLayer >* iParent ) // override
                 if( !ref )
                     break;
                 Realloc( ref->Width(), ref->Height(), ref->Format(), ref->ColorSpace() );
+                ReallocSequence( stack->Width(), stack->Height(), stack->Format(), stack->ColorSpace() );
                 break;
             }
         }

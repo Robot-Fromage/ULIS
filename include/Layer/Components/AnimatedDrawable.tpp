@@ -21,12 +21,7 @@ TAnimatedDrawable< BlockType >::TAnimatedDrawable()
 template< class BlockType >
 bool
 TAnimatedDrawable< BlockType >::IsImageCacheValid( uint32 iFrame ) const {
-    for (uint64 i = 0; i < mCacheValid.Size(); i++)
-    {
-        if (mCacheValid[i] == iFrame)
-            return true;
-    }
-    return false;
+    return mCacheValid[i] == iFrame;
 }
 
 template< class BlockType >
@@ -59,19 +54,22 @@ TAnimatedDrawable< BlockType >::RenderImage(
 template< class BlockType >
 void
 TAnimatedDrawable< BlockType >::InvalidImageCache(uint32 iFrame) {
-    for (uint64 i = mCacheValid.Size() - 1; i >= 0 ; i--)
-    {
-        if (mCacheValid[i] == iFrame)
-            mCacheValid.Erase(i, 1);
-    }
+    mCacheValid = -1;
 }
 
 template< class BlockType >
 void
 TAnimatedDrawable< BlockType >::ValidateImageCache(uint32 iFrame) {
-    mCacheValid.PushBack(iFrame);
+    mCacheValid = iFrame;
 }
 
+template< class BlockType >
+const TArray<FCelInfo>
+TAnimatedDrawable< BlockType >::GetDrawableCelInfos(uint32* oFirstFrame) const
+{
+    *oFirstFrame = 0;
+    return TArray<FCelInfo>();
+}
 
 ULIS_NAMESPACE_END
 

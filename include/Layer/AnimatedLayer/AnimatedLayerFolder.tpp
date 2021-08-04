@@ -28,10 +28,6 @@ CLASS::TAnimatedLayerFolder(
     , bool iLocked
     , bool iVisible
     , const FColor& iPrettyColor
-    , uint16 iWidth
-    , uint16 iHeight
-    , eFormat iFormat
-    , const FColorSpace* iColorSpace
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
@@ -95,97 +91,7 @@ CLASS::TAnimatedLayerFolder(
     )
     , tRasterizable()
     , tHasBlock(
-          iWidth
-        , iHeight
-        , iFormat
-        , iColorSpace
-        , iOnBlockChanged
-    )
-    , IHasBlendInfo(
-          iBlendMode
-        , iAlphaMode
-        , iOpacity
-        , iOnBlendInfoChanged
-    )
-    , IHasCollapse(
-          iCollapsed
-        , iOnCollapseChanged
-    )
-{
-    ULIS_DEBUG_PRINTF( "TAnimatedLayerFolder Created" )
-}
-
-TEMPLATE
-CLASS::TAnimatedLayerFolder(
-      BlockType* iBlock
-    , const FString& iName
-    , bool iLocked
-    , bool iVisible
-    , const FColor& iPrettyColor
-    , eBlendMode iBlendMode
-    , eAlphaMode iAlphaMode
-    , ufloat iOpacity
-    , bool iCollapsed
-    , const TRoot< IAnimatedLayer >* iParent
-
-    , const FOnNameChanged& iOnNameChanged
-    , const FOnBoolChanged& iOnLockChanged
-    , const FOnBoolChanged& iOnVisibleChanged
-    , const FOnColorChanged& iOnColorChanged
-    , const FOnUserDataAdded& iOnUserDataAdded
-    , const FOnUserDataChanged& iOnUserDataChanged
-    , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnAnimatedLayerParentChanged& iOnParentChanged
-    , const FOnAnimatedLayerSelfChanged& iOnSelfChanged
-    , const FOnAnimatedLayerNodeAdded& iOnLayerAdded
-    , const FOnAnimatedLayerNodeRemoved& iOnLayerRemoved
-
-    , const TOnBlockChanged< BlockType >& iOnBlockChanged
-    , const FOnBlendInfoChanged& iOnBlendInfoChanged
-    , const FOnBoolChanged& iOnCollapseChanged
-)
-    : TNode< IAnimatedLayer >(
-          iParent
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , IAnimatedLayer(
-          iName
-        , iLocked
-        , iVisible
-        , iPrettyColor
-        , iParent
-
-        , iOnNameChanged
-        , iOnLockChanged
-        , iOnVisibleChanged
-        , iOnColorChanged
-        , iOnUserDataAdded
-        , iOnUserDataChanged
-        , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , tAbstractAnimatedLayerDrawable(
-          iName
-        , iLocked
-        , iVisible
-        , iPrettyColor
-        , iParent
-
-        , iOnNameChanged
-        , iOnLockChanged
-        , iOnVisibleChanged
-        , iOnColorChanged
-        , iOnUserDataAdded
-        , iOnUserDataChanged
-        , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , tRasterizable()
-    , tHasBlock(
-          iBlock
+          nullptr
         , iOnBlockChanged
     )
     , IHasBlendInfo(
@@ -270,17 +176,14 @@ TEMPLATE
 typename CLASS::tSiblingImage*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
+    uint32 firstFrame = 0;
+    const TArray<FCelInfo> celInfos = GetDrawableCelInfos(&firstFrame);
 
-    // Actual Deep Copy with Event.
-    /* tSiblingImage* rasterized = new tSiblingImage(
+    tSiblingImage* rasterized = new tSiblingImage(
         Name()
         , IsLocked()
         , IsVisible() 
         , PrettyColor()
-        , ref->Width()
-        , ref->Height()
-        , ref->Format()
-        , ref->ColorSpace()
         , BlendMode()
         , AlphaMode()
         , Opacity()
@@ -302,20 +205,54 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnBoolChanged::GetDelegate()
     );
 
-    uint64 startBoundary = StartBoundary();
-    uint64 endBoundary = EndBoundary();
-    for (uint64 i = startBoundary; i <= endBoundary; i++)
+    rasterized->InitFromParent(Praent());
+
+    TSequence<BlockType>* sequence = rasterized->Sequence();
+
+    sequence->FirstFrame(firstFrame);
+    uint32 currentFrame = firstFrame;
+    for (int i = 0; i < celInfos.Size(); i++)
     {
-        FEvent ev = RenderImageCache( iCtx, i );
-        BlockType* ref = Block();
-        if( !ref )
-            return  nullptr;
+        FEvent ev = RenderImageCache( iCtx, currentFrame );
+        rasterized->AddCel(celInfos[i]);
 
-        iCtx.Copy( *Block(), *( rasterized->Block() ), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 1, &ev, oEvent );
+        if (Block())
+            iCtx.Copy( *Block(), *( sequence->Cels()[i]->Block() ), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 1, &ev, oEvent );
+        currentFrame += celInfos[i].Exposure();
     }
-    return  rasterized; */
 
-    return nullptr; //TODO:
+    return rasterized; //TODO:
+}
+
+TEMPLATE
+const TArray<FCelInfo>
+CLASS::GetDrawableCelInfos(uint32* oFirstFrame) const
+{
+    *oFirstFrame = 0;
+    TArray<FCelInfo> celInfos1;
+    TArray<FCelInfo> celInfos2;
+    TArray<FCelInfo>* resultCelInfos = &celInfos1;
+    TArray<FCelInfo>* sourceCelInfos = &celInfos2;
+
+    const int max = static_cast< int >( Children().Size() ) - 1;
+    for( int i = max; i >= 0; --i ) {
+        tAbstractAnimatedLayerDrawable* drawable = dynamic_cast< tAbstractAnimatedLayerDrawable* >( &( Children()[i]->Self() ) );
+        if( !drawable )
+            continue;
+
+        uint32 firstFrame = 0;
+        TArray<FCelInfo> drawableCelInfos = drawable->GetDrawableCelInfos(&firstFrame);
+        if (celInfos.Size() <= 0)
+            continue;
+
+        BlendCelInfos(*sourceCelInfos, *oFirstFrame, drawableCelInfos, firstFrame, resultCelInfos, oFirstFrame);
+        
+        TArray<FCelInfo>* tmp = resultCelInfos;
+        resultCelInfos = sourceCelInfos;
+        sourceCelInfos = tmp;
+    }
+
+    return celInfos;
 }
 
 // TNode< IAnimatedLayer > Interface

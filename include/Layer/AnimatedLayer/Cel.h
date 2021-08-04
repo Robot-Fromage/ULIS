@@ -96,11 +96,19 @@ public:
     FCelExtension& PostBehaviour();
     const FCelExtension& PostBehaviour() const;
 
+    void SetExposure( uint32 iValue );
+    void SetPreBehaviour(FCelExtension iValue);
+    void SetPostBehaviour(FCelExtension iValue);
+
 private:
     uint32 mExposure;
     FCelExtension mPreBehaviour;
     FCelExtension mPostBehaviour;
 };
+
+ULIS_API
+void
+BlendCelInfos(const TArray<FCelInfo>& iCelInfos1, uint32 iFirstFrame1, const TArray<FCelInfo>& iCelInfos2, uint32 iFirstFrame2, TArray<FCelInfo>* oCelInfos, uint32* oFirstFrame);
 
 /////////////////////////////////////////////////////
 /// @class      TCel
@@ -129,6 +137,14 @@ public:
 
     const Type& Data() const {
         return  *mData;
+    }
+
+    const FCelInfo& Info() const {
+        return mInfo;
+    }
+
+    FCelInfo& Info() {
+        return mInfo;
     }
 
 private:

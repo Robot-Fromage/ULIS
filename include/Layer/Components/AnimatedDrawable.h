@@ -15,11 +15,25 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/Event.h"
 #include "Scheduling/SchedulePolicy.h"
+#include "Layer/AnimatedLayer/Cel.h"
 
 ULIS_NAMESPACE_BEGIN
+
+template< class BlockType > class TAnimatedDrawable;
+template< class BlockType > using TOnFrameChangedDelegate = TLambdaCallback< void, const TAnimatedDrawable< BlockType >*, uint32 >;
+template< class BlockType > using TOnCelAddedDelegate = TLambdaCallback< void, const TAnimatedDrawable< BlockType >*, uint32 >;
+template< class BlockType > using TOnCelChangedDelegate = TLambdaCallback< void, const TAnimatedDrawable< BlockType >*, uint32 >;
+template< class BlockType > using TOnCelRemovedDelegate = TLambdaCallback< void, const TAnimatedDrawable< BlockType >*, uint32 >;
+
+template< class BlockType > using TOnFrameChanged = TCallbackCapable< TOnFrameChangedDelegate< BlockType >, 0 >;
+template< class BlockType > using TOnCelAdded = TCallbackCapable< TOnCelAddedDelegate< BlockType >, 1 >;
+template< class BlockType > using TOnCelChanged = TCallbackCapable< TOnCelChangedDelegate< BlockType >, 2 >;
+template< class BlockType > using TOnCelRemoved = TCallbackCapable< TOnCelRemovedDelegate< BlockType >, 3 >;
+
+
 /////////////////////////////////////////////////////
 /// @class      TAnimatedDrawable
-/// @brief      The TAnimatedDrawable class provides a base abstract interface to
+/// @brief      The TAnimatedDrawable class provides a template interface to
 ///             perform cached renders of contents for layers
 template< class BlockType >
 class TAnimatedDrawable
@@ -44,11 +58,13 @@ public:
     bool IsImageCacheValid(uint32 iFrame) const;
     virtual void InvalidImageCache(uint32 iFrame);
 
+    virtual const TArray<FCelInfo> GetDrawableCelInfos(uint32* oFirstFrame) const;
+
 protected:
     void ValidateImageCache(uint32 iFrame);
 
 private:
-    TArray<uint32> mCacheValid;
+    uint32 mCacheValid;
 };
 
 ULIS_NAMESPACE_END

@@ -341,6 +341,7 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
     }
 
     TRoot< ILayer >::InitFromParent( iParent );
+    
 }
 
 ULIS_NAMESPACE_END

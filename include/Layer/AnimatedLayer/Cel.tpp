@@ -10,7 +10,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Core/Core.h"
+#include "Layer/AnimatedLayer/Cel.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

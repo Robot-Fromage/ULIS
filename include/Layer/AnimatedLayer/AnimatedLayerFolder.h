@@ -60,39 +60,6 @@ public:
         , bool iLocked = false
         , bool iVisible = true
         , const FColor& iPrettyColor = FColor::Transparent
-        , uint16 iWidth = 0
-        , uint16 iHeight = 0
-        , eFormat iFormat = Format_RGBA8
-        , const FColorSpace* iColorSpace = nullptr
-        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
-        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
-        , ufloat iOpacity = 1.f
-        , bool iCollapsed = false
-        , const TRoot< IAnimatedLayer >* iParent = nullptr
-
-        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
-        , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
-        , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()
-        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
-        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
-        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
-        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnAnimatedLayerParentChanged& iOnParentChanged = FOnAnimatedLayerParentChanged()
-        , const FOnAnimatedLayerSelfChanged& iOnSelfChanged = FOnAnimatedLayerSelfChanged()
-        , const FOnAnimatedLayerNodeAdded& iOnLayerAdded = FOnAnimatedLayerNodeAdded()
-        , const FOnAnimatedLayerNodeRemoved& iOnLayerRemoved = FOnAnimatedLayerNodeRemoved()
-
-        , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
-        , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
-        , const FOnBoolChanged& iOnCollapseChanged = FOnBoolChanged()
-    );
-
-    TAnimatedLayerFolder(
-          BlockType* iBlock
-        , const FString& iName = "Untitled Folder"
-        , bool iLocked = false
-        , bool iVisible = true
-        , const FColor& iPrettyColor = FColor::Transparent
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
@@ -144,6 +111,11 @@ public:
     // TSearchable Overload Shadow Interface
     using TRoot< IAnimatedLayer >::operator[];
     using TSearchable< TRoot< IAnimatedLayer > >::operator[];
+
+    const TArray<FCelInfo> GetDrawableCelInfos(uint32* oFirstFrame) const override;
+
+protected:
+    using THasBlock::Block;
 
 private:
     // TNode< IAnimatedLayer > Interface

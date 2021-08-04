@@ -13,6 +13,7 @@
 #include "Core/Core.h"
 #include "Layer/Components/HasBlendInfo.h"
 #include "Layer/Components/HasBlock.h"
+#include "Layer/Components/HasSequence.h"
 #include "Layer/Components/Rasterizable.h"
 #include "Layer/AnimatedLayer/AbstractAnimatedLayerDrawable.h"
 
@@ -36,6 +37,7 @@ class TAnimatedLayerImage
     : public TAbstractAnimatedLayerDrawable< BlockType >
     , public TRasterizable< TAnimatedLayerImage< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType > >
     , public THasBlock< BlockType, BlockAllocatorType >
+    , public THasSequence< BlockType >
     , public IHasBlendInfo
     , public IHasPaintLock
 {
@@ -45,6 +47,7 @@ class TAnimatedLayerImage
     typedef TAbstractAnimatedLayerDrawable< BlockType > tAbstractLayerDrawable;
     typedef TRasterizable< tSelf > tRasterizable;
     typedef THasBlock< BlockType, BlockAllocatorType > tHasBlock;
+    typedef THasSequence< BlockType > tHasSequence;
 
 public:
     // DTor
@@ -56,10 +59,6 @@ public:
         , bool iLocked = false
         , bool iVisible = true
         , const FColor& iPrettyColor = FColor::Transparent
-        , uint16 iWidth = 0
-        , uint16 iHeight = 0
-        , eFormat iFormat = Format_RGBA8
-        , const FColorSpace* iColorSpace = nullptr
         , eBlendMode iBlendMode = eBlendMode::Blend_Normal
         , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
         , ufloat iOpacity = 1.f
@@ -77,33 +76,7 @@ public:
         , const FOnAnimatedLayerSelfChanged& iOnSelfChanged = FOnAnimatedLayerSelfChanged()
 
         , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
-        , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
-        , const FOnBoolChanged& iOnPaintLockChanged = FOnBoolChanged()
-    );
-
-    TAnimatedLayerImage(
-          BlockType* iBlock
-        , const FString& iName = "Untitled Image"
-        , bool iLocked = false
-        , bool iVisible = true
-        , const FColor& iPrettyColor = FColor::Transparent
-        , eBlendMode iBlendMode = eBlendMode::Blend_Normal
-        , eAlphaMode iAlphaMode = eAlphaMode::Alpha_Normal
-        , ufloat iOpacity = 1.f
-        , bool iAlphaLocked = false
-        , const TRoot< IAnimatedLayer >* iParent = nullptr
-
-        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
-        , const FOnBoolChanged& iOnLockChanged = FOnBoolChanged()
-        , const FOnBoolChanged& iOnVisibleChanged = FOnBoolChanged()
-        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
-        , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
-        , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
-        , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnAnimatedLayerParentChanged& iOnParentChanged = FOnAnimatedLayerParentChanged()
-        , const FOnAnimatedLayerSelfChanged& iOnSelfChanged = FOnAnimatedLayerSelfChanged()
-
-        , const TOnBlockChanged< BlockType >& iOnBlockChanged = TOnBlockChanged< BlockType >()
+        , const TOnSequenceChanged< BlockType >& iOnSequenceChanged = TOnSequenceChanged< BlockType >()
         , const FOnBlendInfoChanged& iOnBlendInfoChanged = FOnBlendInfoChanged()
         , const FOnBoolChanged& iOnPaintLockChanged = FOnBoolChanged()
     );
@@ -130,6 +103,11 @@ public:
 
     // TRasterizable Interface
     tSelf* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) override;
+
+    const TArray<FCelInfo> GetDrawableCelInfos(uint32* oFirstFrame) const override;
+
+protected:
+    using THasBlock::Block;
 
 private:
     // TNode< IAnimatedLayer > Interface
