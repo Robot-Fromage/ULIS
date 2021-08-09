@@ -298,10 +298,22 @@ FBlock::OnInvalid( const FOnInvalidBlock& iOnInvalid )
     mOnInvalid = iOnInvalid;
 }
 
+const FOnInvalidBlock&
+FBlock::OnInvalid() const
+{
+    return  mOnInvalid;
+}
+
 void
 FBlock::OnCleanup( const FOnCleanupData& iOnCleanup )
 {
     mOnCleanup = iOnCleanup;
+}
+
+const FOnCleanupData&
+FBlock::OnCleanup() const
+{
+    return  mOnCleanup;
 }
 
 void
