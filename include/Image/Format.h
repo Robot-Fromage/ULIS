@@ -55,7 +55,7 @@ struct ULIS_API FFormatMetrics
     /*! Cached Num Color Channels */
     uint8       NCC;
     /*! Cached Has Extra Alpha */
-    uint8       HEA;
+    bool        HEA;
     /*! Cached ReverseSwapped Code */
     uint8       RSC;
     /*! Cached Samples Per Pixel */
@@ -65,17 +65,17 @@ struct ULIS_API FFormatMetrics
     /*! Cached Alpha Index */
     uint8       AID;
     /*! Cached Reversed */
-    uint8       REV;
+    bool        REV;
     /*! Cached Swapped */
-    uint8       SWA;
+    bool        SWA;
     /*! Cached Premultiplied */
-    uint8       PRE;
+    bool        PRE;
     /*! Cached Linear */
-    uint8       LIN;
+    bool        LIN;
     /*! Cached Default Profile Code */
     uint8       PRO;
     /*! Cached Planar */
-    uint8       PLA;
+    bool        PLA;
 };
 
 /////////////////////////////////////////////////////
