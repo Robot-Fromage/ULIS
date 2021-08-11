@@ -83,10 +83,12 @@ ISample::operator==( const  ISample& iOther )  const {
         return  false;
 
     bool bytePerfectMatch = true;
-    for( int i = 0; i < BytesPerPixel(); ++i ) {
-        if( Channel8( i ) != iOther.Channel8(i) ) {
-            bytePerfectMatch = false;
-            break;
+    for( int i = 0; i < SamplesPerPixel(); ++i ) {
+        for( jnt j = 0; j < BytesPerPixel(); ++j ) {
+            if( ( mSignal + mPlaneSize * i + j ) != ( iOther.mSignal + iOther.mPlaneSize * i + j ) ) {
+                bytePerfectMatch = false;
+                break;
+            }
         }
     }
 
