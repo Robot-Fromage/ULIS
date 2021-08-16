@@ -37,7 +37,12 @@ FContext::ConvertFormat(
 {
     // In case of same format, we can optimize by using the faster Copy version,
     // since no conversion is actually involved.
-    if( iSource.Format() == iDestination.Format() ) {
+    // Warning though: this works only if it is also the same format as the context.
+    // If source and destination have the same format, but are not in the context
+    // format, in order to keep the copy optimization and allow conv to work on
+    // any format as part of the conv exception, the conv fall backs again to the
+    // proper conv invocation that will perform a low perf format aware "copy conv".
+    if( ( iSource.Format() == iDestination.Format() ) && ( iSource.Format() == Format() ) ) {
         return  FContext::Copy( iSource, iDestination, iSourceRect, iPosition, iPolicy, iNumWait, iWaitList, iEvent );
     }
 
