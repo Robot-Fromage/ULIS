@@ -1,0 +1,144 @@
+# Global Overview
+Global overview of the various features of ULIS.
+
+---
+
+## Data
+A non-exhaustive list of important data elements in ULIS:
+    - FBlock, a simple 2D image, also called a pixel matrix, the underlying storage is a simple contiguous buffer with enough storage to contain pixel data according to the specified width, height, and depth, can embed a colorspace.
+    - FPixel, a simple wrapper around a pointer to a pixel in a FBlock, with utilities to access channels values and format informations, can embed a colorspace.
+    - FColor, a light allocation storing channels values and format informations in a given format, according to a configured color model and channel depth, can embed a colorspace.
+    - FMat3F, a simple 3x3 Matrix of floats used to represent either affine transforms or homographies 
+    - FRectI, a simple AABB rectangle with integer coordinates often used to represent regions in a FBlock. See also FRectF for rectangles with floating point coordinates.
+    - FVec2I, a simple vector with integer coordinates, often used to represent a point or a vector in a FBlock. See also FVec2F for the floating point counterpart.
+    - FContext, an heavy object that you generally want to create only once, featuring a runtime dispatch mechanism that selects the best implementation of the various block processing features available, according to a given format, selecting SIMD specializations or format-specific specializations when available, with a systelatic generic fallback if not available.
+    - FFont, a font object representing a font entry in a font family, such as "Arial Black". Not bound to a specific size. Can be used to raster text in a FBlock through FContext.
+    - FGradient, a gradient object used to raster gradients in a FBlock through a FContext.
+    - FPathInfo, a utility class with static methods to retrieve informations about system paths.
+    - FCPUInfo, a utility class with static methods to retrieve informations about the running hardware.
+    - FLibInfo, a utility class with static methods to retrieve informations about the library, and the features of the machine it was compiled on.
+    - FString, a string class for use in ULIS.
+    - TArray, a dynamic array or vector class for use in ULIS.
+
+## Features
+For an exhaustive list of available features, you can simply consult the documentation for the FContext class, it will list all available image processing operations that are part of the safe public API. But here is a non-exhaustive list of important image processing features available at the time of writing:
+    - AccumulateSample
+    - AlphaBlend
+    - AlphaBlendAA
+    - AnalyzeSmallestVisibleRect
+    - BezierDisplacementFieldMetrics
+    - BezierDisplacementMaskMetrics
+    - Blend
+    - BlendAA
+    - BlendBucket
+    - BlendColor
+    - BlendTiled
+    - BrownianNoise
+    - BuildPremultipliedSummedAreaTable
+    - BuildSummedAreaTable
+    - Clear
+    - Clouds
+    - ConvertFormat
+    - Convolve
+    - ConvolveMax
+    - ConvolveMin
+    - ConvolvePremult
+    - ConvolvePremultMax
+    - ConvolvePremultMin
+    - Copy
+    - DrawArc
+    - DrawArcAA
+    - DrawArcSP
+    - DrawCircle
+    - DrawCircleAA
+    - DrawCircleSP
+    - DrawEllipse
+    - DrawEllipseAA
+    - DrawEllipseSP
+    - DrawLine
+    - DrawLineAA
+    - DrawLineSP
+    - DrawPolygon
+    - DrawPolygonAA
+    - DrawPolygonSP
+    - DrawQuadraticBezier
+    - DrawQuadraticBezierAA
+    - DrawQuadraticBezierSP
+    - DrawRectangle
+    - DrawRotatedEllipse
+    - DrawRotatedEllipseAA
+    - DrawRotatedEllipseSP
+    - Extract
+    - Fill
+    - FillPreserveAlpha
+    - Filter
+    - FilterInPlace
+    - FilterInto
+    - LinearTosRGB
+    - LoadBlockFromDiskMetrics
+    - LoadPSDFromDiskMetrics
+    - MaxMipLevelMetrics
+    - MipLevelMetrics
+    - MipMapMetrics
+    - MipRectsMetrics
+    - MorphologicalProcess
+    - Premultiply
+    - RasterGradient
+    - RasterText
+    - RasterTextAA
+    - Resize
+    - SanitizeZeroAlpha
+    - SaveBlockToDisk
+    - SaveBlockToDiskMetrics
+    - sRGBToLinear
+    - SummedAreaTableMetrics
+    - Swap
+    - TextMetrics
+    - TransformAffine
+    - TransformAffineMetrics
+    - TransformAffineTiled
+    - TransformBezier
+    - TransformBezierMetrics
+    - TransformPerspective
+    - TransformPerspectiveMetrics
+    - Unpremultiply
+    - ValueNoise
+    - VoronoiNoise
+    - WhiteNoise
+    - XAllocateBlockData
+    - XBuildMipMap
+    - XCreateTestBlock
+    - XDeallocateBlockData
+    - XLoadBlockFromDisk
+    - XProcessBezierDisplacementField
+
+## Examples
+There is a large amount of example projects available in the ULIS repository that can be generated with cmake if ULIS_BUILD_EXAMPLES is enabled during generation. Some of them have a lot of extensive explanatory comments, some of them are less verbose. They all showcase one or more features and how to use it. They are a good way to grasp the philosophy and recurrent patterns that come into play when using ULIS. Some of them might not compile at all times and need a little refactor, but these changes are often minimal. Here is a non-exhaustive list, source files for these projects can be found under ULIS/example:
+    - All
+    - AnimatedBezier
+    - Bezier
+    - Blend
+    - BlendShowcase
+    - ClearFillCopy
+    - Context
+    - Conversion
+    - Convolution
+    - Extract
+    - Gradient
+    - InteractiveDrawing
+    - LayerStack
+    - LoadSaveDisk
+    - MipMap
+    - Noise
+    - Particles
+    - PSD
+    - Raster
+    - SimpleFluid
+    - Sparse
+    - Test
+    - Text
+    - TextShowcase
+    - TiledBlend
+    - TiledBlock
+    - Transform
+    - Transform2
