@@ -101,8 +101,8 @@ BuildDualBufferJob_Chunks(
     const uint8* const ULIS_RESTRICT src    = iCargs->src.Bits();
     uint8* const ULIS_RESTRICT dst          = iCargs->dst.Bits();
     const int64 btt                         = static_cast< int64 >( iCargs->src.BytesTotal() );
-    oJargs.src                              = src + iIndex;
-    oJargs.dst                              = dst + iIndex;
+    oJargs.src                              = src + iOffset; // Changed from xxx + iIndex to xxx + iOffset to solve Copy on Chunk CacheEfficient, might trigger a new bug later on.
+    oJargs.dst                              = dst + iOffset; // Changed from xxx + iIndex to xxx + iOffset to solve Copy on Chunk CacheEfficient, might trigger a new bug later on.
     oJargs.size                             = FMath::Min( iOffset + iSize, btt ) - iOffset;
     oJargs.line                             = ULIS_UINT16_MAX; // N/A for chunks
 }
