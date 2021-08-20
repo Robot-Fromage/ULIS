@@ -16,9 +16,9 @@ function( AddExampleModule iModuleName )
         return()
     endif()
 
-    if( NOT ${ULIS_USE_CURSES} )
-        return()
-    endif()
+    #if( NOT ${ULIS_USE_CURSES} )
+    #    return()
+    #endif()
 
     # ADD PROJECT
     add_executable( ${iModuleName} )
@@ -56,7 +56,7 @@ function( AddExampleModule iModuleName )
         Qt5::Core
         Qt5::Widgets
         Qt5::Gui
-        PDCurses
+        #PDCurses
     )
 
 endfunction()
