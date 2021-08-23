@@ -1,28 +1,28 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Mix.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definitions for the Mix entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Mix/Mix.h"
 #include "Conv/Conv.h"
 #include "Data/Pixel.h"
 #include "Maths/Maths.h"
-#include "Color/srgb2linear.h"
+#include "Conv/srgb2linear.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 FPixelValue
 MixNative( ufloat iT, IPixel* iA, IPixel* iB )
 {
-    ULIS2_ASSERT( iA, "Bad input A" );
-    ULIS2_ASSERT( iB, "Bad input B" );
+    ULIS3_ASSERT( iA, "Bad input A" );
+    ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
     FPixelValue native_ret( iA->Format() );
     FPixelValue native_B( iA->Format() );
@@ -37,12 +37,12 @@ MixNative( ufloat iT, IPixel* iA, IPixel* iB )
 FPixelValue
 MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB )
 {
-    ULIS2_ASSERT( iA, "Bad input A" );
-    ULIS2_ASSERT( iB, "Bad input B" );
+    ULIS3_ASSERT( iA, "Bad input A" );
+    ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue rgbA( ULIS2_FORMAT_RGBAF );
-    FPixelValue rgbB( ULIS2_FORMAT_RGBAF );
-    FPixelValue rgbResult( ULIS2_FORMAT_RGBAF );
+    FPixelValue rgbA( ULIS3_FORMAT_RGBAF );
+    FPixelValue rgbB( ULIS3_FORMAT_RGBAF );
+    FPixelValue rgbResult( ULIS3_FORMAT_RGBAF );
     Conv( *iA, rgbA );
     Conv( *iB, rgbB );
     rgbResult.SetRF( srgb2linear( ( 1.f - t ) * rgbA.RF() + t * rgbB.RF() ) );
@@ -56,12 +56,12 @@ MixLinearRGB( ufloat iT, IPixel* iA, IPixel* iB )
 FPixelValue
 MixRGB( ufloat iT, IPixel* iA, IPixel* iB )
 {
-    ULIS2_ASSERT( iA, "Bad input A" );
-    ULIS2_ASSERT( iB, "Bad input B" );
+    ULIS3_ASSERT( iA, "Bad input A" );
+    ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue rgbA( ULIS2_FORMAT_RGBAF );
-    FPixelValue rgbB( ULIS2_FORMAT_RGBAF );
-    FPixelValue rgbResult( ULIS2_FORMAT_RGBAF );
+    FPixelValue rgbA( ULIS3_FORMAT_RGBAF );
+    FPixelValue rgbB( ULIS3_FORMAT_RGBAF );
+    FPixelValue rgbResult( ULIS3_FORMAT_RGBAF );
     Conv( *iA, rgbA );
     Conv( *iB, rgbB );
     rgbResult.SetRF( ( 1.f - t ) * rgbA.RF() + t * rgbB.RF() );
@@ -75,12 +75,12 @@ MixRGB( ufloat iT, IPixel* iA, IPixel* iB )
 FPixelValue
 MixLab( ufloat iT, IPixel* iA, IPixel* iB )
 {
-    ULIS2_ASSERT( iA, "Bad input A" );
-    ULIS2_ASSERT( iB, "Bad input B" );
+    ULIS3_ASSERT( iA, "Bad input A" );
+    ULIS3_ASSERT( iB, "Bad input B" );
     ufloat t = FMaths::Clamp( iT, 0.f, 1.f );
-    FPixelValue LabA( ULIS2_FORMAT_LabAF );
-    FPixelValue LabB( ULIS2_FORMAT_LabAF );
-    FPixelValue LabResult( ULIS2_FORMAT_LabAF );
+    FPixelValue LabA( ULIS3_FORMAT_LabAF );
+    FPixelValue LabB( ULIS3_FORMAT_LabAF );
+    FPixelValue LabResult( ULIS3_FORMAT_LabAF );
     Conv( *iA, LabA );
     Conv( *iB, LabB );
     LabResult.SetLF( ( 1.f - t ) * LabA.LF() + t * LabB.LF() );
@@ -90,5 +90,5 @@ MixLab( ufloat iT, IPixel* iA, IPixel* iB )
     return  LabResult;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

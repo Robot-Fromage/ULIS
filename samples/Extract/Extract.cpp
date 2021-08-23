@@ -1,17 +1,17 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Extract.cpp
 * @author       Clement Berthaud
-* @brief        Extract application for ULIS2.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        Extract application for ULIS3.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
+#include <ULIS3>
 
 #include <QApplication>
 #include <QWidget>
@@ -21,17 +21,17 @@
 
 #include <chrono>
 
-using namespace ::ul2;
+using namespace ::ul3;
 
 int
 main( int argc, char *argv[] ) {
-    FThreadPool  threadPool;
-    uint32 perfIntent = /* ULIS2_PERF_MT | */ ULIS2_PERF_TSPEC | ULIS2_PERF_SSE42 | ULIS2_PERF_AVX2;
+    FThreadPool* threadPool = XCreateThreadPool();
+    uint32 perfIntent = /* ULIS3_PERF_MT | */ ULIS3_PERF_SSE42 | ULIS3_PERF_AVX2;
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
 
     FVec2I size( 800, 600 );
-    FBlock* blockSRC = new FBlock( size.x, size.y, ULIS2_FORMAT_RGBA8 );
-    Clear( &threadPool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, blockSRC, blockSRC->Rect() );
+    FBlock* blockSRC = new FBlock( size.x, size.y, ULIS3_FORMAT_RGBA8 );
+    Clear( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockSRC, blockSRC->Rect() );
     FVec2I mid = size / 2;
     int rad = 250;
     for( int x = 0; x < size.x; ++x ) {
@@ -46,7 +46,7 @@ main( int argc, char *argv[] ) {
         }
     }
 
-    FBlock* blockDST = XExtract( &threadPool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, blockSRC, false, 1 << blockSRC->AlphaIndex(), ULIS2_FORMAT_G8, false, 1 );
+    FBlock* blockDST = XExtract( threadPool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, blockSRC, false, 1 << blockSRC->AlphaIndex(), ULIS3_FORMAT_G8, false, 1 );
 
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
@@ -72,6 +72,8 @@ main( int argc, char *argv[] ) {
     // Delete our block Canvas.
     delete  blockSRC;
     delete  blockDST;
+
+    XDeleteThreadPool( threadPool );
 
     // Return exit code.
     return  exit_code;

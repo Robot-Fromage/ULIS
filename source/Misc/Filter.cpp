@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Filter.cpp
 * @author       Clement Berthaud
 * @brief        This file provides the definitions for the Filter entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Misc/Filter.h"
@@ -18,7 +18,7 @@
 #include "Maths/Maths.h"
 #include "Thread/ThreadPool.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 
 void InvokeFilter( const size_t iLen, const FBlock* iBlock, const tByte* iPtr, const size_t iSrcBPP, std::function< void( const FBlock* iBlock, const tByte* iPtr ) > iFunc ) {
     for( size_t i = 0; i < iLen; ++i ) {
@@ -51,10 +51,10 @@ void Filter( FThreadPool*           iThreadPool
            , std::function< void( const FBlock* iBlock, const tByte* iPtr ) > iFunc )
 {
     // Assertions
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( iFunc,                                        "No func provided"                                      );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
     const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
@@ -64,11 +64,10 @@ void Filter( FThreadPool*           iThreadPool
     tSize           src_bps = iSource->BytesPerScanLine();
     const int       max     = iSource->Height();
     const tSize     len     = iSource->Width();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , InvokeFilter
                                    , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
-
 }
 
 void FilterInPlace( FThreadPool*            iThreadPool
@@ -79,10 +78,10 @@ void FilterInPlace( FThreadPool*            iThreadPool
                   , FBlock*                 iSource
                   , std::function< void( FBlock* iBlock, tByte* iPtr ) > iFunc )
 {
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( iFunc,                                        "No func provided"                                      );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
     const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
@@ -92,7 +91,7 @@ void FilterInPlace( FThreadPool*            iThreadPool
     tSize       src_bps = iSource->BytesPerScanLine();
     const int   max     = iSource->Height();
     const tSize len     = iSource->Width();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , InvokeFilterInPlace
                                    , len, iSource, src + ( pLINE * src_bps ), srcFormatInfo.BPP, iFunc );
@@ -109,14 +108,14 @@ void FilterInto( FThreadPool*              iThreadPool
                , FBlock*                   iDestination
                , std::function< void( const FBlock* iSrcBlock, const tByte* iSrcPtr, FBlock* iDstBlock, tByte* iDstPtr ) > iFunc )
 {
-    ULIS2_ASSERT( iThreadPool,                                  "Bad pool."                                             );
-    ULIS2_ASSERT( iSource,                                      "Bad source."                                           );
-    ULIS2_ASSERT( iDestination,                                 "Bad destination."                                      );
-    ULIS2_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
-    ULIS2_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
-    ULIS2_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
-    ULIS2_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
-    ULIS2_ASSERT( iFunc,                                        "No func provided"                                      );
+    ULIS3_ASSERT( iThreadPool,                                  "Bad pool."                                             );
+    ULIS3_ASSERT( iSource,                                      "Bad source."                                           );
+    ULIS3_ASSERT( iDestination,                                 "Bad destination."                                      );
+    ULIS3_ASSERT( iSource != iDestination,                      "Cannot extract a block to itself, use swap instead."   );
+    ULIS3_ASSERT( !iCallCB || iBlocking,                        "Callback flag is specified on non-blocking operation." );
+    ULIS3_ASSERT( iSource->Width()  == iDestination->Width(),   "Blocks sizes don't match"                              );
+    ULIS3_ASSERT( iSource->Height() == iDestination->Height(),  "Blocks sizes don't match"                              );
+    ULIS3_ASSERT( iFunc,                                        "No func provided"                                      );
 
     // Format info
     const FFormatInfo& srcFormatInfo( iSource->FormatInfo() );
@@ -129,7 +128,7 @@ void FilterInto( FThreadPool*              iThreadPool
     tSize           dst_bps = iDestination->BytesPerScanLine();
     const int       max     = iSource->Height();
     const tSize     len     = iSource->Width();
-    ULIS2_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
+    ULIS3_MACRO_INLINE_PARALLEL_FOR( iPerfIntent, iThreadPool, iBlocking
                                    , max
                                    , InvokeFilterInto
                                    , len
@@ -143,5 +142,5 @@ void FilterInto( FThreadPool*              iThreadPool
     iDestination->Invalidate( iCallCB );
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

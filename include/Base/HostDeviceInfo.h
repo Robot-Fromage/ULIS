@@ -1,21 +1,21 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         HostDeviceInfo.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the FCPU struct.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
-struct ULIS2_API FHostDeviceInfo
+ULIS3_NAMESPACE_BEGIN
+struct ULIS3_API FHostDeviceInfo
 {
 private:
     FHostDeviceInfo() = delete;
@@ -101,5 +101,5 @@ public:
     const bool HW_AVX512_VBMI;
 };
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

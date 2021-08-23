@@ -1,4 +1,4 @@
-REM Put this file in a neighbour directory of ULIS2 repository.
+REM Put this file in a neighbour directory of ULIS3 repository.
 
 @echo off
 setlocal
@@ -20,7 +20,7 @@ IF EXIST cmake_install.cmake ( del cmake_install.cmake )
 IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 
 :: Rebuild Project
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ../../../ULIS2
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ../../../ULIS3
 
 cd ../Debug
 :: Clean cmake garbage if there
@@ -29,4 +29,4 @@ IF EXIST cmake_install.cmake ( del cmake_install.cmake )
 IF EXIST CMakeCache.txt ( del CMakeCache.txt )
 
 :: Rebuild Project
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug ../../../ULIS2
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug ../../../ULIS3

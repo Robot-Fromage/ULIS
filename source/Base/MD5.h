@@ -1,25 +1,25 @@
-// Copyright// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         MD5.h
 * @author       Clement Berthaud
 * @brief        This file provides declaration for MD5 functions and FMD5 class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FMD5
 /// @brief      The FMD5 class provides a mean for computation of MD5 hash.
 /// @details    Based on reference implementation of RFC 1321.
-class ULIS2_API FMD5
+class FMD5
 {
 public:
 //--------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ private:
 /// @brief      Shorthand function, computes MD5 for std::string directly
 /// @param      iStr    The text to hash.
 /// @return     A std::string representing the MD5 hash.
-ULIS2_API std::string  MD5( const std::string iStr );
+std::string  MD5( const std::string iStr );
 
 
 /// @fn         MD5( const uint8* iData, int iLen )
@@ -121,7 +121,7 @@ ULIS2_API std::string  MD5( const std::string iStr );
 /// @param      iData   The data to hash.
 /// @param      iLen    The size in bytes of the data to hash.
 /// @return     A std::string representing the MD5 hash.
-ULIS2_API std::string  MD5( const uint8* iData, int iLen );
+std::string  MD5( const uint8* iData, int iLen );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

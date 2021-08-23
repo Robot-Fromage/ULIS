@@ -1,24 +1,24 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Font.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the FFont class.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      FFont
 /// @brief      The FFont class provides a thin wrapper around the freetype face type.
-class ULIS2_API FFont
+class ULIS3_API FFont
 {
 public:
     // Construction / Destruction
@@ -37,5 +37,5 @@ private:
     const FFontEngine& mFontEngine;
     const FFontRegistry& mFontRegistry;
 };
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

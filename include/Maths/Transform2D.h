@@ -1,60 +1,63 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Transform2D.h
 * @author       Clement Berthaud
 * @brief        This file provides the Transform2D class declaration.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
-#include <glm/mat3x3.hpp>
+#include "Maths/Geometry.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // FTransform2D
-class ULIS2_API FTransform2D
+class ULIS3_API FTransform2D
 {
 public:
+    class FTransform2D_imp;
+
+public:
     // Construction / Destruction
+    ~FTransform2D();
     FTransform2D();
-    FTransform2D( const glm::mat3& iMat );
+    FTransform2D( const FTransform2D& iOther );
+    FTransform2D( FTransform2D&& iOther );
+    FTransform2D& operator=( const FTransform2D& iOther );
 
 public:
     // Public API
-    const std::string& ID() const; // Str From Blob
-    const glm::mat3& Matrix() const;
-    const glm::mat3& InverseMatrix() const;
-    void Decompose( float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY ) const;
+    const FTransform2D_imp& GetImp() const;
+    const tByte* Ptr() const;
+    FTransform2D Inverse() const;
 
 private:
     // Private API
-    void UpdateID() const;
-    void UpdateInverseMatrix() const;
+    FTransform2D( FTransform2D_imp* iVal );
+
+public:
+    // Static API
+    static FTransform2D MakeFromMatrix( float iM00, float iM10, float iM20, float iM01, float iM11, float iM21, float iM02, float iM12, float iM22 );
+    static FTransform2D MakeIdentityTransform();
+    static FTransform2D MakeRotationTransform( float iAngleRag );
+    static FTransform2D MakeScaleTransform( float iX, float iY );
+    static FTransform2D MakeShearTransform( float iX, float iY );
+    static FTransform2D MakeTranslationTransform( float iX, float iY );
+    static FTransform2D ComposeTransforms( const FTransform2D& iA, const FTransform2D& iB );
+    static void DecomposeTransform( const FTransform2D& iTransform, float* oTx, float* oTy, float* oRotation, float* oScaleX, float* oScaleY, float* oSkewX, float* oSkewY );
+    static FTransform2D GetPerspectiveTransform( const FVec2F iSrc[], const FVec2F iDst[] );
+    static FVec2F DoHomographyTransform( const FVec2F& iPoint, const FTransform2D& iTransform );
 
 private:
     // Private Data Members
-    glm::mat3           mMatrix;
-    mutable glm::mat3   mInverseMatrix;
-    mutable std::string mID;
-    mutable bool mDirtyID;
-    mutable bool mDirtyInverseMatrix;
+    FTransform2D_imp* mImp;
 };
 
-ULIS2_API glm::mat3 MakeIdentityMatrix();
-ULIS2_API glm::mat3 MakeRotationMatrix( float iAngleRag );
-ULIS2_API glm::mat3 MakeScaleMatrix( float iX, float iY );
-ULIS2_API glm::mat3 MakeShearMatrix( float iX, float iY );
-ULIS2_API glm::mat3 MakeTranslationMatrix( float iX, float iY );
-ULIS2_API glm::mat3 ComposeMatrix( const glm::mat3& iA, const glm::mat3& iB );
-ULIS2_API void DecomposeMatrix( const glm::mat3& iMat, float* iTx, float* iTy, float* iRotation, float* iScaleX, float* iScaleY, float* iSkewX, float* iSkewY );
-ULIS2_API glm::mat3 GetPerspectiveMatrix( const FVec2F iSrc[], const FVec2F iDst[] );
-ULIS2_API FVec2F HomographyTransform( const FVec2F& iPoint, const glm::mat3& iMat );
-
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

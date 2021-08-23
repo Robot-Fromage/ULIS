@@ -1,19 +1,19 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clipboard_MacOSPlatform.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the definition for the clipboard IO entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "IO/Clipboard.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 FBlock* XLoadFromClipboard( FThreadPool*            iThreadPool
                           , bool                    iBlocking
                           , uint32                  iPerfIntent
@@ -38,5 +38,5 @@ bool ClipboardHasImageData_MacOSPlatform() {
     return  false;
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

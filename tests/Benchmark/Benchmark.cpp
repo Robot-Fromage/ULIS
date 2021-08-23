@@ -1,24 +1,24 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Benchmark.cpp
 * @author       Clement Berthaud
-* @brief        Benchmark application for ULIS2.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        Benchmark application for ULIS3.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
+#include <ULIS3>
 #include <chrono>
 #include <sstream>
 #include <iomanip>
 #include <iostream>
 #include <codecvt>
 
-using namespace ::ul2;
+using namespace ::ul3;
 constexpr int criticalError = 0xB00BA420;
 
 int error( const char* iMsg ) {
@@ -37,19 +37,20 @@ int clear( int argc, char *argv[] ) {
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     std::string opt = std::string( argv[6] );
     uint32 optBit = 0;
-    if( opt == "sse" ) optBit = ULIS2_PERF_SSE42;
-    if( opt == "avx" ) optBit = ULIS2_PERF_AVX2;
-    FThreadPool pool( threads );
+    if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
+    if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
+    FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* block = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        Clear( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, block, block->Rect() );
+    for( uint32 l = 0; l < repeat; ++l )
+        Clear( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, block, block->Rect() );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete block;
-    return deltaMs;
+    XDeleteThreadPool( pool );
+    return static_cast< int >( deltaMs );
 }
 
 int fill( int argc, char *argv[] ) {
@@ -63,20 +64,21 @@ int fill( int argc, char *argv[] ) {
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     std::string opt = std::string( argv[6] );
     uint32 optBit = 0;
-    if( opt == "sse" ) optBit = ULIS2_PERF_SSE42;
-    if( opt == "avx" ) optBit = ULIS2_PERF_AVX2;
-    FThreadPool pool( threads );
+    if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
+    if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
+    FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* block = new FBlock( size, size, format );
     FPixelValue source( format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        Fill( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, block, source, block->Rect() );
+    for( uint32 l = 0; l < repeat; ++l )
+        Fill( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, block, source, block->Rect() );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete block;
-    return deltaMs;
+    XDeleteThreadPool( pool );
+    return static_cast< int >( deltaMs );
 }
 
 int copy( int argc, char *argv[] ) {
@@ -90,21 +92,22 @@ int copy( int argc, char *argv[] ) {
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     std::string opt = std::string( argv[6] );
     uint32 optBit = 0;
-    if( opt == "sse" ) optBit = ULIS2_PERF_SSE42;
-    if( opt == "avx" ) optBit = ULIS2_PERF_AVX2;
-    FThreadPool pool( threads );
+    if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
+    if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
+    FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        Copy( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, src, dst, src->Rect(), FVec2I() );
+    for( uint32 l = 0; l < repeat; ++l )
+        Copy( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2I() );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete src;
     delete dst;
-    return deltaMs;
+    XDeleteThreadPool( pool );
+    return static_cast< int >( deltaMs );
 }
 
 int blend( int argc, char *argv[] ) {
@@ -121,21 +124,22 @@ int blend( int argc, char *argv[] ) {
     eAlphaMode      alphaMode       = static_cast< eAlphaMode >( std::atoi( std::string( argv[8] ).c_str() ) );
     bool            subpixelFlag    = static_cast< bool >( std::atoi( std::string( argv[9] ).c_str() ) );
     uint32 optBit = 0;
-    if( opt == "sse" ) optBit = ULIS2_PERF_SSE42;
-    if( opt == "avx" ) optBit = ULIS2_PERF_AVX2;
-    FThreadPool pool( threads );
+    if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
+    if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
+    FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        Blend( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, src, dst, src->Rect(), FVec2F(), subpixelFlag, blendingMode, alphaMode, 0.5f );
+    for( uint32 l = 0; l < repeat; ++l )
+        Blend( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), FVec2F(), subpixelFlag, blendingMode, alphaMode, 0.5f );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete src;
     delete dst;
-    return deltaMs;
+    XDeleteThreadPool( pool );
+    return static_cast< int >( deltaMs );
 }
 
 
@@ -151,21 +155,22 @@ int conv( int argc, char *argv[] ) {
     std::string opt = std::string( argv[6] );
     tFormat dstFormat = std::stoul( std::string( argv[7] ).c_str() );
     uint32 optBit = 0;
-    if( opt == "sse" ) optBit = ULIS2_PERF_SSE42;
-    if( opt == "avx" ) optBit = ULIS2_PERF_AVX2;
-    FThreadPool pool( threads );
+    if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
+    if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
+    FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, dstFormat );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        Conv( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, src, dst );
+    for( uint32 l = 0; l < repeat; ++l )
+        Conv( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete src;
     delete dst;
-    return deltaMs;
+    XDeleteThreadPool( pool );
+    return static_cast< int >( deltaMs );
 }
 
 int clearRaw( int argc, char *argv[] ) {
@@ -177,16 +182,15 @@ int clearRaw( int argc, char *argv[] ) {
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
-    FThreadPool pool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     FBlock* block = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        ClearRaw( block, ULIS2_NOCB );
+    for( uint32 l = 0; l < repeat; ++l )
+        ClearRaw( block, ULIS3_NOCB );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete block;
-    return deltaMs;
+    return static_cast< int >( deltaMs );
 }
 
 int copyRaw( int argc, char *argv[] ) {
@@ -198,18 +202,17 @@ int copyRaw( int argc, char *argv[] ) {
     uint32  threads = std::atoi( std::string( argv[3] ).c_str() );
     uint32  repeat  = std::atoi( std::string( argv[4] ).c_str() );
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
-    FThreadPool pool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
     FBlock* src = new FBlock( size, size, format );
     FBlock* dst = new FBlock( size, size, format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        CopyRaw( src, dst, ULIS2_NOCB );
+    for( uint32 l = 0; l < repeat; ++l )
+        CopyRaw( src, dst, ULIS3_NOCB );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete src;
     delete dst;
-    return deltaMs;
+    return static_cast< int >( deltaMs );
 }
 
 int transform( int argc, char *argv[] ) {
@@ -223,33 +226,34 @@ int transform( int argc, char *argv[] ) {
     uint32  size    = std::atoi( std::string( argv[5] ).c_str() );
     std::string opt = std::string( argv[6] );
     eResamplingMethod method = static_cast< eResamplingMethod >( std::atoi( argv[7] ) );
-    float m00 = std::atof( argv[8] );
-    float m10 = std::atof( argv[9] );
-    float m20 = std::atof( argv[10] );
-    float m01 = std::atof( argv[11] );
-    float m11 = std::atof( argv[12] );
-    float m21 = std::atof( argv[13] );
-    float m02 = std::atof( argv[14] );
-    float m12 = std::atof( argv[15] );
-    float m22 = std::atof( argv[16] );
-    FTransform2D mat( glm::mat3( m00, m10, m20, m01, m11, m21, m02, m12, m22 ) );
+    float m00 = static_cast< float >( std::atof( argv[8] ) );
+    float m10 = static_cast< float >( std::atof( argv[9] ) );
+    float m20 = static_cast< float >( std::atof( argv[10] ) );
+    float m01 = static_cast< float >( std::atof( argv[11] ) );
+    float m11 = static_cast< float >( std::atof( argv[12] ) );
+    float m21 = static_cast< float >( std::atof( argv[13] ) );
+    float m02 = static_cast< float >( std::atof( argv[14] ) );
+    float m12 = static_cast< float >( std::atof( argv[15] ) );
+    float m22 = static_cast< float >( std::atof( argv[16] ) );
+    FTransform2D mat( FTransform2D::MakeFromMatrix( m00, m10, m20, m01, m11, m21, m02, m12, m22 ) );
     uint32 optBit = 0;
-    if( opt == "sse" ) optBit = ULIS2_PERF_SSE42;
-    if( opt == "avx" ) optBit = ULIS2_PERF_AVX2;
-    FThreadPool pool( threads );
+    if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
+    if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
+    FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FBlock* src = new FBlock( size, size, format );
     FRect dstmetrics = TransformAffineMetrics( src->Rect(), mat, method );
     FBlock* dst = new FBlock( dstmetrics.w, dstmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        TransformAffine( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, src, dst, src->Rect(), mat, method );
+    for( uint32 l = 0; l < repeat; ++l )
+        TransformAffine( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, src, dst, src->Rect(), mat, method );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete src;
     delete dst;
-    return deltaMs;
+    XDeleteThreadPool( pool );
+    return static_cast< int >( deltaMs );
 }
 
 int text( int argc, char *argv[] ) {
@@ -272,11 +276,11 @@ int text( int argc, char *argv[] ) {
     uint32 fontSize = std::atoi( std::string( argv[10] ).c_str() );
     bool antialiasingFlag = static_cast< bool >( std::atoi( std::string( argv[11] ).c_str() ) );
     uint32 optBit = 0;
-    if( opt == "sse" ) optBit = ULIS2_PERF_SSE42;
-    if( opt == "avx" ) optBit = ULIS2_PERF_AVX2;
-    FThreadPool pool( threads );
+    if( opt == "sse" ) optBit = ULIS3_PERF_SSE42;
+    if( opt == "avx" ) optBit = ULIS3_PERF_AVX2;
+    FThreadPool* pool = XCreateThreadPool( threads );
     FHostDeviceInfo host = FHostDeviceInfo::Detect();
-    uint32 perfIntent = ULIS2_PERF_MT | ULIS2_PERF_TSPEC | optBit;
+    uint32 perfIntent = ULIS3_PERF_MT | optBit;
     FFontEngine fontEngine;
     FFontRegistry fontRegistry( fontEngine );
     FFont font( fontRegistry, fam, style );
@@ -284,12 +288,13 @@ int text( int argc, char *argv[] ) {
     FPixelValue color( format );
     FBlock* dst = new FBlock( textmetrics.w, textmetrics.h, format );
     auto startTime = std::chrono::steady_clock::now();
-    for( int l = 0; l < repeat; ++l )
-        RenderText( &pool, ULIS2_BLOCKING, perfIntent, host, ULIS2_NOCB, dst, wtxt, font, fontSize, color, FTransform2D(), antialiasingFlag );
+    for( uint32 l = 0; l < repeat; ++l )
+        RenderText( pool, ULIS3_BLOCKING, perfIntent, host, ULIS3_NOCB, dst, wtxt, font, fontSize, color, FTransform2D(), antialiasingFlag );
     auto endTime = std::chrono::steady_clock::now();
     auto deltaMs = std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count();
     delete dst;
-    return deltaMs;
+    XDeleteThreadPool( pool );
+    return static_cast< int >( deltaMs );
 }
 
 // Call examples:

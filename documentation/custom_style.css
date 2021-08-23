@@ -9,10 +9,16 @@ body {
     box-sizing: border-box;
     margin: 0px;
     width: 100%;
-    border-bottom: 5px solid #5c9400;
-    color: #5c9400;
-    background-color: rgb( 58, 65, 64 );
-    text-shadow: 0px -1px 1px rgba( 0, 0, 0, 0.5 );
+    color: #00a99d;
+    background-color: #FFFFFF;
+}
+
+#projectname {
+    visibility:hidden;
+}
+
+#projectbrief {
+    visibility:hidden;
 }
 
 table.classindex {
@@ -37,22 +43,22 @@ div.ah, span.ah {
     width:100%;
     border: none;
     box-shadow: none;
-    border-bottom: 2px solid #5c9400;
+    border-bottom: 2px solid #00a99d;
 }
 
 a {
-    color: #5c9400;
+    color: #00a99d;
 }
 
 .contents a:visited {
-    color: #5c9400;
+    color: #00a99d;
 }
 
 div.header {
     background-image: none;
     background: rgb( 248, 248, 248 );
     margin: 0px;
-    border-bottom: 5px solid #5c9400;
+    border-bottom: 5px solid #00a99d;
 }
 
 div.qindex, div.navtab {
@@ -79,7 +85,7 @@ hr {
     height: 14px;
     width: 16px;
     display: inline-block;
-    background-color: #5c9400;
+    background-color: #00a99d;
     color: white;
     text-align: center;
     border-radius: 4px;
@@ -102,8 +108,8 @@ table.memberdecls {
 }
 
 h2.groupheader {
-    border-bottom: 2px solid #5c9400;
-    color: #5c9400;
+    border-bottom: 2px solid #00a99d;
+    color: #00a99d;
     font-size: 150%;
     font-weight: normal;
     margin-top: 1.75em;
@@ -113,7 +119,7 @@ h2.groupheader {
 }
 
 span.mlabel {
-    background-color: #5c9400;
+    background-color: #00a99d;
     border: none;
     text-shadow: none;
     color: white;
@@ -148,7 +154,7 @@ span.mlabel {
 
 .memproto, dl.reflist dt {
     border:none;
-    border-bottom: 2px solid #5c9400;
+    border-bottom: 2px solid #00a99d;
     padding: 6px 0px 6px 0px;
     color: #282828;
     font-weight: bold;
@@ -223,4 +229,21 @@ div.textblock {
     overflow: hidden;
     margin: 0px;
     padding: 0px;
+}
+
+.sm-dox a:hover {
+    background-image: none;
+    background: #00a99d;
+    color: white;
+    text-shadow: 0 1px 1px black;
+    border:none;
+}
+
+.image > img {
+    max-width:200px;
+}
+
+th.markdownTableHeadLeft, th.markdownTableHeadRight, th.markdownTableHeadCenter, th.markdownTableHeadNone {
+    background: #FFFFFF;
+    color:#000000;
 }

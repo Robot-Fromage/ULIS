@@ -12,8 +12,9 @@ criticalError = 0xB00BA420
 
 benchmark_msvc_path   = abspath( join( dirname( __file__ ), 'bin/msvc/Benchmark.exe' ) )
 benchmark_clang_path  = abspath( join( dirname( __file__ ), 'bin/clang/Benchmark.exe' ) )
-cpuinfo_path  = abspath( join( dirname( __file__ ), 'bin/clang/CPUDeviceInfo.exe' ) )
-gpuinfo_path  = abspath( join( dirname( __file__ ), 'bin/clang/GPUDeviceInfo.exe' ) )
+benchmark_gcc_path  = abspath( join( dirname( __file__ ), 'bin/gcc/Benchmark.exe' ) )
+cpuinfo_path  = abspath( join( dirname( __file__ ), 'bin/gcc/CPUDeviceInfo.exe' ) )
+gpuinfo_path  = abspath( join( dirname( __file__ ), 'bin/gcc/GPUDeviceInfo.exe' ) )
 
 formats = { "G8"        : 65808     , "RGB16"     : 131633      , "ABGRD"     : 569908      , "HSVF"      : 267059      , "ALSH16"    : 173105
           , "GA8"       : 98576     , "BGR16"     : 139825      , "ARGBD"     : 578100      , "VSHF"      : 275251      , "AHSL16"    : 181297
@@ -83,7 +84,7 @@ formats = { "G8"        : 65808     , "RGB16"     : 131633      , "ABGRD"     : 
           , "XYZ8"      : 67888     , "AXYZF"     : 317747      , "YxyA32"    : 297522
           , "ZYX8"      : 76080     , "ZYXAF"     : 325939      , "AyxY32"    : 305714 }
 
-htmlHead        ="<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>ULIS2 Benchmark</title><style>body{background-color:#23241f;color:#f8f8d1;font-family:Lucida Console;margin:0;padding:0;overflow-x:hidden}table,td,th{border-collapse:collapse;text-align:left;padding:0;margin:0}.info{background-color:#131310;font-size:12px}.infoTitle{font-size:16px;padding:5px;width:100%;text-align:center;text-align:center;background:#23241f;background:linear-gradient(0deg,#23241f 0,rgba(78,84,52,.2) 100%);border-top:1px solid #4e5434}.CPUInfo{height:600px;overflow-y:scroll;overflow-x:visible;white-space:pre-wrap;vertical-align:top;padding:0;margin:0;display:inline-block;background-color:#131310;color:#ddd;width:50%}.GPUInfo{height:600px;overflow-y:scroll;overflow-x:visible;white-space:pre-wrap;vertical-align:top;padding:0;margin:0;display:inline-block;background-color:#131310;color:#ddd;width:50%}.benchmarkTitle{text-align:center;background:#23241f;background:linear-gradient(0deg,#23241f 0,rgba(78,84,52,.2) 100%);border-top:1px solid #4e5434}td,th{padding:5px}.benchmarkTable{width:100%}.benchmarkID{background-color:#131310}th.benchmarkOP{text-align:center}.benchmarkOP{background-color:#470c00}.benchmarkMSVC{background-color:#450029}.benchmarkCLANG{background-color:#751900}.benchmarkGCC{background-color:#61000f}.benchmarkTimeMS{text-align:center}td.benchmarkOP{background-color:#6c291c}td.benchmarkMSVC{background-color:#6a1c4a}td.benchmarkCLANG{background-color:#9a3115}td.benchmarkGCC{background-color:#861829}td.benchmarkEntry{color:rgba(255,255,255,.5)}td.benchmarkEntryOPSize64.benchmarkOP{background-color:#47231c}td.benchmarkEntryOPSize64.benchmarkTimeMS.benchmarkMSVC{background-color:#453b41}td.benchmarkEntryOPSize64.benchmarkTimeMS.benchmarkCLANG{background-color:#753624}td.benchmarkEntryOPSize64.benchmarkTimeMS.benchmarkGCC{background-color:#602b33}td.benchmarkEntryOPSize128.benchmarkOP{background-color:#4a3919}td.benchmarkEntryOPSize128.benchmarkTimeMS.benchmarkMSVC{background-color:#48543e}td.benchmarkEntryOPSize128.benchmarkTimeMS.benchmarkCLANG{background-color:#784f21}td.benchmarkEntryOPSize128.benchmarkTimeMS.benchmarkGCC{background-color:#634430}td.benchmarkEntryOPSize256.benchmarkOP{background-color:#3e3c1d}td.benchmarkEntryOPSize256.benchmarkTimeMS.benchmarkMSVC{background-color:#3a5743}td.benchmarkEntryOPSize256.benchmarkTimeMS.benchmarkCLANG{background-color:#6a5225}td.benchmarkEntryOPSize256.benchmarkTimeMS.benchmarkGCC{background-color:#554735}td.benchmarkEntryOPSize512.benchmarkOP{background-color:#1d3521}td.benchmarkEntryOPSize512.benchmarkTimeMS.benchmarkMSVC{background-color:#154f47}td.benchmarkEntryOPSize512.benchmarkTimeMS.benchmarkCLANG{background-color:#454a2a}td.benchmarkEntryOPSize512.benchmarkTimeMS.benchmarkGCC{background-color:#303f39}td.benchmarkEntryOPSize1024.benchmarkOP{background-color:#1d3331}td.benchmarkEntryOPSize1024.benchmarkTimeMS.benchmarkMSVC{background-color:#154d59}td.benchmarkEntryOPSize1024.benchmarkTimeMS.benchmarkCLANG{background-color:#45473b}td.benchmarkEntryOPSize1024.benchmarkTimeMS.benchmarkGCC{background-color:#303d4b}td.benchmarkEntryOPSize2048.benchmarkOP{background-color:#1d2730}td.benchmarkEntryOPSize2048.benchmarkTimeMS.benchmarkMSVC{background-color:#154058}td.benchmarkEntryOPSize2048.benchmarkTimeMS.benchmarkCLANG{background-color:#453a3b}td.benchmarkEntryOPSize2048.benchmarkTimeMS.benchmarkGCC{background-color:#303049}td.benchmarkEntryOPSize4096.benchmarkOP{background-color:#281f2c}td.benchmarkEntryOPSize4096.benchmarkTimeMS.benchmarkMSVC{background-color:#213754}td.benchmarkEntryOPSize4096.benchmarkTimeMS.benchmarkCLANG{background-color:#513237}td.benchmarkEntryOPSize4096.benchmarkTimeMS.benchmarkGCC{background-color:#3c2745}td.benchmarkEntryOPSize8192.benchmarkOP{background-color:#381d2a}td.benchmarkEntryOPSize8192.benchmarkTimeMS.benchmarkMSVC{background-color:#333452}td.benchmarkEntryOPSize8192.benchmarkTimeMS.benchmarkCLANG{background-color:#632f35}td.benchmarkEntryOPSize8192.benchmarkTimeMS.benchmarkGCC{background-color:#4e2444}td.benchmarkEntryOPSize16384.benchmarkOP{background-color:#1d1713}td.benchmarkEntryOPSize16384.benchmarkTimeMS.benchmarkMSVC{background-color:#152d37}td.benchmarkEntryOPSize16384.benchmarkTimeMS.benchmarkCLANG{background-color:#45281a}td.benchmarkEntryOPSize16384.benchmarkTimeMS.benchmarkGCC{background-color:#301d29}</style><script>function AutoRefresh( t ) {setTimeout(\"location.reload(false);\", t);}</script></head>"
+htmlHead        ="<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>ULIS3 Benchmark</title><style>body{background-color:#23241f;color:#f8f8d1;font-family:Lucida Console;margin:0;padding:0;overflow-x:hidden}table,td,th{border-collapse:collapse;text-align:left;padding:0;margin:0}.info{background-color:#131310;font-size:12px}.infoTitle{font-size:16px;padding:5px;width:100%;text-align:center;text-align:center;background:#23241f;background:linear-gradient(0deg,#23241f 0,rgba(78,84,52,.2) 100%);border-top:1px solid #4e5434}.CPUInfo{height:600px;overflow-y:scroll;overflow-x:visible;white-space:pre-wrap;vertical-align:top;padding:0;margin:0;display:inline-block;background-color:#131310;color:#ddd;width:50%}.GPUInfo{height:600px;overflow-y:scroll;overflow-x:visible;white-space:pre-wrap;vertical-align:top;padding:0;margin:0;display:inline-block;background-color:#131310;color:#ddd;width:50%}.benchmarkTitle{text-align:center;background:#23241f;background:linear-gradient(0deg,#23241f 0,rgba(78,84,52,.2) 100%);border-top:1px solid #4e5434}td,th{padding:5px}.benchmarkTable{width:100%}.benchmarkID{background-color:#131310}th.benchmarkOP{text-align:center}.benchmarkOP{background-color:#470c00}.benchmarkMSVC{background-color:#450029}.benchmarkCLANG{background-color:#751900}.benchmarkGCC{background-color:#61000f}.benchmarkTimeMS{text-align:center}td.benchmarkOP{background-color:#6c291c}td.benchmarkMSVC{background-color:#6a1c4a}td.benchmarkCLANG{background-color:#9a3115}td.benchmarkGCC{background-color:#861829}td.benchmarkEntry{color:rgba(255,255,255,.5)}td.benchmarkEntryOPSize64.benchmarkOP{background-color:#47231c}td.benchmarkEntryOPSize64.benchmarkTimeMS.benchmarkMSVC{background-color:#453b41}td.benchmarkEntryOPSize64.benchmarkTimeMS.benchmarkCLANG{background-color:#753624}td.benchmarkEntryOPSize64.benchmarkTimeMS.benchmarkGCC{background-color:#602b33}td.benchmarkEntryOPSize128.benchmarkOP{background-color:#4a3919}td.benchmarkEntryOPSize128.benchmarkTimeMS.benchmarkMSVC{background-color:#48543e}td.benchmarkEntryOPSize128.benchmarkTimeMS.benchmarkCLANG{background-color:#784f21}td.benchmarkEntryOPSize128.benchmarkTimeMS.benchmarkGCC{background-color:#634430}td.benchmarkEntryOPSize256.benchmarkOP{background-color:#3e3c1d}td.benchmarkEntryOPSize256.benchmarkTimeMS.benchmarkMSVC{background-color:#3a5743}td.benchmarkEntryOPSize256.benchmarkTimeMS.benchmarkCLANG{background-color:#6a5225}td.benchmarkEntryOPSize256.benchmarkTimeMS.benchmarkGCC{background-color:#554735}td.benchmarkEntryOPSize512.benchmarkOP{background-color:#1d3521}td.benchmarkEntryOPSize512.benchmarkTimeMS.benchmarkMSVC{background-color:#154f47}td.benchmarkEntryOPSize512.benchmarkTimeMS.benchmarkCLANG{background-color:#454a2a}td.benchmarkEntryOPSize512.benchmarkTimeMS.benchmarkGCC{background-color:#303f39}td.benchmarkEntryOPSize1024.benchmarkOP{background-color:#1d3331}td.benchmarkEntryOPSize1024.benchmarkTimeMS.benchmarkMSVC{background-color:#154d59}td.benchmarkEntryOPSize1024.benchmarkTimeMS.benchmarkCLANG{background-color:#45473b}td.benchmarkEntryOPSize1024.benchmarkTimeMS.benchmarkGCC{background-color:#303d4b}td.benchmarkEntryOPSize2048.benchmarkOP{background-color:#1d2730}td.benchmarkEntryOPSize2048.benchmarkTimeMS.benchmarkMSVC{background-color:#154058}td.benchmarkEntryOPSize2048.benchmarkTimeMS.benchmarkCLANG{background-color:#453a3b}td.benchmarkEntryOPSize2048.benchmarkTimeMS.benchmarkGCC{background-color:#303049}td.benchmarkEntryOPSize4096.benchmarkOP{background-color:#281f2c}td.benchmarkEntryOPSize4096.benchmarkTimeMS.benchmarkMSVC{background-color:#213754}td.benchmarkEntryOPSize4096.benchmarkTimeMS.benchmarkCLANG{background-color:#513237}td.benchmarkEntryOPSize4096.benchmarkTimeMS.benchmarkGCC{background-color:#3c2745}td.benchmarkEntryOPSize8192.benchmarkOP{background-color:#381d2a}td.benchmarkEntryOPSize8192.benchmarkTimeMS.benchmarkMSVC{background-color:#333452}td.benchmarkEntryOPSize8192.benchmarkTimeMS.benchmarkCLANG{background-color:#632f35}td.benchmarkEntryOPSize8192.benchmarkTimeMS.benchmarkGCC{background-color:#4e2444}td.benchmarkEntryOPSize16384.benchmarkOP{background-color:#1d1713}td.benchmarkEntryOPSize16384.benchmarkTimeMS.benchmarkMSVC{background-color:#152d37}td.benchmarkEntryOPSize16384.benchmarkTimeMS.benchmarkCLANG{background-color:#45281a}td.benchmarkEntryOPSize16384.benchmarkTimeMS.benchmarkGCC{background-color:#301d29}</style><script>function AutoRefresh( t ) {setTimeout(\"location.reload(false);\", t);}</script></head>"
 htmlBodyBegin   ="<body onload = \"JavaScript:AutoRefresh({});\">"
 htmlInfoBegin   ="<div class=\"info\"><div class=\"infoTitle\">Local Machine Features</div><div class=\"CPUInfo\">"
 cpuinfo         = subprocess.run( cpuinfo_path, capture_output=True)
@@ -92,7 +93,7 @@ htmlInfoInter   ="</div><div class=\"GPUInfo\">"
 gpuinfo         = subprocess.run( gpuinfo_path, capture_output=True)
 gpuinfo         = str( gpuinfo.stdout, 'utf8' ).replace( "\r", "" )
 htmlInfoEnd     ="</div></div>"
-htmlTableBegin  ="<div id=\"mainWrapper\"> <table class=\"benchmarkTable\"> <thead> <tr> <th class=\"benchmarkHead benchmarkTitle\" colspan=\"15\">ULIS2 Benchmark</th> </tr><tr> <td class=\"benchmarkHead benchmarkID\" colspan=\"15\">Machine ID</td></tr><tr> <th class=\"benchmarkHead benchmarkOP \" colspan=\"6\">Operation</th> <th class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS \" colspan=\"3\">MSVC</th> <th class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS \" colspan=\"3\">CLANG</th> <th class=\"benchmarkHead benchmarkGCC benchmarkTimeMS \" colspan=\"3\">GCC</th> </tr><tr> <td class=\"benchmarkHead benchmarkOP benchmarkName \" colspan=\"1\">Name</td><td class=\"benchmarkHead benchmarkOP benchmarkFormat \" colspan=\"1\">Format</td><td class=\"benchmarkHead benchmarkOP benchmarkThreads \" colspan=\"1\">Threads</td><td class=\"benchmarkHead benchmarkOP benchmarkRepeat \" colspan=\"1\">Repeat</td><td class=\"benchmarkHead benchmarkOP benchmarkSize \" colspan=\"1\">Size</td><td class=\"benchmarkHead benchmarkOP benchmarkExtra \" colspan=\"1\">Parameters</td><td class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS benchmarkMEM \" colspan=\"1\">MEM</td><td class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS benchmarkSSE \" colspan=\"1\">SSE42</td><td class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS benchmarkAVX \" colspan=\"1\">AVX2</td><td class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS benchmarkMEM \" colspan=\"1\">MEM</td><td class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS benchmarkSSE \" colspan=\"1\">SSE42</td><td class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS benchmarkAVX \" colspan=\"1\">AVX2</td><td class=\"benchmarkHead benchmarkGCC benchmarkTimeMS benchmarkMEM \" colspan=\"1\">MEM</td><td class=\"benchmarkHead benchmarkGCC benchmarkTimeMS benchmarkSSE \" colspan=\"1\">SSE42</td><td class=\"benchmarkHead benchmarkGCC benchmarkTimeMS benchmarkAVX \" colspan=\"1\">AVX2</td></tr></thead> <tbody>"
+htmlTableBegin  ="<div id=\"mainWrapper\"> <table class=\"benchmarkTable\"> <thead> <tr> <th class=\"benchmarkHead benchmarkTitle\" colspan=\"15\">ULIS3 Benchmark</th> </tr><tr> <td class=\"benchmarkHead benchmarkID\" colspan=\"15\">Machine ID</td></tr><tr> <th class=\"benchmarkHead benchmarkOP \" colspan=\"6\">Operation</th> <th class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS \" colspan=\"3\">MSVC</th> <th class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS \" colspan=\"3\">CLANG</th> <th class=\"benchmarkHead benchmarkGCC benchmarkTimeMS \" colspan=\"3\">GCC</th> </tr><tr> <td class=\"benchmarkHead benchmarkOP benchmarkName \" colspan=\"1\">Name</td><td class=\"benchmarkHead benchmarkOP benchmarkFormat \" colspan=\"1\">Format</td><td class=\"benchmarkHead benchmarkOP benchmarkThreads \" colspan=\"1\">Threads</td><td class=\"benchmarkHead benchmarkOP benchmarkRepeat \" colspan=\"1\">Repeat</td><td class=\"benchmarkHead benchmarkOP benchmarkSize \" colspan=\"1\">Size</td><td class=\"benchmarkHead benchmarkOP benchmarkExtra \" colspan=\"1\">Parameters</td><td class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS benchmarkMEM \" colspan=\"1\">MEM</td><td class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS benchmarkSSE \" colspan=\"1\">SSE42</td><td class=\"benchmarkHead benchmarkMSVC benchmarkTimeMS benchmarkAVX \" colspan=\"1\">AVX2</td><td class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS benchmarkMEM \" colspan=\"1\">MEM</td><td class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS benchmarkSSE \" colspan=\"1\">SSE42</td><td class=\"benchmarkHead benchmarkCLANG benchmarkTimeMS benchmarkAVX \" colspan=\"1\">AVX2</td><td class=\"benchmarkHead benchmarkGCC benchmarkTimeMS benchmarkMEM \" colspan=\"1\">MEM</td><td class=\"benchmarkHead benchmarkGCC benchmarkTimeMS benchmarkSSE \" colspan=\"1\">SSE42</td><td class=\"benchmarkHead benchmarkGCC benchmarkTimeMS benchmarkAVX \" colspan=\"1\">AVX2</td></tr></thead> <tbody>"
 htmlEnd         ="</tbody></table></div></body></html>"
 htmlEntry = """
 <tr>
@@ -113,7 +114,7 @@ htmlEntry = """
     <td class="benchmarkEntry   benchmarkEntryOPSize{size} benchmarkTimeMS benchmarkGCC        " >{GCCTimeAVX}</td>
 </tr>"""
 
-reloadTime = 2000
+reloadTime = 5000
 fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
 fileObjectBenchmarkHtml.truncate(0)
 fileObjectBenchmarkHtml.write( htmlHead )
@@ -126,18 +127,19 @@ fileObjectBenchmarkHtml.write( htmlInfoEnd )
 fileObjectBenchmarkHtml.write( htmlTableBegin )
 fileObjectBenchmarkHtml.close()
 
-print( "ULIS2 Benchmark running, don't close this window !" )
+print( "ULIS3 Benchmark running, don't close this window !" )
 print( "get visual feedback @" + join( dirname( __file__ ), "benchmark.html" ) )
 webbrowser.open('benchmark.html', new=2)
 
 sizes   = [ 64,     128,    256,    512,    1024,   2048,   4096,   8192,   16384   ]
-repeats = [ 4000,   2000,   1000,   500,    250,    175,    120,    60,     30      ]
-repeatModifier = 0.25
+repeats = [ 16384,  8192,   4096,   2048,   1024,   512,    256,    128,    64      ]
+repeatModifier = 0.5
 numBlendingModes    = 40
 numAlphaModes       = 9
 op      = [ "clear", "fill", "blend", "copy", "conv" ]
 subWorker = numWorkers
 workers = [numWorkers]
+
 while subWorker > 1:
     subWorker = int( subWorker / 2 )
     workers.append( subWorker )
@@ -154,22 +156,25 @@ for _op in [ "clear", "fill", "copy" ]:
             timeCLANGMEM    = Popen( [ benchmark_clang_path,    _op, str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem" ], stdout=PIPE ).wait()     / modRepeat
             timeCLANGSSE    = Popen( [ benchmark_clang_path,    _op, str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse" ], stdout=PIPE ).wait()     / modRepeat
             timeCLANGAVX    = Popen( [ benchmark_clang_path,    _op, str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx" ], stdout=PIPE ).wait()     / modRepeat
+            timeGCCMEM      = Popen( [ benchmark_gcc_path,      _op, str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem" ], stdout=PIPE ).wait()     / modRepeat
+            timeGCCSSE      = Popen( [ benchmark_gcc_path,      _op, str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse" ], stdout=PIPE ).wait()     / modRepeat
+            timeGCCAVX      = Popen( [ benchmark_gcc_path,      _op, str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx" ], stdout=PIPE ).wait()     / modRepeat
             fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
-            fileObjectBenchmarkHtml.write( htmlEntry.format( size=sizes[i]
-                                                           , op=_op
-                                                           , format="RGBA8"
-                                                           , threads=_threads
-                                                           , repeat=modRepeat
-                                                           , parameters="-"
-                                                           , MSVCTimeMEM= format( timeMSVCMEM, '.6f')
-                                                           , MSVCTimeSSE= format( timeMSVCSSE, '.6f')
-                                                           , MSVCTimeAVX= format( timeMSVCAVX, '.6f')
-                                                           , CLANGTimeMEM= format( timeCLANGMEM, '.6f')
-                                                           , CLANGTimeSSE= format( timeCLANGSSE, '.6f')
-                                                           , CLANGTimeAVX= format( timeCLANGAVX, '.6f')
-                                                           , GCCTimeMEM="-"
-                                                           , GCCTimeSSE="-"
-                                                           , GCCTimeAVX="-" ) )
+            fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
+                                                           , op             = _op
+                                                           , format         = "RGBA8"
+                                                           , threads        = _threads
+                                                           , repeat         = modRepeat
+                                                           , parameters     = "-"
+                                                           , MSVCTimeMEM    = format( timeMSVCMEM, '.6f')
+                                                           , MSVCTimeSSE    = format( timeMSVCSSE, '.6f')
+                                                           , MSVCTimeAVX    = format( timeMSVCAVX, '.6f')
+                                                           , CLANGTimeMEM   = format( timeCLANGMEM, '.6f')
+                                                           , CLANGTimeSSE   = format( timeCLANGSSE, '.6f')
+                                                           , CLANGTimeAVX   = format( timeCLANGAVX, '.6f')
+                                                           , GCCTimeMEM     = format( timeGCCMEM, '.6f' )
+                                                           , GCCTimeSSE     = format( timeGCCSSE, '.6f' )
+                                                           , GCCTimeAVX     = format( timeGCCAVX, '.6f' ) ) )
             fileObjectBenchmarkHtml.close()
 
 # Test Conv RGBA8 To LabAf
@@ -178,24 +183,26 @@ for i in range( len(sizes) ):
         modRepeat = math.ceil( repeats[i] * repeatModifier )
         timeMSVCMEM     = Popen( [ benchmark_msvc_path,     "conv", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", str( formats["LabAF"] ) ], stdout=PIPE ).wait()     / modRepeat
         timeCLANGMEM    = Popen( [ benchmark_clang_path,    "conv", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", str( formats["LabAF"] ) ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCMEM      = Popen( [ benchmark_gcc_path,      "conv", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", str( formats["LabAF"] ) ], stdout=PIPE ).wait()     / modRepeat
         fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
-        fileObjectBenchmarkHtml.write( htmlEntry.format( size=sizes[i]
-                                                       , op="conv"
-                                                       , format="RGBA8"
-                                                       , threads=_threads
-                                                       , repeat=modRepeat
-                                                       , parameters="To LabAf"
-                                                       , MSVCTimeMEM= format( timeMSVCMEM, '.6f')
-                                                       , MSVCTimeSSE= "-"
-                                                       , MSVCTimeAVX= "-"
-                                                       , CLANGTimeMEM= format( timeCLANGMEM, '.6f')
-                                                       , CLANGTimeSSE= "-"
-                                                       , CLANGTimeAVX= "-"
-                                                       , GCCTimeMEM="-"
-                                                       , GCCTimeSSE="-"
-                                                       , GCCTimeAVX="-" ) )
+        fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
+                                                       , op             ="conv"
+                                                       , format         ="RGBA8"
+                                                       , threads        = _threads
+                                                       , repeat         = modRepeat
+                                                       , parameters     = "To LabAf"
+                                                       , MSVCTimeMEM    = format( timeMSVCMEM, '.6f')
+                                                       , MSVCTimeSSE    = "-"
+                                                       , MSVCTimeAVX    = "-"
+                                                       , CLANGTimeMEM   = format( timeCLANGMEM, '.6f')
+                                                       , CLANGTimeSSE   = "-"
+                                                       , CLANGTimeAVX   = "-"
+                                                       , GCCTimeMEM     = format( timeGCCMEM, '.6f')
+                                                       , GCCTimeSSE     = "-"
+                                                       , GCCTimeAVX     = "-" ) )
         fileObjectBenchmarkHtml.close()
 
+#blend noAA
 for i in range( len(sizes) ):
     for _threads in workers:
         modRepeat = math.ceil( repeats[i] * repeatModifier )
@@ -205,22 +212,87 @@ for i in range( len(sizes) ):
         timeCLANGMEM    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
         timeCLANGSSE    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
         timeCLANGAVX    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCMEM      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCSSE      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCAVX      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "0" ], stdout=PIPE ).wait()     / modRepeat
         fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
-        fileObjectBenchmarkHtml.write( htmlEntry.format( size=sizes[i]
-                                                       , op="blend"
-                                                       , format="RGBA8"
-                                                       , threads=_threads
-                                                       , repeat=modRepeat
-                                                       , parameters="BM_NORMAL | AM_NORMAL | NO_AA"
-                                                       , MSVCTimeMEM= format( timeMSVCMEM, '.6f')
-                                                       , MSVCTimeSSE= format( timeMSVCSSE, '.6f')
-                                                       , MSVCTimeAVX= format( timeMSVCAVX, '.6f')
-                                                       , CLANGTimeMEM= format( timeCLANGMEM, '.6f')
-                                                       , CLANGTimeSSE= format( timeCLANGSSE, '.6f')
-                                                       , CLANGTimeAVX= format( timeCLANGAVX, '.6f')
-                                                       , GCCTimeMEM="-"
-                                                       , GCCTimeSSE="-"
-                                                       , GCCTimeAVX="-" ) )
+        fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
+                                                       , op             = "blend"
+                                                       , format         = "RGBA8"
+                                                       , threads        = _threads
+                                                       , repeat         = modRepeat
+                                                       , parameters     = "BM_NORMAL | AM_NORMAL | NO_AA"
+                                                       , MSVCTimeMEM    = format( timeMSVCMEM, '.6f')
+                                                       , MSVCTimeSSE    = format( timeMSVCSSE, '.6f')
+                                                       , MSVCTimeAVX    = format( timeMSVCAVX, '.6f')
+                                                       , CLANGTimeMEM   = format( timeCLANGMEM, '.6f')
+                                                       , CLANGTimeSSE   = format( timeCLANGSSE, '.6f')
+                                                       , CLANGTimeAVX   = format( timeCLANGAVX, '.6f')
+                                                       , GCCTimeMEM     = format( timeGCCMEM, '.6f' )
+                                                       , GCCTimeSSE     = format( timeGCCSSE, '.6f' )
+                                                       , GCCTimeAVX     = format( timeGCCAVX, '.6f' ) ) )
+        fileObjectBenchmarkHtml.close()
+
+#blend yesAA
+for i in range( len(sizes) ):
+    for _threads in workers:
+        modRepeat = math.ceil( repeats[i] * repeatModifier )
+        timeMSVCMEM     = Popen( [ benchmark_msvc_path,     "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCSSE     = Popen( [ benchmark_msvc_path,     "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCAVX     = Popen( [ benchmark_msvc_path,     "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGMEM    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGSSE    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGAVX    = Popen( [ benchmark_clang_path,    "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCMEM      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCSSE      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCAVX      = Popen( [ benchmark_gcc_path,      "blend", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
+        fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
+                                                       , op             = "blend"
+                                                       , format         = "RGBA8"
+                                                       , threads        = _threads
+                                                       , repeat         = modRepeat
+                                                       , parameters     = "BM_NORMAL | AM_NORMAL | YES_AA"
+                                                       , MSVCTimeMEM    = format( timeMSVCMEM, '.6f')
+                                                       , MSVCTimeSSE    = format( timeMSVCSSE, '.6f')
+                                                       , MSVCTimeAVX    = format( timeMSVCAVX, '.6f')
+                                                       , CLANGTimeMEM   = format( timeCLANGMEM, '.6f')
+                                                       , CLANGTimeSSE   = format( timeCLANGSSE, '.6f')
+                                                       , CLANGTimeAVX   = format( timeCLANGAVX, '.6f')
+                                                       , GCCTimeMEM     = format( timeGCCMEM, '.6f' )
+                                                       , GCCTimeSSE     = format( timeGCCSSE, '.6f' )
+                                                       , GCCTimeAVX     = format( timeGCCAVX, '.6f' ) ) )
+        fileObjectBenchmarkHtml.close()
+
+#transform
+for i in range( len(sizes) ):
+    for _threads in workers:
+        modRepeat = math.ceil( repeats[i] * repeatModifier )
+        timeMSVCMEM     = Popen( [ benchmark_msvc_path,     "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCSSE     = Popen( [ benchmark_msvc_path,     "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeMSVCAVX     = Popen( [ benchmark_msvc_path,     "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGMEM    = Popen( [ benchmark_clang_path,    "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGSSE    = Popen( [ benchmark_clang_path,    "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeCLANGAVX    = Popen( [ benchmark_clang_path,    "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCMEM      = Popen( [ benchmark_gcc_path,      "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "mem", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCSSE      = Popen( [ benchmark_gcc_path,      "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "sse", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        timeGCCAVX      = Popen( [ benchmark_gcc_path,      "transform", str( formats["RGBA8"] ), str( _threads ), str( modRepeat ), str( sizes[i] ), "avx", "0.5", "0", "0", "0", "0.5", "0", "0", "0", "1" ], stdout=PIPE ).wait()     / modRepeat
+        fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
+        fileObjectBenchmarkHtml.write( htmlEntry.format( size           = sizes[i]
+                                                       , op             = "conv"
+                                                       , format         = "RGBA8"
+                                                       , threads        = _threads
+                                                       , repeat         = modRepeat
+                                                       , parameters     = "BM_NORMAL | AM_NORMAL | NO_AA"
+                                                       , MSVCTimeMEM    = format( timeMSVCMEM, '.6f')
+                                                       , MSVCTimeSSE    = format( timeMSVCSSE, '.6f')
+                                                       , MSVCTimeAVX    = format( timeMSVCAVX, '.6f')
+                                                       , CLANGTimeMEM   = format( timeCLANGMEM, '.6f')
+                                                       , CLANGTimeSSE   = format( timeCLANGSSE, '.6f')
+                                                       , CLANGTimeAVX   = format( timeCLANGAVX, '.6f')
+                                                       , GCCTimeMEM     = format( timeGCCMEM, '.6f' )
+                                                       , GCCTimeSSE     = format( timeGCCSSE, '.6f' )
+                                                       , GCCTimeAVX     = format( timeGCCAVX, '.6f' ) ) )
         fileObjectBenchmarkHtml.close()
 
 with fileinput.FileInput('benchmark.html', inplace=True ) as file:
@@ -230,5 +302,5 @@ with fileinput.FileInput('benchmark.html', inplace=True ) as file:
 fileObjectBenchmarkHtml = open('benchmark.html', 'a+')
 fileObjectBenchmarkHtml.write( htmlEnd )
 fileObjectBenchmarkHtml.close()
-
+print( "ULIS3 Benchmark finished, you can close this window, backup benchmark.html to keep results." )
 os.system("pause")

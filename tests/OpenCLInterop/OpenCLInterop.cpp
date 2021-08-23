@@ -1,23 +1,24 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /**
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         OpenCLInterop.cpp
 * @author       Clement Berthaud
-* @brief        Test application for ULIS2.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        Test application for ULIS3.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS2>
-#include <CL/cl.hpp>
+#include <ULIS3>
+//#include <CL/cl.hpp>
 #include <vector>
-using namespace ::ul2;
+using namespace ::ul3;
 
 int
 main() {
+    /*
     // OpenCL
     //get all platforms (drivers)
     std::vector<cl::Platform> all_platforms;
@@ -82,7 +83,7 @@ main() {
     for(int i=0;i<10;i++){
         std::cout<<C[i]<< " " << std::endl;
     }
-
+    */
     return  0;
 }
 

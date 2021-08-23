@@ -31,7 +31,7 @@
   <!-- Layout definition for a class page -->
   <class>
     <briefdescription visible="yes"/>
-    <includes visible="$SHOW_INCLUDE_FILES"/>
+    <includes visible="no"/>
     <inheritancegraph visible="$CLASS_GRAPH"/>
     <collaborationgraph visible="$COLLABORATION_GRAPH"/>
     <memberdecl>
@@ -121,10 +121,10 @@
   <!-- Layout definition for a file page -->
   <file>
     <briefdescription visible="yes"/>
-    <includes visible="$SHOW_INCLUDE_FILES"/>
+    <includes visible="no"/>
     <includegraph visible="$INCLUDE_GRAPH"/>
     <includedbygraph visible="$INCLUDED_BY_GRAPH"/>
-    <sourcelink visible="yes"/>
+    <sourcelink visible="no"/>
     <memberdecl>
       <interfaces visible="yes" title=""/>
       <classes visible="yes" title=""/>

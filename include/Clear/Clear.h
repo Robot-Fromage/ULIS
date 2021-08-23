@@ -1,21 +1,23 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         Clear.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the Clear entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
 
-ULIS2_NAMESPACE_BEGIN
-ULIS2_API void Clear( FThreadPool*              iThreadPool
+ULIS3_NAMESPACE_BEGIN
+/////////////////////////////////////////////////////
+// Clear
+ULIS3_API void Clear( FThreadPool*              iThreadPool
                     , bool                      iBlocking
                     , uint32                    iPerfIntent
                     , const FHostDeviceInfo&    iHostDeviceInfo
@@ -23,7 +25,9 @@ ULIS2_API void Clear( FThreadPool*              iThreadPool
                     , FBlock*                   iDestination
                     , const FRect&              iArea );
 
-ULIS2_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
+/////////////////////////////////////////////////////
+// ClearRaw
+ULIS3_API void ClearRaw( FBlock* iSrc, bool iCallCB = false );
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 

@@ -9,7 +9,7 @@ file(
 )
 
 add_executable( CPUDeviceInfo ${source_list} )
-target_link_libraries( CPUDeviceInfo ULIS2 )
+target_link_libraries( CPUDeviceInfo ULIS3 )
 
 # For MSVC parse pretty filter names
 foreach(source IN LISTS source_list)

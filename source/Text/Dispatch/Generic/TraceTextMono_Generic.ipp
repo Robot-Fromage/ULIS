@@ -1,14 +1,14 @@
-// Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 // IDDN FR.001.250001.002.S.P.2019.000.00000
-/**
+/*
 *
-*   ULIS2
+*   ULIS3
 *__________________
 *
 * @file         TraceTextMono_Generic.ipp
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic trace text entry point functions.
-* @copyright    Copyright © 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -16,7 +16,7 @@
 #include "Text/Dispatch/TextInfo.h"
 #include "Maths/Geometry.h"
 
-ULIS2_NAMESPACE_BEGIN
+ULIS3_NAMESPACE_BEGIN
 float AlphaBlendAlpha( float iAs, float iAb ) {
     return  iAs + iAb * ( 1.f - iAs );
 }
@@ -78,7 +78,7 @@ TraceTextMono_Generic( std::shared_ptr< _FPrivateTextInfo > iTextParams ) {
     FT_Error error = 0;
     FT_Face face = reinterpret_cast< FT_Face >( iTextParams->font->Handle() );
     error = FT_Set_Pixel_Sizes( face, 0, iTextParams->size );
-    ULIS2_ASSERT( !error, "Error setting face size" );
+    ULIS3_ASSERT( !error, "Error setting face size" );
 
     slot = face->glyph;
     pen.x = 0;
@@ -89,14 +89,14 @@ TraceTextMono_Generic( std::shared_ptr< _FPrivateTextInfo > iTextParams ) {
         FT_Set_Transform( face, &(iTextParams->matrix), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-        ULIS2_ASSERT( !error, "Error loading glyph" );
+        ULIS3_ASSERT( !error, "Error loading glyph" );
         error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-        ULIS2_ASSERT( !error, "Error rendering glyph" );
+        ULIS3_ASSERT( !error, "Error rendering glyph" );
         RasterBitmap< T >( iTextParams, &slot->bitmap, iTextParams->position.x + slot->bitmap_left, iTextParams->position.y + ( autobaseline - slot->bitmap_top ) );
         pen.x += slot->advance.x;
         pen.y += slot->advance.y;
     }
 }
 
-ULIS2_NAMESPACE_END
+ULIS3_NAMESPACE_END
 
