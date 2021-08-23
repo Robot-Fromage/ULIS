@@ -483,11 +483,25 @@ public:
     void OnInvalid( const FOnInvalidBlock& iOnInvalid );
 
     /*!
+    Optain the invalid callback for convenience when reloading data or propagating.
+
+    \sa OnCleanup()
+    */
+    const FOnInvalidBlock& OnInvalid() const;
+
+    /*!
     Set a new cleanup callback that will be called on destruction.
 
     \sa OnInvalid()
     */
     void OnCleanup( const FOnCleanupData& iOnCleanup );
+
+    /*!
+    Optain the cleanup callback for convenience when reloading data or propagating.
+
+    \sa OnCleanup()
+    */
+    const FOnCleanupData& OnCleanup() const;
 
     /*!
     Reconstruct the internal representation from an existing external buffer

@@ -20,7 +20,7 @@ extern FCPUInfo_Private sgCPUInfo_private_instance;
 
 //static
 bool
-FCPUInfo::IsHardwareAmd()
+FCPUInfo::IsHardwareAMD()
 {
     return  ULIS_R_HW_AMD( detail::sgCPUInfo_private_instance.features_bitfield );
 }
@@ -40,14 +40,14 @@ FCPUInfo::IsOSx64() {
 
 //static
 bool
-FCPUInfo::HasOsAvx()
+FCPUInfo::HasOSAVX()
 {
     return  ULIS_R_OS_AVX( detail::sgCPUInfo_private_instance.features_bitfield );
 }
 
 //static
 bool
-FCPUInfo::HasOsAvx512()
+FCPUInfo::HasOSAVX512()
 {
     return  ULIS_R_OS_AVX512( detail::sgCPUInfo_private_instance.features_bitfield );
 }

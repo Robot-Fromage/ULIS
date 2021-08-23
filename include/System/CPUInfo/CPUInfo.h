@@ -45,11 +45,11 @@ private:
     FCPUInfo( FCPUInfo&& ) = delete;
 
 public:
-    static bool IsHardwareAmd();
+    static bool IsHardwareAMD();
     static bool IsHardwareIntel();
     static bool IsOSx64();
-    static bool HasOsAvx();
-    static bool HasOsAvx512();
+    static bool HasOSAVX();
+    static bool HasOSAVX512();
     static bool HasHardwarex64();
     static bool HasHardwareMMX();
     static bool HasHardwareABM();
