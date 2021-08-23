@@ -1,195 +1,269 @@
-// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
-// IDDN FR.001.250001.002.S.P.2019.000.00000
+// IDDN FR.001.250001.004.S.X.2019.000.00000
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
-*
-*   ULIS3
+*   ULIS
 *__________________
-*
 * @file         Platform.h
 * @author       Clement Berthaud
-* @brief        This file provides platform definitions for the ULIS3 library.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+* @brief        This file provides platform definitions for the ULIS library.
+* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+/////////////////////////////////////////////////////
+// Disable CRT Secure non standard msvc versions of functions such as strcpy_s
+#ifdef _MSC_VER
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+
+/////////////////////////////////////////////////////
+// For ASSERT logs
 #include <iostream>
 
 /////////////////////////////////////////////////////
+// STRINGIFY
+#define ULIS_XSTRINGIFY( X ) #X
+#define ULIS_STRINGIFY( X ) ULIS_XSTRINGIFY( X )
+
+/////////////////////////////////////////////////////
 // Detect Build Configuration
-#ifdef NDEBUG
-    #define ULIS3_RELEASE
-#else // !NDEBUG
-    #define ULIS3_DEBUG
-#endif // !NDEBUG
+#ifndef ULIS_RELWITHDEBINFO
+    #ifdef NDEBUG
+        #define ULIS_RELEASE
+    #else // !NDEBUG
+        #define ULIS_DEBUG
+    #endif // !NDEBUG
+#endif
 
 /////////////////////////////////////////////////////
 // Detect Compiler
 #if defined(__clang__)
-    #define ULIS3_CLANG
-#elif defined(__GNUC__) || defined(__GNUG__)
-    #define ULIS3_GCC
+    #define ULIS_CLANG
 #elif defined(_MSC_VER)
-    #define ULIS3_MSVC
+    #define ULIS_MSVC
+#elif defined(__MINGW64__)
+    #define ULIS_MINGW64
+    #define ULIS_MINGW
+#elif defined(__MINGW32__)
+    #define ULIS_MINGW32
+    #define ULIS_MINGW
+#elif defined(__GNUC__) || defined(__GNUG__)
+    #define ULIS_GCC
 #else
-    #define ULIS3_UNKNOWN_COMPILER
+    #define ULIS_UNKNOWN_COMPILER
 #endif
-
-/////////////////////////////////////////////////////
-// Disable CRT Secure non standard msvc versions of functions such as strcpy_s
-#ifdef ULIS3_MSVC
-    #define _CRT_SECURE_NO_WARNINGS 1
-#endif // ULIS3_MSVC
 
 /////////////////////////////////////////////////////
 // Detect Platform
 #ifdef __EMSCRIPTEN__
-    #define ULIS3_EMSCRIPTEN
+    #define ULIS_EMSCRIPTEN
 #else
     #ifdef _WIN32
-        #define ULIS3_WIN
+        #define ULIS_WIN
        #ifdef _WIN64
-          #define ULIS3_WIN64
+          #define ULIS_WIN64
        #else
-          #define ULIS3_WIN32
+          #define ULIS_WIN32
        #endif
     #elif __APPLE__
         #include "TargetConditionals.h"
         #if TARGET_IPHONE_SIMULATOR
-             #define ULIS3_IOS_SIMULATOR
+             #define ULIS_IOS_SIMULATOR
         #elif TARGET_OS_IPHONE
-            #define ULIS3_IOS_DEVICE
+            #define ULIS_IOS_DEVICE
         #elif TARGET_OS_MAC
-            #define ULIS3_MACOS
+            #define ULIS_MACOS
         #else
             #error "Unknown Apple platform"
         #endif
     #elif __linux__
-        #define ULIS3_LINUX
+        #define ULIS_LINUX
     #elif __unix__
-        #define ULIS3_UNIX
+        #define ULIS_UNIX
     #elif defined(_POSIX_VERSION)
-        #define ULIS3_POSIX
+        #define ULIS_POSIX
     #else
         #error "Unknown Platform"
     #endif
 #endif
 
 /////////////////////////////////////////////////////
-// Safety disable thread and SIMD for Emscripten target
-#ifdef ULIS3_EMSCRIPTEN
-#define ULIS3_NO_THREAD_SUPPORT
-#define ULIS3_NO_SIMD_SUPPORT
+// Disable thread and SIMD for Emscripten target
+#ifdef ULIS_EMSCRIPTEN
+#ifndef __EMSCRIPTEN_PTHREADS__
+#define ULIS_NO_THREAD_SUPPORT
+#endif
+#define ULIS_NO_SIMD_SUPPORT
 #endif
 
 /////////////////////////////////////////////////////
 // Force Inline Utility
-#define ULIS3_ENABLE_FORCEINLINE
-#define ULIS3_ENABLE_VECTORCALL
+#define ULIS_ENABLE_FORCEINLINE
+#define ULIS_ENABLE_VECTORCALL
+#define ULIS_ENABLE_RESTRICT
 
-#ifdef ULIS3_ENABLE_FORCEINLINE
+#ifdef ULIS_ENABLE_FORCEINLINE
     #if defined(__clang__)
-    #define ULIS3_FORCEINLINE inline __attribute__ ((always_inline))
+    #define ULIS_FORCEINLINE inline __attribute__ ((always_inline))
     #elif defined(__GNUC__) || defined(__GNUG__)
-    #define ULIS3_FORCEINLINE inline __attribute__ ((always_inline))
+    #define ULIS_FORCEINLINE inline __attribute__ ((always_inline))
     #elif defined(_MSC_VER)
-    #define ULIS3_FORCEINLINE __forceinline
+    #define ULIS_FORCEINLINE __forceinline
     #else
-    #define ULIS3_FORCEINLINE inline
+    #define ULIS_FORCEINLINE inline
     #endif
 #else
-    #define ULIS3_FORCEINLINE inline
-#endif // ULIS3_ENABLE_FORCEINLINE
+    #define ULIS_FORCEINLINE inline
+#endif // ULIS_ENABLE_FORCEINLINE
 
-#ifdef ULIS3_ENABLE_VECTORCALL
+#ifdef ULIS_ENABLE_VECTORCALL
     #if defined(__clang__)
-    #define ULIS3_VECTORCALL __vectorcall
+    #define ULIS_VECTORCALL __vectorcall
     #elif defined(__GNUC__) || defined(__GNUG__)
-    #define ULIS3_VECTORCALL
+    #define ULIS_VECTORCALL
     #elif defined(_MSC_VER)
-    #define ULIS3_VECTORCALL __vectorcall
+    #define ULIS_VECTORCALL __vectorcall
     #else
-    #define ULIS3_VECTORCALL __vectorcall
+    #define ULIS_VECTORCALL __vectorcall
     #endif
 #else
-    #define ULIS3_VECTORCALL
-#endif // ULIS3_ENABLE_FORCEINLINE
+    #define ULIS_VECTORCALL
+#endif // ULIS_ENABLE_FORCEINLINE
+
+#ifdef ULIS_ENABLE_RESTRICT
+    #if defined(__clang__)
+    #define ULIS_RESTRICT __restrict
+    #elif defined(__GNUC__) || defined(__GNUG__)
+    #define ULIS_RESTRICT __restrict
+    #elif defined(_MSC_VER)
+    #define ULIS_RESTRICT __restrict
+    #else
+    #define ULIS_RESTRICT __restrict
+    #endif
+#else
+    #define ULIS_RESTRICT
+#endif // ULIS_ENABLE_RESTRICT
 
 /////////////////////////////////////////////////////
 // Export utility macros
-#ifdef ULIS3_WIN
-    #ifdef ULIS3_BUILD_SHARED
-        #define ULIS3_SHARED
-        #define ULIS3_API __declspec( dllexport )
-        #define ULIS3_API_TEMPLATE template ULIS3_API
-    #elif defined ULIS3_DYNAMIC_LIBRARY
-        #define ULIS3_SHARED
-        #define ULIS3_API __declspec( dllimport )
-        #define ULIS3_API_TEMPLATE extern template ULIS3_API
+#ifdef ULIS_WIN
+    #ifdef ULIS_STATIC_LIBRARY
+        #define ULIS_BUILT_AS_STATIC_LIBRARY
+        #define ULIS_API
     #else
-        #define ULIS3_STATIC
-        #define ULIS3_API
-        #define ULIS3_API_TEMPLATE template
+        #ifdef ULIS_BUILD_SHARED
+            #define ULIS_BUILT_AS_SHARED_LIBRARY
+            #define ULIS_API __declspec( dllexport )
+        #else
+            #define ULIS_BUILT_AS_SHARED_LIBRARY
+            #define ULIS_API __declspec( dllimport )
+        #endif
     #endif
 #else
-    #define ULIS3_API
-    #define ULIS3_API_TEMPLATE template
+    #define ULIS_API
 #endif
 
 /////////////////////////////////////////////////////
 // Macros for Thread and SIMD activation, for embeded targets or WASM
-#ifndef ULIS3_NO_THREAD_SUPPORT
-#define ULIS3_COMPILED_WITH_THREAD_SUPPORT
-#endif // !ULIS3_NO_THREAD_SUPPORT
+#ifndef ULIS_NO_THREAD_SUPPORT
+#define ULIS_COMPILED_WITH_THREAD_SUPPORT
+#endif // !ULIS_NO_THREAD_SUPPORT
 
-#ifndef ULIS3_NO_SIMD_SUPPORT
-#define ULIS3_COMPILED_WITH_SIMD_SUPPORT
-#endif // !ULIS3_NO_SIMD_SUPPORT
+#ifndef ULIS_NO_SIMD_SUPPORT
+#define ULIS_COMPILED_WITH_SIMD_SUPPORT
+#endif // !ULIS_NO_SIMD_SUPPORT
 
-#ifndef ULIS3_NO_FILESYSTEM_SUPPORT
-#define ULIS3_COMPILED_WITH_FILESYSTEM_SUPPORT
-#endif // !ULIS3_NO_SIMD_SUPPORT
+#ifndef ULIS_NO_FILESYSTEM_SUPPORT
+#define ULIS_COMPILED_WITH_FILESYSTEM_SUPPORT
+#endif // !ULIS_NO_SIMD_SUPPORT
+
+/////////////////////////////////////////////////////
+// Macros for features support
+#define ULIS_FEATURE_NO_GPU
+#ifndef ULIS_FEATURE_NO_GPU
+#define ULIS_FEATURE_GPU_ENABLED
+#endif // !ULIS_FEATURE_NO_GPU
+
+#ifndef ULIS_FEATURE_NO_BLEND
+#define ULIS_FEATURE_BLEND_ENABLED
+#endif // !ULIS_FEATURE_NO_BLEND
+
+#ifndef ULIS_FEATURE_NO_CLEAR
+#define ULIS_FEATURE_CLEAR_ENABLED
+#endif // !ULIS_FEATURE_NO_CLEAR
+
+#ifndef ULIS_FEATURE_NO_CONV
+#define ULIS_FEATURE_CONV_ENABLED
+#endif // !ULIS_FEATURE_NO_CONV
+
+#ifndef ULIS_FEATURE_NO_COPY
+#define ULIS_FEATURE_COPY_ENABLED
+#endif // !ULIS_FEATURE_NO_COPY
+
+#ifndef ULIS_FEATURE_NO_FILL
+#define ULIS_FEATURE_FILL_ENABLED
+#endif // !ULIS_FEATURE_NO_FILL
+
+#ifndef ULIS_FEATURE_NO_TEXT
+#define ULIS_FEATURE_TEXT_ENABLED
+#endif // !ULIS_FEATURE_NO_TEXT
+
+#ifndef ULIS_FEATURE_NO_TRANSFORM
+#define ULIS_FEATURE_TRANSFORM_ENABLED
+#endif // !ULIS_FEATURE_NO_TRANSFORM
+
+#ifndef ULIS_FEATURE_NO_IO
+#define ULIS_FEATURE_IO_ENABLED
+#endif // !ULIS_FEATURE_NO_IO
 
 /////////////////////////////////////////////////////
 // Erors
-#pragma warning(disable : 4251)     // Shut down dll interface warnings.
-#pragma warning(disable : 26812)    // Shut non-class enum warnings.
-
+//#pragma warning(disable : 4251)     // Shut down dll interface warnings.
+//#pragma warning(disable : 26812)    // Shut non-class enum warnings.
+#pragma warning(disable : 4010)     // Shut single-line comment contains line-continuation character
+#pragma warning(disable : 4996)     // Shut CRT SECURE
+#pragma warning(disable : 4250)     // Virtual inheritance by dominance
 /////////////////////////////////////////////////////
 // Define Namespaces
-#define ULIS3_NAMESPACE_NAME        ULIS3
-#define ULIS3_SHORT_NAMESPACE_NAME  ul3
-#define ULIS3_NAMESPACE_BEGIN       namespace ULIS3_NAMESPACE_NAME {
-#define ULIS3_NAMESPACE_END         }
-#define ULIS3_FDECL_CLASS( i )      ULIS3_NAMESPACE_BEGIN class i ;     ULIS3_NAMESPACE_END
-#define ULIS3_FDECL_STRUCT( i )     ULIS3_NAMESPACE_BEGIN struct i ;    ULIS3_NAMESPACE_END
-namespace ULIS3_NAMESPACE_NAME {}
-namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
-
-/////////////////////////////////////////////////////
-// Version Specification
-#define ULIS3_VERSION_MAJOR      3
-#define ULIS3_VERSION_MINOR      0
-#define ULIS3_VERSION_MAJOR_STR  "3"
-#define ULIS3_VERSION_MINOR_STR  "0"
+#define ULIS_NAMESPACE_NAME        ULIS
+//#define ULIS_SHORT_NAMESPACE_NAME  ul
+#define ULIS_NAMESPACE_BEGIN       namespace ULIS_NAMESPACE_NAME {
+#define ULIS_NAMESPACE_END         }
+namespace ULIS_NAMESPACE_NAME {}
+//namespace ULIS_SHORT_NAMESPACE_NAME = ULIS_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Crash Behaviours
-#define ULIS3_CRASH *((volatile int*)0) = 0
+#define ULIS_CRASH *((volatile int*)0) = 0
 
 /////////////////////////////////////////////////////
 // Assert Behaviours
 
-#if defined( ULIS3_DEBUG ) || defined( ULIS3_FORCE_ASSERT )
-    #define ULIS3_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS3_CRASH; }
+#define ULIS_WARNING( cond, log )
+
+#if ( !defined( ULIS_EMSCRIPTEN ) ) && ( defined( ULIS_DEBUG ) || defined( ULIS_RELWITHDEBINFO ) || defined( ULIS_FORCE_ASSERT ) )
+    #define ULIS_ASSERT( cond, log )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS_CRASH; }
+    #define ULIS_ASSERT_RETURN_ERROR( cond, log, ret )  if( !( cond ) ) { std::cout << __FILE__ << " " << __FUNCTION__ << " " << __LINE__ << " " << "Assertion failed: " << log << std::endl; ULIS_CRASH; return  ret; }
+    #define ULIS_ASSERT_ENABLED
 #else
-    #define ULIS3_ASSERT( cond, log )
+    #define ULIS_ASSERT( cond, log )
+    #define ULIS_ASSERT_RETURN_ERROR( cond, log, ret ) if( !( cond ) ) { return  ret; }
+#endif
+
+#define ULIS_ENABLE_DEBUG_PRINTF
+#ifdef ULIS_ENABLE_DEBUG_PRINTF
+    #define ULIS_DEBUG_PRINTF( log ) { std::cout << log << std::endl; }
+#else
+    #define ULIS_DEBUG_PRINTF( log )
 #endif
 
 /////////////////////////////////////////////////////
 // SIMD PATCH FOR GNU < 9
 // CHECK: this conflicts with xcode sometimes identifying itself as GNUC < 9 but defining the appropriate simd instructions.
-#ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
-#if defined( ULIS3_GCC ) && ( defined( ULIS3_WIN ) || defined( ULIS3_LINUX ) )
+#ifdef ULIS_COMPILED_WITH_SIMD_SUPPORT
+#if ( defined( ULIS_GCC ) || defined( ULIS_MINGW ) ) && ( defined( ULIS_WIN ) || defined( ULIS_LINUX ) )
 #if __GNUC__ < 9
 // unaligned load and store functions
 #define _mm_loadu_si16(p) _mm_cvtsi32_si128(*(unsigned short const*)(p))
@@ -198,6 +272,11 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 #define _mm_storeu_si32(p, a) (void)(*(int*)(p) = _mm_cvtsi128_si32((a)))
 #define _mm_loadu_si64(p) _mm_loadl_epi64((__m128i const*)(p))
 #define _mm_storeu_si64(p, a) (_mm_storel_epi64((__m128i*)(p), (a)))
+#else // GNUC 10+
+//#define _mm_loadu_si32(p) _mm_castps_si128( _mm_load_ss((float*)p) )
+//#define _mm_storeu_si32(p, a) _mm_store_ss((float*)p, _mm_castsi128_ps(a))
+#define _mm_loadu_si32(p) _mm_cvtsi32_si128(*(unsigned int const*)(p))
+#define _mm_storeu_si32(p, a) (void)(*(int*)(p) = _mm_cvtsi128_si32((a)))
 #endif
 #endif
 #include <immintrin.h>
@@ -205,19 +284,28 @@ namespace ULIS3_SHORT_NAMESPACE_NAME = ULIS3_NAMESPACE_NAME;
 
 /////////////////////////////////////////////////////
 // Conditional compile time detection macro in order to decide if we should include SIMD versions in the various dispatch
-#ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
+#ifdef ULIS_COMPILED_WITH_SIMD_SUPPORT
     #ifdef __AVX2__
-        #define ULIS3_COMPILETIME_AVX2_SUPPORT
+        #define ULIS_COMPILETIME_AVX_SUPPORT
     #endif
     #ifdef __SSE4_2__
-        #define ULIS3_COMPILETIME_SSE42_SUPPORT
+        #define ULIS_COMPILETIME_SSE_SUPPORT
     #endif
 #endif
 
 /////////////////////////////////////////////////////
-// glm FORCE extensions, before any glm related includes
-#ifdef ULIS3_COMPILED_WITH_SIMD_SUPPORT
-#define GLM_FORCE_SSE42
-#define GLM_FORCE_INTRINSICS
+// Conditional Debug Statistics
+#if defined( ULIS_DEBUG ) || defined( ULIS_RELWITHDEBINFO ) || defined( ULIS_FORCE_STATISTICS )
+    #define ULIS_STATISTICS_ENABLED
 #endif
-#define GLM_FORCE_SWIZZLE
+
+/////////////////////////////////////////////////////
+// Disable REGISTER Keyword for LCMS2
+#define CMS_NO_REGISTER_KEYWORD
+
+/////////////////////////////////////////////////////
+// For python binding, fake factory create
+#define ULIS_FAKE_FACTORY_NAME __do_not_call__
+#define ULIS_DECLARE_FAKE_FACTORY( iType ) static iType __do_not_call__();
+#define ULIS_DEFINE_FAKE_FACTORY( iType, ... ) iType iType :: __do_not_call__() { return  iType ( __VA_ARGS__ ); }
+

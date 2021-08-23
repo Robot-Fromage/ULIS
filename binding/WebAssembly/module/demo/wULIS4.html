@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>wULIS4 Interactive WebAssembly Demo</title>
+    <meta name="description" content="wULIS4 Interactive WebAssembly Demo">
+    <meta name="author" content="Clément BERTHAUD - Layl">
+
+    <!-- Core load wULIS4 and delegate to beginApplication -->
+    <script>
+        var Module = {
+            onRuntimeInitialized: function() {
+                beginApplication( Module );
+            }
+        };
+    </script>
+    <script src="wULIS4.js"></script>
+
+    <!-- monaco editor include style -->
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.css">
+
+    <!-- Our Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="main-container" >
+        <div id="title" >
+            <span>
+                wULIS4 Interactive WebAssembly Demo
+            </span>
+        </div>
+        <div id="contents" >
+            <div id="canvas-container" >
+                <span>
+                    <canvas id="viewport" ></canvas>
+                </span>
+            </div>
+            <div id="controls-container" >
+                <span>
+                    <div title="Run the script." class="control" id="play-control" >&#9654</div><!--
+                 --><div title="Advance one frame." class="control" id="next-control" >&#x23ED</div><!--
+                 --><div title="Pause/Play the script." class="control" id="pause-control" >&#x23F8</div><!--
+                 --><div title="Stop the script." class="control" id="stop-control" >&#9724</div><!--
+                 --><div title="Reload the script." class="control" id="reload-control" >&#8617</div><!--
+                 --><div title="Clear the console." class="control" id="clear-control" >&#10799</div><!--
+                 --><div title="Auto scroll the console." class="control" id="scroll-control" >&#8595</div>
+                </span>
+            </div>
+        </div>
+        <div id="console" >
+        </div>
+    </div><!--
+
+ --><div id="monaco-supercontainer" ><div id="monaco-container" ></div></div>
+    <script>var require = { paths: { 'vs': 'monaco-editor/node_modules/monaco-editor/min/vs' } };</script>
+    <script src="monaco-editor/node_modules/monaco-editor/min/vs/loader.js"></script>
+    <script src="monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+    <script src="monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.js"></script>
+</body>
+
+<script>
+    /////////
+    // Utils
+    var wULIS4;
+    var bReady = false;
+    var bAutoScroll = true;
+    /////////
+    // Main gui log function
+    function stdout( iText ) {
+        var console = document.getElementById( "console" );
+        console.innerHTML += "<div>" + iText + "</div>";
+        if( bAutoScroll )
+            console.scrollTo( 0, console.scrollHeight );
+    }
+
+    /////////
+    // Main beginApplication entry point for wULIS4 Demo
+    function beginApplication( iMod ) {
+        bReady = true;
+        wULIS4 = iMod;
+        stdout( wULIS4.FullLibraryInformationString() );
+        //console.log( wULIS4 );
+        //console.log( Object.getOwnPropertyNames( wULIS4["FColor"].prototype ) );
+        //console.log( Object.getOwnPropertySymbols( wULIS4["FColor"].prototype ) );
+        //console.log( wULIS4["FColor"] );
+        //console.log( wULIS4["FColor"].prototype );
+        //for( const key in wULIS4["FColor"] ) stdout( key, wULIS4["FColor"][key] );
+        //for( const key in wULIS4["FColor"].prototype ) stdout( key, wULIS4["FColor"].prototype[key] );
+        //console.log('Version: ' + wULIS4.FullLibraryInformationString() );
+
+        // Test FFormatMetrics
+        //var fmt = new wULIS4.FFormatMetrics( wULIS4.eFormat.Format_RGBA8 );
+        //console.log( fmt.BPP );
+        //fmt.delete()
+
+        // Test FEvent with callback
+        //function onEventCompleteDoStuff( iRect ) {
+        //    console.log( iRect.x )
+        //}
+        //var event = new wULIS4.FEvent( new wULIS4.FOnEventComplete( onEventCompleteDoStuff ) );
+        //event.delete()
+
+        // Test FColor
+        //var color = wULIS4.FColor.RGBA8( 255, 255, 255, 255 );
+        //color.SetR8( 5 );
+        //console.log( color.R8() );
+        //color.delete();
+    }
+</script>
+
+<script>
+    /////////
+    // Utils
+    var bPlaying = false;
+    var framerate = 24;
+    var timeout_ms = 1000.0 / 24.0;
+    var delta = timeout_ms / 1000.0;
+
+    /////////
+    // controls UI behaviours
+    document.getElementById( "play-control" ).onclick = function() {
+        bPlaying = true;
+        if( bReady )
+            onStart();
+    };
+
+    document.getElementById( "next-control" ).onclick = function() {
+        bPlaying = false;
+        if( bReady )
+            onUpdate( delta );
+    };
+
+    document.getElementById( "pause-control" ).onclick = function() {
+        bPlaying = !bPlaying;
+    };
+
+    document.getElementById( "stop-control" ).onclick = function() {
+        bPlaying = false;
+    };
+
+    document.getElementById( "reload-control" ).onclick = function() {
+        bPlaying = false;
+        eval( editor.getValue() );
+    };
+
+    document.getElementById( "clear-control" ).onclick = function() {
+        document.getElementById( "console" ).innerHTML = "";
+    };
+
+    document.getElementById( "scroll-control" ).onclick = function() {
+        bAutoScroll = !bAutoScroll;
+    };
+
+    function runUpdate() {
+        if( bReady && bPlaying )
+            onUpdate( delta );
+    }
+    setInterval( runUpdate, timeout_ms );
+
+    /////////
+    // Setup
+    {
+        var w = 256;
+        var h = 256;
+        var viewport = document.getElementById( "viewport" );
+        viewport.width = w;
+        viewport.height = h;
+        var ctx = viewport.getContext( "2d" );
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect( 0, 0, w, h );
+        var imageData = ctx.getImageData( 0, 0, w, h );
+    }
+
+    /////////
+    // Refresh
+    function refresh( iBlock ) {
+        var w = iBlock.Width();
+        var h = iBlock.Height();
+        var viewport = document.getElementById( "viewport" );
+        viewport.width = w;
+        viewport.height = h;
+        var ctx = viewport.getContext( "2d" );
+        var imageData = ctx.getImageData( 0, 0, w, h );
+        var bits = iBlock.JSCanvasCompatibleData();
+        imageData.data.set( bits );
+        ctx.putImageData( imageData, 0, 0 );
+    }
+
+    //if( crossOriginIsolated ) { alert( "MT" ); }
+
+</script>
+
+<script>
+    /////////
+    // monaco special behaviours
+    monaco.editor.setTheme('vs-dark');
+
+    // resize
+    function updateDimensions() { this.editor.layout(); }
+    window.onresize = updateDimensions;
+
+    // create
+    var editor = monaco.editor.create( document.getElementById( 'monaco-container' ), { value: "", language: 'javascript' } );
+
+    // fill Value
+    editor.setValue( `// wULIS4 Interactive WebAssembly Demo.
+// Interaction beetween C++ compiled to WebAssembly and JS container.
+// No documentation is available for the binding yet.
+// You can use the C++ API reference instead:
+// https://praxinos.coop/Documentation/ULIS/Developer/version/dev/html/
+// Have fun,
+// - Layl.
+var elapsed = 0.0;
+var pool = new wULIS4.FThreadPool( 1 );
+var queue = new wULIS4.FCommandQueue( pool );
+var fmt = wULIS4.eFormat.Format_RGBA8;
+var ctx = new wULIS4.FContext( queue, fmt, wULIS4.ePerformanceIntent.PerformanceIntent_Max );
+var w = 512;
+var h = 512;
+var block = new wULIS4.FBlock( w, h, fmt );
+
+onStart = function() {
+    stdout( wULIS4.FullLibraryInformationString() );
+}
+
+onUpdate = function( delta ) {
+    elapsed += delta;
+    var color = wULIS4.FColor.HSVA8( ( elapsed * 40 ) % 255, 255, 255, 255 );
+    ctx.Fill( block, color, block.Rect() );
+    ctx.Finish();
+    refresh( block );
+    color.delete();
+}
+
+`
+    );
+
+    eval( editor.getValue() );
+</script>
+
+</html>
+

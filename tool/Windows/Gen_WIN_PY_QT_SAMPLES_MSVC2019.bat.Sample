@@ -1,0 +1,28 @@
+@echo off
+setlocal
+pushd %~dp0
+
+:: Make Generated dir for generated project if not exist
+IF NOT EXIST Generated_VisualStudio_Solution_MSVC ( MKDIR Generated_VisualStudio_Solution_MSVC )
+
+:: Step in Generated dir
+cd Generated_VisualStudio_Solution_MSVC
+
+:: Clean cmake garbage if there
+IF EXIST CMakeFiles ( rmdir /S /Q CMakeFiles )
+IF EXIST cmake_install.cmake ( del cmake_install.cmake )
+IF EXIST CMakeCache.txt ( del CMakeCache.txt )
+
+:: Rebuild Project
+cmake   -G "Visual Studio 16 2019"                                                                          ^
+        -A x64                                                                                              ^
+        -DULIS3_BUILD_SHARED=ON                                                                             ^
+        -DULIS3_QT_CMAKE_PATH:STRING="C:/Qt/5.12.6/msvc2017_64/lib/cmake/"                                  ^
+        -DULIS3_BUILD_PYTHON_MODULE=ON                                                                      ^
+        -DULIS3_PYTHON_REL_LIB:STRING="C:/Users/xxx/work/cpython/PCbuild/amd64/python39.lib"                ^
+        -DULIS3_PYTHON_DEB_LIB:STRING="C:/Users/xxx/work/cpython/PCbuild/amd64/python39_d.lib"              ^
+        -DULIS3_PYTHON_INCLUDE_PATH1:STRING="C:/Users/xxx/work/cpython/Include/"                            ^
+        -DULIS3_PYTHON_INCLUDE_PATH2:STRING="C:/Users/xxx/work/cpython/PC/"                                 ^
+        -ULIS3_BUILD_TESTS=ON                                                                               ^
+        -ULIS3_BUILD_SAMPLES=ON                                                                             ^
+        ../../ULIS3

@@ -1,2 +1,2 @@
-ULIS3 repository will be under a commercial license (to be defined as soon as possible)
-Write to contact@praxinos.coop for more informations
+The ULIS repository and all related materials are licensed under a proprietary license.
+The access and use of ULIS is free of charge for open-source non-commercial projects. For commercial purposes, the user is required to contact Praxinos to subscribe for a monthly or yearly plan, and enjoy technical support from the Praxinos team. If, after reading the EULA or CLUF, you are left with doubts or questions about a certain clause or need more information, feel free to contact Praxinos.

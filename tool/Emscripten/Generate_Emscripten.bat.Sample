@@ -1,0 +1,27 @@
+@echo off
+setlocal
+pushd %~dp0
+
+CALL emsdk\emsdk_env.bat
+
+:: Make Generated dir for generated project if not exist
+IF NOT EXIST Generated_Emscripten_WebAssembly ( MKDIR Generated_Emscripten_WebAssembly )
+
+:: Step in Generated dir
+cd Generated_Emscripten_WebAssembly
+
+:: Clean cmake garbage if there
+IF EXIST CMakeFiles ( rmdir /S /Q CMakeFiles )
+IF EXIST cmake_install.cmake ( del cmake_install.cmake )
+IF EXIST CMakeCache.txt ( del CMakeCache.txt )
+
+:: Rebuild Project
+CALL emcmake cmake -DCMAKE_BUILD_TYPE=Release ../../ULIS/binding/WebAssembly
+
+:: Step in Generated dir
+cd Generated_Emscripten_WebAssembly
+
+:: Build
+emmake cmake --build . --config Release --target wInfo -j8
+PAUSE
+
