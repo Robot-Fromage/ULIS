@@ -84,7 +84,7 @@ ISample::operator==( const  ISample& iOther )  const {
 
     bool bytePerfectMatch = true;
     for( int i = 0; i < SamplesPerPixel(); ++i ) {
-        for( jnt j = 0; j < BytesPerPixel(); ++j ) {
+        for( int j = 0; j < BytesPerPixel(); ++j ) {
             if( ( mSignal + mPlaneSize * i + j ) != ( iOther.mSignal + iOther.mPlaneSize * i + j ) ) {
                 bytePerfectMatch = false;
                 break;
