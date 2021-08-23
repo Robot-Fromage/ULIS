@@ -47,7 +47,7 @@ public:
 
 private:
     // Private API
-    virtual std::string MakeName( const std::string& iFile ) const;
+    std::string MakeName( const std::string& iFile ) const;
 
 private:
     // Private Data Members
