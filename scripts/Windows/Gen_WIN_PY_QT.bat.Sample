@@ -1,0 +1,25 @@
+@echo off
+setlocal
+pushd %~dp0
+
+:: Make Generated dir for generated project if not exist
+IF NOT EXIST Generated_VisualStudio_Solution_MSVC ( MKDIR Generated_VisualStudio_Solution_MSVC )
+
+:: Step in Generated dir
+cd Generated_VisualStudio_Solution_MSVC
+
+:: Clean cmake garbage if there
+IF EXIST CMakeFiles ( rmdir /S /Q CMakeFiles )
+IF EXIST cmake_install.cmake ( del cmake_install.cmake )
+IF EXIST CMakeCache.txt ( del CMakeCache.txt )
+
+:: Rebuild Project
+cmake   -G "Visual Studio 15 2017 Win64"                                                                    ^
+        -DULIS2_BUILD_SHARED=ON                                                                             ^
+        -DULIS2_QT_CMAKE_PATH:STRING="C:/Qt/5.12.2/msvc2017_64/lib/cmake/"                                  ^
+        -DULIS2_BUILD_PYTHON_MODULE=ON                                                                      ^
+        -DULIS2_PYTHON_REL_LIB:STRING="C:/Users/xxx/work/cpython37/PCbuild/amd64/python39.lib"              ^
+        -DULIS2_PYTHON_DEB_LIB:STRING="C:/Users/xxx/work/cpython37/PCbuild/amd64/python39_d.lib"            ^
+        -DULIS2_PYTHON_INCLUDE_PATH:STRING="C:/Users/xxx/work/cpython37/Include/"                           ^
+        -DULIS2_PYTHON_ADD_INCLUDE_PATH:STRING="C:/Users/xxx/work/cpython37/PC/"                            ^
+        ../../ULIS2
