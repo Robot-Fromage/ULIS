@@ -134,21 +134,21 @@ FColor::FColor( const uint8* iData, eFormat iFormat, const FColorSpace* iColorSp
 }
 
 FColor::FColor( const FPixel& iPixel )
-    : ISample( nullptr, iPixel.Format(), iPixel.ColorSpace() )
+    : ISample( nullptr, iPixel.Format(), iPixel.ColorSpace(), iPixel.PlaneSize() )
 {
     mSignal = new uint8[ BytesPerPixel() ];
     memcpy( mSignal, iPixel.Bits(), BytesPerPixel() );
 }
 
 FColor::FColor( const ISample& iPixel )
-    : ISample( nullptr, iPixel.Format(), iPixel.ColorSpace() )
+    : ISample( nullptr, iPixel.Format(), iPixel.ColorSpace(), iPixel.PlaneSize() )
 {
     mSignal = new uint8[ BytesPerPixel() ];
     memcpy( mSignal, iPixel.Bits(), BytesPerPixel() );
 }
 
 FColor::FColor( const FColor& iValue )
-    : ISample( nullptr, iValue.Format(), iValue.ColorSpace() )
+    : ISample( nullptr, iValue.Format(), iValue.ColorSpace(), iValue.PlaneSize() )
 {
     mSignal = new uint8[ BytesPerPixel() ];
     memcpy( mSignal, iValue.Bits(), BytesPerPixel() );
@@ -156,7 +156,7 @@ FColor::FColor( const FColor& iValue )
 
 
 FColor::FColor( FColor&& iValue )
-    : ISample( iValue.mSignal, iValue.Format(), iValue.ColorSpace() )
+    : ISample( iValue.mSignal, iValue.Format(), iValue.ColorSpace(), iValue.PlaneSize() )
 {
     iValue.mSignal = nullptr;
 }
@@ -168,6 +168,7 @@ FColor::operator=( const FColor& iOther ) {
 
     ReinterpretFormat( iOther.Format() );
     AssignColorSpace( iOther.ColorSpace() );
+    mPlaneSize = iOther.PlaneSize();
     mSignal = new uint8[ BytesPerPixel() ];
     memcpy( mSignal, iOther.Bits(), BytesPerPixel() );
 
