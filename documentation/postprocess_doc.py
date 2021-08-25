@@ -37,7 +37,7 @@ background_color = "#282828"
 
 def PostProcessSVG( iFile ):
     print( "Processing " + iFile )
-    doc = minidom.parse( "./version_4.0.9/html/" + iFile )
+    doc = minidom.parse( "./version_4.0.10/html/" + iFile )
     root = doc.documentElement
 
     # BACKGROUND
@@ -102,11 +102,11 @@ def PostProcessSVG( iFile ):
             old.unlink()
 
     # SAVE
-    text_file = open( "./version_4.0.9/html/" + iFile, "w" )
+    text_file = open( "./version_4.0.10/html/" + iFile, "w" )
     n = text_file.write(  doc.toxml() )
     text_file.close()
 
-for file in os.listdir( "./version_4.0.9/html/" ):
+for file in os.listdir( "./version_4.0.10/html/" ):
     if file.endswith( ".svg" ) and file.startswith( "class_" ):
         PostProcessSVG( file )
 
