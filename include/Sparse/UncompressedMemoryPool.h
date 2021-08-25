@@ -16,6 +16,7 @@
 #include <atomic>
 #include <forward_list>
 #include <mutex>
+#include <thread>
 
 ULIS_NAMESPACE_BEGIN
 #pragma warning(push)
