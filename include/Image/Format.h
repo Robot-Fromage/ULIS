@@ -55,6 +55,8 @@ struct ULIS_API FFormatMetrics
             case ColorModel_XYZ     : return  ULIS_XYZ;
             case ColorModel_Yxy     : return  ULIS_Yxy;
         }
+        ULIS_ASSERT( false, "Bad color model." );
+        return 0;
     }
 
     /*! Cached Index Table */
