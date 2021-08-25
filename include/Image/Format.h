@@ -42,6 +42,21 @@ struct ULIS_API FFormatMetrics
     /*! Reinterpret the format by changing its type only. */
     FFormatMetrics ReinterpretedFloatType( eType iType ) const;
 
+    ULIS_FORCEINLINE static uint8 DefaultProfileCodeForColorModel( eColorModel iColorModel ) {
+        switch( iColorModel ) {
+            case ColorModel_GREY    : return  ULIS_sGrey;
+            case ColorModel_RGB     : return  ULIS_sRGB;
+            case ColorModel_HSV     : return  ULIS_sRGB;
+            case ColorModel_HSL     : return  ULIS_sRGB;
+            case ColorModel_CMY     : return  ULIS_sRGB;
+            case ColorModel_CMYK    : return  ULIS_sRGB;
+            case ColorModel_YUV     : return  ULIS_YUV;
+            case ColorModel_Lab     : return  ULIS_LabD65;
+            case ColorModel_XYZ     : return  ULIS_XYZ;
+            case ColorModel_Yxy     : return  ULIS_Yxy;
+        }
+    }
+
     /*! Cached Index Table */
     uint8*      IDT;
     /*! Cached Format */
