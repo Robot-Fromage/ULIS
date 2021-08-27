@@ -15,7 +15,6 @@
 #include <mach/mach.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
-#include <sys/vfs.h>
 #include <mach/vm_statistics.h>
 #include <mach/mach_types.h>
 #include <mach/mach_init.h>
