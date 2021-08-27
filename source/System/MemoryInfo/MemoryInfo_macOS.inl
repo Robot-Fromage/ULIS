@@ -15,6 +15,7 @@
 #include <mach/mach.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#include <sys/vfs.h>
 #include <mach/vm_statistics.h>
 #include <mach/mach_types.h>
 #include <mach/mach_init.h>
@@ -31,7 +32,7 @@ static unsigned long long _previousIdleTicks = 0;
 
 uint64 TotalVirtualMemory() {
     uint64 myFreeSwap;
-    struct statfs stats;
+    statfs stats;
     if( statfs( "/", &stats ) == 0 )
         myFreeSwap = (uint64)stats.f_bsize * stats.f_bfree;
     return  myFreeSwap;
@@ -44,7 +45,7 @@ uint64 VirtualMemoryCurrentlyUsed() {
     {
        perror( "unable to get swap usage by calling sysctlbyname(\"vm.swapusage\",...)" );
     }
-    return  static_cast< uint64 >( vmusage );
+    return  static_cast< uint64 >( vmusage.xsu_used );
 }
 
 uint64 VirtualMemoryCurrentlyUsedByProcess() {
@@ -63,7 +64,7 @@ uint64 TotalRAM() {
     int64_t physical_memory;
     mib[0] = CTL_HW;
     mib[1] = HW_MEMSIZE;
-    length = sizeof(int64_t);
+    size_t length = sizeof(int64_t);
     sysctl(mib, 2, &physical_memory, &length, NULL, 0);
     return  physical_memory;
 }
@@ -102,6 +103,16 @@ uint64 TotalRAMCurrentlyUsedByProcess() {
     return  static_cast< uint64 >( t_info.resident_size );
 }
 
+float CalculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks)
+{
+  unsigned long long totalTicksSinceLastTime = totalTicks-_previousTotalTicks;
+  unsigned long long idleTicksSinceLastTime  = idleTicks-_previousIdleTicks;
+  float ret = 1.0f-((totalTicksSinceLastTime > 0) ? ((float)idleTicksSinceLastTime)/totalTicksSinceLastTime : 0);
+  _previousTotalTicks = totalTicks;
+  _previousIdleTicks  = idleTicks;
+  return ret;
+}
+
 // Returns 1.0f for "CPU fully pinned", 0.0f for "CPU idle", or somewhere in between
 // You'll need to call this at regular intervals, since it measures the load between
 // the previous call and the current one.
@@ -116,16 +127,6 @@ float GetCPULoad()
       return CalculateCPULoad(cpuinfo.cpu_ticks[CPU_STATE_IDLE], totalTicks);
    }
    else return -1.0f;
-}
-
-float CalculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks)
-{
-  unsigned long long totalTicksSinceLastTime = totalTicks-_previousTotalTicks;
-  unsigned long long idleTicksSinceLastTime  = idleTicks-_previousIdleTicks;
-  float ret = 1.0f-((totalTicksSinceLastTime > 0) ? ((float)idleTicksSinceLastTime)/totalTicksSinceLastTime : 0);
-  _previousTotalTicks = totalTicks;
-  _previousIdleTicks  = idleTicks;
-  return ret;
 }
 
 double CPUCurrentlyUsed(){
