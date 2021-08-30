@@ -83,7 +83,7 @@ ISample::operator==( const  ISample& iOther )  const {
         return  false;
 
     for( int i = 0; i < SamplesPerPixel(); ++i ) {
-        for( int j = 0; j < BytesPerPixel(); ++j ) {
+        for( int j = 0; j < BytesPerSample(); ++j ) {
             if( *( mSignal + mPlaneSize * i + j ) != *( iOther.mSignal + iOther.mPlaneSize * i + j ) ) {
                 return  false;
             }
