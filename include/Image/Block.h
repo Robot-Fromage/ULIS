@@ -117,7 +117,7 @@ public:
     /*!
     Construct a hollow block with no internal data or size.
     */
-    FBlock MakeHollow();
+    static FBlock MakeHollow();
 
     /*!
     Check wether a block is hollow.
