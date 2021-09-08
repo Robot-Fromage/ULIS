@@ -49,6 +49,7 @@ public:
 
 private:
     void ScheduleJob( const FJob* iJob );
+    void ScheduleJobs( const TArray< const FJob* >& iJobs );
     void WorkProcess();
     void ScheduleProcess();
 
