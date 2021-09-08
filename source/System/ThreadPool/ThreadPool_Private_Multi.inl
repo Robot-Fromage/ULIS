@@ -19,7 +19,7 @@ FThreadPool_Private::~FThreadPool_Private()
     // Complete commands
     WaitForCompletion();
 
-    // Notify stop condition
+    // Notify stop conditioncd 
     {
         std::lock( mJobsQueueMutex, mCommandsQueueMutex );
         std::lock_guard< std::mutex > lock0( mJobsQueueMutex, std::adopt_lock );
@@ -70,6 +70,16 @@ FThreadPool_Private::ScheduleJob( const FJob* iJob )
     std::lock_guard< std::mutex > lock( mJobsQueueMutex );
     mJobs.push_back( iJob );
     cvJob.notify_one();
+}
+
+void
+FThreadPool_Private::ScheduleJobs( const TArray< const FJob* >& iJobs )
+{
+    std::lock_guard< std::mutex > lock( mJobsQueueMutex );
+    for( uint64 i = 0; i < iJobs.Size(); ++i ) {
+        mJobs.push_back( iJobs[i] );
+    }
+    cvJob.notify_all();
 }
 
 void
@@ -195,10 +205,11 @@ FThreadPool_Private::ScheduleProcess()
             {
                 const_cast< FCommand* >( cmd )->ProcessAsyncScheduling();
                 const TArray< const FJob* >& jobs = cmd->Jobs();
-                const uint64 size = jobs.Size();
-                for( uint64 i = 0; i < size; ++i )
-                    ScheduleJob( jobs[i] );
+                //const uint64 size = jobs.Size();
+                //for( uint64 i = 0; i < size; ++i )
+                //    ScheduleJob( jobs[i] );
                 mNumQueued.fetch_sub( 1 );
+                ScheduleJobs( jobs );
             }
 
             // lock again, run sync.
