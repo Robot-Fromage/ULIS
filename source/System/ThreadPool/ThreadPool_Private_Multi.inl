@@ -208,8 +208,8 @@ FThreadPool_Private::ScheduleProcess()
                 //const uint64 size = jobs.Size();
                 //for( uint64 i = 0; i < size; ++i )
                 //    ScheduleJob( jobs[i] );
-                mNumQueued.fetch_sub( 1 );
                 ScheduleJobs( jobs );
+                mNumQueued.fetch_sub( 1 );
             }
 
             // lock again, run sync.

@@ -29,20 +29,11 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, fmt, PerformanceIntent_Max );
 
     // Create both "hollow" blocks Base and Over.
-    FBlock blockBase;
-    FBlock blockOver;
+    FBlock blockBase( 160, 160, fmt );
+    FBlock blockOver( 160, 160, fmt );
     {
-        // Collect hard-coded paths to images.
-        std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
-        std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
-        // Load from file into blocks
-        ulError err;
-        err = ctx.XLoadBlockFromDisk( blockBase, pathBase );
-        ULIS_ASSERT( !err, "Load failed" );
-        err = ctx.XLoadBlockFromDisk( blockOver, pathOver );
-        ULIS_ASSERT( !err, "Load failed" );
-        ULIS_ASSERT( blockBase.Format() == fmt, "Bad format assumption." );
-        ULIS_ASSERT( blockOver.Format() == fmt, "Bad format assumption." );
+        ctx.Fill( blockBase, FColor::Red );
+        ctx.Fill( blockOver, FColor::Blue );
         ctx.Finish();
     }
 
