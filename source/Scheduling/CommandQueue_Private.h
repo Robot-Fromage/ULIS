@@ -16,6 +16,7 @@
 #include "Scheduling/Command.h"
 
 ULIS_NAMESPACE_BEGIN
+template class ULIS_API TQueue< const FCommand* >;
 /////////////////////////////////////////////////////
 /// @class      FCommandQueue_Private
 /// @brief      The FCommandQueue_Private class provides a way to enqueue tasks for being
@@ -25,7 +26,7 @@ ULIS_NAMESPACE_BEGIN
 ///
 ///             \sa FCommand
 ///             \sa FThreadPool
-class FCommandQueue_Private
+class ULIS_API FCommandQueue_Private
 {
     typedef TQueue< const FCommand* > tQueue;
 

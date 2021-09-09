@@ -38,7 +38,7 @@ typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 ///             \sa FThreadPool
 ///             \sa FCPUInfo
 ///             \sa FCommandQueue
-class FInternalEvent
+class ULIS_API FInternalEvent
 {
     friend class FEvent;
 

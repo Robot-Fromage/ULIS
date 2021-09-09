@@ -54,7 +54,7 @@ FContext::Blend(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -141,7 +141,7 @@ FContext::BlendAA(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
@@ -212,7 +212,7 @@ FContext::AlphaBlend(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -279,7 +279,7 @@ FContext::AlphaBlendAA(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
@@ -350,7 +350,7 @@ FContext::BlendTiled(
     const FRectI dst_roi = iBackdropRect.Sanitized() & dst_rect;
 
      // Check no-op
-    if( src_roi.Area() <= 0 || dst_roi.Area() <= 0 )
+    if( src_roi.Area() <= 0 || dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
@@ -412,7 +412,7 @@ FContext::BlendColor(
     const FRectI dst_roi = iBackdropRect.Sanitized() & iBackdrop.Rect();
 
      // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking

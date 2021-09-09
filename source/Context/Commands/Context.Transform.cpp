@@ -52,7 +52,7 @@ FContext::TransformAffine(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -111,7 +111,7 @@ FContext::TransformAffineTiled(
     const FRectI dst_roi = iDestinationRect.Sanitized() & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -171,7 +171,7 @@ FContext::TransformPerspective(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -240,7 +240,7 @@ FContext::TransformBezier(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FBlock* field = new FBlock();
@@ -329,7 +329,7 @@ FContext::Resize(
     const FRectF dst_roi = iDestinationRect.Sanitized() & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0.f )
+    if( dst_roi.Sanitized().Area() <= 0.f )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward Arguments Baking
@@ -498,7 +498,7 @@ FContext::XProcessBezierDisplacementField(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FRectI roi = FRectI::FromPositionAndSize( FVec2I(), dst_roi.Size() );
@@ -635,7 +635,7 @@ FContext::XBuildMipMap(
         iResamplingMethod = Resampling_Bilinear;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     if( iMaxMipLevel == -1 )
