@@ -123,7 +123,7 @@ FContext::Extract(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
@@ -295,7 +295,7 @@ FContext::FilterInto(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command

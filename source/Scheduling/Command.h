@@ -33,7 +33,7 @@ typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, bool, boo
 ///             which operation arguments are stored in a ICommandArgs child class.
 ///
 ///             \sa FCommandQueue
-class FCommand {
+class ULIS_API FCommand {
 public:
     /*! Destructor */
     ~FCommand();

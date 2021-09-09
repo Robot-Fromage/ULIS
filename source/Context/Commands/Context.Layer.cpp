@@ -53,7 +53,7 @@ FContext::Flatten(
     const FRectI dst_roi = dst_aim & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FEvent ev = iStack.RenderImage( *this, oDestination, src_roi, dst_roi.Position(), iPolicy, iNumWait, iWaitList );

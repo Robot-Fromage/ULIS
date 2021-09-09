@@ -54,7 +54,7 @@ FContext::Convolve(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -110,7 +110,7 @@ FContext::ConvolveMax(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -166,7 +166,7 @@ FContext::ConvolveMin(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -222,7 +222,7 @@ FContext::ConvolvePremult(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -278,7 +278,7 @@ FContext::ConvolvePremultMax(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -334,7 +334,7 @@ FContext::ConvolvePremultMin(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
@@ -390,7 +390,7 @@ FContext::MorphologicalProcess(
     const FRectI dst_roi = FRectI::FromPositionAndSize( iPosition, src_roi.Size() ) & dst_rect;
 
     // Check no-op
-    if( dst_roi.Area() <= 0 )
+    if( dst_roi.Sanitized().Area() <= 0 )
         return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
