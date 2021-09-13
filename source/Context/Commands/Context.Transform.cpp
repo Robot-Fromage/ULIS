@@ -41,7 +41,7 @@ FContext::TransformAffine(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -53,7 +53,7 @@ FContext::TransformAffine(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -101,7 +101,7 @@ FContext::TransformAffineTiled(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -112,7 +112,7 @@ FContext::TransformAffineTiled(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -160,7 +160,7 @@ FContext::TransformPerspective(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -172,7 +172,7 @@ FContext::TransformPerspective(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -221,12 +221,12 @@ FContext::TransformBezier(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
     ULIS_ASSERT_RETURN_ERROR(
           iControlPoints.Size() == 4
         , "Bad control points size"
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA )
     );
 
     // Sanitize geometry
@@ -241,7 +241,7 @@ FContext::TransformBezier(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FBlock* field = new FBlock();
     FBlock* mask = new FBlock();
@@ -319,7 +319,7 @@ FContext::Resize(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -330,7 +330,7 @@ FContext::Resize(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0.f )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward Arguments Baking
     FVec2F inverseScale = src_roi.Size() / dst_roi.Size();
@@ -499,7 +499,7 @@ FContext::XProcessBezierDisplacementField(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FRectI roi = FRectI::FromPositionAndSize( FVec2I(), dst_roi.Size() );
     TArray< FEvent > events( 3 );
@@ -624,7 +624,7 @@ FContext::XBuildMipMap(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
     // Sanitize geometry
     const FRectI src_rect = iSource.Rect();
@@ -636,7 +636,7 @@ FContext::XBuildMipMap(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     if( iMaxMipLevel == -1 )
         iMaxMipLevel = MaxMipLevelMetrics( src_roi );

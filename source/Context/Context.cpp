@@ -68,13 +68,16 @@ FContext::Format() const
     return  mContextualDispatchTable->mFormat;
 }
 
-// static
 ulError
-FContext::FinishEventNo_OP( FEvent* iEvent, ulError iError )
+FContext::FinishEventNo_OP( uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent, ulError iError )
 {
-    if( iEvent )
-        iEvent->d->m->NotifyAllJobsFinished();
-
+    if( iEvent && iWaitList && iNumWait ) {
+        // Async dependencies, need to schedule it with a dummy task
+        Dummy_OP( iNumWait, iWaitList, iEvent );
+    } else if( iEvent ) {
+        // No dependencies, no need to wait async on other event, just mark finished.
+        MarkEventFinished( iEvent );
+    }
     return  iError;
 }
 
@@ -100,6 +103,13 @@ FContext::Dummy_OP(
     );
 
     return  ULIS_NO_ERROR;
+}
+
+//static
+void
+FContext::MarkEventFinished( FEvent* iEvent ) {
+    if( iEvent )
+        iEvent->d->m->NotifyAllJobsFinished();
 }
 
 ULIS_NAMESPACE_END

@@ -38,7 +38,7 @@ FContext::Copy(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iDestination.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -49,7 +49,7 @@ FContext::Copy(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(

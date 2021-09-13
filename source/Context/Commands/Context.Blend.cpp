@@ -43,7 +43,7 @@ FContext::Blend(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -55,7 +55,7 @@ FContext::Blend(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -126,7 +126,7 @@ FContext::BlendAA(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -142,7 +142,7 @@ FContext::BlendAA(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     FVec2F subpixelComponent = iPosition.DecimalPart();
@@ -201,7 +201,7 @@ FContext::AlphaBlend(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -213,7 +213,7 @@ FContext::AlphaBlend(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -264,7 +264,7 @@ FContext::AlphaBlendAA(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -280,7 +280,7 @@ FContext::AlphaBlendAA(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     const FVec2F subpixelComponent = iPosition.DecimalPart();
@@ -340,7 +340,7 @@ FContext::BlendTiled(
     ULIS_ASSERT_RETURN_ERROR(
           iSource.Format() == iBackdrop.Format() && iSource.Format() == Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -351,7 +351,7 @@ FContext::BlendTiled(
 
      // Check no-op
     if( src_roi.Area() <= 0 || dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     FVec2I mod_shift(
@@ -413,7 +413,7 @@ FContext::BlendColor(
 
      // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     FBlock* color = new FBlock( 1, 1, iBackdrop.Format() );

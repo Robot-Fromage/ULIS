@@ -33,9 +33,9 @@ FContext::BuildSummedAreaTable(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
-    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() == iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
-    ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() == iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
 
     FEvent xpass_event;
     mCommandQueue.d->Push(
@@ -106,9 +106,9 @@ FContext::BuildPremultipliedSummedAreaTable(
     , FEvent* iEvent
 )
 {
-    ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
-    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() == iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
-    ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( &iSource != &iDestination, "Source and Destination are the same block.", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_CONCURRENT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iSource.Rect() == iDestination.Rect(), "Source and Destination must be the same size.", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( iDestination.Format() == SummedAreaTableMetrics( iSource ), "Cannot build an SAT in this format, use SummedAreaTableMetrics.", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
 
     FEvent xpass_event;
     mCommandQueue.d->Push(
