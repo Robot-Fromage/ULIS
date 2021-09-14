@@ -31,9 +31,7 @@ public:
         ULIS_DEBUG_PRINTF( "TSearchable Created" )
     }
 
-    virtual ~TSearchable() = 0 {
-        ULIS_DEBUG_PRINTF( "TSearchable Destroyed" )
-    }
+    virtual ~TSearchable() = 0;
 
     InnerType& operator[]( const FString& iStr ) {
         RootType& self = dynamic_cast< RootType& >( *this );
@@ -78,6 +76,12 @@ public:
         return  dynamic_cast< const T& >( (*this)[ iName ] );
     }
 };
+
+template< class RootType >
+TSearchable<RootType>::~TSearchable()
+{
+    ULIS_DEBUG_PRINTF( "TSearchable Destroyed" )
+}
 
 ULIS_NAMESPACE_END
 

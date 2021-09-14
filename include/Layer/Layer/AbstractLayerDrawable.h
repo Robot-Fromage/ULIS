@@ -25,13 +25,11 @@ class TAbstractLayerDrawable
 {
 public:
     using ILayer::ILayer;
-    virtual ~TAbstractLayerDrawable() override = 0 {
-        ULIS_DEBUG_PRINTF( "TAbstractLayerDrawable Destroyed" )
-    }
+    virtual ~TAbstractLayerDrawable() override = 0;
 
     void OnChangeNotifiedInternal() override {
         ULIS_DEBUG_PRINTF( "Invalidation" )
-        InvalidImageCache();
+        TDrawable< BlockType >::InvalidImageCache();
     }
 };
 

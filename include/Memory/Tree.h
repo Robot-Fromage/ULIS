@@ -185,7 +185,7 @@ public:
         }
         mChildren.Clear();
 
-        mParent = iParent;
+        tNode::mParent = iParent;
         TOnParentChanged< Type >::SetDelegate( iParentChangedDelegate );
         TOnNodeAdded< Type >::SetDelegate( iNodeAddedDelegate );
         TOnNodeRemoved< Type >::SetDelegate( iNodeRemovedDelegate );

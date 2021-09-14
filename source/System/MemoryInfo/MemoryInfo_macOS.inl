@@ -13,6 +13,8 @@
 #include "System/MemoryInfo/MemoryInfo.h"
 
 #include <mach/mach.h>
+#include <sys/param.h>
+#include <sys/mount.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <mach/vm_statistics.h>
@@ -31,7 +33,7 @@ static unsigned long long _previousIdleTicks = 0;
 
 uint64 TotalVirtualMemory() {
     uint64 myFreeSwap;
-    statfs stats;
+    struct statfs stats;
     if( statfs( "/", &stats ) == 0 )
         myFreeSwap = (uint64)stats.f_bsize * stats.f_bfree;
     return  myFreeSwap;

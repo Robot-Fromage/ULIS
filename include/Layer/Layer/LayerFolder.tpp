@@ -207,11 +207,11 @@ TEMPLATE
 FEvent
 CLASS::RenderImageCache( FContext& iCtx ) // override
 {
-    if( IsImageCacheValid() )
+    if( tSelf::IsImageCacheValid() )
         return  FEvent::NoOP();
 
     FEvent ev;
-    iCtx.Clear( *Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &ev );
+    iCtx.Clear( *tSelf::Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &ev );
     const int max = static_cast< int >( Children().Size() ) - 1;
     for( int i = max; i >= 0; --i ) {
         tAbstractLayerDrawable* drawable = dynamic_cast< tAbstractLayerDrawable* >( &( Children()[i]->Self() ) );
@@ -220,7 +220,7 @@ CLASS::RenderImageCache( FContext& iCtx ) // override
 
         ev = drawable->RenderImage(
               iCtx
-            , *Block()
+            , *tSelf::Block()
             , FRectI::Auto
             , FVec2F( 0 )
             , FSchedulePolicy::MultiScanlines
@@ -229,7 +229,7 @@ CLASS::RenderImageCache( FContext& iCtx ) // override
         );
     }
 
-    ValidateImageCache();
+    tSelf::ValidateImageCache();
     return  ev;
 }
 
@@ -247,7 +247,7 @@ CLASS::RenderImage(
 {
     FEvent ev = RenderImageCache( iCtx );
     ulError err = iCtx.Blend(
-          *Block()
+          *tHasBlock::Block()
         , ioBlock
         , iRect
         , iPos
@@ -269,16 +269,16 @@ typename CLASS::tSiblingImage*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
     FEvent ev = RenderImageCache( iCtx );
-    BlockType* ref = Block();
+    BlockType* ref = tHasBlock::Block();
     if( !ref )
         return  nullptr;
 
     // Actual Deep Copy with Event.
     tSiblingImage* rasterized = new tSiblingImage(
-          Name()
-        , IsLocked()
-        , IsVisible()
-        , PrettyColor()
+          tSelf::Name()
+        , tSelf::IsLocked()
+        , tSelf::IsVisible()
+        , tSelf::PrettyColor()
         , ref->Width()
         , ref->Height()
         , ref->Format()
@@ -304,7 +304,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnBoolChanged::GetDelegate()
     );
 
-    iCtx.Copy( *Block(), *( rasterized->Block() ), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 1, &ev, oEvent );
+    iCtx.Copy( *tSelf::Block(), *( rasterized->Block() ), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 1, &ev, oEvent );
     return  rasterized;
 }
 
@@ -318,8 +318,9 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
     if( !topLevel )
         return;
 
-    if( !Block() ) {
-        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+    if( !tSelf::Block() ) {
+        //const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+        const ILayer* layer = (const ILayer*)( topLevel );
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the class hierarchy !" );
         switch( layer->TypeID() ) {
             case LayerStackType::StaticTypeID(): {

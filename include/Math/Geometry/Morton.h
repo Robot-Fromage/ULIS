@@ -27,8 +27,8 @@ struct TMortonEncodeKeys8bit
     constexpr TMortonEncodeKeys8bit< N, O >()
         : keys{ 0 }
     {
-        static_assert( N > 0 );
-        static_assert( N <= 16 );
+        static_assert( N > 0, "" );
+        static_assert( N <= 16, "" );
         for( uint8 x = 0; x < N; ++x )
             for( uint8 i = 0; i < 8; ++i )
                 keys[x] |= ( x & ( 1 << i ) ) << ( i + O );
@@ -55,8 +55,8 @@ struct TMortonDecodeKeys8bit2D
     constexpr TMortonDecodeKeys8bit2D< N >()
         : keys{ { 0, 0 } }
     {
-        static_assert( N > 0 );
-        static_assert( N <= 256 );
+        static_assert( N > 0, "" );
+        static_assert( N <= 256, "" );
         for( uint16 i = 0; i < N; ++i ) {
             for( uint8 b = 0; b < 4; ++b ) {
                 keys[i].x |= ( i & ( 1 << b * 2 ) ) >> b;
