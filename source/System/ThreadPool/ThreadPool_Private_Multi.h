@@ -16,6 +16,7 @@
 #include "Memory/Queue.h"
 #include "Scheduling/Job.h"
 #include "Scheduling/Command.h"
+#include "ThirdParty/ConcurrentQueue/blockingconcurrentqueue.h"
 
 #include <atomic>
 #include <condition_variable>
@@ -48,24 +49,24 @@ public:
     static uint32 MaxWorkers();
 
 private:
-    void ScheduleJob( const FJob* iJob );
-    void ScheduleJobs( const TArray< const FJob* >& iJobs );
     void WorkProcess();
     void ScheduleProcess();
 
 private:
     // Private Data
-    uint32                              mNumBusy;
-    bool                                bStop;
-    std::atomic_uint32_t                mNumQueued;
+    bool                                mStopCommands;
+    bool                                mStopJobs;
+    std::atomic_uint64_t                mNumWaitingCommands;
+    std::atomic_uint64_t                mNumScheduledCommands;
+    std::atomic_uint64_t                mNumScheduledJobs;
+
     std::vector< std::thread >          mWorkers;
     std::thread                         mScheduler;
-    std::deque< const FJob* >           mJobs;
-    std::deque< const FCommand* >       mCommands;
-    std::mutex                          mJobsQueueMutex;
-    std::mutex                          mCommandsQueueMutex;
-    std::condition_variable             cvJob;
-    std::condition_variable             cvJobsFinished;
+
+    ::moodycamel::BlockingConcurrentQueue<const FCommand*> mScheduledCommands;
+    ::moodycamel::BlockingConcurrentQueue<const FJob*> mJobs;
+    moodycamel::ProducerToken           mDefaultScheduleCommandProducerToken;
+    std::vector< moodycamel::ProducerToken >          mWorkersProducerTokens;
 };
 
 ULIS_NAMESPACE_END

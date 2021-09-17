@@ -25,27 +25,38 @@ FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 void
 FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
+    //What we do here is just enqueue the commands when they are ready
+    //If they are already ready, FOnEventReady will be immediately fired
+    //If not, it will be fired later
+    //Emptying the queue is ok, as the command still exist and is owned by the Event
+    uint32 size = static_cast< uint32 >( ioCommands.Size() );
+    TQueue< const FCommand* > scheduledCommands;
     while( !ioCommands.IsEmpty() )
     {
         const FCommand* cmd = ioCommands.Front();
         ioCommands.Pop();
+        cmd->Event()->SetOnEventReady(
+            FOnEventReady(
+                [this, &scheduledCommands, cmd]()
+                {
+                    scheduledCommands.Push(cmd);
+                }
+            )
+        );
+    }
 
-        ULIS_ASSERT( cmd->ReadyForScheduling(), "Bad queue state, waiting on events that are not scheduled will hang forever." );
-
-        if( cmd->ReadyForProcessing() )
-        {
-            const_cast< FCommand* >( cmd )->ProcessAsyncScheduling();
-            FSharedInternalEvent evt = cmd->Event();
-            const TArray< const FJob* >& jobs = cmd->Jobs();
-            const uint64 size = jobs.Size();
-            for( uint64 i = 0; i < size; ++i ) {
-                jobs[i]->Execute();
-                evt->NotifyOneJobFinished();
-            }
-        }
-        else
-        {
-            ioCommands.Push( cmd );
+    while( !scheduledCommands.IsEmpty() )
+    {
+        const FCommand* cmd = scheduledCommands.Front();
+        scheduledCommands.Pop();
+        
+        const_cast< FCommand* >( cmd )->ProcessAsyncScheduling();
+        FSharedInternalEvent evt = cmd->Event();
+        const TArray< const FJob* >& jobs = cmd->Jobs();
+        const uint64 size = jobs.Size();
+        for( uint64 i = 0; i < size; ++i ) {
+            jobs[i]->Execute();
+            evt->NotifyOneJobFinished();
         }
     }
 }

@@ -87,18 +87,6 @@ FCommand::NumJobs() const
     return  mJobs.Size();
 }
 
-bool
-FCommand::ReadyForProcessing() const
-{
-    return  mEvent->ReadyForProcessing();
-}
-
-bool
-FCommand::ReadyForScheduling() const
-{
-    return  mEvent->ReadyForScheduling();
-}
-
 void
 FCommand::ProcessAsyncScheduling()
 {

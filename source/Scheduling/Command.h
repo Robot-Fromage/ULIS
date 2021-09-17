@@ -78,19 +78,6 @@ public:
     /*! Query num jobs */
     uint64 NumJobs() const;
 
-    /*!
-    Check if the command is ready for processing.
-    That is, all events in wait list are finished.
-    */
-    bool ReadyForProcessing() const;
-
-    /*!
-    Check if the command is ready for scheduling.
-    That is, all events in wait list are scheduled too.
-    If an event in wait list is still idle, the command will block forever.
-    */
-    bool ReadyForScheduling() const;
-
     void ProcessAsyncScheduling();
 
     FSharedInternalEvent Event() const;

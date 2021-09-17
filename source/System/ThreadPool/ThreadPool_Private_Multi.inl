@@ -21,30 +21,44 @@ FThreadPool_Private::~FThreadPool_Private()
 
     // Notify stop conditioncd 
     {
-        std::lock( mJobsQueueMutex, mCommandsQueueMutex );
-        std::lock_guard< std::mutex > lock0( mJobsQueueMutex, std::adopt_lock );
-        std::lock_guard< std::mutex > lock1( mCommandsQueueMutex, std::adopt_lock );
-        bStop = true;
-        cvJob.notify_all();
+        mStopCommands = true;
+        mStopJobs = true;
     }
+
+    //Add a dummy command to force wait_dequeue to wake up
+    mScheduledCommands.enqueue(nullptr);
 
     // Join all threads
     mScheduler.join();
 
-    for( auto& t : mWorkers )
+    for (auto& t : mWorkers)
+    {
+        //Add a dummy job to force wait_dequeue to wake up
+        mJobs.enqueue(nullptr);
         t.join();
+    }
 
 }
 
 FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
-    : mNumBusy( 0 )
-    , bStop( false )
-    , mNumQueued( 0 )
+    : mStopCommands( false )
+    , mStopJobs( false )
+    , mNumWaitingCommands( 0 )
+    , mNumScheduledCommands( 0 )
+    , mNumScheduledJobs( 0 )
+    , mDefaultScheduleCommandProducerToken(mScheduledCommands)
 {
     uint32 max = FMath::Clamp( iNumWorkers, uint32( 1 ), MaxWorkers() );
     mWorkers.reserve( max );
-    for( uint32 i = 0; i < max; ++i )
+    for (uint32 i = 0; i < max; ++i)
+    {
+        mWorkersProducerTokens.emplace_back(mScheduledCommands);
+    }
+
+    for (uint32 i = 0; i < max; ++i)
+    {
         mWorkers.emplace_back( std::bind( &FThreadPool_Private::WorkProcess, this ) );
+    }
 
     mScheduler = std::thread( std::bind( &FThreadPool_Private::ScheduleProcess, this ) );
 }
@@ -52,75 +66,98 @@ FThreadPool_Private::FThreadPool_Private( uint32 iNumWorkers )
 void
 FThreadPool_Private::ScheduleCommands( TQueue< const FCommand* >& ioCommands )
 {
-    std::lock_guard< std::mutex > lock( mCommandsQueueMutex );
+    static std::thread::id mainThreadId = std::this_thread::get_id();
+
+    assert(mainThreadId == std::this_thread::get_id());
+    //What we do here is just enqueue the commands when they are ready
+    //If they are already ready, FOnEventReady will be immediately fired
+    //If not, it will be fired later
+    //Emptying the queue is ok, as the command still exist and is owned by the Event
     uint32 size = static_cast< uint32 >( ioCommands.Size() );
+    mNumWaitingCommands.fetch_add( size, std::memory_order_release );
     while( !ioCommands.IsEmpty() )
     {
         const FCommand* cmd = ioCommands.Front();
         ioCommands.Pop();
-        ULIS_ASSERT( cmd->ReadyForScheduling(), "Bad Events dependency, this command relies on unscheduled commands and will block the pool forever." );
-        mCommands.push_back( cmd );
-    }
-    mNumQueued.fetch_add( size );
-}
+        cmd->Event()->SetOnEventReady(
+            FOnEventReady(
+                [this, cmd]()
+                {
+                    mNumScheduledCommands.fetch_add( 1, std::memory_order_release );
 
-void
-FThreadPool_Private::ScheduleJob( const FJob* iJob )
-{
-    std::lock_guard< std::mutex > lock( mJobsQueueMutex );
-    mJobs.push_back( iJob );
-    cvJob.notify_one();
-}
+                    std::thread::id threadId = std::this_thread::get_id();
 
-void
-FThreadPool_Private::ScheduleJobs( const TArray< const FJob* >& iJobs )
-{
-    std::lock_guard< std::mutex > lock( mJobsQueueMutex );
-    for( uint64 i = 0; i < iJobs.Size(); ++i ) {
-        mJobs.push_back( iJobs[i] );
+                    for( int i = 0; i < mWorkers.size(); i++ )
+                    {
+                        if (threadId == mWorkers[i].get_id())
+                        {
+                            mScheduledCommands.enqueue(mWorkersProducerTokens[i], cmd);
+                            mNumWaitingCommands.fetch_sub(1, std::memory_order_release);
+                            return;
+                        }
+                    }
+
+                    mScheduledCommands.enqueue(mDefaultScheduleCommandProducerToken, cmd);
+                    mNumWaitingCommands.fetch_sub(1, std::memory_order_release);
+                }
+            )
+        );
     }
-    cvJob.notify_all();
 }
 
 void
 FThreadPool_Private::WaitForCompletion()
 {
-    //std::unique_lock< std::mutex > lock( mJobsQueueMutex );
-    //cvJobsFinished.wait( lock, [ this ](){ return mJobs.empty() && ( mNumBusy == 0 ) && ( mNumQueued == 0 ); } );
+    static std::thread::id mainThreadId = std::this_thread::get_id();
 
-    while( true )
-    {
-        std::lock( mJobsQueueMutex, mCommandsQueueMutex );
-        std::lock_guard< std::mutex > lock0( mJobsQueueMutex, std::adopt_lock );
-        std::lock_guard< std::mutex > lock1( mCommandsQueueMutex, std::adopt_lock );
-        if( mJobs.empty() && ( mNumBusy == 0 ) && ( mNumQueued == 0 ) && mCommands.empty() )
-            break;
-    }
+    assert(mainThreadId == std::this_thread::get_id());
+    // When waiting we are not pushing anything more in the queue, so we can assume queue.size_approx() == 0 is okay to watch
+    // To wait for all the frame's tasks to complete before rendering:
+    while (mNumWaitingCommands.load(std::memory_order_acquire) != 0)
+	    continue;
+
+    while (mNumScheduledCommands.load(std::memory_order_acquire) != 0)
+	    continue;
+
+    while (mNumScheduledJobs.load(std::memory_order_acquire) != 0)
+	    continue;
 }
 
 void
-FThreadPool_Private::SetNumWorkers( uint32 iNumWorkers )
+FThreadPool_Private::SetNumWorkers(uint32 iNumWorkers)
 {
     WaitForCompletion();
 
     // Notify stop condition
     {
-        std::lock_guard< std::mutex > lock( mJobsQueueMutex );
-        bStop = true;
-        cvJob.notify_all();
+        //std::lock_guard< std::mutex > lock( mJobsQueueMutex );
+        mStopJobs = true;
+        //cvJob.notify_all();
     }
 
     // Join all threads
-    for( auto& t : mWorkers )
+    for (auto& t : mWorkers)
+    {
+        //Add a dummy job to force wait_dequeue to wake up
+        mJobs.enqueue(nullptr);
         t.join();
+    }
 
-    bStop = false;
+    mStopJobs = false;
 
     uint32 max = FMath::Min( iNumWorkers, MaxWorkers() );
     mWorkers.clear();
+    mWorkersProducerTokens.clear();
     mWorkers.reserve( max );
     for( uint32 i = 0; i < max; ++i )
-        mWorkers.emplace_back( std::bind( &FThreadPool_Private::WorkProcess, this ) );
+    {
+        mWorkersProducerTokens.emplace_back(mScheduledCommands);
+    }
+
+    for (uint32 i = 0; i < max; ++i)
+    {
+        mWorkers.emplace_back(std::bind(&FThreadPool_Private::WorkProcess, this));
+    }
 }
 
 uint32
@@ -139,47 +176,31 @@ FThreadPool_Private::MaxWorkers()
 void
 FThreadPool_Private::WorkProcess()
 {
-    while( true )
+    ::moodycamel::ConsumerToken consumerToken(mScheduledCommands);
+    while( !mStopJobs )
     {
-        // Acquire Mutex
-        std::unique_lock< std::mutex > latch( mJobsQueueMutex );
-
-        // Release held mutex and put to sleep until notified
-        // Then wake up of signal and re-acquire the mutex to check condition
-        cvJob.wait( latch, [ this ](){ return bStop || !mJobs.empty(); } );
-
-        if( !mJobs.empty() )
+        const FJob* job = nullptr;
+        mJobs.wait_dequeue(consumerToken, job);
+        if (!job)
         {
-            // got work. set busy.
-            ++mNumBusy;
+            mNumScheduledJobs.fetch_sub(1, std::memory_order_release);
+            continue;
+        }
 
-            // pull from queue
-            const FJob* job = mJobs.front();
-            mJobs.pop_front();
-
-            // release lock. run async
-            latch.unlock();
-
+        while (job && !mStopJobs)
+        {   
             // Gather event
             FSharedInternalEvent evt = job->Parent()->Event();
 
-            // run function outside context
+            //Execute Job
             job->Execute();
 
-            // lock again, run sync.
-            latch.lock();
-            // Notify event
-            bool notify = evt->NotifyOneJobFinished();
-            // Managing internals
-            --mNumBusy;
+            // Notify job's done
+            evt->NotifyOneJobFinished();
 
-            latch.unlock();
-            if( notify )
-                cvJobsFinished.notify_one();
-        }
-        else if( bStop )
-        {
-            break;
+            mNumScheduledJobs.fetch_sub( 1, std::memory_order_release );
+            if (!mJobs.try_dequeue(consumerToken, job))
+                job = nullptr;
         }
     }
 }
@@ -187,42 +208,30 @@ FThreadPool_Private::WorkProcess()
 void
 FThreadPool_Private::ScheduleProcess()
 {
-    while( true )
+    ::moodycamel::ConsumerToken consumerToken(mScheduledCommands);
+    ::moodycamel::ProducerToken producerToken(mJobs);
+    while( !mStopCommands )
     {
-        std::unique_lock< std::mutex > latch( mCommandsQueueMutex );
-
-        if( !mCommands.empty() )
+        const FCommand* command = nullptr;
+        mScheduledCommands.wait_dequeue(consumerToken, command);
+        if (!command)
         {
-            // pull from queue
-            const FCommand* cmd = mCommands.front();
-            mCommands.pop_front();
-
-            latch.unlock();
-
-            // Push jobs
-            bool ready = cmd->ReadyForProcessing();
-            if( ready )
-            {
-                const_cast< FCommand* >( cmd )->ProcessAsyncScheduling();
-                const TArray< const FJob* >& jobs = cmd->Jobs();
-                //const uint64 size = jobs.Size();
-                //for( uint64 i = 0; i < size; ++i )
-                //    ScheduleJob( jobs[i] );
-                ScheduleJobs( jobs );
-                mNumQueued.fetch_sub( 1 );
-            }
-
-            // lock again, run sync.
-            latch.lock();
-
-            if( !ready )
-            {
-                mCommands.push_back( cmd );
-            }
+            mNumScheduledCommands.fetch_sub(1, std::memory_order_release);
+            continue;
         }
-        else if( bStop )
+
+        while (command && !mStopCommands)
         {
-            break;
+            const_cast< FCommand* >( command )->ProcessAsyncScheduling();
+            const TArray< const FJob* >& jobs = command->Jobs();
+            
+            //ScheduleJobs( jobs );
+            mNumScheduledJobs.fetch_add(jobs.Size(), std::memory_order_release);
+            mJobs.enqueue_bulk(producerToken, jobs.Data(), jobs.Size());
+
+            mNumScheduledCommands.fetch_sub( 1, std::memory_order_release );
+            if (!mScheduledCommands.try_dequeue(consumerToken, command))
+                command = nullptr;
         }
     }
 }

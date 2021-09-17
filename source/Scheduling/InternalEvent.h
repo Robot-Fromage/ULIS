@@ -15,12 +15,16 @@
 #include "Memory/Array.h"
 #include "Scheduling/Event.h"
 #include "Math/Geometry/Rectangle.h"
+#include "ThirdParty/ConcurrentQueue/concurrentqueue.h"
+
 #include <atomic>
+#include <mutex>
 
 ULIS_NAMESPACE_BEGIN
 class FInternalEvent;
 class FCommand;
 typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
+typedef TLambdaCallback< void > FOnEventReady;
 
 /////////////////////////////////////////////////////
 /// @class      FInternalEvent
@@ -39,6 +43,7 @@ typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 ///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class FInternalEvent
+    : public std::enable_shared_from_this<FInternalEvent>
 {
     friend class FEvent;
 
@@ -52,8 +57,6 @@ public:
 public:
     static FSharedInternalEvent MakeShared( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
     bool IsBound() const;
-    bool ReadyForProcessing() const;
-    bool ReadyForScheduling() const;
     void CheckCyclicSelfReference() const;
     eEventStatus Status() const;
     void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
@@ -63,18 +66,26 @@ public:
     void NotifyQueued();
     void Wait() const;
 
+    void SetOnEventReady(FOnEventReady iOnEventReady);
+
 private:
     void SetStatus( eEventStatus iStatus );
     void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
     void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
+    void OnParentEventComplete();
+    void AddChild(FSharedInternalEvent iChild);
 
 private:
-    TArray< FSharedInternalEvent > mWaitList;
+    TArray< FSharedInternalEvent > mChildren;
     FCommand* mCommand;
-    std::atomic< eEventStatus > mStatus;
-    uint64 mNumJobsRemaining;
+    eEventStatus mStatus;
+    std::atomic_uint64_t mNumJobsRemaining;
     FRectI mGeometry;
     FOnEventComplete mOnEventComplete;
+    FOnEventReady mOnEventReady;
+    uint64 mParentUnfinished;
+    std::mutex mStatusFinishedMutex;
+    std::mutex mEventReadyMutex;
 };
 
 ULIS_NAMESPACE_END

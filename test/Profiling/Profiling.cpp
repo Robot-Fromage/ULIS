@@ -20,18 +20,24 @@ int main( int argc, char *argv[] ) {
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_Max );
     int size = 128;
-    uint32 repeat = 500;
+    uint32 repeat = 100;
     FBlock src( size, size, fmt );
     FBlock dst( size, size, fmt );
     auto startTime = std::chrono::steady_clock::now();
 
-    for( uint32 l = 0; l < repeat; ++l ) {
-        ctx.Blend( src, dst, src.Rect() );
+    for (uint32 l = 0; l < repeat; ++l) {
+        FEvent eventBlend = FEvent::NoOP();
+        for (uint32 l = 0; l < repeat; ++l) {
+            FEvent subEventBlend;
+            ctx.Blend(src, dst, src.Rect(), FVec2I(0), Blend_Normal, Alpha_Normal, 1.0f, FSchedulePolicy::MultiScanlines, 1, &eventBlend, &subEventBlend);
+            eventBlend = subEventBlend;
+        }
         ctx.Finish();
+        //std::cout << l << std::endl;
     }
 
     auto endTime = std::chrono::steady_clock::now();
-    auto deltaMs = static_cast< double >( std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count() ) / static_cast< double >( repeat );
+    auto deltaMs = static_cast< double >( std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count() ) / static_cast< double >( repeat * repeat );
 
     std::cout << deltaMs << std::endl;
     return  0;

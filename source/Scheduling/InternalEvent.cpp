@@ -22,12 +22,14 @@ FInternalEvent::~FInternalEvent()
 FInternalEvent::FInternalEvent(
     const FOnEventComplete& iOnEventComplete
 )
-    : mWaitList( TArray< FSharedInternalEvent >() )
+    : mChildren( TArray< FSharedInternalEvent >() )
     , mCommand( nullptr )
     , mStatus( eEventStatus::EventStatus_Idle )
     , mNumJobsRemaining( UINT64_MAX )
     , mGeometry( FRectI() )
-    , mOnEventComplete( iOnEventComplete )
+    , mOnEventComplete(iOnEventComplete)
+    , mParentUnfinished(0)
+    , mStatusFinishedMutex()
 {
 }
 
@@ -43,40 +45,54 @@ FInternalEvent::MakeShared(
 void
 FInternalEvent::BuildWaitList( uint32 iNumWait, const FEvent* iWaitList )
 {
-    mWaitList.Reserve( iNumWait );
+    mParentUnfinished = iNumWait;
+    //mWaitList.Reserve( iNumWait );
     for( uint32 i = 0; i < iNumWait; ++i )
-        mWaitList.PushBack( iWaitList[i].d->m );
+    {
+        //mWaitList.PushBack( iWaitList[i].d->m );
+        iWaitList[i].d->m->AddChild(shared_from_this());
+    }
 
 #ifdef ULIS_ASSERT_ENABLED
     CheckCyclicSelfReference();
 #endif // ULIS_ASSERT_ENABLED
 }
 
+void
+FInternalEvent::AddChild(FSharedInternalEvent iChild)
+{
+    std::unique_lock<std::mutex> lock (mStatusFinishedMutex);
+    mChildren.PushBack(iChild);
+    if (mStatus == eEventStatus::EventStatus_Finished)
+        iChild->OnParentEventComplete();
+}
+
+void
+FInternalEvent::OnParentEventComplete()
+{   
+    std::unique_lock<std::mutex> lock (mEventReadyMutex);
+    --mParentUnfinished;
+    if (mParentUnfinished == 0)
+    {
+        mOnEventReady.ExecuteIfBound();
+    }
+}
+
+void
+FInternalEvent::SetOnEventReady(FOnEventReady iOnEventReady)
+{
+    std::unique_lock<std::mutex> lock (mEventReadyMutex);
+    mOnEventReady = iOnEventReady;
+    if (mParentUnfinished == 0)
+    {
+        mOnEventReady.ExecuteIfBound();
+    }
+}
+
 bool
 FInternalEvent::IsBound() const
 {
     return  mCommand != nullptr;
-}
-
-bool
-FInternalEvent::ReadyForProcessing() const
-{
-    for( uint32 i = 0; i < mWaitList.Size(); ++i ) {
-        if( mWaitList[i]->Status() != eEventStatus::EventStatus_Finished )
-            return  false;
-    }
-
-    return  true;
-}
-
-bool
-FInternalEvent::ReadyForScheduling() const
-{
-    for( uint32 i = 0; i < mWaitList.Size(); ++i )
-        if( mWaitList[i]->Status() == eEventStatus::EventStatus_Idle )
-            return  false;
-
-    return  true;
 }
 
 void
@@ -88,9 +104,9 @@ FInternalEvent::CheckCyclicSelfReference() const
 void
 FInternalEvent::CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const
 {
-    for( uint32 i = 0; i < mWaitList.Size(); ++i )
+    for( uint32 i = 0; i < mChildren.Size(); ++i )
     {
-        FInternalEvent* pin = mWaitList[i].get();
+        FInternalEvent* pin = mChildren[i].get();
         ULIS_ASSERT( pin != iPin, "Bad self reference in wait list." );
         pin->CheckCyclicSelfReference_imp( iPin );
     }
@@ -114,21 +130,21 @@ FInternalEvent::Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitLi
     ULIS_ASSERT( !IsBound(), "Event already bound !" )
     mCommand = iCommand;
     BuildWaitList( iNumWait, iWaitList );
-    mNumJobsRemaining = mCommand->NumJobs();
+    mNumJobsRemaining.store(mCommand->NumJobs(), std::memory_order_release);
     mGeometry = iGeometry;
 }
 
 void
 FInternalEvent::PostBindAsync()
 {
-    mNumJobsRemaining = mCommand->NumJobs();
+    mNumJobsRemaining.store(mCommand->NumJobs(), std::memory_order_release);
 }
 
 bool
 FInternalEvent::NotifyOneJobFinished()
 {
-    --mNumJobsRemaining;
-    if( mNumJobsRemaining == 0 ) {
+    uint64 count = mNumJobsRemaining.fetch_sub(1, std::memory_order_release);
+    if( count == 1 ) {
         delete  mCommand;
         NotifyAllJobsFinished();
         return  true;
@@ -139,7 +155,17 @@ FInternalEvent::NotifyOneJobFinished()
 void
 FInternalEvent::NotifyAllJobsFinished()
 {
-    SetStatus( eEventStatus::EventStatus_Finished );
+    {//scope lock
+        std::unique_lock<std::mutex> lock (mStatusFinishedMutex);
+        SetStatus( eEventStatus::EventStatus_Finished );
+        if (mStatus == eEventStatus::EventStatus_Finished)
+        {
+            for (int i = 0; i < mChildren.Size(); i++)
+            {
+                mChildren[i]->OnParentEventComplete();
+            }
+        }
+    }
     mOnEventComplete.ExecuteIfBound( mGeometry );
 }
 
