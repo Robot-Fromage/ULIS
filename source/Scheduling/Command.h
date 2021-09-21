@@ -84,6 +84,8 @@ public:
 
     const TArray< const FJob* >& Jobs() const;
 
+    const FSchedulePolicy& SchedulePolicy() const;
+
 private:
     const ICommandArgs* mArgs;
     FSharedInternalEvent mEvent;

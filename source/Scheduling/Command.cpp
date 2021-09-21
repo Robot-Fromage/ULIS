@@ -109,5 +109,11 @@ FCommand::Jobs() const
     return  mJobs;
 }
 
+const FSchedulePolicy&
+FCommand::SchedulePolicy() const
+{
+    return mPolicy;
+}
+
 ULIS_NAMESPACE_END
 

@@ -62,9 +62,15 @@ void
 FInternalEvent::AddChild(FSharedInternalEvent iChild)
 {
     std::unique_lock<std::mutex> lock (mStatusFinishedMutex);
-    mChildren.PushBack(iChild);
     if (mStatus == eEventStatus::EventStatus_Finished)
+    {
         iChild->OnParentEventComplete();
+        mChildren.PushBack(nullptr); //just for consistency of data, not really needed
+    }
+    else
+    {
+        mChildren.PushBack(iChild);
+    }
 }
 
 void
@@ -145,7 +151,6 @@ FInternalEvent::NotifyOneJobFinished()
 {
     uint64 count = mNumJobsRemaining.fetch_sub(1, std::memory_order_release);
     if( count == 1 ) {
-        delete  mCommand;
         NotifyAllJobsFinished();
         return  true;
     }
@@ -163,10 +168,17 @@ FInternalEvent::NotifyAllJobsFinished()
             for (int i = 0; i < mChildren.Size(); i++)
             {
                 mChildren[i]->OnParentEventComplete();
+                mChildren[i] = nullptr;
             }
         }
     }
     mOnEventComplete.ExecuteIfBound( mGeometry );
+
+    if (mCommand)
+    {
+        delete  mCommand;
+        mCommand = nullptr;
+    }
 }
 
 void

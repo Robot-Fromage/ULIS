@@ -181,26 +181,18 @@ FThreadPool_Private::WorkProcess()
     {
         const FJob* job = nullptr;
         mJobs.wait_dequeue(consumerToken, job);
-        if (!job)
-        {
-            mNumScheduledJobs.fetch_sub(1, std::memory_order_release);
-            continue;
-        }
 
-        while (job && !mStopJobs)
+        while (!mStopJobs)
         {   
-            // Gather event
-            FSharedInternalEvent evt = job->Parent()->Event();
-
-            //Execute Job
-            job->Execute();
-
-            // Notify job's done
-            evt->NotifyOneJobFinished();
+            if (job)
+            {
+                //Execute Job
+                job->Execute();
+            }
 
             mNumScheduledJobs.fetch_sub( 1, std::memory_order_release );
             if (!mJobs.try_dequeue(consumerToken, job))
-                job = nullptr;
+                break;
         }
     }
 }
@@ -214,24 +206,24 @@ FThreadPool_Private::ScheduleProcess()
     {
         const FCommand* command = nullptr;
         mScheduledCommands.wait_dequeue(consumerToken, command);
-        if (!command)
-        {
-            mNumScheduledCommands.fetch_sub(1, std::memory_order_release);
-            continue;
-        }
 
-        while (command && !mStopCommands)
+        while (!mStopCommands)
         {
-            const_cast< FCommand* >( command )->ProcessAsyncScheduling();
-            const TArray< const FJob* >& jobs = command->Jobs();
-            
-            //ScheduleJobs( jobs );
-            mNumScheduledJobs.fetch_add(jobs.Size(), std::memory_order_release);
-            mJobs.enqueue_bulk(producerToken, jobs.Data(), jobs.Size());
+            if (command)
+            {
+                if( command->SchedulePolicy().TimePolicy() == eScheduleTimePolicy::ScheduleTime_Async )
+                    const_cast< FCommand* >( command )->ProcessAsyncScheduling();
+
+                const TArray< const FJob* >& jobs = command->Jobs();
+                
+                //ScheduleJobs( jobs );
+                mNumScheduledJobs.fetch_add(jobs.Size(), std::memory_order_release);
+                mJobs.enqueue_bulk(producerToken, jobs.Data(), jobs.Size());                
+            }
 
             mNumScheduledCommands.fetch_sub( 1, std::memory_order_release );
             if (!mScheduledCommands.try_dequeue(consumerToken, command))
-                command = nullptr;
+                break;
         }
     }
 }
