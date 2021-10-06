@@ -12,33 +12,52 @@
 #include <ULIS>
 #include <chrono>
 #include <iostream>
+#include <queue>
+#include <thread>
+
 using namespace ::ULIS;
 
-int main( int argc, char *argv[] ) {
+int main( int argc, char *argv[] )
+{
+    //std::this_thread::sleep_for(std::chrono::seconds(5));
+
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_Max );
+    eFormat fmt = Format_BGRA8;
+    FContext ctx( queue, fmt, PerformanceIntent_SSE );
     int size = 128;
-    uint32 repeat = 100;
+    uint32 repeat = 36000;
     FBlock src( size, size, fmt );
     FBlock dst( size, size, fmt );
-    auto startTime = std::chrono::steady_clock::now();
 
+    std::queue<std::function<void()>> funcQueue;
+
+    char a;
+    std::cin >> a;
+
+    FEvent eventBlend = FEvent::NoOP();
+
+    auto startTime = std::chrono::steady_clock::now();
     for (uint32 l = 0; l < repeat; ++l) {
-        FEvent eventBlend = FEvent::NoOP();
-        for (uint32 l = 0; l < repeat; ++l) {
-            FEvent subEventBlend;
-            ctx.Blend(src, dst, src.Rect(), FVec2I(0), Blend_Normal, Alpha_Normal, 1.0f, FSchedulePolicy::MultiScanlines, 1, &eventBlend, &subEventBlend);
-            eventBlend = subEventBlend;
+        FSchedulePolicy policy = FSchedulePolicy::AsyncCacheEfficient;
+        FEvent subEventBlend [10];
+        ctx.Copy(src, dst, FRectI::Auto, FVec2I(0), policy, 1, &eventBlend, &subEventBlend[0]);
+        for (int i = 1; i < 10; i++)
+        {
+            ctx.Copy(src, dst, FRectI::Auto, FVec2I(0), policy, 1, &subEventBlend[i-1], &subEventBlend[i]);
         }
-        ctx.Finish();
-        //std::cout << l << std::endl;
+        eventBlend = subEventBlend[9];
+        ctx.Flush();
     }
 
     auto endTime = std::chrono::steady_clock::now();
-    auto deltaMs = static_cast< double >( std::chrono::duration_cast< std::chrono::milliseconds>( endTime - startTime ).count() ) / static_cast< double >( repeat * repeat );
+    auto deltaMs = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+    std::cout << deltaMs << std::endl;
 
+    ctx.Finish();
+
+    endTime = std::chrono::steady_clock::now();
+    deltaMs = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
     std::cout << deltaMs << std::endl;
     return  0;
 }

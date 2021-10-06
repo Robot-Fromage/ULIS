@@ -19,7 +19,11 @@
 
 ULIS_NAMESPACE_BEGIN
 class FCommand;
+#ifdef NEW_JOBSYSTEM
+class IJob;
+#else
 class FJob;
+#endif
 typedef void (*fpCommandScheduler)( FCommand*, const FSchedulePolicy&, bool, bool );
 
 /////////////////////////////////////////////////////
@@ -69,32 +73,55 @@ public:
     /*! Get the args */
     const ICommandArgs* Args() const;
 
+#ifdef NEW_JOBSYSTEM
+    /* Executes the command concurrently */
+    void ExecuteConcurrently();
+
+    /* Sets the job */
+    void SetJob(IJob* iJob);
+
+    /* Get the job */
+    IJob* GetJob();
+#else
     /*! Reserve some space for jobs */
     void ReserveJobs( uint64 iNum );
 
     /*! Add a job */
     void AddJob( const FJob* iJob );
 
+    /*! Gets a FJob for execution, or nullptr if none is available */
+    FJob* GetJobForExecution();
+
+    const TArray< const FJob* >& Jobs() const;
+
     /*! Query num jobs */
     uint64 NumJobs() const;
+#endif
+
+    /* Returns the amount of threads currently working on this command*/
+    ::std::atomic_uint32_t& WorkingThreads();
 
     void ProcessAsyncScheduling();
 
     FSharedInternalEvent Event() const;
-
-    const TArray< const FJob* >& Jobs() const;
 
     const FSchedulePolicy& SchedulePolicy() const;
 
 private:
     const ICommandArgs* mArgs;
     FSharedInternalEvent mEvent;
+
+#ifdef NEW_JOBSYSTEM
+    IJob* mJob;
+#else
     TArray< const FJob* > mJobs;
+    ::std::atomic_uint64_t mJobIndex; //index to the next job to execute
+#endif
+    ::std::atomic_uint32_t mWorkingThreads;
     fpCommandScheduler mSched;
     FSchedulePolicy mPolicy;
     bool mContiguous;
     bool mForceMonoChunk;
-    bool mScheduled;
 };
 
 ULIS_NAMESPACE_END

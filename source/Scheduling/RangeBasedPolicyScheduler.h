@@ -11,8 +11,67 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Scheduling/JobChunks.h"
+#include "Scheduling/JobScanlines.h"
 
 ULIS_NAMESPACE_BEGIN
+
+#ifdef NEW_JOBSYSTEM
+
+/////////////////////////////////////////////////////
+// Scanline Job Building
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+    , typename TDelegateBuildJobScanlines
+>
+ULIS_FORCEINLINE
+static
+void
+RangeBasedSchedulingDelegateBuildJobs_Scanlines(
+      FCommand* iCommand
+    , const int64 iNumJobs
+    , const int64 iNumTasksPerJob
+    , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
+)
+{
+    ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
+    const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
+    FJobScanlines<TCommandArgs, TJobArgs, TDelegateBuildJobScanlines>* job = new FJobScanlines<TCommandArgs, TJobArgs, TDelegateBuildJobScanlines>(iNumJobs, iNumTasksPerJob, &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >, cargs, iDelegateBuildJobScanlines);
+    iCommand->SetJob(job);
+}
+
+/////////////////////////////////////////////////////
+// Chunk Job Building
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+    , typename TDelegateBuildJobChunks
+>
+ULIS_FORCEINLINE
+static
+void
+RangeBasedSchedulingDelegateBuildJobs_Chunks(
+      FCommand* iCommand
+    , const int64 iSize
+    , const int64 iNumChunks
+    , TDelegateBuildJobChunks iDelegateBuildJobChunks
+)
+{
+    const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
+    FJobChunks<TCommandArgs, TJobArgs, TDelegateBuildJobChunks>* job = new FJobChunks<TCommandArgs, TJobArgs, TDelegateBuildJobChunks>(iNumChunks, 1, &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >, cargs, iSize, iDelegateBuildJobChunks);
+    iCommand->SetJob(job);
+}
+
+#else
 /////////////////////////////////////////////////////
 // Scanline Job Building
 template<
@@ -43,7 +102,7 @@ RangeBasedSchedulingDelegateBuildJobs_Scanlines(
         for( int j = 0; j < iNumTasksPerJob; ++j ) {
             TJobArgs* largs = new TJobArgs();
             jargs[ j ] = largs;
-            iDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i + j, *largs );
+            iDelegateBuildJobScanlines( cargs, i + j, *largs );
         }
         FJob* job = new FJob(
               static_cast< uint32 >( iNumTasksPerJob )
@@ -84,7 +143,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
         IJobArgs** jargs = new IJobArgs*[ 1 ];
         TJobArgs* largs = new TJobArgs();
         jargs[ 0 ] = largs;
-        iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, *largs );
+        iDelegateBuildJobChunks( cargs, iSize, offset, i, *largs );
 
         FJob* job = new FJob(
               1
@@ -97,6 +156,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
     }
     return;
 }
+#endif
 
 /////////////////////////////////////////////////////
 // Master Job Building

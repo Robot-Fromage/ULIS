@@ -126,8 +126,6 @@ static
 void
 BuildBlendJob_Scanlines(
       const FBlendCommandArgs* iCargs
-    , const int64 iNumJobs
-    , const int64 iNumTasksPerJob
     , const int64 iIndex
     , FBlendJobArgs& oJargs
 )
@@ -151,7 +149,6 @@ void
 BuildBlendJob_Chunks(
       const FBlendCommandArgs* iCargs
     , const int64 iSize
-    , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
     , FBlendJobArgs& oJargs

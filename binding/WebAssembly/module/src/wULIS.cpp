@@ -432,9 +432,9 @@ EMSCRIPTEN_BINDINGS( wULIS4 ) {
     /////////
     // eEventStatus
     enum_< eEventStatus >( "eEventStatus" )
-        .value( "EventStatus_Idle",     eEventStatus::EventStatus_Idle      )
-        .value( "EventStatus_Queued",   eEventStatus::EventStatus_Queued    )
-        .value( "EventStatus_Finished", eEventStatus::EventStatus_Finished  );
+        .value( "EventStatus_Idle",      eEventStatus::EventStatus_Idle      )
+        .value( "EventStatus_Queued",    eEventStatus::EventStatus_Queued    )
+        .value( "EventStatus_Finished",  eEventStatus::EventStatus_Finished  );
 
 
 

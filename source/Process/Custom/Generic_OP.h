@@ -43,8 +43,8 @@ public:
 
 /////////////////////////////////////////////////////
 // Builders
-static void BuildGeneric_OPJob_Scanlines( const FGeneric_OPCommandArgs* iCargs, const int64 iNumJobs, const int64 iNumTasksPerJob, const int64 iIndex, FGeneric_OPJobArgs& oJargs ) {}
-static void BuildGeneric_OPJob_Chunks( const FGeneric_OPCommandArgs* iCargs, const int64 iSize, const int64 iCount, const int64 iOffset, const int64 iIndex, FGeneric_OPJobArgs& oJargs ) {}
+static void BuildGeneric_OPJob_Scanlines( const FGeneric_OPCommandArgs* iCargs, const int64 iIndex, FGeneric_OPJobArgs& oJargs ) {}
+static void BuildGeneric_OPJob_Chunks( const FGeneric_OPCommandArgs* iCargs, const int64 iSize, const int64 iOffset, const int64 iIndex, FGeneric_OPJobArgs& oJargs ) {}
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule

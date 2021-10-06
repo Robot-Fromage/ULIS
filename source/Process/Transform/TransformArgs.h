@@ -212,8 +212,6 @@ static
 void
 BuildTransformJob_Scanlines(
       const FTransformCommandArgs* iCargs
-    , const int64 iNumJobs
-    , const int64 iNumTasksPerJob
     , const int64 iIndex
     , FTransformJobArgs& oJargs
 )
@@ -235,7 +233,6 @@ void
 BuildTransformJob_Chunks(
       const FTransformCommandArgs* iCargs
     , const int64 iSize
-    , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
     , FTransformJobArgs& oJargs
@@ -248,8 +245,6 @@ static
 void
 BuildResizeJob_Scanlines(
       const FResizeCommandArgs* iCargs
-    , const int64 iNumJobs
-    , const int64 iNumTasksPerJob
     , const int64 iIndex
     , FTransformJobArgs& oJargs
 )
@@ -271,7 +266,6 @@ void
 BuildResizeJob_Chunks(
       const FResizeCommandArgs* iCargs
     , const int64 iSize
-    , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
     , FTransformJobArgs& oJargs
@@ -285,8 +279,6 @@ static
 void
 BuildBezierJob_Scanlines(
       const FTransformBezierCommandArgs* iCargs
-    , const int64 iNumJobs
-    , const int64 iNumTasksPerJob
     , const int64 iIndex
     , FTransformJobArgs& oJargs
 )
@@ -308,7 +300,6 @@ void
 BuildBezierJob_Chunks(
       const FTransformBezierCommandArgs* iCargs
     , const int64 iSize
-    , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
     , FTransformJobArgs& oJargs

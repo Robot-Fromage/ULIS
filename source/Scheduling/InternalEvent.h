@@ -24,7 +24,8 @@ ULIS_NAMESPACE_BEGIN
 class FInternalEvent;
 class FCommand;
 typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
-typedef TLambdaCallback< void > FOnEventReady;
+typedef TLambdaCallback< void, const FInternalEvent* > FOnInternalEventComplete;
+typedef TLambdaCallback< void, const FInternalEvent* > FOnInternalEventReady;
 
 /////////////////////////////////////////////////////
 /// @class      FInternalEvent
@@ -57,35 +58,60 @@ public:
 public:
     static FSharedInternalEvent MakeShared( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
     bool IsBound() const;
+#ifdef ULIS_ASSERT_ENABLED
     void CheckCyclicSelfReference() const;
+#endif
     eEventStatus Status() const;
     void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
-    void PostBindAsync();
-    bool NotifyOneJobFinished();
+    // void PostBindAsync();
+    // bool NotifyOneJobFinished();
     void NotifyAllJobsFinished();
     void NotifyQueued();
     void Wait() const;
 
-    void SetOnEventReady(FOnEventReady iOnEventReady);
+    void SetOnInternalEventReady(FOnInternalEventReady iOnEventReady);
+    // void SetOnInternalEventComplete(FOnInternalEventComplete iOnEventComplete);
+
+    const FCommand* Command() const;
 
 private:
-    void SetStatus( eEventStatus iStatus );
     void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
+#ifdef ULIS_ASSERT_ENABLED
     void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
+#endif
     void OnParentEventComplete();
     void AddChild(FSharedInternalEvent iChild);
 
 private:
-    TArray< FSharedInternalEvent > mChildren;
+    enum eChildrenStatus : uint8
+    {
+        ChildrenStatus_Unlocked,
+        ChildrenStatus_Locked,
+        ChildrenStatus_Finished
+    };
+
+private:
+    //::moodycamel::ConcurrentQueue<FSharedInternalEvent> mChildren;
+    std::vector< FSharedInternalEvent > mChildren;
+    //std::atomic_uint8_t mChildrenStatus;
+    std::atomic<eChildrenStatus> mChildrenStatus;
     FCommand* mCommand;
+    // std::atomic_uint8_t mStatus;
     eEventStatus mStatus;
-    std::atomic_uint64_t mNumJobsRemaining;
+    // std::atomic_uint64_t mNumChildren;
+    // std::atomic_uint64_t mNumJobsRemaining;
     FRectI mGeometry;
     FOnEventComplete mOnEventComplete;
-    FOnEventReady mOnEventReady;
-    uint64 mParentUnfinished;
+    FOnInternalEventReady mOnInternalEventReady;
+    // FOnInternalEventComplete mOnInternalEventComplete;
+    std::atomic_uint64_t mParentUnfinished;
+    //uint64 mParentUnfinished;
     std::mutex mStatusFinishedMutex;
     std::mutex mEventReadyMutex;
+
+/* #ifdef ULIS_ASSERT_ENABLED
+    TArray< FSharedInternalEvent >  mDebugChildren;
+#endif */
 };
 
 ULIS_NAMESPACE_END

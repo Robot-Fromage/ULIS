@@ -49,24 +49,39 @@ public:
     static uint32 MaxWorkers();
 
 private:
-    void WorkProcess();
-    void ScheduleProcess();
+    void WorkProcess(uint32 iThreadIndex);
+    void Work();
+    void PrepareCommands();
+    void ExecuteCommand();
+    void ScheduleProcess(FCommand* iCmd);
+    void OnEventReady(const FInternalEvent* iEvent);
+    void StopWorkers();
+    void StartWorkers(uint32 iNumWorkers);
+    FCommand* GetCommandToExecute();
+    void ReleaseCommandToExecute(FCommand* iCommand);
+
+    // void OnEventComplete(const FInternalEvent* iEvent);
 
 private:
     // Private Data
-    bool                                mStopCommands;
-    bool                                mStopJobs;
-    std::atomic_uint64_t                mNumWaitingCommands;
-    std::atomic_uint64_t                mNumScheduledCommands;
-    std::atomic_uint64_t                mNumScheduledJobs;
-
+    bool                                mStopWorkers;
     std::vector< std::thread >          mWorkers;
-    std::thread                         mScheduler;
+    ::moodycamel::ConcurrentQueue<FCommand*> mCommandsToPrepare; //the queue of commands ready to be prepared (Preparing a command means creating its jobs if needed)
+    std::vector<::moodycamel::ConcurrentQueue<FCommand*>> mCommandsToExecuteQueues; //The queue of commands ready to execute
+    //std::atomic<FCommand*> mCurrentCommand; //The command currently executed by all workers, is an atomic so we don't need a mutex to read it;
+    FCommand* mCurrentCommand;
+    // std::atomic<eWorkStatus> mWorkStatus;
+    // std::atomic_uint64_t mCurrentJobIndex;
+    ::std::mutex mCommandToExecuteMutex; //a mutex to avoid dequeue several commands from mCommandsToExecute while setting mCurrentCommand
+    
+    ::moodycamel::LightweightSemaphore* mWorkersSemaphore; //Semaphore to signal all workers to wake up when something needs to be done
 
-    ::moodycamel::BlockingConcurrentQueue<const FCommand*> mScheduledCommands;
-    ::moodycamel::BlockingConcurrentQueue<const FJob*> mJobs;
-    moodycamel::ProducerToken           mDefaultScheduleCommandProducerToken;
-    std::vector< moodycamel::ProducerToken >          mWorkersProducerTokens;
+    std::atomic_uint64_t mNumScheduledCommands; //an atomic counter to know how many commands are queued
+    
+    ::std::function<void(const FInternalEvent*)>  mOnEventReady;
+
+    //std::atomic_uint64_t                mNumScheduledJobs;
+    //::moodycamel::BlockingConcurrentQueue<const FJob*> mJobs;
 };
 
 ULIS_NAMESPACE_END
