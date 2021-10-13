@@ -123,6 +123,7 @@ ScheduleSimpleBufferJobs(
         , iPolicy
         , static_cast< int64 >( cargs->dst.BytesTotal() )
         , cargs->dstRect.h
+        , cargs->dstRect.w * cargs->dst.BytesPerPixel()
         , iContiguous
         , iForceMonoChunk
         , iDelegateBuildJobScanlines

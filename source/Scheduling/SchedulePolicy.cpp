@@ -23,10 +23,10 @@ const FSchedulePolicy FSchedulePolicy::AsyncCacheEfficient( ScheduleTime_Async, 
 const FSchedulePolicy FSchedulePolicy::CacheEfficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, FCPUInfo::L1CacheSize() );
 const FSchedulePolicy FSchedulePolicy::AsyncMonoChunk( ScheduleTime_Async, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 const FSchedulePolicy FSchedulePolicy::MonoChunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
-const FSchedulePolicy FSchedulePolicy::AsyncMultiScanlines( ScheduleTime_Async, ScheduleRun_Multi, ScheduleMode_Scanlines );
-const FSchedulePolicy FSchedulePolicy::AsyncMonoScanlines( ScheduleTime_Async, ScheduleRun_Mono, ScheduleMode_Scanlines );
-const FSchedulePolicy FSchedulePolicy::MultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
-const FSchedulePolicy FSchedulePolicy::MonoScanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
+const FSchedulePolicy FSchedulePolicy::AsyncMultiScanlines( ScheduleTime_Async, ScheduleRun_Multi, ScheduleMode_Scanlines, ScheduleParameter_Length, FCPUInfo::L1CacheSize());
+const FSchedulePolicy FSchedulePolicy::AsyncMonoScanlines( ScheduleTime_Async, ScheduleRun_Mono, ScheduleMode_Scanlines, ScheduleParameter_Length, FCPUInfo::L1CacheSize());
+const FSchedulePolicy FSchedulePolicy::MultiScanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines, ScheduleParameter_Length, FCPUInfo::L1CacheSize());
+const FSchedulePolicy FSchedulePolicy::MonoScanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines, ScheduleParameter_Length, FCPUInfo::L1CacheSize());
 //
 
 FSchedulePolicy::~FSchedulePolicy()
@@ -38,7 +38,7 @@ FSchedulePolicy::FSchedulePolicy(
     , eScheduleRunPolicy iRun
     , eScheduleModePolicy iMode
     , eScheduleParameterPolicy iParam
-    , int64 iValue
+    , uint64 iValue
 )
     : mTime( iTime )
     , mRun( iRun )
@@ -72,7 +72,7 @@ FSchedulePolicy::ParameterPolicy() const
     return  mParameter;
 }
 
-int64
+uint64
 FSchedulePolicy::Value() const
 {
     return  mValue;

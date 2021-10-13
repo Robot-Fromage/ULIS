@@ -46,6 +46,7 @@ ScheduleGeneric_OP(
         , iPolicy
         , 1
         , 1
+        , 1
         , iContiguous
         , true
         , BuildGeneric_OPJob_Scanlines

@@ -82,6 +82,9 @@ public:
 
     /* Get the job */
     IJob* GetJob();
+
+    /* Returns the maximum amount of tasks that can be executed in concurrency */
+    uint64 GetMaxConcurrency() const;
 #else
     /*! Reserve some space for jobs */
     void ReserveJobs( uint64 iNum );

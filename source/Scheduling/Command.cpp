@@ -101,6 +101,12 @@ FCommand::GetJob()
     return mJob;
 }
 
+uint64
+FCommand::GetMaxConcurrency() const
+{
+    return mJob->GetMaxConcurrency();
+}
+
 #else
 void
 FCommand::ReserveJobs( uint64 iNum )

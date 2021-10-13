@@ -19,34 +19,69 @@ using namespace ::ULIS;
 
 int main( int argc, char *argv[] )
 {
+
+    char a;
+    std::cin >> a;
     //std::this_thread::sleep_for(std::chrono::seconds(5));
 
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_BGRA8;
-    FContext ctx( queue, fmt, PerformanceIntent_SSE );
+    FContext ctx( queue, fmt, PerformanceIntent_SSE);
     int size = 128;
-    uint32 repeat = 36000;
+    uint32 repeat = 360000;
+    uint32 mult = 360000;
     FBlock src( size, size, fmt );
     FBlock dst( size, size, fmt );
 
     std::queue<std::function<void()>> funcQueue;
 
-    char a;
-    std::cin >> a;
-
     FEvent eventBlend = FEvent::NoOP();
 
     auto startTime = std::chrono::steady_clock::now();
-    for (uint32 l = 0; l < repeat; ++l) {
-        FSchedulePolicy policy = FSchedulePolicy::AsyncCacheEfficient;
-        FEvent subEventBlend [10];
-        ctx.Copy(src, dst, FRectI::Auto, FVec2I(0), policy, 1, &eventBlend, &subEventBlend[0]);
-        for (int i = 1; i < 10; i++)
+    for (uint32 l = 0; l < repeat / mult; ++l) {
+        FSchedulePolicy policy = FSchedulePolicy::CacheEfficient;
+        FEvent* subEventBlend = new FEvent[mult];
+
+        int i = 0;
+        
+        //ctx.Copy(src, dst, FRectI::Auto, FVec2I(0), policy, 1, &eventBlend, &subEventBlend[i]);
+        //ctx.Dummy_OP(1, &subEventBlend[i], &subEventBlend[i + 1]); i++;
+        ctx.BlendAA(
+            src
+            , dst
+            , FRectI::Auto
+            , FVec2I(0)
+            , Blend_Normal
+            , Alpha_Normal
+            , 1.0f
+            , policy
+            , 1
+            , &eventBlend
+            , &subEventBlend[0]
+        );
+
+
+        for( int j = 1; j < mult; j++)
         {
-            ctx.Copy(src, dst, FRectI::Auto, FVec2I(0), policy, 1, &subEventBlend[i-1], &subEventBlend[i]);
+            //ctx.Copy(src, dst, FRectI::Auto, FVec2I(0), policy, 1, &subEventBlend[i], &subEventBlend[i + 1]); i++;
+            //ctx.Dummy_OP(1, &subEventBlend[i], &subEventBlend[i + 1]); i++;
+            ctx.BlendAA(
+                src
+                , dst
+                , FRectI::Auto
+                , FVec2I(0)
+                , Blend_Normal
+                , Alpha_Normal
+                , 1.0f
+                , policy
+                , 1
+                , &subEventBlend[j - 1]
+                , &subEventBlend[j]
+            );
         }
-        eventBlend = subEventBlend[9];
+        eventBlend = subEventBlend[mult - 1];
+        delete[] subEventBlend;
         ctx.Flush();
     }
 

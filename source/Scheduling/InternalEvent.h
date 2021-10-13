@@ -91,27 +91,16 @@ private:
     };
 
 private:
-    //::moodycamel::ConcurrentQueue<FSharedInternalEvent> mChildren;
     std::vector< FSharedInternalEvent > mChildren;
-    //std::atomic_uint8_t mChildrenStatus;
-    std::atomic<eChildrenStatus> mChildrenStatus;
+    //std::atomic<eChildrenStatus> mChildrenStatus;
     FCommand* mCommand;
-    // std::atomic_uint8_t mStatus;
     eEventStatus mStatus;
-    // std::atomic_uint64_t mNumChildren;
-    // std::atomic_uint64_t mNumJobsRemaining;
     FRectI mGeometry;
     FOnEventComplete mOnEventComplete;
     FOnInternalEventReady mOnInternalEventReady;
-    // FOnInternalEventComplete mOnInternalEventComplete;
     std::atomic_uint64_t mParentUnfinished;
-    //uint64 mParentUnfinished;
     std::mutex mStatusFinishedMutex;
     std::mutex mEventReadyMutex;
-
-/* #ifdef ULIS_ASSERT_ENABLED
-    TArray< FSharedInternalEvent >  mDebugChildren;
-#endif */
 };
 
 ULIS_NAMESPACE_END

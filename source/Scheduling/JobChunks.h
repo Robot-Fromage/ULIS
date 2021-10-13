@@ -35,14 +35,15 @@ public:
 
     /*! Constructor */
     FJobChunks(
-        const int64 iNumJobs
-        , const int64 iNumTaskPerJob
+        const uint64 iNumJobs
+        , const uint64 iNumTaskPerJob
+        , const uint64 mNumTasks
         , fpTask iTask
         , const TCommandArgs* iArgs
         , const int64 iChunkSize
         , TDelegateBuildJobChunks iDelegateBuildJobChunks
     )
-        : FJob(iNumJobs, iNumTaskPerJob, iTask, iArgs)
+        : FJob(iNumJobs, iNumTaskPerJob, mNumTasks, iTask, iArgs)
         , mChunkSize( iChunkSize )
         , mDelegateBuildJobChunks( iDelegateBuildJobChunks )
     {
@@ -71,7 +72,7 @@ public:
     }
 
 private:
-    int64 mChunkSize;
+    uint64 mChunkSize;
     TDelegateBuildJobChunks mDelegateBuildJobChunks;
 };
 

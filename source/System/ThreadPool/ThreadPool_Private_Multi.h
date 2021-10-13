@@ -25,6 +25,7 @@
 #include <mutex>
 #include <random>
 #include <thread>
+#include <stack>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -50,38 +51,37 @@ public:
 
 private:
     void WorkProcess(uint32 iThreadIndex);
-    void Work();
-    void PrepareCommands();
+    // void Work();
+    // bool PrepareCommands();
+    void FinishCommand(FCommand* iCommand);
     void ExecuteCommand();
-    void ScheduleProcess(FCommand* iCmd);
+    //void ScheduleProcess(FCommand* iCmd);
     void OnEventReady(const FInternalEvent* iEvent);
+
     void StopWorkers();
     void StartWorkers(uint32 iNumWorkers);
+
     FCommand* GetCommandToExecute();
     void ReleaseCommandToExecute(FCommand* iCommand);
 
-    // void OnEventComplete(const FInternalEvent* iEvent);
-
 private:
     // Private Data
+    std::atomic_uint64_t mNumScheduledCommands; //an atomic counter to know how many commands are queued
+    ::std::mutex mWaitMutex; //a mutex to use with a condition variable to WaitForCompletion()
+    ::std::condition_variable mWaitCV; //The condition variable to WaitForCompletion()
+
     bool                                mStopWorkers;
     std::vector< std::thread >          mWorkers;
-    ::moodycamel::ConcurrentQueue<FCommand*> mCommandsToPrepare; //the queue of commands ready to be prepared (Preparing a command means creating its jobs if needed)
-    std::vector<::moodycamel::ConcurrentQueue<FCommand*>> mCommandsToExecuteQueues; //The queue of commands ready to execute
-    //std::atomic<FCommand*> mCurrentCommand; //The command currently executed by all workers, is an atomic so we don't need a mutex to read it;
-    FCommand* mCurrentCommand;
-    // std::atomic<eWorkStatus> mWorkStatus;
-    // std::atomic_uint64_t mCurrentJobIndex;
-    ::std::mutex mCommandToExecuteMutex; //a mutex to avoid dequeue several commands from mCommandsToExecute while setting mCurrentCommand
-    
     ::moodycamel::LightweightSemaphore* mWorkersSemaphore; //Semaphore to signal all workers to wake up when something needs to be done
 
-    std::atomic_uint64_t mNumScheduledCommands; //an atomic counter to know how many commands are queued
-    
-    ::std::function<void(const FInternalEvent*)>  mOnEventReady;
+    //::moodycamel::ConcurrentQueue<FCommand*> mCommandsToPrepare; //the queue of commands ready to be prepared (Preparing a command means creating its jobs if needed)
+    std::vector<::moodycamel::ConcurrentQueue<FCommand*>> mCommandsToExecuteQueues; //The queue of commands ready to execute
+    std::atomic_uint64_t* mNumCommandsToExecute;
+    FCommand* mCurrentCommand;
 
-    //std::atomic_uint64_t                mNumScheduledJobs;
-    //::moodycamel::BlockingConcurrentQueue<const FJob*> mJobs;
+    ::std::function<void(const FInternalEvent*)>  mOnEventReady;
+    ::std::mutex mWorkersReadyMutex;
+    ::std::vector<uint32> mWorkersReady;
 };
 
 ULIS_NAMESPACE_END

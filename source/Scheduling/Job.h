@@ -66,6 +66,9 @@ public:
 public:
     /*! Start exec job tasks. */
     virtual void ExecuteConcurrently() = 0;
+
+    /*! Returns the maximum amount of tasks that can be executed in concurrency. */
+    virtual const uint64 GetMaxConcurrency() = 0;
 };
 
 /////////////////////////////////////////////////////
@@ -92,13 +95,15 @@ public:
 
     /*! Constructor */
     FJob(
-        const int64 iNumJobs
-        , const int64 iNumTaskPerJob
+        const uint64 iNumJobs
+        , const uint64 iNumTaskPerJob
+        , const uint64 iNumTasks
         , fpTask iTask
         , const TCommandArgs* iCommandArgs
     )
         : mNumJobs (iNumJobs)
         , mNumTaskPerJob( iNumTaskPerJob )
+        , mNumTasks( iNumTasks )
         , mTask(iTask)
         , mCommandArgs(iCommandArgs)
         , mJobIndex(0)
@@ -128,28 +133,39 @@ public:
         {
             TJobArgs args;
 
-            int64 jobIndex = mJobIndex.fetch_add(1, ::std::memory_order_relaxed);
+            //relaxed, because we're just getting an index for us, not making any new memory available for other threads
+            uint64 jobIndex = mJobIndex.fetch_add(1, ::std::memory_order_relaxed);
             if (jobIndex >= mNumJobs)
                 break;
 
+            //Compute all the tasks to do for the retrieved job index
+            //Fill the args for each task and execute it
             uint64 firstTask = jobIndex * mNumTaskPerJob;
-            for (int i = 0; i < mNumTaskPerJob; i++)
+            uint64 endTask = FMath::Min(mNumTasks, (jobIndex + 1) * mNumTaskPerJob);
+            for (uint64 i = firstTask; i < endTask; i++)
             {
-                FillJobArgs(mCommandArgs, args, firstTask + i);
+                FillJobArgs(mCommandArgs, args, i);
                 mTask( &args, mCommandArgs );
             }
         }
+    }
+
+    /*! Returns the maximum amount of tasks that can be executed in concurrency. */
+    virtual const uint64 GetMaxConcurrency() override
+    {
+        return mNumJobs;
     }
 
 protected:
     virtual void FillJobArgs(const TCommandArgs* iCommandArgs, TJobArgs& oJobArgs, uint64 iTaskIndex) = 0;
 
 private:
-    const int64 mNumJobs;
-    const int64 mNumTaskPerJob;
+    const uint64 mNumJobs;
+    const uint64 mNumTaskPerJob;
+    const uint64 mNumTasks;
     fpTask mTask;
     const TCommandArgs* mCommandArgs;
-    ::std::atomic_int64_t mJobIndex;
+    ::std::atomic_uint64_t mJobIndex;
 };
 
 #else

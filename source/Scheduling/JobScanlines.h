@@ -36,13 +36,14 @@ public:
 
     /*! Constructor */
     FJobScanlines(
-        const int64 iNumJobs
-        , const int64 iNumTaskPerJob
+        const uint64 iNumJobs
+        , const uint64 iNumTaskPerJob
+        , const uint64 iNumTasks
         , fpTask iTask
         , const TCommandArgs* iArgs
         , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
     )
-        : FJob(iNumJobs, iNumTaskPerJob, iTask, iArgs)
+        : FJob(iNumJobs, iNumTaskPerJob, iNumTasks, iTask, iArgs)
         , mDelegateBuildJobScanlines( iDelegateBuildJobScanlines )
     {
     }
