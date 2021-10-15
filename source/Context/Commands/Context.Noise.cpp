@@ -45,7 +45,7 @@ FContext::WhiteNoise(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     int seed = iSeed < 0 ? static_cast< int >( time( 0 ) ) : iSeed;
 
@@ -91,7 +91,7 @@ FContext::ValueNoise(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     int seed = iSeed < 0 ? static_cast< int >( time( 0 ) ) : iSeed;
 
@@ -141,7 +141,7 @@ FContext::BrownianNoise(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     int seed = iSeed < 0 ? static_cast< int >( time( 0 ) ) : iSeed;
     float amplitudeMax = 0;
@@ -201,7 +201,7 @@ FContext::VoronoiNoise(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     int seed = iSeed < 0 ? static_cast< int >( time( 0 ) ) : iSeed;
     std::minstd_rand generator( seed );

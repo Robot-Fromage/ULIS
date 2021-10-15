@@ -17,13 +17,13 @@ ULIS_NAMESPACE_BEGIN
 // Invocations
 //--------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------- MEM
-void
+/* void
 InvokeNo_OP(
       const FNo_OPJobArgs* jargs
     , const FNo_OPCommandArgs* cargs
 )
 {
-}
+} */
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule
@@ -35,7 +35,7 @@ ScheduleNo_OP(
     , bool iForceMonoChunk
 )
 {
-    RangeBasedSchedulingBuildJobs<
+    /* RangeBasedSchedulingBuildJobs<
           FNo_OPJobArgs
         , FNo_OPCommandArgs
         , &InvokeNo_OP
@@ -47,9 +47,9 @@ ScheduleNo_OP(
         , 1
         , iContiguous
         , true
-        , BuildNo_OPJob_Scanlines
-        , BuildNo_OPJob_Chunks
-    );
+        , &BuildNo_OPJob_Scanlines
+        , &BuildNo_OPJob_Chunks
+    ); */
 }
 
 ULIS_NAMESPACE_END

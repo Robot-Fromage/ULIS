@@ -15,12 +15,17 @@
 #include "Memory/Array.h"
 #include "Scheduling/Event.h"
 #include "Math/Geometry/Rectangle.h"
+#include "ThirdParty/ConcurrentQueue/concurrentqueue.h"
+
 #include <atomic>
+#include <mutex>
 
 ULIS_NAMESPACE_BEGIN
 class FInternalEvent;
 class FCommand;
 typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
+typedef TLambdaCallback< void, const FInternalEvent* > FOnInternalEventComplete;
+typedef TLambdaCallback< void, const FInternalEvent* > FOnInternalEventReady;
 
 /////////////////////////////////////////////////////
 /// @class      FInternalEvent
@@ -39,6 +44,7 @@ typedef std::shared_ptr< FInternalEvent > FSharedInternalEvent;
 ///             \sa FCPUInfo
 ///             \sa FCommandQueue
 class FInternalEvent
+    : public std::enable_shared_from_this<FInternalEvent>
 {
     friend class FEvent;
 
@@ -52,29 +58,49 @@ public:
 public:
     static FSharedInternalEvent MakeShared( const FOnEventComplete& iOnEventComplete = FOnEventComplete() );
     bool IsBound() const;
-    bool ReadyForProcessing() const;
-    bool ReadyForScheduling() const;
+#ifdef ULIS_ASSERT_ENABLED
     void CheckCyclicSelfReference() const;
+#endif
     eEventStatus Status() const;
     void Bind( FCommand* iCommand, uint32 iNumWait, const FEvent* iWaitList, const FRectI& iGeometry );
-    void PostBindAsync();
-    bool NotifyOneJobFinished();
+    // void PostBindAsync();
+    // bool NotifyOneJobFinished();
     void NotifyAllJobsFinished();
     void NotifyQueued();
     void Wait() const;
 
-private:
-    void SetStatus( eEventStatus iStatus );
-    void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
-    void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
+    void SetOnInternalEventReady(FOnInternalEventReady iOnEventReady);
+    // void SetOnInternalEventComplete(FOnInternalEventComplete iOnEventComplete);
+
+    const FCommand* Command() const;
 
 private:
-    TArray< FSharedInternalEvent > mWaitList;
+    void BuildWaitList( uint32 iNumWait, const FEvent* iWaitList );
+#ifdef ULIS_ASSERT_ENABLED
+    void CheckCyclicSelfReference_imp( const FInternalEvent* iPin ) const;
+#endif
+    void OnParentEventComplete();
+    void AddChild(FSharedInternalEvent iChild);
+
+private:
+    enum eChildrenStatus : uint8
+    {
+        ChildrenStatus_Unlocked,
+        ChildrenStatus_Locked,
+        ChildrenStatus_Finished
+    };
+
+private:
+    std::vector< FSharedInternalEvent > mChildren;
+    //std::atomic<eChildrenStatus> mChildrenStatus;
     FCommand* mCommand;
-    std::atomic< eEventStatus > mStatus;
-    uint64 mNumJobsRemaining;
+    eEventStatus mStatus;
     FRectI mGeometry;
     FOnEventComplete mOnEventComplete;
+    FOnInternalEventReady mOnInternalEventReady;
+    std::atomic_uint64_t mParentUnfinished;
+    std::mutex mStatusFinishedMutex;
+    std::mutex mEventReadyMutex;
 };
 
 ULIS_NAMESPACE_END

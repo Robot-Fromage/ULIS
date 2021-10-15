@@ -59,7 +59,7 @@ FContext::AnalyzeSmallestVisibleRect(
     ULIS_ASSERT_RETURN_ERROR(
           oRect
         , "No input."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA )
     );
 
     // Sanitize geometry
@@ -68,11 +68,11 @@ FContext::AnalyzeSmallestVisibleRect(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     if( !iBlock.HasAlpha() ) {
         *oRect = src_roi;
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     }
 
     FEvent event_alloc;
@@ -170,7 +170,7 @@ FContext::AccumulateSample(
     ULIS_ASSERT_RETURN_ERROR(
           oColor
         , "No input."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA )
     );
 
     // Sanitize geometry
@@ -180,7 +180,7 @@ FContext::AccumulateSample(
     // Check no-op
     const int area = src_roi.Area();
     if( area <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FEvent event_alloc;
     FBlock* strip = new FBlock( 1, src_roi.h, SummedAreaTableMetrics( iBlock ), nullptr, FOnInvalidBlock(), FOnCleanupData( &OnCleanup_FreeMemory ) );

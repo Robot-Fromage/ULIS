@@ -46,7 +46,7 @@ FContext::XLoadBlockFromDisk(
 {
     fs::path path( iPath );
     if( ( !( fs::exists( path ) ) ) || ( !( fs::is_regular_file( path ) ) ) )
-       return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_INPUT_DATA );
+       return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_BAD_INPUT_DATA );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -92,7 +92,7 @@ FContext::SaveBlockToDisk(
                       ( iFileFormat == FileFormat_hdr && type == Type_ufloat && model == ColorModel_RGB );
 
     if( !( layout_valid && model_valid && type_valid ) )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_BAD_FILE_FORMAT );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_BAD_FILE_FORMAT );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -143,14 +143,14 @@ FContext::LoadProxyFromDisk(
 
         FEvent subcommand_event;
         ulError err = LoadBlockFromDisk( *src_hollow, iPath, iPolicy, iNumWait, iWaitList, &subcommand_event );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within subcommand" );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iNumWait, iWaitList, iEvent, err ), "Error occured within subcommand" );
 
         FEvent maincommand_event( FOnEventComplete( []( const FRectI&, void* iUserData ){ delete  reinterpret_cast< FBlock* >( iUserData ); }, src_hollow ) );
         err = ConvertFormat( *src_hollow, ioBlock, ioBlock.Rect(), FVec2I( 0 ), iPolicy, 1, &subcommand_event, &maincommand_event );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within maincommand" );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iNumWait, iWaitList, iEvent, err ), "Error occured within maincommand" );
 
         err = Dummy_OP( 1, &maincommand_event, iEvent );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within postcommand" );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iNumWait, iWaitList, iEvent, err ), "Error occured within postcommand" );
         return  ULIS_NO_ERROR;
     } else {
         return  LoadBlockFromDisk( ioBlock, iPath, iPolicy, iNumWait, iWaitList, iEvent );
@@ -190,15 +190,15 @@ FContext::SaveProxyToDisk(
 
         FEvent subcommand_event;
         ulError err = ConvertFormat( iBlock, *conv, iBlock.Rect(), FVec2I( 0 ), iPolicy, iNumWait, iWaitList, &subcommand_event );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within subcommand" );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iNumWait, iWaitList, iEvent, err ), "Error occured within subcommand" );
 
         // Lambda with no captures can be used as function pointers. The TCallback and reinterpret_cast are used as a primitive capture instead.
         FEvent maincommand_event( FOnEventComplete( []( const FRectI&, void* iUserData ){ delete  reinterpret_cast< FBlock* >( iUserData ); }, conv ) );
         err = SaveBlockToDisk( *conv, iPath, iFileFormat, iQuality, iPolicy, 1, &subcommand_event, &maincommand_event );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within maincommand" );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iNumWait, iWaitList, iEvent, err ), "Error occured within maincommand" );
 
         err = Dummy_OP( 1, &maincommand_event, iEvent );
-        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iEvent, err ), "Error occured within postcommand" );
+        ULIS_ASSERT_RETURN_ERROR( FinishEventNo_OP( iNumWait, iWaitList, iEvent, err ), "Error occured within postcommand" );
         return  ULIS_NO_ERROR;
     } else {
         return  SaveBlockToDisk( iBlock, iPath, iFileFormat, iQuality, iPolicy, iNumWait, iWaitList, iEvent );

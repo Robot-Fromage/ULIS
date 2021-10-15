@@ -40,7 +40,7 @@ FContext::Fill(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     // This one is a bit tricky so here is a breakdown of the steps:
@@ -93,7 +93,7 @@ FContext::FillPreserveAlpha(
 
     // Check no-op
     if( roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(

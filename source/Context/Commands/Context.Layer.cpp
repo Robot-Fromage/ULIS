@@ -42,7 +42,7 @@ FContext::Flatten(
     ULIS_ASSERT_RETURN_ERROR(
           iStack.Format() == oDestination.Format()
         , "Formats mismatch."
-        , FinishEventNo_OP( iEvent, ULIS_ERROR_FORMATS_MISMATCH )
+        , FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
     );
 
     // Sanitize geometry
@@ -54,7 +54,7 @@ FContext::Flatten(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     FEvent ev = iStack.RenderImage( *this, oDestination, src_roi, dst_roi.Position(), iPolicy, iNumWait, iWaitList );
     Dummy_OP( 1, &ev, iEvent );

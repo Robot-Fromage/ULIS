@@ -100,13 +100,23 @@ public:
     eFormat Format() const;
 
 public:
+/////////////////////////////////////////////////////
+// Utils
     /*!
         Internal tool for notifying an user event the task is a no-op
     */
-    static ulError FinishEventNo_OP( FEvent* iEvent, ulError iError );
+    ulError FinishEventNo_OP( uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent, ulError iError );
+
+    /*!
+        Utility tool for a dummy task with an asynchronous time constraint
+    */
     ulError Dummy_OP( uint32 iNumWait, const FEvent* iWaitList, FEvent* iEvent );
 
-public:
+    /*!
+        Utility tool to mark an event finished without doing any work at all
+    */
+    static void MarkEventFinished( FEvent* iEvent );
+
 /////////////////////////////////////////////////////
 // Layers
     /*!

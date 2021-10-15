@@ -54,7 +54,7 @@ FContext::ConvertFormat(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(

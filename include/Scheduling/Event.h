@@ -20,9 +20,9 @@ class FEvent_Private;
 // eEventStatus
 enum eEventStatus : uint8
 {
-      EventStatus_Idle
-    , EventStatus_Queued
-    , EventStatus_Finished
+      EventStatus_Idle //Created, Not flushed, No jobs ready
+    , EventStatus_Queued //Created, flushed, No jobs ready
+    , EventStatus_Finished //jobs donc, children informed
 };
 
 /////////////////////////////////////////////////////
