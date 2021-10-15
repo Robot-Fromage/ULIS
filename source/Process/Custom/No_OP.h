@@ -37,8 +37,8 @@ public:
 
 /////////////////////////////////////////////////////
 // Builders
-static void BuildNo_OPJob_Scanlines( const FNo_OPCommandArgs* iCargs, const int64 iNumJobs, const int64 iNumTasksPerJob, const int64 iIndex, FNo_OPJobArgs& oJargs ) {}
-static void BuildNo_OPJob_Chunks( const FNo_OPCommandArgs* iCargs, const int64 iSize, const int64 iCount, const int64 iOffset, const int64 iIndex, FNo_OPJobArgs& oJargs ) {}
+static void BuildNo_OPJob_Scanlines( const FNo_OPCommandArgs* iCargs, const int64 iIndex, FNo_OPJobArgs& oJargs ) {}
+static void BuildNo_OPJob_Chunks( const FNo_OPCommandArgs* iCargs, const int64 iSize, const int64 iOffset, const int64 iIndex, FNo_OPJobArgs& oJargs ) {}
 
 /////////////////////////////////////////////////////
 // Dispatch / Schedule

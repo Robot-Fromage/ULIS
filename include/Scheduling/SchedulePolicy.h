@@ -62,7 +62,7 @@ public:
         , eScheduleRunPolicy iRun = ScheduleRun_Multi
         , eScheduleModePolicy iMode = ScheduleMode_Scanlines
         , eScheduleParameterPolicy iParam = ScheduleParameter_Count
-        , int64 iValue = -1
+        , uint64 iValue = 0
     );
 
     /*! Getter for the Time Value. */
@@ -78,7 +78,7 @@ public:
     eScheduleParameterPolicy ParameterPolicy() const;
 
     /*! Getter for the Parameter Value. */
-    int64 Value() const;
+    uint64 Value() const;
 
 public:
     static const FSchedulePolicy AsyncCacheEfficient;
@@ -95,7 +95,7 @@ private:
     eScheduleRunPolicy          mRun;
     eScheduleModePolicy         mMode;
     eScheduleParameterPolicy    mParameter;
-    int64                       mValue;
+    uint64                      mValue;
 };
 
 ULIS_NAMESPACE_END

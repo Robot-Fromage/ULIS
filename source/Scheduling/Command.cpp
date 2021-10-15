@@ -23,8 +23,14 @@ FCommand::~FCommand()
     if( mArgs )
         delete  mArgs;
 
+#ifdef NEW_JOBSYSTEM
+
+    if (mJob)
+        delete mJob;
+#else
     for( uint64 i = 0; i < mJobs.Size(); ++i )
         delete  mJobs[i];
+#endif
 }
 
 FCommand::FCommand(
@@ -40,12 +46,18 @@ FCommand::FCommand(
 )
     : mArgs( iArgs )
     , mEvent( nullptr )
-    , mJobs( TArray< const FJob* >() )
+    
+#ifdef NEW_JOBSYSTEM
+    , mJob( nullptr )
+#else
+    , mJobs()
+    , mJobIndex(0)
+#endif
+    , mWorkingThreads(0)
     , mSched( iSched )
     , mPolicy( iPolicy )
     , mContiguous( iContiguous )
     , mForceMonoChunk( iForceMonoChunk )
-    , mScheduled( false )
 {
     // Bind Event
     if( iEvent ) {
@@ -69,6 +81,33 @@ FCommand::Args() const
     return  mArgs;
 }
 
+#ifdef NEW_JOBSYSTEM
+
+void
+FCommand::ExecuteConcurrently()
+{
+    mJob->ExecuteConcurrently();
+}
+
+void
+FCommand::SetJob(IJob* iJob)
+{
+    mJob = iJob;
+}
+
+IJob*
+FCommand::GetJob()
+{
+    return mJob;
+}
+
+uint64
+FCommand::GetMaxConcurrency() const
+{
+    return mJob->GetMaxConcurrency();
+}
+
+#else
 void
 FCommand::ReserveJobs( uint64 iNum )
 {
@@ -81,32 +120,54 @@ FCommand::AddJob( const FJob* iJob )
     mJobs.EmplaceBack( iJob );
 }
 
+
+FJob*
+FCommand::GetJobForExecution()
+{
+    if (mJobIndex.load(::std::memory_order_relaxed) >= mJobs.Size())
+        return nullptr;
+
+    uint64 index = mJobIndex.fetch_add(1, ::std::memory_order_relaxed);
+    if (index >= mJobs.Size())
+        return nullptr;
+
+    return const_cast<FJob*>(mJobs[index]);
+}
+
 uint64
 FCommand::NumJobs() const
 {
     return  mJobs.Size();
 }
 
+const TArray< const FJob* >&
+FCommand::Jobs() const
+{
+    return  mJobs;
+}
+
+#endif
+
+::std::atomic_uint32_t&
+FCommand::WorkingThreads()
+{
+    return mWorkingThreads;
+}
+
 void
 FCommand::ProcessAsyncScheduling()
 {
-    if( !mScheduled ) {
-        mSched( this, mPolicy, mContiguous, mForceMonoChunk );
-        mEvent->PostBindAsync();
-        mScheduled = true;
+    if (mSched)
+    {
+        mSched(this, mPolicy, mContiguous, mForceMonoChunk);
     }
+    // mEvent->PostBindAsync();
 }
 
 FSharedInternalEvent
 FCommand::Event() const
 {
     return  mEvent;
-}
-
-const TArray< const FJob* >&
-FCommand::Jobs() const
-{
-    return  mJobs;
 }
 
 const FSchedulePolicy&
