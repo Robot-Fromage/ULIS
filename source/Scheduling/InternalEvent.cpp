@@ -115,6 +115,7 @@ FInternalEvent::OnParentEventComplete()
     //We need to release here, because we need to ensure other threads what this thread did has been done
     //And in the case where OnParentEventComplete() has been called from SetOnInternalEventReady()
     //we also need to ensure mOnInternalEventReady to be set
+    //Thus, we can use acq_rel to perform acquire and release
     if (mParentUnfinished.fetch_sub(1, std::memory_order_acq_rel) == 1)
     {
         mOnInternalEventReady.ExecuteIfBound(this);
