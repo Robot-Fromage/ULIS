@@ -100,14 +100,10 @@ private:
 };
 
 #define ULIS_DECLARE_SIMPLE_DELEGATE( __Name__, __Ret__, ... )                          \
-    typedef TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ > > __Name__;       \
-    template class ULIS_API TLambdaCallback< __Ret__, __VA_ARGS__ >;                    \
-    template class ULIS_API TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ > >;
+    typedef TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ > > __Name__;
 
 #define ULIS_DECLARE_SIMPLE_DELEGATE_SPEC( __Name__, __Spec__, __Ret__, ... )                       \
-    typedef TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ >, __Spec__ > __Name__;         \
-    template class ULIS_API TLambdaCallback< __Ret__, __VA_ARGS__ >;                                \
-    template class ULIS_API TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ >, __Spec__ >;
+    typedef TCallbackCapable< TLambdaCallback< __Ret__, __VA_ARGS__ >, __Spec__ > __Name__;
 
 ULIS_NAMESPACE_END
 

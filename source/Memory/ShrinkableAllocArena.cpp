@@ -464,7 +464,7 @@ FShrinkableAllocArena::DebugPrint( int iType, int iCol ) const
             int k = static_cast< int >( ( ( i + 1 ) / float( iCol ) ) * ( mArenaSize - smMetaTotalPad ) );
             float delta = static_cast< float >( k-j );
             uint64 sum = 0;
-            for( j; j<k; ++j) {
+            for( ; j<k; ++j) {
                 sum += raw_buf[j];
             }
             std::cout << ( ( sum / delta ) > 0.5f ? sgBlockChar : ' ' );

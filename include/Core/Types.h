@@ -143,18 +143,14 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
 #define ULIS_FOR_ALL_TYPES_DO( X, _E0, _E1, _E2, _E3 )      \
     X( uint8,   _E0, _E1, _E2, _E3 )                        \
     X( uint16,  _E0, _E1, _E2, _E3 )                        \
-    X( ufloat,  _E0, _E1, _E2, _E3 )                        //DISABLED:UINT32\
-    X( uint32,  _E0, _E1, _E2, _E3 )                        //DISABLED:DOUBLE\
-    X( udouble, _E0, _E1, _E2, _E3 )
+    X( ufloat,  _E0, _E1, _E2, _E3 )
 
 /////////////////////////////////////////////////////
 // Macro for all types ID for template instanciation
 #define ULIS_FOR_ALL_TYPES_ID_DO( X, _E0, _E1, _E2, _E3 )   \
     X( Type_uint8,      _E0, uint8, _E2, _E3 )              \
     X( Type_uint16,     _E0, uint16, _E2, _E3 )             \
-    X( Type_ufloat,     _E0, ufloat, _E2, _E3 )             //DISABLED:UINT32\
-    X( Type_uint32,     _E0, uint32, _E2, _E3 )             //DISABLED:DOUBLE\
-    X( TYPE_UDOUBLE,    _E0, udouble, _E2, _E3 )
+    X( Type_ufloat,     _E0, ufloat, _E2, _E3 )
 
 /////////////////////////////////////////////////////
 // Macro for all types for combination template instanciation
@@ -167,23 +163,7 @@ template<> udouble  constexpr ULIS_FORCEINLINE MaxType< udouble >() { return 1.0
     X( uint16,  ufloat  , _E0, _E1 )                        \
     X( ufloat,  uint8   , _E0, _E1 )                        \
     X( ufloat,  uint16  , _E0, _E1 )                        \
-    X( ufloat,  ufloat  , _E0, _E1 )                           //DISABLED:DOUBLE\
-    X( uint8,   uint32  , _E0, _E1 )                        \
-    X( uint16,  uint32  , _E0, _E1 )                        \
-    X( uint32,  uint8   , _E0, _E1 )                        \
-    X( uint32,  uint16  , _E0, _E1 )                        \
-    X( uint32,  uint32  , _E0, _E1 )                        \
-    X( uint32,  ufloat  , _E0, _E1 )                        \
-    X( ufloat,  uint32  , _E0, _E1 )                        \
-    X( uint8,   udouble  )                          \
-    X( uint16,  udouble )                           \
-    X( uint32,  udouble )                           \
-    X( ufloat,  udouble )                           \
-    X( udouble, udouble )                           \
-    X( udouble, uint8   )                           \
-    X( udouble, uint16  )                           \
-    X( udouble, uint32  )                           \
-    X( udouble, ufloat  )
+    X( ufloat,  ufloat  , _E0, _E1 )
 
 /////////////////////////////////////////////////////
 // Model codes

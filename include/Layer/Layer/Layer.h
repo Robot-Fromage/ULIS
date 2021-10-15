@@ -33,9 +33,9 @@ template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< IL
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TRoot< ILayer >*, const TNode< ILayer >*, bool >, 1 >;
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< ILayer >*, const TRoot< ILayer >* >, 2 >;
 template class ULIS_API TCallbackCapable< TLambdaCallback< void, const TNode< ILayer >* >, 3 >;
-template class ULIS_API TNode< ILayer >;
-template class ULIS_API TArray< TNode< ILayer >* >;
-template class ULIS_API TRoot< ILayer >;
+//template class ULIS_API TNode< ILayer >;
+//template class ULIS_API TArray< TNode< ILayer >* >;
+//template class ULIS_API TRoot< ILayer >;
 typedef FOn_bool_Changed FOnBoolChanged;
 typedef TOnParentChanged< ILayer > FOnParentChanged;
 typedef TOnSelfChanged< ILayer > FOnSelfChanged;

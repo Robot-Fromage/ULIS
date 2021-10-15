@@ -440,9 +440,9 @@ PYBIND11_MODULE( pyULIS4, m ) {
     /////////
     // eEventStatus
     py::enum_< eEventStatus >( m, "eEventStatus" )
-        .value( "EventStatus_Idle",     eEventStatus::EventStatus_Idle      )
-        .value( "EventStatus_Queued",   eEventStatus::EventStatus_Queued    )
-        .value( "EventStatus_Finished", eEventStatus::EventStatus_Finished  )
+        .value( "EventStatus_Idle",      eEventStatus::EventStatus_Idle      )
+        .value( "EventStatus_Queued",    eEventStatus::EventStatus_Queued    )
+        .value( "EventStatus_Finished",  eEventStatus::EventStatus_Finished  )
         .export_values();
 
 

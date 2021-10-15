@@ -213,7 +213,7 @@ CLASS::RenderImage(
 {
     FEvent ev;
     ulError err = iCtx.Blend(
-          *Block()
+          *tSelf::Block()
         , ioBlock
         , iRect
         , iPos
@@ -234,16 +234,16 @@ TEMPLATE
 typename CLASS::tSelf*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
-    const BlockType* ref = Block();
+    const BlockType* ref = tSelf::Block();
     if( !ref )
         return  nullptr;
 
     // Actual Deep Copy with Event.
     tSelf* rasterized = new tSelf(
-          Name()
-        , IsLocked()
-        , IsVisible()
-        , PrettyColor()
+          tSelf::Name()
+        , tSelf::IsLocked()
+        , tSelf::IsVisible()
+        , tSelf::PrettyColor()
         , ref->Width()
         , ref->Height()
         , ref->Format()
@@ -269,7 +269,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnBoolChanged::GetDelegate()
     );
 
-    iCtx.Copy( *Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
+    iCtx.Copy( *tSelf::Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
     return  rasterized;
 }
 
@@ -283,8 +283,9 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
     if( !topLevel )
         return;
 
-    if( !Block() ) {
-        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+    if( !tSelf::Block() ) {
+        //const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+        const ILayer* layer = (const ILayer*)( topLevel );
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the class hierarchy !" );
         switch( layer->TypeID() ) {
             case LayerStackType::StaticTypeID(): {

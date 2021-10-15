@@ -124,7 +124,7 @@ FContext::Extract(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Forward arguments baking
     const FFormatMetrics& srcFormatMetrics( iSource.FormatMetrics() );
@@ -146,8 +146,8 @@ FContext::Extract(
     sourceChannelsToExtract.shrink_to_fit();
     destinationChannelsToExtract.shrink_to_fit();
 
-    ULIS_ASSERT_RETURN_ERROR( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
-    ULIS_ASSERT_RETURN_ERROR( sourceChannelsToExtract.size() && destinationChannelsToExtract.size(), "Bad Extraction parameters", FinishEventNo_OP( iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( sourceChannelsToExtract.size() == destinationChannelsToExtract.size(), "Extract masks don't map", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
+    ULIS_ASSERT_RETURN_ERROR( sourceChannelsToExtract.size() && destinationChannelsToExtract.size(), "Bad Extraction parameters", FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_BAD_INPUT_DATA ) );
 
     // Strides
     uint8* sourceStrides = new uint8[ sourceChannelsToExtract.size() ];
@@ -209,7 +209,7 @@ FContext::Filter(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -250,7 +250,7 @@ FContext::FilterInPlace(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -296,7 +296,7 @@ FContext::FilterInto(
 
     // Check no-op
     if( dst_roi.Sanitized().Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -338,7 +338,7 @@ FContext::sRGBToLinear(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -377,7 +377,7 @@ FContext::LinearTosRGB(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -411,7 +411,7 @@ FContext::Premultiply(
 )
 {
     if( !iBlock.HasAlpha() )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP );
 
     // Sanitize geometry
     const FRectI src_rect = iBlock.Rect();
@@ -419,7 +419,7 @@ FContext::Premultiply(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -453,7 +453,7 @@ FContext::Unpremultiply(
 )
 {
     if( !iBlock.HasAlpha() )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP );
 
     // Sanitize geometry
     const FRectI src_rect = iBlock.Rect();
@@ -461,7 +461,7 @@ FContext::Unpremultiply(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -495,7 +495,7 @@ FContext::SanitizeZeroAlpha(
 )
 {
     if( !iBlock.HasAlpha() )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP );
 
     // Sanitize geometry
     const FRectI src_rect = iBlock.Rect();
@@ -503,7 +503,7 @@ FContext::SanitizeZeroAlpha(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(
@@ -544,7 +544,7 @@ FContext::Swap(
         || iChannel2 >= iBlock.SamplesPerPixel()
     )
     {
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP );
     }
 
     // Sanitize geometry
@@ -553,7 +553,7 @@ FContext::Swap(
 
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Bake and push command
     mCommandQueue.d->Push(

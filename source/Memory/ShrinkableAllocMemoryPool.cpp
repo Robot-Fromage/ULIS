@@ -210,8 +210,7 @@ FShrinkableAllocMemoryPool::DefragForce()
             dst_it = (*highArena)->FindFirstMinAlloc( false, src_it.NextSize(), dst_it );
 
             // Should never happen, but i'm not sure.
-            if( !dst_it.IsValid() )
-                ULIS_ASSERT( false, "CRASHBOOUUM" );
+            ULIS_ASSERT( dst_it.IsValid(), "CRASHBOOUUM" );
 
             uint64 freed, used;
             FShrinkableAllocArena::MoveAlloc( src_it, dst_it, &freed, &used );

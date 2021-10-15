@@ -229,6 +229,7 @@
 // Define Namespaces
 #define ULIS_NAMESPACE_NAME        ULIS
 //#define ULIS_SHORT_NAMESPACE_NAME  ul
+#define NEW_JOBSYSTEM
 #define ULIS_NAMESPACE_BEGIN       namespace ULIS_NAMESPACE_NAME {
 #define ULIS_NAMESPACE_END         }
 namespace ULIS_NAMESPACE_NAME {}

@@ -62,8 +62,6 @@ static
 void
 BuildSimpleBufferJob_Scanlines(
       const FSimpleBufferCommandArgs* iCargs
-    , const int64 iNumJobs
-    , const int64 iNumTasksPerJob
     , const int64 iIndex
     , FSimpleBufferJobArgs& oJargs
 )
@@ -82,7 +80,6 @@ void
 BuildSimpleBufferJob_Chunks(
       const FSimpleBufferCommandArgs* iCargs
     , const int64 iSize
-    , const int64 iCount
     , const int64 iOffset
     , const int64 iIndex
     , FSimpleBufferJobArgs& oJargs
@@ -126,6 +123,7 @@ ScheduleSimpleBufferJobs(
         , iPolicy
         , static_cast< int64 >( cargs->dst.BytesTotal() )
         , cargs->dstRect.h
+        , cargs->dstRect.w * cargs->dst.BytesPerPixel()
         , iContiguous
         , iForceMonoChunk
         , iDelegateBuildJobScanlines

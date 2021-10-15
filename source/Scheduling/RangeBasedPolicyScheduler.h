@@ -11,8 +11,13 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Scheduling/JobChunks.h"
+#include "Scheduling/JobScanlines.h"
 
 ULIS_NAMESPACE_BEGIN
+
+#ifdef NEW_JOBSYSTEM
+
 /////////////////////////////////////////////////////
 // Scanline Job Building
 template<
@@ -29,21 +34,76 @@ static
 void
 RangeBasedSchedulingDelegateBuildJobs_Scanlines(
       FCommand* iCommand
-    , const int64 iNumJobs
-    , const int64 iNumTasksPerJob
+    , const uint64 iNumJobs
+    , const uint64 iNumTasksPerJob
+    , const uint64 iNumTasks
+    , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
+)
+{
+    //ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
+    const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
+    FJobScanlines<TCommandArgs, TJobArgs, TDelegateBuildJobScanlines>* job = new FJobScanlines<TCommandArgs, TJobArgs, TDelegateBuildJobScanlines>(iNumJobs, iNumTasksPerJob, iNumTasks, &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >, cargs, iDelegateBuildJobScanlines);
+    iCommand->SetJob(job);
+}
+
+/////////////////////////////////////////////////////
+// Chunk Job Building
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+    , typename TDelegateBuildJobChunks
+>
+ULIS_FORCEINLINE
+static
+void
+RangeBasedSchedulingDelegateBuildJobs_Chunks(
+      FCommand* iCommand
+    , const uint64 iSize
+    , const uint64 iNumChunks
+    , TDelegateBuildJobChunks iDelegateBuildJobChunks
+)
+{
+    const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
+    FJobChunks<TCommandArgs, TJobArgs, TDelegateBuildJobChunks>* job = new FJobChunks<TCommandArgs, TJobArgs, TDelegateBuildJobChunks>(iNumChunks, 1, iNumChunks, &ResolveScheduledJobInvocation< TJobArgs, TCommandArgs, TDelegateInvoke >, cargs, iSize, iDelegateBuildJobChunks);
+    iCommand->SetJob(job);
+}
+
+#else
+/////////////////////////////////////////////////////
+// Scanline Job Building
+template<
+      typename TJobArgs
+    , typename TCommandArgs
+    , void (*TDelegateInvoke)(
+          const TJobArgs*
+        , const TCommandArgs*
+        )
+    , typename TDelegateBuildJobScanlines
+>
+ULIS_FORCEINLINE
+static
+void
+RangeBasedSchedulingDelegateBuildJobs_Scanlines(
+      FCommand* iCommand
+    , const uint64 iNumJobs
+    , const uint64 iNumTasksPerJob
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
 )
 {
     ULIS_ASSERT( iNumJobs == 1 || iNumTasksPerJob == 1, "Logic error, one of these values should equal 1" );
     iCommand->ReserveJobs( iNumJobs );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
-    for( int64 i = 0; i < iNumJobs; ++i )
+    for( uint64 i = 0; i < iNumJobs; ++i )
     {
         IJobArgs** jargs = new IJobArgs*[ iNumTasksPerJob ];
         for( int j = 0; j < iNumTasksPerJob; ++j ) {
             TJobArgs* largs = new TJobArgs();
             jargs[ j ] = largs;
-            iDelegateBuildJobScanlines( cargs, iNumJobs, iNumTasksPerJob, i + j, *largs );
+            iDelegateBuildJobScanlines( cargs, i + j, *largs );
         }
         FJob* job = new FJob(
               static_cast< uint32 >( iNumTasksPerJob )
@@ -71,20 +131,20 @@ static
 void
 RangeBasedSchedulingDelegateBuildJobs_Chunks(
       FCommand* iCommand
-    , const int64 iSize
-    , const int64 iNumChunks
+    , const uint64 iSize
+    , const uint64 iNumChunks
     , TDelegateBuildJobChunks iDelegateBuildJobChunks
 )
 {
     iCommand->ReserveJobs( iNumChunks );
     const TCommandArgs* cargs  = dynamic_cast< const TCommandArgs* >( iCommand->Args() );
-    int64 offset = 0;
+    uint64 offset = 0;
     for( int i = 0; i < iNumChunks; ++i )
     {
         IJobArgs** jargs = new IJobArgs*[ 1 ];
         TJobArgs* largs = new TJobArgs();
         jargs[ 0 ] = largs;
-        iDelegateBuildJobChunks( cargs, iSize, iNumChunks, offset, i, *largs );
+        iDelegateBuildJobChunks( cargs, iSize, offset, i, *largs );
 
         FJob* job = new FJob(
               1
@@ -97,6 +157,7 @@ RangeBasedSchedulingDelegateBuildJobs_Chunks(
     }
     return;
 }
+#endif
 
 /////////////////////////////////////////////////////
 // Master Job Building
@@ -116,8 +177,9 @@ void
 RangeBasedSchedulingBuildJobs(
       FCommand* iCommand
     , const FSchedulePolicy& iPolicy
-    , const int64 iBytesTotal
-    , const int64 iNumScanlines
+    , const uint64 iBytesTotal
+    , const uint64 iNumScanlines
+    , const uint64 iBytesPerScanline
     , const bool iChunkAllowed
     , const bool iForceMonoChunk
     , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
@@ -159,6 +221,7 @@ mono_scanlines:
               iCommand
             , 1
             , iNumScanlines
+            , iNumScanlines
             , iDelegateBuildJobScanlines
         );
         return;
@@ -166,6 +229,13 @@ mono_scanlines:
 
 multi_scanlines:
     {
+        const uint64 size = FMath::Max( iPolicy.Value(), uint64(1) );
+        const uint64 NumTaskPerJob = uint64( FMath::Ceil(size / float(iBytesPerScanline) ) );
+        const uint64 NumJobs = uint64( FMath::Ceil(iNumScanlines / float(NumTaskPerJob) ) );
+        // const uint64 size = FMath::Max( iPolicy.Value(), uint64(1) );
+        // const uint64 count = uint64( FMath::Ceil( iBytesTotal / float( size ) ) );
+
+
         RangeBasedSchedulingDelegateBuildJobs_Scanlines<
               TJobArgs
             , TCommandArgs
@@ -174,8 +244,9 @@ multi_scanlines:
         >
         (
               iCommand
+            , NumJobs
+            , NumTaskPerJob // num scanline per job
             , iNumScanlines
-            , 1
             , iDelegateBuildJobScanlines
         );
         return;
@@ -200,8 +271,8 @@ mono_chunks:
 
 multi_chunks_count:
     {
-        const int64 count = FMath::Max( iPolicy.Value(), int64(1) );
-        const int64 size = int64( FMath::Ceil( iBytesTotal / float( count ) ) );
+        const uint64 count = FMath::Max( iPolicy.Value(), uint64(1) );
+        const uint64 size = uint64( FMath::Ceil( iBytesTotal / float( count ) ) );
         RangeBasedSchedulingDelegateBuildJobs_Chunks<
               TJobArgs
             , TCommandArgs
@@ -219,8 +290,8 @@ multi_chunks_count:
 
 multi_chunks_length:
     {
-        const int64 size = FMath::Max( iPolicy.Value(), int64(1) );
-        const int64 count = int64( FMath::Ceil( iBytesTotal / float( size ) ) );
+        const uint64 size = FMath::Max( iPolicy.Value(), uint64(1) );
+        const uint64 count = uint64( FMath::Ceil( iBytesTotal / float( size ) ) );
         RangeBasedSchedulingDelegateBuildJobs_Chunks<
               TJobArgs
             , TCommandArgs

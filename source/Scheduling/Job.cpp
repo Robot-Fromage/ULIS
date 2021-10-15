@@ -13,6 +13,9 @@
 
 ULIS_NAMESPACE_BEGIN
 
+#ifdef NEW_JOBSYSTEM
+
+#else
 FJob::~FJob()
 {
     // Cleanup assumes args were allocated as a raw buffer,
@@ -41,8 +44,14 @@ FJob::FJob(
 void
 FJob::Execute() const
 {
+    // Gather event
+    //FSharedInternalEvent evt = Parent()->Event();
+
     for( uint32 i = 0; i < mNumTasks; ++i )
         mTask( mArgs[i], mParent->Args() );
+
+    // Notify job's done
+    //evt->NotifyOneJobFinished();
 }
 
 const FCommand*
@@ -50,6 +59,7 @@ FJob::Parent() const
 {
     return  mParent;
 }
+#endif
 
 ULIS_NAMESPACE_END
 

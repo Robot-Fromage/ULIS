@@ -13,5 +13,9 @@
 #include "Layer/Layer/AbstractLayerDrawable.h"
 
 ULIS_NAMESPACE_BEGIN
+template< class BlockType >
+TAbstractLayerDrawable<BlockType>::~TAbstractLayerDrawable() {
+    ULIS_DEBUG_PRINTF( "TAbstractLayerDrawable Destroyed" )
+}
 ULIS_NAMESPACE_END
 

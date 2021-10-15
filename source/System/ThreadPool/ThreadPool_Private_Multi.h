@@ -16,6 +16,7 @@
 #include "Memory/Queue.h"
 #include "Scheduling/Job.h"
 #include "Scheduling/Command.h"
+#include "ThirdParty/ConcurrentQueue/blockingconcurrentqueue.h"
 
 #include <atomic>
 #include <condition_variable>
@@ -24,6 +25,7 @@
 #include <mutex>
 #include <random>
 #include <thread>
+#include <stack>
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -48,24 +50,38 @@ public:
     static uint32 MaxWorkers();
 
 private:
-    void ScheduleJob( const FJob* iJob );
-    void ScheduleJobs( const TArray< const FJob* >& iJobs );
-    void WorkProcess();
-    void ScheduleProcess();
+    void WorkProcess(uint32 iThreadIndex);
+    // void Work();
+    // bool PrepareCommands();
+    void FinishCommand(FCommand* iCommand);
+    void ExecuteCommand();
+    //void ScheduleProcess(FCommand* iCmd);
+    void OnEventReady(const FInternalEvent* iEvent);
+
+    void StopWorkers();
+    void StartWorkers(uint32 iNumWorkers);
+
+    FCommand* GetCommandToExecute();
+    void ReleaseCommandToExecute(FCommand* iCommand);
 
 private:
     // Private Data
-    uint32                              mNumBusy;
-    bool                                bStop;
-    std::atomic_uint32_t                mNumQueued;
+    std::atomic_uint64_t mNumScheduledCommands; //an atomic counter to know how many commands are queued
+    ::std::mutex mWaitMutex; //a mutex to use with a condition variable to WaitForCompletion()
+    ::std::condition_variable mWaitCV; //The condition variable to WaitForCompletion()
+
+    bool                                mStopWorkers;
     std::vector< std::thread >          mWorkers;
-    std::thread                         mScheduler;
-    std::deque< const FJob* >           mJobs;
-    std::deque< const FCommand* >       mCommands;
-    std::mutex                          mJobsQueueMutex;
-    std::mutex                          mCommandsQueueMutex;
-    std::condition_variable             cvJob;
-    std::condition_variable             cvJobsFinished;
+    ::moodycamel::LightweightSemaphore* mWorkersSemaphore; //Semaphore to signal all workers to wake up when something needs to be done
+
+    //::moodycamel::ConcurrentQueue<FCommand*> mCommandsToPrepare; //the queue of commands ready to be prepared (Preparing a command means creating its jobs if needed)
+    std::vector<::moodycamel::ConcurrentQueue<FCommand*>> mCommandsToExecuteQueues; //The queue of commands ready to execute
+    std::atomic_uint64_t* mNumCommandsToExecute;
+    FCommand* mCurrentCommand;
+
+    ::std::function<void(const FInternalEvent*)>  mOnEventReady;
+    ::std::mutex mWorkersReadyMutex;
+    ::std::vector<uint32> mWorkersReady;
 };
 
 ULIS_NAMESPACE_END

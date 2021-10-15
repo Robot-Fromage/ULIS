@@ -17,7 +17,7 @@
 #include "Scheduling/Event.h"
 
 ULIS_NAMESPACE_BEGIN
-class FJob;
+//class FJob;
 typedef void (*fpTask)( const IJobArgs*, const ICommandArgs* );
 
 /////////////////////////////////////////////////////
@@ -32,6 +32,143 @@ static ULIS_FORCEINLINE void ResolveScheduledJobInvocation( const IJobArgs* iJob
     TDelegateInvoke( job_args, cmd_args );
 }
 
+#ifdef NEW_JOBSYSTEM
+
+/////////////////////////////////////////////////////
+/// @class      FJob
+/// @brief      The IJob class provides an interface to execute a command's underlying tasks.
+///             It can be accessed and execute its tasks concurrently.
+/// @details    The IJob is used by FCommand when the command is being executed by the ThreadPool workers
+///
+///             \sa FCommand
+///             \sa FThreadPool
+
+class IJob {
+public:
+    /*! Destructor */
+    virtual ~IJob() {}
+
+    /*! explicitly deleted default constructor. */
+    IJob() {}
+
+    /*! explicitly deleted copy constructor. */
+    IJob(const IJob&) = delete;
+
+    /*! explicitly deleted move constructor. */
+    IJob(IJob&&) = delete;
+
+    /*! explicitly deleted copy assignment operator. */
+    IJob& operator=(const IJob&) = delete;
+
+    /*! explicitly deleted move assignment operator. */
+    IJob& operator=(IJob&&) = delete;
+
+public:
+    /*! Start exec job tasks. */
+    virtual void ExecuteConcurrently() = 0;
+
+    /*! Returns the maximum amount of tasks that can be executed in concurrency. */
+    virtual const uint64 GetMaxConcurrency() = 0;
+};
+
+/////////////////////////////////////////////////////
+/// @class      FJob
+/// @brief      The FJob class provides an way to execute a command's underlying tasks.
+///             It can be accessed and execute its tasks concurrently.
+/// @details    The FJob is used by FCommand when the command is being executed by the ThreadPool workers
+///
+///             \sa FCommand
+///             \sa FThreadPool
+
+template<
+      typename TCommandArgs
+    , typename TJobArgs
+>
+class FJob 
+    : public IJob
+{
+public:
+    /*! Destructor */
+    virtual ~FJob()
+    {
+    }
+
+    /*! Constructor */
+    FJob(
+        const uint64 iNumJobs
+        , const uint64 iNumTaskPerJob
+        , const uint64 iNumTasks
+        , fpTask iTask
+        , const TCommandArgs* iCommandArgs
+    )
+        : mNumJobs (iNumJobs)
+        , mNumTaskPerJob( iNumTaskPerJob )
+        , mNumTasks( iNumTasks )
+        , mTask(iTask)
+        , mCommandArgs(iCommandArgs)
+        , mJobIndex(0)
+    {
+    }
+
+    /*! explicitly deleted default constructor. */
+    FJob() = delete;
+
+    /*! explicitly deleted copy constructor. */
+    FJob(const FJob&) = delete;
+
+    /*! explicitly deleted move constructor. */
+    FJob(FJob&&) = delete;
+
+    /*! explicitly deleted copy assignment operator. */
+    FJob& operator=(const FJob&) = delete;
+
+    /*! explicitly deleted move assignment operator. */
+    FJob& operator=(FJob&&) = delete;
+
+public:
+    /*! Start exec job tasks. */
+    virtual void ExecuteConcurrently() override
+    {
+        while(true)
+        {
+            TJobArgs args;
+
+            //relaxed, because we're just getting an index for us, not making any new memory available for other threads
+            uint64 jobIndex = mJobIndex.fetch_add(1, ::std::memory_order_relaxed);
+            if (jobIndex >= mNumJobs)
+                break;
+
+            //Compute all the tasks to do for the retrieved job index
+            //Fill the args for each task and execute it
+            uint64 firstTask = jobIndex * mNumTaskPerJob;
+            uint64 endTask = FMath::Min(mNumTasks, (jobIndex + 1) * mNumTaskPerJob);
+            for (uint64 i = firstTask; i < endTask; i++)
+            {
+                FillJobArgs(mCommandArgs, args, i);
+                mTask( &args, mCommandArgs );
+            }
+        }
+    }
+
+    /*! Returns the maximum amount of tasks that can be executed in concurrency. */
+    virtual const uint64 GetMaxConcurrency() override
+    {
+        return mNumJobs;
+    }
+
+protected:
+    virtual void FillJobArgs(const TCommandArgs* iCommandArgs, TJobArgs& oJobArgs, uint64 iTaskIndex) = 0;
+
+private:
+    const uint64 mNumJobs;
+    const uint64 mNumTaskPerJob;
+    const uint64 mNumTasks;
+    fpTask mTask;
+    const TCommandArgs* mCommandArgs;
+    ::std::atomic_uint64_t mJobIndex;
+};
+
+#else
 /////////////////////////////////////////////////////
 /// @class      FJob
 /// @brief      The FJob class provides a way to store awaiting scheduled Jobs,
@@ -83,6 +220,7 @@ private:
     IJobArgs** mArgs;
     const FCommand* mParent;
 };
+#endif
 
 ULIS_NAMESPACE_END
 

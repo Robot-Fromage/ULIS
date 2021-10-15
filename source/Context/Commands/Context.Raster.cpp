@@ -42,7 +42,7 @@ FContext::DrawLine(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -90,7 +90,7 @@ FContext::DrawLineAA(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -138,7 +138,7 @@ FContext::DrawLineSP(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -187,7 +187,7 @@ FContext::DrawCircle(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -237,7 +237,7 @@ FContext::DrawCircleAA(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -287,7 +287,7 @@ FContext::DrawCircleSP(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -338,7 +338,7 @@ FContext::DrawArc(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -390,7 +390,7 @@ FContext::DrawArcAA(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -442,7 +442,7 @@ FContext::DrawArcSP(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -494,7 +494,7 @@ FContext::DrawEllipse(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -546,7 +546,7 @@ FContext::DrawEllipseAA(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -579,7 +579,7 @@ FContext::DrawEllipseAA(
 
 ulError
 FContext::DrawEllipseSP(
-    FBlock& iBlock
+      FBlock& iBlock
     , const FVec2F&            iCenter
     , const float              iA
     , const float              iB
@@ -598,17 +598,17 @@ FContext::DrawEllipseSP(
 
     // Check no-op
     if (src_roi.Area() <= 0)
-        return  FinishEventNo_OP(iEvent, ULIS_WARNING_NO_OP_GEOMETRY);
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
     // Convert color to right format
-    FColor color = iColor.ToFormat(iBlock.Format());
+    FColor color = iColor.ToFormat( iBlock.Format() );
 
     // Bake and push command
     mCommandQueue.d->Push(
         new FCommand(
             mContextualDispatchTable->mScheduleDrawEllipseSP
             , new FDrawEllipseSPCommandArgs(
-                iBlock
+                  iBlock
                 , src_roi
                 , iCenter
                 , iA
@@ -651,7 +651,7 @@ FContext::DrawRotatedEllipse(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -705,7 +705,7 @@ FContext::DrawRotatedEllipseAA(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -759,7 +759,7 @@ FContext::DrawRotatedEllipseSP(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -811,7 +811,7 @@ FContext::DrawRectangle(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -871,7 +871,7 @@ FContext::DrawPolygon(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -919,7 +919,7 @@ FContext::DrawPolygonAA(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -967,7 +967,7 @@ FContext::DrawPolygonSP(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -1017,7 +1017,7 @@ FContext::DrawQuadraticBezier(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -1069,7 +1069,7 @@ FContext::DrawQuadraticBezierAA(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());
@@ -1122,7 +1122,7 @@ FContext::DrawQuadraticBezierSP(
     
     // Check no-op
     if( src_roi.Area() <= 0 )
-        return  FinishEventNo_OP( iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
+        return  FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
     
     // Convert color to right format
     FColor color = iColor.ToFormat(iBlock.Format());

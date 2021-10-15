@@ -239,19 +239,19 @@ TEMPLATE
 FEvent
 CLASS::RenderImageCache( FContext& iCtx ) // override
 {
-    if( IsImageCacheValid() )
+    if( tSelf::IsImageCacheValid() )
         return  FEvent::NoOP();
 
     FEvent eventClear;
-    iCtx.Clear( *Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &eventClear );
+    iCtx.Clear( *tSelf::Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &eventClear );
     FEvent ev;
     if( IsAntiAliased() ) {
-        iCtx.RasterTextAA( *Block(), Text(), Font(), FontSize(), Matrix(), TextColor(), FSchedulePolicy::MonoChunk, 1, &eventClear, &ev );
+        iCtx.RasterTextAA( *tSelf::Block(), Text(), Font(), FontSize(), Matrix(), TextColor(), FSchedulePolicy::MonoChunk, 1, &eventClear, &ev );
     } else {
-        iCtx.RasterText( *Block(), Text(), Font(), FontSize(), Matrix(), TextColor(), FSchedulePolicy::MonoChunk, 1, &eventClear, &ev );
+        iCtx.RasterText( *tSelf::Block(), Text(), Font(), FontSize(), Matrix(), TextColor(), FSchedulePolicy::MonoChunk, 1, &eventClear, &ev );
     }
 
-    ValidateImageCache();
+    tSelf::ValidateImageCache();
     return  ev;
 }
 
@@ -269,7 +269,7 @@ CLASS::RenderImage(
 {
     FEvent ev;
     ulError err = iCtx.Blend(
-          *Block()
+          *tSelf::Block()
         , ioBlock
         , iRect
         , iPos
@@ -290,16 +290,16 @@ TEMPLATE
 typename CLASS::tSelf*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
-    const BlockType* ref = Block();
+    const BlockType* ref = tSelf::Block();
     if( !ref )
         return  nullptr;
 
     // Actual Deep Copy with Event.
     tSelf* rasterized = new tSelf(
-          Name()
-        , IsLocked()
-        , IsVisible()
-        , PrettyColor()
+          tSelf::Name()
+        , tSelf::IsLocked()
+        , tSelf::IsVisible()
+        , tSelf::PrettyColor()
         , ref->Width()
         , ref->Height()
         , ref->Format()
@@ -307,7 +307,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , BlendMode()
         , AlphaMode()
         , Opacity()
-        , IsPaintLocked()
+        , tSelf::IsPaintLocked()
         , nullptr
 
         , FOnNameChanged::GetDelegate()
@@ -325,7 +325,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnBoolChanged::GetDelegate()
     );
 
-    iCtx.Copy( *Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
+    iCtx.Copy( *tSelf::Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
     return  rasterized;
 }
 
@@ -339,8 +339,9 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
     if( !topLevel )
         return;
 
-    if( !Block() ) {
-        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+    if( !tSelf::Block() ) {
+        //const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+        const ILayer* layer = (const ILayer*)( topLevel );
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the class hierarchy !" );
         switch( layer->TypeID() ) {
             case LayerStackType::StaticTypeID(): {
