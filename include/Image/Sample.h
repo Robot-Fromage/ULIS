@@ -99,39 +99,43 @@ public:
     uint64 PlaneSize() const;
 
     /*!
-    Obtain the value at the redirected channel index as T. It is undefined
-    behaviour to call this if the format is not of type T.
+    Obtain the value at the redirected channel index as T.
     */
     template< typename T >
     ULIS_FORCEINLINE T ChannelT( uint8 iIndex ) const {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == eTypeFromT< T >(), "Bad type" );
-        return  *( reinterpret_cast< T* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) );
+
+        if (Type() == eTypeFromT< T >())
+        {
+            return  *( reinterpret_cast< T* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) );
+        }
+
+        #define TMP_CALL( _TYPE_ID, _TYPE, iE2, iE3 ) \
+        const _TYPE& value = *( reinterpret_cast< _TYPE* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) ); \
+        return ConvType<_TYPE, T>(value);
+
+        ULIS_SWITCH_FOR_ALL_DO(Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0)
+        #undef TMP_CALL
+
+        return T(); //for warning
     }
 
     /*!
-    Obtain the value at the redirected channel index as uint8. It is undefined
-    behaviour to call this if the format is not of type uint8.
+    Obtain the value at the redirected channel index as uint8. 
     */
     ULIS_FORCEINLINE uint8 Channel8( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_uint8, "Bad type" );
-        return  *( reinterpret_cast< uint8* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) );
+        return ChannelT<uint8>(iIndex);
     }
 
     /*!
-    Obtain the value at the redirected channel index as uint16. It is undefined
-    behaviour to call this if the format is not of type uint16.
+    Obtain the value at the redirected channel index as uint16. 
     */
     ULIS_FORCEINLINE uint16 Channel16( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_uint16, "Bad type" );
-        return  *( reinterpret_cast< uint16* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) );
+        return ChannelT<uint16>(iIndex);
     }
 
     /*!
-    Obtain the value at the redirected channel index as uint32. It is undefined
-    behaviour to call this if the format is not of type uint32.
+    Obtain the value at the redirected channel index as uint32. 
     */
     //DISABLED:UINT32ULIS_FORCEINLINE uint32 Channel32( uint8 iIndex ) const {
     //DISABLED:UINT32    ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
@@ -140,13 +144,10 @@ public:
     //DISABLED:UINT32}
 
     /*!
-    Obtain the value at the redirected channel index as ufloat. It is undefined
-    behaviour to call this if the format is not of type ufloat.
+    Obtain the value at the redirected channel index as ufloat. 
     */
     ULIS_FORCEINLINE ufloat ChannelF( uint8 iIndex ) const {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_ufloat, "Bad type" );
-        return  *( reinterpret_cast< ufloat* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) );
+        return ChannelT<ufloat>(iIndex);
     }
 
     //DISABLED:DOUBLE/*!
@@ -160,34 +161,38 @@ public:
     //DISABLED:DOUBLE}
 
     /*!
-    Set the value at the redirected channel index as T. It is undefined
-    behaviour to call this if the format is not of type T.
+    Set the value at the redirected channel index as T. 
     */
     template< typename T >
     ULIS_FORCEINLINE void SetChannelT( uint8 iIndex, T iValue ) {
         ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == eTypeFromT< T >(), "Bad type" );
-        *( reinterpret_cast< T* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) ) = iValue;
+
+        if (Type() == eTypeFromT< T >())
+        {
+            *( reinterpret_cast< T* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) ) = iValue;
+        }
+        else
+        {
+            #define TMP_CALL( _TYPE_ID, _TYPE, iE2, iE3 ) \
+            *( reinterpret_cast< _TYPE* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) ) = ConvType<T, _TYPE>(iValue);
+
+            ULIS_SWITCH_FOR_ALL_DO( Type(), ULIS_FOR_ALL_TYPES_ID_DO, TMP_CALL, 0, 0, 0 )
+            #undef TMP_CALL
+        }
     }
 
     /*!
-    Set the value at the redirected channel index as uint8. It is undefined
-    behaviour to call this if the format is not of type uint8.
+    Set the value at the redirected channel index as uint8. 
     */
     ULIS_FORCEINLINE void SetChannel8( uint8 iIndex, uint8 iValue ) {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_uint8, "Bad type" );
-        *( reinterpret_cast< uint8* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) ) = iValue;
+        SetChannelT<uint8>(iIndex, iValue);
     }
 
     /*!
-    Set the value at the redirected channel index as uint16. It is undefined
-    behaviour to call this if the format is not of type uint16.
+    Set the value at the redirected channel index as uint16. 
     */
     ULIS_FORCEINLINE void SetChannel16( uint8 iIndex, uint16 iValue ) {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_uint16, "Bad type" );
-        *( reinterpret_cast< uint16* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) ) = iValue;
+        SetChannelT<uint16>(iIndex, iValue);
     }
 
     //DISABLED:UINT32/*!
@@ -201,13 +206,10 @@ public:
     //DISABLED:UINT32}
 
     /*!
-    Set the value at the redirected channel index as ufloat. It is undefined
-    behaviour to call this if the format is not of type ufloat.
+    Set the value at the redirected channel index as ufloat. 
     */
     ULIS_FORCEINLINE void SetChannelF( uint8 iIndex, ufloat iValue ) {
-        ULIS_ASSERT( iIndex < SamplesPerPixel(), "Index out of range" );
-        ULIS_ASSERT( Type() == Type_ufloat, "Bad type" );
-        *( reinterpret_cast< ufloat* >( mSignal + mPlaneSize * RedirectedIndex( iIndex ) ) ) = iValue;
+        SetChannelT<ufloat>(iIndex, iValue);
     }
 
     //DISABLED:DOUBLE/*!
