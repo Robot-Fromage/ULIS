@@ -91,8 +91,8 @@ ULIS_NAMESPACE_END
 
 typedef std::shared_ptr< ULIS::FColorStep > FSharedColorStep;
 typedef std::shared_ptr< ULIS::FAlphaStep > FSharedAlphaStep;
-template class ULIS_API std::shared_ptr< ULIS::FColorStep >;
-template class ULIS_API std::shared_ptr< ULIS::FAlphaStep >;
+//template class ULIS_API std::shared_ptr< ULIS::FColorStep >;
+//template class ULIS_API std::shared_ptr< ULIS::FAlphaStep >;
 
 ULIS_NAMESPACE_BEGIN
 template class ULIS_API TArray< FSharedColorStep >;
