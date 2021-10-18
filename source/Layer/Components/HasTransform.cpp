@@ -47,7 +47,7 @@ IHasTransform::SetPivot( const FVec2F& iValues ) {
 
 void
 IHasTransform::SetPivot( float iX, float iY ) {
-    mInfo.pivot = ( iX, iY );
+    mInfo.pivot = FVec2F( iX, iY );
     Invoke( mInfo );
 }
 
@@ -114,7 +114,7 @@ IHasTransform::SetTranslation( const FVec2F& iValues ) {
 }
 void
 IHasTransform::SetTranslation( float iX, float iY ) {
-    mInfo.translation = ( iX, iY );
+    mInfo.translation = FVec2F( iX, iY );
     Invoke( mInfo );
 }
 
@@ -212,13 +212,13 @@ IHasTransform::SetScale( const FVec2F& iValues ) {
 
 void
 IHasTransform::SetScale( float iX, float iY ) {
-    mInfo.scale = ( iX, iY );
+    mInfo.scale = FVec2F( iX, iY );
     Invoke( mInfo );
 }
 
 void
 IHasTransform::SetScaleuniform( float iValue ) {
-    mInfo.scale = ( iValue, iValue );
+    mInfo.scale = FVec2F( iValue, iValue );
     Invoke( mInfo );
 }
 
@@ -242,7 +242,7 @@ IHasTransform::Stretch( const FVec2F& iValues ) {
 
 void
 IHasTransform::Stretch( float iX, float iY ) {
-    mInfo.scale *= ( iX, iY );
+    mInfo.scale *= FVec2F( iX, iY );
     Invoke( mInfo );
 }
 
@@ -272,13 +272,13 @@ IHasTransform::DeltaScale( const FVec2F& iValues ) {
 
 void
 IHasTransform::DeltaScale( float iX, float iY ) {
-    mInfo.scale += ( iX, iY );
+    mInfo.scale += FVec2F( iX, iY );
     Invoke( mInfo );
 }
 
 void
 IHasTransform::DeltaScaleUniform( float iValue ) {
-    mInfo.scale += ( iValue, iValue );
+    mInfo.scale += FVec2F( iValue, iValue );
     Invoke( mInfo );
 }
 

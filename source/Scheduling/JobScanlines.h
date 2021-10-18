@@ -43,7 +43,7 @@ public:
         , const TCommandArgs* iArgs
         , TDelegateBuildJobScanlines iDelegateBuildJobScanlines
     )
-        : FJob(iNumJobs, iNumTaskPerJob, iNumTasks, iTask, iArgs)
+        : FJob<TCommandArgs, TJobArgs>(iNumJobs, iNumTaskPerJob, iNumTasks, iTask, iArgs)
         , mDelegateBuildJobScanlines( iDelegateBuildJobScanlines )
     {
     }
