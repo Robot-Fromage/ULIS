@@ -43,7 +43,7 @@ public:
         , const int64 iChunkSize
         , TDelegateBuildJobChunks iDelegateBuildJobChunks
     )
-        : FJob(iNumJobs, iNumTaskPerJob, mNumTasks, iTask, iArgs)
+        : FJob<TCommandArgs, TJobArgs>(iNumJobs, iNumTaskPerJob, mNumTasks, iTask, iArgs)
         , mChunkSize( iChunkSize )
         , mDelegateBuildJobChunks( iDelegateBuildJobChunks )
     {

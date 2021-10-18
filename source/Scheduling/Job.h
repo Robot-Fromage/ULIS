@@ -127,7 +127,7 @@ public:
 
 public:
     /*! Start exec job tasks. */
-    void ExecuteConcurrently()
+    virtual void ExecuteConcurrently() override
     {
         while(true)
         {
