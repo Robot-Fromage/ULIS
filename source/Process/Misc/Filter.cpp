@@ -18,7 +18,7 @@ ULIS_NAMESPACE_BEGIN
 void InvokeFilter( const FSimpleBufferJobArgs* jargs, const FFilterCommandArgs* cargs ) {
     uint8* dst = jargs->dst;
     uint8 bpp = cargs->dst.BytesPerPixel();
-    for( uint32 i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < jargs->size; i += bpp ) { //size = size in bytes of src
         cargs->invocation( cargs->dst, dst );
         dst += bpp;
     }
@@ -27,7 +27,7 @@ void InvokeFilter( const FSimpleBufferJobArgs* jargs, const FFilterCommandArgs* 
 void InvokeFilterInPlace( const FSimpleBufferJobArgs* jargs, const FFilterInPlaceCommandArgs* cargs ) {
     uint8* dst = jargs->dst;
     uint8 bpp = cargs->dst.BytesPerPixel();
-    for( uint32 i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < jargs->size; i += bpp ) {
         cargs->invocation( cargs->dst, dst );
         dst += bpp;
     }
@@ -38,7 +38,7 @@ void InvokeFilterInto( const FDualBufferJobArgs* jargs, const FFilterIntoCommand
     uint8* dst = jargs->dst;
     uint8 src_bpp = cargs->src.BytesPerPixel();
     uint8 dst_bpp = cargs->dst.BytesPerPixel();
-    for( uint32 i = 0; i < jargs->size; ++i ) {
+    for( uint32 i = 0; i < jargs->size; i += src_bpp ) {
         cargs->invocation( cargs->src, src, cargs->dst, dst );
         src += src_bpp;
         dst += dst_bpp;
