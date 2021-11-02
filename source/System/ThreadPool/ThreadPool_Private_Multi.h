@@ -4,7 +4,7 @@
 *   ULIS
 *__________________
 * @file         ThreadPool_Private_Multi.h
-* @author       Clement Berthaud
+* @author       Clement Berthaud && Eric Scholl
 * @brief        This file provides the definition for the FThreadPool_Private
 *               class for generic systems.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
