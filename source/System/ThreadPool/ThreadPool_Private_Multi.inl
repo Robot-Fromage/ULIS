@@ -174,6 +174,8 @@ FThreadPool_Private::FinishCommand(FCommand* iCommand)
     uint64 num = mNumScheduledCommands.fetch_sub(1, ::std::memory_order_release);
     if (num == 1) // if num was 1, then we just finished the last scheduled commands and we can notify WaitOnCompletion() 
     {
+        std::unique_lock<std::mutex> lock(mWaitMutex); //lock and unlock immediately just to assure synchronisation with WaitForCompletion wait()
+        lock.unlock();
         mWaitCV.notify_one();
     }
 }
@@ -229,11 +231,8 @@ FThreadPool_Private::WaitForCompletion()
 #endif // ULIS_ASSERT_ENABLED
 
     //acquire : because we need to be sure that, if mNumScheduledCommands == 0, all commands are done, and all threads are synchronized
-    while (mNumScheduledCommands.load(std::memory_order_acquire) != 0)
-    {
-        std::unique_lock<std::mutex> lock(mWaitMutex);
-        mWaitCV.wait(lock, [this](){return  mNumScheduledCommands.load(std::memory_order_acquire) == 0;});
-    }
+    std::unique_lock<std::mutex> lock(mWaitMutex);
+    mWaitCV.wait(lock, [this](){return  mNumScheduledCommands.load(std::memory_order_acquire) == 0;});
 }
 
 void
