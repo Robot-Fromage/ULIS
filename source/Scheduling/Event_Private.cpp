@@ -4,7 +4,7 @@
 *   ULIS
 *__________________
 * @file         Event_Private.cpp
-* @author       Clement Berthaud
+* @author       Clement Berthaud && Eric Scholl
 * @brief        This file provides definition for the FEvent_Private class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
