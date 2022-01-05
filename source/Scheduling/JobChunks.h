@@ -4,7 +4,7 @@
 *   ULIS
 *__________________
 * @file         JobChunks.h
-* @author       Eric Scholl
+* @author       Eric Scholl && Eric Scholl
 * @brief        This file provides the declaration for the FJobChunks class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md

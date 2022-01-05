@@ -4,7 +4,7 @@
 *   ULIS
 *__________________
 * @file         Job.cpp
-* @author       Clement Berthaud
+* @author       Clement Berthaud && Eric Scholl
 * @brief        This file provides the definition for the FJob class.
 * @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
