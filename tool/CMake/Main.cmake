@@ -50,6 +50,7 @@ target_include_directories(
     "include/"
     PRIVATE
     #${OpenCL_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/ConcurrentQueue/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/

@@ -15,7 +15,7 @@
 #include "Memory/Array.h"
 #include "Scheduling/Event.h"
 #include "Math/Geometry/Rectangle.h"
-#include "ThirdParty/ConcurrentQueue/concurrentqueue.h"
+#include <ConcurrentQueue/concurrentqueue.h>
 
 #include <atomic>
 #include <mutex>

@@ -16,7 +16,7 @@
 #include "Memory/Queue.h"
 #include "Scheduling/Job.h"
 #include "Scheduling/Command.h"
-#include "ThirdParty/ConcurrentQueue/blockingconcurrentqueue.h"
+#include <ConcurrentQueue/blockingconcurrentqueue.h>
 
 #include <atomic>
 #include <condition_variable>
