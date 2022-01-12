@@ -155,8 +155,8 @@ InvokeRasterTextMono_MEM_Generic(
     FT_Vector pen { 0, 0 };
     // Old baseline hack
     //int height = cargs->dst.Height();
-    const wchar_t* str = cargs->text.c_str();
-    const size_t len = static_cast< size_t >( cargs->text.size() );
+    const wchar_t* str = cargs->text.Data();
+    const size_t len = static_cast< size_t >( cargs->text.Size() );
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
@@ -185,8 +185,8 @@ InvokeRasterTextAAMono_MEM_Generic(
     FT_Vector pen { 0, 0 };
     // Old baseline hack
     //int height = cargs->dst.Height();
-    const wchar_t* str = cargs->text.c_str();
-    const size_t len = static_cast< size_t >( cargs->text.size() );
+    const wchar_t* str = cargs->text.Data();
+    const size_t len = static_cast< size_t >( cargs->text.Size() );
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );

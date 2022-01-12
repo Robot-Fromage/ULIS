@@ -145,7 +145,7 @@ public:
     ) override;
 
     // TRasterizable Interface
-    tSelf* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) override;
+    tSiblingImage* Rasterize( FContext& iCtx, FEvent* oEvent = nullptr ) override;
 
 private:
     // TNode< ILayer > Interface

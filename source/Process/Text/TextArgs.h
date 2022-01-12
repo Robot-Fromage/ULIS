@@ -16,6 +16,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
+#include "String/WString.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -34,7 +35,7 @@ public:
     FTextCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
-        , const std::wstring& iText
+        , const FWString& iText
         , const FFont& iFont
         , uint32 iFontSize
         , const FColor& iColor
@@ -50,7 +51,7 @@ public:
         , position( iPosition )
     {}
 
-    const std::wstring  text;
+    const FWString      text;
     const FFont&        font;
     const uint32        fontSize;
     const FColor        color;

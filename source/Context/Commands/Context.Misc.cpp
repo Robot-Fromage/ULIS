@@ -26,6 +26,7 @@
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include "String/WString.h"
 #include "Font/Font.h"
 #include "Font/FontEngine.h"
 #include <vector>
@@ -48,7 +49,7 @@ FContext::XCreateTestBlock(
     const FColor foreground = FColor::RGB( 170, 146, 64 );
     FFont* font = new FFont( FFontEngine::GFontEngine, "Segoe UI", "Regular" );
 
-    const std::wstring text = L"Test";
+    const FWString text = L"Test";
     FRectI textBox = TextMetrics( text, *font, 23 );
     FVec2I pos = FVec2I( size ) / 2 - textBox.Size() / 2;
     FMat3F mat = FMat3F::MakeTranslationMatrix( static_cast< float >( pos.x ), static_cast< float >( pos.y ) + textBox.h );

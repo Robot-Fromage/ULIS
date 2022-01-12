@@ -30,7 +30,7 @@ ULIS_NAMESPACE_BEGIN
 ulError
 FContext::RasterText(
       FBlock& iBlock
-    , const std::wstring& iText
+    , const FWString& iText
     , const FFont& iFont
     , uint32 iFontSize
     , const FMat3F& iTransform
@@ -88,7 +88,7 @@ FContext::RasterText(
 ulError
 FContext::RasterTextAA(
       FBlock& iBlock
-    , const std::wstring& iText
+    , const FWString& iText
     , const FFont& iFont
     , uint32 iFontSize
     , const FMat3F& iTransform
@@ -146,7 +146,7 @@ FContext::RasterTextAA(
 //static
 FRectI
 FContext::TextMetrics(
-      const std::wstring& iText
+      const FWString& iText
     , const FFont& iFont
     , uint32 iFontSize
     , const FMat3F& iTransform
@@ -166,8 +166,8 @@ FContext::TextMetrics(
     result.w = 1;
     result.h = 1;
 
-    const wchar_t* str = iText.c_str();
-    int len = (int)iText.size();
+    const wchar_t* str = iText.Data();
+    int len = (int)iText.Size();
 
     FT_GlyphSlot  slot;
     FT_Vector     pen;

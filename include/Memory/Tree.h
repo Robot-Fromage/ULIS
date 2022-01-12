@@ -75,6 +75,10 @@ public:
         return  Self();
     }
 
+    tParent* Parent() {
+        return  const_cast< tParent* >( mParent );
+    }
+
     const tParent* Parent() const {
         return  mParent;
     }

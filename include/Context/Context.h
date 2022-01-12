@@ -16,6 +16,7 @@
 #include "Image/Sample.h"
 #include "Image/Block.h"
 #include "Image/Gradient.h"
+#include "Layer/Layer/LayerTypedefs.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
@@ -122,7 +123,6 @@ public:
     /*!
         Perform a flattened blend of the whole layer stack
     */
-    /*
     ulError
     Flatten(
           FLayerStack& iStack
@@ -146,7 +146,6 @@ public:
           FLayerText& iText
         , FEvent* iEvent = nullptr
     );
-    */
 
     /*!
         Collect metrics before a XLoadPSDFromDisk call
@@ -162,7 +161,6 @@ public:
     /*!
         Perform a load of a PSD file in a layer stack
     */
-    /*
     ulError
     XLoadPSDFromDisk(
           FLayerStack& iStack
@@ -174,7 +172,6 @@ public:
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
-    */
 /////////////////////////////////////////////////////
 // Gradient
     /*!
@@ -584,7 +581,7 @@ public:
     ulError
     RasterText(
           FBlock& iBlock
-        , const std::wstring& iText
+        , const FWString& iText
         , const FFont& iFont
         , uint32 iFontSize = 12
         , const FMat3F& iTransform = FMat3F()
@@ -619,7 +616,7 @@ public:
     ulError
     RasterTextAA(
           FBlock& iBlock
-        , const std::wstring& iText
+        , const FWString& iText
         , const FFont& iFont
         , uint32 iFontSize = 12
         , const FMat3F& iTransform = FMat3F()
@@ -642,7 +639,7 @@ public:
     static
     FRectI
     TextMetrics(
-          const std::wstring& iText
+          const FWString& iText
         , const FFont& iFont
         , uint32 iFontSize = 12
         , const FMat3F& iTransform = FMat3F()

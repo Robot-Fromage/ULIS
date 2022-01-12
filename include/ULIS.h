@@ -24,6 +24,7 @@
 #include "Image/StructuringElement.h"
 // Layer
 #include "Layer/Layer/LayerBuilder.h"
+#include "Layer/Layer/LayerTypedefs.h"
 // Font
 #include "Font/Font.h"
 #include "Font/FontEngine.h"

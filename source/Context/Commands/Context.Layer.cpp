@@ -13,7 +13,6 @@
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Image/Block.h"
-#include "Layer/Layer/LayerStack.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/CommandQueue_Private.h"
@@ -24,7 +23,6 @@
 #include "Process/Layer/PSD.h"
 
 ULIS_NAMESPACE_BEGIN
-/*
 /////////////////////////////////////////////////////
 // Entry points
 ulError
@@ -227,9 +225,11 @@ FContext::XLoadPSDFromDisk(
                 , op.GetImageWidth()
                 , op.GetImageHeight()
                 , layerStackFormat
+                , nullptr
                 , blendMode
                 , isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal
                 , opacity
+                , false
                 , currentRoot
             );
 
@@ -246,6 +246,6 @@ FContext::XLoadPSDFromDisk(
     Dummy_OP( uint32(eventConvert.Size()), eventConvert.Data(), iEvent );
     return  ULIS_NO_ERROR;
 }
-*/
+
 ULIS_NAMESPACE_END
 

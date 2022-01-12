@@ -287,7 +287,7 @@ CLASS::RenderImage(
 
 // TRasterizable Interface
 TEMPLATE
-typename CLASS::tSelf*
+typename CLASS::tSiblingImage*
 CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
     const BlockType* ref = tSelf::Block();
@@ -295,7 +295,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         return  nullptr;
 
     // Actual Deep Copy with Event.
-    tSelf* rasterized = new tSelf(
+    tSiblingImage* rasterized = new tSiblingImage(
           tSelf::Name()
         , tSelf::IsLocked()
         , tSelf::IsVisible()
@@ -307,7 +307,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , BlendMode()
         , AlphaMode()
         , Opacity()
-        , tSelf::IsPaintLocked()
+        , false
         , nullptr
 
         , FOnNameChanged::GetDelegate()
