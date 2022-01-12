@@ -340,8 +340,8 @@ CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
         return;
 
     if( !tSelf::Block() ) {
-        //const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
-        const ILayer* layer = (const ILayer*)( topLevel );
+        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+        //const ILayer* layer = (const ILayer*)( topLevel ); // Unsafe !
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the class hierarchy !" );
         switch( layer->TypeID() ) {
             case LayerStackType::StaticTypeID(): {
