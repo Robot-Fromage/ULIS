@@ -42,6 +42,11 @@ public:
     BlockType* Block();
     const BlockType* Block() const;
 
+    //template< typename T >
+    //void Payload( T t ) {
+    //    t( *mBlock );
+    //}
+
 protected:
     void Realloc(
           uint16 iWidth

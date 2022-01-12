@@ -245,7 +245,12 @@ CLASS::RenderImage(
     , const FEvent* iWaitList
 ) // override
 {
-    FEvent ev = RenderImageCache( iCtx );
+    FEvent ev;
+    TArray< FEvent > events( iNumWait + 1 );
+    for( int i = 0; i < iNumWait; ++i )
+        events[i] = iWaitList[i];
+    events[ iNumWait ] = RenderImageCache( iCtx );
+
     ulError err = iCtx.Blend(
           *tHasBlock::Block()
         , ioBlock
@@ -255,8 +260,8 @@ CLASS::RenderImage(
         , AlphaMode()
         , Opacity()
         , iPolicy
-        , iNumWait
-        , iWaitList
+        , iNumWait + 1
+        , &events[0]
         , &ev
     );
     ULIS_ASSERT( !err, "Error during layer folder blend" );

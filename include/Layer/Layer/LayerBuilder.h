@@ -78,6 +78,7 @@ public:
 #define ULAssignChild( _Class_, _Elem_, ... )   TLayerBuilder< _Class_ >::Assign( & _Elem_, __VA_ARGS__ )
 #define ULAddLayer( _Elem_ )                    .AddChild( _Elem_ )
 #define ULDef( ... )                            .Def( [&]( auto i ){ i-> __VA_ARGS__ ; } )
+#define ULPayload( ... )                        ULDef( Payload( __VA_ARGS__ ) )
 
 ULIS_NAMESPACE_END
 
