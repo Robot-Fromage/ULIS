@@ -91,9 +91,24 @@ main( int argc, char *argv[] ) {
         // But the blends are concurrent with their respective copy, so each blend waits on one copy.
         // The policies will default to mono scanlines despite our input because of the nature of the task ( unaligned non contiguous images )
         FEvent cp_ev;
-        ctx.Copy( blockBase, *blockCanvas, srcRect, FVec2I( x, y ), FSchedulePolicy::MonoChunk, 0, nullptr, &cp_ev );
+        ctx.Copy( blockBase, *blockCanvas, srcRect, FVec2I( x, y ), FSchedulePolicy::CacheEfficient );
         ctx.Flush();
-        ctx.Blend( blockOver, *blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, FSchedulePolicy::MonoChunk, 1, &cp_ev, nullptr );
+    }
+
+    // Flush and Fence.
+    ctx.Finish();
+
+    for( int i = 0; i < NumBlendModes; ++i ) {
+        // Compute x & y in regular grid, remember we tile it in a 8 * 5 grid and NUM_BLENDING_MODES = 40.
+        int x = ( i % 8 ) * srcRect.w;
+        int y = ( i / 8 ) * srcRect.h;
+
+        // Notice the async part:
+        // All copies are non concurrent and can be scheduled without wait dependencies
+        // But the blends are concurrent with their respective copy, so each blend waits on one copy.
+        // The policies will default to mono scanlines despite our input because of the nature of the task ( unaligned non contiguous images )
+        ctx.Blend( blockOver, *blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, FSchedulePolicy::MultiScanlines );
+        ctx.Flush();
     }
 
     // Flush and Fence.
