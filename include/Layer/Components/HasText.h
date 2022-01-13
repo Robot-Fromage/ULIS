@@ -34,9 +34,9 @@ protected:
 
 public:
     FWString Text() const;
-    FFont Font() const;
+    const FFont& Font() const;
     int FontSize() const;
-    FColor TextColor() const;
+    const FColor& TextColor() const;
     bool IsAntiAliased() const;
 
     void SetText( const FWString& iValue );

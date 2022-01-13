@@ -268,8 +268,13 @@ CLASS::RenderImage(
 ) // override
 {
     FEvent ev;
+    TArray< FEvent > events( iNumWait + 1 );
+    for( int i = 0; i < iNumWait; ++i )
+        events[i] = iWaitList[i];
+    events[ iNumWait ] = RenderImageCache( iCtx );
+
     ulError err = iCtx.Blend(
-          *tSelf::Block()
+          *tHasBlock::Block()
         , ioBlock
         , iRect
         , iPos
@@ -277,11 +282,11 @@ CLASS::RenderImage(
         , AlphaMode()
         , Opacity()
         , iPolicy
-        , iNumWait
-        , iWaitList
+        , iNumWait + 1
+        , &events[0]
         , &ev
     );
-    ULIS_ASSERT( !err, "Error during layer image blend" );
+    ULIS_ASSERT( !err, "Error during layer text blend" );
     return  ev;
 }
 

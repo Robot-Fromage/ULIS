@@ -23,7 +23,7 @@ main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_Max );
+    FContext ctx( queue, fmt );
 
     uint16 w = 1024;
     uint16 h = 1024;
@@ -37,6 +37,9 @@ main( int argc, char *argv[] ) {
         // Warning: can't use iRoot->Self().Name().Data() if called during destructor.
         ULIS_DEBUG_PRINTF( "Node removed from container " << ": " << iNode->Self().Name().Data() );
     };
+
+    FFontEngine fontEngine;
+    FFont font( fontEngine, "Segoe UI", "Bold" );
 
     FLayerStack* stack;
     ULAssignStack( stack, w, h, fmt )
@@ -56,12 +59,26 @@ main( int argc, char *argv[] ) {
         ULCreateChild( FLayerFolder )
         ULDef( SetName( "2f" ) )
         [
-            ULCreateChild( FLayerImage )
-            ULDef( SetName( "2_0i" ) )
+            ULCreateChild( FLayerText )
+            ULDef( SetName( "2_0t" ) )
+            ULDef( SetTextColor( FColor::White ) )
+            ULDef( SetFontSize( 38 ) )
+            ULDef( SetTranslation( 530, 530 ) )
+        ]
+        [
+            ULCreateChild( FLayerText )
+            ULDef( SetName( "2_0t" ) )
+            ULDef( SetTextColor( FColor::White ) )
+            ULDef( SetFontSize( 38 ) )
+            ULDef( SetTranslation( 530, 580 ) )
         ]
         [
             ULCreateChild( FLayerImage )
             ULDef( SetName( "2_1i" ) )
+        ]
+        [
+            ULCreateChild( FLayerImage )
+            ULDef( SetName( "2_2i" ) )
         ]
     ]
     [
@@ -71,8 +88,8 @@ main( int argc, char *argv[] ) {
 
     FBlock& img0 = *( stack->Find< FLayerImage >( "0i" ) ).Block();
     FBlock& img1 = *( stack->Find< FLayerImage >( "1i" ) ).Block();
-    FBlock& img2_0 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_0i" ) ).Block();
-    FBlock& img2_1 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" ) ).Block();
+    FBlock& img2_0 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" ) ).Block();
+    FBlock& img2_1 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_2i" ) ).Block();
     FBlock& img3 = *( stack->Find< FLayerImage >( "3i" ) ).Block();
 
     ctx.Clear( img0 );

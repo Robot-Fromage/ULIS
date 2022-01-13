@@ -38,7 +38,7 @@ FWString IHasText::Text() const
     return mInfo.string;
 }
 
-FFont IHasText::Font() const
+const FFont& IHasText::Font() const
 {
     return mInfo.font;
 }
@@ -48,7 +48,7 @@ int IHasText::FontSize() const
     return mInfo.size;
 }
 
-FColor IHasText::TextColor() const
+const FColor& IHasText::TextColor() const
 {
     return mInfo.color;
 }
