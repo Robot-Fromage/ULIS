@@ -75,8 +75,8 @@ public:
     {}
 
     template< typename ... Args >
-    ULIS_FORCEINLINE void Invoke( Args ... args ) const {
-        mDelegate.ExecuteIfBound( args ... );
+    ULIS_FORCEINLINE void Invoke( Args&& ... args ) const {
+        mDelegate.ExecuteIfBound( std::forward< Args >(args)... );
     }
 
     void SetDelegate( const DelegateType& iDelegate ) {
