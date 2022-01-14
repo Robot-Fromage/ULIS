@@ -32,9 +32,11 @@ main( int argc, char *argv[] ) {
     ctx.Clear( canvas );
     ctx.Finish();
 
+    // BL_FORMAT_PRGB32: 32-bit premultiplied ARGB pixel format (8-bit components). 
     BLImage img( w, h, BL_FORMAT_PRGB32 );
     {
         BLContext blctx( img );
+        blctx.setFillStyle(BLRgba32(0x3FFF0000));
         blctx.setCompOp(BL_COMP_OP_SRC_COPY);
         blctx.fillAll();
         BLPath path;
@@ -53,7 +55,10 @@ main( int argc, char *argv[] ) {
     QApplication app( argc, argv );
     QWidget* widget = new QWidget();
     //QImage* image = new QImage( canvas.Bits(), canvas.Width(), canvas.Height(), canvas.BytesPerScanLine(), QImage::Format_RGBA8888 );
-    QImage* image = new QImage( (uint8*)data.pixelData, data.size.w, data.size.h, data.stride, QImage::Format_RGBA8888 );
+    // Format_ARGB32: (0xAARRGGBB)
+    // Format_ARGB32_Premultiplied: (0xAARRGGBB) prem, only compatible with bl2d
+    // Format_RGB32: 32-bit RGB format (0xffRRGGBB)
+    QImage* image = new QImage( (uint8*)data.pixelData, data.size.w, data.size.h, data.stride, QImage::Format_ARGB32_Premultiplied );
     QPixmap pixmap = QPixmap::fromImage( *image );
     QLabel* label = new QLabel( widget );
     label->setPixmap( pixmap );

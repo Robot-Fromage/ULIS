@@ -108,7 +108,7 @@ FContext::XLoadPSDFromDisk(
 )
 {
     FPSDOperations op( iPath, iStack );
-    ULIS_ASSERT_RETURN_ERROR( !op.Import(), "Bad input data", ULIS_ERROR_BAD_INPUT_DATA );
+    ULIS_ASSERT_RETURN_ERROR( op.Import(), "Bad input data", ULIS_ERROR_BAD_INPUT_DATA );
 
     // Genarating layer stack from imported info
     eFormat layerStackFormat = iStack.Format();
