@@ -1,4 +1,4 @@
-// Copyright © 2018-2021 Praxinos, Inc. All Rights Reserved.
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /*
 *   ULIS
@@ -6,7 +6,6 @@
 * @file         ULIS.Build.cs
 * @author       Clement Berthaud
 * @brief        Module description file for UnrealEngine4
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 using System;
