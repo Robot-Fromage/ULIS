@@ -268,7 +268,7 @@ CLASS::RenderImage(
 {
     FEvent ev;
     TArray< FEvent > events( iNumWait + 1 );
-    for( int i = 0; i < iNumWait; ++i )
+    for( uint32 i = 0; i < iNumWait; ++i )
         events[i] = iWaitList[i];
     events[ iNumWait ] = RenderImageCache( iCtx );
 
