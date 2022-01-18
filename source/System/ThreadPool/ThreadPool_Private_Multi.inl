@@ -189,10 +189,9 @@ FThreadPool_Private::OnEventReady(const FInternalEvent* iEvent)
         FinishCommand(command);
         return;
     }
-
     //Initialize the command with an amount of workers working on it
     //this helps us to know when all expected workers has done working on the command and thus finish the command
-    uint64 numWorkers = command->GetMaxConcurrency() < mWorkers.size() ? command->GetMaxConcurrency() : mWorkers.size();
+    uint32 numWorkers = static_cast< uint32 >( command->GetMaxConcurrency() < mWorkers.size() ? command->GetMaxConcurrency() : mWorkers.size() );
     //relaxed : because we just increase a counter without ensuring any new memory to be shared
     command->WorkingThreads().fetch_add(numWorkers, std::memory_order_relaxed);
 
