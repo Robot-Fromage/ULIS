@@ -98,6 +98,7 @@ public:
     }
 
     void NotifyChange() const {
+        OnChangeNotifiedInternal();
         TOnSelfChanged< Type >::Invoke( this );
         if( mParent )
             mParent->NotifyChange();
@@ -122,7 +123,7 @@ protected:
     }
 
 private:
-    virtual void OnChangeNotifiedInternal() {
+    virtual void OnChangeNotifiedInternal() const {
     }
 
 private:

@@ -92,7 +92,7 @@ main( int argc, char *argv[] ) {
     FBlock& img3 = *( stack->Find< FLayerImage >( "3i" ) ).Block();
 
     FLayerImage& layer = stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" );
-    layer.InvalidImageCache();
+    layer.NotifyChange();
 
     ctx.Clear( img0 );
     ctx.Clear( img1 );

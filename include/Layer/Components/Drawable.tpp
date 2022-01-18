@@ -51,7 +51,7 @@ TDrawable< BlockType >::RenderImage(
 
 template< class BlockType >
 void
-TDrawable< BlockType >::InvalidImageCache() {
+TDrawable< BlockType >::InvalidImageCache() const {
     mCacheValid = false;
 }
 

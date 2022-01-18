@@ -39,13 +39,13 @@ public:
     ) = 0;
 
     bool IsImageCacheValid() const;
-    virtual void InvalidImageCache();
+    virtual void InvalidImageCache() const;
 
 protected:
     void ValidateImageCache();
 
 private:
-    bool mCacheValid;
+    mutable bool mCacheValid;
 };
 
 ULIS_NAMESPACE_END

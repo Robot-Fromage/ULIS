@@ -26,7 +26,7 @@ public:
     using ILayer::ILayer;
     virtual ~TAbstractLayerDrawable() override = 0;
 
-    void OnChangeNotifiedInternal() override {
+    void OnChangeNotifiedInternal() const override {
         ULIS_DEBUG_PRINTF( "Invalidation" )
         TDrawable< BlockType >::InvalidImageCache();
     }
