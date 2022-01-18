@@ -18,7 +18,7 @@ add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/blend2d ${PROJECT_BINARY_
 
 # Warnings
 if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" )
-    set_target_properties( blend2d PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312 /wd4100 /wd4457 /wd4189" )
+    set_target_properties( blend2d PROPERTIES COMPILE_FLAGS "/wd4267 /wd4244 /wd4018 /wd4312 /wd4100 /wd4457 /wd4189 /wd4701" )
 endif()
 
 # Folder
