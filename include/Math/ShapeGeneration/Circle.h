@@ -49,7 +49,7 @@ static inline void GenerateCirclePoints(
         }
     }
     
-    octantStartingIndex = ioCirclePoints.Size();
+    octantStartingIndex = static_cast< int >( ioCirclePoints.Size() );
 
     //Octant 2 ------
     x = 0;
@@ -79,7 +79,7 @@ static inline void GenerateCirclePoints(
         }
     }
 
-    octantStartingIndex = ioCirclePoints.Size();
+    octantStartingIndex = static_cast< int >( ioCirclePoints.Size() );
 
     //Octant 3 ------
     x = 0;
@@ -109,7 +109,7 @@ static inline void GenerateCirclePoints(
         }
     }
 
-    octantStartingIndex = ioCirclePoints.Size();
+    octantStartingIndex = static_cast< int >( ioCirclePoints.Size() );
 
     //Octant 4 ------
     x = 0;
@@ -139,7 +139,7 @@ static inline void GenerateCirclePoints(
         }
     }
 
-    octantStartingIndex = ioCirclePoints.Size();
+    octantStartingIndex = static_cast< int >( ioCirclePoints.Size() );
 
     //Octant 5 ------
     x = 0;
@@ -169,7 +169,7 @@ static inline void GenerateCirclePoints(
         }
     }
 
-    octantStartingIndex = ioCirclePoints.Size();
+    octantStartingIndex = static_cast< int >( ioCirclePoints.Size() );
 
     //Octant 6 ------
     x = 0;
@@ -199,7 +199,7 @@ static inline void GenerateCirclePoints(
         }
     }
 
-    octantStartingIndex = ioCirclePoints.Size();
+    octantStartingIndex = static_cast< int >( ioCirclePoints.Size() );
 
     //Octant 7 ------
     x = 0;
@@ -229,7 +229,7 @@ static inline void GenerateCirclePoints(
         }
     }
 
-    octantStartingIndex = ioCirclePoints.Size();
+    octantStartingIndex = static_cast< int >( ioCirclePoints.Size() );
 
     //Octant 8 ------
     x = 0;

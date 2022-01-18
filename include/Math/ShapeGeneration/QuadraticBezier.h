@@ -30,7 +30,7 @@ static inline void InternalGenerateQuadraticBezierSegPoints(
     double dx = x0-x2,dy = y0-y2,xx = x0-x1,yy = y0-y1;
     double xy = xx*sy+yy*sx,cur = xx*sy-yy*sx,err;
     bool pushBack = true;
-    int indexEndArray = ioQuadraticBezierPoints.Size();
+    int indexEndArray = static_cast< int >( ioQuadraticBezierPoints.Size() );
 
     if(xx*sx > 0.0 || yy*sy > 0.0)
     {

@@ -48,7 +48,7 @@ static inline void GenerateEllipsePoints(
         x++;
     }
 
-    octantStartingIndex = ioEllipsePoints.Size();
+    octantStartingIndex = static_cast< int >( ioEllipsePoints.Size() );
 
     //Octant 2 ------
     x = iA;
@@ -67,7 +67,7 @@ static inline void GenerateEllipsePoints(
         y++;
     }
 
-    octantStartingIndex = ioEllipsePoints.Size();
+    octantStartingIndex = static_cast< int >( ioEllipsePoints.Size() );
 
     //Octant 3 ------
     x = iA;
@@ -87,7 +87,7 @@ static inline void GenerateEllipsePoints(
         y++;
     }
 
-    octantStartingIndex = ioEllipsePoints.Size();
+    octantStartingIndex = static_cast< int >( ioEllipsePoints.Size() );
    
     //Octant 4 ------
     x = 0;
@@ -107,7 +107,7 @@ static inline void GenerateEllipsePoints(
         x++;
     }
 
-    octantStartingIndex = ioEllipsePoints.Size();
+    octantStartingIndex = static_cast< int >( ioEllipsePoints.Size() );
 
     //Octant 5 ------
     x = 0;
@@ -127,7 +127,7 @@ static inline void GenerateEllipsePoints(
         x++;
     }
 
-    octantStartingIndex = ioEllipsePoints.Size();
+    octantStartingIndex = static_cast< int >( ioEllipsePoints.Size() );
 
     //Octant 6 ------
     x = iA;
@@ -147,7 +147,7 @@ static inline void GenerateEllipsePoints(
         y++;
     }
 
-    octantStartingIndex = ioEllipsePoints.Size();
+    octantStartingIndex = static_cast< int >( ioEllipsePoints.Size() );
 
     //Octant 7 ------
     x = iA;
@@ -167,7 +167,7 @@ static inline void GenerateEllipsePoints(
         y++;
     }
 
-    octantStartingIndex = ioEllipsePoints.Size();
+    octantStartingIndex = static_cast< int >( ioEllipsePoints.Size() );
 
     //Octant 8 ------
     x = 0;

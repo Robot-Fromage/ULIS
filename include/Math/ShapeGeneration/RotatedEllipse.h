@@ -66,10 +66,10 @@ static inline void GenerateRotatedEllipsePoints(
     dx = std::floor(dx * w + 0.5f);
     dy = std::floor(dy * w + 0.5f);
 
-    InternalGenerateQuadraticBezierSegPoints(x1, int(y1 - dy), x1, y0, int(x0 + dx), y0, w, ioRotatedEllipsePoints, true, ioRotatedEllipsePoints.Size()); //1st quadrant
-    InternalGenerateQuadraticBezierSegPoints(x1, int(y1 - dy), x1, y1, int(x1 - dx), y1, 1.f - w, ioRotatedEllipsePoints, false, ioRotatedEllipsePoints.Size() ); //2nd quadrant
-    InternalGenerateQuadraticBezierSegPoints(x0, int(y0 + dy), x0, y1, int(x1 - dx), y1, w, ioRotatedEllipsePoints, true, ioRotatedEllipsePoints.Size()); // 3rd quadrant
-    InternalGenerateQuadraticBezierSegPoints(x0, int(y0 + dy), x0, y0, int(x0 + dx), y0, 1.f - w, ioRotatedEllipsePoints, false, ioRotatedEllipsePoints.Size()); // 4th quadrant
+    InternalGenerateQuadraticBezierSegPoints(x1, int(y1 - dy), x1, y0, int(x0 + dx), y0, w, ioRotatedEllipsePoints, true, static_cast< int >( ioRotatedEllipsePoints.Size() )); //1st quadrant
+    InternalGenerateQuadraticBezierSegPoints(x1, int(y1 - dy), x1, y1, int(x1 - dx), y1, 1.f - w, ioRotatedEllipsePoints, false, static_cast< int >( ioRotatedEllipsePoints.Size() ) ); //2nd quadrant
+    InternalGenerateQuadraticBezierSegPoints(x0, int(y0 + dy), x0, y1, int(x1 - dx), y1, w, ioRotatedEllipsePoints, true, static_cast< int >( ioRotatedEllipsePoints.Size() )); // 3rd quadrant
+    InternalGenerateQuadraticBezierSegPoints(x0, int(y0 + dy), x0, y0, int(x0 + dx), y0, 1.f - w, ioRotatedEllipsePoints, false, static_cast< int >( ioRotatedEllipsePoints.Size() )); // 4th quadrant
 }
 
 ULIS_NAMESPACE_END

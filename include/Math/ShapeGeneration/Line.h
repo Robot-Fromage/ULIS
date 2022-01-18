@@ -24,7 +24,7 @@ static inline void GenerateLinePoints(
     FVec2I p0 = iP0;
     FVec2I p1 = iP1;
 
-    int startArray = iCustomIndex != -1 ? iCustomIndex : ioLinePoints.Size(); 
+    int startArray = iCustomIndex != -1 ? iCustomIndex : static_cast< int >( ioLinePoints.Size() ); 
 
     bool pushArray = true; //While inserting the points into the array, if true, we push back, else, we insert at front
 

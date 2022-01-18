@@ -138,7 +138,7 @@ static inline void GenerateArcPoints(
 
 
 
-        octantStartingIndex = ioArcPoints.Size();
+        octantStartingIndex = static_cast< int >( ioArcPoints.Size() );
 
         //Octant 2 ------
         x = 0;
@@ -198,7 +198,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        octantStartingIndex = ioArcPoints.Size();
+        octantStartingIndex = static_cast< int >( ioArcPoints.Size() );
 
         //Octant 3 ------
         x = 0;
@@ -258,7 +258,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        octantStartingIndex = ioArcPoints.Size();
+        octantStartingIndex = static_cast< int >( ioArcPoints.Size() );
 
         //Octant 4 ------
         x = 0;
@@ -318,7 +318,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        octantStartingIndex = ioArcPoints.Size();
+        octantStartingIndex = static_cast< int >( ioArcPoints.Size() );
 
         //Octant 5 ------
         x = 0;
@@ -378,7 +378,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        octantStartingIndex = ioArcPoints.Size();
+        octantStartingIndex = static_cast< int >( ioArcPoints.Size() );
 
         //Octant 6 ------
         x = 0;
@@ -438,7 +438,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        octantStartingIndex = ioArcPoints.Size();
+        octantStartingIndex = static_cast< int >( ioArcPoints.Size() );
 
         //Octant 7 ------
         x = 0;
@@ -498,7 +498,7 @@ static inline void GenerateArcPoints(
             }
         }
 
-        octantStartingIndex = ioArcPoints.Size();
+        octantStartingIndex = static_cast< int >( ioArcPoints.Size() );
 
         //Octant 8 ------
         x = 0;
