@@ -91,6 +91,9 @@ main( int argc, char *argv[] ) {
     FBlock& img2_1 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_2i" ) ).Block();
     FBlock& img3 = *( stack->Find< FLayerImage >( "3i" ) ).Block();
 
+    FLayerImage& layer = stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" );
+    layer.InvalidImageCache();
+
     ctx.Clear( img0 );
     ctx.Clear( img1 );
     ctx.Clear( img2_0 );
