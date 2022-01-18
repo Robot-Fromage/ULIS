@@ -200,7 +200,7 @@ FThreadPool_Private::OnEventReady(const FInternalEvent* iEvent)
     //as the 
     std::unique_lock<std::mutex> lock(mWorkersReadyMutex);
     uint32 index = sgThreadIndex;
-    for (int i = 0; i < numWorkers; i++ )
+    for( uint32 i = 0; i < numWorkers; i++ )
     {
         uint32  index = mWorkersReady.front();
         mWorkersReady.erase(mWorkersReady.begin());
