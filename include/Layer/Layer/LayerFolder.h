@@ -25,7 +25,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      FLayerFolder
 /// @brief      The FLayerFolder class provides a class to store a folder of
 ///             layers in a layer stack for painting applications.
-class FLayerFolder
+class ULIS_API FLayerFolder
     : public ILayer
     , public TRoot< ILayer >
     , public TSearchable< TRoot< ILayer > >

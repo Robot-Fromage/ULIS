@@ -24,7 +24,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      FLayerImage
 /// @brief      The FLayerImage class provides a class to store an image in a
 ///             layer stack for painting applications.
-class FLayerImage final
+class ULIS_API FLayerImage final
     : public ILayer
     , public THasBlock< FBlock, FRegularBlockAllocator >
     , public IHasBlendInfo

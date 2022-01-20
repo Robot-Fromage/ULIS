@@ -26,7 +26,7 @@ ULIS_NAMESPACE_BEGIN
 /// @class      FLayerText
 /// @brief      The FLayerText class provides a class to store text in a layer
 ///             of a layer stack for painting applications.
-class FLayerText final
+class ULIS_API FLayerText final
     : public ILayer
     , public IHasBlendInfo
     , public IHasText

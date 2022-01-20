@@ -38,7 +38,7 @@ main( int argc, char *argv[] ) {
     ctx.Finish(); 
 
     FBlock blockCanvas( layerStack.Width(), layerStack.Height(), layerStack.Format() );
-    ctx.Flatten( layerStack, blockCanvas );
+    //ctx.Flatten( layerStack, blockCanvas );
     ctx.Finish();
 
     FBlock blockCanvasConverted( layerStack.Width(), layerStack.Height(), Format_RGBA8 );
