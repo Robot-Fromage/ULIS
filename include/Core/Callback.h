@@ -30,7 +30,7 @@ public:
     {}
 
     /*! Constructor from function pointer and optional extra info. */
-    TCallback( tFptr iFptr, void* iInfo = nullptr )
+    explicit TCallback( tFptr iFptr, void* iInfo = nullptr )
         : mFptr( iFptr )
         , mInfo( iInfo )
     {}
