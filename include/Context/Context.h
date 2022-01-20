@@ -119,32 +119,32 @@ public:
 
 /////////////////////////////////////////////////////
 // Layers
-    /*!
-        Perform a flattened blend of the whole layer stack
-    */
-    ulError
-    Flatten(
-          FLayerStack& iStack
-        , FBlock& iDestination
-        , const FRectI& iSourceRect = FRectI::Auto
-        , const FVec2I& iPosition = FVec2I( 0 )
-        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
-        , uint32 iNumWait = 0
-        , const FEvent* iWaitList = nullptr
-        , FEvent* iEvent = nullptr
-    );
-
-    ulError
-    RenderLayerFolder(
-          FLayerFolder& iFolder
-        , FEvent* iEvent = nullptr
-    );
-
-    ulError
-    RenderLayerText(
-          FLayerText& iText
-        , FEvent* iEvent = nullptr
-    );
+    ///*!
+    //    Perform a flattened blend of the whole layer stack
+    //*/
+    //ulError
+    //Flatten(
+    //      FLayerStack& iStack
+    //    , FBlock& iDestination
+    //    , const FRectI& iSourceRect = FRectI::Auto
+    //    , const FVec2I& iPosition = FVec2I( 0 )
+    //    , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+    //    , uint32 iNumWait = 0
+    //    , const FEvent* iWaitList = nullptr
+    //    , FEvent* iEvent = nullptr
+    //);
+    //
+    //ulError
+    //RenderLayerFolder(
+    //      FLayerFolder& iFolder
+    //    , FEvent* iEvent = nullptr
+    //);
+    //
+    //ulError
+    //RenderLayerText(
+    //      FLayerText& iText
+    //    , FEvent* iEvent = nullptr
+    //);
 
     /*!
         Collect metrics before a XLoadPSDFromDisk call

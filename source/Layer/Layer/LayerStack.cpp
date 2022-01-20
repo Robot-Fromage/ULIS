@@ -3,30 +3,23 @@
 /*
 *   ULIS
 *__________________
-* @file         LayerStack.tpp
+* @file         LayerStack.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TLayerStack class.
+* @brief        This file provides the definition for the FLayerStack FLayerStack.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Layer/Layer/LayerStack.h"
 
-// Template Macro Utility
-#define TEMPLATE template< class BlockType, class RendererType, class TSuperStackExtra >
-#define CLASS TLayerStack< BlockType, RendererType, TSuperStackExtra >
-
 ULIS_NAMESPACE_BEGIN
 // DTor
-TEMPLATE
-CLASS::~TLayerStack()
+FLayerStack::~FLayerStack()
 {
-    ULIS_DEBUG_PRINTF( "TLayerStack Destroyed" )
+    ULIS_DEBUG_PRINTF( "FLayerStack Destroyed" )
 }
 
 // CTor
-TEMPLATE
-template< typename ... Args >
-CLASS::TLayerStack(
+FLayerStack::FLayerStack(
       uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
@@ -37,7 +30,6 @@ CLASS::TLayerStack(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , Args ... args
 )
     : TNode< ILayer >(
           nullptr
@@ -60,21 +52,6 @@ CLASS::TLayerStack(
         , FOnParentChanged()
         , iOnSelfChanged
     )
-    , TAbstractLayerDrawable< BlockType >(
-          "LayerStack"
-        , false
-        , false
-        , FColor::Transparent
-        , nullptr
-        , FOnNameChanged()
-        , FOnBoolChanged()
-        , FOnBoolChanged()
-        , FOnColorChanged()
-        , iOnUserDataAdded
-        , iOnUserDataChanged
-        , iOnUserDataRemoved
-        , FOnParentChanged()
-    )
     , TRoot< ILayer > (
           nullptr
         , FOnParentChanged()
@@ -86,16 +63,13 @@ CLASS::TLayerStack(
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
-    , TSuperStackExtra( args ... )
 {
-    ULIS_DEBUG_PRINTF( "TLayerStack Created" )
+    ULIS_DEBUG_PRINTF( "FLayerStack Created" )
 }
 
-// TLayerStack Interface
-TEMPLATE
-template< typename ... Args >
+// FLayerStack Interface
 void
-CLASS::Reset(
+FLayerStack::Reset(
       uint16 iWidth
     , uint16 iHeight
     , eFormat iFormat
@@ -106,7 +80,6 @@ CLASS::Reset(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , Args ... args
 )
 {
     ReinterpretFormat( iFormat );
@@ -124,10 +97,10 @@ CLASS::Reset(
     this->FOnUserDataRemoved::SetDelegate( iOnUserDataRemoved );
 }
 
+/*
 // TDrawable Interface
-TEMPLATE
 FEvent
-CLASS::RenderImage(
+FLayerStack::RenderImage(
       FContext& iCtx
     , BlockType& ioBlock
     , const FRectI& iRect
@@ -159,10 +132,7 @@ CLASS::RenderImage(
     }
     return  ev;
 }
+*/
 
 ULIS_NAMESPACE_END
-
-// Template Macro Utility
-#undef TEMPLATE
-#undef CLASS
 

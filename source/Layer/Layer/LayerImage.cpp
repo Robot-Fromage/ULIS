@@ -3,26 +3,24 @@
 /*
 *   ULIS
 *__________________
-* @file         LayerText.tpp
+* @file         LayerImage.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TLayerText class.
+* @brief        This file provides the definition for the FLayerImage FLayerImage.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-#include "Layer/Layer/LayerText.h"
-
-// Template Macro Utility
-#define TEMPLATE template< class BlockType, class RasterizerType, class RendererType, class BlockAllocatorType, class LayerStackType >
-#define CLASS TLayerText< BlockType, RasterizerType, RendererType, BlockAllocatorType, LayerStackType >
+#include "Layer/Layer/LayerImage.h"
+#include "Layer/Layer/LayerFolder.h"
+#include "Layer/Layer/LayerStack.h"
 
 ULIS_NAMESPACE_BEGIN
-TEMPLATE
-CLASS::~TLayerText() {
-    ULIS_DEBUG_PRINTF( "TLayerText Destroyed" )
+
+FLayerImage::~FLayerImage() {
+    ULIS_DEBUG_PRINTF( "FLayerImage Destroyed" )
 }
 
-TEMPLATE
-CLASS::TLayerText(
+
+FLayerImage::FLayerImage(
       const FString& iName
     , bool iLocked
     , bool iVisible
@@ -34,12 +32,7 @@ CLASS::TLayerText(
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , const FWString& iText
-    , const FFont& iFont
-    , uint32 iFontSize
-    , const ISample& iTextColor
-    , bool iAntiAliased
-    , const FTransformInfo& iTransform
+    , bool iAlphaLocked
     , const TRoot< ILayer >* iParent
 
     , const FOnNameChanged& iOnNameChanged
@@ -52,10 +45,9 @@ CLASS::TLayerText(
     , const FOnParentChanged& iOnParentChanged
     , const FOnSelfChanged& iOnSelfChanged
 
-    , const TOnBlockChanged< BlockType >& iOnBlockChanged
+    , const TOnBlockChanged< FBlock >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
-    , const FOnTextInfoChanged& iOnTextInfoChanged
-    , const FOnTransformInfoChanged& iOnTransformInfoChanged
+    , const FOnBoolChanged& iOnPaintLockChanged
 )
     : TNode< ILayer >(
           iParent
@@ -79,25 +71,7 @@ CLASS::TLayerText(
         , iOnParentChanged
         , iOnSelfChanged
     )
-    , tAbstractLayerDrawable(
-          iName
-        , iLocked
-        , iVisible
-        , iPrettyColor
-        , iParent
-
-        , iOnNameChanged
-        , iOnLockChanged
-        , iOnVisibleChanged
-        , iOnColorChanged
-        , iOnUserDataAdded
-        , iOnUserDataChanged
-        , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , tRasterizable()
-    , tHasBlock(
+    , THasBlock< FBlock, FRegularBlockAllocator >(
           iWidth
         , iHeight
         , iFormat
@@ -110,28 +84,17 @@ CLASS::TLayerText(
         , iOpacity
         , iOnBlendInfoChanged
     )
-    , IHasText(
-          iText
-        , iFont
-        , iFontSize
-        , iTextColor
-        , iAntiAliased
-        , iOnTextInfoChanged
-    )
-    , IHasTransform(
-          FVec2F( 0 )
-        , FVec2F( 0 )
-        , 0
-        , FVec2F( 1 )
-        , iOnTransformInfoChanged
+    , IHasPaintLock(
+          iAlphaLocked
+        , iOnPaintLockChanged
     )
 {
-    ULIS_DEBUG_PRINTF( "TLayerText Created" )
+    ULIS_DEBUG_PRINTF( "FLayerImage Created" )
 }
 
-TEMPLATE
-CLASS::TLayerText(
-      BlockType* iBlock
+
+FLayerImage::FLayerImage(
+      FBlock* iBlock
     , const FString& iName
     , bool iLocked
     , bool iVisible
@@ -139,12 +102,7 @@ CLASS::TLayerText(
     , eBlendMode iBlendMode
     , eAlphaMode iAlphaMode
     , ufloat iOpacity
-    , const FWString& iText
-    , const FFont& iFont
-    , uint32 iFontSize
-    , const ISample& iTextColor
-    , bool iAntiAliased
-    , const FTransformInfo& iTransform
+    , bool iAlphaLocked
     , const TRoot< ILayer >* iParent
 
     , const FOnNameChanged& iOnNameChanged
@@ -157,10 +115,9 @@ CLASS::TLayerText(
     , const FOnParentChanged& iOnParentChanged
     , const FOnSelfChanged& iOnSelfChanged
 
-    , const TOnBlockChanged< BlockType >& iOnBlockChanged
+    , const TOnBlockChanged< FBlock >& iOnBlockChanged
     , const FOnBlendInfoChanged& iOnBlendInfoChanged
-    , const FOnTextInfoChanged& iOnTextInfoChanged
-    , const FOnTransformInfoChanged& iOnTransformInfoChanged
+    , const FOnBoolChanged& iOnPaintLockChanged
 )
     : TNode< ILayer >(
           iParent
@@ -184,25 +141,7 @@ CLASS::TLayerText(
         , iOnParentChanged
         , iOnSelfChanged
     )
-    , tAbstractLayerDrawable(
-          iName
-        , iLocked
-        , iVisible
-        , iPrettyColor
-        , iParent
-
-        , iOnNameChanged
-        , iOnLockChanged
-        , iOnVisibleChanged
-        , iOnColorChanged
-        , iOnUserDataAdded
-        , iOnUserDataChanged
-        , iOnUserDataRemoved
-        , iOnParentChanged
-        , iOnSelfChanged
-    )
-    , tRasterizable()
-    , tHasBlock(
+    , THasBlock< FBlock, FRegularBlockAllocator >(
           iBlock
         , iOnBlockChanged
     )
@@ -212,53 +151,20 @@ CLASS::TLayerText(
         , iOpacity
         , iOnBlendInfoChanged
     )
-    , IHasText(
-          iText
-        , iFont
-        , iFontSize
-        , iTextColor
-        , iAntiAliased
-        , iOnTextInfoChanged
-    )
-    , IHasTransform(
-          FVec2F( 0 )
-        , FVec2F( 0 )
-        , 0
-        , FVec2F( 1 )
-        , iOnTransformInfoChanged
+    , IHasPaintLock(
+          iAlphaLocked
+        , iOnPaintLockChanged
     )
 {
-    ULIS_DEBUG_PRINTF( "TLayerText Created" )
+    ULIS_DEBUG_PRINTF( "FLayerImage Created" )
 }
 
-
-
+/*
 // TDrawable Interface
-TEMPLATE
 FEvent
-CLASS::RenderImageCache( FContext& iCtx ) // override
-{
-    if( tSelf::IsImageCacheValid() )
-        return  FEvent::NoOP();
-
-    FEvent eventClear;
-    iCtx.Clear( *tSelf::Block(), FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &eventClear );
-    FEvent ev;
-    if( IsAntiAliased() ) {
-        iCtx.RasterTextAA( *tSelf::Block(), Text(), Font(), FontSize(), Matrix(), TextColor(), FSchedulePolicy::MonoChunk, 1, &eventClear, &ev );
-    } else {
-        iCtx.RasterText( *tSelf::Block(), Text(), Font(), FontSize(), Matrix(), TextColor(), FSchedulePolicy::MonoChunk, 1, &eventClear, &ev );
-    }
-
-    tSelf::ValidateImageCache();
-    return  ev;
-}
-
-TEMPLATE
-FEvent
-CLASS::RenderImage(
+FLayerImage::RenderImage(
       FContext& iCtx
-    , BlockType& ioBlock
+    , FBlock& ioBlock
     , const FRectI& iRect
     , const FVec2I& iPos
     , const FSchedulePolicy& iPolicy
@@ -267,13 +173,8 @@ CLASS::RenderImage(
 ) // override
 {
     FEvent ev;
-    TArray< FEvent > events( iNumWait + 1 );
-    for( uint32 i = 0; i < iNumWait; ++i )
-        events[i] = iWaitList[i];
-    events[ iNumWait ] = RenderImageCache( iCtx );
-
     ulError err = iCtx.Blend(
-          *tHasBlock::Block()
+          *tSelf::Block()
         , ioBlock
         , iRect
         , iPos
@@ -281,25 +182,24 @@ CLASS::RenderImage(
         , AlphaMode()
         , Opacity()
         , iPolicy
-        , iNumWait + 1
-        , &events[0]
+        , iNumWait
+        , iWaitList
         , &ev
     );
-    ULIS_ASSERT( !err, "Error during layer text blend" );
+    ULIS_ASSERT( !err, "Error during layer image blend" );
     return  ev;
 }
 
 // TRasterizable Interface
-TEMPLATE
-typename CLASS::tSiblingImage*
-CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
+typename FLayerImage::tSelf*
+FLayerImage::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 {
-    const BlockType* ref = tSelf::Block();
+    const FBlock* ref = tSelf::Block();
     if( !ref )
         return  nullptr;
 
     // Actual Deep Copy with Event.
-    tSiblingImage* rasterized = new tSiblingImage(
+    tSelf* rasterized = new tSelf(
           tSelf::Name()
         , tSelf::IsLocked()
         , tSelf::IsVisible()
@@ -311,7 +211,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , BlendMode()
         , AlphaMode()
         , Opacity()
-        , false
+        , IsPaintLocked()
         , nullptr
 
         , FOnNameChanged::GetDelegate()
@@ -324,7 +224,7 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
         , FOnParentChanged::GetDelegate()
         , FOnSelfChanged::GetDelegate()
 
-        , TOnBlockChanged< BlockType >::GetDelegate()
+        , TOnBlockChanged< FBlock >::GetDelegate()
         , FOnBlendInfoChanged::GetDelegate()
         , FOnBoolChanged::GetDelegate()
     );
@@ -332,44 +232,42 @@ CLASS::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
     iCtx.Copy( *tSelf::Block(), *(rasterized->Block()), FRectI::Auto, FVec2I( 0 ), FSchedulePolicy::CacheEfficient, 0, nullptr, oEvent );
     return  rasterized;
 }
+*/
 
 // TNode< ILayer > Interface
-TEMPLATE
+
 void
-CLASS::InitFromParent( const TRoot< ILayer >* iParent ) // override
+FLayerImage::InitFromParent( const TRoot< ILayer >* iParent ) // override
 {
     ULIS_ASSERT( iParent == Parent(), "Inconsistent Parent" );
     const tParent* topLevel = iParent->TopLevelParent();
     if( !topLevel )
         return;
 
-    if( !tSelf::Block() ) {
+    if( !FLayerImage::Block() ) {
         const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
         //const ILayer* layer = (const ILayer*)( topLevel ); // Unsafe !
-        ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the class hierarchy !" );
+        ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the FLayerImage hierarchy !" );
         switch( layer->TypeID() ) {
-            case LayerStackType::StaticTypeID(): {
-                const LayerStackType* stack = dynamic_cast< const LayerStackType* >( layer );
+            case FLayerStack::StaticTypeID(): {
+                const FLayerStack* stack = dynamic_cast< const FLayerStack* >( layer );
                 ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
                 Realloc( stack->Width(), stack->Height(), stack->Format(), stack->ColorSpace() );
                 break;
             }
-            case tSiblingFolder::StaticTypeID(): {
-                const tSiblingFolder* folder = dynamic_cast< const tSiblingFolder* >( layer );
+            case FLayerFolder::StaticTypeID(): {
+                const FLayerFolder* folder = dynamic_cast< const FLayerFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
-                const BlockType* ref = folder->Block();
-                if( !ref )
-                    break;
-                Realloc( ref->Width(), ref->Height(), ref->Format(), ref->ColorSpace() );
-                break;
+                ULIS_ASSERT( false, "Cannot init from parent in orphan folder, we need height width format info !" );
+                //const FBlock* ref = folder->Block();
+                //if( !ref )
+                //    break;
+                //Realloc( ref->Width(), ref->Height(), ref->Format(), ref->ColorSpace() );
+                //break;
             }
         }
     }
 }
 
 ULIS_NAMESPACE_END
-
-// Template Macro Utility
-#undef TEMPLATE
-#undef CLASS
 

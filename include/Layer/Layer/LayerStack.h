@@ -5,7 +5,7 @@
 *__________________
 * @file         LayerStack.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the TLayerStack class.
+* @brief        This file provides the declaration for the FLayerStack class.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -14,45 +14,27 @@
 #include "Image/Format.h"
 #include "Image/Size2D.h"
 #include "Layer/Components/Searchable.h"
-#include "Layer/Layer/AbstractLayerDrawable.h"
 
 ULIS_NAMESPACE_BEGIN
 
-struct ULIS_API FDummySuperStack {
-    ~FDummySuperStack() {
-        ULIS_DEBUG_PRINTF( "FDummySuperStack Destroyed" )
-    }
-
-    FDummySuperStack() {
-        ULIS_DEBUG_PRINTF( "FDummySuperStack Created" )
-    }
-};
-
 /////////////////////////////////////////////////////
-/// @class      TLayerStack
-/// @brief      The TLayerStack class provides a class to store a layer stack
+/// @class      FLayerStack
+/// @brief      The FLayerStack class provides a class to store a layer stack
 ///             for painting applications.
-template<
-      class BlockType
-    , class RendererType
-    , class TSuperStackExtra
->
-class TLayerStack final
-    : public TAbstractLayerDrawable< BlockType >
+class FLayerStack final
+    : public ILayer
     , public TRoot< ILayer >
     , public TSearchable< TRoot< ILayer > >
     , public IHasSize2D
     , public IHasFormat
     , public IHasColorSpace
-    , public TSuperStackExtra
 {
 public:
     // DTor
-    ~TLayerStack() override;
+    ~FLayerStack() override;
 
     // CTor
-    template< typename ... Args >
-    TLayerStack(
+    FLayerStack(
           uint16 iWidth
         , uint16 iHeight
         , eFormat iFormat = eFormat::Format_RGBA8
@@ -63,16 +45,14 @@ public:
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , Args ... args
     );
 
     // Disable copy
-    TLayerStack( const TLayerStack& ) = delete;
-    TLayerStack& operator=( const TLayerStack& ) = delete;
+    FLayerStack( const FLayerStack& ) = delete;
+    FLayerStack& operator=( const FLayerStack& ) = delete;
 
 public:
-    // TLayerStack Interface
-    template< typename ... Args >
+    // FLayerStack Interface
     void Reset(
           uint16 iWidth
         , uint16 iHeight
@@ -84,12 +64,12 @@ public:
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , Args ... args
     );
 
     // ITypeIdentifiable Interface
     ULIS_OVERRIDE_TYPEID_INTERFACE( "Stack" );
 
+    /*
     // TDrawable Interface
     FEvent RenderImage(
           FContext& iCtx
@@ -100,6 +80,7 @@ public:
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
     ) override;
+    */
 
     // TRoot Overload Shadow Interface
     // TSearchable Overload Shadow Interface
@@ -112,6 +93,4 @@ private:
 };
 
 ULIS_NAMESPACE_END
-
-#include "Layer/Layer/LayerStack.tpp"
 

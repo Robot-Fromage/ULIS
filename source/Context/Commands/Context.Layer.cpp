@@ -24,6 +24,7 @@
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 // Entry points
+/*
 ulError
 FContext::Flatten(
       FLayerStack& iStack
@@ -81,7 +82,7 @@ FContext::RenderLayerText(
     Dummy_OP( 1, &ev, iEvent );
     return  ULIS_NO_ERROR;
 }
-
+*/
 
 // static
 void
@@ -221,10 +222,10 @@ FContext::XLoadPSDFromDisk(
                 , false
                 , true
                 , FColor::Transparent
-                , op.GetImageWidth()
-                , op.GetImageHeight()
-                , layerStackFormat
-                , nullptr
+                //, op.GetImageWidth()
+                //, op.GetImageHeight()
+                //, layerStackFormat
+                //, nullptr
                 , blendMode
                 , isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal
                 , opacity
