@@ -5,7 +5,7 @@
 *__________________
 * @file         AnimatedLayerStack.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the TAnimatedLayerStack class.
+* @brief        This file provides the declaration for the FAnimatedLayerStack class.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -13,10 +13,10 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TAnimatedLayerStack
-/// @brief      The TAnimatedLayerStack class provides a class to store a layer stack
+/// @class      FAnimatedLayerStack
+/// @brief      The FAnimatedLayerStack class provides a class to store a layer stack
 ///             for painting applications.
-class TAnimatedLayerStack final
+class FAnimatedLayerStack final
 {
 };
 

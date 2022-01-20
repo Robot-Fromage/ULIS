@@ -5,7 +5,7 @@
 *__________________
 * @file         AnimatedLayerImage.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the TAnimatedLayerImage class.
+* @brief        This file provides the declaration for the FAnimatedLayerImage class.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -13,10 +13,10 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TAnimatedLayerImage
-/// @brief      The TAnimatedLayerImage class provides a class to store an image in a
+/// @class      FAnimatedLayerImage
+/// @brief      The FAnimatedLayerImage class provides a class to store an image in a
 ///             layer stack for painting applications.
-class TAnimatedLayerImage
+class FAnimatedLayerImage
 {
 };
 

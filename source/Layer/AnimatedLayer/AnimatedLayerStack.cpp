@@ -5,7 +5,7 @@
 *__________________
 * @file         AnimatedLayerStack.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TAnimatedLayerStack class.
+* @brief        This file provides the definition for the FAnimatedLayerStack class.
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/AnimatedLayer/AnimatedLayerStack.h"

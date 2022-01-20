@@ -5,7 +5,7 @@
 *__________________
 * @file         AnimatedLayerText.h
 * @author       Clement Berthaud
-* @brief        This file provides the declaration for the TAnimatedLayerText class.
+* @brief        This file provides the declaration for the FAnimatedLayerText class.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -13,10 +13,10 @@
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
-/// @class      TAnimatedLayerText
-/// @brief      The TAnimatedLayerText class provides a class to store text in a layer
+/// @class      FAnimatedLayerText
+/// @brief      The FAnimatedLayerText class provides a class to store text in a layer
 ///             of a layer stack for painting applications.
-class TAnimatedLayerText final
+class FAnimatedLayerText final
 {
 };
 

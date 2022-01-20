@@ -3,12 +3,12 @@
 /*
 *   ULIS
 *__________________
-* @file         AnimatedLayerImage.cpp
+* @file         AnimatedLayerText.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TAnimatedLayerImage class.
+* @brief        This file provides the definition for the FAnimatedLayerText class.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/AnimatedLayer/AnimatedLayerImage.h"
+#include "Layer/AnimatedLayer/AnimatedLayerText.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END

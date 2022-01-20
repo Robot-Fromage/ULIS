@@ -3,12 +3,12 @@
 /*
 *   ULIS
 *__________________
-* @file         AnimatedLayerFolder.cpp
+* @file         AnimatedLayerImage.cpp
 * @author       Clement Berthaud
-* @brief        This file provides the definition for the TAnimatedLayerFolder class.
+* @brief        This file provides the definition for the FAnimatedLayerImage class.
 * @license      Please refer to LICENSE.md
 */
-#include "Layer/AnimatedLayer/AnimatedLayerFolder.h"
+#include "Layer/AnimatedLayer/AnimatedLayerImage.h"
 
 ULIS_NAMESPACE_BEGIN
 ULIS_NAMESPACE_END
