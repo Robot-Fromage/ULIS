@@ -258,7 +258,9 @@ FLayerImage::InitFromParent( const TRoot< ILayer >* iParent ) // override
             case FLayerFolder::StaticTypeID(): {
                 const FLayerFolder* folder = dynamic_cast< const FLayerFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
-                ULIS_ASSERT( false, "Cannot init from parent in orphan folder, we need height width format info !" );
+
+                // ULIS WARNING: Init from orphan folder can be dangerous but is okay if it's only temporary during build.
+                //ULIS_ASSERT( false, "Cannot init from parent in orphan folder, we need height width format info !" );
                 //const FBlock* ref = folder->Block();
                 //if( !ref )
                 //    break;

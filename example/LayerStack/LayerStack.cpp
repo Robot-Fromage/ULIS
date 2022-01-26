@@ -111,7 +111,7 @@ main( int argc, char *argv[] ) {
 
     auto startTime = std::chrono::steady_clock::now();
     {
-        ctx.Flatten( *stack, canvas );
+        //ctx.Flatten( *stack, canvas );
         ctx.Finish();
     }
     auto endTime = std::chrono::steady_clock::now();
