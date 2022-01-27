@@ -32,8 +32,8 @@ IAnimatedLayer::IAnimatedLayer(
     , const FOnUserDataAdded& iOnUserDataAdded
     , const FOnUserDataChanged& iOnUserDataChanged
     , const FOnUserDataRemoved& iOnUserDataRemoved
-    , const FOnParentChanged& iOnParentChanged
-    , const FOnSelfChanged& iOnSelfChanged
+    , const FOnAnimatedParentChanged& iOnParentChanged
+    , const FOnAnimatedSelfChanged& iOnSelfChanged
 )
     : TNode< IAnimatedLayer >(
           iParent

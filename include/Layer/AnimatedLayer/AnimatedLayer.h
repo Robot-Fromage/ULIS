@@ -40,10 +40,10 @@ template class ULIS_API TRoot< IAnimatedLayer >;
 #endif
 
 typedef FOn_bool_Changed FOnBoolChanged;
-typedef TOnParentChanged< IAnimatedLayer > FOnParentChanged;
-typedef TOnSelfChanged< IAnimatedLayer > FOnSelfChanged;
-typedef TOnNodeAdded< IAnimatedLayer > FOnNodeAdded;
-typedef TOnNodeRemoved< IAnimatedLayer > FOnNodeRemoved;
+typedef TOnParentChanged< IAnimatedLayer > FOnAnimatedParentChanged;
+typedef TOnSelfChanged< IAnimatedLayer > FOnAnimatedSelfChanged;
+typedef TOnNodeAdded< IAnimatedLayer > FOnAnimatedNodeAdded;
+typedef TOnNodeRemoved< IAnimatedLayer > FOnAnimatedNodeRemoved;
 
 /////////////////////////////////////////////////////
 /// @class      IAnimatedLayer
@@ -81,8 +81,8 @@ class ULIS_API IAnimatedLayer
         , const FOnUserDataAdded& iOnUserDataAdded = FOnUserDataAdded()
         , const FOnUserDataChanged& iOnUserDataChanged = FOnUserDataChanged()
         , const FOnUserDataRemoved& iOnUserDataRemoved = FOnUserDataRemoved()
-        , const FOnParentChanged& iOnParentChanged = FOnParentChanged()
-        , const FOnSelfChanged& iOnSelfChanged = FOnSelfChanged()
+        , const FOnAnimatedParentChanged& iOnParentChanged = FOnAnimatedParentChanged()
+        , const FOnAnimatedSelfChanged& iOnSelfChanged = FOnAnimatedSelfChanged()
     );
 };
 

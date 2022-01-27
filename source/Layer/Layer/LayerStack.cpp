@@ -39,7 +39,7 @@ FLayerStack::FLayerStack(
     , ILayer(
           "LayerStack"
         , false
-        , false
+        , true
         , FColor::Transparent
         , nullptr
         , FOnNameChanged()

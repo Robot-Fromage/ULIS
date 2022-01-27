@@ -87,9 +87,6 @@ public:
     using TRoot< ILayer >::operator[];
     using TSearchable< TRoot< ILayer > >::operator[];
 
-private:
-    // TNode< ILayer > Interface ( Hide )
-    using TNode< ILayer >::SetParent;
 };
 
 ULIS_NAMESPACE_END
