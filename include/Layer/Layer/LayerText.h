@@ -10,11 +10,13 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Font/Font.h"
 #include "Layer/Components/HasBlendInfo.h"
 #include "Layer/Components/HasBlock.h"
 #include "Layer/Components/HasText.h"
 #include "Layer/Components/HasTransform.h"
 #include "Layer/Layer/Layer.h"
+#include "String/WString.h"
 
 ULIS_NAMESPACE_BEGIN
 // Forward-declarations

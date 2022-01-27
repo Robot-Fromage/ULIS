@@ -41,7 +41,7 @@ FAnimatedLayerStack::FAnimatedLayerStack(
         , iOnSelfChanged
     )
     , IAnimatedLayer(
-          "LayerStack"
+          "AnimatedLayerStack"
         , false
         , false
         , true

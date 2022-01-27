@@ -70,7 +70,7 @@ public:
     ULIS_OVERRIDE_TYPEID_INTERFACE( "AnimatedImage" );
 
 private:
-    // TNode< ILayer > Interface
+    // TNode< IAnimatedLayer > Interface
     void InitFromParent( const TRoot< IAnimatedLayer >* iParent ) override;
 };
 

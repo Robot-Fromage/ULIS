@@ -17,7 +17,6 @@ FAnimatedLayerImage::~FAnimatedLayerImage() {
     ULIS_DEBUG_PRINTF( "FAnimatedLayerImage Destroyed" )
 }
 
-
 FAnimatedLayerImage::FAnimatedLayerImage(
       const FString& iName
     , bool iLocked
@@ -96,10 +95,9 @@ FAnimatedLayerImage::InitFromParent( const TRoot< IAnimatedLayer >* iParent ) //
         return;
 
     /*
-    if( !FAnimatedLayerImage::Block() ) {
-        const IAnimatedLayer* layer = dynamic_cast< const IAnimatedLayer* >( topLevel );
-        //const IAnimatedLayer* layer = (const IAnimatedLayer*)( topLevel ); // Unsafe !
-        ULIS_ASSERT( layer, "Parent cannot be cast to IAnimatedLayer, there's something wrong with the FAnimatedLayerImage hierarchy !" );
+    if( !FLayerImage::Block() ) {
+        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+        ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the FLayerImage hierarchy !" );
         switch( layer->TypeID() ) {
             case FLayerStack::StaticTypeID(): {
                 const FLayerStack* stack = dynamic_cast< const FLayerStack* >( layer );
@@ -110,14 +108,7 @@ FAnimatedLayerImage::InitFromParent( const TRoot< IAnimatedLayer >* iParent ) //
             case FLayerFolder::StaticTypeID(): {
                 const FLayerFolder* folder = dynamic_cast< const FLayerFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
-
-                // ULIS WARNING: Init from orphan folder can be dangerous but is okay if it's only temporary during build.
-                //ULIS_ASSERT( false, "Cannot init from parent in orphan folder, we need height width format info !" );
-                //const FBlock* ref = folder->Block();
-                //if( !ref )
-                //    break;
-                //Realloc( ref->Width(), ref->Height(), ref->Format(), ref->ColorSpace() );
-                //break;
+                ULIS_WARNING( false, "Init from orphan folder can be dangerous but is okay if it's only temporary during build." );
             }
         }
     }

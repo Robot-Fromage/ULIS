@@ -14,11 +14,9 @@
 #include "Layer/Layer/LayerStack.h"
 
 ULIS_NAMESPACE_BEGIN
-
 FLayerImage::~FLayerImage() {
     ULIS_DEBUG_PRINTF( "FLayerImage Destroyed" )
 }
-
 
 FLayerImage::FLayerImage(
       const FString& iName
@@ -91,7 +89,6 @@ FLayerImage::FLayerImage(
 {
     ULIS_DEBUG_PRINTF( "FLayerImage Created" )
 }
-
 
 FLayerImage::FLayerImage(
       FBlock* iBlock
@@ -235,7 +232,6 @@ FLayerImage::Rasterize( FContext& iCtx, FEvent* oEvent ) // override
 */
 
 // TNode< ILayer > Interface
-
 void
 FLayerImage::InitFromParent( const TRoot< ILayer >* iParent ) // override
 {
@@ -246,7 +242,6 @@ FLayerImage::InitFromParent( const TRoot< ILayer >* iParent ) // override
 
     if( !FLayerImage::Block() ) {
         const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
-        //const ILayer* layer = (const ILayer*)( topLevel ); // Unsafe !
         ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the FLayerImage hierarchy !" );
         switch( layer->TypeID() ) {
             case FLayerStack::StaticTypeID(): {
@@ -258,14 +253,7 @@ FLayerImage::InitFromParent( const TRoot< ILayer >* iParent ) // override
             case FLayerFolder::StaticTypeID(): {
                 const FLayerFolder* folder = dynamic_cast< const FLayerFolder* >( layer );
                 ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
-
-                // ULIS WARNING: Init from orphan folder can be dangerous but is okay if it's only temporary during build.
-                //ULIS_ASSERT( false, "Cannot init from parent in orphan folder, we need height width format info !" );
-                //const FBlock* ref = folder->Block();
-                //if( !ref )
-                //    break;
-                //Realloc( ref->Width(), ref->Height(), ref->Format(), ref->ColorSpace() );
-                //break;
+                ULIS_WARNING( false, "Init from orphan folder can be dangerous but is okay if it's only temporary during build." );
             }
         }
     }
