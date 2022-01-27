@@ -39,7 +39,7 @@ class ULIS_API FLayerImage final
 
 public:
     // DTor
-    virtual ~FLayerImage() override;
+    ~FLayerImage() override;
 
     // CTors
     FLayerImage(

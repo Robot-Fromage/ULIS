@@ -42,7 +42,7 @@ class ULIS_API FLayerText final
 
 public:
     // DTor
-    virtual ~FLayerText() override;
+    ~FLayerText() override;
 
     // CTors
     FLayerText(

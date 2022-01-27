@@ -41,7 +41,7 @@ class ULIS_API FLayerFolder
 
 public:
     // DTor
-    virtual ~FLayerFolder() override;
+    ~FLayerFolder() override;
 
     // CTors
     FLayerFolder(
