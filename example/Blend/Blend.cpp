@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -6,7 +6,6 @@
 * @file         Blend.cpp
 * @author       Clement Berthaud
 * @brief        Blend application for ULIS.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS>
@@ -31,19 +30,14 @@ main( int argc, char *argv[] ) {
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_MEM );
-    FHardwareMetrics hw;
-    FSchedulePolicy policy_sync_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    FSchedulePolicy policy_sync_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
-    FSchedulePolicy policy_sync_multi_scanlines( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines );
-    FSchedulePolicy policy_sync_mono_scanlines( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines );
 
     // Create both "hollow" blocks Base and Over.
     FBlock blockBase;
     FBlock blockOver;
     {
         // Collect hard-coded paths to images.
-        std::string pathBase = "C:/Users/PRAXINOS/Documents/work/base_160.png";
-        std::string pathOver = "C:/Users/PRAXINOS/Documents/work/over_160.png";
+        std::string pathBase = "C:/Users/conta/Documents/work/base_160.png";
+        std::string pathOver = "C:/Users/conta/Documents/work/over_160.png";
         // Load from file into blocks
         ulError err;
         err = ctx.XLoadBlockFromDisk( blockBase, pathBase );
@@ -96,9 +90,24 @@ main( int argc, char *argv[] ) {
         // But the blends are concurrent with their respective copy, so each blend waits on one copy.
         // The policies will default to mono scanlines despite our input because of the nature of the task ( unaligned non contiguous images )
         FEvent cp_ev;
-        ctx.Copy( blockBase, *blockCanvas, srcRect, FVec2I( x, y ), policy_sync_mono_chunk, 0, nullptr, &cp_ev );
+        ctx.Copy( blockBase, *blockCanvas, srcRect, FVec2I( x, y ), FSchedulePolicy::CacheEfficient );
         ctx.Flush();
-        ctx.Blend( blockOver, *blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, policy_sync_mono_chunk, 1, &cp_ev, nullptr );
+    }
+
+    // Flush and Fence.
+    ctx.Finish();
+
+    for( int i = 0; i < NumBlendModes; ++i ) {
+        // Compute x & y in regular grid, remember we tile it in a 8 * 5 grid and NUM_BLENDING_MODES = 40.
+        int x = ( i % 8 ) * srcRect.w;
+        int y = ( i / 8 ) * srcRect.h;
+
+        // Notice the async part:
+        // All copies are non concurrent and can be scheduled without wait dependencies
+        // But the blends are concurrent with their respective copy, so each blend waits on one copy.
+        // The policies will default to mono scanlines despite our input because of the nature of the task ( unaligned non contiguous images )
+        ctx.Blend( blockOver, *blockCanvas, srcRect, FVec2I( x, y ), static_cast< eBlendMode >( i ), Alpha_Normal, 0.5f, FSchedulePolicy::MultiScanlines );
+        ctx.Flush();
     }
 
     // Flush and Fence.
