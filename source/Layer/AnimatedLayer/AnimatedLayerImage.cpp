@@ -71,6 +71,9 @@ FAnimatedLayerImage::FAnimatedLayerImage(
         , iOnParentChanged
         , iOnSelfChanged
     )
+    , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
+    , IHasFormat( iFormat )
+    , IHasColorSpace( iColorSpace )
     , IHasBlendInfo(
           iBlendMode
         , iAlphaMode
@@ -94,25 +97,23 @@ FAnimatedLayerImage::InitFromParent( const TRoot< IAnimatedLayer >* iParent ) //
     if( !topLevel )
         return;
 
-    /*
-    if( !FLayerImage::Block() ) {
-        const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
-        ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the FLayerImage hierarchy !" );
-        switch( layer->TypeID() ) {
-            case FLayerStack::StaticTypeID(): {
-                const FLayerStack* stack = dynamic_cast< const FLayerStack* >( layer );
-                ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
-                Realloc( stack->Width(), stack->Height(), stack->Format(), stack->ColorSpace() );
-                break;
-            }
-            case FLayerFolder::StaticTypeID(): {
-                const FLayerFolder* folder = dynamic_cast< const FLayerFolder* >( layer );
-                ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
-                ULIS_WARNING( false, "Init from orphan folder can be dangerous but is okay if it's only temporary during build." );
-            }
+    const ILayer* layer = dynamic_cast< const ILayer* >( topLevel );
+    ULIS_ASSERT( layer, "Parent cannot be cast to ILayer, there's something wrong with the FLayerImage hierarchy !" );
+    switch( layer->TypeID() ) {
+        case FAnimatedLayerStack::StaticTypeID(): {
+            const FAnimatedLayerStack* stack = dynamic_cast< const FAnimatedLayerStack* >( layer );
+            ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
+            ReinterpretFormat( stack->Format() );
+            AssignColorSpace( stack->ColorSpace() );
+            ReinterpretSize( FVec2UI16( stack->Width(), stack->Height() ) );
+            break;
+        }
+        case FAnimatedLayerFolder::StaticTypeID(): {
+            const FAnimatedLayerFolder* folder = dynamic_cast< const FAnimatedLayerFolder* >( layer );
+            ULIS_ASSERT( folder, "Parent cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
+            ULIS_WARNING( false, "Init from orphan folder can be dangerous but is okay if it's only temporary during build." );
         }
     }
-    */
 }
 
 ULIS_NAMESPACE_END

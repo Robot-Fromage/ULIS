@@ -10,6 +10,9 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Image/ColorSpace.h"
+#include "Image/Format.h"
+#include "Image/Size2D.h"
 #include "Layer/AnimatedLayer/AnimatedLayer.h"
 #include "Layer/Components/HasBlendInfo.h"
 
@@ -20,6 +23,9 @@ ULIS_NAMESPACE_BEGIN
 ///             layer stack for painting applications.
 class ULIS_API FAnimatedLayerImage final
     : public IAnimatedLayer
+    , public IHasSize2D
+    , public IHasFormat
+    , public IHasColorSpace
     , public IHasBlendInfo
     , public IHasPaintLock
 {

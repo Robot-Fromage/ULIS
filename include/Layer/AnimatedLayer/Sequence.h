@@ -10,6 +10,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/AnimatedLayer/Cel.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
