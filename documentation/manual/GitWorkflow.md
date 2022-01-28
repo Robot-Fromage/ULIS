@@ -31,12 +31,13 @@ cd ULIS
 git checkout dev
 git fetch & git rebase
 git tag "dev-stable-5.0.9"
+git push --tags
 git checkout -b 5.0.9
+git push --set-upstream origin 5.0.9
 git checkout release
 git fetch & git rebase
-git merge --squash 5.0.9
-git checkout --theirs *
-git add *
+git rm -r .
+git checkout 5da1c06d318d19a31a2f26f9a09696c8de130184 -- . # the hash being the one from the latest commit of the newly created 5.0.9 branch
 git commit -m "release-5.0.9"
 git tag "release-5.0.9"
 git push
