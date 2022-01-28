@@ -105,7 +105,7 @@ The following documents provides the **Coding Rules** for this project.
 ### License Header
 - Comment headers:
 ```
-// Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
+// ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 // IDDN FR.001.250001.002.S.P.2019.000.00000
 /*
 *
@@ -115,7 +115,6 @@ The following documents provides the **Coding Rules** for this project.
 * @file         Example.hpp
 * @author       Clement Berthaud
 * @brief        This file provides an example.
-* @copyright    Copyright 2018-2020 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 ```

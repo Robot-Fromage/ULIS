@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -6,7 +6,6 @@
 * @file         RasterTextMono_Generic.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the generic trace text entry point functions.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -155,8 +154,8 @@ InvokeRasterTextMono_MEM_Generic(
     FT_Vector pen { 0, 0 };
     // Old baseline hack
     //int height = cargs->dst.Height();
-    const wchar_t* str = cargs->text.c_str();
-    const size_t len = static_cast< size_t >( cargs->text.size() );
+    const wchar_t* str = cargs->text.Data();
+    const size_t len = static_cast< size_t >( cargs->text.Size() );
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );
@@ -185,8 +184,8 @@ InvokeRasterTextAAMono_MEM_Generic(
     FT_Vector pen { 0, 0 };
     // Old baseline hack
     //int height = cargs->dst.Height();
-    const wchar_t* str = cargs->text.c_str();
-    const size_t len = static_cast< size_t >( cargs->text.size() );
+    const wchar_t* str = cargs->text.Data();
+    const size_t len = static_cast< size_t >( cargs->text.Size() );
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, const_cast< FT_Matrix* >( &( cargs->matrix ) ), &pen );
         FT_UInt glyph_index = FT_Get_Char_Index( face, str[n] );

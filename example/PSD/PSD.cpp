@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -6,21 +6,15 @@
 * @file         PSD.cpp
 * @author       Clement Berthaud
 * @brief        PSD application for ULIS.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS>
-
 #include <QApplication>
 #include <QWidget>
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
-
 #include <chrono>
-
-#include "Layer/LayerStack.h"
-
 using namespace ::ULIS;
 
 int
@@ -29,31 +23,25 @@ main( int argc, char *argv[] ) {
     FCommandQueue queue( pool );
 
 
-    std::string path = "C:/Users/Galendil/Desktop/bitmap.psd"; //"C:/Users/PRAXINOS/Documents/work/psdTests/RGBA32bits.psd" )
+    std::string path = "C:/Users/conta/Documents/work/psdwork.psd";
     bool fileExist = false;
 
-    eFormat fmt = Format_RGBA8; //Changed next line to the right format
+    eFormat fmt;
     FContext::LoadPSDFromDiskMetrics( path, &fileExist, &fmt );
 
-    FContext ctx(queue, fmt, PerformanceIntent_AVX);
-    FHardwareMetrics hw;
-    FSchedulePolicy policy_sync_cache_efficient(ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize());
-    FSchedulePolicy policy_sync_mono_chunk(ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1);
-    FSchedulePolicy policy_sync_multi_scanlines(ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Scanlines);
-    FSchedulePolicy policy_sync_mono_scanlines(ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Scanlines);
-
-    FLayerStack layerStack(1, 1, fmt);
+    FContext ctx( queue, fmt, PerformanceIntent_AVX );
+    FLayerStack layerStack( 1, 1, fmt );
 
     auto startTime = std::chrono::steady_clock::now();
 
-    ctx.XLoadPSDFromDisk(layerStack, path);
+    ctx.XLoadPSDFromDisk( layerStack, path );
+    ctx.Finish(); 
+
+    FBlock blockCanvas( layerStack.Width(), layerStack.Height(), layerStack.Format() );
+    //ctx.Flatten( layerStack, blockCanvas );
     ctx.Finish();
 
-    FBlock blockCanvas(layerStack.Width(), layerStack.Height(), layerStack.Format());
-    ctx.Flatten( layerStack, blockCanvas );
-    ctx.Finish();
-
-    FBlock blockCanvasConverted(layerStack.Width(), layerStack.Height(), Format_RGBA8);
+    FBlock blockCanvasConverted( layerStack.Width(), layerStack.Height(), Format_RGBA8 );
     ctx.ConvertFormat( blockCanvas, blockCanvasConverted );
     ctx.Finish();
     

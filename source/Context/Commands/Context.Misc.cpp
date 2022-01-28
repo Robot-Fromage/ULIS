@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -7,7 +7,6 @@
 * @author       Clement Berthaud
 * @brief        This file provides the implementation of the misc API entry
 *               points in the FContext class.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Context/Context.h"
@@ -26,6 +25,7 @@
 #include "Scheduling/Event.h"
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
+#include "String/WString.h"
 #include "Font/Font.h"
 #include "Font/FontEngine.h"
 #include <vector>
@@ -48,7 +48,7 @@ FContext::XCreateTestBlock(
     const FColor foreground = FColor::RGB( 170, 146, 64 );
     FFont* font = new FFont( FFontEngine::GFontEngine, "Segoe UI", "Regular" );
 
-    const std::wstring text = L"Test";
+    const FWString text = L"Test";
     FRectI textBox = TextMetrics( text, *font, 23 );
     FVec2I pos = FVec2I( size ) / 2 - textBox.Size() / 2;
     FMat3F mat = FMat3F::MakeTranslationMatrix( static_cast< float >( pos.x ), static_cast< float >( pos.y ) + textBox.h );

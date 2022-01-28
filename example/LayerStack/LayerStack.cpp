@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -6,7 +6,6 @@
 * @file         LayerStack.cpp
 * @author       Clement Berthaud
 * @brief        LayerStack application for ULIS.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS>
@@ -23,20 +22,11 @@ main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
-    FContext ctx( queue, fmt, PerformanceIntent_Max );
+    FContext ctx( queue, fmt );
 
     uint16 w = 1024;
     uint16 h = 1024;
     FBlock canvas( w, h, fmt );
-
-    auto onParentChanged_print = []( const TNode< ILayer >* iSelf, const TRoot< ILayer >* iParent ) {
-        const char* str_parent = iParent ? iParent->Self().Name().Data() : "nullptr";
-        ULIS_DEBUG_PRINTF( iSelf->Self().Name().Data() << ": parent changed to: " << str_parent )
-    };
-
-    auto onSelfChanged_print = []( const TNode< ILayer >* iSelf ) {
-        ULIS_DEBUG_PRINTF( iSelf->Self().Name().Data() << ": trigger on changed" )
-    };
 
     auto onNodeAdded_print = []( const TRoot< ILayer >* iRoot, const TNode< ILayer >* iNode ) {
         ULIS_DEBUG_PRINTF( "Node added to container " << iRoot->Self().Name().Data() << ": " << iNode->Self().Name().Data() );
@@ -47,39 +37,81 @@ main( int argc, char *argv[] ) {
         ULIS_DEBUG_PRINTF( "Node removed from container " << ": " << iNode->Self().Name().Data() );
     };
 
+    FFontEngine fontEngine;
+    FFont font( fontEngine, "Segoe UI", "Bold" );
+
     FLayerStack* stack;
     ULAssignStack( stack, w, h, fmt )
-    ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
+    ULDef( SetName( "stack" ) )
+    ULDef( AddOrSetUserData( new FTextUserData( "UserData" ) ) )
     ULDef( FOnNodeAdded::SetDelegate( onNodeAdded_print ) )
     ULDef( FOnNodeRemoved::SetDelegate( onNodeRemoved_print ) )
-    ( &ILayer::AddOrSetUserData, new FTextUserData( "My test layer stack with custom callbacks and user data !" ) )
-    ( &ILayer::SetName, "stack" )
     [
         ULCreateChild( FLayerImage )
-        ULDef( SetName( "image0" ) )
-        ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
-        ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
-    ][
+        ULDef( SetName( "0i" ) )
+    ]
+    [
+        ULCreateChild( FLayerImage )
+        ULDef( SetName( "1i" ) )
+    ]
+    [
         ULCreateChild( FLayerFolder )
-        ULDef( SetName( "folder0" ) )
-        ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
-        ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
+        ULDef( SetName( "2f" ) )
+        [
+            ULCreateChild( FLayerText )
+            ULDef( SetName( "2_0t" ) )
+            ULDef( SetTextColor( FColor::White ) )
+            ULDef( SetFontSize( 38 ) )
+            ULDef( SetTranslation( 530, 530 ) )
+        ]
+        [
+            ULCreateChild( FLayerText )
+            ULDef( SetName( "2_0t" ) )
+            ULDef( SetTextColor( FColor::White ) )
+            ULDef( SetFontSize( 38 ) )
+            ULDef( SetTranslation( 530, 580 ) )
+        ]
         [
             ULCreateChild( FLayerImage )
-            ULDef( SetName( "image0_0" ) )
-            ULDef( FOnParentChanged::SetDelegate( onParentChanged_print ) )
-            ULDef( FOnSelfChanged::SetDelegate( onSelfChanged_print ) )
+            ULDef( SetName( "2_1i" ) )
         ]
+        [
+            ULCreateChild( FLayerImage )
+            ULDef( SetName( "2_2i" ) )
+        ]
+    ]
+    [
+        ULCreateChild( FLayerImage )
+        ULDef( SetName( "3i" ) )
     ];
 
-    FLayerImage& img = stack->Find< FLayerImage >( "image0" );
-    {
-        ctx.Clear( canvas, canvas.Rect() );
-        ctx.Finish();
-    }
+    FBlock& img0 = *( stack->Find< FLayerImage >( "0i" ) ).Block();
+    FBlock& img1 = *( stack->Find< FLayerImage >( "1i" ) ).Block();
+    FBlock& img2_0 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" ) ).Block();
+    FBlock& img2_1 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_2i" ) ).Block();
+    FBlock& img3 = *( stack->Find< FLayerImage >( "3i" ) ).Block();
+
+    FLayerImage& layer = stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" );
+    layer.NotifyChange();
+
+    ctx.Clear( img0 );
+    ctx.Clear( img1 );
+    ctx.Clear( img2_0 );
+    ctx.Clear( img2_1 );
+    ctx.Clear( img3 );
+    ctx.Finish();
+
+    ctx.Fill( img0, FColor::Red, FRectI( 64, 64, 64, 64 ) );
+    ctx.Fill( img1, FColor::Blue, FRectI( 32, 32, 512, 512 ) );
+    ctx.Fill( img2_0, FColor::Green, FRectI( 512, 0, 512, 1024 ) );
+    ctx.Fill( img2_1, FColor::Yellow, FRectI( 256, 256, 512, 512 ) );
+    ctx.Fill( img3, FColor::Black );
+    ctx.Clear( canvas, canvas.Rect() );
+    ctx.Finish();
 
     auto startTime = std::chrono::steady_clock::now();
     {
+        //ctx.Flatten( *stack, canvas );
         ctx.Finish();
     }
     auto endTime = std::chrono::steady_clock::now();

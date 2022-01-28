@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -6,7 +6,6 @@
 * @file         TextArgs.h
 * @author       Clement Berthaud
 * @brief        This file provides the declaration for the Text Command Args.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -16,6 +15,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/ScheduleArgs.h"
 #include "Scheduling/SimpleBufferArgs.h"
+#include "String/WString.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -34,7 +34,7 @@ public:
     FTextCommandArgs(
           FBlock& iBlock
         , const FRectI& iRect
-        , const std::wstring& iText
+        , const FWString& iText
         , const FFont& iFont
         , uint32 iFontSize
         , const FColor& iColor
@@ -50,7 +50,7 @@ public:
         , position( iPosition )
     {}
 
-    const std::wstring  text;
+    const FWString      text;
     const FFont&        font;
     const uint32        fontSize;
     const FColor        color;

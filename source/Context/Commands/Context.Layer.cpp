@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -7,13 +7,11 @@
 * @author       Clement Berthaud
 * @brief        This file provides the implementation of the Layer API entry
 *               points in the FContext class.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Context/Context.h"
 #include "Context/ContextualDispatchTable.h"
 #include "Image/Block.h"
-#include "Layer/Layer/LayerStack.h"
 #include "Scheduling/Command.h"
 #include "Scheduling/CommandQueue.h"
 #include "Scheduling/CommandQueue_Private.h"
@@ -24,9 +22,9 @@
 #include "Process/Layer/PSD.h"
 
 ULIS_NAMESPACE_BEGIN
-/*
 /////////////////////////////////////////////////////
 // Entry points
+/*
 ulError
 FContext::Flatten(
       FLayerStack& iStack
@@ -84,7 +82,7 @@ FContext::RenderLayerText(
     Dummy_OP( 1, &ev, iEvent );
     return  ULIS_NO_ERROR;
 }
-
+*/
 
 // static
 void
@@ -110,7 +108,7 @@ FContext::XLoadPSDFromDisk(
 )
 {
     FPSDOperations op( iPath, iStack );
-    ULIS_ASSERT_RETURN_ERROR( !op.Import(), "Bad input data", ULIS_ERROR_BAD_INPUT_DATA );
+    ULIS_ASSERT_RETURN_ERROR( op.Import(), "Bad input data", ULIS_ERROR_BAD_INPUT_DATA );
 
     // Genarating layer stack from imported info
     eFormat layerStackFormat = iStack.Format();
@@ -224,12 +222,14 @@ FContext::XLoadPSDFromDisk(
                 , false
                 , true
                 , FColor::Transparent
-                , op.GetImageWidth()
-                , op.GetImageHeight()
-                , layerStackFormat
+                //, op.GetImageWidth()
+                //, op.GetImageHeight()
+                //, layerStackFormat
+                //, nullptr
                 , blendMode
                 , isAlphaLocked ? eAlphaMode::Alpha_Top : eAlphaMode::Alpha_Normal
                 , opacity
+                , false
                 , currentRoot
             );
 
@@ -246,6 +246,6 @@ FContext::XLoadPSDFromDisk(
     Dummy_OP( uint32(eventConvert.Size()), eventConvert.Data(), iEvent );
     return  ULIS_NO_ERROR;
 }
-*/
+
 ULIS_NAMESPACE_END
 

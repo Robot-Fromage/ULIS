@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -7,7 +7,6 @@
 * @author       Clement Berthaud && Eric Scholl
 * @brief        This file provides the definition for the FThreadPool_Private
 *               class for generic systems.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #pragma once
@@ -190,10 +189,9 @@ FThreadPool_Private::OnEventReady(const FInternalEvent* iEvent)
         FinishCommand(command);
         return;
     }
-
     //Initialize the command with an amount of workers working on it
     //this helps us to know when all expected workers has done working on the command and thus finish the command
-    uint64 numWorkers = command->GetMaxConcurrency() < mWorkers.size() ? command->GetMaxConcurrency() : mWorkers.size();
+    uint32 numWorkers = static_cast< uint32 >( command->GetMaxConcurrency() < mWorkers.size() ? command->GetMaxConcurrency() : mWorkers.size() );
     //relaxed : because we just increase a counter without ensuring any new memory to be shared
     command->WorkingThreads().fetch_add(numWorkers, std::memory_order_relaxed);
 
@@ -202,7 +200,7 @@ FThreadPool_Private::OnEventReady(const FInternalEvent* iEvent)
     //as the 
     std::unique_lock<std::mutex> lock(mWorkersReadyMutex);
     uint32 index = sgThreadIndex;
-    for (int i = 0; i < numWorkers; i++ )
+    for( uint32 i = 0; i < numWorkers; i++ )
     {
         uint32  index = mWorkersReady.front();
         mWorkersReady.erase(mWorkersReady.begin());

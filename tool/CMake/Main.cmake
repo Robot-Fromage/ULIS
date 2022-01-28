@@ -1,4 +1,4 @@
-# IDDN FR.001.250001.004.S.X.2019.000.00000
+# IDDN.FR.001.250001.005.S.P.2019.000.00000
 # ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 #
 #   ULIS
@@ -6,7 +6,6 @@
 # @file         Main.cmake
 # @author       Clement Berthaud
 # @brief        CMake utility.
-# @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 # @license      Please refer to LICENSE.md
 cmake_minimum_required( VERSION 3.11.0 )
 
@@ -48,8 +47,10 @@ target_include_directories(
     ULIS
     PUBLIC
     "include/"
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/blend2d/src/
     PRIVATE
     #${OpenCL_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/ConcurrentQueue/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/VCL/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb/
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Little-CMS/include/
@@ -63,6 +64,7 @@ target_include_directories(
 target_link_libraries( ULIS PRIVATE lcms2 )
 target_link_libraries( ULIS PRIVATE freetype )
 target_link_libraries( ULIS PRIVATE zlibstatic )
+target_link_libraries( ULIS PUBLIC blend2d )
 #target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
 
 # Configure

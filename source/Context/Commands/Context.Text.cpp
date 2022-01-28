@@ -1,4 +1,4 @@
-// IDDN FR.001.250001.004.S.X.2019.000.00000
+// IDDN.FR.001.250001.005.S.P.2019.000.00000
 // ULIS is subject to copyright laws and is the legal and intellectual property of Praxinos,Inc
 /*
 *   ULIS
@@ -7,7 +7,6 @@
 * @author       Clement Berthaud
 * @brief        This file provides the implementation of the Text API entry
 *               points in the FContext class.
-* @copyright    Copyright 2018-2021 Praxinos, Inc. All Rights Reserved.
 * @license      Please refer to LICENSE.md
 */
 #include "Context/Context.h"
@@ -30,7 +29,7 @@ ULIS_NAMESPACE_BEGIN
 ulError
 FContext::RasterText(
       FBlock& iBlock
-    , const std::wstring& iText
+    , const FWString& iText
     , const FFont& iFont
     , uint32 iFontSize
     , const FMat3F& iTransform
@@ -88,7 +87,7 @@ FContext::RasterText(
 ulError
 FContext::RasterTextAA(
       FBlock& iBlock
-    , const std::wstring& iText
+    , const FWString& iText
     , const FFont& iFont
     , uint32 iFontSize
     , const FMat3F& iTransform
@@ -146,7 +145,7 @@ FContext::RasterTextAA(
 //static
 FRectI
 FContext::TextMetrics(
-      const std::wstring& iText
+      const FWString& iText
     , const FFont& iFont
     , uint32 iFontSize
     , const FMat3F& iTransform
@@ -166,8 +165,8 @@ FContext::TextMetrics(
     result.w = 1;
     result.h = 1;
 
-    const wchar_t* str = iText.c_str();
-    int len = (int)iText.size();
+    const wchar_t* str = iText.Data();
+    int len = (int)iText.Size();
 
     FT_GlyphSlot  slot;
     FT_Vector     pen;
