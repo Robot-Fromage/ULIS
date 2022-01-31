@@ -24,7 +24,7 @@ int
 main( int argc, char *argv[] ) {
     FThreadPool pool;
     FCommandQueue queue( pool );
-    eFormat fmt = Format_RGBA8;
+    eFormat fmt = Format_GA8;
     FContext ctx( queue, fmt, PerformanceIntent_Max );
 
     // Create both "hollow" blocks Base and Over.
@@ -75,17 +75,22 @@ main( int argc, char *argv[] ) {
         typedef std::codecvt_utf8<wchar_t> convert_type;
         std::wstring_convert<convert_type, wchar_t> converter;
         std::wstring wbm = converter.from_bytes(bm);
-        ctx.RasterText( blockCanvas, wbm, font, 16, FMat3F::MakeTranslationMatrix( x + 4, y + srcRect.h - 4 ), white, FSchedulePolicy::MonoChunk );
+        FWString wstr( wbm.c_str() );
+        ctx.RasterText( blockCanvas, wstr, font, 16, FMat3F::MakeTranslationMatrix( x + 4, y + srcRect.h - 4 ), white, FSchedulePolicy::MonoChunk );
         ctx.Finish();
     }
 
+    FBlock block8( w, h, Format_G8 );
+    ctx.ConvertFormat( blockCanvas, block8 );
+    ctx.Finish();
+
     QApplication    app( argc, argv );
     QWidget*        widget  = new QWidget();
-    QImage*         image   = new QImage( blockCanvas.Bits()
-                                        , blockCanvas.Width()
-                                        , blockCanvas.Height()
-                                        , blockCanvas.BytesPerScanLine()
-                                        , QImage::Format_RGBA8888 );
+    QImage*         image   = new QImage( block8.Bits()
+                                        , block8.Width()
+                                        , block8.Height()
+                                        , block8.BytesPerScanLine()
+                                        , QImage::Format_Grayscale8 );
     QPixmap         pixmap  = QPixmap::fromImage( *image );
     QLabel*         label   = new QLabel( widget );
     label->setPixmap( pixmap );
