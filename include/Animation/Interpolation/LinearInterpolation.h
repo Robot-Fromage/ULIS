@@ -10,43 +10,46 @@
 */
 #pragma once
 
+#include "Core/Core.h"
 #include "Animation/Interpolation/Interpolation.h"
 
-template< typename Scalar >
-class TLinearInterpolation : public TInterpolation< Scalar >
+ULIS_NAMESPACE_BEGIN
+
+template< typename T >
+class TLinearInterpolation : public TInterpolation< T >
 {
 protected:
-    TLinearInterpolation<Scalar>();
+    TLinearInterpolation<T>();
 
-    static inline TLinearInterpolation<Scalar>* Instance = nullptr;
+    static inline TLinearInterpolation<T>* Instance = nullptr;
 
 public:
-    TLinearInterpolation<Scalar>(TLinearInterpolation<Scalar> &other) = delete;
-    void operator=(const TLinearInterpolation<Scalar> &) = delete;
-    static TLinearInterpolation<Scalar> *GetInstance();
+    TLinearInterpolation<T>(TLinearInterpolation<T> &other) = delete;
+    void operator=(const TLinearInterpolation<T> &) = delete;
+    static TLinearInterpolation<T> *GetInstance();
     static void *ReleaseInstance();
 
 public:
-    virtual Scalar Interpolate(float iT, Scalar iLeftValue, Scalar iRightValue) override;
+    virtual T Interpolate(float iT, T iLeftValue, T iRightValue) override;
 };
 
-template< typename Scalar >
-TLinearInterpolation<Scalar>::TLinearInterpolation() :
-TInterpolation<Scalar>()
+template< typename T >
+TLinearInterpolation<T>::TLinearInterpolation() :
+TInterpolation<T>()
 {
 
 }
 
-template< typename Scalar >
-TLinearInterpolation<Scalar>* TLinearInterpolation<Scalar>::GetInstance()
+template< typename T >
+TLinearInterpolation<T>* TLinearInterpolation<T>::GetInstance()
 {
     if( Instance == nullptr )
-        Instance = new TLinearInterpolation<Scalar>();
+        Instance = new TLinearInterpolation<T>();
     return Instance;
 }
 
-template< typename Scalar >
-void * TLinearInterpolation<Scalar>::ReleaseInstance()
+template< typename T >
+void * TLinearInterpolation<T>::ReleaseInstance()
 {
     if( Instance != nullptr )
     {
@@ -55,8 +58,10 @@ void * TLinearInterpolation<Scalar>::ReleaseInstance()
     }
 }
 
-template< typename Scalar >
-Scalar TLinearInterpolation<Scalar>::Interpolate(float iT, Scalar iLeftValue, Scalar iRightValue)
+template< typename T >
+T TLinearInterpolation<T>::Interpolate(float iT, T iLeftValue, T iRightValue)
 {
     return iLeftValue + iT * (iRightValue - iLeftValue);
 }
+
+ULIS_NAMESPACE_END

@@ -25,17 +25,18 @@ using namespace ::ULIS;
 int
 main( int argc, char *argv[] ) {
 
-    TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 1.f, 4.f );
-    animatedFloat.AddKey( FKey<float>(6.5f, 1.1f, TLinearInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(5.2f, 7.2f, TLinearInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(3.8f, 4.5f, TLinearInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(1.7f, 3.5f, TLinearInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(4.4f, 5.6f, TLinearInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(2.1f, 1.5f, TLinearInterpolation<float>::GetInstance()) );
+    TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 1.f, 8.f );
+    animatedFloat.AddKey( FKey<float>(60, 2.1f, TLinearInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(55, 7.2f, TLinearInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(38, 4.5f, TLinearInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(17, 3.5f, TLinearInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(44, 5.6f, TLinearInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(21, 1.5f, TLinearInterpolation<float>::GetInstance()) );
 
-    animatedFloat.RemoveKeyAt( 2.1f );
+    animatedFloat.RemoveKeyAtFrame( 21 );
+    animatedFloat.RemoveKeyAtFrame( 60 );
 
-    float value = animatedFloat.GetValueAtTime( 2.9f );
+    float value = animatedFloat.GetValueAtFrame( 58 );
 
     std::cout << value << std::endl;
 

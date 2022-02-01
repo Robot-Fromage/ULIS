@@ -10,7 +10,11 @@
 */
 #pragma once
 
-template< typename Scalar >
+#include "Core/Core.h"
+
+ULIS_NAMESPACE_BEGIN
+
+template< typename T >
 class TInterpolation
 {
 protected:
@@ -18,17 +22,19 @@ protected:
     ~TInterpolation();
 
 public:
-    virtual Scalar Interpolate( float iT, Scalar iLeftValue, Scalar iRightValue ) = 0;
+    virtual T Interpolate( float iT, T iLeftValue, T iRightValue ) = 0;
 };
 
-template< typename Scalar >
-TInterpolation<Scalar>::TInterpolation()
+template< typename T >
+TInterpolation<T>::TInterpolation()
 {
 
 }
 
-template< typename Scalar >
-TInterpolation<Scalar>::~TInterpolation()
+template< typename T >
+TInterpolation<T>::~TInterpolation()
 {
 
 }
+
+ULIS_NAMESPACE_END

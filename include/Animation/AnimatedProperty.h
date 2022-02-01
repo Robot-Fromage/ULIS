@@ -5,82 +5,68 @@
 *__________________
 * @file         AnimatedProperty.h
 * @author       Thomas Schmitt
-* @brief        This file provides declaration for animating a property in the time
+* @brief        This file provides declaration for animating a property
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 
+#include "Core/Core.h"
 #include "Memory/Array.h"
+#include "Animation/HasKeys.h"
 #include "Animation/Interpolation/Interpolation.h"
 #include "Animation/Interpolation/LinearInterpolation.h"
 
-template< typename Scalar >
-struct FKey
-{
-    FKey( float iTime, Scalar iValue, TInterpolation<Scalar>* iInterpolation );
+ULIS_NAMESPACE_BEGIN
 
-    float Time;
-    Scalar Value;
-    TInterpolation<Scalar>* Interpolation;
-};
-
-template< typename Scalar >
-FKey<Scalar>::FKey(float iTime, Scalar iValue, TInterpolation<Scalar>* iInterpolation):
-    Time(iTime),
-    Value(iValue),
-    Interpolation(iInterpolation)
-{
-}
-
-template< typename Scalar >
+template< typename T >
 class TAnimatedProperty
 {
 public:
     TAnimatedProperty();
-    TAnimatedProperty( Scalar iDefaultValue );
+    TAnimatedProperty( T iDefaultValue );
     ~TAnimatedProperty();
 
 public:
-    virtual Scalar GetValueAtTime(float iTime) const;
-    void AddKey( FKey<Scalar>& iKey );
-    bool RemoveKeyAt(float iTime);
+    virtual T GetValueAtFrame(int iFrame) const;
+    void AddKey( FKey<T>& iKey );
+    bool RemoveKeyAtFrame(int iFrame);
 
 public:
-    Scalar GetDefaultValue() const;
-    virtual void SetDefaultValue( Scalar iDefaultValue );
+    T GetDefaultValue() const;
+    virtual void SetDefaultValue( T iDefaultValue );
 
 protected:
-    ::ULIS::TArray<FKey<Scalar>> Keys;
-    Scalar DefaultValue;
+    TArray<FKey<T>> Keys;
+    T DefaultValue;
 };
 
-template< typename Scalar >
-TAnimatedProperty<Scalar>::TAnimatedProperty()
+template< typename T >
+TAnimatedProperty<T>::TAnimatedProperty()
 {
 }
 
-template< typename Scalar >
-TAnimatedProperty<Scalar>::TAnimatedProperty(Scalar iDefaultValue) :
+template< typename T >
+TAnimatedProperty<T>::TAnimatedProperty(T iDefaultValue) :
     DefaultValue(iDefaultValue)
 {
 
 }
 
-template< typename Scalar >
-TAnimatedProperty<Scalar>::~TAnimatedProperty()
+template< typename T >
+TAnimatedProperty<T>::~TAnimatedProperty()
 {
 
 }
 
-template< typename Scalar >
-Scalar TAnimatedProperty<Scalar>::GetValueAtTime(float iTime) const
+template< typename T >
+T TAnimatedProperty<T>::GetValueAtFrame(int iFrame) const
 {
     if (Keys.Size() == 0)
         return DefaultValue;
 
-    if( Keys[0].Time >= iTime )
+    if( Keys[0].Frame >= iFrame )
         return Keys[0].Value;
-    else if ( Keys[Keys.Size() - 1].Time <= iTime )
+    else if ( Keys[Keys.Size() - 1].Frame <= iFrame )
         return Keys[Keys.Size() - 1].Value;
 
     int leftKeyIndex = 0;
@@ -90,7 +76,7 @@ Scalar TAnimatedProperty<Scalar>::GetValueAtTime(float iTime) const
     while (rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if (Keys[searchIndex].Time > iTime)
+        if (Keys[searchIndex].Frame > iFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -100,21 +86,30 @@ Scalar TAnimatedProperty<Scalar>::GetValueAtTime(float iTime) const
         }
     }
 
-    float t = ( iTime - Keys[leftKeyIndex].Time ) / ( Keys[rightKeyIndex].Time - Keys[leftKeyIndex].Time );
+    float t = float( iFrame - Keys[leftKeyIndex].Frame ) / float( Keys[rightKeyIndex].Frame - Keys[leftKeyIndex].Frame );
 
     return Keys[leftKeyIndex].Interpolation->Interpolate( t, Keys[leftKeyIndex].Value, Keys[rightKeyIndex].Value );
 }
 
-template< typename Scalar >
-void TAnimatedProperty<Scalar>::AddKey(FKey<Scalar>& iKey)
+template< typename T >
+void TAnimatedProperty<T>::AddKey(FKey<T>& iKey)
 {
     if (Keys.Size() == 0)
+    {
         Keys.PushBack(iKey);
+        return;
+    }
 
-    if (Keys[0].Time >= iKey.Time)
+    if (Keys[0].Frame > iKey.Frame)
+    {
         Keys.Insert(0, iKey);
-    else if (Keys[Keys.Size() - 1].Time <= iKey.Time)
+        return;
+    }
+    else if (Keys[Keys.Size() - 1].Frame < iKey.Frame)
+    {
         Keys.PushBack(iKey);
+        return;
+    }
 
     //Dichotomy to search for the index at which we want to insert our key
     int leftKeyIndex = 0;
@@ -123,7 +118,7 @@ void TAnimatedProperty<Scalar>::AddKey(FKey<Scalar>& iKey)
     while (rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if (Keys[searchIndex].Time > iKey.Time)
+        if (Keys[searchIndex].Frame > iKey.Frame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -133,23 +128,24 @@ void TAnimatedProperty<Scalar>::AddKey(FKey<Scalar>& iKey)
         }
     }
 
-    Keys.Insert( leftKeyIndex, iKey );
+    Keys.Insert( rightKeyIndex, iKey );
 }
 
-template< typename Scalar >
-bool TAnimatedProperty<Scalar>::RemoveKeyAt(float iTime)
+template< typename T >
+bool TAnimatedProperty<T>::RemoveKeyAtFrame(int iFrame)
 {
     if (Keys.Size() == 0)
         return false;
 
-    if (Keys[0].Time == iTime)
+    if (Keys[0].Frame == iFrame)
     {
         Keys.Erase( 0 );
         return true;
     }
-    else if (Keys[Keys.Size() - 1].Time == iTime)
+    else if (Keys[Keys.Size() - 1].Frame == iFrame)
     {
-        Keys.Erase(Keys.Size() - 1);
+        Keys.PopBack();
+        return true;
     }
 
     //Dichotomy to search for the index at which we want to remove our key
@@ -160,13 +156,13 @@ bool TAnimatedProperty<Scalar>::RemoveKeyAt(float iTime)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
         
-        if (Keys[searchIndex].Time == iTime)
+        if (Keys[searchIndex].Frame == iFrame)
         {
             Keys.Erase( searchIndex );
             return true;
         }
 
-        if (Keys[searchIndex].Time > iTime)
+        if (Keys[searchIndex].Frame > iFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -179,15 +175,16 @@ bool TAnimatedProperty<Scalar>::RemoveKeyAt(float iTime)
     return false;
 }
 
-template< typename Scalar >
-Scalar TAnimatedProperty<Scalar>::GetDefaultValue() const
+template< typename T >
+T TAnimatedProperty<T>::GetDefaultValue() const
 {
     return DefaultValue;
 }
 
-template< typename Scalar >
-void TAnimatedProperty<Scalar>::SetDefaultValue(Scalar iDefaultValue)
+template< typename T >
+void TAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
 {
     DefaultValue = iDefaultValue;
 }
 
+ULIS_NAMESPACE_END

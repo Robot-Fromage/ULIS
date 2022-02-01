@@ -10,34 +10,37 @@
 */
 #pragma once
 
+#include "Core/Core.h"
 #include "Memory/Array.h"
 #include "Animation/AnimatedProperty.h"
 
-template< typename Scalar >
-class TBoundedAnimatedProperty : public TAnimatedProperty<Scalar>
+ULIS_NAMESPACE_BEGIN
+
+template< typename T >
+class TBoundedAnimatedProperty : public TAnimatedProperty<T>
 {
 public:
-    TBoundedAnimatedProperty( Scalar iDefaultValue, Scalar iMinValue, Scalar iMaxValue );
+    TBoundedAnimatedProperty( T iDefaultValue, T iMinValue, T iMaxValue );
     ~TBoundedAnimatedProperty();
 
 public:
-    //We can add keys that have a value outside the bounds of MinValue;MaxValue. We just clamp the value we get at time iTime
-    virtual Scalar GetValueAtTime(float iTime) const override;
+    //We can add keys that have a value outside the bounds of MinValue;MaxValue. We just clamp the value we get at frame iFrame
+    virtual T GetValueAtFrame(int iFrame) const override;
 
 public:
-    virtual void SetDefaultValue(Scalar iDefaultValue) override;
-    void SetMinValue( Scalar iNewMinValue );
-    void SetMaxValue( Scalar iNewMaxValue );
-    Scalar GetMinValue() const;
-    Scalar GetMaxValue() const;
+    virtual void SetDefaultValue(T iDefaultValue) override;
+    void SetMinValue( T iNewMinValue );
+    void SetMaxValue( T iNewMaxValue );
+    T GetMinValue() const;
+    T GetMaxValue() const;
 
 protected:
-    Scalar MinValue;
-    Scalar MaxValue;
+    T MinValue;
+    T MaxValue;
 };
 
-template< typename Scalar >
-TBoundedAnimatedProperty<Scalar>::TBoundedAnimatedProperty(Scalar iDefaultValue, Scalar iMinValue, Scalar iMaxValue)
+template< typename T >
+TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinValue, T iMaxValue)
 {
     if (iMinValue > iMaxValue)
     {
@@ -59,27 +62,27 @@ TBoundedAnimatedProperty<Scalar>::TBoundedAnimatedProperty(Scalar iDefaultValue,
         
 }
 
-template< typename Scalar >
-TBoundedAnimatedProperty<Scalar>::~TBoundedAnimatedProperty()
+template< typename T >
+TBoundedAnimatedProperty<T>::~TBoundedAnimatedProperty()
 {
 
 }
 
-template< typename Scalar >
-Scalar TBoundedAnimatedProperty<Scalar>::GetValueAtTime(float iTime) const
+template< typename T >
+T TBoundedAnimatedProperty<T>::GetValueAtFrame(int iFrame) const
 {
-    Scalar value = TAnimatedProperty<Scalar>::GetValueAtTime( iTime );
+    T value = TAnimatedProperty<T>::GetValueAtFrame( iFrame );
     return FMath::Clamp( value, MinValue, MaxValue );
 }
 
-template< typename Scalar >
-void TBoundedAnimatedProperty<Scalar>::SetDefaultValue(Scalar iDefaultValue)
+template< typename T >
+void TBoundedAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
 {
     DefaultValue = FMath::Clamp( iDefaultValue, MinValue, MaxValue );
 }
 
-template< typename Scalar >
-void TBoundedAnimatedProperty<Scalar>::SetMinValue(Scalar iNewMinValue)
+template< typename T >
+void TBoundedAnimatedProperty<T>::SetMinValue(T iNewMinValue)
 {
     if (iNewMinValue > MaxValue)
         MinValue = MaxValue;
@@ -87,8 +90,8 @@ void TBoundedAnimatedProperty<Scalar>::SetMinValue(Scalar iNewMinValue)
         MinValue = iNewMinValue;
 }
 
-template< typename Scalar >
-void TBoundedAnimatedProperty<Scalar>::SetMaxValue(Scalar iNewMaxValue)
+template< typename T >
+void TBoundedAnimatedProperty<T>::SetMaxValue(T iNewMaxValue)
 {
     if( iNewMaxValue < MinValue )
         MaxValue = MinValue;
@@ -96,14 +99,16 @@ void TBoundedAnimatedProperty<Scalar>::SetMaxValue(Scalar iNewMaxValue)
         MaxValue = iNewMaxValue;
 }
 
-template< typename Scalar >
-Scalar TBoundedAnimatedProperty<Scalar>::GetMinValue() const
+template< typename T >
+T TBoundedAnimatedProperty<T>::GetMinValue() const
 {
     return MinValue;
 }
 
-template< typename Scalar >
-Scalar TBoundedAnimatedProperty<Scalar>::GetMaxValue() const
+template< typename T >
+T TBoundedAnimatedProperty<T>::GetMaxValue() const
 {
     return MaxValue;
 }
+
+ULIS_NAMESPACE_END
