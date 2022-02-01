@@ -16,15 +16,19 @@ ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
 /// @class      TSequence
 /// @brief      Basic Animation Sequence of Cels
-template< class Type >
-class TSequence {
+template< class T, class CelTypeFactory >
+class TSequence
+    : public CelTypeFactory
+{
 
 public:
     virtual ~TSequence() {
         Reset();
     }
 
-    TSequence()
+    template< typename ... Args >
+    TSequence( Args&& ... args )
+        : CelTypeFactory( std::forward< Args >(args)... )
     {}
 
 public:
@@ -36,16 +40,29 @@ public:
         mInstances.Clear();
     }
 
-    TArray< TCel< Type >* >& Instances() {
+    TArray< TCel< T >* >& Instances() {
         return  mInstances;
     }
 
-    const TArray< TCel< Type >* >& Instances() const {
+    const TArray< TCel< T >* >& Instances() const {
         return  mInstances;
     }
+
+    void PushCel();
+    void PopCel();
+    void InsertNewCelAtIndex( uint32 iIndex, bool iPreserveSequenceTimingIfPossible = true );
+    void InsertNewCelAtFrame( uint32 iFrame, bool iPreserveSequenceTimingIfPossible = true );
+    void InsertBlankCelAtIndex( uint32 iIndex, bool iPreserveSequenceTimingIfPossible = true );
+    void InsertBlankCelAtFrame( uint32 iFrame, bool iPreserveSequenceTimingIfPossible = true );
+    void InsertSharedResourceCelAtIndex( uint32 iIndex, TCel< T >* iRefCel, bool iPreserveSequenceTimingIfPossible = true );
+    void InsertSharedResourceCelAtFrame( uint32 iFrame, TCel< T >* iRefCel, bool iPreserveSequenceTimingIfPossible = true );
+    TCel< T >* CelAtIndex( uint32 iIndex );
+    TCel< T >* CelAtFrame( uint32 iFrame );
+    const TCel< T >* CelAtIndex( uint32 iIndex ) const;
+    const TCel< T >* CelAtFrame( uint32 iFrame ) const;
 
 private:
-    TArray< TCel< Type >* > mInstances;
+    TArray< TCel< T >* > mInstances;
 };
 
 ULIS_NAMESPACE_END

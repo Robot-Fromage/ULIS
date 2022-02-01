@@ -24,6 +24,8 @@
 // Layer
 #include "Layer/Layer/LayerBuilder.h"
 #include "Layer/Layer/LayerTypedefs.h"
+#include "Layer/AnimatedLayer/AnimatedLayerBuilder.h"
+#include "Layer/AnimatedLayer/AnimatedLayerTypedefs.h"
 // Font
 #include "Font/Font.h"
 #include "Font/FontEngine.h"
