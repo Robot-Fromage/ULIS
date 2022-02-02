@@ -19,7 +19,7 @@
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-class TAnimatedProperty
+class TAnimatedProperty : public IHasKeys<T>
 {
 public:
     TAnimatedProperty();
@@ -27,16 +27,13 @@ public:
     ~TAnimatedProperty();
 
 public:
-    virtual T GetValueAtFrame(int iFrame) const;
-    void AddKey( FKey<T>& iKey );
-    bool RemoveKeyAtFrame(int iFrame);
+    virtual T GetValueAtFrame(float iFrame) const;
 
 public:
     T GetDefaultValue() const;
     virtual void SetDefaultValue( T iDefaultValue );
 
 protected:
-    TArray<FKey<T>> Keys;
     T DefaultValue;
 };
 
@@ -59,24 +56,24 @@ TAnimatedProperty<T>::~TAnimatedProperty()
 }
 
 template< typename T >
-T TAnimatedProperty<T>::GetValueAtFrame(int iFrame) const
+T TAnimatedProperty<T>::GetValueAtFrame(float iFrame) const
 {
-    if (Keys.Size() == 0)
+    if (GetKeys().Size() == 0)
         return DefaultValue;
 
-    if( Keys[0].Frame >= iFrame )
-        return Keys[0].Value;
-    else if ( Keys[Keys.Size() - 1].Frame <= iFrame )
-        return Keys[Keys.Size() - 1].Value;
+    if( GetKeys()[0].Frame >= iFrame )
+        return GetKeys()[0].Value;
+    else if ( GetKeys()[GetKeys().Size() - 1].Frame <= iFrame )
+        return GetKeys()[GetKeys().Size() - 1].Value;
 
     int leftKeyIndex = 0;
-    int rightKeyIndex = Keys.Size() - 1;
+    int rightKeyIndex = GetKeys().Size() - 1;
 
     //Dichotomy to search for the successive keys to interpolate between them
     while (rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if (Keys[searchIndex].Frame > iFrame)
+        if (GetKeys()[searchIndex].Frame > iFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -86,93 +83,9 @@ T TAnimatedProperty<T>::GetValueAtFrame(int iFrame) const
         }
     }
 
-    float t = float( iFrame - Keys[leftKeyIndex].Frame ) / float( Keys[rightKeyIndex].Frame - Keys[leftKeyIndex].Frame );
+    float t = ( iFrame - GetKeys()[leftKeyIndex].Frame ) / ( GetKeys()[rightKeyIndex].Frame - GetKeys()[leftKeyIndex].Frame );
 
-    return Keys[leftKeyIndex].Interpolation->Interpolate( t, Keys[leftKeyIndex].Value, Keys[rightKeyIndex].Value );
-}
-
-template< typename T >
-void TAnimatedProperty<T>::AddKey(FKey<T>& iKey)
-{
-    if (Keys.Size() == 0)
-    {
-        Keys.PushBack(iKey);
-        return;
-    }
-
-    if (Keys[0].Frame > iKey.Frame)
-    {
-        Keys.Insert(0, iKey);
-        return;
-    }
-    else if (Keys[Keys.Size() - 1].Frame < iKey.Frame)
-    {
-        Keys.PushBack(iKey);
-        return;
-    }
-
-    //Dichotomy to search for the index at which we want to insert our key
-    int leftKeyIndex = 0;
-    int rightKeyIndex = Keys.Size() - 1;
-
-    while (rightKeyIndex - leftKeyIndex > 1)
-    {
-        int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if (Keys[searchIndex].Frame > iKey.Frame)
-        {
-            rightKeyIndex = searchIndex;
-        }
-        else
-        {
-            leftKeyIndex = searchIndex;
-        }
-    }
-
-    Keys.Insert( rightKeyIndex, iKey );
-}
-
-template< typename T >
-bool TAnimatedProperty<T>::RemoveKeyAtFrame(int iFrame)
-{
-    if (Keys.Size() == 0)
-        return false;
-
-    if (Keys[0].Frame == iFrame)
-    {
-        Keys.Erase( 0 );
-        return true;
-    }
-    else if (Keys[Keys.Size() - 1].Frame == iFrame)
-    {
-        Keys.PopBack();
-        return true;
-    }
-
-    //Dichotomy to search for the index at which we want to remove our key
-    int leftKeyIndex = 0;
-    int rightKeyIndex = Keys.Size() - 1;
-
-    while (rightKeyIndex - leftKeyIndex > 1)
-    {
-        int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        
-        if (Keys[searchIndex].Frame == iFrame)
-        {
-            Keys.Erase( searchIndex );
-            return true;
-        }
-
-        if (Keys[searchIndex].Frame > iFrame)
-        {
-            rightKeyIndex = searchIndex;
-        }
-        else
-        {
-            leftKeyIndex = searchIndex;
-        }
-    }
-
-    return false;
+    return GetKeys()[leftKeyIndex].Interpolation->Interpolate( t, GetKeys()[leftKeyIndex].Value, GetKeys()[rightKeyIndex].Value );
 }
 
 template< typename T >

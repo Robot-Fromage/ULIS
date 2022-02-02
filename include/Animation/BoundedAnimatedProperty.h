@@ -25,7 +25,7 @@ public:
 
 public:
     //We can add keys that have a value outside the bounds of MinValue;MaxValue. We just clamp the value we get at frame iFrame
-    virtual T GetValueAtFrame(int iFrame) const override;
+    virtual T GetValueAtFrame(float iFrame) const override;
 
 public:
     virtual void SetDefaultValue(T iDefaultValue) override;
@@ -69,7 +69,7 @@ TBoundedAnimatedProperty<T>::~TBoundedAnimatedProperty()
 }
 
 template< typename T >
-T TBoundedAnimatedProperty<T>::GetValueAtFrame(int iFrame) const
+T TBoundedAnimatedProperty<T>::GetValueAtFrame(float iFrame) const
 {
     T value = TAnimatedProperty<T>::GetValueAtFrame( iFrame );
     return FMath::Clamp( value, MinValue, MaxValue );
