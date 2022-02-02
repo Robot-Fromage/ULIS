@@ -19,6 +19,7 @@
 #include "Animation/AnimatedProperty.h"
 #include "Animation/BoundedAnimatedProperty.h"
 #include "Animation/Interpolation/LinearInterpolation.h"
+#include "Animation/Interpolation/HoldInterpolation.h"
 
 using namespace ::ULIS;
 
@@ -27,16 +28,16 @@ main( int argc, char *argv[] ) {
 
     TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 1.f, 8.f );
     animatedFloat.AddKey( FKey<float>(60, 2.1f, TLinearInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(55, 7.2f, TLinearInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(55, 7.2f, THoldInterpolation<float>::GetInstance()) );
     animatedFloat.AddKey( FKey<float>(38, 4.5f, TLinearInterpolation<float>::GetInstance()) );
     animatedFloat.AddKey( FKey<float>(17, 3.5f, TLinearInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(44, 5.6f, TLinearInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(44, 5.6f, THoldInterpolation<float>::GetInstance()) );
     animatedFloat.AddKey( FKey<float>(21, 1.5f, TLinearInterpolation<float>::GetInstance()) );
 
     animatedFloat.RemoveKeyAtFrame( 21 );
     animatedFloat.RemoveKeyAtFrame( 60 );
 
-    float value = animatedFloat.GetValueAtFrame( 58 );
+    float value = animatedFloat.GetValueAtFrame( 48 );
 
     std::cout << value << std::endl;
 
