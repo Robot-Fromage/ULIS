@@ -65,9 +65,10 @@ T TBezierInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, co
     FVec2F leftKey = FVec2F( iLeftKey.Frame, iLeftKey.Value );
     FVec2F rightKey = FVec2F( iRightKey.Frame, iRightKey.Value );
 
-    //Can probably be faster, more correct and flexible(since we're in a template function and we return a float here instead of T) if we solve the cubic equation of the bezier for x = iFrame;
+    //This method of approximation is in fact faster than solving the maths around a cubic bezier. So for the interpolation in animation, we should keep this solution
+    //If this is not enough, https://stackoverflow.com/questions/51879836/cubic-bezier-curves-get-y-for-given-x-special-case-where-x-of-control-points and https://pomax.github.io/bezierinfo/#whatis can lead to mathematical solution
     std::vector<FSplineParametricSample> bezier;
-    CubicBezierGenerateLinearLUT( &bezier, leftKey, leftKey + iLeftKey.RightTangent, rightKey + iRightKey.LeftTangent, rightKey, 0.1f );
+    CubicBezierGenerateLinearLUT( &bezier, leftKey, leftKey + iLeftKey.RightTangent, rightKey + iRightKey.LeftTangent, rightKey, 1.f );    
 
     //Dichotomy to search for the closest point at iFrame
     int leftKeyIndex = 0;
