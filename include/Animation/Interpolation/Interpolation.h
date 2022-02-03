@@ -12,7 +12,11 @@
 
 #include "Core/Core.h"
 
+
 ULIS_NAMESPACE_BEGIN
+
+template<typename T>
+struct FKey;
 
 template< typename T >
 class TInterpolation
@@ -22,7 +26,7 @@ protected:
     ~TInterpolation();
 
 public:
-    virtual T Interpolate( float iT, T iLeftValue, T iRightValue ) = 0;
+    virtual T Interpolate( float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey ) const = 0;
 };
 
 template< typename T >

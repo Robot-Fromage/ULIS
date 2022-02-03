@@ -83,9 +83,7 @@ T TAnimatedProperty<T>::GetValueAtFrame(float iFrame) const
         }
     }
 
-    float t = ( iFrame - GetKeys()[leftKeyIndex].Frame ) / ( GetKeys()[rightKeyIndex].Frame - GetKeys()[leftKeyIndex].Frame );
-
-    return GetKeys()[leftKeyIndex].Interpolation->Interpolate( t, GetKeys()[leftKeyIndex].Value, GetKeys()[rightKeyIndex].Value );
+    return GetKeys()[leftKeyIndex].Interpolation->Interpolate( iFrame, GetKeys()[leftKeyIndex], GetKeys()[rightKeyIndex] );
 }
 
 template< typename T >

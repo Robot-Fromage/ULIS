@@ -30,7 +30,7 @@ public:
     static void *ReleaseInstance();
 
 public:
-    virtual T Interpolate(float iT, T iLeftValue, T iRightValue) override;
+    virtual T Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const override;
 };
 
 template< typename T >
@@ -59,9 +59,9 @@ void * THoldInterpolation<T>::ReleaseInstance()
 }
 
 template< typename T >
-T THoldInterpolation<T>::Interpolate(float iT, T iLeftValue, T iRightValue)
+T THoldInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const
 {
-    return iLeftValue;
+    return iLeftKey.Value;
 }
 
 ULIS_NAMESPACE_END

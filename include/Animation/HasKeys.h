@@ -19,18 +19,22 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 struct FKey
 {
-    FKey( float iFrame, T iValue, TInterpolation<T>* iInterpolation );
+    FKey( float iFrame, T iValue, TInterpolation<T>* iInterpolation, FVec2F iLeftTangent = FVec2F(-1.f, 0.f), FVec2F iRightTangent = FVec2F(1.f, 0.f) );
 
     float Frame;
     T Value;
     TInterpolation<T>* Interpolation;
+    FVec2F LeftTangent;
+    FVec2F RightTangent;
 };
 
 template< typename T >
-FKey<T>::FKey(float iFrame, T iValue, TInterpolation<T>* iInterpolation):
+FKey<T>::FKey(float iFrame, T iValue, TInterpolation<T>* iInterpolation, FVec2F iLeftTangent, FVec2F iRightTangent ):
     Frame(iFrame),
     Value(iValue),
-    Interpolation(iInterpolation)
+    Interpolation(iInterpolation),
+    LeftTangent( iLeftTangent ), 
+    RightTangent( iRightTangent )
 {
 }
 
