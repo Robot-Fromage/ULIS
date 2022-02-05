@@ -45,8 +45,9 @@ struct ULIS_API FCelBlockFactory
         return  new TCel< FBlock >( std::make_shared< FBlock >( Width(), Height(), Format(), ColorSpace() ), iExposure );
     }
 
-    TCel< FBlock >* MakeSharedFrom( TCel< FBlock > iRefCel, uint32 iExposure = 0 ) {
-        return  new TCel< FBlock >( iRefCel.Data(), iExposure );
+    TCel< FBlock >* MakeSharedFrom( TCel< FBlock >* iRefCel, uint32 iExposure = 0 ) {
+        ULIS_ASSERT( iRefCel, "Bad input" );
+        return  new TCel< FBlock >( iRefCel->Data(), iExposure );
     }
 };
 

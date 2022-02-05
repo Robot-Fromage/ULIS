@@ -48,18 +48,53 @@ public:
         return  mInstances;
     }
 
-    void PushCel();
-    void PopCel();
-    void InsertNewCelAtIndex( uint32 iIndex, bool iPreserveSequenceTimingIfPossible = true );
-    void InsertNewCelAtFrame( uint32 iFrame, bool iPreserveSequenceTimingIfPossible = true );
-    void InsertBlankCelAtIndex( uint32 iIndex, bool iPreserveSequenceTimingIfPossible = true );
-    void InsertBlankCelAtFrame( uint32 iFrame, bool iPreserveSequenceTimingIfPossible = true );
-    void InsertSharedResourceCelAtIndex( uint32 iIndex, TCel< T >* iRefCel, bool iPreserveSequenceTimingIfPossible = true );
-    void InsertSharedResourceCelAtFrame( uint32 iFrame, TCel< T >* iRefCel, bool iPreserveSequenceTimingIfPossible = true );
-    TCel< T >* CelAtIndex( uint32 iIndex );
-    TCel< T >* CelAtFrame( uint32 iFrame );
-    const TCel< T >* CelAtIndex( uint32 iIndex ) const;
-    const TCel< T >* CelAtFrame( uint32 iFrame ) const;
+    void PushNewCel() {
+        mInstances.PushBack( CelTypeFactory::MakeNew() );
+    }
+
+    void PopCel() {
+        delete  mInstances.Back();
+        mInstances.PopBack();
+    }
+
+    void InsertNewCelAtFrame( uint64 iFrame ) {
+        mInstances.Insert( IndexAtFrame( iFrame ), CelTypeFactory::MakeNew() );
+    }
+
+    void InsertBlankCelAtFrame( uint64 iFrame ) {
+        mInstances.Insert( IndexAtFrame( iFrame ), CelTypeFactory::MakeBlank() );
+    }
+    void InsertSharedResourceCelAtFrame( uint64 iFrame, TCel< T >* iRefCel ) {
+        mInstances.Insert( IndexAtFrame( iFrame ), CelTypeFactory::MakeSharedFrom( iRefCel ) );
+    }
+
+    TCel< T >* CelAtFrame( uint64 iFrame ) {
+        return  CelAtIndex( IndexAtFrame( iFrame ) );
+    }
+
+    const TCel< T >* CelAtFrame( uint64 iFrame ) const {
+        return  CelAtIndex( IndexAtFrame( iFrame ) );
+    }
+
+private:
+    TCel< T >* CelAtIndex( uint64 iIndex ) {
+        return  mInstances[iIndex];
+    }
+
+    const TCel< T >* CelAtIndex( uint64 iIndex ) const {
+        return  mInstances[iIndex];
+    }
+
+    uint64 IndexAtFrame( uint64 iFrame ) const {
+        const uint64 size = mInstances.Size();
+        uint64 counter = 0;
+        for( uint64 i = 0; i < size; ++i ) {
+            const uint64 exposure = mInstances[i]->Exposure();
+            if( counter + exposure >= iFrame )
+                return  i;
+            counter += exposure + 1;
+        }
+    }
 
 private:
     TArray< TCel< T >* > mInstances;

@@ -106,9 +106,10 @@ FAnimatedLayerImage::InitFromParent( const TRoot< IAnimatedLayer >* iParent ) //
         case FAnimatedLayerStack::StaticTypeID(): {
             const FAnimatedLayerStack* stack = dynamic_cast< const FAnimatedLayerStack* >( layer );
             ULIS_ASSERT( stack, "Parent cannot be cast to stack, this is inconsistent with the StaticTypeID !" );
-            ReinterpretFormat( stack->Format() );
-            AssignColorSpace( stack->ColorSpace() );
-            ReinterpretSize( FVec2UI16( stack->Width(), stack->Height() ) );
+            TSequence< FBlock, FCelBlockFactory >::ReinterpretFormat( stack->Format() );
+            TSequence< FBlock, FCelBlockFactory >::AssignColorSpace( stack->ColorSpace() );
+            TSequence< FBlock, FCelBlockFactory >::ReinterpretSize( FVec2UI16( stack->Width(), stack->Height() ) );
+            TSequence< FBlock, FCelBlockFactory >::Reset();
             break;
         }
         case FAnimatedLayerFolder::StaticTypeID(): {
