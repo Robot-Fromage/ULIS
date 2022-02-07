@@ -44,7 +44,9 @@ main( int argc, char *argv[] ) {
         path.cubicTo(882, 404, 144, 267, 27, 31);
         blctx.setCompOp(BL_COMP_OP_SRC_OVER);
         blctx.setFillStyle(BLRgba32(0xFFFFFFFF));
-        blctx.fillPath(path);
+        blctx.setStrokeStyle(BLRgba32(0xFF000000));
+        blctx.fillPath( path );
+        blctx.strokePath(path);
         blctx.end();
     }
 

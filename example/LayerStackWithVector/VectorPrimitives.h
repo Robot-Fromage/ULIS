@@ -11,3 +11,59 @@
 #include <ULIS>
 #include <blend2d.h>
 
+enum eVectorPrimitive
+{
+    kPath = 0,
+};
+
+namespace eVectorPaintingAttribute
+{
+    constexpr uint8_t kNone = 0;
+    constexpr uint8_t kStroke = 1;
+    constexpr uint8_t kFill = 2;
+    constexpr uint8_t kStrokeAndFill = 3;
+};
+
+class IVectorPrimitive
+{
+public:
+    virtual ~IVectorPrimitive() = 0;
+    IVectorPrimitive();
+
+public:
+    char Type() const;
+
+    uint8_t VectorPaintingAttribute() const;
+    BLCompOp StrokeCompOp() const;
+    const BLStyle& StrokeStyle() const;
+    const BLStrokeOptions& StrokeOptions() const;
+    BLCompOp FillCompOp() const;
+    const BLStyle& FillStyle() const;
+    BLFillRule FillRule() const;
+
+    void SetVectorPaintingAttribute( uint8_t iVectorPaintingAttribute );
+    void SetStrokeCompOp( BLCompOp iCompOp );
+    void SetStrokeStyle( BLStyle iStyle );
+    void SetStrokeOptions( BLStrokeOptions iOptions );
+    void SetFillCompOp( BLCompOp iCompOp );
+    void SetFillStyle( BLStyle iStyle );
+    void SetFillRule( BLFillRule iRule );
+
+private:
+    // Primitive Type Interface
+    const char mType;
+
+    // Core Rendering Option ( bitflag )
+    uint8_t mVectorPaintingAttribute;
+
+    // Stroke Option
+    BLCompOp mStrokeCompOp;
+    BLStyle mStrokeStyle;
+    BLStrokeOptions mStrokeOptions;
+
+    // Fill Option
+    BLCompOp mFillCompOp;
+    BLStyle mFillStyle;
+    BLFillRule mFillRule;
+};
+
