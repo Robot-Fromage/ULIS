@@ -11,11 +11,21 @@
 #include <ULIS>
 #include <blend2d.h>
 
+// https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Basic_Shapes
+// We may need to implement more shapes types internally for ease of use
+// But the interfaces should stick to the SVG standard.
 enum eVectorPrimitive
 {
-    kPath = 0,
+    kRectangle,
+    kCircle,
+    kEllipse,
+    kLine,
+    kPolyline,
+    kPolygon,
+    kPath
 };
 
+// https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Fills_and_Strokes
 namespace eVectorPaintingAttribute
 {
     constexpr uint8_t kNone = 0;
@@ -25,14 +35,13 @@ namespace eVectorPaintingAttribute
 };
 
 class IVectorPrimitive
+    : ::ULIS::ITypeIdentifiable
 {
 public:
     virtual ~IVectorPrimitive() = 0;
-    IVectorPrimitive( char iType );
+    IVectorPrimitive();
 
 public:
-    char Type() const;
-
     uint8_t VectorPaintingAttribute() const;
     BLCompOp StrokeCompOp() const;
     const BLStyle& StrokeStyle() const;
@@ -55,9 +64,6 @@ public:
     static void SetContextAttributesForFill( BLContext& iCtx, const IVectorPrimitive& iPrim );
 
 private:
-    // Primitive Type Interface
-    const char mType;
-
     // Core Rendering Option ( bitflag )
     uint8_t mVectorPaintingAttribute;
 

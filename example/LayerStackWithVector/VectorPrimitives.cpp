@@ -14,9 +14,8 @@ IVectorPrimitive::~IVectorPrimitive()
 {
 }
 
-IVectorPrimitive::IVectorPrimitive( char iType )
-    : mType( iType )
-    , mVectorPaintingAttribute( eVectorPaintingAttribute::kStrokeAndFill )
+IVectorPrimitive::IVectorPrimitive()
+    : mVectorPaintingAttribute( eVectorPaintingAttribute::kStrokeAndFill )
     , mStrokeCompOp( BL_COMP_OP_SRC_OVER )
     , mStrokeStyle( BLRgba( 0.f, 0.f, 0.f ) )
     , mStrokeOptions( BLStrokeOptions() )
@@ -31,11 +30,6 @@ IVectorPrimitive::IVectorPrimitive( char iType )
     mStrokeOptions.width = 1.0;
     mStrokeOptions.miterLimit = 4.0;
     mStrokeOptions.dashOffset = 0.0;
-}
-
-char
-IVectorPrimitive::Type() const {
-    return  mType;
 }
 
 uint8_t
