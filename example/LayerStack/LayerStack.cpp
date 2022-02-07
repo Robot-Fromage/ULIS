@@ -47,6 +47,13 @@ main( int argc, char *argv[] ) {
     ULDef( FOnNodeAdded::SetDelegate( onNodeAdded_print ) )
     ULDef( FOnNodeRemoved::SetDelegate( onNodeRemoved_print ) )
     [
+        ULCreateChild( FLayerText )
+        ULDef( SetName( "0t" ) )
+        ULDef( SetTextColor( FColor::White ) )
+        ULDef( SetFontSize( 38 ) )
+        ULDef( SetTranslation( 80, 80 ) )
+    ]
+    [
         ULCreateChild( FLayerImage )
         ULDef( SetName( "0i" ) )
     ]
@@ -54,32 +61,32 @@ main( int argc, char *argv[] ) {
         ULCreateChild( FLayerImage )
         ULDef( SetName( "1i" ) )
     ]
-    [
-        ULCreateChild( FLayerFolder )
-        ULDef( SetName( "2f" ) )
-        [
-            ULCreateChild( FLayerText )
-            ULDef( SetName( "2_0t" ) )
-            ULDef( SetTextColor( FColor::White ) )
-            ULDef( SetFontSize( 38 ) )
-            ULDef( SetTranslation( 530, 530 ) )
-        ]
-        [
-            ULCreateChild( FLayerText )
-            ULDef( SetName( "2_0t" ) )
-            ULDef( SetTextColor( FColor::White ) )
-            ULDef( SetFontSize( 38 ) )
-            ULDef( SetTranslation( 530, 580 ) )
-        ]
-        [
-            ULCreateChild( FLayerImage )
-            ULDef( SetName( "2_1i" ) )
-        ]
-        [
-            ULCreateChild( FLayerImage )
-            ULDef( SetName( "2_2i" ) )
-        ]
-    ]
+    //[
+    //    ULCreateChild( FLayerFolder )
+    //    ULDef( SetName( "2f" ) )
+    //    [
+    //        ULCreateChild( FLayerText )
+    //        ULDef( SetName( "2_0t" ) )
+    //        ULDef( SetTextColor( FColor::White ) )
+    //        ULDef( SetFontSize( 38 ) )
+    //        ULDef( SetTranslation( 530, 530 ) )
+    //    ]
+    //    [
+    //        ULCreateChild( FLayerText )
+    //        ULDef( SetName( "2_0t" ) )
+    //        ULDef( SetTextColor( FColor::White ) )
+    //        ULDef( SetFontSize( 38 ) )
+    //        ULDef( SetTranslation( 530, 580 ) )
+    //    ]
+    //    [
+    //        ULCreateChild( FLayerImage )
+    //        ULDef( SetName( "2_1i" ) )
+    //    ]
+    //    [
+    //        ULCreateChild( FLayerImage )
+    //        ULDef( SetName( "2_2i" ) )
+    //    ]
+    //]
     [
         ULCreateChild( FLayerImage )
         ULDef( SetName( "3i" ) )
@@ -87,24 +94,24 @@ main( int argc, char *argv[] ) {
 
     FBlock& img0 = *( stack->Find< FLayerImage >( "0i" ) ).Block();
     FBlock& img1 = *( stack->Find< FLayerImage >( "1i" ) ).Block();
-    FBlock& img2_0 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" ) ).Block();
-    FBlock& img2_1 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_2i" ) ).Block();
+    //FBlock& img2_0 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" ) ).Block();
+    //FBlock& img2_1 = *( stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_2i" ) ).Block();
     FBlock& img3 = *( stack->Find< FLayerImage >( "3i" ) ).Block();
 
-    FLayerImage& layer = stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" );
-    layer.NotifyChange();
+    //FLayerImage& layer = stack->Find< FLayerFolder >( "2f" ).Find< FLayerImage >( "2_1i" );
+    //layer.NotifyChange();
 
     ctx.Clear( img0 );
     ctx.Clear( img1 );
-    ctx.Clear( img2_0 );
-    ctx.Clear( img2_1 );
+    //ctx.Clear( img2_0 );
+    //ctx.Clear( img2_1 );
     ctx.Clear( img3 );
     ctx.Finish();
 
     ctx.Fill( img0, FColor::Red, FRectI( 64, 64, 64, 64 ) );
     ctx.Fill( img1, FColor::Blue, FRectI( 32, 32, 512, 512 ) );
-    ctx.Fill( img2_0, FColor::Green, FRectI( 512, 0, 512, 1024 ) );
-    ctx.Fill( img2_1, FColor::Yellow, FRectI( 256, 256, 512, 512 ) );
+    //ctx.Fill( img2_0, FColor::Green, FRectI( 512, 0, 512, 1024 ) );
+    //ctx.Fill( img2_1, FColor::Yellow, FRectI( 256, 256, 512, 512 ) );
     ctx.Fill( img3, FColor::Black );
     ctx.Clear( canvas, canvas.Rect() );
     ctx.Finish();
@@ -134,7 +141,7 @@ main( int argc, char *argv[] ) {
                 , const FEvent* iWaitList = nullptr
             )
             {
-                FEvent ev;
+                FEvent eventBlend;
                 ulError err = iCtx.Blend(
                       *iLayer.Block()
                     , ioBlock
@@ -146,10 +153,10 @@ main( int argc, char *argv[] ) {
                     , iPolicy
                     , iNumWait
                     , iWaitList
-                    , &ev
+                    , &eventBlend
                 );
                 ULIS_ASSERT( !err, "Error during layer image blend" );
-                return  ev;
+                return  eventBlend;
             }
 
             static FEvent RenderFolder(
@@ -163,6 +170,63 @@ main( int argc, char *argv[] ) {
                 , const FEvent* iWaitList = nullptr
             )
             {
+                FRectI src_rect = FRectI::FromPositionAndSize( FVec2I( 0 ), iRect.Size() );
+                FBlock* temp = new FBlock( iRect.w, iRect.h, iCtx.Format() );
+                FEvent eventClear;
+                iCtx.Clear( *temp, FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &eventClear );
+                FEvent eventFolder;
+                const int max = static_cast< int >( iLayer.Children().Size() ) - 1;
+                for( int i = max; i >= 0; --i ) {
+                    ILayer* layer = dynamic_cast< ILayer* >( &( iLayer.Children()[i]->Self() ) );
+                    ULIS_ASSERT( layer, "Bad children cannot be cast to layer" );
+                    switch( layer->TypeID() ) {
+                        case FLayerStack::StaticTypeID(): {
+                            FLayerStack* stack = dynamic_cast< FLayerStack* >( layer );
+                            ULIS_ASSERT( false, "Should not be able to have a stack embedded in a stack" );
+                            break;
+                        }
+                        case FLayerImage::StaticTypeID(): {
+                            FLayerImage* image = dynamic_cast< FLayerImage* >( layer );
+                            ULIS_ASSERT( image, "Layer cannot be cast to image, this is inconsistent with the StaticTypeID !" );
+                            eventFolder = FLayerStackFlattener::RenderImage( iCtx, *image, *temp, iRect, FVec2I( 0 ), iPolicy, 1, &eventFolder );
+                            break;
+                        }
+                        case FLayerFolder::StaticTypeID(): {
+                            FLayerFolder* folder = dynamic_cast< FLayerFolder* >( layer );
+                            ULIS_ASSERT( folder, "Layer cannot be cast to folder, this is inconsistent with the StaticTypeID !" );
+                            eventFolder = FLayerStackFlattener::RenderFolder( iCtx, *folder, *temp, iRect, FVec2I( 0 ), iPolicy, 1, &eventFolder );
+                            break;
+                        }
+                        case FLayerText::StaticTypeID(): {
+                            FLayerText* text = dynamic_cast< FLayerText* >( layer );
+                            ULIS_ASSERT( text, "Layer cannot be cast to text, this is inconsistent with the StaticTypeID !" );
+                            eventFolder = FLayerStackFlattener::RenderText( iCtx, *text, *temp, iRect, FVec2I( 0 ), iPolicy, 1, &eventFolder );
+                            break;
+                        }
+                    }
+                }
+
+                FEvent eventBlend( FOnEventComplete( [temp]( const FRectI& ) { delete  temp; } ) );
+                TArray< FEvent > events( iNumWait + 1 );
+                for( uint32 i = 0; i < iNumWait; ++i )
+                    events[i] = iWaitList[i];
+                events[ iNumWait ] = eventFolder;
+
+                ulError err = iCtx.Blend(
+                      *temp
+                    , ioBlock
+                    , src_rect
+                    , iPos
+                    , iLayer.BlendMode()
+                    , iLayer.AlphaMode()
+                    , iLayer.Opacity()
+                    , iPolicy
+                    , iNumWait + 1
+                    , &events[0]
+                    , &eventBlend
+                );
+                ULIS_ASSERT( !err, "Error during layer folder blend" );
+                return  eventBlend;
             }
 
             static FEvent RenderText(
@@ -190,9 +254,10 @@ main( int argc, char *argv[] ) {
                 FRectI dst_rect = FRectI::FromPositionAndSize( iPos, iRect.Size() );
                 FRectI dst_roi = text_rect & dst_rect;
                 FRectI src_roi = FRectI::FromPositionAndSize( FVec2I( 0 ), dst_roi.Size() );
+
                 FMat3F fixedMatrix = iLayer.Matrix() * FMat3F::MakeTranslationMatrix( -text_rect.x, -text_rect.y );
 
-                FBlock* temp = new FBlock( text_rect.w, text_rect.h, iCtx.Format() );
+                FBlock* temp = new FBlock( src_roi.w, src_roi.h, iCtx.Format() );
 
                 FEvent eventClear;
                 iCtx.Clear( *temp, FRectI::Auto, FSchedulePolicy::CacheEfficient, 0, nullptr, &eventClear );
@@ -203,13 +268,7 @@ main( int argc, char *argv[] ) {
                     iCtx.RasterText( *temp, iLayer.Text(), iLayer.Font(), iLayer.FontSize(), fixedMatrix, iLayer.TextColor(), FSchedulePolicy::MonoChunk, 1, &eventClear, &eventText );
                 }
 
-                FEvent eventBlend(
-                    FOnEventComplete(
-                        [temp]( const FRectI& ) {
-                            delete  temp;
-                        }
-                    )
-                );
+                FEvent eventBlend( FOnEventComplete( [temp]( const FRectI& ) { delete  temp; } ) );
                 TArray< FEvent > events( iNumWait + 1 );
                 for( uint32 i = 0; i < iNumWait; ++i )
                     events[i] = iWaitList[i];
@@ -219,7 +278,7 @@ main( int argc, char *argv[] ) {
                       *temp
                     , ioBlock
                     , src_roi
-                    , iPos
+                    , text_rect.Position()
                     , iLayer.BlendMode()
                     , iLayer.AlphaMode()
                     , iLayer.Opacity()
@@ -246,7 +305,6 @@ main( int argc, char *argv[] ) {
                 FEvent ev;
                 iCtx.Clear( ioBlock, FRectI::Auto, FSchedulePolicy::CacheEfficient, iNumWait, iWaitList, &ev );
                 const int max = static_cast< int >( iStack.Children().Size() ) - 1;
-                bool bFirst = true;
                 for( int i = max; i >= 0; --i ) {
                     ILayer* layer = dynamic_cast< ILayer* >( &( iStack.Children()[i]->Self() ) );
                     ULIS_ASSERT( layer, "Bad children cannot be cast to layer" );
@@ -292,7 +350,7 @@ main( int argc, char *argv[] ) {
             )
             {
                 ULIS_ASSERT_RETURN_ERROR(
-                      iCtx.Format() == iStack.Format() == oDestination.Format()
+                      ( iCtx.Format() == iStack.Format() ) && ( iCtx.Format() == oDestination.Format() )
                     , "Formats mismatch."
                     , iCtx.FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_ERROR_FORMATS_MISMATCH )
                 );
@@ -314,7 +372,8 @@ main( int argc, char *argv[] ) {
                 return  ULIS_NO_ERROR;
             }
         };
-        //ctx.Flatten( *stack, canvas );
+
+        FLayerStackFlattener::Flatten( ctx, *stack, canvas );
         ctx.Finish();
     }
     auto endTime = std::chrono::steady_clock::now();

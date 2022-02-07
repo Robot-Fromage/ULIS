@@ -23,22 +23,19 @@ main( int argc, char *argv[] ) {
     FCommandQueue queue( pool );
     eFormat fmt = Format_RGBA8;
     FContext ctx( queue, fmt, PerformanceIntent_AVX );
-    FHardwareMetrics hw;
-    FSchedulePolicy policy_cache_efficient( ScheduleTime_Sync, ScheduleRun_Multi, ScheduleMode_Chunks, ScheduleParameter_Length, hw.L1CacheSize() );
-    FSchedulePolicy policy_mono_chunk( ScheduleTime_Sync, ScheduleRun_Mono, ScheduleMode_Chunks, ScheduleParameter_Count, 1 );
 
     int w = 600;
     int h = 600;
     FBlock* blockCanvas = new FBlock( w, h, Format_RGBA8 );
     FColor color = FColor::RGBA8( 255, 0, 0 );
-    std::wstring str1 = L"Text.";
+    FWString str1 = L"Text.";
     FFontEngine fontEngine;
     FFont font( fontEngine, "Segoe UI", "Bold" );
     int fontSize = 160;
-    FRectI rect1 = ctx.TextMetrics( str1, font, fontSize, FMat3F() );
+    FMat3F transform1( FMat3F::MakeTranslationMatrix( 0, 0 ) );
+    FRectI rect1 = ctx.TextMetrics( str1, font, fontSize, transform1 );
     rect1.x = ( w - rect1.w ) / 2;
     rect1.y = ( h - rect1.h ) / 2;
-    FMat3F transform1( FMat3F::MakeTranslationMatrix( 0, 160 ) );
     FColor backgroundColor = FColor::RGBA8( 180, 0, 255 );
     FColor fontColor       = FColor::RGBA8( 255, 255, 255, 250 );
 

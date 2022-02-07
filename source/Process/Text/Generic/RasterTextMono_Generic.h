@@ -182,8 +182,6 @@ InvokeRasterTextAAMono_MEM_Generic(
     ULIS_ASSERT( !error, "Error setting face size" );
     FT_GlyphSlot slot = face->glyph;
     FT_Vector pen { 0, 0 };
-    // Old baseline hack
-    //int height = cargs->dst.Height();
     const wchar_t* str = cargs->text.Data();
     const size_t len = static_cast< size_t >( cargs->text.Size() );
     for( int n = 0; n < len; ++n ) {
