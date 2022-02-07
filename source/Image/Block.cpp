@@ -362,14 +362,17 @@ FBlock::ReallocInternalData(
     AssignColorSpace( iColorSpace );
     ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
 
-    mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
-    ULIS_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
-    mOnInvalid = iOnInvalid;
-    mOnCleanup = iOnCleanup;
-
     mBytesPerScanline = Width() * FormatMetrics().BPP;
     mBytesPerPlane = Planar() ? Area() * BytesPerSample() : BytesPerSample();
     mBytesTotal = Height() * mBytesPerScanline;
+
+    ULIS_ASSERT( mBytesTotal != 0, "Cannot allocate a buffer of size 0" );
+
+    mBitmap = new  ( std::nothrow )  uint8[ mBytesTotal ];
+    ULIS_ASSERT( mBitmap, "Allocation failed with requested size: " << mBytesTotal << " bytes" );
+
+    mOnInvalid = iOnInvalid;
+    mOnCleanup = iOnCleanup;
 }
 
 uint32
