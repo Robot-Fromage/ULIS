@@ -35,6 +35,14 @@ main( int argc, char *argv[] ) {
     BLImage img( w, h, BL_FORMAT_PRGB32 );
     {
         BLContext blctx( img );
+        auto a = blctx.fillRule();
+        BLStyle strokeStyle;
+        BLStyle fillStyle;
+        blctx.getStrokeStyle( strokeStyle );
+        blctx.getStrokeStyle( fillStyle );
+
+        auto dummy = 0;
+
         blctx.setFillStyle(BLRgba32(0x3FFF0000));
         blctx.setCompOp(BL_COMP_OP_SRC_COPY);
         blctx.fillAll();

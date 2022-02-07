@@ -136,7 +136,7 @@ FLayerStackRenderer::RenderText(
     ::ULIS::FRectI dst_roi = text_rect & dst_rect;
     ::ULIS::FRectI src_roi = ::ULIS::FRectI::FromPositionAndSize( ::ULIS::FVec2I( 0 ), dst_roi.Size() );
 
-    ::ULIS::FMat3F fixedMatrix = iLayer.Matrix() * ::ULIS::FMat3F::MakeTranslationMatrix( -text_rect.x, -text_rect.y );
+    ::ULIS::FMat3F fixedMatrix = iLayer.Matrix() * ::ULIS::FMat3F::MakeTranslationMatrix( float( -text_rect.x ), float( -text_rect.y ) );
 
     ::ULIS::FBlock* temp = new ::ULIS::FBlock( src_roi.w, src_roi.h, iCtx.Format() );
 

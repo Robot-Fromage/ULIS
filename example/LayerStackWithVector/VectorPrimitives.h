@@ -28,7 +28,7 @@ class IVectorPrimitive
 {
 public:
     virtual ~IVectorPrimitive() = 0;
-    IVectorPrimitive();
+    IVectorPrimitive( char iType );
 
 public:
     char Type() const;
@@ -48,6 +48,11 @@ public:
     void SetFillCompOp( BLCompOp iCompOp );
     void SetFillStyle( BLStyle iStyle );
     void SetFillRule( BLFillRule iRule );
+
+    void ResetAttributes();
+
+    static void SetContextAttributesForStroke( BLContext& iCtx, const IVectorPrimitive& iPrim );
+    static void SetContextAttributesForFill( BLContext& iCtx, const IVectorPrimitive& iPrim );
 
 private:
     // Primitive Type Interface
