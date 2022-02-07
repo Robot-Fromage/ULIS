@@ -10,6 +10,7 @@
 */
 #include "VectorPrimitives.h"
 
+// IVectorPrimitive
 IVectorPrimitive::~IVectorPrimitive() 
 {
 }
@@ -152,3 +153,29 @@ IVectorPrimitive::SetContextAttributesForFill( BLContext& iCtx, const IVectorPri
     iCtx.setStrokeStyle( iPrim.StrokeStyle() );
     iCtx.setStrokeOptions( iPrim.StrokeOptions() );
 }
+
+// FRectangleVectorPrimitive
+FRectangleVectorPrimitive::~FRectangleVectorPrimitive()
+{
+}
+
+FRectangleVectorPrimitive::FRectangleVectorPrimitive( const BLRect& iData )
+    : IVectorPrimitive()
+    , mData( iData )
+{}
+
+BLRect&
+FRectangleVectorPrimitive::Rect() {
+    return  mData;
+}
+
+const BLRect&
+FRectangleVectorPrimitive::Rect() const {
+    return  mData;
+}
+
+void
+FRectangleVectorPrimitive::SetRect( const BLRect& iRect ) {
+    mData = iRect;
+}
+

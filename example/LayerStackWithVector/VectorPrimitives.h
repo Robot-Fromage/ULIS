@@ -83,3 +83,22 @@ private:
     BLMatrix2D mTransform;
 };
 
+
+class FRectangleVectorPrimitive
+    : public IVectorPrimitive
+{
+public:
+    ~FRectangleVectorPrimitive() override;
+    FRectangleVectorPrimitive( const BLRect& iData );
+
+public:
+    BLRect& Rect();
+    const BLRect& Rect() const;
+    void SetRect( const BLRect& iRect );
+
+    // TypeID Interface
+    ULIS_OVERRIDE_TYPEID_INTERFACE_EXT( "Rectangle" )
+
+private:
+    BLRect mData;
+};
