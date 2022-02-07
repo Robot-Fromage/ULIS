@@ -123,3 +123,24 @@ public:
 private:
     BLCircle mData;
 };
+
+// FPathVectorShape
+class FPathVectorShape
+    : public IVectorShape
+{
+public:
+    ~FPathVectorShape() override;
+    FPathVectorShape( const BLPath& iData );
+
+public:
+    BLPath& Path();
+    const BLPath& Path() const;
+    void SetPath( const BLPath& iData );
+
+    // TypeID Interface
+    ULIS_OVERRIDE_TYPEID_INTERFACE_EXT( "Path" )
+
+private:
+    BLPath mData;
+};
+

@@ -204,3 +204,28 @@ FCircleVectorShape::SetCircle( const BLCircle& iCircle ) {
     mData = iCircle;
 }
 
+// FPathVectorShape
+FPathVectorShape::~FPathVectorShape()
+{
+}
+
+FPathVectorShape::FPathVectorShape( const BLPath& iData )
+    : IVectorShape()
+    , mData( iData )
+{}
+
+BLPath&
+FPathVectorShape::Path() {
+    return  mData;
+}
+
+const BLPath&
+FPathVectorShape::Path() const {
+    return  mData;
+}
+
+void
+FPathVectorShape::SetPath( const BLPath& iPath ) {
+    mData = iPath;
+}
+
