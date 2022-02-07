@@ -68,3 +68,14 @@ FLayerVector::FLayerVector(
 {
     ULIS_DEBUG_PRINTF( "FLayerVector Created" )
 }
+
+FGroupVectorShape&
+FLayerVector::VectorData() {
+    return  mVectorData;
+}
+
+const FGroupVectorShape&
+FLayerVector::VectorData() const {
+    return  mVectorData;
+}
+

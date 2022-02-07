@@ -9,6 +9,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include <ULIS>
+#include "VectorShapes.h"
 
 class FLayerVector final
     : public ::ULIS::ILayer
@@ -46,8 +47,14 @@ public:
     FLayerVector( const FLayerVector& ) = delete;
     FLayerVector& operator=( const FLayerVector& ) = delete;
 
+    FGroupVectorShape& VectorData();
+    const FGroupVectorShape& VectorData() const;
+
 public:
     // ITypeIdentifiable Interface
     ULIS_OVERRIDE_TYPEID_INTERFACE_EXT( "Vector" );
+
+private:
+    FGroupVectorShape mVectorData;
 };
 

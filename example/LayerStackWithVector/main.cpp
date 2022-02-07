@@ -60,6 +60,49 @@ main( int argc, char *argv[] ) {
     ctx.Clear( canvas, canvas.Rect() );
     ctx.Finish();
 
+    // Process Vector Data
+    FLayerVector& vectorLayer = stack->Find< FLayerVector >( "Vector" );
+    FGroupVectorShape& groupVectorShape = vectorLayer.VectorData();
+    {
+        FCircleVectorShape* circle = new FCircleVectorShape( BLCircle( 200.0, 200.0, 150.0 ) );
+        BLStrokeOptions strokeOptions = circle->StrokeOptions();
+        strokeOptions.width = 1.5;
+        circle->SetStrokeOptions( strokeOptions );
+        circle->SetStrokeStyle( BLStyle( BLRgba( 0.0f, 0.0f, 0.0f, 0.0f ) ) );
+        circle->SetFillStyle( BLStyle( BLRgba( 1.0f, 0.0f, 0.0f, 0.75f ) ) );
+        groupVectorShape.Data().PushBack( circle );
+    }
+
+    {
+        FRectangleVectorShape* rectangle = new FRectangleVectorShape( BLRect( 0.0, 0.0, 20.0, 20.0 ) );
+        BLStrokeOptions strokeOptions = rectangle->StrokeOptions();
+        strokeOptions.width = 2.0;
+        strokeOptions.join = BL_STROKE_JOIN_ROUND;
+        rectangle->SetStrokeOptions( strokeOptions );
+        rectangle->SetStrokeStyle( BLStyle( BLRgba( 0.0f, 0.0f, 0.0f, 0.0f ) ) );
+        rectangle->SetFillStyle( BLStyle( BLRgba( 0.0f, 0.5f, 0.5f, 0.75f ) ) );
+        BLMatrix2D transform = BLMatrix2D::makeIdentity();
+        transform.rotate( 3.14/8 );
+        transform.translate( 600, 600 );
+        rectangle->SetTransform( transform );
+        groupVectorShape.Data().PushBack( rectangle );
+    }
+
+    {
+        BLPath pathPoints;
+        pathPoints.moveTo( 26, 31 );
+        pathPoints.cubicTo( 642, 132, 587, -136, 25, 464 );
+        pathPoints.cubicTo( 882, 404, 144, 267, 27, 31 );
+        FPathVectorShape* path = new FPathVectorShape( pathPoints );
+        BLStrokeOptions strokeOptions = path->StrokeOptions();
+        strokeOptions.width = 1.0;
+        strokeOptions.join = BL_STROKE_JOIN_ROUND;
+        path->SetStrokeOptions( strokeOptions );
+        path->SetStrokeStyle( BLStyle( BLRgba( 0.0f, 0.0f, 0.0f, 0.0f ) ) );
+        path->SetFillStyle( BLStyle( BLRgba( 1.f, 1.f, 1.f, 0.33f ) ) );
+        groupVectorShape.Data().PushBack( path );
+    }
+
     // Render Document
     auto startTime = std::chrono::steady_clock::now();
     {
