@@ -3,7 +3,7 @@
 /*
 *   ULIS
 *__________________
-* @file         VectorPrimitives.h
+* @file         VectorShapes.h
 * @author       Clement Berthaud
 * @brief        LayerStack application for ULIS.
 * @license      Please refer to LICENSE.md
@@ -14,7 +14,7 @@
 // https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Basic_Shapes
 // We may need to implement more shapes types internally for ease of use
 // But the interfaces should stick to the SVG standard.
-enum eVectorPrimitive
+enum eVectorShape
 {
     kRectangle,
     kCircle,
@@ -34,12 +34,13 @@ namespace eVectorPaintingAttribute
     constexpr uint8_t kStrokeAndFill = 3;
 };
 
-class IVectorPrimitive
+// IVectorShape
+class IVectorShape
     : ::ULIS::ITypeIdentifiable
 {
 public:
-    virtual ~IVectorPrimitive() = 0;
-    IVectorPrimitive();
+    virtual ~IVectorShape() = 0;
+    IVectorShape();
 
 public:
     uint8_t VectorPaintingAttribute() const;
@@ -62,8 +63,8 @@ public:
 
     void ResetAttributes();
 
-    static void SetContextAttributesForStroke( BLContext& iCtx, const IVectorPrimitive& iPrim );
-    static void SetContextAttributesForFill( BLContext& iCtx, const IVectorPrimitive& iPrim );
+    static void SetContextAttributesForStroke( BLContext& iCtx, const IVectorShape& iPrim );
+    static void SetContextAttributesForFill( BLContext& iCtx, const IVectorShape& iPrim );
 
 private:
     // Core Rendering Option ( bitflag )
@@ -83,22 +84,42 @@ private:
     BLMatrix2D mTransform;
 };
 
-
-class FRectangleVectorPrimitive
-    : public IVectorPrimitive
+// FRectangleVectorShape
+class FRectangleVectorShape
+    : public IVectorShape
 {
 public:
-    ~FRectangleVectorPrimitive() override;
-    FRectangleVectorPrimitive( const BLRect& iData );
+    ~FRectangleVectorShape() override;
+    FRectangleVectorShape( const BLRect& iData );
 
 public:
-    BLRect& Rect();
-    const BLRect& Rect() const;
-    void SetRect( const BLRect& iRect );
+    BLRect& Rectangle();
+    const BLRect& Rectangle() const;
+    void SetRectangle( const BLRect& iData );
 
     // TypeID Interface
     ULIS_OVERRIDE_TYPEID_INTERFACE_EXT( "Rectangle" )
 
 private:
     BLRect mData;
+};
+
+// FCircleVectorShape
+class FCircleVectorShape
+    : public IVectorShape
+{
+public:
+    ~FCircleVectorShape() override;
+    FCircleVectorShape( const BLCircle& iData );
+
+public:
+    BLCircle& Circle();
+    const BLCircle& Circle() const;
+    void SetCircle( const BLCircle& iData );
+
+    // TypeID Interface
+    ULIS_OVERRIDE_TYPEID_INTERFACE_EXT( "Circle" )
+
+private:
+    BLCircle mData;
 };

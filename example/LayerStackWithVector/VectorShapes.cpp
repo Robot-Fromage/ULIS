@@ -3,19 +3,19 @@
 /*
 *   ULIS
 *__________________
-* @file         VectorPrimitives.cpp
+* @file         VectorShapes.cpp
 * @author       Clement Berthaud
 * @brief        LayerStack application for ULIS.
 * @license      Please refer to LICENSE.md
 */
-#include "VectorPrimitives.h"
+#include "VectorShapes.h"
 
-// IVectorPrimitive
-IVectorPrimitive::~IVectorPrimitive() 
+// IVectorShape
+IVectorShape::~IVectorShape() 
 {
 }
 
-IVectorPrimitive::IVectorPrimitive()
+IVectorShape::IVectorShape()
     : mVectorPaintingAttribute( eVectorPaintingAttribute::kStrokeAndFill )
     , mStrokeCompOp( BL_COMP_OP_SRC_OVER )
     , mStrokeStyle( BLRgba( 0.f, 0.f, 0.f ) )
@@ -35,87 +35,87 @@ IVectorPrimitive::IVectorPrimitive()
 }
 
 uint8_t
-IVectorPrimitive::VectorPaintingAttribute() const {
+IVectorShape::VectorPaintingAttribute() const {
     return  mVectorPaintingAttribute;
 }
 
 BLCompOp
-IVectorPrimitive::StrokeCompOp() const {
+IVectorShape::StrokeCompOp() const {
     return  mStrokeCompOp;
 }
 
 const BLStyle&
-IVectorPrimitive::StrokeStyle() const {
+IVectorShape::StrokeStyle() const {
     return  mStrokeStyle;
 }
 
 const BLStrokeOptions&
-IVectorPrimitive::StrokeOptions() const {
+IVectorShape::StrokeOptions() const {
     return  mStrokeOptions;
 }
 
 BLCompOp
-IVectorPrimitive::FillCompOp() const {
+IVectorShape::FillCompOp() const {
     return  mFillCompOp;
 }
 
 const BLStyle&
-IVectorPrimitive::FillStyle() const {
+IVectorShape::FillStyle() const {
     return  mFillStyle;
 }
 
 BLFillRule
-IVectorPrimitive::FillRule() const {
+IVectorShape::FillRule() const {
     return  mFillRule;
 }
 
 const BLMatrix2D&
-IVectorPrimitive::Transform() const {
+IVectorShape::Transform() const {
     return  mTransform;
 }
 
 void
-IVectorPrimitive::SetVectorPaintingAttribute( uint8_t iVectorPaintingAttribute ) {
+IVectorShape::SetVectorPaintingAttribute( uint8_t iVectorPaintingAttribute ) {
     mVectorPaintingAttribute = iVectorPaintingAttribute;
 }
 
 void
-IVectorPrimitive::SetStrokeCompOp( BLCompOp iCompOp ) {
+IVectorShape::SetStrokeCompOp( BLCompOp iCompOp ) {
     mStrokeCompOp = iCompOp;
 }
 
 void
-IVectorPrimitive::SetStrokeStyle( BLStyle iStyle ) {
+IVectorShape::SetStrokeStyle( BLStyle iStyle ) {
     mStrokeStyle = iStyle;
 }
 
 void
-IVectorPrimitive::SetStrokeOptions( BLStrokeOptions iOptions ) {
+IVectorShape::SetStrokeOptions( BLStrokeOptions iOptions ) {
     mStrokeOptions = iOptions;
 }
 
 void
-IVectorPrimitive::SetFillCompOp( BLCompOp iCompOp ) {
+IVectorShape::SetFillCompOp( BLCompOp iCompOp ) {
     mFillCompOp = iCompOp;
 }
 
 void
-IVectorPrimitive::SetFillStyle( BLStyle iStyle ) {
+IVectorShape::SetFillStyle( BLStyle iStyle ) {
     mFillStyle = iStyle;
 }
 
 void
-IVectorPrimitive::SetFillRule( BLFillRule iRule ) {
+IVectorShape::SetFillRule( BLFillRule iRule ) {
     mFillRule = iRule;
 }
 
 void
-IVectorPrimitive::SetTransform( const BLMatrix2D& iTransform ) {
+IVectorShape::SetTransform( const BLMatrix2D& iTransform ) {
     mTransform = iTransform;
 }
 
 void
-IVectorPrimitive::ResetAttributes()
+IVectorShape::ResetAttributes()
 {
     // Reset all visual attributes just as if it was just created but
     // retain the vector geometry data in the children.
@@ -138,7 +138,7 @@ IVectorPrimitive::ResetAttributes()
 
 //static
 void
-IVectorPrimitive::SetContextAttributesForStroke( BLContext& iCtx, const IVectorPrimitive& iPrim )
+IVectorShape::SetContextAttributesForStroke( BLContext& iCtx, const IVectorShape& iPrim )
 {
     iCtx.setCompOp( iPrim.FillCompOp() );
     iCtx.setFillStyle( iPrim.FillStyle() );
@@ -147,35 +147,60 @@ IVectorPrimitive::SetContextAttributesForStroke( BLContext& iCtx, const IVectorP
 
 //static
 void
-IVectorPrimitive::SetContextAttributesForFill( BLContext& iCtx, const IVectorPrimitive& iPrim )
+IVectorShape::SetContextAttributesForFill( BLContext& iCtx, const IVectorShape& iPrim )
 {
     iCtx.setCompOp( iPrim.StrokeCompOp() );
     iCtx.setStrokeStyle( iPrim.StrokeStyle() );
     iCtx.setStrokeOptions( iPrim.StrokeOptions() );
 }
 
-// FRectangleVectorPrimitive
-FRectangleVectorPrimitive::~FRectangleVectorPrimitive()
+// FRectangleVectorShape
+FRectangleVectorShape::~FRectangleVectorShape()
 {
 }
 
-FRectangleVectorPrimitive::FRectangleVectorPrimitive( const BLRect& iData )
-    : IVectorPrimitive()
+FRectangleVectorShape::FRectangleVectorShape( const BLRect& iData )
+    : IVectorShape()
     , mData( iData )
 {}
 
 BLRect&
-FRectangleVectorPrimitive::Rect() {
+FRectangleVectorShape::Rectangle() {
     return  mData;
 }
 
 const BLRect&
-FRectangleVectorPrimitive::Rect() const {
+FRectangleVectorShape::Rectangle() const {
     return  mData;
 }
 
 void
-FRectangleVectorPrimitive::SetRect( const BLRect& iRect ) {
-    mData = iRect;
+FRectangleVectorShape::SetRectangle( const BLRect& iData ) {
+    mData = iData;
+}
+
+// FCircleVectorShape
+FCircleVectorShape::~FCircleVectorShape()
+{
+}
+
+FCircleVectorShape::FCircleVectorShape( const BLCircle& iData )
+    : IVectorShape()
+    , mData( iData )
+{}
+
+BLCircle&
+FCircleVectorShape::Circle() {
+    return  mData;
+}
+
+const BLCircle&
+FCircleVectorShape::Circle() const {
+    return  mData;
+}
+
+void
+FCircleVectorShape::SetCircle( const BLCircle& iCircle ) {
+    mData = iCircle;
 }
 
