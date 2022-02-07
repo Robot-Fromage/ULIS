@@ -53,6 +53,9 @@ public:
     }
 
     void PopCel() {
+        if( mInstances.Size() == 0 )
+            return;
+
         delete  mInstances.Back();
         mInstances.PopBack();
     }
@@ -66,6 +69,12 @@ public:
     }
     void InsertSharedResourceCelAtFrame( uint64 iFrame, TCel< T >* iRefCel ) {
         mInstances.Insert( IndexAtFrame( iFrame ), CelTypeFactory::MakeSharedFrom( iRefCel ) );
+    }
+
+    void RemoveCelAtFrame( uint64 iFrame ) {
+        const uint64 index = IndexAtFrame( iFrame );
+        delete mInstances[index];
+        mInstances.Erase( index );
     }
 
     TCel< T >* CelAtFrame( uint64 iFrame ) {
