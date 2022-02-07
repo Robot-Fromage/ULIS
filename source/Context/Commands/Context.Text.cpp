@@ -159,26 +159,20 @@ FContext::TextMetrics(
     int dx = static_cast< int >( iTransform[2].x );
     int dy = static_cast< int >( iTransform[2].y );
 
+    FT_Error error = 0;
+    FT_Face face = reinterpret_cast< FT_Face >( iFont.FontHandle() );
+    error = FT_Set_Pixel_Sizes( face, 0, iFontSize );
+    ULIS_ASSERT( !error, "Error setting face size" );
+    FT_GlyphSlot slot = face->glyph;
+    FT_Vector pen { 0, 0 };
+    const wchar_t* str = iText.Data();
+    int len = (int)iText.Size();
+
     FRectI result;
     result.x = static_cast< int >( dx );
     result.y = static_cast< int >( dy );
     result.w = 1;
     result.h = 1;
-
-    const wchar_t* str = iText.Data();
-    int len = (int)iText.Size();
-
-    FT_GlyphSlot  slot;
-    FT_Vector     pen;
-
-    FT_Error error = 0;
-    FT_Face face = reinterpret_cast< FT_Face >( iFont.FontHandle() );
-    error = FT_Set_Pixel_Sizes( face, 0, iFontSize );
-    ULIS_ASSERT( !error, "Error setting face size" );
-    slot = face->glyph;
-    pen.x = 0;
-    pen.y = 0;
-    int autobaseline = (int)( iFontSize * 0.7 );
 
     for( int n = 0; n < len; ++n ) {
         FT_Set_Transform( face, &matrix, &pen );
@@ -186,7 +180,7 @@ FContext::TextMetrics(
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_BITMAP_METRICS_ONLY );
         ULIS_ASSERT( !error, "Error loading glyph" );
 
-        FRectI box = FRectI::FromXYWH( dx + slot->bitmap_left, dy + ( autobaseline - slot->bitmap_top ), slot->bitmap.width, slot->bitmap.rows );
+        FRectI box = FRectI::FromXYWH( dx + slot->bitmap_left, -slot->bitmap_top + dy, slot->bitmap.width, slot->bitmap.rows );
         result = result | box;
 
         pen.x += slot->advance.x;

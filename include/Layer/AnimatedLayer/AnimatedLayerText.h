@@ -12,10 +12,41 @@
 #include "Core/Core.h"
 #include "Font/Font.h"
 #include "Layer/AnimatedLayer/AnimatedLayer.h"
+#include "Layer/AnimatedLayer/Sequence.h"
+#include "Layer/Components/HasText.h"
 #include "Layer/Components/HasBlendInfo.h"
 #include "String/WString.h"
 
 ULIS_NAMESPACE_BEGIN
+struct ULIS_API FCelTextFactory
+    : public IHasText
+{
+    ~FCelTextFactory() {};
+
+    FCelTextFactory(
+          const FWString& iString = L"Lorem ipsum dolor sit amet..."
+        , const FFont& iFont = FFont::DefaultFont
+        , int iSize = 12
+        , const FColor& iColor = FColor::Black
+        , bool iAntiAliased = true
+    )
+    : IHasText( iString, iFont, iSize, iColor, iAntiAliased )
+    {}
+
+    TCel< FWString >* MakeBlank( uint32 iExposure = 0 ) {
+        return  new TCel< FWString >( nullptr, iExposure );
+    }
+
+    TCel< FWString >* MakeNew( uint32 iExposure = 0 ) {
+        return  new TCel< FWString >( std::make_shared< FWString >( L"Lorem ipsum dolor sit amet..." ), iExposure );
+    }
+
+    TCel< FWString >* MakeSharedFrom( TCel< FWString >* iRefCel, uint32 iExposure = 0 ) {
+        ULIS_ASSERT( iRefCel, "Bad input" );
+        return  new TCel< FWString >( iRefCel->Data(), iExposure );
+    }
+};
+
 /////////////////////////////////////////////////////
 /// @class      FAnimatedLayerText
 /// @brief      The FAnimatedLayerText class provides a class to store text in a layer
@@ -23,6 +54,7 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FAnimatedLayerText final
     : public IAnimatedLayer
     , public IHasBlendInfo
+    , public TSequence< FWString, FCelTextFactory >
 {
     typedef TRoot< IAnimatedLayer > tParent;
 

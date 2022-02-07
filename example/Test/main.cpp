@@ -16,11 +16,32 @@
 #include <QLabel>
 #include <chrono>
 
+#include "Animation/AnimatedProperty.h"
+#include "Animation/BoundedAnimatedProperty.h"
+#include "Animation/Interpolation/LinearInterpolation.h"
+#include "Animation/Interpolation/HoldInterpolation.h"
+#include "Animation/Interpolation/BezierInterpolation.h"
+
 using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
-    FThreadPool pool;
+
+    TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 1.f, 8.f );
+    animatedFloat.AddKey( FKey<float>(60, 2.1f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(55, 7.2f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(38, 4.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(17, 3.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(44, 5.6f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddKey( FKey<float>(21, 1.5f, TBezierInterpolation<float>::GetInstance()) );
+
+    animatedFloat.RemoveKeyAtFrame( 60 );
+
+    float value = animatedFloat.GetValueAtFrame( 48 );
+
+    std::cout << value << std::endl;
+
+    /*FThreadPool pool;
     FCommandQueue queue( pool );
     eFormat fmt = Format_LabA8;
     FContext ctx( queue, fmt );
@@ -63,6 +84,7 @@ main( int argc, char *argv[] ) {
     delete  image;
     delete  widget;
 
-    return  exit_code;
+    return  exit_code;*/
+    return 0;
 }
 
