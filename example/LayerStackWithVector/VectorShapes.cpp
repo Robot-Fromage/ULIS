@@ -154,6 +154,33 @@ IVectorShape::SetContextAttributesForFill( BLContext& iCtx, const IVectorShape& 
     iCtx.setStrokeOptions( iPrim.StrokeOptions() );
 }
 
+
+
+// FGroupVectorShape
+FGroupVectorShape::~FGroupVectorShape()
+{
+    for( uint64_t i = 0; i < mData.Size(); ++ i )
+        delete  mData[i];
+    mData.Clear();
+}
+
+FGroupVectorShape::FGroupVectorShape()
+    : IVectorShape()
+    , mData()
+{}
+
+::ULIS::TArray< IVectorShape* >&
+FGroupVectorShape::Data() {
+    return  mData;
+}
+
+const ::ULIS::TArray< IVectorShape* >&
+FGroupVectorShape::Data() const {
+    return  mData;
+}
+
+
+
 // FRectangleVectorShape
 FRectangleVectorShape::~FRectangleVectorShape()
 {
@@ -179,6 +206,8 @@ FRectangleVectorShape::SetRectangle( const BLRect& iData ) {
     mData = iData;
 }
 
+
+
 // FCircleVectorShape
 FCircleVectorShape::~FCircleVectorShape()
 {
@@ -203,6 +232,8 @@ void
 FCircleVectorShape::SetCircle( const BLCircle& iCircle ) {
     mData = iCircle;
 }
+
+
 
 // FPathVectorShape
 FPathVectorShape::~FPathVectorShape()

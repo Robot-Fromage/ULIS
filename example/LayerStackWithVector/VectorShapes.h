@@ -35,6 +35,8 @@ namespace eVectorPaintingAttribute
 };
 
 // IVectorShape
+// Copy of BL members seems to be trivial but it hasn't been tested.
+// See especially BLStrokeOptions and BLArray
 class IVectorShape
     : ::ULIS::ITypeIdentifiable
 {
@@ -82,6 +84,25 @@ private:
 
     // Transform
     BLMatrix2D mTransform;
+};
+
+// FGroupVectorShape
+class FGroupVectorShape
+    : IVectorShape
+{
+public:
+    ~FGroupVectorShape();
+    FGroupVectorShape();
+
+public:
+    ::ULIS::TArray< IVectorShape* >& Data();
+    const ::ULIS::TArray< IVectorShape* >& Data() const;
+
+    // TypeID Interface
+    ULIS_OVERRIDE_TYPEID_INTERFACE_EXT( "Group" )
+
+private:
+    ::ULIS::TArray< IVectorShape* > mData;
 };
 
 // FRectangleVectorShape
