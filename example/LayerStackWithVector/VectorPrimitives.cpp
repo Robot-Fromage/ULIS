@@ -22,6 +22,7 @@ IVectorPrimitive::IVectorPrimitive()
     , mFillCompOp( BL_COMP_OP_SRC_OVER )
     , mFillStyle( BLRgba( 0.f, 0.f, 0.f ) )
     , mFillRule( BL_FILL_RULE_NON_ZERO )
+    , mTransform( BLMatrix2D::makeIdentity() )
 {
     mStrokeOptions.startCap = BL_STROKE_CAP_BUTT;
     mStrokeOptions.endCap = BL_STROKE_CAP_BUTT;
@@ -67,6 +68,11 @@ IVectorPrimitive::FillRule() const {
     return  mFillRule;
 }
 
+const BLMatrix2D&
+IVectorPrimitive::Transform() const {
+    return  mTransform;
+}
+
 void
 IVectorPrimitive::SetVectorPaintingAttribute( uint8_t iVectorPaintingAttribute ) {
     mVectorPaintingAttribute = iVectorPaintingAttribute;
@@ -103,6 +109,11 @@ IVectorPrimitive::SetFillRule( BLFillRule iRule ) {
 }
 
 void
+IVectorPrimitive::SetTransform( const BLMatrix2D& iTransform ) {
+    mTransform = iTransform;
+}
+
+void
 IVectorPrimitive::ResetAttributes()
 {
     // Reset all visual attributes just as if it was just created but
@@ -121,6 +132,7 @@ IVectorPrimitive::ResetAttributes()
     mStrokeOptions.width = 1.0;
     mStrokeOptions.miterLimit = 4.0;
     mStrokeOptions.dashOffset = 0.0;
+    mTransform = BLMatrix2D::makeIdentity();
 }
 
 //static

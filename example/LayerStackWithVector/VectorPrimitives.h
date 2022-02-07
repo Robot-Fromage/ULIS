@@ -49,6 +49,7 @@ public:
     BLCompOp FillCompOp() const;
     const BLStyle& FillStyle() const;
     BLFillRule FillRule() const;
+    const BLMatrix2D& Transform() const;
 
     void SetVectorPaintingAttribute( uint8_t iVectorPaintingAttribute );
     void SetStrokeCompOp( BLCompOp iCompOp );
@@ -57,6 +58,7 @@ public:
     void SetFillCompOp( BLCompOp iCompOp );
     void SetFillStyle( BLStyle iStyle );
     void SetFillRule( BLFillRule iRule );
+    void SetTransform( const BLMatrix2D& iTransform );
 
     void ResetAttributes();
 
@@ -76,5 +78,8 @@ private:
     BLCompOp mFillCompOp;
     BLStyle mFillStyle;
     BLFillRule mFillRule;
+
+    // Transform
+    BLMatrix2D mTransform;
 };
 
