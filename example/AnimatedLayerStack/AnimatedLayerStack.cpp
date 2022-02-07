@@ -37,6 +37,8 @@ main( int argc, char *argv[] ) {
     ];
 
     FAnimatedLayerImage& layer0 = stack->Find< FAnimatedLayerImage >( "layer0" );
+    for( int i = 0; i < 5; ++i )
+        layer0.PushNewCel();
 
     ctx.Clear( canvas, canvas.Rect() );
     ctx.Finish();

@@ -103,6 +103,7 @@ private:
                 return  i;
             counter += exposure + 1;
         }
+        return  0; // Shut warning C4715
     }
 
 private:

@@ -10,6 +10,9 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "Layer/Components/HasName.h"
+#include "Layer/Components/HasPrettyColor.h"
+#include "Layer/Components/HasExposure.h"
 #include <memory>
 
 ULIS_NAMESPACE_BEGIN
@@ -20,14 +23,29 @@ class TSequence;
 /// @class      TCel
 /// @brief      Basic Animation Cel
 template< class T >
-class TCel {
+class TCel
+    : public IHasExposure
+    , public IHasName
+    , public IHasPrettyColor
+{
 public:
     virtual ~TCel() {
     }
 
-    TCel( std::shared_ptr< T > iData, uint32 iExposure = 0 )
+    TCel(
+          std::shared_ptr< T > iData
+        , uint32 iExposure = 0
+        , const FString& iName = ""
+        , const FColor& iPrettyColor = FColor::Transparent
+
+        , const FOn_uint32_Changed& iOnExposureChanged = FOn_uint32_Changed()
+        , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
+        , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
+    )
         : mData( iData )
-        , mExposure( iExposure )
+        , IHasExposure( iExposure, iOnExposureChanged )
+        , IHasName( iName, iOnNameChanged )
+        , IHasPrettyColor( iPrettyColor, iOnColorChanged )
     {}
 
     std::shared_ptr< T > Data() {
@@ -36,10 +54,6 @@ public:
 
     const std::shared_ptr< T > Data() const {
         return  mData;
-    }
-
-    uint32 Exposure() const {
-        return  mExposure;
     }
 
     bool IsCelResourceShared() const {
@@ -52,13 +66,8 @@ public:
 
 private:
     std::shared_ptr< T > mData;
-    uint32 mExposure; // Exposure can be zero but results in a 1-frame exposition anyway.
+    // Exposure stored in IHasExposure can be zero but results in a 1-frame exposition anyway.
 };
-
-//#define ULIS_EXPORT_CEL_CLASSES( CLASS )                \
-//    template class ULIS_API TCel< CLASS >;              \
-//    template class ULIS_API TArray< TCel< CLASS >* >;   \
-//    template class ULIS_API TSequence< CLASS >;
 
 ULIS_NAMESPACE_END
 
