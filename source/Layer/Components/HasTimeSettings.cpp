@@ -53,6 +53,10 @@ int64 IHasTimeSettings::GetFrameAtTime( ufloat iTimeSeconds ) {
     return  static_cast< int64 >( FMath::RoundToNegativeInfinity( static_cast< float >( mInfo.fps ) * iTimeSeconds ) );
 }
 
+ufloat IHasTimeSettings::GetInterval_ms() const {
+    return  static_cast< ufloat >( mInfo.fps ) / 1000.0f;
+}
+
 void IHasTimeSettings::SetFps( uint16 iValue )
 {
     mInfo.fps = iValue;
