@@ -28,16 +28,22 @@ int
 main( int argc, char *argv[] ) {
 
     TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 1.f, 8.f );
-    animatedFloat.AddKey( FKey<float>(60, 2.1f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(55, 7.2f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(38, 4.5f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(17, 3.5f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(44, 5.6f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(21, 1.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( FKey<float>(60.2f, 2.1f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( FKey<float>(55.1f, 7.2f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( FKey<float>(38, 4.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( FKey<float>(17, 3.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( FKey<float>(44, 5.6f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( FKey<float>(21, 1.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( FKey<float>(44, 7.6f, TBezierInterpolation<float>::GetInstance()) );
 
-    animatedFloat.RemoveKeyAtFrame( 60 );
+    animatedFloat.RemoveKeyAtFrame( 60.2f );
 
     float value = animatedFloat.GetValueAtFrame( 48 );
+
+    for (int i = 0; i < animatedFloat.GetKeys().Size(); i++)
+    {
+        std::cout << animatedFloat.GetKeys()[i].Frame << ";" << animatedFloat.GetKeys()[i].Value << std::endl;
+    }
 
     std::cout << value << std::endl;
 
