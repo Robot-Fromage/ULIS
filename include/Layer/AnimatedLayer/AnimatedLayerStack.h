@@ -82,6 +82,10 @@ public:
     // ITypeIdentifiable Interface
     ULIS_OVERRIDE_TYPEID_INTERFACE( "AnimatedStack" );
 
+public:
+    // IAnimatedLayer interface
+    uint64 GetNumFrames() const override;
+
     // TRoot Overload Shadow Interface
     // TSearchable Overload Shadow Interface
     using TRoot< IAnimatedLayer >::operator[];

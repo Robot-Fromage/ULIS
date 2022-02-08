@@ -95,6 +95,10 @@ public:
 public:
     // ITypeIdentifiable Interface
     ULIS_OVERRIDE_TYPEID_INTERFACE( "AnimatedText" );
+
+public:
+    // IAnimatedLayer interface
+    uint64 GetNumFrames() const override;
 };
 
 ULIS_NAMESPACE_END

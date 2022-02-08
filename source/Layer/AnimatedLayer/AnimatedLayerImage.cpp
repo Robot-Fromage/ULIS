@@ -120,5 +120,10 @@ FAnimatedLayerImage::InitFromParent( const TRoot< IAnimatedLayer >* iParent ) //
     }
 }
 
+uint64
+FAnimatedLayerImage::GetNumFrames() const {
+    return  TotalFrames();
+}
+
 ULIS_NAMESPACE_END
 

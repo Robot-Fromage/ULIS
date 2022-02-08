@@ -122,5 +122,17 @@ FAnimatedLayerStack::Reset(
     this->FOnUserDataRemoved::SetDelegate( iOnUserDataRemoved );
 }
 
+uint64
+FAnimatedLayerStack::GetNumFrames() const {
+    uint64 numFrames = 0;
+    const uint64 size = Children().Size();
+    for( uint64 i = 0; i < size; ++i ) {
+        ::ULIS::IAnimatedLayer* layer = dynamic_cast< ::ULIS::IAnimatedLayer* >( &( Children()[i]->Self() ) );
+        ULIS_ASSERT( layer, "Bad cast, shouldn't be possible!" );
+        numFrames = FMath::Max( numFrames, layer->GetNumFrames() );
+    }
+    return  numFrames;
+}
+
 ULIS_NAMESPACE_END
 
