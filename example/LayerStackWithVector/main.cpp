@@ -64,12 +64,16 @@ main( int argc, char *argv[] ) {
     FLayerVector& vectorLayer = stack->Find< FLayerVector >( "Vector" );
     FGroupVectorShape& groupVectorShape = vectorLayer.VectorData();
     {
-        FRectangleVectorShape* rectangle = new FRectangleVectorShape( BLRect( 50.0, 50.0, 150.0, 150.0 ) );
+        FRectangleVectorShape* rectangle = new FRectangleVectorShape( BLRect( 0.0, 0.0, 150.0, 150.0 ) );
         BLStrokeOptions strokeOptions = rectangle->StrokeOptions();
         strokeOptions.width = 2.0;
         rectangle->SetStrokeOptions( strokeOptions );
         rectangle->SetStrokeStyle( BLStyle( BLRgba( 0.f, 0.f, 0.f ) ) );
         rectangle->SetFillStyle( BLStyle( BLRgba( 1.f, 0.f, 0.f ) ) );
+        BLMatrix2D transform = BLMatrix2D::makeIdentity();
+        transform.translate( 50, 50 );
+        transform.rotate( 3.14 / 8 );
+        rectangle->SetTransform( transform );
         groupVectorShape.Data().PushBack( rectangle );
     }
     {
@@ -93,6 +97,7 @@ main( int argc, char *argv[] ) {
         path->SetStrokeOptions( strokeOptions );
         path->SetStrokeStyle( BLStyle( BLRgba( 0.0f, 0.0f, 0.0f, 1.0f ) ) );
         path->SetFillStyle( BLStyle( BLRgba( 1.f, 1.f, 1.f, 0.33f ) ) );
+        path->SetTransform( BLMatrix2D::makeTranslation( 200, 200 ) );
         groupVectorShape.Data().PushBack( path );
     }
 

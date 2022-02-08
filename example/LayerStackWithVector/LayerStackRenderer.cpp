@@ -185,6 +185,12 @@ FLayerStackRenderer::RenderVector(
     , const ::ULIS::FEvent* iWaitList
 )
 {
+    // Todo: hierarchical group transforms
+    // Fix transform in case we draw a subrect of the stack ( base user matrix or meta matrix )
+    // scaling transform in case we raster at full pixel scale / view scale.
+    // avoid conv if not necessary ( unlikely to happen but still worth it )
+    // Handle all shapes types
+
     ::ULIS::FRectI src_rect = ::ULIS::FRectI::FromPositionAndSize( ::ULIS::FVec2I( 0 ), iRect.Size() );
 
     // Dual image rep: FBlock owns the memory, BLImage borrows it for the time of the vector render.
@@ -197,6 +203,7 @@ FLayerStackRenderer::RenderVector(
     // Local BLContext, we could also keep a BLContext outside and bind it to the image target,
     // not sure if it has any impact, needs to be tested.
     BLContext blctx( vectorTarget );
+    blctx.clipToRect( src_rect.x, src_rect.y, src_rect.w, src_rect.h ); // Ensure clipping of geometry data in the render rect
 
     // Equivalent to a clear with the BLContext, this needs to be blocking in the BL pipeline.
     // No call to ULIS should be made until the BLContext::end
@@ -207,9 +214,11 @@ FLayerStackRenderer::RenderVector(
     FGroupVectorShape& group = iLayer.VectorData();
     ::ULIS::TArray< IVectorShape* >& shapes = group.Data();
     for( uint64_t i = 0; i < shapes.Size(); ++i ) {
+        blctx.resetMatrix();
         IVectorShape::SetContextAttributesForStroke( blctx, *shapes[i] );
         IVectorShape::SetContextAttributesForFill( blctx, *shapes[i] );
         uint8_t flag = shapes[i]->VectorPaintingAttribute();
+        blctx.transform( shapes[i]->Transform() );
         switch( shapes[i]->TypeID() ) {
             case FRectangleVectorShape::StaticTypeID() : {
                 FRectangleVectorShape* shape = dynamic_cast< FRectangleVectorShape* >( shapes[i] );
