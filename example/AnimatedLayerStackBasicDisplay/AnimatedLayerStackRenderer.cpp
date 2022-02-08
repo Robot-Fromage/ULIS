@@ -250,6 +250,7 @@ FAnimatedLayerStackRenderer::Render(
     if( dst_roi.Sanitized().Area() <= 0 )
         return  iCtx.FinishEventNo_OP( iNumWait, iWaitList, iEvent, ULIS_WARNING_NO_OP_GEOMETRY );
 
+    const uint64_t frame = static_cast< uint64_t >( ::ULIS::FMath::Clamp( iStack.GetFrameAtTime( iTime ), int64_t( 0 ), int64_t( ULIS_UINT32_MAX ) ) );
     ::ULIS::FEvent ev = FAnimatedLayerStackRenderer::RenderStack( iCtx, iStack, oDestination, frame, src_roi, dst_roi.Position(), iPolicy, iNumWait, iWaitList );
     iCtx.Dummy_OP( 1, &ev, iEvent );
 
