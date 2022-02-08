@@ -38,7 +38,7 @@ namespace eVectorPaintingAttribute
 // Copy of BL members seems to be trivial but it hasn't been tested.
 // See especially BLStrokeOptions and BLArray
 class IVectorShape
-    : ::ULIS::ITypeIdentifiable
+    : public ::ULIS::ITypeIdentifiable
 {
 public:
     virtual ~IVectorShape() = 0;

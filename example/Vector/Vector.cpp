@@ -43,7 +43,7 @@ main( int argc, char *argv[] ) {
 
         auto dummy = 0;
 
-        blctx.setFillStyle(BLRgba32(0x3FFF0000));
+        blctx.setFillStyle(BLRgba32(0xFF0100FF));
         blctx.setCompOp(BL_COMP_OP_SRC_COPY);
         blctx.fillAll();
         BLPath path;

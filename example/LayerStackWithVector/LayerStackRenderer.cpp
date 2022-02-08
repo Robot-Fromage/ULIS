@@ -185,10 +185,94 @@ FLayerStackRenderer::RenderVector(
     , const ::ULIS::FEvent* iWaitList
 )
 {
-    ULIS_DEBUG_PRINTF( "FLayerStackRenderer::RenderVector not implemented yet !" )
-    ::ULIS::FEvent ev;
-    iCtx.Dummy_OP( iNumWait, iWaitList, &ev );
-    return  ev;
+    ::ULIS::FRectI src_rect = ::ULIS::FRectI::FromPositionAndSize( ::ULIS::FVec2I( 0 ), iRect.Size() );
+
+    // Dual image rep: FBlock owns the memory, BLImage borrows it for the time of the vector render.
+    // This is because the BLContext will be blocking with a fence here while further asynchronous
+    // conversion operations will occur on the ULIS block data.
+    ::ULIS::FBlock* temp = new ::ULIS::FBlock( src_rect.w, src_rect.h, ::ULIS::Format_BGRA8_Premultiplied );
+    BLImage vectorTarget;
+    vectorTarget.createFromData( src_rect.w, src_rect.h, BL_FORMAT_PRGB32, temp->Bits(), temp->BytesPerScanLine() );
+
+    // Local BLContext, we could also keep a BLContext outside and bind it to the image target,
+    // not sure if it has any impact, needs to be tested.
+    BLContext blctx( vectorTarget );
+
+    // Equivalent to a clear with the BLContext, this needs to be blocking in the BL pipeline.
+    // No call to ULIS should be made until the BLContext::end
+    blctx.setCompOp(BL_COMP_OP_SRC_COPY);
+    blctx.setFillStyle( BLRgba32( 0x00000000 ) );
+    blctx.fillAll();
+
+    FGroupVectorShape& group = iLayer.VectorData();
+    ::ULIS::TArray< IVectorShape* >& shapes = group.Data();
+    for( uint64_t i = 0; i < shapes.Size(); ++i ) {
+        IVectorShape::SetContextAttributesForStroke( blctx, *shapes[i] );
+        IVectorShape::SetContextAttributesForFill( blctx, *shapes[i] );
+        uint8_t flag = shapes[i]->VectorPaintingAttribute();
+        switch( shapes[i]->TypeID() ) {
+            case FRectangleVectorShape::StaticTypeID() : {
+                FRectangleVectorShape* shape = dynamic_cast< FRectangleVectorShape* >( shapes[i] );
+                ULIS_ASSERT( shape, "Cannot cast shape, this is inconsistent with the StaticTypeID" );
+                if( flag & eVectorPaintingAttribute::kFill )
+                    blctx.fillRect( shape->Rectangle() );
+                if( flag & eVectorPaintingAttribute::kStroke )
+                    blctx.strokeRect( shape->Rectangle() );
+                break;
+            }
+
+            case FCircleVectorShape::StaticTypeID() : {
+                FCircleVectorShape* shape = dynamic_cast< FCircleVectorShape* >( shapes[i] );
+                ULIS_ASSERT( shape, "Cannot cast shape, this is inconsistent with the StaticTypeID" );
+                if( flag & eVectorPaintingAttribute::kFill )
+                    blctx.fillCircle( shape->Circle() );
+                if( flag & eVectorPaintingAttribute::kStroke )
+                    blctx.strokeCircle( shape->Circle() );
+                break;
+            }
+
+            case FPathVectorShape::StaticTypeID() : {
+                FPathVectorShape* shape = dynamic_cast< FPathVectorShape* >( shapes[i] );
+                ULIS_ASSERT( shape, "Cannot cast shape, this is inconsistent with the StaticTypeID" );
+                if( flag & eVectorPaintingAttribute::kFill )
+                    blctx.fillPath( shape->Path() );
+                if( flag & eVectorPaintingAttribute::kStroke )
+                    blctx.strokePath( shape->Path() );
+                break;
+            }
+        }
+    }
+    // This is a blocking synchronous fence
+    blctx.end();
+
+    ::ULIS::FBlock* conv = new ::ULIS::FBlock( src_rect.w, src_rect.h, iCtx.Format() );
+    ::ULIS::FEvent eventUnpremult;
+    //iCtx.Unpremultiply( *temp, src_rect, ::ULIS::FSchedulePolicy::MultiScanlines, 0, nullptr, &eventUnpremult );
+    iCtx.Dummy_OP( 0, nullptr, &eventUnpremult );
+    ::ULIS::FEvent eventConv( ::ULIS::FOnEventComplete( [ temp ]( const ::ULIS::FRectI& ){ delete temp; } ) );
+    iCtx.ConvertFormat( *temp, *conv, src_rect, ::ULIS::FVec2I( 0 ), ::ULIS::FSchedulePolicy::MultiScanlines, 1, &eventUnpremult, &eventConv );
+
+    ::ULIS::FEvent eventBlend( ::ULIS::FOnEventComplete( [conv]( const ::ULIS::FRectI& ) { delete  conv; } ) );
+    ::ULIS::TArray< ::ULIS::FEvent > events( iNumWait + 1 );
+    for( ::ULIS::uint32 i = 0; i < iNumWait; ++i )
+        events[i] = iWaitList[i];
+    events[ iNumWait ] = eventConv;
+
+    ::ULIS::ulError err = iCtx.Blend(
+          *conv
+        , ioBlock
+        , src_rect
+        , iPos
+        , iLayer.BlendMode()
+        , iLayer.AlphaMode()
+        , iLayer.Opacity()
+        , iPolicy
+        , iNumWait + 1
+        , &events[0]
+        , &eventBlend
+    );
+    ULIS_ASSERT( !err, "Error during layer text blend" );
+    return  eventBlend;
 }
 
 //static
