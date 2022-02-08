@@ -256,8 +256,7 @@ FLayerStackRenderer::RenderVector(
 
     ::ULIS::FBlock* conv = new ::ULIS::FBlock( src_rect.w, src_rect.h, iCtx.Format() );
     ::ULIS::FEvent eventUnpremult;
-    //iCtx.Unpremultiply( *temp, src_rect, ::ULIS::FSchedulePolicy::MultiScanlines, 0, nullptr, &eventUnpremult );
-    iCtx.Dummy_OP( 0, nullptr, &eventUnpremult );
+    iCtx.Unpremultiply( *temp, src_rect, ::ULIS::FSchedulePolicy::MultiScanlines, 0, nullptr, &eventUnpremult );
     ::ULIS::FEvent eventConv( ::ULIS::FOnEventComplete( [ temp ]( const ::ULIS::FRectI& ){ delete temp; } ) );
     iCtx.ConvertFormat( *temp, *conv, src_rect, ::ULIS::FVec2I( 0 ), ::ULIS::FSchedulePolicy::MultiScanlines, 1, &eventUnpremult, &eventConv );
 
