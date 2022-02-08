@@ -9,6 +9,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Editor.h"
+#include "AnimatedLayerStackRenderer.h"
 #include <QImage>
 #include <QLabel>
 #include <QPixmap>
@@ -24,6 +25,7 @@ SEditor::~SEditor() {
     delete  mPixmap;
     delete  mLabel;
     delete  mTimer;
+    delete  mView;
 }
 
 SEditor::SEditor( FContext& iCtx, FAnimatedLayerStack& iDocument )
@@ -54,8 +56,13 @@ SEditor::tickEvent() {
     // This is not particularly precise but enough for a demo
     mElapsed += mDocument.GetInterval_ms();
 
+    // Loop play
+    if( mElapsed >= static_cast< float >( mDocument.GetNumFrames() ) / static_cast< float >( mDocument.Fps() ) )
+        mElapsed = 0;
+
     // Work on mView...
-    // Nothing ATM
+    FAnimatedLayerStackRenderer::Render( mCtx, mDocument, *mView, mElapsed );
+    mCtx.Finish();
 
     // Finish and update display
     mCtx.Finish();

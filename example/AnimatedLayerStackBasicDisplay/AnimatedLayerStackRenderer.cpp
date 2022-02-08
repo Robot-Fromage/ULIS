@@ -26,7 +26,7 @@ FAnimatedLayerStackRenderer::RenderImage(
 {
     ::ULIS::FEvent eventBlend;
     ::ULIS::ulError err = iCtx.Blend(
-          *iLayer.Block()
+          *iLayer.CelAtFrame( iFrame )->Data()
         , ioBlock
         , iRect
         , iPos
@@ -128,22 +128,25 @@ FAnimatedLayerStackRenderer::RenderText(
     , const ::ULIS::FEvent* iWaitList
 )
 {
-    ::ULIS::FRectI text_rect = ::ULIS::FContext::TextMetrics( iLayer.Text(), iLayer.Font(), iLayer.FontSize(), iLayer.Matrix() );
+    ::ULIS::TCel< ::ULIS::FWString >& cel = *iLayer.CelAtFrame( iFrame );
+    ::ULIS::FMat3F dummyMatrix = ::ULIS::FMat3F::MakeTranslationMatrix( 30, 30 );
+    ::ULIS::FRectI text_rect = ::ULIS::FContext::TextMetrics( *cel.Data(), ::ULIS::FFont::DefaultFont, 16, dummyMatrix );
     ::ULIS::FRectI dst_rect = ::ULIS::FRectI::FromPositionAndSize( iPos, iRect.Size() );
     ::ULIS::FRectI dst_roi = text_rect & dst_rect;
     ::ULIS::FRectI src_roi = ::ULIS::FRectI::FromPositionAndSize( ::ULIS::FVec2I( 0 ), dst_roi.Size() );
 
-    ::ULIS::FMat3F fixedMatrix = iLayer.Matrix() * ::ULIS::FMat3F::MakeTranslationMatrix( float( -text_rect.x ), float( -text_rect.y ) );
+    ::ULIS::FMat3F fixedMatrix = dummyMatrix * ::ULIS::FMat3F::MakeTranslationMatrix( float( -text_rect.x ), float( -text_rect.y ) );
 
     ::ULIS::FBlock* temp = new ::ULIS::FBlock( src_roi.w, src_roi.h, iCtx.Format() );
 
     ::ULIS::FEvent eventClear;
     iCtx.Clear( *temp, ::ULIS::FRectI::Auto, ::ULIS::FSchedulePolicy::CacheEfficient, 0, nullptr, &eventClear );
     ::ULIS::FEvent eventText;
-    if( iLayer.IsAntiAliased() ) {
-        iCtx.RasterTextAA( *temp, iLayer.Text(), iLayer.Font(), iLayer.FontSize(), fixedMatrix, iLayer.TextColor(), ::ULIS::FSchedulePolicy::MonoChunk, 1, &eventClear, &eventText );
+    bool dummyAntialiased = true;
+    if( dummyAntialiased ) {
+        iCtx.RasterTextAA( *temp, *cel.Data(), ::ULIS::FFont::DefaultFont, 16, fixedMatrix, ::ULIS::FColor::Black, ::ULIS::FSchedulePolicy::MonoChunk, 1, &eventClear, &eventText );
     } else {
-        iCtx.RasterText( *temp, iLayer.Text(), iLayer.Font(), iLayer.FontSize(), fixedMatrix, iLayer.TextColor(), ::ULIS::FSchedulePolicy::MonoChunk, 1, &eventClear, &eventText );
+        iCtx.RasterText( *temp, *cel.Data(), ::ULIS::FFont::DefaultFont, 16, fixedMatrix, ::ULIS::FColor::Black, ::ULIS::FSchedulePolicy::MonoChunk, 1, &eventClear, &eventText );
     }
 
     ::ULIS::FEvent eventBlend( ::ULIS::FOnEventComplete( [temp]( const ::ULIS::FRectI& ) { delete  temp; } ) );

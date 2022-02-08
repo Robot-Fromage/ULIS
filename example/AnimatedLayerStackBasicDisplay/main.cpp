@@ -32,6 +32,10 @@ main( int argc, char *argv[] ) {
     ULADef( SetName( "stack" ) )
     ULADef( SetFps( 6 ) )
     [
+        ULACreateChild( FAnimatedLayerText )
+        ULADef( SetName( "text" ) )
+    ]
+    [
         ULACreateChild( FAnimatedLayerImage )
         ULADef( SetName( "layer0" ) )
     ];
@@ -40,6 +44,11 @@ main( int argc, char *argv[] ) {
     FAnimatedLayerImage& layer0 = stack->Find< FAnimatedLayerImage >( "layer0" );
     for( int i = 0; i < 5; ++i )
         layer0.PushNewCel();
+
+    FAnimatedLayerText& text = stack->Find< FAnimatedLayerText >( "text" );
+    text.PushNewCel();
+    text.Instances()[0]->SetExposure( 5 );
+    *text.Instances()[0]->Data() = L"Animated !";
 
     // Paint solid colors at each frames manually
     ctx.Fill( *layer0.Instances()[0]->Data(), FColor::Red );
