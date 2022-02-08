@@ -36,6 +36,8 @@ public:
     int64 EndFrame();
     int64 CurrentFrame();
 
+    int64 GetFrameAtTime( ufloat iTimeSeconds );
+
     void SetFps( uint16 iValue );
     void SetBeginFrame( int64 iValue );
     void SetEndFrame( int64 iValue );

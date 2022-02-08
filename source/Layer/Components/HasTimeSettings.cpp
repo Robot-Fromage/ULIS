@@ -9,6 +9,7 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/Components/HasTimeSettings.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -46,6 +47,10 @@ int64 IHasTimeSettings::EndFrame()
 int64 IHasTimeSettings::CurrentFrame()
 {
     return mInfo.currentFrame;
+}
+
+int64 IHasTimeSettings::GetFrameAtTime( ufloat iTimeSeconds ) {
+    return  static_cast< int64 >( FMath::RoundToNegativeInfinity( static_cast< float >( mInfo.fps ) * iTimeSeconds ) );
 }
 
 void IHasTimeSettings::SetFps( uint16 iValue )
