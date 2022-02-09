@@ -23,7 +23,7 @@ class ULIS_API IHasTimeSettings
 {
 protected:
     IHasTimeSettings(
-          uint16 iFps = 24
+          ufloat iFps = 24.f
         , int64 iBeginFrame = 0
         , int64 iEndFrame = 0
         , int64 iCurrentFrame = 0
@@ -31,7 +31,7 @@ protected:
     );
 
 public:
-    uint16 Fps();
+    ufloat Fps();
     int64 BeginFrame();
     int64 EndFrame();
     int64 CurrentFrame();
@@ -39,7 +39,7 @@ public:
     int64 GetFrameAtTime( ufloat iTimeSeconds );
     ufloat GetInterval_ms() const;
 
-    void SetFps( uint16 iValue );
+    void SetFps( ufloat iValue );
     void SetBeginFrame( int64 iValue );
     void SetEndFrame( int64 iValue );
     void SetCurrentFrame( int64 iValue );

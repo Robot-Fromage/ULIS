@@ -14,7 +14,7 @@
 ULIS_NAMESPACE_BEGIN
 
 IHasTimeSettings::IHasTimeSettings(
-      uint16 iFps
+      ufloat iFps
     , int64 iBeginFrame
     , int64 iEndFrame
     , int64 iCurrentFrame
@@ -22,14 +22,14 @@ IHasTimeSettings::IHasTimeSettings(
 )
     : FOnTimeSettingsChanged( iDelegate )
     , mInfo{
-          iFps
+          FMath::Max( iFps, FMath::kEpsilonf )
         , iBeginFrame
         , iEndFrame
         , iCurrentFrame
     }
 {}
 
-uint16 IHasTimeSettings::Fps()
+ufloat IHasTimeSettings::Fps()
 {
     return mInfo.fps;
 }
@@ -57,9 +57,9 @@ ufloat IHasTimeSettings::GetInterval_ms() const {
     return  static_cast< ufloat >( mInfo.fps ) / 1000.0f;
 }
 
-void IHasTimeSettings::SetFps( uint16 iValue )
+void IHasTimeSettings::SetFps( ufloat iValue )
 {
-    mInfo.fps = iValue;
+    mInfo.fps = FMath::Max( iValue, FMath::kEpsilonf );
 }
 
 void IHasTimeSettings::SetBeginFrame( int64 iValue )
