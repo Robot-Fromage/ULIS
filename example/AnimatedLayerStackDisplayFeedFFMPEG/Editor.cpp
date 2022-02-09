@@ -75,6 +75,8 @@ SEditor::tickEvent() {
     mElapsed += mDocument.GetIntervalSeconds();
     std::cout << mElapsed << std::endl;
 
+    double duration = double(mVideoReader.av_format_ctx->duration) / AV_TIME_BASE;
+
     // Loop play
     //if( mElapsed >= static_cast< float >( mDocument.GetNumFrames() ) / static_cast< float >( mDocument.Fps() ) )
     //    mElapsed = 0;
