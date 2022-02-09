@@ -37,7 +37,7 @@ public:
     int64 CurrentFrame();
 
     int64 GetFrameAtTime( ufloat iTimeSeconds );
-    ufloat GetInterval_ms() const;
+    ufloat GetIntervalSeconds() const;
 
     void SetFps( ufloat iValue );
     void SetBeginFrame( int64 iValue );

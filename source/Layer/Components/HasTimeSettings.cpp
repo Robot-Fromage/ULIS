@@ -50,11 +50,11 @@ int64 IHasTimeSettings::CurrentFrame()
 }
 
 int64 IHasTimeSettings::GetFrameAtTime( ufloat iTimeSeconds ) {
-    return  static_cast< int64 >( FMath::RoundToNegativeInfinity( static_cast< float >( mInfo.fps ) * iTimeSeconds ) );
+    return  static_cast< int64 >( FMath::RoundToNegativeInfinity( mInfo.fps * iTimeSeconds ) );
 }
 
-ufloat IHasTimeSettings::GetInterval_ms() const {
-    return  static_cast< ufloat >( mInfo.fps ) / 1000.0f;
+ufloat IHasTimeSettings::GetIntervalSeconds() const {
+    return  1.f / mInfo.fps;
 }
 
 void IHasTimeSettings::SetFps( ufloat iValue )
