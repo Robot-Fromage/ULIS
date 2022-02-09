@@ -16,7 +16,6 @@ class QLabel;
 class QPixmap;
 class QTimer;
 using namespace ::ULIS;
-#include "VReader.h"
 
 class SEditor
     : public QWidget
@@ -40,8 +39,5 @@ private:
     QPixmap* mPixmap;
     QLabel* mLabel;
     QTimer* mTimer;
-
-    FVideoReaderState mVideoReader;
-    uint8_t* mFrameData;
 };
 
