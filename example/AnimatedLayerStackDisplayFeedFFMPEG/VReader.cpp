@@ -10,8 +10,6 @@
 */
 #include "VReader.h"
 
-#include "video_reader.hpp"
-
 // av_err2str returns a temporary array. This doesn't work in gcc.
 // This function can be used as a replacement for av_err2str.
 static const char* av_make_error(int errnum) {
@@ -43,6 +41,8 @@ bool video_reader_open(FVideoReaderState* state, const char* filename) {
     auto& video_stream_index = state->video_stream_index;
     auto& av_frame = state->av_frame;
     auto& av_packet = state->av_packet;
+
+    state->sws_scaler_ctx = nullptr;
 
     // Open the file using libavformat
     av_format_ctx = avformat_alloc_context();

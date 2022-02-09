@@ -30,7 +30,7 @@ main( int argc, char *argv[] ) {
     FAnimatedLayerStack* stack;
     ULAAssignStack( stack, w, h, fmt )
     ULADef( SetName( "stack" ) )
-    ULADef( SetFps( 6 ) )
+    ULADef( SetFps( 30 ) )
     [
         ULACreateChild( FAnimatedLayerText )
         ULADef( SetName( "text" ) )

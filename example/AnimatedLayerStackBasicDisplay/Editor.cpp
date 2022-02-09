@@ -46,7 +46,7 @@ SEditor::SEditor( FContext& iCtx, FAnimatedLayerStack& iDocument )
     this->QWidget::setFixedSize( mPixmap->size() );
     mTimer = new QTimer();
     // This is not particularly precise but enough for a demo
-    mTimer->setInterval( mDocument.GetInterval_ms() );
+    mTimer->setInterval( mDocument.GetIntervalSeconds() * 1000.0f );
     QObject::connect( mTimer, SIGNAL( timeout() ), this, SLOT( tickEvent() ) );
     mTimer->start();
 }
@@ -54,7 +54,7 @@ SEditor::SEditor( FContext& iCtx, FAnimatedLayerStack& iDocument )
 void
 SEditor::tickEvent() {
     // This is not particularly precise but enough for a demo
-    mElapsed += mDocument.GetInterval_ms();
+    mElapsed += mDocument.GetIntervalSeconds();
 
     // Loop play
     if( mElapsed >= static_cast< float >( mDocument.GetNumFrames() ) / static_cast< float >( mDocument.Fps() ) )
