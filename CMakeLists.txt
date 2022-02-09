@@ -48,6 +48,7 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindLCMS2.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindOpenGL.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindGlew.cmake )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindBlend2D.cmake )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/FindFFMPEG.cmake )
 
 # Library
 include( ${CMAKE_CURRENT_SOURCE_DIR}/tool/CMake/Main.cmake )

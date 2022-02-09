@@ -66,6 +66,11 @@ target_link_libraries( ULIS PRIVATE freetype )
 target_link_libraries( ULIS PRIVATE zlibstatic )
 target_link_libraries( ULIS PUBLIC blend2d )
 #target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
+if( ${ULIS_USE_FFMPEG} )
+    target_include_directories( ULIS PUBLIC ${FFMPEG_INCLUDE_DIRS} )
+    target_link_directories( ULIS PUBLIC ${FFMPEG_LIBRARY_DIRS} )
+    target_link_libraries( ULIS PUBLIC ${FFMPEG_LIBRARIES} )
+endif()
 
 # Configure
 set_target_properties( ULIS PROPERTIES OUTPUT_NAME "ULIS${ULIS_VERSION_MAJOR}" )
