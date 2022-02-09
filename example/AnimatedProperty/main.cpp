@@ -16,12 +16,6 @@
 #include <QLabel>
 #include <chrono>
 
-#include "Animation/AnimatedProperty.h"
-#include "Animation/BoundedAnimatedProperty.h"
-#include "Animation/Interpolation/LinearInterpolation.h"
-#include "Animation/Interpolation/HoldInterpolation.h"
-#include "Animation/Interpolation/BezierInterpolation.h"
-
 using namespace ::ULIS;
 
 int

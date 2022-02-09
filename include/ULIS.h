@@ -9,6 +9,14 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
+// Animation
+#include "Animation/AnimatedProperty.h"
+#include "Animation/BoundedAnimatedProperty.h"
+#include "Animation/HasKeys.h"
+#include "Animation/Interpolation/BezierInterpolation.h"
+#include "Animation/Interpolation/HoldInterpolation.h"
+#include "Animation/Interpolation/Interpolation.h"
+#include "Animation/Interpolation/LinearInterpolation.h"
 // Context
 #include "Context/Context.h"
 // Image
