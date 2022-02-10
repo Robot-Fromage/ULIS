@@ -47,22 +47,22 @@ template< class Type > using TOnKeyRemoved = TCallbackCapable< TKeyRemovedDelega
 template< class Type > using TOnKeyChanged = TCallbackCapable< TKeyAddedDelegate< Type >, 2 >;
 
 template< typename T >
-class IHasKeys:
+class THasKeys:
     public TOnKeyAdded<T>,
     public TOnKeyRemoved<T>,
     public TOnKeyChanged<T>
 {
 public:
-    IHasKeys();
-    ~IHasKeys();
+    THasKeys();
+    ~THasKeys();
 
 public:
 
     /** Adds a key in Keys Array, replaces existing key if there was already one at the same frame*/
-    void AddOrReplaceKey( FKey<T>& iKey );
+    virtual void AddOrReplaceKey( FKey<T>& iKey );
 
     /** Removes a key at a certain frame. Return true if there was one at the frame passed in parameter */
-    bool RemoveKeyAtFrame(float iFrame);
+    virtual bool RemoveKeyAtFrame(float iFrame);
 
     /** Const getter, useful to check or display the keys, but no modification is allowed */
     const ::ULIS::TArray<FKey<T>>& GetKeys() const;
@@ -72,18 +72,18 @@ private:
 };
 
 template< typename T >
-IHasKeys<T>::IHasKeys()
+THasKeys<T>::THasKeys()
 {
 }
 
 template< typename T >
-IHasKeys<T>::~IHasKeys()
+THasKeys<T>::~THasKeys()
 {
 
 }
 
 template< typename T >
-void IHasKeys<T>::AddOrReplaceKey(FKey<T>& iKey)
+void THasKeys<T>::AddOrReplaceKey(FKey<T>& iKey)
 {
     if (Keys.Size() == 0)
     {
@@ -148,7 +148,7 @@ void IHasKeys<T>::AddOrReplaceKey(FKey<T>& iKey)
 }
 
 template< typename T >
-bool IHasKeys<T>::RemoveKeyAtFrame(float iFrame)
+bool THasKeys<T>::RemoveKeyAtFrame(float iFrame)
 {
     if (Keys.Size() == 0)
         return false;
@@ -195,7 +195,7 @@ bool IHasKeys<T>::RemoveKeyAtFrame(float iFrame)
 }
 
 template< typename T >
-const TArray<FKey<T>>& IHasKeys<T>::GetKeys() const
+const TArray<FKey<T>>& THasKeys<T>::GetKeys() const
 {
     return Keys;
 }

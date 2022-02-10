@@ -19,7 +19,7 @@
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-class TAnimatedProperty : public IHasKeys<T>
+class TAnimatedProperty : public THasKeys<T>
 {
 public:
     TAnimatedProperty();

@@ -21,7 +21,7 @@ using namespace ::ULIS;
 int
 main( int argc, char *argv[] ) {
 
-    TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 1.f, 8.f );
+    TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 6.f, 5.f );
     animatedFloat.AddOrReplaceKey( FKey<float>(60.2f, 2.1f, TBezierInterpolation<float>::GetInstance()) );
     animatedFloat.AddOrReplaceKey( FKey<float>(55.1f, 7.2f, TBezierInterpolation<float>::GetInstance()) );
     animatedFloat.AddOrReplaceKey( FKey<float>(38, 4.5f, TBezierInterpolation<float>::GetInstance()) );
