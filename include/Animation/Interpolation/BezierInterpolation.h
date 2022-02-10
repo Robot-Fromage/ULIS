@@ -9,9 +9,8 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-#include "Animation/Interpolation/Interpolation.h"
+#include "Animation/Interpolation/AbstractInterpolation.h"
 #include "Math/Interpolation/Bezier.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -31,7 +30,7 @@ public:
     static void *ReleaseInstance();
 
 public:
-    virtual T Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const override;
+    virtual T Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const override;
 };
 
 template< typename T >
@@ -46,7 +45,7 @@ TBezierInterpolation<T>* TBezierInterpolation<T>::GetInstance()
 {
     if( Instance == nullptr )
         Instance = new TBezierInterpolation<T>();
-    return Instance;
+    return  Instance;
 }
 
 template< typename T >
@@ -60,7 +59,7 @@ void * TBezierInterpolation<T>::ReleaseInstance()
 }
 
 template< typename T >
-T TBezierInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const
+T TBezierInterpolation<T>::Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const
 {
     FVec2F leftKey = FVec2F( iLeftKey.Frame, iLeftKey.Value );
     FVec2F rightKey = FVec2F( iRightKey.Frame, iRightKey.Value );
@@ -74,10 +73,10 @@ T TBezierInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, co
     int leftKeyIndex = 0;
     int rightKeyIndex = int(bezier.size() - 1);
 
-    while (rightKeyIndex - leftKeyIndex > 1)
+    while(rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if (bezier[searchIndex].point.x > iFrame)
+        if(bezier[searchIndex].point.x > iFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -87,7 +86,7 @@ T TBezierInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, co
         }
     }
     
-    return bezier[leftKeyIndex].point.y;
+    return  bezier[leftKeyIndex].point.y;
 }
 
 ULIS_NAMESPACE_END

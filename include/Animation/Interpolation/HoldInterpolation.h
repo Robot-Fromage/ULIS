@@ -9,9 +9,8 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-#include "Animation/Interpolation/Interpolation.h"
+#include "Animation/Interpolation/AbstractInterpolation.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -30,7 +29,7 @@ public:
     static void *ReleaseInstance();
 
 public:
-    virtual T Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const override;
+    virtual T Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const override;
 };
 
 template< typename T >
@@ -45,7 +44,7 @@ THoldInterpolation<T>* THoldInterpolation<T>::GetInstance()
 {
     if( Instance == nullptr )
         Instance = new THoldInterpolation<T>();
-    return Instance;
+    return  Instance;
 }
 
 template< typename T >
@@ -59,9 +58,9 @@ void * THoldInterpolation<T>::ReleaseInstance()
 }
 
 template< typename T >
-T THoldInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const
+T THoldInterpolation<T>::Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const
 {
-    return iLeftKey.Value;
+    return  iLeftKey.Value;
 }
 
 ULIS_NAMESPACE_END

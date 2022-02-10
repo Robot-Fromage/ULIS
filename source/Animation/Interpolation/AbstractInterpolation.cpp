@@ -8,6 +8,6 @@
 * @brief        This file provides implementation for interpolation between keys
 * @license      Please refer to LICENSE.md
 */
-#include "Animation/Interpolation/Interpolation.h"
+#include "Animation/Interpolation/AbstractInterpolation.h"
 
 

@@ -9,12 +9,9 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-#include "Memory/Array.h"
 #include "Animation/HasKeys.h"
-#include "Animation/Interpolation/Interpolation.h"
-#include "Animation/Interpolation/LinearInterpolation.h"
+#include "Animation/Interpolation/AbstractInterpolation.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -27,7 +24,7 @@ public:
     ~TAnimatedProperty();
 
 public:
-    virtual T GetValueAtFrame(float iFrame) const;
+    virtual T GetValueAtFrame( ufloat iFrame ) const;
 
 public:
     T GetDefaultValue() const;
@@ -56,24 +53,24 @@ TAnimatedProperty<T>::~TAnimatedProperty()
 }
 
 template< typename T >
-T TAnimatedProperty<T>::GetValueAtFrame(float iFrame) const
+T TAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
 {
-    if (GetKeys().Size() == 0)
-        return DefaultValue;
+    if(GetKeys().Size() == 0)
+        return  DefaultValue;
 
     if( GetKeys()[0].Frame >= iFrame )
-        return GetKeys()[0].Value;
-    else if ( GetKeys()[GetKeys().Size() - 1].Frame <= iFrame )
-        return GetKeys()[GetKeys().Size() - 1].Value;
+        return  GetKeys()[0].Value;
+    else if( GetKeys()[GetKeys().Size() - 1].Frame <= iFrame )
+        return  GetKeys()[GetKeys().Size() - 1].Value;
 
     int leftKeyIndex = 0;
     int rightKeyIndex = GetKeys().Size() - 1;
 
     //Dichotomy to search for the successive keys to interpolate between them
-    while (rightKeyIndex - leftKeyIndex > 1)
+    while(rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if (GetKeys()[searchIndex].Frame > iFrame)
+        if(GetKeys()[searchIndex].Frame > iFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -83,17 +80,17 @@ T TAnimatedProperty<T>::GetValueAtFrame(float iFrame) const
         }
     }
 
-    return GetKeys()[leftKeyIndex].Interpolation->Interpolate( iFrame, GetKeys()[leftKeyIndex], GetKeys()[rightKeyIndex] );
+    return  GetKeys()[leftKeyIndex].Interpolation->Interpolate( iFrame, GetKeys()[leftKeyIndex], GetKeys()[rightKeyIndex] );
 }
 
 template< typename T >
 T TAnimatedProperty<T>::GetDefaultValue() const
 {
-    return DefaultValue;
+    return  DefaultValue;
 }
 
 template< typename T >
-void TAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
+void TAnimatedProperty<T>::SetDefaultValue( T iDefaultValue )
 {
     DefaultValue = iDefaultValue;
 }

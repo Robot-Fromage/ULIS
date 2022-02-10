@@ -9,14 +9,12 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-
 
 ULIS_NAMESPACE_BEGIN
 
 template<typename T>
-struct FKey;
+struct TKey;
 
 template< typename T >
 class TInterpolation
@@ -26,7 +24,7 @@ protected:
     ~TInterpolation();
 
 public:
-    virtual T Interpolate( float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey ) const = 0;
+    virtual T Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const = 0;
 };
 
 template< typename T >

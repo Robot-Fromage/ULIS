@@ -9,9 +9,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-#include "Memory/Array.h"
 #include "Animation/AnimatedProperty.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -25,9 +23,9 @@ public:
 
 public:
     //We can add keys that have a value outside the bounds of MinValue;MaxValue. We just clamp the value we get at frame iFrame
-    virtual T GetValueAtFrame(float iFrame) const override;
+    virtual T GetValueAtFrame( ufloat iFrame ) const override;
 
-    virtual void AddOrReplaceKey(FKey<T>& iKey) override;
+    virtual void AddOrReplaceKey(TKey<T>& iKey) override;
 
 public:
     virtual void SetDefaultValue(T iDefaultValue) override;
@@ -42,7 +40,7 @@ protected:
 template< typename T >
 TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinValue, T iMaxValue)
 {
-    if (iMinValue > iMaxValue)
+    if(iMinValue > iMaxValue)
     {
         MinValue = iMaxValue;
         MaxValue = iMinValue;
@@ -69,14 +67,14 @@ TBoundedAnimatedProperty<T>::~TBoundedAnimatedProperty()
 }
 
 template< typename T >
-T TBoundedAnimatedProperty<T>::GetValueAtFrame(float iFrame) const
+T TBoundedAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
 {
     T value = TAnimatedProperty<T>::GetValueAtFrame( iFrame );
-    return FMath::Clamp( value, MinValue, MaxValue );
+    return  FMath::Clamp( value, MinValue, MaxValue );
 }
 
 template< typename T >
-void TBoundedAnimatedProperty<T>::AddOrReplaceKey(FKey<T>& iKey)
+void TBoundedAnimatedProperty<T>::AddOrReplaceKey( TKey<T>& iKey )
 {
     iKey.Value = FMath::Clamp( iKey.Value, MinValue, MaxValue );
     THasKeys<T>::AddOrReplaceKey( iKey );
@@ -91,13 +89,13 @@ void TBoundedAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
 template< typename T >
 T TBoundedAnimatedProperty<T>::GetMinValue() const
 {
-    return MinValue;
+    return  MinValue;
 }
 
 template< typename T >
 T TBoundedAnimatedProperty<T>::GetMaxValue() const
 {
-    return MaxValue;
+    return  MaxValue;
 }
 
 ULIS_NAMESPACE_END
