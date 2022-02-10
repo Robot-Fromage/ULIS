@@ -65,3 +65,4 @@ T THoldInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, cons
 }
 
 ULIS_NAMESPACE_END
+

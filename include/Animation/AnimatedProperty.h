@@ -99,3 +99,4 @@ void TAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
 }
 
 ULIS_NAMESPACE_END
+

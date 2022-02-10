@@ -101,3 +101,4 @@ T TBoundedAnimatedProperty<T>::GetMaxValue() const
 }
 
 ULIS_NAMESPACE_END
+

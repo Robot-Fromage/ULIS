@@ -42,3 +42,4 @@ TInterpolation<T>::~TInterpolation()
 }
 
 ULIS_NAMESPACE_END
+

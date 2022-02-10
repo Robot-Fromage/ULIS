@@ -91,3 +91,4 @@ T TBezierInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, co
 }
 
 ULIS_NAMESPACE_END
+
