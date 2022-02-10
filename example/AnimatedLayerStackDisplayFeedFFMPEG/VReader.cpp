@@ -169,7 +169,6 @@ bool video_reader_read_frame(FVideoReaderState* state, uint8_t* frame_buffer, in
 }
 
 bool video_reader_seek_frame(FVideoReaderState* state, int64_t ts) {
-    
     // Unpack members of state
     auto& av_format_ctx = state->av_format_ctx;
     auto& av_codec_ctx = state->av_codec_ctx;
