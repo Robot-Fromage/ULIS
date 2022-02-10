@@ -15,7 +15,7 @@
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-class TLinearInterpolation : public TInterpolation< T >
+class TLinearInterpolation : public TAbstractInterpolation< T >
 {
 protected:
     TLinearInterpolation<T>();
@@ -34,7 +34,7 @@ public:
 
 template< typename T >
 TLinearInterpolation<T>::TLinearInterpolation() :
-TInterpolation<T>()
+TAbstractInterpolation<T>()
 {
 
 }

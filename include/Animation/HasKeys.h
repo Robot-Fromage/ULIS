@@ -18,9 +18,9 @@ ULIS_NAMESPACE_BEGIN
 template< typename T >
 struct TKey
 {
-    TKey( ufloat iFrame, T iValue, TInterpolation<T>* iInterpolation, FVec2F iLeftTangent = FVec2F(-1.f, 0.f), FVec2F iRightTangent = FVec2F(1.f, 0.f) );
+    TKey( ufloat iFrame, T iValue, TAbstractInterpolation<T>* iInterpolation, FVec2F iLeftTangent = FVec2F(-1.f, 0.f), FVec2F iRightTangent = FVec2F(1.f, 0.f) );
 
-    TInterpolation<T>* GetInterpolation() const;
+    TAbstractInterpolation<T>* GetInterpolation() const;
 
     ufloat mFrame;
     T mValue;
@@ -28,11 +28,11 @@ struct TKey
     FVec2F mRightTangent;
 
 private:
-    TInterpolation<T>* mInterpolation;
+    TAbstractInterpolation<T>* mInterpolation;
 };
 
 template< typename T >
-TKey<T>::TKey( ufloat iFrame, T iValue, TInterpolation<T>* iInterpolation, FVec2F iLeftTangent, FVec2F iRightTangent ):
+TKey<T>::TKey( ufloat iFrame, T iValue, TAbstractInterpolation<T>* iInterpolation, FVec2F iLeftTangent, FVec2F iRightTangent ):
     mFrame(iFrame),
     mValue(iValue),
     mInterpolation(iInterpolation),
@@ -42,7 +42,7 @@ TKey<T>::TKey( ufloat iFrame, T iValue, TInterpolation<T>* iInterpolation, FVec2
 }
 
 template< typename T >
-TInterpolation<T>* TKey<T>::GetInterpolation() const
+TAbstractInterpolation<T>* TKey<T>::GetInterpolation() const
 {
     return mInterpolation;
 }

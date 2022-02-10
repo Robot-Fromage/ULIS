@@ -15,7 +15,7 @@
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-class THoldInterpolation : public TInterpolation< T >
+class THoldInterpolation : public TAbstractInterpolation< T >
 {
 protected:
     THoldInterpolation<T>();
@@ -34,7 +34,7 @@ public:
 
 template< typename T >
 THoldInterpolation<T>::THoldInterpolation() :
-    TInterpolation<T>()
+    TAbstractInterpolation<T>()
 {
 
 }

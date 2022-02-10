@@ -16,7 +16,7 @@
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-class TBezierInterpolation : public TInterpolation< T >
+class TBezierInterpolation : public TAbstractInterpolation< T >
 {
 protected:
     TBezierInterpolation<T>();
@@ -35,7 +35,7 @@ public:
 
 template< typename T >
 TBezierInterpolation<T>::TBezierInterpolation() :
-    TInterpolation<T>()
+    TAbstractInterpolation<T>()
 {
 
 }

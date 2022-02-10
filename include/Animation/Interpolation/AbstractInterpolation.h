@@ -17,24 +17,24 @@ template<typename T>
 struct TKey;
 
 template< typename T >
-class TInterpolation
+class TAbstractInterpolation
 {
 protected:
-    TInterpolation();
-    ~TInterpolation();
+    TAbstractInterpolation();
+    ~TAbstractInterpolation();
 
 public:
     virtual T Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const = 0;
 };
 
 template< typename T >
-TInterpolation<T>::TInterpolation()
+TAbstractInterpolation<T>::TAbstractInterpolation()
 {
 
 }
 
 template< typename T >
-TInterpolation<T>::~TInterpolation()
+TAbstractInterpolation<T>::~TAbstractInterpolation()
 {
 
 }
