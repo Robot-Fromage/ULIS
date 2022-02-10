@@ -20,7 +20,7 @@ class TLinearInterpolation : public TInterpolation< T >
 protected:
     TLinearInterpolation<T>();
 
-    static inline TLinearInterpolation<T>* Instance = nullptr;
+    static inline TLinearInterpolation<T>* mInstance = nullptr;
 
 public:
     TLinearInterpolation<T>(TLinearInterpolation<T> &other) = delete;
@@ -42,27 +42,27 @@ TInterpolation<T>()
 template< typename T >
 TLinearInterpolation<T>* TLinearInterpolation<T>::GetInstance()
 {
-    if( Instance == nullptr )
-        Instance = new TLinearInterpolation<T>();
-    return  Instance;
+    if( mInstance == nullptr )
+        mInstance = new TLinearInterpolation<T>();
+    return  mInstance;
 }
 
 template< typename T >
 void * TLinearInterpolation<T>::ReleaseInstance()
 {
-    if( Instance != nullptr )
+    if( mInstance != nullptr )
     {
-        delete Instance;
-        Instance = nullptr;
+        delete mInstance;
+        mInstance = nullptr;
     }
 }
 
 template< typename T >
 T TLinearInterpolation<T>::Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey) const
 {
-    ufloat t = (iFrame - iLeftKey.Frame) / iRightKey.Frame - iLeftKey.Frame;
+    ufloat t = (iFrame - iLeftKey.mFrame) / iRightKey.mFrame - iLeftKey.mFrame;
 
-    return  iLeftKey.Value + t * (iRightKey.Value - iLeftKey.Value);
+    return  iLeftKey.mValue + t * (iRightKey.mValue - iLeftKey.mValue);
 }
 
 ULIS_NAMESPACE_END

@@ -36,7 +36,7 @@ main( int argc, char *argv[] ) {
 
     for (int i = 0; i < animatedFloat.GetKeys().Size(); i++)
     {
-        std::cout << animatedFloat.GetKeys()[i].Frame << ";" << animatedFloat.GetKeys()[i].Value << std::endl;
+        std::cout << animatedFloat.GetKeys()[i].mFrame << ";" << animatedFloat.GetKeys()[i].mValue << std::endl;
     }
 
     std::cout << value << std::endl;

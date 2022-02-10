@@ -31,7 +31,7 @@ public:
     virtual void SetDefaultValue( T iDefaultValue );
 
 protected:
-    T DefaultValue;
+    T mDefaultValue;
 };
 
 template< typename T >
@@ -41,7 +41,7 @@ TAnimatedProperty<T>::TAnimatedProperty()
 
 template< typename T >
 TAnimatedProperty<T>::TAnimatedProperty(T iDefaultValue) :
-    DefaultValue(iDefaultValue)
+    mDefaultValue(iDefaultValue)
 {
 
 }
@@ -56,12 +56,12 @@ template< typename T >
 T TAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
 {
     if(GetKeys().Size() == 0)
-        return  DefaultValue;
+        return  mDefaultValue;
 
-    if( GetKeys()[0].Frame >= iFrame )
-        return  GetKeys()[0].Value;
-    else if( GetKeys()[GetKeys().Size() - 1].Frame <= iFrame )
-        return  GetKeys()[GetKeys().Size() - 1].Value;
+    if( GetKeys()[0].mFrame >= iFrame )
+        return  GetKeys()[0].mValue;
+    else if( GetKeys()[GetKeys().Size() - 1].mFrame <= iFrame )
+        return  GetKeys()[GetKeys().Size() - 1].mValue;
 
     int leftKeyIndex = 0;
     int rightKeyIndex = GetKeys().Size() - 1;
@@ -70,7 +70,7 @@ T TAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
     while(rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if(GetKeys()[searchIndex].Frame > iFrame)
+        if(GetKeys()[searchIndex].mFrame > iFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -80,19 +80,19 @@ T TAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
         }
     }
 
-    return  GetKeys()[leftKeyIndex].Interpolation->Interpolate( iFrame, GetKeys()[leftKeyIndex], GetKeys()[rightKeyIndex] );
+    return  GetKeys()[leftKeyIndex].GetInterpolation()->Interpolate( iFrame, GetKeys()[leftKeyIndex], GetKeys()[rightKeyIndex] );
 }
 
 template< typename T >
 T TAnimatedProperty<T>::GetDefaultValue() const
 {
-    return  DefaultValue;
+    return  mDefaultValue;
 }
 
 template< typename T >
 void TAnimatedProperty<T>::SetDefaultValue( T iDefaultValue )
 {
-    DefaultValue = iDefaultValue;
+    mDefaultValue = iDefaultValue;
 }
 
 ULIS_NAMESPACE_END

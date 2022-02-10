@@ -33,8 +33,8 @@ public:
     T GetMaxValue() const;
 
 protected:
-    T MinValue;
-    T MaxValue;
+    T mMinValue;
+    T mMaxValue;
 };
 
 template< typename T >
@@ -42,21 +42,21 @@ TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinVal
 {
     if(iMinValue > iMaxValue)
     {
-        MinValue = iMaxValue;
-        MaxValue = iMinValue;
+        mMinValue = iMaxValue;
+        mMaxValue = iMinValue;
     }
     else
     {
-        MinValue = iMinValue;
-        MaxValue = iMaxValue;
+        mMinValue = iMinValue;
+        mMaxValue = iMaxValue;
     }
 
-    if( iDefaultValue < MinValue )
-        DefaultValue = MinValue;
-    else if( iDefaultValue > MaxValue )
-        DefaultValue = MaxValue;
+    if( iDefaultValue < mMinValue )
+        mDefaultValue = mMinValue;
+    else if( iDefaultValue > mMaxValue )
+        mDefaultValue = mMaxValue;
     else
-        DefaultValue = iDefaultValue;
+        mDefaultValue = iDefaultValue;
         
 }
 
@@ -70,32 +70,32 @@ template< typename T >
 T TBoundedAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
 {
     T value = TAnimatedProperty<T>::GetValueAtFrame( iFrame );
-    return  FMath::Clamp( value, MinValue, MaxValue );
+    return  FMath::Clamp( value, mMinValue, mMaxValue );
 }
 
 template< typename T >
 void TBoundedAnimatedProperty<T>::AddOrReplaceKey( TKey<T>& iKey )
 {
-    iKey.Value = FMath::Clamp( iKey.Value, MinValue, MaxValue );
+    iKey.mValue = FMath::Clamp( iKey.mValue, mMinValue, mMaxValue );
     THasKeys<T>::AddOrReplaceKey( iKey );
 }
 
 template< typename T >
 void TBoundedAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
 {
-    DefaultValue = FMath::Clamp( iDefaultValue, MinValue, MaxValue );
+    mDefaultValue = FMath::Clamp( iDefaultValue, mMinValue, mMaxValue );
 }
 
 template< typename T >
 T TBoundedAnimatedProperty<T>::GetMinValue() const
 {
-    return  MinValue;
+    return  mMinValue;
 }
 
 template< typename T >
 T TBoundedAnimatedProperty<T>::GetMaxValue() const
 {
-    return  MaxValue;
+    return  mMaxValue;
 }
 
 ULIS_NAMESPACE_END
