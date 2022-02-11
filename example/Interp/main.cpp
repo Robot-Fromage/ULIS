@@ -25,34 +25,23 @@ main( int argc, char *argv[] ) {
 
     FBlock block0;
     FBlock block1;
-    {
-        std::string path0 = "C:\Users\conta\Documents\work\Interp/0.png";
-        std::string path1 = "C:\Users\conta\Documents\work\Interp/0.png";
-        // Load from file into blocks
+    { // Load
+        std::string path0 = "C:/Users/conta/Documents/work/Interp/0.png";
+        std::string path1 = "C:/Users/conta/Documents/work/Interp/1.png";
         ulError err;
-        err = ctx.XLoadBlockFromDisk( blockBase, pathBase );
+        err = ctx.XLoadBlockFromDisk( block0, path0 );
         ULIS_ASSERT( !err, "Load failed" );
-        err = ctx.XLoadBlockFromDisk( blockOver, pathOver );
+        ULIS_ASSERT( block0.Format() == fmt, "Bad format assumption." );
+        err = ctx.XLoadBlockFromDisk( block1, path1 );
         ULIS_ASSERT( !err, "Load failed" );
-        ULIS_ASSERT( blockBase.Format() == fmt, "Bad format assumption." );
-        ULIS_ASSERT( blockOver.Format() == fmt, "Bad format assumption." );
-
-        // Flush all commands
+        ULIS_ASSERT( block1.Format() == fmt, "Bad format assumption." );
         ctx.Flush();
-
-        // Wait for completion
         ctx.Fence();
-
-        // Flush() + Fence() is equivalent to Finish()
     }
 
-    FRectI srcRect = blockBase.Rect();
-    int w = srcRect.w * 8;
-    int h = srcRect.h * 5;
+    const FRectI roi = block0.Rect();
+    FBlock* blockCanvas = new  FBlock( roi.w, roi.h, fmt );
 
-    FBlock* blockCanvas = new  FBlock( w, h, fmt );
-
-    // Return exit code.
-    return  exit_code;
+    return  0;
 }
 
