@@ -10,6 +10,7 @@
 */
 #pragma once
 #include "Core/Core.h"
+#include "DefaultValue.h"
 #include "Animation/HasKeys.h"
 #include "Animation/Interpolation/AbstractInterpolation.h"
 
@@ -19,31 +20,27 @@ template< typename T >
 class TAnimatedProperty : public THasKeys<T>
 {
 public:
-    TAnimatedProperty();
     TAnimatedProperty( T iDefaultValue );
+    TAnimatedProperty( std::function< T( ufloat ) > iDefaultExpression );
     ~TAnimatedProperty();
 
 public:
     virtual T GetValueAtFrame( ufloat iFrame ) const;
 
-public:
-    T GetDefaultValue() const;
-    virtual void SetDefaultValue( T iDefaultValue );
-
 protected:
-    T mDefaultValue;
+    TDefaultValue<T> mTrueDefaultValue;
 };
 
 template< typename T >
-TAnimatedProperty<T>::TAnimatedProperty()
+TAnimatedProperty<T>::TAnimatedProperty(T iDefaultValue) :
+    mTrueDefaultValue( TDefaultValue<T>::FromValue( iDefaultValue ) )
 {
 }
 
 template< typename T >
-TAnimatedProperty<T>::TAnimatedProperty(T iDefaultValue) :
-    mDefaultValue(iDefaultValue)
+TAnimatedProperty<T>::TAnimatedProperty( std::function< T( ufloat ) > iDefaultExpression ) :
+    mTrueDefaultValue( TDefaultValue<T>::FromExpression( iDefaultExpression ))
 {
-
 }
 
 template< typename T >
@@ -56,7 +53,7 @@ template< typename T >
 T TAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
 {
     if(GetKeys().Size() == 0)
-        return  mDefaultValue;
+        return  mTrueDefaultValue(0.f);
 
     if( GetKeys()[0].mFrame >= iFrame )
         return  GetKeys()[0].mValue;
@@ -83,17 +80,6 @@ T TAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
     return  GetKeys()[leftKeyIndex].GetInterpolation()->Interpolate( iFrame, GetKeys()[leftKeyIndex], GetKeys()[rightKeyIndex] );
 }
 
-template< typename T >
-T TAnimatedProperty<T>::GetDefaultValue() const
-{
-    return  mDefaultValue;
-}
-
-template< typename T >
-void TAnimatedProperty<T>::SetDefaultValue( T iDefaultValue )
-{
-    mDefaultValue = iDefaultValue;
-}
 
 ULIS_NAMESPACE_END
 

@@ -28,7 +28,6 @@ public:
     virtual void AddOrReplaceKey(TKey<T>& iKey) override;
 
 public:
-    virtual void SetDefaultValue(T iDefaultValue) override;
     T GetMinValue() const;
     T GetMaxValue() const;
 
@@ -38,7 +37,8 @@ protected:
 };
 
 template< typename T >
-TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinValue, T iMaxValue)
+TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinValue, T iMaxValue) :
+    TAnimatedProperty(iDefaultValue)
 {
     if(iMinValue > iMaxValue)
     {
@@ -50,14 +50,6 @@ TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinVal
         mMinValue = iMinValue;
         mMaxValue = iMaxValue;
     }
-
-    if( iDefaultValue < mMinValue )
-        mDefaultValue = mMinValue;
-    else if( iDefaultValue > mMaxValue )
-        mDefaultValue = mMaxValue;
-    else
-        mDefaultValue = iDefaultValue;
-        
 }
 
 template< typename T >
@@ -78,12 +70,6 @@ void TBoundedAnimatedProperty<T>::AddOrReplaceKey( TKey<T>& iKey )
 {
     iKey.mValue = FMath::Clamp( iKey.mValue, mMinValue, mMaxValue );
     THasKeys<T>::AddOrReplaceKey( iKey );
-}
-
-template< typename T >
-void TBoundedAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
-{
-    mDefaultValue = FMath::Clamp( iDefaultValue, mMinValue, mMaxValue );
 }
 
 template< typename T >

@@ -15,6 +15,7 @@
 #include <QPixmap>
 #include <QLabel>
 #include <chrono>
+#include "Animation/DefaultValue.h"
 
 using namespace ::ULIS;
 

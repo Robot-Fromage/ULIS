@@ -26,9 +26,6 @@ private:
         : mExpression( iExpression )
     {}
 
-    TDefaultValue( const TDefaultValue< T >& iOther ) = delete;
-    TDefaultValue& operator=( const TDefaultValue< T >& iOther ) = delete;
-
 public:
     static TDefaultValue FromValue( const T& iValue ) {
         return  TDefaultValue( [iValue]( ufloat ){ return  iValue; } );
@@ -38,7 +35,11 @@ public:
         return  TDefaultValue( iExpression );
     }
 
-private
+    T operator()(ufloat iFrame) const {
+        return mExpression(iFrame);
+    }
+
+private:
     tExpression mExpression;
 };
 
