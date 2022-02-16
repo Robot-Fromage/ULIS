@@ -7,7 +7,7 @@
 * @author       Thomas Schmitt
 * @brief        This file provides declaration for the bezier interpolation
 * @license      Please refer to LICENSE.md
-*/
+*//*
 #pragma once
 #include "Core/Core.h"
 #include "Animation/Interpolation/AbstractInterpolation.h"
@@ -91,3 +91,4 @@ T TBezierInterpolation<T>::Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, 
 
 ULIS_NAMESPACE_END
 
+*/

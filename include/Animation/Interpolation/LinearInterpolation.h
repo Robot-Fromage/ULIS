@@ -7,7 +7,7 @@
 * @author       Thomas Schmitt
 * @brief        This file provides declaration for the linear interpolation
 * @license      Please refer to LICENSE.md
-*/
+*//*
 #pragma once
 #include "Core/Core.h"
 #include "Animation/Interpolation/AbstractInterpolation.h"
@@ -65,5 +65,5 @@ T TLinearInterpolation<T>::Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, 
     return  iLeftKey.mValue + t * (iRightKey.mValue - iLeftKey.mValue);
 }
 
-ULIS_NAMESPACE_END
+ULIS_NAMESPACE_END*/
 
