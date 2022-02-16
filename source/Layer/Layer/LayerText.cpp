@@ -8,7 +8,6 @@
 * @brief        This file provides the definition for the FLayerText FLayerText.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Layer/Layer/LayerText.h"
 
 ULIS_NAMESPACE_BEGIN

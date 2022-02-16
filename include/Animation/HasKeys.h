@@ -8,8 +8,9 @@
 * @brief        This file provides declaration for animating a property in the time
 * @license      Please refer to LICENSE.md
 */
-#pragma once
+/*#pragma once
 #include "Core/Core.h"
+#include "Math/Geometry/Vector.h"
 #include "Animation/Interpolation/AbstractInterpolation.h"
 #include "Core/CallbackCapable.h"
 
@@ -46,15 +47,15 @@ TAbstractInterpolation<T>* TKey<T>::GetInterpolation() const
 {
     return mInterpolation;
 }
-
-/** Returns the whole array of keys(AFTER the addition), the index at which we added the key, and a reference to the key we added */
-template< class Type > using TKeyAddedDelegate = TLambdaCallback< void, ::ULIS::TArray<TKey<Type>>&, uint64, TKey<Type>& >;
+*/
+/** Returns the whole array of keys(AFTER the addition), the index at which we added the key, and a reference to the key we added *//*
+template< class Type > using TKeyAddedDelegate = TLambdaCallback< void, ::ULIS::TArray<TKey<Type>>&, uint64, TKey<Type>& >;*/
 
 /** Returns the whole array of keys(BEFORE the deletion), the index at which we deleted the key, and a reference to the key we deleted */
-template< class Type > using TKeyRemovedDelegate = TLambdaCallback< void, ::ULIS::TArray<TKey<Type>>&, uint64, TKey<Type>& >;
+/*template< class Type > using TKeyRemovedDelegate = TLambdaCallback< void, ::ULIS::TArray<TKey<Type>>&, uint64, TKey<Type>& >;*/
 
 /** Returns a copy of the key before the change, and a reference to the changed key */
-template< class Type > using TKeyChangedDelegate = TLambdaCallback< void, TKey<Type>, TKey<Type>& >;
+/*template< class Type > using TKeyChangedDelegate = TLambdaCallback< void, TKey<Type>, TKey<Type>& >;
 
 template< class Type > using TOnKeyAdded = TCallbackCapable< TKeyAddedDelegate< Type >, 0 >;
 template< class Type > using TOnKeyRemoved = TCallbackCapable< TKeyRemovedDelegate< Type >, 1 >;
@@ -70,16 +71,16 @@ public:
     THasKeys();
     ~THasKeys();
 
-public:
+public:*/
 
     /** Adds a key in Keys Array, replaces existing key if there was already one at the same frame*/
-    virtual void AddOrReplaceKey( TKey<T>& iKey );
+   /* virtual void AddOrReplaceKey( TKey<T>& iKey );*/
 
     /** Removes a key at a certain frame. Return true if there was one at the frame passed in parameter */
-    virtual bool RemoveKeyAtFrame( ufloat iFrame );
-
+ /*   virtual bool RemoveKeyAtFrame( ufloat iFrame );
+*/
     /** Const getter, useful to check or display the keys, but no modification is allowed */
-    const ::ULIS::TArray<TKey<T>>& GetKeys() const;
+  /*  const ::ULIS::TArray<TKey<T>>& GetKeys() const;
 
 private:
     ::ULIS::TArray<TKey<T>> mKeys;
@@ -217,5 +218,5 @@ const TArray<TKey<T>>& THasKeys<T>::GetKeys() const
     return  mKeys;
 }
 
-ULIS_NAMESPACE_END
+ULIS_NAMESPACE_END*/
 

@@ -7,7 +7,7 @@
 * @author       Thomas Schmitt
 * @brief        This file provides declaration for the basics of interpolation between animation keys
 * @license      Please refer to LICENSE.md
-*/
+*//*
 #pragma once
 #include "Core/Core.h"
 
@@ -40,4 +40,4 @@ TAbstractInterpolation<T>::~TAbstractInterpolation()
 }
 
 ULIS_NAMESPACE_END
-
+*/

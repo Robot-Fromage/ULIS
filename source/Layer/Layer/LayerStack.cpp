@@ -8,7 +8,6 @@
 * @brief        This file provides the definition for the FLayerStack FLayerStack.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Layer/Layer/LayerStack.h"
 
 ULIS_NAMESPACE_BEGIN
