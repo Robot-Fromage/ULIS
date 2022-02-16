@@ -15,10 +15,6 @@
 #include <QPixmap>
 #include <QLabel>
 
-#include "Math/ShapeGeneration/Line.h"
-#include "Math/ShapeGeneration/Polygon.h"
-#include "Math/ShapeGeneration/RotatedRectangle.h"
-
 using namespace ::ULIS;
 
 int
@@ -110,9 +106,9 @@ main(int argc,char *argv[])
         //ctx.DrawPolygon( canvas, points, FColor::RGBA8(0,200,0, 155), false);
         //GeneratePolygonPoints( points, pointsGenerated );
 
-        GenerateCircleInscribedRectanglePoints( FVec2I( 100, 400 ), FVec2I( 600, 500 ), 1, pointsGenerated );
+        GenerateCircleInscribedRectanglePoints( FVec2I( 100, 200 ), FVec2I( 300, 250 ), 90, pointsGenerated );
 
-        GenerateRectanglePoints( FVec2I( 100, 400 ), FVec2I( 600, 500 ), pointsGenerated2);
+        GenerateRectanglePoints( FVec2I( 100, 200 ), FVec2I( 300, 250 ), pointsGenerated2);
 
         for (int i = 0; i < pointsGenerated.Size(); i++)
         {

@@ -21,7 +21,7 @@ class TBezierInterpolation : public TAbstractInterpolation< T >
 protected:
     TBezierInterpolation<T>();
 
-    static inline TBezierInterpolation<T>* mInstance = nullptr;
+    static TBezierInterpolation<T>* mInstance = nullptr;
 
 public:
     TBezierInterpolation<T>(TBezierInterpolation<T> &other) = delete;

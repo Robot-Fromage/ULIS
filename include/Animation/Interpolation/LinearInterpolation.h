@@ -20,7 +20,7 @@ class TLinearInterpolation : public TAbstractInterpolation< T >
 protected:
     TLinearInterpolation<T>();
 
-    static inline TLinearInterpolation<T>* mInstance = nullptr;
+    static TLinearInterpolation<T>* mInstance = nullptr;
 
 public:
     TLinearInterpolation<T>(TLinearInterpolation<T> &other) = delete;

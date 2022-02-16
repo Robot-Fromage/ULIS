@@ -3,13 +3,14 @@
 /*
 *   ULIS
 *__________________
-* @file         Rectangle.h
+* @file         CircleInscribedRectangle.h
 * @author       Thomas Schmitt
-* @brief        This file provides the Rectangle points generation methods
+* @brief        This file provides the a method to generate the points of a rectangle inscribed in a circle at a certain angle
 * @license      Please refer to LICENSE.md
 */
 #pragma once
 #include "Core/Core.h"
+#include "Math/ShapeGeneration/Rectangle.h"
 
 ULIS_NAMESPACE_BEGIN
 
@@ -27,8 +28,8 @@ static inline void GenerateCircleInscribedRectanglePoints(
 
     FVec2I center = iTopLeft + (iBottomRight - iTopLeft) / 2;
     FVec2I delta = center - iTopLeft;
-    int angle = -FMath::RadToDeg( atan2( delta.y, delta.x ) );
-    int radius = FMath::Dist( iTopLeft.x, iTopLeft.y, iBottomRight.x, iBottomRight.y ) / 2;
+    int angle = int(-FMath::RadToDeg( atan2( delta.y, delta.x ) ));
+    int radius = int(FMath::Dist( iTopLeft.x, iTopLeft.y, iBottomRight.x, iBottomRight.y ) / 2);
 
     FVec2I topRight = center + FVec2I(radius * cos(FMath::DegToRadF(float(angle + iRotationDegrees))), radius * sin(FMath::DegToRadF(float(angle + iRotationDegrees))));
     FVec2I bottomLeft = center + FVec2I(radius * cos(FMath::DegToRadF(float(angle + iRotationDegrees + 180))), radius * sin(FMath::DegToRadF(float(angle + iRotationDegrees + 180))));

@@ -47,6 +47,7 @@
 #include "Math/Interpolation/Spline.h"
 #include "Math/ShapeGeneration/Arc.h"
 #include "Math/ShapeGeneration/Circle.h"
+#include "Math/ShapeGeneration/CircleInscribedRectangle.h"
 #include "Math/ShapeGeneration/Ellipse.h"
 #include "Math/ShapeGeneration/Line.h"
 #include "Math/ShapeGeneration/Polygon.h"

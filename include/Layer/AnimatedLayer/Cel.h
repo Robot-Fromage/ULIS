@@ -42,10 +42,10 @@ public:
         , const FOnNameChanged& iOnNameChanged = FOnNameChanged()
         , const FOnColorChanged& iOnColorChanged = FOnColorChanged()
     )
-        : mData( iData )
-        , IHasExposure( iExposure, iOnExposureChanged )
+        : IHasExposure( iExposure, iOnExposureChanged )
         , IHasName( iName, iOnNameChanged )
         , IHasPrettyColor( iPrettyColor, iOnColorChanged )
+        , mData( iData )
     {}
 
     std::shared_ptr< T > Data() {

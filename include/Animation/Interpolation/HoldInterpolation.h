@@ -20,7 +20,7 @@ class THoldInterpolation : public TAbstractInterpolation< T >
 protected:
     THoldInterpolation<T>();
 
-    static inline THoldInterpolation<T>* mInstance = nullptr;
+    static THoldInterpolation<T>* mInstance = nullptr;
 
 public:
     THoldInterpolation<T>(THoldInterpolation<T> &other) = delete;
