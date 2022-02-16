@@ -17,10 +17,10 @@ ULIS_NAMESPACE_BEGIN
 static inline void GenerateCircleInscribedRectanglePoints(
     const FVec2I& iTopLeft
     , const FVec2I& iBottomRight
-    , const int iRotationDegrees
+    , const float iRotationDegrees
     , TArray<FVec2I>& ioRectanglePoints )
 {
-    if( iRotationDegrees % 180 == 0 )
+    if( fmod(iRotationDegrees, 180.f) <= FMath::kEpsilonf )
     {
         GenerateRectanglePoints( iTopLeft, iBottomRight, ioRectanglePoints );
         return;
@@ -28,11 +28,11 @@ static inline void GenerateCircleInscribedRectanglePoints(
 
     FVec2I center = iTopLeft + (iBottomRight - iTopLeft) / 2;
     FVec2I delta = center - iTopLeft;
-    int angle = int(-FMath::RadToDeg( atan2( delta.y, delta.x ) ));
-    int radius = int(FMath::Dist( iTopLeft.x, iTopLeft.y, iBottomRight.x, iBottomRight.y ) / 2);
+    double angle = -FMath::RadToDeg( atan2( delta.y, delta.x ) );
+    double radius = FMath::Dist( iTopLeft.x, iTopLeft.y, iBottomRight.x, iBottomRight.y ) / 2;
 
-    FVec2I topRight = center + FVec2I(radius * cos(FMath::DegToRadF(float(angle + iRotationDegrees))), radius * sin(FMath::DegToRadF(float(angle + iRotationDegrees))));
-    FVec2I bottomLeft = center + FVec2I(radius * cos(FMath::DegToRadF(float(angle + iRotationDegrees + 180))), radius * sin(FMath::DegToRadF(float(angle + iRotationDegrees + 180))));
+    FVec2I topRight = center + FVec2I(radius * cos(FMath::DegToRad(angle + iRotationDegrees)), radius * sin(FMath::DegToRad(angle + iRotationDegrees)));
+    FVec2I bottomLeft = center + FVec2I(radius * cos(FMath::DegToRad(angle + iRotationDegrees + 180)), radius * sin(FMath::DegToRad(angle + iRotationDegrees + 180)));
 
     GenerateLinePoints( iTopLeft, topRight, ioRectanglePoints ); // Top
     GenerateLinePoints( topRight, iBottomRight, ioRectanglePoints); // Right
