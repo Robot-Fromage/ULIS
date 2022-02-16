@@ -8,7 +8,6 @@
 * @brief        This file provides the definition for the FLayerImage FLayerImage.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Layer/Layer/LayerImage.h"
 #include "Layer/Layer/LayerFolder.h"
 #include "Layer/Layer/LayerStack.h"

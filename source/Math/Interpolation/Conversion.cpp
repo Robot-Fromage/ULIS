@@ -8,7 +8,6 @@
 * @brief        This file provides basic Spline tools.
 * @license      Please refer to LICENSE.md
 */
-#pragma once
 #include "Core/Core.h"
 #include "Math/Geometry/Rectangle.h"
 #include "Math/Geometry/Vector.h"
