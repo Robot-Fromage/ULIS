@@ -66,5 +66,10 @@ IAnimatedLayer::IAnimatedLayer(
     ULIS_DEBUG_PRINTF( "IAnimatedLayer Created" )
 }
 
+uint64
+IAnimatedLayer::GetNumFrames() const {
+    return  0;
+}
+
 ULIS_NAMESPACE_END
 

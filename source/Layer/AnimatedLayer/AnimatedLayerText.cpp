@@ -73,5 +73,10 @@ FAnimatedLayerText::FAnimatedLayerText(
     ULIS_DEBUG_PRINTF( "FAnimatedLayerText Created" )
 }
 
+uint64
+FAnimatedLayerText::GetNumFrames() const {
+    return  TotalFrames();
+}
+
 ULIS_NAMESPACE_END
 

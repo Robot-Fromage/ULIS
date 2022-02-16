@@ -29,7 +29,7 @@ InvokePremultMT_MEM_Generic(
 {
     T* dst = reinterpret_cast< T* >( jargs->dst );
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
-    for( int i = 0; i < jargs->size; ++i ) {
+    for( int i = 0; i < jargs->size; i+=fmt.BPP ) {
         T alpha = fmt.HEA ? *( dst + fmt.AID ) : MaxType< T >();
         for( int j = 0; j < fmt.NCC; ++j ) {
             uint8 r = fmt.IDT[j];
@@ -48,11 +48,13 @@ InvokeUnpremultMT_MEM_Generic(
 {
     T* dst = reinterpret_cast< T* >( jargs->dst );
     const FFormatMetrics& fmt = cargs->dst.FormatMetrics();
-    for( int i = 0; i < jargs->size; ++i ) {
+    for( int i = 0; i < jargs->size; i+=fmt.BPP ) {
         T alpha = fmt.HEA ? *( dst + fmt.AID ) : MaxType< T >();
-        for( int j = 0; j < fmt.NCC; ++j ) {
-            uint8 r = fmt.IDT[j];
-            *( dst + r ) = ( *( dst + r ) * MaxType< T >() ) / alpha;
+        if( alpha != 0 ) {
+            for( int j = 0; j < fmt.NCC; ++j ) {
+                const uint8 r = fmt.IDT[j];
+                *( dst + r ) = ( *( dst + r ) * MaxType< T >() ) / alpha;
+            }
         }
         dst += fmt.SPP;
     }

@@ -85,6 +85,15 @@ public:
         return  CelAtIndex( IndexAtFrame( iFrame ) );
     }
 
+    uint64 TotalFrames() const {
+        // Assume start at 0
+        const uint64 size = mInstances.Size();
+        uint64 counter = 0;
+        for( uint64 i = 0; i < size; ++i )
+            counter += mInstances[i]->Exposure() + 1;
+        return  counter;
+    }
+
 private:
     TCel< T >* CelAtIndex( uint64 iIndex ) {
         return  mInstances[iIndex];

@@ -56,9 +56,50 @@ main( int argc, char *argv[] ) {
 
     // Process Document
     FBlock& background = *( stack->Find< FLayerImage >( "Background" ) ).Block();
-    ctx.Fill( background, FColor::RGBA8( 50, 50, 50, 255 ) );
+    ctx.Fill( background, FColor::RGBA8( 220, 220, 220, 255 ) );
     ctx.Clear( canvas, canvas.Rect() );
     ctx.Finish();
+
+    // Process Vector Data
+    FLayerVector& vectorLayer = stack->Find< FLayerVector >( "Vector" );
+    FGroupVectorShape& groupVectorShape = vectorLayer.VectorData();
+    {
+        FRectangleVectorShape* rectangle = new FRectangleVectorShape( BLRect( 0.0, 0.0, 150.0, 150.0 ) );
+        BLStrokeOptions strokeOptions = rectangle->StrokeOptions();
+        strokeOptions.width = 2.0;
+        rectangle->SetStrokeOptions( strokeOptions );
+        rectangle->SetStrokeStyle( BLStyle( BLRgba( 1.f, 0.f, 0.f ) ) );
+        rectangle->SetFillStyle( BLStyle( BLRgba( 0.5f, 0.f, 0.f ) ) );
+        BLMatrix2D transform = BLMatrix2D::makeIdentity();
+        transform.translate( 50, 50 );
+        transform.rotate( 3.14 / 8 );
+        rectangle->SetTransform( transform );
+        groupVectorShape.Data().PushBack( rectangle );
+    }
+    {
+        FCircleVectorShape* circle = new FCircleVectorShape( BLCircle( 250, 250, 150.0 ) );
+        BLStrokeOptions strokeOptions = circle->StrokeOptions();
+        strokeOptions.width = 1.5;
+        circle->SetStrokeOptions( strokeOptions );
+        circle->SetStrokeStyle( BLStyle( BLRgba( 0.0f, 1.0f, 0.0f, 1.0f ) ) );
+        circle->SetFillStyle( BLStyle( BLRgba( 0.0f, 1.0f, 0.0f, 0.75f ) ) );
+        groupVectorShape.Data().PushBack( circle );
+    }
+    {
+        BLPath pathPoints;
+        pathPoints.moveTo( 26, 31 );
+        pathPoints.cubicTo( 642, 132, 587, -136, 25, 464 );
+        pathPoints.cubicTo( 882, 404, 144, 267, 27, 31 );
+        FPathVectorShape* path = new FPathVectorShape( pathPoints );
+        BLStrokeOptions strokeOptions = path->StrokeOptions();
+        strokeOptions.width = 1.0;
+        strokeOptions.join = BL_STROKE_JOIN_ROUND;
+        path->SetStrokeOptions( strokeOptions );
+        path->SetStrokeStyle( BLStyle( BLRgba( 1.0f, 1.0f, 1.0f, 0.8f ) ) );
+        path->SetFillStyle( BLStyle( BLRgba( 1.f, 1.f, 1.f, 0.33f ) ) );
+        path->SetTransform( BLMatrix2D::makeTranslation( 200, 200 ) );
+        groupVectorShape.Data().PushBack( path );
+    }
 
     // Render Document
     auto startTime = std::chrono::steady_clock::now();

@@ -19,18 +19,10 @@
 
 ULIS_NAMESPACE_BEGIN
 struct ULIS_API FCelTextFactory
-    : public IHasText
 {
     ~FCelTextFactory() {};
 
-    FCelTextFactory(
-          const FWString& iString = L"Lorem ipsum dolor sit amet..."
-        , const FFont& iFont = FFont::DefaultFont
-        , int iSize = 12
-        , const FColor& iColor = FColor::Black
-        , bool iAntiAliased = true
-    )
-    : IHasText( iString, iFont, iSize, iColor, iAntiAliased )
+    FCelTextFactory()
     {}
 
     TCel< FWString >* MakeBlank( uint32 iExposure = 0 ) {
@@ -95,6 +87,10 @@ public:
 public:
     // ITypeIdentifiable Interface
     ULIS_OVERRIDE_TYPEID_INTERFACE( "AnimatedText" );
+
+public:
+    // IAnimatedLayer interface
+    uint64 GetNumFrames() const override;
 };
 
 ULIS_NAMESPACE_END

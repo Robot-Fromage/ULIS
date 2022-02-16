@@ -9,9 +9,7 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-#include "Memory/Array.h"
 #include "Animation/AnimatedProperty.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -25,41 +23,33 @@ public:
 
 public:
     //We can add keys that have a value outside the bounds of MinValue;MaxValue. We just clamp the value we get at frame iFrame
-    virtual T GetValueAtFrame(float iFrame) const override;
+    virtual T GetValueAtFrame( ufloat iFrame ) const override;
+
+    virtual void AddOrReplaceKey(TKey<T>& iKey) override;
 
 public:
-    virtual void SetDefaultValue(T iDefaultValue) override;
-    void SetMinValue( T iNewMinValue );
-    void SetMaxValue( T iNewMaxValue );
     T GetMinValue() const;
     T GetMaxValue() const;
 
 protected:
-    T MinValue;
-    T MaxValue;
+    T mMinValue;
+    T mMaxValue;
 };
 
 template< typename T >
-TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinValue, T iMaxValue)
+TBoundedAnimatedProperty<T>::TBoundedAnimatedProperty(T iDefaultValue, T iMinValue, T iMaxValue) :
+    TAnimatedProperty(iDefaultValue)
 {
-    if (iMinValue > iMaxValue)
+    if(iMinValue > iMaxValue)
     {
-        MinValue = iMaxValue;
-        MaxValue = iMinValue;
+        mMinValue = iMaxValue;
+        mMaxValue = iMinValue;
     }
     else
     {
-        MinValue = iMinValue;
-        MaxValue = iMaxValue;
+        mMinValue = iMinValue;
+        mMaxValue = iMaxValue;
     }
-
-    if( iDefaultValue < MinValue )
-        DefaultValue = MinValue;
-    else if( iDefaultValue > MaxValue )
-        DefaultValue = MaxValue;
-    else
-        DefaultValue = iDefaultValue;
-        
 }
 
 template< typename T >
@@ -69,46 +59,30 @@ TBoundedAnimatedProperty<T>::~TBoundedAnimatedProperty()
 }
 
 template< typename T >
-T TBoundedAnimatedProperty<T>::GetValueAtFrame(float iFrame) const
+T TBoundedAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
 {
     T value = TAnimatedProperty<T>::GetValueAtFrame( iFrame );
-    return FMath::Clamp( value, MinValue, MaxValue );
+    return  FMath::Clamp( value, mMinValue, mMaxValue );
 }
 
 template< typename T >
-void TBoundedAnimatedProperty<T>::SetDefaultValue(T iDefaultValue)
+void TBoundedAnimatedProperty<T>::AddOrReplaceKey( TKey<T>& iKey )
 {
-    DefaultValue = FMath::Clamp( iDefaultValue, MinValue, MaxValue );
-}
-
-template< typename T >
-void TBoundedAnimatedProperty<T>::SetMinValue(T iNewMinValue)
-{
-    if (iNewMinValue > MaxValue)
-        MinValue = MaxValue;
-    else
-        MinValue = iNewMinValue;
-}
-
-template< typename T >
-void TBoundedAnimatedProperty<T>::SetMaxValue(T iNewMaxValue)
-{
-    if( iNewMaxValue < MinValue )
-        MaxValue = MinValue;
-    else
-        MaxValue = iNewMaxValue;
+    iKey.mValue = FMath::Clamp( iKey.mValue, mMinValue, mMaxValue );
+    THasKeys<T>::AddOrReplaceKey( iKey );
 }
 
 template< typename T >
 T TBoundedAnimatedProperty<T>::GetMinValue() const
 {
-    return MinValue;
+    return  mMinValue;
 }
 
 template< typename T >
 T TBoundedAnimatedProperty<T>::GetMaxValue() const
 {
-    return MaxValue;
+    return  mMaxValue;
 }
 
 ULIS_NAMESPACE_END
+

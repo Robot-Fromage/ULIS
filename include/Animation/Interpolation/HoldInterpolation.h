@@ -9,19 +9,18 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-#include "Animation/Interpolation/Interpolation.h"
+#include "Animation/Interpolation/AbstractInterpolation.h"
 
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-class THoldInterpolation : public TInterpolation< T >
+class THoldInterpolation : public TAbstractInterpolation< T >
 {
 protected:
     THoldInterpolation<T>();
 
-    static inline THoldInterpolation<T>* Instance = nullptr;
+    static THoldInterpolation<T>* mInstance = nullptr;
 
 public:
     THoldInterpolation<T>(THoldInterpolation<T> &other) = delete;
@@ -30,12 +29,12 @@ public:
     static void *ReleaseInstance();
 
 public:
-    virtual T Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const override;
+    virtual T Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const override;
 };
 
 template< typename T >
 THoldInterpolation<T>::THoldInterpolation() :
-    TInterpolation<T>()
+    TAbstractInterpolation<T>()
 {
 
 }
@@ -43,25 +42,26 @@ THoldInterpolation<T>::THoldInterpolation() :
 template< typename T >
 THoldInterpolation<T>* THoldInterpolation<T>::GetInstance()
 {
-    if( Instance == nullptr )
-        Instance = new THoldInterpolation<T>();
-    return Instance;
+    if( mInstance == nullptr )
+        mInstance = new THoldInterpolation<T>();
+    return  mInstance;
 }
 
 template< typename T >
 void * THoldInterpolation<T>::ReleaseInstance()
 {
-    if( Instance != nullptr )
+    if( mInstance != nullptr )
     {
-        delete Instance;
-        Instance = nullptr;
+        delete mInstance;
+        mInstance = nullptr;
     }
 }
 
 template< typename T >
-T THoldInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const
+T THoldInterpolation<T>::Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const
 {
-    return iLeftKey.Value;
+    return  iLeftKey.mValue;
 }
 
 ULIS_NAMESPACE_END
+

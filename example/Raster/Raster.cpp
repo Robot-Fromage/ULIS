@@ -15,9 +15,6 @@
 #include <QPixmap>
 #include <QLabel>
 
-#include "Math/ShapeGeneration/Line.h"
-#include "Math/ShapeGeneration/Polygon.h"
-
 using namespace ::ULIS;
 
 int
@@ -27,9 +24,6 @@ main(int argc,char *argv[])
     FCommandQueue queue(pool);
     eFormat fmt = Format_RGBAF;
     FContext ctx(queue,fmt,PerformanceIntent_AVX);
-    FHardwareMetrics hw;
-    FSchedulePolicy policy_cache_efficient(ScheduleTime_Sync, ScheduleRun_Multi,ScheduleMode_Chunks,ScheduleParameter_Length,hw.L1CacheSize());
-    FSchedulePolicy policy_mono_chunk(ScheduleTime_Sync, ScheduleRun_Mono,ScheduleMode_Chunks,ScheduleParameter_Count,1);
 
     //Data
     FBlock canvas(800,800,fmt);
@@ -37,7 +31,9 @@ main(int argc,char *argv[])
     ctx.Finish();
     {
         TArray<FVec2I> pointsGenerated;
+        TArray<FVec2I> pointsGenerated2;
         FColor color =  FColor::HSVA8(0,255,255,255);
+        FColor color2 = FColor::HSVA8(0, 0, 0, 255);
         /*GenerateLinePoints( canvas, FVec2F( 200, 200 ), FVec2F( 515, 324 ), points);
         for (int i = 0; i < points.Size(); i++)
         {
@@ -100,20 +96,29 @@ main(int argc,char *argv[])
 
         //ctx.DrawQuadraticBezier( canvas, FVec2I( 150, 150 ),  FVec2I( 250, 126 ), FVec2I( 72, 59 ), 1 );
 
-        std::vector< FVec2I > points;
-        points.push_back( FVec2I( 381, 144 )); //Top
-        points.push_back(FVec2I(211,586)); //Bottom left
-        points.push_back(FVec2I(511,234)); // Right
-        points.push_back(FVec2I(158,236)); // Left
-        points.push_back(FVec2I(502,589)); // Bottom Right
+        //std::vector< FVec2I > points;
+        //points.push_back( FVec2I( 381, 144 )); //Top
+        //points.push_back(FVec2I(211,586)); //Bottom left
+        //points.push_back(FVec2I(511,234)); // Right
+        //points.push_back(FVec2I(158,236)); // Left
+        //points.push_back(FVec2I(502,589)); // Bottom Right
 
         //ctx.DrawPolygon( canvas, points, FColor::RGBA8(0,200,0, 155), false);
-        GeneratePolygonPoints( points, pointsGenerated );
+        //GeneratePolygonPoints( points, pointsGenerated );
+
+        GenerateCircleInscribedRectanglePoints( FVec2I( 100, 200 ), FVec2I( 300, 250 ), 90, pointsGenerated );
+
+        GenerateRectanglePoints( FVec2I( 100, 200 ), FVec2I( 300, 250 ), pointsGenerated2);
 
         for (int i = 0; i < pointsGenerated.Size(); i++)
         {
             color.SetHue8(i % 255);
             canvas.SetPixelSafe(pointsGenerated[i].x, pointsGenerated[i].y, color);
+        }
+
+        for (int i = 0; i < pointsGenerated2.Size(); i++)
+        {
+            canvas.SetPixelSafe(pointsGenerated2[i].x, pointsGenerated2[i].y, color2);
         }
 
         //ctx.DrawLineAA( canvas, FVec2F( 381, 144 ), FVec2F( 211, 586 ), FColor::RGBA8(0,200,0,155) );

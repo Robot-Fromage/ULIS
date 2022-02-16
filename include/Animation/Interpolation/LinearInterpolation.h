@@ -9,19 +9,18 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
 #include "Core/Core.h"
-#include "Animation/Interpolation/Interpolation.h"
+#include "Animation/Interpolation/AbstractInterpolation.h"
 
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-class TLinearInterpolation : public TInterpolation< T >
+class TLinearInterpolation : public TAbstractInterpolation< T >
 {
 protected:
     TLinearInterpolation<T>();
 
-    static inline TLinearInterpolation<T>* Instance = nullptr;
+    static TLinearInterpolation<T>* mInstance = nullptr;
 
 public:
     TLinearInterpolation<T>(TLinearInterpolation<T> &other) = delete;
@@ -30,12 +29,12 @@ public:
     static void *ReleaseInstance();
 
 public:
-    virtual T Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const override;
+    virtual T Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey ) const override;
 };
 
 template< typename T >
 TLinearInterpolation<T>::TLinearInterpolation() :
-TInterpolation<T>()
+TAbstractInterpolation<T>()
 {
 
 }
@@ -43,27 +42,28 @@ TInterpolation<T>()
 template< typename T >
 TLinearInterpolation<T>* TLinearInterpolation<T>::GetInstance()
 {
-    if( Instance == nullptr )
-        Instance = new TLinearInterpolation<T>();
-    return Instance;
+    if( mInstance == nullptr )
+        mInstance = new TLinearInterpolation<T>();
+    return  mInstance;
 }
 
 template< typename T >
 void * TLinearInterpolation<T>::ReleaseInstance()
 {
-    if( Instance != nullptr )
+    if( mInstance != nullptr )
     {
-        delete Instance;
-        Instance = nullptr;
+        delete mInstance;
+        mInstance = nullptr;
     }
 }
 
 template< typename T >
-T TLinearInterpolation<T>::Interpolate(float iFrame, const FKey<T>& iLeftKey, const FKey<T>& iRightKey) const
+T TLinearInterpolation<T>::Interpolate( ufloat iFrame, const TKey<T>& iLeftKey, const TKey<T>& iRightKey) const
 {
-    float t = (iFrame - iLeftKey.Frame) / iRightKey.Frame - iLeftKey.Frame;
+    ufloat t = (iFrame - iLeftKey.mFrame) / iRightKey.mFrame - iLeftKey.mFrame;
 
-    return iLeftKey.Value + t * (iRightKey.Value - iLeftKey.Value);
+    return  iLeftKey.mValue + t * (iRightKey.mValue - iLeftKey.mValue);
 }
 
 ULIS_NAMESPACE_END
+

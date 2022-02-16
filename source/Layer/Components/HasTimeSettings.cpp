@@ -9,11 +9,12 @@
 * @license      Please refer to LICENSE.md
 */
 #include "Layer/Components/HasTimeSettings.h"
+#include "Math/Math.h"
 
 ULIS_NAMESPACE_BEGIN
 
 IHasTimeSettings::IHasTimeSettings(
-      uint16 iFps
+      ufloat iFps
     , int64 iBeginFrame
     , int64 iEndFrame
     , int64 iCurrentFrame
@@ -21,14 +22,14 @@ IHasTimeSettings::IHasTimeSettings(
 )
     : FOnTimeSettingsChanged( iDelegate )
     , mInfo{
-          iFps
+          FMath::Max( iFps, FMath::kEpsilonf )
         , iBeginFrame
         , iEndFrame
         , iCurrentFrame
     }
 {}
 
-uint16 IHasTimeSettings::Fps()
+ufloat IHasTimeSettings::Fps()
 {
     return mInfo.fps;
 }
@@ -48,9 +49,17 @@ int64 IHasTimeSettings::CurrentFrame()
     return mInfo.currentFrame;
 }
 
-void IHasTimeSettings::SetFps( uint16 iValue )
+int64 IHasTimeSettings::GetFrameAtTime( ufloat iTimeSeconds ) {
+    return  static_cast< int64 >( FMath::RoundToNegativeInfinity( mInfo.fps * iTimeSeconds ) );
+}
+
+ufloat IHasTimeSettings::GetIntervalSeconds() const {
+    return  1.f / mInfo.fps;
+}
+
+void IHasTimeSettings::SetFps( ufloat iValue )
 {
-    mInfo.fps = iValue;
+    mInfo.fps = FMath::Max( iValue, FMath::kEpsilonf );
 }
 
 void IHasTimeSettings::SetBeginFrame( int64 iValue )

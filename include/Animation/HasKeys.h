@@ -9,101 +9,148 @@
 * @license      Please refer to LICENSE.md
 */
 #pragma once
-
-#include "Memory/Array.h"
-#include "Animation/Interpolation/Interpolation.h"
+#include "Core/Core.h"
+#include "Animation/Interpolation/AbstractInterpolation.h"
 #include "Core/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
 
 template< typename T >
-struct FKey
+struct TKey
 {
-    FKey( float iFrame, T iValue, TInterpolation<T>* iInterpolation, FVec2F iLeftTangent = FVec2F(-1.f, 0.f), FVec2F iRightTangent = FVec2F(1.f, 0.f) );
+    TKey( ufloat iFrame, T iValue, TAbstractInterpolation<T>* iInterpolation, FVec2F iLeftTangent = FVec2F(-1.f, 0.f), FVec2F iRightTangent = FVec2F(1.f, 0.f) );
 
-    float Frame;
-    T Value;
-    TInterpolation<T>* Interpolation;
-    FVec2F LeftTangent;
-    FVec2F RightTangent;
+    TAbstractInterpolation<T>* GetInterpolation() const;
+
+    ufloat mFrame;
+    T mValue;
+    FVec2F mLeftTangent;
+    FVec2F mRightTangent;
+
+private:
+    TAbstractInterpolation<T>* mInterpolation;
 };
 
 template< typename T >
-FKey<T>::FKey(float iFrame, T iValue, TInterpolation<T>* iInterpolation, FVec2F iLeftTangent, FVec2F iRightTangent ):
-    Frame(iFrame),
-    Value(iValue),
-    Interpolation(iInterpolation),
-    LeftTangent( iLeftTangent ), 
-    RightTangent( iRightTangent )
+TKey<T>::TKey( ufloat iFrame, T iValue, TAbstractInterpolation<T>* iInterpolation, FVec2F iLeftTangent, FVec2F iRightTangent ):
+    mFrame(iFrame),
+    mValue(iValue),
+    mInterpolation(iInterpolation),
+    mLeftTangent( iLeftTangent ), 
+    mRightTangent( iRightTangent )
 {
 }
 
-template< class Type > using TKeyAddedDelegate = TLambdaCallback< void, FKey<Type> >;
-template< class Type > using TKeyRemovedDelegate = TLambdaCallback< void, FKey<Type> >;
+template< typename T >
+TAbstractInterpolation<T>* TKey<T>::GetInterpolation() const
+{
+    return mInterpolation;
+}
+
+/** Returns the whole array of keys(AFTER the addition), the index at which we added the key, and a reference to the key we added */
+template< class Type > using TKeyAddedDelegate = TLambdaCallback< void, ::ULIS::TArray<TKey<Type>>&, uint64, TKey<Type>& >;
+
+/** Returns the whole array of keys(BEFORE the deletion), the index at which we deleted the key, and a reference to the key we deleted */
+template< class Type > using TKeyRemovedDelegate = TLambdaCallback< void, ::ULIS::TArray<TKey<Type>>&, uint64, TKey<Type>& >;
+
+/** Returns a copy of the key before the change, and a reference to the changed key */
+template< class Type > using TKeyChangedDelegate = TLambdaCallback< void, TKey<Type>, TKey<Type>& >;
 
 template< class Type > using TOnKeyAdded = TCallbackCapable< TKeyAddedDelegate< Type >, 0 >;
 template< class Type > using TOnKeyRemoved = TCallbackCapable< TKeyRemovedDelegate< Type >, 1 >;
+template< class Type > using TOnKeyChanged = TCallbackCapable< TKeyChangedDelegate< Type > >;
 
 template< typename T >
-class IHasKeys:
+class THasKeys:
     public TOnKeyAdded<T>,
-    public TOnKeyRemoved<T>
+    public TOnKeyRemoved<T>,
+    public TOnKeyChanged<T>
 {
 public:
-    IHasKeys();
-    ~IHasKeys();
+    THasKeys();
+    ~THasKeys();
 
 public:
-    void AddKey( FKey<T>& iKey );
-    bool RemoveKeyAtFrame(int iFrame);
-    const ::ULIS::TArray<FKey<T>>& GetKeys() const;
+
+    /** Adds a key in Keys Array, replaces existing key if there was already one at the same frame*/
+    virtual void AddOrReplaceKey( TKey<T>& iKey );
+
+    /** Removes a key at a certain frame. Return true if there was one at the frame passed in parameter */
+    virtual bool RemoveKeyAtFrame( ufloat iFrame );
+
+    /** Const getter, useful to check or display the keys, but no modification is allowed */
+    const ::ULIS::TArray<TKey<T>>& GetKeys() const;
 
 private:
-    ::ULIS::TArray<FKey<T>> Keys;
+    ::ULIS::TArray<TKey<T>> mKeys;
 };
 
 template< typename T >
-IHasKeys<T>::IHasKeys()
+THasKeys<T>::THasKeys()
 {
 }
 
 template< typename T >
-IHasKeys<T>::~IHasKeys()
+THasKeys<T>::~THasKeys()
 {
 
 }
 
 template< typename T >
-void IHasKeys<T>::AddKey(FKey<T>& iKey)
+void THasKeys<T>::AddOrReplaceKey(TKey<T>& iKey)
 {
-    if (Keys.Size() == 0)
+    if(mKeys.Size() == 0)
     {
-        Keys.PushBack(iKey);
-        TOnKeyAdded<T>::Invoke( iKey );
+        mKeys.PushBack(iKey);
+        TOnKeyAdded<T>::Invoke( mKeys, 0, mKeys[0] );
         return;
     }
 
-    if (Keys[0].Frame > iKey.Frame)
+    if(mKeys[0].mFrame == iKey.mFrame)
     {
-        Keys.Insert(0, iKey);
-        TOnKeyAdded<T>::Invoke( iKey );
+        TKey<T> beforeChangeKey = mKeys[0];
+        mKeys[0] = iKey;
+        TOnKeyChanged<T>::Invoke( beforeChangeKey, mKeys[0]);
         return;
     }
-    else if (Keys[Keys.Size() - 1].Frame < iKey.Frame)
+    else if(mKeys[mKeys.Size() - 1].mFrame == iKey.mFrame)
     {
-        Keys.PushBack(iKey);
-        TOnKeyAdded<T>::Invoke( iKey );
+        TKey<T> beforeChangeKey = mKeys[mKeys.Size() - 1];
+        mKeys[mKeys.Size() - 1] = iKey;
+        TOnKeyChanged<T>::Invoke( beforeChangeKey, mKeys[mKeys.Size() - 1] );
+        return;
+    }
+
+    if(mKeys[0].mFrame > iKey.mFrame)
+    {
+        mKeys.Insert(0, iKey);
+        TOnKeyAdded<T>::Invoke( mKeys, 0, mKeys.Front() );
+        return;
+    }
+    else if(mKeys[mKeys.Size() - 1].mFrame < iKey.mFrame)
+    {
+        mKeys.PushBack(iKey);
+        TOnKeyAdded<T>::Invoke( mKeys, mKeys.Size() - 1, mKeys.Back() );
         return;
     }
 
     //Dichotomy to search for the index at which we want to insert our key
     int leftKeyIndex = 0;
-    int rightKeyIndex = Keys.Size() - 1;
+    int rightKeyIndex = mKeys.Size() - 1;
 
-    while (rightKeyIndex - leftKeyIndex > 1)
+    while(rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
-        if (Keys[searchIndex].Frame > iKey.Frame)
+        
+        if(mKeys[searchIndex].mFrame == iKey.mFrame)
+        {
+            TKey<T> beforeChangeKey = mKeys[searchIndex];
+            mKeys[searchIndex] = iKey;
+            TOnKeyChanged<T>::Invoke( beforeChangeKey, mKeys[searchIndex]);
+            return;
+        }
+
+        if(mKeys[searchIndex].mFrame > iKey.mFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -113,45 +160,45 @@ void IHasKeys<T>::AddKey(FKey<T>& iKey)
         }
     }
 
-    Keys.Insert(rightKeyIndex, iKey);
-    TOnKeyAdded<T>::Invoke( iKey );
+    mKeys.Insert(rightKeyIndex, iKey);
+    TOnKeyAdded<T>::Invoke( mKeys, rightKeyIndex, mKeys[rightKeyIndex] );
 }
 
 template< typename T >
-bool IHasKeys<T>::RemoveKeyAtFrame(int iFrame)
+bool THasKeys<T>::RemoveKeyAtFrame( ufloat iFrame )
 {
-    if (Keys.Size() == 0)
-        return false;
+    if(mKeys.Size() == 0)
+        return  false;
 
-    if (Keys[0].Frame == iFrame)
+    if(mKeys[0].mFrame == iFrame)
     {
-        TOnKeyRemoved<T>::Invoke( Keys[0] );
-        Keys.Erase(0);
-        return true;
+        TOnKeyRemoved<T>::Invoke( mKeys, 0, mKeys[0] );
+        mKeys.Erase(0);
+        return  true;
     }
-    else if (Keys[Keys.Size() - 1].Frame == iFrame)
+    else if(mKeys[mKeys.Size() - 1].mFrame == iFrame)
     {
-        TOnKeyRemoved<T>::Invoke( Keys[Keys.Size() - 1] );
-        Keys.PopBack();
-        return true;
+        TOnKeyRemoved<T>::Invoke( mKeys, mKeys.Size() - 1, mKeys[mKeys.Size() - 1] );
+        mKeys.PopBack();
+        return  true;
     }
 
     //Dichotomy to search for the index at which we want to remove our key
     int leftKeyIndex = 0;
-    int rightKeyIndex = Keys.Size() - 1;
+    int rightKeyIndex = mKeys.Size() - 1;
 
-    while (rightKeyIndex - leftKeyIndex > 1)
+    while(rightKeyIndex - leftKeyIndex > 1)
     {
         int searchIndex = (leftKeyIndex + rightKeyIndex) / 2;
 
-        if (Keys[searchIndex].Frame == iFrame)
+        if(mKeys[searchIndex].mFrame == iFrame)
         {
-            TOnKeyRemoved<T>::Invoke( Keys[searchIndex] );
-            Keys.Erase(searchIndex);
-            return true;
+            TOnKeyRemoved<T>::Invoke( mKeys, searchIndex, mKeys[searchIndex] );
+            mKeys.Erase(searchIndex);
+            return  true;
         }
 
-        if (Keys[searchIndex].Frame > iFrame)
+        if(mKeys[searchIndex].mFrame > iFrame)
         {
             rightKeyIndex = searchIndex;
         }
@@ -161,13 +208,14 @@ bool IHasKeys<T>::RemoveKeyAtFrame(int iFrame)
         }
     }
 
-    return false;
+    return  false;
 }
 
 template< typename T >
-const TArray<FKey<T>>& IHasKeys<T>::GetKeys() const
+const TArray<TKey<T>>& THasKeys<T>::GetKeys() const
 {
-    return Keys;
+    return  mKeys;
 }
 
 ULIS_NAMESPACE_END
+

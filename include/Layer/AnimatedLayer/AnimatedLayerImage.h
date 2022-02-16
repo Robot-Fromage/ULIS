@@ -110,6 +110,10 @@ public:
 private:
     // TNode< IAnimatedLayer > Interface
     void InitFromParent( const TRoot< IAnimatedLayer >* iParent ) override;
+
+public:
+    // IAnimatedLayer interface
+    uint64 GetNumFrames() const override;
 };
 
 ULIS_NAMESPACE_END

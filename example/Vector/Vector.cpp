@@ -35,7 +35,15 @@ main( int argc, char *argv[] ) {
     BLImage img( w, h, BL_FORMAT_PRGB32 );
     {
         BLContext blctx( img );
-        blctx.setFillStyle(BLRgba32(0x3FFF0000));
+        auto a = blctx.fillRule();
+        BLStyle strokeStyle;
+        BLStyle fillStyle;
+        blctx.getStrokeStyle( strokeStyle );
+        blctx.getStrokeStyle( fillStyle );
+
+        auto dummy = 0;
+
+        blctx.setFillStyle(BLRgba32(0xFF0100FF));
         blctx.setCompOp(BL_COMP_OP_SRC_COPY);
         blctx.fillAll();
         BLPath path;
@@ -44,7 +52,9 @@ main( int argc, char *argv[] ) {
         path.cubicTo(882, 404, 144, 267, 27, 31);
         blctx.setCompOp(BL_COMP_OP_SRC_OVER);
         blctx.setFillStyle(BLRgba32(0xFFFFFFFF));
-        blctx.fillPath(path);
+        blctx.setStrokeStyle(BLRgba32(0xFF000000));
+        blctx.fillPath( path );
+        blctx.strokePath(path);
         blctx.end();
     }
 

@@ -15,29 +15,30 @@
 #include <QPixmap>
 #include <QLabel>
 #include <chrono>
-
-#include "Animation/AnimatedProperty.h"
-#include "Animation/BoundedAnimatedProperty.h"
-#include "Animation/Interpolation/LinearInterpolation.h"
-#include "Animation/Interpolation/HoldInterpolation.h"
-#include "Animation/Interpolation/BezierInterpolation.h"
+#include "Animation/DefaultValue.h"
 
 using namespace ::ULIS;
 
 int
 main( int argc, char *argv[] ) {
 
-    TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 1.f, 8.f );
-    animatedFloat.AddKey( FKey<float>(60, 2.1f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(55, 7.2f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(38, 4.5f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(17, 3.5f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(44, 5.6f, TBezierInterpolation<float>::GetInstance()) );
-    animatedFloat.AddKey( FKey<float>(21, 1.5f, TBezierInterpolation<float>::GetInstance()) );
+    TBoundedAnimatedProperty<float> animatedFloat = TBoundedAnimatedProperty<float>( 1.0f, 6.f, 5.f );
+    animatedFloat.AddOrReplaceKey( TKey<float>(60.2f, 2.1f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( TKey<float>(55.1f, 7.2f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( TKey<float>(38, 4.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( TKey<float>(17, 3.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( TKey<float>(44, 5.6f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( TKey<float>(21, 1.5f, TBezierInterpolation<float>::GetInstance()) );
+    animatedFloat.AddOrReplaceKey( TKey<float>(44, 7.6f, TBezierInterpolation<float>::GetInstance()) );
 
-    animatedFloat.RemoveKeyAtFrame( 60 );
+    animatedFloat.RemoveKeyAtFrame( 60.2f );
 
     float value = animatedFloat.GetValueAtFrame( 48 );
+
+    for (int i = 0; i < animatedFloat.GetKeys().Size(); i++)
+    {
+        std::cout << animatedFloat.GetKeys()[i].mFrame << ";" << animatedFloat.GetKeys()[i].mValue << std::endl;
+    }
 
     std::cout << value << std::endl;
 
