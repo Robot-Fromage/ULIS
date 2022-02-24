@@ -214,10 +214,10 @@ void TestShrinkableAdvanced() {
 
 int main( int argc, char *argv[] ) {
     //srand( time( NULL ) );
-    TestFixedDefragRate();
-    TestFixedClientUpdateAfterDefrag();
-    TestBasicShrinkable();
-    TestShrinkableDefrag();
+    //TestFixedDefragRate();
+    //TestFixedClientUpdateAfterDefrag();
+    //TestBasicShrinkable();
+    //TestShrinkableDefrag();
     TestShrinkableAdvanced();
 
     return  0;
