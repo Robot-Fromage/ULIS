@@ -107,6 +107,14 @@ public:
         return  counter;
     }
 
+    TAnimatedProperty< ufloat >& GetTimeRemapProperty() {
+        return  mTimeRemap;
+    }
+
+    const TAnimatedProperty< ufloat >& GetTimeRemapProperty() const {
+        return  mTimeRemap;
+    }
+
 private:
     TCel< T >* CelAtIndex( uint64 iIndex ) {
         return  mInstances[iIndex];

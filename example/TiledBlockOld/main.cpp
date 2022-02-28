@@ -8,28 +8,21 @@
 * @brief        TiledBlock application for ULIS.
 * @license      Please refer to LICENSE.md
 */
-#include <ULIS>
+#include "Canvas.h"
+#include "ULISLoader.h"
 #include <QApplication>
+
 #include <cstdlib>
 #include <ctime>
-using namespace ::ULIS;
-
 int
 main( int argc, char *argv[] ) {
     srand( time( NULL ) );
-
-    FThreadPool pool;
-    FCommandQueue queue( pool );
-    eFormat format = Format_RGBA8;
-    FContext ctx( queue, format );
-
-    while( true ) {
-        std::cout << "n\n";
-        volatile FTilePool tilePool( format );
-        for( volatile int i = 0; i < 1000000; ++i ) {
-            const volatile int dummy = 0;
-        }
-    }
-    return  0;
+    QApplication app( argc, argv );
+    FULISLoader handle;
+    SCanvas* canvas = new SCanvas( handle );
+    canvas->show();
+    int exit_code = app.exec();
+    delete  canvas;
+    return  exit_code;
 }
 

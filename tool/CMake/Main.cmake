@@ -48,6 +48,7 @@ target_include_directories(
     PUBLIC
     "include/"
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/blend2d/src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glew/glew-cmake/include/
     PRIVATE
     #${OpenCL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/ConcurrentQueue/
@@ -62,9 +63,11 @@ target_include_directories(
 
 # Link
 target_link_libraries( ULIS PRIVATE lcms2 )
+target_link_libraries( ULIS PRIVATE lcms2 )
 target_link_libraries( ULIS PRIVATE freetype )
 target_link_libraries( ULIS PRIVATE zlibstatic )
 target_link_libraries( ULIS PUBLIC blend2d )
+target_link_libraries( ULIS PUBLIC libglew_static )
 #target_link_libraries( ULIS PRIVATE ${OpenCL_LIBRARY} )
 if( ${ULIS_USE_FFMPEG} )
     target_include_directories( ULIS PUBLIC ${FFMPEG_INCLUDE_DIRS} )

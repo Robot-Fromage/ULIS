@@ -54,6 +54,7 @@ FUncompressedMemoryPool::PurgeAllNow() {
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
     for( auto it : mAvailableTiles )
         FFixedAllocMemoryPool::Free( it );
+    mAvailableTiles.clear();
 }
 
 void
