@@ -68,6 +68,16 @@ FTilePool::EmptyTile() const {
     return  mEmptyTile->Bits();
 }
 
+void
+FTilePool::PrintDiagnosis() {
+    std::cout << "====== FTilePool" << std::endl;
+    std::cout << "Num registered TileBlocks: " << mRegisteredTiledBlocks.size() << std::endl;
+    std::cout << "Empty Tile Hash: " << mEmptyCRC32Hash << std::endl;
+    std::cout << "Bytes Per Tile: " << mBytesPerTile << "o" << std::endl;
+    std::cout << "Tile Size: " << TileSize().x << " * " << TileSize().y << std::endl;
+    mMemoryDriver->PrintDiagnosis();
+}
+
 // Core API
 void
 FTilePool::PurgeAllNow() {

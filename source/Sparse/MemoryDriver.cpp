@@ -153,6 +153,22 @@ FMemoryDriver::SetBackground( const uint8* iBackground, uint32 iBackgroundHash )
 }
 
 void
+FMemoryDriver::PrintDiagnosis() {
+    std::lock_guard< std::mutex > lockA( mMutexDirtyHashedTilesLock );
+    std::lock_guard< std::mutex > lockB( mMutexCorrectlyHashedTilesLock );
+    std::cout << "====== FMemoryDriver" << std::endl;
+    std::cout << "Replicated Background Hash: " << mBackgroundHash << std::endl;
+    std::cout << "Replicated Bytes Per Tile: " << mBytesPerTile << std::endl;
+    std::cout << "Requested Stop? : " << bStopWorker << std::endl;
+    std::cout << "Relax Time: " << mWorkerRelaxTime_ms << std::endl;
+    std::cout << "Num Dirty Hashed Tiles: " << mDirtyHashedTiles.size() << std::endl;
+    std::cout << "Num Correctly Hashed Tiles: " << mCorrectlyHashedTiles.size() << std::endl;
+    std::cout << "Replicated Num Dirty Hashed Tiles: " << mDirtyHashedBatchSize << std::endl;
+    std::cout << "Replicated Num Correctly Hashed Tiles: " << mCorrectlyHashedBatchSize << std::endl;
+    mUncompressedMemoryPool.PrintDiagnosis();
+}
+
+void
 FMemoryDriver::SanitizeDirtyHashedBatch() {
     // Just process the dirty ones
     // Refcounted ones: compute their hashes

@@ -23,12 +23,11 @@ main( int argc, char *argv[] ) {
     eFormat format = Format_RGBA8;
     FContext ctx( queue, format );
 
+    FTilePool tilePool( format );
     while( true ) {
-        std::cout << "n\n";
-        volatile FTilePool tilePool( format );
-        for( volatile int i = 0; i < 1000000; ++i ) {
-            const volatile int dummy = 0;
-        }
+        system("cls");
+        tilePool.PrintDiagnosis();
+        std::this_thread::sleep_for( std::chrono::duration< double, std::milli >( 1000 ) );
     }
     return  0;
 }
