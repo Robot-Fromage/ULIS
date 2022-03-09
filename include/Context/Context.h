@@ -20,6 +20,7 @@
 #include "Math/Geometry/Vector.h"
 #include "Scheduling/SchedulePolicy.h"
 #include "System/CPUInfo/CPUInfo.h"
+#include "Sparse/TiledBlock.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
@@ -443,6 +444,29 @@ public:
         , FEvent* iEvent = nullptr
     );
 
+    /*!
+        Perform a clear operation on the input block.
+        iBlock is modified to be cleared.
+
+        You can specify a sub-portion of the iBlock image by specifying the
+        iRect to the desired part of the picture. If you want to clear the
+        whole image, use the FBlock::Rect() method on the iBlock.
+
+        If the iRect lead to a destination geometry that does not intersect the
+        rectangular geometry of iBlock, the call will not perform any
+        computation and will return safely, so it is safe to specify
+        out-of-bounds positions.
+    */
+    ulError
+    Clear(
+          FTiledBlock& iBlock
+        , const FRectI& iRect = FRectI::Auto
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
 /////////////////////////////////////////////////////
 // Conv
     /*!
@@ -521,6 +545,30 @@ public:
     ulError
     Fill(
           FBlock& iBlock
+        , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
+        , const FRectI& iRect = FRectI::Auto
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+    /*!
+        Perform a fill operation in iBlock.
+        iBlock is modified to receive the result of the operation.
+
+        You can specify a sub-portion of the iBlock image by specifying the
+        iRect to the desired part of the picture. If you want to fill
+        the whole image, use the FBlock::Rect() method on the iBlock.
+
+        If the iRect lead to a destination geometry that does not intersect the
+        rectangular geometry of iBlock, the call will not perform any
+        computation and will return safely, so it is safe to specify
+        out-of-bounds positions.
+    */
+    ulError
+    Fill(
+          FTiledBlock& iBlock
         , const ISample& iColor = FColor::RGBA8( 0, 0, 0 )
         , const FRectI& iRect = FRectI::Auto
         , const FSchedulePolicy& iPolicy = FSchedulePolicy::CacheEfficient

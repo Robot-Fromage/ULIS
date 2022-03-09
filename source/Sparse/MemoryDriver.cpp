@@ -126,6 +126,7 @@ FMemoryDriver::RedundantHashMerge( FTile* iTile ) {
         tile->IncreaseRefCount();
         tile->mDirty = false;
         tile->mHash = iTile->mHash;
+        tile->mLock = false;
         memcpy( *( tile->mClient ), *( iTile->mClient ), mBytesPerTile );
 
         mMutexCorrectlyHashedTilesLock.lock();
@@ -151,16 +152,13 @@ FMemoryDriver::SplitMutable( FTile* iElem ) {
     if( !iElem ) {
         return  QueryOne();
     } else {
-        if( iElem->mRefCount == 1 ) {
-            return  iElem;
-        } else {
-            FTile* tile = new FTile( mUncompressedMemoryPool.QueryOne() );
-            tile->IncreaseRefCount();
-            memcpy( *( tile->mClient ), *( iElem->mClient ), mBytesPerTile );
-            std::lock_guard< std::mutex > lock( mMutexDirtyHashedTilesLock );
-            mDirtyHashedTiles.push_front( tile );
-            return  tile;
-        }
+        FTile* tile = new FTile( mUncompressedMemoryPool.QueryOne() );
+        tile->IncreaseRefCount();
+        iElem->DecreaseRefCount();
+        memcpy( *( tile->mClient ), *( iElem->mClient ), mBytesPerTile );
+        std::lock_guard< std::mutex > lock( mMutexDirtyHashedTilesLock );
+        mDirtyHashedTiles.push_front( tile );
+        return  tile;
     }
 }
 

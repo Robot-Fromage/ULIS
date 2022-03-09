@@ -24,27 +24,27 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, format );
 
     FTilePool tilePool( format );
-    FTiledBlock block( tilePool );
-    FTile** tileA = block.QueryMutableTile( FVec2I( 0, 0 ) );
-    (*tileA)->mLock = true;
-    FTile** tileB = block.QueryMutableTile( FVec2I( 64, 0 ) );
-    (*tileB)->mLock = true;
-    FBlock proxA( *(*tileA)->mClient, 64, 64, format );
-    FBlock proxB( *(*tileB)->mClient, 64, 64, format );
-    FBlock comp( 64, 64, format );
-    ctx.Fill( proxA, FColor::Red );
-    ctx.Fill( proxB, FColor::Red );
-    ctx.Fill( comp, FColor::Red );
+    FTiledBlock blockA( tilePool );
+    ctx.Fill( blockA, FColor::Red, FRectI( 0, 0, 128, 128 ) );
     ctx.Finish();
-    (*tileA)->mLock = false;
-    (*tileB)->mLock = false;
-    auto a = comp.CRC32();
+    tilePool.PrintDiagnosis();
+    system("cls");
+    blockA.SanitizeNow();
+    tilePool.PrintDiagnosis();
+    system("cls");
+    ctx.Clear( blockA, FRectI( 32, 32, 64, 64 ) );
+    ctx.Finish();
+    tilePool.PrintDiagnosis();
+    system("cls");
+    blockA.SanitizeNow();
+    tilePool.PrintDiagnosis();
+    system("cls");
 
     while( true ) {
         system("cls");
         tilePool.PrintDiagnosis();
         std::this_thread::sleep_for( std::chrono::duration< double, std::milli >( 1000 ) );
-        block.SanitizeNow();
+        blockA.SanitizeNow();
     }
     return  0;
 }
