@@ -40,8 +40,8 @@ FLQTree::FLQTree()
 void
 FLQTree::Erase( uint16 iX, uint16 iY ) {
     uint8 key =
-          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX / sm_leaf_size_as_pixels ]
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY / sm_leaf_size_as_pixels ];
     if( mBulk[ key ] ) {
         --mNumEntries;
         mBulk[ key ]->DecreaseRefCount();
@@ -78,8 +78,8 @@ FLQTree::LeafGeometry() const {
 const uint8*
 FLQTree::QueryConst( FTilePool& iPool, uint8 iX, uint8 iY ) const {
     uint8 key =
-          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX / sm_leaf_size_as_pixels ]
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY / sm_leaf_size_as_pixels ];
     if( mBulk[ key ] )
         return  *( mBulk[ key ]->mClient );
     else
@@ -89,8 +89,8 @@ FLQTree::QueryConst( FTilePool& iPool, uint8 iX, uint8 iY ) const {
 FTile**
 FLQTree::QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY ) {
     uint8 key =
-          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX / sm_leaf_size_as_pixels ]
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY / sm_leaf_size_as_pixels ];
     // Perform data copy for imminent mutable change if needed
     if( !mBulk[ key ] )
         ++mNumEntries;

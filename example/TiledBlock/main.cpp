@@ -25,10 +25,20 @@ main( int argc, char *argv[] ) {
 
     FTilePool tilePool( format );
     FTiledBlock block( tilePool );
-    FTile** tile = block.QueryMutableTile( FVec2I( 0, 0 ) );
-    FBlock prox( *(*tile)->mClient, 64, 64, format );
-    ctx.Fill( prox, FColor::Red );
+    FTile** tileA = block.QueryMutableTile( FVec2I( 0, 0 ) );
+    (*tileA)->mLock = true;
+    FTile** tileB = block.QueryMutableTile( FVec2I( 64, 0 ) );
+    (*tileB)->mLock = true;
+    FBlock proxA( *(*tileA)->mClient, 64, 64, format );
+    FBlock proxB( *(*tileB)->mClient, 64, 64, format );
+    FBlock comp( 64, 64, format );
+    ctx.Fill( proxA, FColor::Red );
+    ctx.Fill( proxB, FColor::Red );
+    ctx.Fill( comp, FColor::Red );
     ctx.Finish();
+    (*tileA)->mLock = false;
+    (*tileB)->mLock = false;
+    auto a = comp.CRC32();
 
     while( true ) {
         system("cls");

@@ -204,6 +204,12 @@ FMemoryDriver::SanitizeDirtyHashedBatch() {
             break;
 
         FTile* tile = *it;
+
+        if( tile->mLock ) {
+            ++it;
+            continue;
+        }
+
         if( tile->mRefCount == 0 ) {
             mUncompressedMemoryPool.Release( tile->mClient );
             delete  tile;
