@@ -106,7 +106,16 @@ FLQTree::IsEmpty() const {
 
 void
 FLQTree::SanitizeNow( FTilePool& iPool ) {
-    // TODO
+    if( IsEmpty() )
+        return;
+
+    for( uint16 i = 0; i < 256; ++i ) {
+        FTile* prev = mBulk[ i ];
+        FTile* next = iPool.RedundantHashMerge( prev );
+        mBulk[ i ] = next;
+        if( prev != nullptr && next == nullptr )
+            --mNumEntries;
+    }
 }
 
 ULIS_NAMESPACE_END

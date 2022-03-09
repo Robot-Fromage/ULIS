@@ -101,7 +101,9 @@ FMemoryDriver::QueryOne() {
 
 FTile*
 FMemoryDriver::RedundantHashMerge( FTile* iTile ) {
-    ULIS_ASSERT( iTile, "Bad Elem Query during Hash Merge Check" );
+    if( !iTile )
+        return  nullptr;
+
     // Process only clean tiles
     if( iTile->mDirty )
         return  iTile;
@@ -142,6 +144,24 @@ FMemoryDriver::RedundantHashMerge( FTile* iTile ) {
     it->second->IncreaseRefCount();
     iTile->DecreaseRefCount();
     return  it->second;
+}
+
+FTile*
+FMemoryDriver::SplitMutable( FTile* iElem ) {
+    if( !iElem ) {
+        return  QueryOne();
+    } else {
+        if( iElem->mRefCount == 1 ) {
+            return  iElem;
+        } else {
+            FTile* tile = new FTile( mUncompressedMemoryPool.QueryOne() );
+            tile->IncreaseRefCount();
+            memcpy( *( tile->mClient ), *( iElem->mClient ), mBytesPerTile );
+            std::lock_guard< std::mutex > lock( mMutexDirtyHashedTilesLock );
+            mDirtyHashedTiles.push_front( tile );
+            return  tile;
+        }
+    }
 }
 
 void

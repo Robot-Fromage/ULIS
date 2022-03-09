@@ -10,6 +10,7 @@
 */
 #include "Sparse/TilePool.h"
 #include "Image/Block.h"
+#include <algorithm>
 
 ULIS_NAMESPACE_BEGIN
 using namespace units_literals;
@@ -78,6 +79,18 @@ FTilePool::PrintDiagnosis() {
     mMemoryDriver->PrintDiagnosis();
 }
 
+void
+FTilePool::RegisterTiledBlock( FTiledBlock* iBlock ) {
+    mRegisteredTiledBlocks.push_back( iBlock );
+}
+
+void
+FTilePool::UnregisterTiledBlock( FTiledBlock* iBlock ) {
+    auto f = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
+    if( f != mRegisteredTiledBlocks.end() )
+        mRegisteredTiledBlocks.erase( f );
+}
+
 // Core API
 void
 FTilePool::PurgeAllNow() {
@@ -99,7 +112,7 @@ FTilePool::RedundantHashMerge( FTile* iElem ) {
 
 FTile*
 FTilePool::SplitMutable( FTile* iElem ) {
-    return  nullptr;
+    return  mMemoryDriver->SplitMutable( iElem );
 }
 
 ULIS_NAMESPACE_END

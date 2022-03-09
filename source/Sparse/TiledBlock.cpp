@@ -17,6 +17,7 @@
 
 ULIS_NAMESPACE_BEGIN
 FTiledBlock::~FTiledBlock() {
+    mTilePool.UnregisterTiledBlock( this );
     Clear();
 }
 
@@ -27,6 +28,7 @@ FTiledBlock::FTiledBlock( FTilePool& iTilePool )
     , mRootGeometry()
     , mLeafGeometry()
 {
+    mTilePool.RegisterTiledBlock( this );
 }
 
 uint64
@@ -212,10 +214,9 @@ FTiledBlock::SanitizeNow() {
     std::vector< std::unordered_map< uint64, FLQTree* >::iterator > to_delete;
     typename std::unordered_map< uint64, FLQTree* >::iterator it = mChunks.begin();
     while( it != mChunks.end() ) {
+        it->second->SanitizeNow( mTilePool );
         if( it->second->IsEmpty() )
             to_delete.push_back( it );
-        else
-            it->second->SanitizeNow( mTilePool );
         ++it;
     }
 

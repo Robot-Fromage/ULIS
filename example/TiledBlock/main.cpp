@@ -24,10 +24,17 @@ main( int argc, char *argv[] ) {
     FContext ctx( queue, format );
 
     FTilePool tilePool( format );
+    FTiledBlock block( tilePool );
+    FTile** tile = block.QueryMutableTile( FVec2I( 0, 0 ) );
+    FBlock prox( *(*tile)->mClient, 64, 64, format );
+    ctx.Fill( prox, FColor::Red );
+    ctx.Finish();
+
     while( true ) {
         system("cls");
         tilePool.PrintDiagnosis();
         std::this_thread::sleep_for( std::chrono::duration< double, std::milli >( 1000 ) );
+        block.SanitizeNow();
     }
     return  0;
 }
