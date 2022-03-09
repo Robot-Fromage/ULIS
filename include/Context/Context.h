@@ -172,6 +172,7 @@ public:
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
     );
+
 /////////////////////////////////////////////////////
 // Gradient
     /*!
@@ -190,6 +191,21 @@ public:
         , eGradientType iType = eGradientType::Gradient_Linear
         , const FRectI& iRect = FRectI::Auto
         , const FSchedulePolicy& iPolicy = FSchedulePolicy::MultiScanlines
+        , uint32 iNumWait = 0
+        , const FEvent* iWaitList = nullptr
+        , FEvent* iEvent = nullptr
+    );
+
+/////////////////////////////////////////////////////
+// Tile Block Specific
+    /*!
+        Dump tiled block into regular block.
+    */
+    ulError
+    Dump(
+          const FTiledBlock& iSource
+        , FBlock& iDestination
+        , const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr

@@ -190,7 +190,7 @@ const uint8*
 FTiledBlock::QueryConstTile( const FVec2I& iPos ) const {
     FVec2I mod = FVec2I::PyModulo( iPos, FVec2I( static_cast< int64 >( FLQTree::sm_root_size_as_pixels ) ) );
     const FLQTree* chunk = QueryChunkR( iPos );
-    return  chunk ? mTilePool.EmptyTile() : chunk->QueryConst( mTilePool, mod.x, mod.y );
+    return  chunk ? chunk->QueryConst( mTilePool, mod.x, mod.y ) : mTilePool.EmptyTile();
 }
 
 FTile**

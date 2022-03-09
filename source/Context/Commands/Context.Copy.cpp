@@ -20,6 +20,7 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 #include "Scheduling/DualBufferArgs.h"
+#include "Sparse/TiledBlock.h"
 
 ULIS_NAMESPACE_BEGIN
 ulError
@@ -70,6 +71,52 @@ FContext::Copy(
         )
     );
 
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::Dump(
+      const FTiledBlock& iSource
+    , FBlock& iDestination
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+) {
+    FRectI leafRect = iSource.LeafGeometry();
+    const int x1 = static_cast< int >( FMath::RoundToNegativeInfinity( leafRect.x / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int y1 = static_cast< int >( FMath::RoundToNegativeInfinity( leafRect.y / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int x2 = static_cast< int >( FMath::RoundToPositiveInfinity( ( leafRect.x + leafRect.w ) / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int y2 = static_cast< int >( FMath::RoundToPositiveInfinity( ( leafRect.y + leafRect.h ) / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    TArray< FEvent > events;
+    const int numOps = ( x2 - x1 ) * ( y2 - y1 );
+    events.Reserve( numOps );
+    for( int y = y1; y < y2; ++y ) {
+        for( int x = x1; x < x2; ++x ) {
+            const int u = x * FLQTree::sm_leaf_size_as_pixels;
+            const int v = y * FLQTree::sm_leaf_size_as_pixels;
+            const uint8* tile = iSource.QueryConstTile( FVec2I( u, v ) );
+            FRectI tileRect( u, v, FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels );
+            FRectI src_poi = ( leafRect & tileRect );
+            FRectI dst_poi = src_poi;
+            src_poi.x = FMath::PyModulo( src_poi.x, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+            src_poi.y = FMath::PyModulo( src_poi.y, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+            dst_poi.Shift( -leafRect.Position() );
+            ULIS_ASSERT( src_poi.Area() > 0, "Bad area" );
+            FBlock* tmp = new FBlock( (uint8*)tile, FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels );
+            events.PushBack(
+                FEvent(
+                    FOnEventComplete(
+                        [tmp,tile]( const ::ULIS::FRectI& ) {
+                            delete  tmp;
+                        }
+                    )
+                )
+            );
+            Copy( *tmp, iDestination, src_poi, dst_poi.Position(), iPolicy, iNumWait, iWaitList, &events.Back() );
+        }
+    }
+    Dummy_OP( events.Size(), &events[0], iEvent );
     return  ULIS_NO_ERROR;
 }
 
