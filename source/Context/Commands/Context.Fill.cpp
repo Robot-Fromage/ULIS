@@ -121,6 +121,7 @@ FContext::Fill(
         }
     }
     Dummy_OP( events.Size(), &events[0], iEvent );
+    iBlock.ExtendOperativeGeometryAfterMutableChange( iRect );
     return  ULIS_NO_ERROR;
 }
 

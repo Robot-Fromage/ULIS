@@ -106,6 +106,7 @@ FContext::Clear(
         }
     }
     Dummy_OP( events.Size(), &events[0], iEvent );
+    iBlock.SubstractOperativeGeometryAfterMutableChange( iRect );
     return  ULIS_NO_ERROR;
 }
 

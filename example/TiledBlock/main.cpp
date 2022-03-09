@@ -25,27 +25,22 @@ main( int argc, char *argv[] ) {
 
     FTilePool tilePool( format );
     FTiledBlock blockA( tilePool );
-    ctx.Fill( blockA, FColor::Red, FRectI( 0, 0, 128, 128 ) );
+    ctx.Fill( blockA, FColor::Red, FRectI( -128, -128, 64, 64 ) );
     ctx.Finish();
-    tilePool.PrintDiagnosis();
-    system("cls");
-    blockA.SanitizeNow();
-    tilePool.PrintDiagnosis();
-    system("cls");
-    ctx.Clear( blockA, FRectI( 32, 32, 64, 64 ) );
     ctx.Finish();
-    tilePool.PrintDiagnosis();
-    system("cls");
-    blockA.SanitizeNow();
-    tilePool.PrintDiagnosis();
-    system("cls");
 
-    while( true ) {
-        system("cls");
-        tilePool.PrintDiagnosis();
-        std::this_thread::sleep_for( std::chrono::duration< double, std::milli >( 1000 ) );
-        blockA.SanitizeNow();
-    }
+    //while( true ) {
+    //    system("cls");
+    //    tilePool.PrintDiagnosis();
+    //    std::this_thread::sleep_for( std::chrono::duration< double, std::milli >( 1000 ) );
+    //    blockA.SanitizeNow();
+    //}
+    blockA.RecomputeLeafGeometry();
+    blockA.RecomputeRootGeometry();
+    FRectI r0 = blockA.LeafGeometry();
+    FRectI r1 = blockA.RootGeometry();
+    FRectI r2 = blockA.OperativeGeometry();
+
     return  0;
 }
 
