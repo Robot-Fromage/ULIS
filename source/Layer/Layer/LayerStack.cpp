@@ -23,6 +23,7 @@ FLayerStack::FLayerStack(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , FTilePool* iTilePool
     , const FOnSelfChanged& iOnSelfChanged
     , const FOnNodeAdded& iOnLayerAdded
     , const FOnNodeRemoved& iOnLayerRemoved
@@ -62,6 +63,7 @@ FLayerStack::FLayerStack(
     , IHasSize2D( FVec2UI16( iWidth, iHeight ) )
     , IHasFormat( iFormat )
     , IHasColorSpace( iColorSpace )
+    , mTilePool( iTilePool )
 {
     ULIS_DEBUG_PRINTF( "FLayerStack Created" )
 }
@@ -73,6 +75,7 @@ FLayerStack::Reset(
     , uint16 iHeight
     , eFormat iFormat
     , const FColorSpace* iColorSpace
+    , FTilePool* iTilePool
     , const FOnSelfChanged& iOnSelfChanged
     , const FOnNodeAdded& iOnLayerAdded
     , const FOnNodeRemoved& iOnLayerRemoved
@@ -81,6 +84,7 @@ FLayerStack::Reset(
     , const FOnUserDataRemoved& iOnUserDataRemoved
 )
 {
+    mTilePool = iTilePool;
     ReinterpretFormat( iFormat );
     AssignColorSpace( iColorSpace );
     ReinterpretSize( FVec2UI16( iWidth, iHeight ) );
@@ -96,42 +100,10 @@ FLayerStack::Reset(
     this->FOnUserDataRemoved::SetDelegate( iOnUserDataRemoved );
 }
 
-/*
-// TDrawable Interface
-FEvent
-FLayerStack::RenderImage(
-      FContext& iCtx
-    , BlockType& ioBlock
-    , const FRectI& iRect
-    , const FVec2I& iPos
-    , const FSchedulePolicy& iPolicy
-    , uint32 iNumWait
-    , const FEvent* iWaitList
-) // override
-{
-    FEvent ev;
-    iCtx.Clear( ioBlock, FRectI::Auto, FSchedulePolicy::CacheEfficient, iNumWait, iWaitList, &ev );
-    const int max = static_cast< int >( Children().Size() ) - 1;
-    bool bFirst = true;
-    for( int i = max; i >= 0; --i ) {
-        typedef TAbstractLayerDrawable< BlockType > tDrawable;
-        tDrawable* drawable = dynamic_cast< tDrawable* >( &( Children()[i]->Self() ) );
-        if( !drawable )
-            continue;
-
-        ev = drawable->RenderImage(
-              iCtx
-            , ioBlock
-            , iRect
-            , iPos
-            , iPolicy
-            , 1
-            , &ev
-        );
-    }
-    return  ev;
+FTilePool*
+FLayerStack::TilePool() const {
+    return  mTilePool;
 }
-*/
 
 ULIS_NAMESPACE_END
 
