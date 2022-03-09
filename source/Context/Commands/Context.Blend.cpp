@@ -20,6 +20,7 @@
 #include "Scheduling/Event_Private.h"
 #include "Scheduling/InternalEvent.h"
 #include "Process/Conv/Conv.h"
+#include "Sparse/TiledBlock.h"
 
 ULIS_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////
@@ -86,6 +87,65 @@ FContext::Blend(
         )
     );
 
+    return  ULIS_NO_ERROR;
+}
+
+ulError
+FContext::Blend(
+      const FTiledBlock& iSource
+    , FTiledBlock& iBackdrop
+    , const FRectI& iSourceRect
+    , eBlendMode iBlendingMode
+    , eAlphaMode iAlphaMode
+    , ufloat iOpacity
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iSourceRect.Sanitized();
+    const FRectI dst_rect = src_rect;
+    const int x1 = static_cast< int >( FMath::RoundToNegativeInfinity( dst_rect.x / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int y1 = static_cast< int >( FMath::RoundToNegativeInfinity( dst_rect.y / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int x2 = static_cast< int >( FMath::RoundToPositiveInfinity( ( dst_rect.x + dst_rect.w ) / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int y2 = static_cast< int >( FMath::RoundToPositiveInfinity( ( dst_rect.y + dst_rect.h ) / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+
+    TArray< FEvent > events;
+    const int numOps = ( x2 - x1 ) * ( y2 - y1 );
+    events.Reserve( numOps );
+    for( int y = y1; y < y2; ++y ) {
+        for( int x = x1; x < x2; ++x ) {
+            const int u = x * FLQTree::sm_leaf_size_as_pixels;
+            const int v = y * FLQTree::sm_leaf_size_as_pixels;
+            const uint8* srcdat = iSource.QueryConstTile( FVec2I( u, v ) );
+            FTile** tile = iBackdrop.QueryMutableTile( FVec2I( u, v ) );
+            (*tile)->mLock = true;
+            (*tile)->mDirty = true;
+            FRectI tileRect( u, v, FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels );
+            FRectI roi = ( iSourceRect & tileRect );
+            roi.x = FMath::PyModulo( roi.x, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+            roi.y = FMath::PyModulo( roi.y, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+            ULIS_ASSERT( roi.Area() > 0, "Bad area" );
+            FBlock* src = new FBlock( (uint8*)srcdat, FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels );
+            FBlock* dst = new FBlock( *(*tile)->mClient, FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels );
+            events.PushBack(
+                FEvent(
+                    FOnEventComplete(
+                        [ src, dst, tile ]( const ::ULIS::FRectI& ) {
+                            delete  src;
+                            delete  dst;
+                            (*tile)->mLock = false;
+                        }
+                    )
+                )
+            );
+            Blend( *src, *dst, roi, roi.Position(), iBlendingMode, iAlphaMode, iOpacity, iPolicy, iNumWait, iWaitList, &events.Back() );
+        }
+    }
+    Dummy_OP( events.Size(), &events[0], iEvent );
+    iBackdrop.ExtendOperativeGeometryAfterMutableChange( iSourceRect );
     return  ULIS_NO_ERROR;
 }
 
