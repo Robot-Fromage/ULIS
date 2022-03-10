@@ -35,7 +35,7 @@ main( int argc, char *argv[] ) {
     ctx.Finish();
     ctx.Clear( blockA, FRectI( 32, 32, 64, 64 ) );
     ctx.Finish();
-    ctx.Blend( blockB, blockA, FRectI( 0, 0, 128, 128 ), Blend_Normal, Alpha_Normal, 0.5f );
+    ctx.Blend( blockB, blockA, FRectI( 0, 0, 128, 128 ), FVec2I( 16, 16 ), Blend_Normal, Alpha_Normal, 0.5f );
     ctx.Finish();
 
     //while( true ) {

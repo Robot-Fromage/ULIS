@@ -150,6 +150,76 @@ FContext::Blend(
 }
 
 ulError
+FContext::Blend(
+      const FTiledBlock& iSource
+    , FTiledBlock& iBackdrop
+    , const FRectI& iSourceRect
+    , const FVec2I& iPosition
+    , eBlendMode iBlendingMode
+    , eAlphaMode iAlphaMode
+    , ufloat iOpacity
+    , const FSchedulePolicy& iPolicy
+    , uint32 iNumWait
+    , const FEvent* iWaitList
+    , FEvent* iEvent
+)
+{
+    // Sanitize geometry
+    const FRectI src_rect = iSourceRect.Sanitized();
+    const FRectI dst_rect = FRectI::FromPositionAndSize( iPosition, src_rect.Size() );
+    const int x1 = static_cast< int >( FMath::RoundToNegativeInfinity( dst_rect.x / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int y1 = static_cast< int >( FMath::RoundToNegativeInfinity( dst_rect.y / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int x2 = static_cast< int >( FMath::RoundToPositiveInfinity( ( dst_rect.x + dst_rect.w ) / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+    const int y2 = static_cast< int >( FMath::RoundToPositiveInfinity( ( dst_rect.y + dst_rect.h ) / static_cast< float >( FLQTree::sm_leaf_size_as_pixels ) ) );
+
+    const int sx = FMath::PyModulo( iPosition.x + src_rect.x, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+    const int sy = FMath::PyModulo( iPosition.y + src_rect.y, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+    const int sx2 = FLQTree::sm_leaf_size_as_pixels - sx;
+    const int sy2 = FLQTree::sm_leaf_size_as_pixels - sy;
+    FRectI srcpois[4] = { { 0, 0, sx, sy }, { sx, 0, sx2, sy }, { 0, sy, sx, sy2 }, { sx, sy, sx2, sy2 } };
+    TArray< FEvent > events;
+    const int numOps = ( x2 - x1 ) * ( y2 - y1 );
+    events.Reserve( numOps * 4 );
+    for( int y = y1; y < y2; ++y ) {
+        for( int x = x1; x < x2; ++x ) {
+            const int u = x * FLQTree::sm_leaf_size_as_pixels;
+            const int v = y * FLQTree::sm_leaf_size_as_pixels;
+
+            FTile** tile = iBackdrop.QueryMutableTile( FVec2I( u, v ) );
+            (*tile)->mLock = true;
+            (*tile)->mDirty = true;
+            for( int i = 0; i < 4; ++i ) {
+                const int p = u - iPosition.x + src_rect.x + srcpois[i].x;
+                const int q = v - iPosition.y + src_rect.y + srcpois[i].y;
+                const uint8* srcdat = iSource.QueryConstTile( FVec2I( p, q ) );
+                FRectI roi = FRectI::FromPositionAndSize( FVec2I( p, q ), srcpois[i].Size() ) & src_rect;
+                roi.x = FMath::PyModulo( roi.x, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+                roi.y = FMath::PyModulo( roi.y, static_cast< int >( FLQTree::sm_leaf_size_as_pixels ) );
+                if( roi.Area() <= 0 )
+                    continue;
+                FBlock* src = new FBlock( (uint8*)srcdat, FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels );
+                FBlock* dst = new FBlock( *(*tile)->mClient, FLQTree::sm_leaf_size_as_pixels, FLQTree::sm_leaf_size_as_pixels );
+                events.PushBack(
+                    FEvent(
+                        FOnEventComplete(
+                            [ src, dst, tile ]( const ::ULIS::FRectI& ) {
+                                delete  src;
+                                delete  dst;
+                                (*tile)->mLock = false;
+                            }
+                        )
+                    )
+                );
+                Blend( *src, *dst, roi, srcpois[i].Position(), iBlendingMode, iAlphaMode, iOpacity, iPolicy, iNumWait, iWaitList, &events.Back() );
+            }
+        }
+    }
+    Dummy_OP( events.Size(), &events[0], iEvent );
+    iBackdrop.ExtendOperativeGeometryAfterMutableChange( dst_rect );
+    return  ULIS_NO_ERROR;
+}
+
+ulError
 FContext::BlendBucket(
       const FBlock& iSource
     , FBlock& iBackdrop
