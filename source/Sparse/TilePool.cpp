@@ -10,6 +10,7 @@
 */
 #include "Sparse/TilePool.h"
 #include "Image/Block.h"
+#include <algorithm>
 
 ULIS_NAMESPACE_BEGIN
 using namespace units_literals;
@@ -68,6 +69,28 @@ FTilePool::EmptyTile() const {
     return  mEmptyTile->Bits();
 }
 
+void
+FTilePool::PrintDiagnosis() {
+    std::cout << "====== FTilePool" << std::endl;
+    std::cout << "Num registered TileBlocks: " << mRegisteredTiledBlocks.size() << std::endl;
+    std::cout << "Empty Tile Hash: " << mEmptyCRC32Hash << std::endl;
+    std::cout << "Bytes Per Tile: " << mBytesPerTile << "o" << std::endl;
+    std::cout << "Tile Size: " << TileSize().x << " * " << TileSize().y << std::endl;
+    mMemoryDriver->PrintDiagnosis();
+}
+
+void
+FTilePool::RegisterTiledBlock( FTiledBlock* iBlock ) {
+    mRegisteredTiledBlocks.push_back( iBlock );
+}
+
+void
+FTilePool::UnregisterTiledBlock( FTiledBlock* iBlock ) {
+    auto f = std::find( mRegisteredTiledBlocks.begin(), mRegisteredTiledBlocks.end(), iBlock );
+    if( f != mRegisteredTiledBlocks.end() )
+        mRegisteredTiledBlocks.erase( f );
+}
+
 // Core API
 void
 FTilePool::PurgeAllNow() {
@@ -89,7 +112,7 @@ FTilePool::RedundantHashMerge( FTile* iElem ) {
 
 FTile*
 FTilePool::SplitMutable( FTile* iElem ) {
-    return  nullptr;
+    return  mMemoryDriver->SplitMutable( iElem );
 }
 
 ULIS_NAMESPACE_END

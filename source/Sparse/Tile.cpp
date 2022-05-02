@@ -21,6 +21,7 @@ FTile::FTile()
     , mHash( 0 )
     , mRefCount( 0 )
     , mDirty( false )
+    , mLock( true )
 {}
 
 FTile::FTile( tClient iPtr )
@@ -28,6 +29,7 @@ FTile::FTile( tClient iPtr )
     , mHash( 0 )
     , mRefCount( 0 )
     , mDirty( true )
+    , mLock( true )
 {}
 
 void

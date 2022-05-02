@@ -54,6 +54,7 @@ FUncompressedMemoryPool::PurgeAllNow() {
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
     for( auto it : mAvailableTiles )
         FFixedAllocMemoryPool::Free( it );
+    mAvailableTiles.clear();
 }
 
 void
@@ -102,6 +103,31 @@ FUncompressedMemoryPool::Release( const std::list< tClient > iList ) {
     std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
     for( auto it : iList )
         FFixedAllocMemoryPool::Free( it );
+}
+
+void
+FUncompressedMemoryPool::PrintDiagnosis() {
+    std::lock_guard< std::mutex > lock( mMutexAvailableTilesLock );
+    std::cout << "====== FUncompressedMemoryPool" << std::endl;
+    std::cout << "Num Available Tiles: " << std::distance( mAvailableTiles.begin(), mAvailableTiles.end() ) << std::endl;
+    std::cout << "Replicated Bytes Per Tiles: " << mBytesPerTile << std::endl;
+    std::cout << "Requested Stop ?: " << bStopWorker << std::endl;
+    std::cout << "Local relax Time: " << mWorkerRelaxTime_ms << std::endl;
+    std::cout << "Dealloc Batch Size: " << mDeallocBatchSize << std::endl;
+    std::cout << "Alloc Batch Size: " << mAllocBatchSize << std::endl;
+
+    std::cout << "====== FFixedAllocMemoryPool DebugPrint" << std::endl;
+    std::cout << "Alloc Size: " << (double)mAllocPool.AllocSize() << std::endl;
+    std::cout << "Arena Size: " << (double)mAllocPool.ArenaSize() << std::endl;
+    std::cout << "Defrag Threshold: " << mAllocPool.DefragThreshold() << std::endl;
+    std::cout << "Fragmentation: " << mAllocPool.Fragmentation() << std::endl;
+    std::cout << "Num Cells: " << mAllocPool.NumCells() << std::endl;
+    std::cout << "Num Free Cells: " << mAllocPool.NumFreeCells() << std::endl;
+    std::cout << "Num Used Cells: " << mAllocPool.NumUsedCells() << std::endl;
+    std::cout << "Target Memory Usage: " << (double)mAllocPool.TargetMemoryUsage() << std::endl;
+    std::cout << "Total Memory: " << (double)mAllocPool.TotalMemory() << std::endl;
+    std::cout << "Free Memory: " << (double)mAllocPool.FreeMemory() << std::endl;
+    std::cout << "Used Memory: " << (double)mAllocPool.UsedMemory() << std::endl;
 }
 
 void

@@ -8,7 +8,7 @@
 * @brief        This file provides declaration for animating a property
 * @license      Please refer to LICENSE.md
 */
-/*#pragma once
+#pragma once
 #include "Core/Core.h"
 #include "DefaultValue.h"
 #include "Animation/HasKeys.h"
@@ -81,5 +81,5 @@ T TAnimatedProperty<T>::GetValueAtFrame( ufloat iFrame ) const
 }
 
 
-ULIS_NAMESPACE_END*/
+ULIS_NAMESPACE_END
 

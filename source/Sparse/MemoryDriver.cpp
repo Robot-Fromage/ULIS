@@ -101,7 +101,9 @@ FMemoryDriver::QueryOne() {
 
 FTile*
 FMemoryDriver::RedundantHashMerge( FTile* iTile ) {
-    ULIS_ASSERT( iTile, "Bad Elem Query during Hash Merge Check" );
+    if( !iTile )
+        return  nullptr;
+
     // Process only clean tiles
     if( iTile->mDirty )
         return  iTile;
@@ -124,6 +126,7 @@ FMemoryDriver::RedundantHashMerge( FTile* iTile ) {
         tile->IncreaseRefCount();
         tile->mDirty = false;
         tile->mHash = iTile->mHash;
+        tile->mLock = false;
         memcpy( *( tile->mClient ), *( iTile->mClient ), mBytesPerTile );
 
         mMutexCorrectlyHashedTilesLock.lock();
@@ -144,12 +147,43 @@ FMemoryDriver::RedundantHashMerge( FTile* iTile ) {
     return  it->second;
 }
 
+FTile*
+FMemoryDriver::SplitMutable( FTile* iElem ) {
+    if( !iElem ) {
+        return  QueryOne();
+    } else {
+        FTile* tile = new FTile( mUncompressedMemoryPool.QueryOne() );
+        tile->IncreaseRefCount();
+        iElem->DecreaseRefCount();
+        memcpy( *( tile->mClient ), *( iElem->mClient ), mBytesPerTile );
+        std::lock_guard< std::mutex > lock( mMutexDirtyHashedTilesLock );
+        mDirtyHashedTiles.push_front( tile );
+        return  tile;
+    }
+}
+
 void
 FMemoryDriver::SetBackground( const uint8* iBackground, uint32 iBackgroundHash ) {
     mUncompressedMemoryPool.SetBackground( iBackground );
     // No contention on background hash a priori.
     // Should be driven on synchronously by the main tile pool.
     mBackgroundHash = iBackgroundHash;
+}
+
+void
+FMemoryDriver::PrintDiagnosis() {
+    std::lock_guard< std::mutex > lockA( mMutexDirtyHashedTilesLock );
+    std::lock_guard< std::mutex > lockB( mMutexCorrectlyHashedTilesLock );
+    std::cout << "====== FMemoryDriver" << std::endl;
+    std::cout << "Replicated Background Hash: " << mBackgroundHash << std::endl;
+    std::cout << "Replicated Bytes Per Tile: " << mBytesPerTile << std::endl;
+    std::cout << "Requested Stop? : " << bStopWorker << std::endl;
+    std::cout << "Relax Time: " << mWorkerRelaxTime_ms << std::endl;
+    std::cout << "Num Dirty Hashed Tiles: " << mDirtyHashedTiles.size() << std::endl;
+    std::cout << "Num Correctly Hashed Tiles: " << mCorrectlyHashedTiles.size() << std::endl;
+    std::cout << "Replicated Num Dirty Hashed Tiles: " << mDirtyHashedBatchSize << std::endl;
+    std::cout << "Replicated Num Correctly Hashed Tiles: " << mCorrectlyHashedBatchSize << std::endl;
+    mUncompressedMemoryPool.PrintDiagnosis();
 }
 
 void
@@ -168,6 +202,12 @@ FMemoryDriver::SanitizeDirtyHashedBatch() {
             break;
 
         FTile* tile = *it;
+
+        if( tile->mLock ) {
+            ++it;
+            continue;
+        }
+
         if( tile->mRefCount == 0 ) {
             mUncompressedMemoryPool.Release( tile->mClient );
             delete  tile;

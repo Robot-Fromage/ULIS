@@ -10,7 +10,7 @@
 cmake_minimum_required( VERSION 3.11.0 )
 
 # macOS
-set( CMAKE_OSX_DEPLOYMENT_TARGET "10.13" )
+set( CMAKE_OSX_DEPLOYMENT_TARGET "10.15" )
 
 # Disable CMake extra
 set( CMAKE_SUPPRESS_REGENERATION true )

@@ -28,7 +28,8 @@ constexpr TMortonDecodeKeys8bit2D< 256 > sgMortonDecodeKeys8bit_2D_16_XY; // 256
 
 FLQTree::~FLQTree() {
     for( uint16 i = 0; i < 256; ++i )
-        mBulk[ i ]->DecreaseRefCount();
+        if( mBulk[i] )
+            mBulk[ i ]->DecreaseRefCount();
 }
 
 FLQTree::FLQTree()
@@ -40,8 +41,8 @@ FLQTree::FLQTree()
 void
 FLQTree::Erase( uint16 iX, uint16 iY ) {
     uint8 key =
-          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX / sm_leaf_size_as_pixels ]
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY / sm_leaf_size_as_pixels ];
     if( mBulk[ key ] ) {
         --mNumEntries;
         mBulk[ key ]->DecreaseRefCount();
@@ -53,7 +54,8 @@ void
 FLQTree::Clear() {
     mNumEntries = 0;
     for( uint16 i = 0; i < 256; ++i ) {
-        mBulk[ i ]->DecreaseRefCount();
+        if( mBulk[i] )
+            mBulk[ i ]->DecreaseRefCount();
         mBulk[ i ] = nullptr;
     }
 }
@@ -76,10 +78,10 @@ FLQTree::LeafGeometry() const {
 }
 
 const uint8*
-FLQTree::QueryConst( FTilePool& iPool, uint8 iX, uint8 iY ) const {
+FLQTree::QueryConst( FTilePool& iPool, uint16 iX, uint16 iY ) const {
     uint8 key =
-          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX / sm_leaf_size_as_pixels ]
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY / sm_leaf_size_as_pixels ];
     if( mBulk[ key ] )
         return  *( mBulk[ key ]->mClient );
     else
@@ -87,10 +89,10 @@ FLQTree::QueryConst( FTilePool& iPool, uint8 iX, uint8 iY ) const {
 }
 
 FTile**
-FLQTree::QueryMutable( FTilePool& iPool, uint8 iX, uint8 iY ) {
+FLQTree::QueryMutable( FTilePool& iPool, uint16 iX, uint16 iY ) {
     uint8 key =
-          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX ] / sm_leaf_size_as_pixels
-        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY ] / sm_leaf_size_as_pixels;
+          details::sgMortonEncodeKeys8bit_2D_16_X.keys[ iX / sm_leaf_size_as_pixels ]
+        | details::sgMortonEncodeKeys8bit_2D_16_Y.keys[ iY / sm_leaf_size_as_pixels ];
     // Perform data copy for imminent mutable change if needed
     if( !mBulk[ key ] )
         ++mNumEntries;
@@ -106,7 +108,16 @@ FLQTree::IsEmpty() const {
 
 void
 FLQTree::SanitizeNow( FTilePool& iPool ) {
-    // TODO
+    if( IsEmpty() )
+        return;
+
+    for( uint16 i = 0; i < 256; ++i ) {
+        FTile* prev = mBulk[ i ];
+        FTile* next = iPool.RedundantHashMerge( prev );
+        mBulk[ i ] = next;
+        if( prev != nullptr && next == nullptr )
+            --mNumEntries;
+    }
 }
 
 ULIS_NAMESPACE_END

@@ -92,39 +92,27 @@ FMemoryInfo::CPUCurrentlyUsedByProcess()
 uint64
 FMemoryInfo::DiskCapacity( const FString& iDisk )
 {
-#ifdef ULIS_MACOS
-    return 0;
-#else
     std::error_code ec;
     const std::filesystem::space_info si = std::filesystem::space( iDisk.Data(), ec );
     return  si.capacity;
-#endif
 }
 
 //static
 uint64
 FMemoryInfo::DiskSpaceAvailable( const FString& iDisk )
 {
-#ifdef ULIS_MACOS
-    return 0;
-#else
     std::error_code ec;
     const std::filesystem::space_info si = std::filesystem::space( iDisk.Data(), ec );
     return  si.available;
-#endif
 }
 
 //static
 uint64
 FMemoryInfo::DiskSpaceFree( const FString& iDisk )
 {
-#ifdef ULIS_MACOS
-    return 0;
-#else
     std::error_code ec;
     const std::filesystem::space_info si = std::filesystem::space( iDisk.Data(), ec );
     return  si.free;
-#endif
 }
 
 ULIS_NAMESPACE_END
