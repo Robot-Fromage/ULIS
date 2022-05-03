@@ -64,10 +64,9 @@ TKey<T>::~TKey()
 template< typename T >
 void TKey<T>::SetInterpolationFromType( eInterpolationType iType )
 {
+    delete mInterpolation;
     switch(iType)
     {
-        delete mInterpolation;
-
         case eInterpolationType::kLinear:
             mInterpolation = new TLinearInterpolation<T>();
         break;
@@ -77,9 +76,8 @@ void TKey<T>::SetInterpolationFromType( eInterpolationType iType )
         case eInterpolationType::kBezier:
             mInterpolation = new TBezierInterpolation<T>();
         break;
-        
-        mInterpolationType = iType;
     }
+    mInterpolationType = iType;
 }
 
 template< typename T >
