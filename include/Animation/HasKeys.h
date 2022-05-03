@@ -12,6 +12,9 @@
 #include "Core/Core.h"
 #include "Math/Geometry/Vector.h"
 #include "Animation/Interpolation/AbstractInterpolation.h"
+#include "Animation/Interpolation/LinearInterpolation.h"
+#include "Animation/Interpolation/HoldInterpolation.h"
+#include "Animation/Interpolation/BezierInterpolation.h"
 #include "Core/CallbackCapable.h"
 
 ULIS_NAMESPACE_BEGIN
@@ -61,7 +64,7 @@ TKey<T>::~TKey()
 template< typename T >
 void TKey<T>::SetInterpolationFromType( eInterpolationType iType )
 {
-    switch
+    switch(iType)
     {
         delete mInterpolation;
 
