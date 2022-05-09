@@ -206,7 +206,14 @@ FInternalEvent::Wait() const
 {
     while( mStatus != eEventStatus::EventStatus_Finished )
     {
+        std::this_thread::yield();
     }
+
+    //we're using locks here only to force thread synchronization at this precise point
+    //otherwise the corresponding result of this event could not be loaded in the calling thread
+    //causing invalid or blank blocks
+    std::unique_lock<std::mutex> lock (mStatusFinishedMutex);
+    lock.unlock(); 
 }
 
 const FCommand*
