@@ -98,7 +98,7 @@ private:
     FOnEventComplete mOnEventComplete;
     FOnInternalEventReady mOnInternalEventReady;
     std::atomic_uint64_t mParentUnfinished;
-    std::mutex mStatusFinishedMutex;
+    mutable std::mutex mStatusFinishedMutex;
     std::mutex mEventReadyMutex;
 };
 
