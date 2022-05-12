@@ -84,7 +84,7 @@ static ULIS_FORCEINLINE FRGBF SetSatF( const FRGBF& iC, ufloat iS ) {
     #pragma warning(disable : 6385)
     uint8 maxIndex = iC.m[0] > iC.m[1] ? ( iC.m[0] > iC.m[2] ? 0 : 2 ) : ( iC.m[1] > iC.m[2] ? 1 : 2 );
     uint8 minIndex = iC.m[0] < iC.m[1] ? ( iC.m[0] < iC.m[2] ? 0 : 2 ) : ( iC.m[1] < iC.m[2] ? 1 : 2 );
-    uint8 midIndex = 3 - maxIndex - minIndex;
+    uint8 midIndex = maxIndex == minIndex ? minIndex : 3 - maxIndex - minIndex;
     ufloat Cmax = iC.m[maxIndex];
     ufloat Cmin = iC.m[minIndex];
     ufloat Cmid = iC.m[midIndex];
@@ -97,7 +97,16 @@ static ULIS_FORCEINLINE FRGBF SetSatF( const FRGBF& iC, ufloat iS ) {
     {
         Cmid = Cmax = 0.f;
     }
+
     Cmin = 0.f;
+
+    if (maxIndex == minIndex)
+    {
+        minIndex = 0;
+        midIndex = 1;
+        maxIndex = 2;
+    }
+
     FRGBF ret;
     ret.m[maxIndex] = Cmax;
     ret.m[minIndex] = Cmin;
