@@ -163,7 +163,7 @@ double CPUCurrentlyUsed() {
     return percent;
 }
 
-void init_CPUCurrentlyUsedByProcess(){
+int init_CPUCurrentlyUsedByProcess(){
     FILE* file;
     struct tms timeSample;
     char line[128];
@@ -178,6 +178,7 @@ void init_CPUCurrentlyUsedByProcess(){
         if (strncmp(line, "processor", 9) == 0) numProcessors++;
     }
     fclose(file);
+    return 0;
 }
 
 

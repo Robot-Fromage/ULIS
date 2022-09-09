@@ -17,10 +17,10 @@ message( "Generating: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_CXX_COMPILER_ID}" )
 # Input
 option( ULIS_BUILD_SHARED           "Build the library shared or statically"            ON  )
 option( ULIS_BUILD_PYTHON_MODULE    "Build the library python module"                   OFF )
-option( ULIS_BUILD_TESTS            "Build the library test modules"                    OFF )
-option( ULIS_BUILD_EXAMPLES         "Build the library example modules"                 OFF )
+option( ULIS_BUILD_TESTS            "Build the library test modules"                    ON )
+option( ULIS_BUILD_EXAMPLES         "Build the library example modules"                 ON )
 SET( ULIS_BINARY_PREFIX             "" CACHE STRING "Indicates a prefix for the output binaries"            )
-SET( ULIS_QT_CMAKE_PATH             "" CACHE STRING "Indicates the path to Qt cmake package"                )
+SET( ULIS_QT_CMAKE_PATH             "C:/Qt/5.15.2/msvc2019_64" CACHE STRING "Indicates the path to Qt cmake package"                )
 SET( ULIS_CURSES_CMAKE_PATH         "" CACHE STRING "Indicates the path to Curses cmake package"            )
 
 # Setup
