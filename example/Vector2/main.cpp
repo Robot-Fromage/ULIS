@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QPainter>
+#include <QMouseEvent>
 #include <QLabel>
 #include <chrono>
 #include <blend2d.h>
@@ -198,8 +199,9 @@ class FVectorPath : public FVectorObject
         FVectorPoint* mLastPoint;
 
     protected :
-        std::vector<FVectorPoint*> mPointList;
-        std::vector<FVectorSegment*> mSegmentList;
+        std::list<FVectorPoint*> mPointList;
+        std::list<FVectorSegment*> mSegmentList;
+        std::list<FVectorPoint*> mSelectedPointList;
         void AddSegment( FVectorSegment* iSegment );
   
     public:
@@ -209,6 +211,9 @@ class FVectorPath : public FVectorObject
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         FVectorPoint *GetLastPoint();
         void SetLastPoint(FVectorPoint* iLastPoint);
+        std::list<FVectorPoint*> GetSelectedPointList();
+        virtual void Pick(double iX,double iY,double iRadius) = 0;
+        virtual void Unselect(FVectorPoint* iPoint) = 0;
 };
 
 FVectorPath::~FVectorPath()
@@ -218,6 +223,12 @@ FVectorPath::~FVectorPath()
 FVectorPath::FVectorPath()
 {
     mLastPoint = NULL;
+}
+
+std::list<FVectorPoint*> 
+FVectorPath::GetSelectedPointList()
+{
+    return mSelectedPointList;
 }
 
 FVectorSegment*
@@ -255,6 +266,8 @@ class FVectorCubicPath : public FVectorPath
         FVectorCubicPath();
         FVectorSegment* AppendPoint( FVectorPoint* iPoint );
         void Draw(FBlock& iBlock,BLContext& iBLContext);
+        void Pick(double iX,double iY,double iRadius);
+        void Unselect(FVectorPoint* iPoint);
 };
 
 FVectorCubicPath::FVectorCubicPath()
@@ -283,18 +296,21 @@ FVectorCubicPath::AppendPoint(FVectorPoint* iPoint)
     return NULL;
 }
 
+
 void
-FVectorCubicPath::Draw(FBlock& iBlock, BLContext& iBLContext )
+FVectorCubicPath::Draw( FBlock& iBlock, BLContext& iBLContext )
 {
     BLPath path;
+    BLPath ctrlPath0;
+    BLPath ctrlPath1;
 
-    iBLContext.setCompOp(BL_COMP_OP_SRC_OVER);
-    iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
-    iBLContext.setStrokeStyle(BLRgba32(0xFF000000));
+    iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
+    /*iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
+    iBLContext.setStrokeStyle(BLRgba32(0xFF000000));*/
 
-    for( int i = 0; i < mSegmentList.size(); i++ )
+    for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
     {
-        FVectorCubicSegment *segment = (FVectorCubicSegment*) mSegmentList[i];
+        FVectorCubicSegment *segment = static_cast<FVectorCubicSegment*>(*it);
         BLPoint point0;
         BLPoint point1;
         BLPoint ctrlPoint0;
@@ -312,6 +328,19 @@ FVectorCubicPath::Draw(FBlock& iBlock, BLContext& iBLContext )
         point1.x = segment->GetPoint(1)->GetX();
         point1.y = segment->GetPoint(1)->GetY();
 
+        iBLContext.setStrokeStyle(BLRgba32(0xFFFF0000));
+        ctrlPath0.moveTo(point0.x,point0.y);
+        ctrlPath0.lineTo(ctrlPoint0.x
+                     ,ctrlPoint0.y );
+        iBLContext.strokePath(ctrlPath0);
+
+        iBLContext.setStrokeStyle(BLRgba32(0xFFFF0000));
+        ctrlPath1.moveTo(point1.x,point1.y);
+        ctrlPath1.lineTo(ctrlPoint1.x
+                     ,ctrlPoint1.y);
+        iBLContext.strokePath(ctrlPath1);
+
+        iBLContext.setStrokeStyle(BLRgba32(0xFF000000));
         path.moveTo( point0.x, point0.y);
         path.cubicTo( ctrlPoint0.x
                     , ctrlPoint0.y
@@ -319,13 +348,60 @@ FVectorCubicPath::Draw(FBlock& iBlock, BLContext& iBLContext )
                     , ctrlPoint1.y
                     , point1.x
                     , point1.y );
+        iBLContext.strokePath(path);
     }
 
     /*iBLContext->fillPath(mPath);*/
-    iBLContext.strokePath(path);
+    /*iBLContext.strokePath(path);*/
 
 }
 
+void
+FVectorCubicPath::Pick(double iX,double iY,double iRadius)
+{
+    for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
+    {
+        FVectorPoint* point = *it;
+
+        if((fabs(point->GetX() - iX) <= iRadius) &&
+           (fabs(point->GetY() - iY) <= iRadius))
+        {
+            mSelectedPointList.push_back(point);
+        }
+    }
+
+    for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
+    {
+        FVectorCubicSegment* segment = static_cast<FVectorCubicSegment*>(*it);
+        FVectorPoint* ctrlPoint0 = segment->GetControlPoint(0);
+        FVectorPoint* ctrlPoint1 = segment->GetControlPoint(1);
+
+        if((fabs(ctrlPoint0->GetX() - iX) <= iRadius) &&
+           (fabs(ctrlPoint0->GetY() - iY) <= iRadius))
+        {
+            mSelectedPointList.push_back(ctrlPoint0);
+        }
+
+        if((fabs(ctrlPoint1->GetX() - iX) <= iRadius) &&
+           (fabs(ctrlPoint1->GetY() - iY) <= iRadius))
+        {
+            mSelectedPointList.push_back(ctrlPoint1);
+        }
+    }
+}
+
+void
+FVectorCubicPath::Unselect(FVectorPoint *iPoint)
+{
+    if ( iPoint == NULL )
+    {
+        mSelectedPointList.clear();
+    }
+    else
+    {
+        mSelectedPointList.remove(iPoint);
+    }
+}
 
 /******************************************************************************/
 class MyWidget: public QWidget
@@ -337,7 +413,6 @@ public:
         delete mQImage; mBLContext->end();
     }
 
-
     virtual void paintEvent( QPaintEvent* e )
     {
         QPainter p(this);
@@ -345,14 +420,20 @@ public:
         mContext->Clear(*mCanvas);
         mContext->Finish();
 
+        mBLContext->setFillStyle(BLRgba32(0xFFFFFFFF));
+        mBLContext->setCompOp(BL_COMP_OP_SRC_COPY);
+        mBLContext->fillAll();
+
         cubicPath->Draw(*mCanvas,*mBLContext);
 
         p.drawImage(rect(),*mQImage);
     }
 
-    virtual void mousePressEvent(QMouseEvent * e)
+    virtual void mousePressEvent(QMouseEvent* event)
     {
-        cubicPath->
+        cubicPath->Unselect(nullptr);
+
+        cubicPath->Pick(event->x(),event->y(), 10.0f);
 
 /*
         const uint32_t someColor = rand();
@@ -363,10 +444,24 @@ public:
         update();
     }
 
-    virtual void mouseMoveEvent(QMouseEvent *event)
+    virtual void mouseMoveEvent(QMouseEvent* event)
     {
+        if (event->buttons() == Qt::LeftButton )
+        {
+            std::list<FVectorPoint*> selectedPointList = cubicPath->GetSelectedPointList();
 
-}
+            for(std::list<FVectorPoint*>::iterator it = selectedPointList.begin(); it != selectedPointList.end(); ++it)
+            {
+                FVectorPoint *selectedPoint = *it;
+
+                selectedPoint->SetX(event->x());
+                selectedPoint->SetY(event->y());
+            }
+
+            update();
+        }
+
+    }
 
 private:
     QImage* mQImage;
@@ -418,16 +513,16 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight) {
     ctrlPoint0 = segment->GetControlPoint(0);
     ctrlPoint1 = segment->GetControlPoint(1);
 
-    ctrlPoint0->SetX(642);
+    ctrlPoint0->SetX(300);
     ctrlPoint0->SetY(132);
-    ctrlPoint1->SetX(587);
+    ctrlPoint1->SetX(270);
     ctrlPoint1->SetY(136);
 
     segment = static_cast<FVectorCubicSegment*>(cubicPath->AppendPoint(point2));
     ctrlPoint0 = segment->GetControlPoint(0);
     ctrlPoint1 = segment->GetControlPoint(1);
 
-    ctrlPoint0->SetX(882);
+    ctrlPoint0->SetX(560);
     ctrlPoint0->SetY(404);
     ctrlPoint1->SetX(144);
     ctrlPoint1->SetY(267);
