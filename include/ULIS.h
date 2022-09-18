@@ -83,4 +83,11 @@
 #include "Sparse/Tile.h"
 #include "Sparse/TiledBlock.h"
 #include "Sparse/TilePool.h"
-
+// Vector
+#include "Vector/FVectorObject.h"
+#include "Vector/FVectorPath.h"
+#include "Vector/FVectorPathCubic.h"
+#include "Vector/FVectorPoint.h"
+#include "Vector/FVectorSegment.h"
+#include "Vector/FVectorSegmentCubic.h"
+#include "Vector/FVectorSegmentQuadratic.h"

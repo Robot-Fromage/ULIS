@@ -6,11 +6,11 @@
 
 using namespace ::ULIS;
 
-#include "FVectorObject.h"
+#include "Vector/FVectorObject.h"
 #include "FVectorPoint.h"
 #include "FVectorSegment.h"
 
-class FVectorPath : public FVectorObject
+class ULIS_API FVectorPath : public FVectorObject
 {
     private:
         FVectorPoint* mLastPoint;

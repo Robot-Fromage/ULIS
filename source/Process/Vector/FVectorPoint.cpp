@@ -3,8 +3,6 @@
 
 using namespace ::ULIS;
 
-#include "FVectorPoint.h"
-
 FVectorPoint::~FVectorPoint()
 {
 }

@@ -8,7 +8,7 @@ using namespace ::ULIS;
 
 class FVectorSegment;
 
-class FVectorPoint
+class ULIS_API FVectorPoint
 {
     private:
 

@@ -259,6 +259,8 @@ private:
     const fpCommandScheduler mScheduleVoronoiNoise;
     const fpCommandScheduler mScheduleWhiteNoise;
 
+    const fpCommandScheduler mScheduleDrawVectorObject;
+
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
     const fpConvertFormat mArgConvForwardBlendNonSeparable;
     const fpConvertFormat mArgConvBackwardBlendNonSeparable;

@@ -3,8 +3,6 @@
 
 using namespace ::ULIS;
 
-#include "FVectorPath.h"
-
 FVectorPath::~FVectorPath()
 {
 }

@@ -3,8 +3,6 @@
 
 using namespace ::ULIS;
 
-#include "FVectorSegment.h"
-
 FVectorSegment::~FVectorSegment()
 {
 }

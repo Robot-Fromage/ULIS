@@ -8,7 +8,7 @@ using namespace ::ULIS;
 
 #include "FVectorPoint.h"
 
-class FVectorSegment
+class ULIS_API FVectorSegment
 {
 protected:
     FVectorPoint *mPoint[2];

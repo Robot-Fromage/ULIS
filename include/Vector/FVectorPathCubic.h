@@ -8,7 +8,7 @@ using namespace ::ULIS;
 #include "FVectorSegmentCubic.h"
 #include "FVectorPath.h"
 
-class FVectorPathCubic: public FVectorPath
+class ULIS_API FVectorPathCubic: public FVectorPath
 {
     public:
         FVectorPathCubic();

@@ -21,6 +21,7 @@
 #include "Scheduling/SchedulePolicy.h"
 #include "System/CPUInfo/CPUInfo.h"
 #include "Sparse/TiledBlock.h"
+#include "Vector/FVectorObject.h"
 #include <functional>
 
 ULIS_NAMESPACE_BEGIN
@@ -2127,6 +2128,20 @@ public:
         , uint32 iNumWait = 0
         , const FEvent* iWaitList = nullptr
         , FEvent* iEvent = nullptr
+    );
+
+/////////////////////////////////////////////////////
+// Vector Objects
+    ulError
+    DrawVectorObject(
+          FBlock& iBlock
+        , FVectorObject& iVecObj
+        , BLContext& iBLCtx
+        ,const FRectI& iClippingRect = FRectI::Auto
+        ,const FSchedulePolicy& iPolicy = FSchedulePolicy::MonoChunk
+        ,uint32 iNumWait = 0
+        ,const FEvent* iWaitList = nullptr
+        ,FEvent* iEvent = nullptr
     );
 
 /////////////////////////////////////////////////////

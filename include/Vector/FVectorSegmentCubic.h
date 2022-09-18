@@ -8,7 +8,7 @@ using namespace ::ULIS;
 
 #include "FVectorSegment.h"
 
-class FVectorSegmentCubic : public FVectorSegment
+class ULIS_API FVectorSegmentCubic : public FVectorSegment
 {
     private:
         FVectorPoint mCtrlPoint[2];

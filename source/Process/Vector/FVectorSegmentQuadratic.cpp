@@ -3,8 +3,6 @@
 
 using namespace ::ULIS;
 
-#include "FVectorSegmentQuadratic.h"
-
 FVectorSegmentQuadratic::~FVectorSegmentQuadratic()
 {
 }

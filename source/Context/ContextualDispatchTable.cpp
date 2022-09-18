@@ -27,6 +27,7 @@
 #include "Process/Convolution/Convolution.h"
 #include "Process/Convolution/Morpho.h"
 #include "Process/Raster/RasterInvocations.h"
+#include "Process/Vector/VectorInvocations.h"
 #include "Process/Analysis/AccumulativeSampling.h"
 #include "Process/Analysis/AnalyzeSmallestVisibleRect.h"
 #include "Process/Gradient/Gradient.h"
@@ -160,6 +161,8 @@ FContext::FContextualDispatchTable::FContextualDispatchTable( eFormat iFormat, e
         , mScheduleValueNoise(                      TDispatcher< FDispatchedValueNoiseInvocationSchedulerSelector                       >::Query( iFormat, iPerfIntent ) )
         , mScheduleVoronoiNoise(                    TDispatcher< FDispatchedVoronoiNoiseInvocationSchedulerSelector                     >::Query( iFormat, iPerfIntent ) )
         , mScheduleWhiteNoise(                      TDispatcher< FDispatchedWhiteNoiseInvocationSchedulerSelector                       >::Query( iFormat, iPerfIntent ) )
+
+        , mScheduleDrawVectorObject(                TDispatcher< FDispatchedDrawVectorObjectInvocationSchedulerSelector                 >::Query( iFormat, iPerfIntent ) )
 
 #if defined( ULIS_FEATURE_CONV_ENABLED ) && defined( ULIS_FEATURE_BLEND_ENABLED )
         , mArgConvForwardBlendNonSeparable(     QueryDispatchedConvertFormatInvocation( iFormat, eFormat::Format_RGBF ) )

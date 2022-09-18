@@ -3,8 +3,6 @@
 
 using namespace ::ULIS;
 
-#include "FVectorSegmentCubic.h"
-
 FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
                                         , FVectorPoint* iPoint1 )
    : FVectorSegment( iPoint0, iPoint1 )
