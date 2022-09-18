@@ -52,6 +52,7 @@ template< typename T > class    TArray;
 template< typename T > struct   TVector2;
 typedef TVector2< int >         FVec2I;
 typedef TVector2< float >       FVec2F;
+typedef TVector2< double >      FVec2D;
 template< typename T > struct   TVector3;
 typedef TVector3< int >         FVec3I;
 typedef TVector3< float >       FVec3F;
@@ -65,6 +66,7 @@ template< typename T > class    TMatrix2;
 typedef TMatrix2< float >       FMat2F;
 template< typename T > class    TMatrix3;
 typedef TMatrix3< float >       FMat3F;
+typedef TMatrix3< double >      FMat3D;
 template< typename T > class    TMatrix4;
 typedef TMatrix4< float >       FMat4F;
 

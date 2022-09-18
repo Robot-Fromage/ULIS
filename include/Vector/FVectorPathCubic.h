@@ -3,10 +3,11 @@
 
 #include <ULIS>
 #include <blend2d.h>
-using namespace ::ULIS;
 
-#include "FVectorSegmentCubic.h"
-#include "FVectorPath.h"
+#include "Vector/FVectorSegmentCubic.h"
+#include "Vector/FVectorPath.h"
+
+ULIS_NAMESPACE_BEGIN
 
 class ULIS_API FVectorPathCubic: public FVectorPath
 {
@@ -16,5 +17,7 @@ class ULIS_API FVectorPathCubic: public FVectorPath
         void Pick(double iX,double iY,double iRadius);
         void Unselect(FVectorPoint* iPoint);
 };
+
+ULIS_NAMESPACE_END
 
 #endif // _FVECTORPATHCUBIC_H_

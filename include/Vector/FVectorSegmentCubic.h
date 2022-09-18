@@ -4,9 +4,9 @@
 #include <ULIS>
 #include <blend2d.h>
 
-using namespace ::ULIS;
+#include "Vector/FVectorSegment.h"
 
-#include "FVectorSegment.h"
+ULIS_NAMESPACE_BEGIN
 
 class ULIS_API FVectorSegmentCubic : public FVectorSegment
 {
@@ -20,5 +20,7 @@ class ULIS_API FVectorSegmentCubic : public FVectorSegment
         FVectorPoint* GetControlPoint( int iCtrlPointNum );
         void Draw( FBlock& iBlock, BLContext& iBLContext );
 };
+
+ULIS_NAMESPACE_END
 
 #endif // _FVECTORSEGMENTCUBIC_H_

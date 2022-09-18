@@ -6,6 +6,9 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QLabel>
+#include <QToolBar>
+#include <QIcon>
+#include <QAction>
 #include <chrono>
 #include <blend2d.h>
 using namespace ::ULIS;
@@ -15,6 +18,19 @@ using namespace ::ULIS;
 /******************************************************************************/
 class MyWidget: public QWidget
 {
+
+private:
+    QImage* mQImage;
+    /*FVectorPathCubic* mCubicPath;
+    FVectorCircle* mCircle;*/
+    BLImage* mBLImage;
+    BLContext* mBLContext;
+    FBlock* mCanvas;
+    FThreadPool* mPool;
+    FCommandQueue* mQueue;
+    FContext* mContext;
+    FVectorObject* mScene;
+
 public:
     MyWidget::MyWidget(uint32 iWidth,uint32 iHeight);
 
@@ -33,34 +49,94 @@ public:
         mBLContext->setCompOp(BL_COMP_OP_SRC_COPY);
         mBLContext->fillAll();
 
-        /*cubicPath->Draw( *mCanvas, *mBLContext );*/
-
-        mContext->DrawVectorObject ( *mCanvas, *cubicPath, *mBLContext );
+        /*mCubicPath->Draw( *mCanvas, *mBLContext );*/
+/*
+        mCubicPath->Translate( 200, 200 );
+        mCubicPath->Rotate( 45 );
+        mCubicPath->Scale( 1.0f, 1.0f );
+        mCubicPath->UpdateMatrix( *mBLContext );
+*/
+        // mandatory for now
+/*
+        mCircle->UpdateMatrix( *mBLContext );
+*/
+        /*mContext->DrawVectorObject ( *mCanvas, *mCubicPath, *mBLContext );*/
+        mContext->DrawVectorObject ( *mCanvas, *mScene, *mBLContext );
         mContext->Finish();
 
         p.drawImage( rect(), *mQImage );
     }
 
+    virtual void keyPressEvent( QKeyEvent* event )
+    {
+        switch( event->key() )
+        {
+            case Qt::Key_C :
+            {
+                FVectorCircle* circle = new FVectorCircle( 20.0f );
+
+                circle->Translate( mQImage->width() / 2, mQImage->height() / 2 );
+                circle->UpdateMatrix( *mBLContext );
+
+                mScene->AddChild( circle );
+            } 
+            break;
+
+            case Qt::Key_R:
+            {
+                FVectorRectangle* rectangle = new FVectorRectangle( 50,80 );
+
+                rectangle->Translate( mQImage->width() / 2, mQImage->height() / 2 );
+                rectangle->UpdateMatrix( *mBLContext );
+
+                mScene->AddChild( rectangle );
+            }
+            break;
+
+            case Qt::Key_Plus:
+            {
+                FVectorRectangle* rectangle = new FVectorRectangle(50,80);
+
+                mScene->Scale( mScene->GetScalingX() + 0.01f, mScene->GetScalingY() + 0.01f );
+                mScene->UpdateMatrix(*mBLContext);
+            }
+            break;
+
+            case Qt::Key_Minus:
+            {
+                FVectorRectangle* rectangle = new FVectorRectangle(50,80);
+
+                mScene->Scale(mScene->GetScalingX() - 0.01f,mScene->GetScalingY() - 0.01f);
+                mScene->UpdateMatrix(*mBLContext);
+            }
+            break;
+        }
+
+        update(); // redraw
+    }
+
     virtual void mousePressEvent(QMouseEvent* event)
     {
-        cubicPath->Unselect(nullptr);
+/*
+        mCubicPath->Unselect(nullptr);
 
-        cubicPath->Pick(event->x(),event->y(), 10.0f);
-
+        mCubicPath->Pick(event->x(),event->y(), 10.0f);
+*/
 /*
         const uint32_t someColor = rand();
         const size_t frameBufferSizeWords = frameBufferSizeBytes/sizeof(uint32_t);
         uint32* fb32 = (uint32* ) frameBuffer;
         for(size_t i=0; i<frameBufferSizeWords; i++) fb32[i] = someColor;
 */
-        update();
+        update(); // redraw
     }
 
     virtual void mouseMoveEvent(QMouseEvent* event)
     {
         if (event->buttons() == Qt::LeftButton )
         {
-            std::list<FVectorPoint*> selectedPointList = cubicPath->GetSelectedPointList();
+/*
+            std::list<FVectorPoint*> selectedPointList = mCubicPath->GetSelectedPointList();
 
             for(std::list<FVectorPoint*>::iterator it = selectedPointList.begin(); it != selectedPointList.end(); ++it)
             {
@@ -69,20 +145,11 @@ public:
                 selectedPoint->SetX(event->x());
                 selectedPoint->SetY(event->y());
             }
+*/
 
             update();
         }
     }
-
-private:
-    QImage* mQImage;
-    FVectorPathCubic* cubicPath;
-    BLImage* mBLImage;
-    BLContext* mBLContext;
-    FBlock* mCanvas;
-    FThreadPool* mPool;
-    FCommandQueue* mQueue;
-    FContext* mContext;
 };
 
 MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
@@ -107,7 +174,12 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
                                  , data.stride
                                  , QImage::Format_ARGB32_Premultiplied );
 
-    cubicPath = new FVectorPathCubic();
+    mScene = new FVectorObject();
+
+    mScene->UpdateMatrix( *mBLContext );
+/*
+    mCubicPath = new FVectorPathCubic();
+    mCircle = new FVectorCircle();
 
     FVectorPoint* point0 = new FVectorPoint( 26, 31 );
     FVectorPoint* point1 = new FVectorPoint( 25, 464 );
@@ -117,9 +189,9 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     FVectorPoint* ctrlPoint0;
     FVectorPoint* ctrlPoint1;
 
-    cubicPath->AppendPoint( point0 );
+    mCubicPath->AppendPoint( point0 );
 
-    segment = static_cast<FVectorSegmentCubic*>( cubicPath->AppendPoint( point1 ) );
+    segment = static_cast<FVectorSegmentCubic*>( mCubicPath->AppendPoint( point1 ) );
 
     ctrlPoint0 = segment->GetControlPoint( 0 );
     ctrlPoint1 = segment->GetControlPoint( 1 );
@@ -129,7 +201,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     ctrlPoint1->SetX( 50 );
     ctrlPoint1->SetY( 400 );
 
-    segment = static_cast<FVectorSegmentCubic*>( cubicPath->AppendPoint( point2 ) );
+    segment = static_cast<FVectorSegmentCubic*>( mCubicPath->AppendPoint( point2 ) );
     ctrlPoint0 = segment->GetControlPoint( 0 );
     ctrlPoint1 = segment->GetControlPoint( 1 );
 
@@ -137,7 +209,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     ctrlPoint0->SetY( 404 );
     ctrlPoint1->SetX( 144 );
     ctrlPoint1->SetY( 267 );
-
+*/
 }
 
 int

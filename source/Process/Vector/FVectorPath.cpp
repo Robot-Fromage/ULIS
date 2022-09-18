@@ -46,7 +46,7 @@ FVectorPath::SetLastPoint(FVectorPoint* iLastPoint)
 }
 
 void
-FVectorPath::Draw( FBlock& iBlock, BLContext& iBLContext )
+FVectorPath::DrawShape( FBlock& iBlock, BLContext& iBLContext )
 {
 
 

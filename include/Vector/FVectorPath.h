@@ -4,16 +4,17 @@
 #include <ULIS>
 #include <blend2d.h>
 
-using namespace ::ULIS;
-
 #include "Vector/FVectorObject.h"
-#include "FVectorPoint.h"
-#include "FVectorSegment.h"
+#include "Vector/FVectorPoint.h"
+#include "Vector/FVectorSegment.h"
+
+ULIS_NAMESPACE_BEGIN
 
 class ULIS_API FVectorPath : public FVectorObject
 {
     private:
         FVectorPoint* mLastPoint;
+        void DrawShape( FBlock& iBlock, BLContext& iBLContext );
 
     protected :
         std::list<FVectorPoint*> mPointList;
@@ -31,7 +32,9 @@ class ULIS_API FVectorPath : public FVectorObject
         std::list<FVectorPoint*> GetSelectedPointList();
         virtual void Pick( double iX, double iY, double iRadius ) = 0;
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
-        void Draw( FBlock& iBlock, BLContext& iBLContext );
+
 };
+
+ULIS_NAMESPACE_END
 
 #endif // _FVECTORPATH_H_
