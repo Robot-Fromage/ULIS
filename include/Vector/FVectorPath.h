@@ -1,12 +1,11 @@
 #ifndef _FVECTORPATH_H_
 #define _FVECTORPATH_H_
 
-#include <ULIS>
 #include <blend2d.h>
-
-#include "Vector/FVectorObject.h"
-#include "Vector/FVectorPoint.h"
-#include "Vector/FVectorSegment.h"
+#include <Core/Core.h>
+#include <Image/Block.h>
+#include <Vector/FVectorObject.h>
+#include <Vector/FVectorSegment.h>
 
 ULIS_NAMESPACE_BEGIN
 

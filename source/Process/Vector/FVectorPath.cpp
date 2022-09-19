@@ -8,6 +8,7 @@ FVectorPath::~FVectorPath()
 }
 
 FVectorPath::FVectorPath()
+    : FVectorObject()
 {
     mLastPoint = NULL;
 }

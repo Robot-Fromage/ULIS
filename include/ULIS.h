@@ -85,6 +85,7 @@
 #include "Sparse/TilePool.h"
 // Vector
 #include "Vector/FVectorObject.h"
+#include "Vector/FVectorRoot.h"
 #include "Vector/FVectorRectangle.h"
 #include "Vector/FVectorCircle.h"
 #include "Vector/FVectorPath.h"

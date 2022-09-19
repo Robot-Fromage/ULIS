@@ -1,14 +1,18 @@
 #ifndef _FVECTOROBJECT_H_
 #define _FVECTOROBJECT_H_
 
+
 #include <blend2d.h>
+#include <Core/Core.h>
+#include <Image/Block.h>
 
 ULIS_NAMESPACE_BEGIN
 
 class ULIS_API FVectorObject
 {
     private:
-        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext ) { };
+        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext );
+        virtual bool PickShape( BLContext& iBLContext, double iX, double iY );
 
     protected:
         FVec2D mTranslation;
@@ -21,7 +25,8 @@ class ULIS_API FVectorObject
     public:
         ~FVectorObject();
         FVectorObject();
-        void Draw( FBlock& iBlock, BLContext& iBLContext );
+        virtual void Draw( FBlock& iBlock, BLContext& iBLContext ) final; // cannot be overridden
+        virtual bool Pick( BLContext& iBLContext, double iX, double iY ) final; // cannot be overridden
         void DrawChildren( FBlock& iBlock,BLContext& iBLContext );
         void UpdateMatrix( BLContext& iBLContext );
         void Translate( double iX, double iY );
@@ -30,6 +35,9 @@ class ULIS_API FVectorObject
         void AddChild( FVectorObject* iChild );
         double GetScalingX();
         double GetScalingY();
+        double GetTranslationX();
+        double GetTranslationY();
+        std::list<FVectorObject*>& GetChildrenList();
 };
 
 ULIS_NAMESPACE_END

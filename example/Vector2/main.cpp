@@ -29,7 +29,9 @@ private:
     FThreadPool* mPool;
     FCommandQueue* mQueue;
     FContext* mContext;
-    FVectorObject* mScene;
+    FVectorRoot* mScene;
+    FVectorObject* mSelectedObject;
+    double mMouseX, mMouseY;
 
 public:
     MyWidget::MyWidget(uint32 iWidth,uint32 iHeight);
@@ -106,8 +108,8 @@ public:
             {
                 FVectorRectangle* rectangle = new FVectorRectangle(50,80);
 
-                mScene->Scale(mScene->GetScalingX() - 0.01f,mScene->GetScalingY() - 0.01f);
-                mScene->UpdateMatrix(*mBLContext);
+                mScene->Scale( mScene->GetScalingX() - 0.01f,mScene->GetScalingY() - 0.01f );
+                mScene->UpdateMatrix( *mBLContext );
             }
             break;
         }
@@ -117,6 +119,12 @@ public:
 
     virtual void mousePressEvent(QMouseEvent* event)
     {
+        mScene->Select( *mBLContext, event->x(),event->y() );
+
+        mSelectedObject = mScene->GetLastSelected();
+
+        mMouseX = event->x();
+        mMouseY = event->y();
 /*
         mCubicPath->Unselect(nullptr);
 
@@ -135,6 +143,15 @@ public:
     {
         if (event->buttons() == Qt::LeftButton )
         {
+            if( mSelectedObject )
+            {
+                double difx = event->x() - mMouseX;
+                double dify = event->y() - mMouseY;
+
+                mSelectedObject->Translate( mSelectedObject->GetTranslationX() + difx
+                                          , mSelectedObject->GetTranslationY() + dify );
+                mSelectedObject->UpdateMatrix( *mBLContext );
+            }
 /*
             std::list<FVectorPoint*> selectedPointList = mCubicPath->GetSelectedPointList();
 
@@ -149,6 +166,9 @@ public:
 
             update();
         }
+
+        mMouseX = event->x();
+        mMouseY = event->y();
     }
 };
 
@@ -168,14 +188,15 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     mBLContext = new BLContext(*mBLImage);
     mBLImage->getData( &data );
 
+    mSelectedObject = nullptr;
+
     mQImage = new QImage( (uchar*) data.pixelData
                                  , data.size.w
                                  , data.size.h
                                  , data.stride
                                  , QImage::Format_ARGB32_Premultiplied );
 
-    mScene = new FVectorObject();
-
+    mScene = new FVectorRoot();
     mScene->UpdateMatrix( *mBLContext );
 /*
     mCubicPath = new FVectorPathCubic();

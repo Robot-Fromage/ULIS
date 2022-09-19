@@ -1,12 +1,12 @@
 #ifndef _FVECTORPOINT_H_
 #define _FVECTORPOINT_H_
 
-#include <ULIS>
 #include <blend2d.h>
+#include <Core/Core.h>
+#include <Image/Block.h>
+#include <Vector/FVectorSegment.h>
 
 ULIS_NAMESPACE_BEGIN
-
-class FVectorSegment;
 
 class ULIS_API FVectorPoint
 {

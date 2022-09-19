@@ -6,12 +6,11 @@
 
 ULIS_NAMESPACE_BEGIN
 
-#include "Vector/FVectorObject.h"
-
 class ULIS_API FVectorCircle : public FVectorObject
 {
     private:
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
+        bool PickShape( BLContext& iBLContext, double iX, double iY );
 
     protected :
         double mRadius; 

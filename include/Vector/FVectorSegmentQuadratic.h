@@ -1,10 +1,11 @@
 #ifndef _FVECTORSEGMENTQUADRATIC_H_
 #define _FVECTORSEGMENTQUADRATIC_H_
 
-#include <ULIS>
 #include <blend2d.h>
-
-#include "Vector/FVectorSegment.h"
+#include <Core/Core.h>
+#include <Image/Block.h>
+#include <Vector/FVectorPoint.h>
+#include <Vector/FVectorSegment.h>
 
 ULIS_NAMESPACE_BEGIN
 

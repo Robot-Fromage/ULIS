@@ -46,16 +46,33 @@ FVectorObject::GetScalingY()
     return mScaling.y;
 }
 
+double
+FVectorObject::GetTranslationX()
+{
+    return mTranslation.x;
+}
+
+double
+FVectorObject::GetTranslationY()
+{
+    return mTranslation.y;
+}
+
 void
 FVectorObject::UpdateMatrix( BLContext& iBLContext )
 {
     iBLContext.save();
     iBLContext.resetMatrix();
-    iBLContext.translate( mTranslation.x,mTranslation.y );
+    iBLContext.translate( mTranslation.x, mTranslation.y );
     iBLContext.rotate( mRotation );
-    iBLContext.scale( mScaling.x,mScaling.y );
+    iBLContext.scale( mScaling.x, mScaling.y );
     mLocalMatrix = iBLContext.userMatrix();
     iBLContext.restore();
+
+    iBLContext.save();
+    iBLContext.transform( mLocalMatrix );
+    iBLContext.restore();
+    mWorldMatrix = iBLContext.userMatrix();
 }
 
 void
@@ -83,9 +100,39 @@ FVectorObject::Draw( FBlock& iBlock, BLContext& iBLContext )
 }
 
 void
+FVectorObject::DrawShape( FBlock& iBlock, BLContext& iBLContext )
+{
+}
+
+bool
+FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY )
+{
+    return false;
+}
+
+bool
+FVectorObject::Pick( BLContext& iBLContext, double iX, double iY )
+{
+    BLMatrix2D inverseWorldMatrix;
+    BLPoint localCoords;
+
+    BLMatrix2D::invert( inverseWorldMatrix, mLocalMatrix );
+
+    localCoords = inverseWorldMatrix.mapPoint( iX, iY );
+printf("%f %f\n", iX, iY );
+    return PickShape( iBLContext, localCoords.x, localCoords.y );
+}
+
+void
 FVectorObject::AddChild( FVectorObject* iChild )
 {
     mChildrenList.push_back( iChild );
+}
+
+std::list<FVectorObject*>&
+FVectorObject::GetChildrenList()
+{
+    return mChildrenList;
 }
 
 ULIS_NAMESPACE_END

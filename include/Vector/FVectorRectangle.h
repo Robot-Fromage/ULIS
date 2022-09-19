@@ -1,12 +1,14 @@
 #ifndef _FVECTORRECTANGLE_H_
 #define _FVECTORRECTANGLE_H_
 
-#include <ULIS>
 #include <blend2d.h>
+#include <Core/Core.h>
+#include <Image/Block.h>
+#include <Vector/FVectorObject.h>
+#include <Vector/FVectorSegment.h>
 
 ULIS_NAMESPACE_BEGIN
 
-#include "Vector/FVectorObject.h"
 
 class ULIS_API FVectorRectangle : public FVectorObject
 {
