@@ -47,6 +47,12 @@ FVectorObject::GetScalingY()
 }
 
 double
+FVectorObject::GetRotation()
+{
+    return mRotation;
+}
+
+double
 FVectorObject::GetTranslationX()
 {
     return mTranslation.x;
@@ -113,14 +119,7 @@ FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY )
 bool
 FVectorObject::Pick( BLContext& iBLContext, double iX, double iY )
 {
-    BLMatrix2D inverseWorldMatrix;
-    BLPoint localCoords;
-
-    BLMatrix2D::invert( inverseWorldMatrix, mLocalMatrix );
-
-    localCoords = inverseWorldMatrix.mapPoint( iX, iY );
-printf("%f %f\n", iX, iY );
-    return PickShape( iBLContext, localCoords.x, localCoords.y );
+    return PickShape( iBLContext, iX, iY );
 }
 
 void
@@ -133,6 +132,12 @@ std::list<FVectorObject*>&
 FVectorObject::GetChildrenList()
 {
     return mChildrenList;
+}
+
+BLMatrix2D&
+FVectorObject::GetLocalMatrix()
+{
+    return mLocalMatrix;
 }
 
 ULIS_NAMESPACE_END

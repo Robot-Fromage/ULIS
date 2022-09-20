@@ -32,18 +32,25 @@ FVectorRoot::GetLastSelected()
 }
 
 void
-FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y )
+FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double iX, double iY )
 {
+    BLMatrix2D inverseLocalMatrix;
+    BLPoint localCoords;
+
+    BLMatrix2D::invert( inverseLocalMatrix, iChild.GetLocalMatrix() );
+
+    localCoords = inverseLocalMatrix.mapPoint( iX, iY);
+
+    if( iChild.Pick( iBLContext, localCoords.x, localCoords.y ) )
+    {
+        mSelectedObjectList.push_back( &iChild );
+    }
+
     for( std::list<FVectorObject*>::iterator it = iChild.GetChildrenList().begin(); it != iChild.GetChildrenList().end(); ++it )
     {
         FVectorObject *obj = (*it);
 
-        if( obj->Pick( iBLContext, x, y ) )
-        {
-            mSelectedObjectList.push_back( obj );
-        }
-
-        RecursiveSelect( iBLContext, *obj, x, y );
+        RecursiveSelect( iBLContext, *obj, localCoords.x, localCoords.y );
     }
 }
 

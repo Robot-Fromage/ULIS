@@ -32,6 +32,7 @@ private:
     FVectorRoot* mScene;
     FVectorObject* mSelectedObject;
     double mMouseX, mMouseY;
+    int32 mAction;
 
 public:
     MyWidget::MyWidget(uint32 iWidth,uint32 iHeight);
@@ -69,10 +70,32 @@ public:
         p.drawImage( rect(), *mQImage );
     }
 
+    virtual void keyReleaseEvent(QKeyEvent* event)
+    {
+        mAction = -1;
+    }
+
     virtual void keyPressEvent( QKeyEvent* event )
     {
         switch( event->key() )
         {
+            case Qt::Key_T:
+            {
+                mAction = 0;
+            }
+            break;
+            case Qt::Key_O:
+            {
+                mAction = 1;
+            }
+            break;
+
+            case Qt::Key_X :
+            {
+                mAction = 2;
+            }
+            break;
+
             case Qt::Key_C :
             {
                 FVectorCircle* circle = new FVectorCircle( 20.0f );
@@ -141,15 +164,33 @@ public:
 
     virtual void mouseMoveEvent(QMouseEvent* event)
     {
+        double difx = event->x() - mMouseX;
+        double dify = event->y() - mMouseY;
+
         if (event->buttons() == Qt::LeftButton )
         {
             if( mSelectedObject )
             {
-                double difx = event->x() - mMouseX;
-                double dify = event->y() - mMouseY;
+                switch ( mAction )
+                {
+                    case 0:
+                        mSelectedObject->Translate( mSelectedObject->GetTranslationX() + difx
+                                                  , mSelectedObject->GetTranslationY() + dify );
+                    break;
 
-                mSelectedObject->Translate( mSelectedObject->GetTranslationX() + difx
-                                          , mSelectedObject->GetTranslationY() + dify );
+                    case 1:
+                        mSelectedObject->Rotate( mSelectedObject->GetRotation() + difx * 0.01f );
+                    break;
+
+                    case 2:
+                        mSelectedObject->Scale( mSelectedObject->GetScalingX() + difx * 0.01f
+                                              , mSelectedObject->GetScalingY() + dify * 0.01f );
+                    break;
+
+                    default :
+                    break;
+                }
+
                 mSelectedObject->UpdateMatrix( *mBLContext );
             }
 /*
@@ -176,6 +217,8 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
 
     BLImageData data;
     eFormat fmt = Format_RGBA8;
+
+    mAction = -1;
 
     // ULIS part
     mPool = new FThreadPool();

@@ -14,6 +14,7 @@ class ULIS_API FVectorRectangle : public FVectorObject
 {
     private:
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
+        bool PickShape( BLContext& iBLContext, double iX, double iY );
 
     protected :
         double mWidth;

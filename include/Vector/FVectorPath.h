@@ -14,6 +14,7 @@ class ULIS_API FVectorPath : public FVectorObject
     private:
         FVectorPoint* mLastPoint;
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
+        bool PickShape( BLContext& iBLContext, double iX, double iY ) { return false; };
 
     protected :
         std::list<FVectorPoint*> mPointList;

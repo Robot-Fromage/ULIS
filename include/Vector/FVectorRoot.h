@@ -13,6 +13,9 @@ class ULIS_API FVectorRoot : public FVectorObject
     private:
         void RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y );
 
+        void DrawShape( FBlock& iBlock, BLContext& iBLContext ) {};
+        bool PickShape( BLContext& iBLContext, double iX, double iY ) { return false; };
+
     protected:
         std::list<FVectorObject*> mSelectedObjectList;
 

@@ -62,6 +62,7 @@ typedef TVector4< float >       FVec4F;
 template< typename T > struct   TRectangle;
 typedef TRectangle< int >       FRectI;
 typedef TRectangle< float >     FRectF;
+typedef TRectangle< double >    FRectD;
 template< typename T > class    TMatrix2;
 typedef TMatrix2< float >       FMat2F;
 template< typename T > class    TMatrix3;

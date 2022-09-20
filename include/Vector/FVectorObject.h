@@ -11,8 +11,8 @@ ULIS_NAMESPACE_BEGIN
 class ULIS_API FVectorObject
 {
     private:
-        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext );
-        virtual bool PickShape( BLContext& iBLContext, double iX, double iY );
+        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext ) = 0;
+        virtual bool PickShape( BLContext& iBLContext, double iX, double iY ) = 0;
 
     protected:
         FVec2D mTranslation;
@@ -37,6 +37,8 @@ class ULIS_API FVectorObject
         double GetScalingY();
         double GetTranslationX();
         double GetTranslationY();
+        double GetRotation();
+        BLMatrix2D& GetLocalMatrix();
         std::list<FVectorObject*>& GetChildrenList();
 };
 
