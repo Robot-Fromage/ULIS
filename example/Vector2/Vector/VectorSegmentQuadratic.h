@@ -4,12 +4,10 @@
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
-#include <Vector/FVectorPoint.h>
-#include <Vector/FVectorSegment.h>
+#include "Vector/VectorPoint.h"
+#include "Vector/VectorSegment.h"
 
-ULIS_NAMESPACE_BEGIN
-
-class ULIS_API FVectorSegmentQuadratic : public FVectorSegment
+class FVectorSegmentQuadratic : public FVectorSegment
 {
     private:
         FVectorPoint mCtrlPoint;
@@ -21,7 +19,5 @@ class ULIS_API FVectorSegmentQuadratic : public FVectorSegment
         FVectorSegmentQuadratic( FVectorPoint* iPoint0, double iCtrlx, double iCtrly, FVectorPoint* iPoint1 );
         void Draw( FBlock& iBlock, BLContext& iBLContext );
 };
-
-ULIS_NAMESPACE_END
 
 #endif // _FVECTORSEGMENTQUADRATIC_H_

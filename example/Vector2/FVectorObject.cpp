@@ -1,7 +1,5 @@
-#include <ULIS>
 #include <blend2d.h>
-
-ULIS_NAMESPACE_BEGIN
+#include "Vector/Vector.h"
 
 FVectorObject::~FVectorObject()
 {
@@ -139,5 +137,3 @@ FVectorObject::GetLocalMatrix()
 {
     return mLocalMatrix;
 }
-
-ULIS_NAMESPACE_END

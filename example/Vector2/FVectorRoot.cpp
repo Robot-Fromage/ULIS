@@ -1,7 +1,5 @@
-#include <ULIS>
 #include <blend2d.h>
-
-ULIS_NAMESPACE_BEGIN
+#include "Vector/Vector.h"
 
 FVectorRoot::~FVectorRoot()
 {
@@ -13,7 +11,15 @@ FVectorRoot::FVectorRoot()
 }
 
 void
-FVectorRoot::Select(BLContext& iBLContext,double x,double y)
+FVectorRoot::Select( BLContext& iBLContext, FVectorObject& iVecObj )
+{
+    mSelectedObjectList.clear();
+
+    mSelectedObjectList.push_back(&iVecObj);
+}
+
+void
+FVectorRoot::Select( BLContext& iBLContext, double x, double y )
 {
     mSelectedObjectList.clear();
 
@@ -53,5 +59,3 @@ FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, doub
         RecursiveSelect( iBLContext, *obj, localCoords.x, localCoords.y );
     }
 }
-
-ULIS_NAMESPACE_END

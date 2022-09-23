@@ -10,10 +10,11 @@
 #include <QIcon>
 #include <QAction>
 #include <chrono>
-#include <blend2d.h>
-using namespace ::ULIS;
 
-#include "Vector/FVectorObject.h"
+#include <blend2d.h>
+#include "Vector/Vector.h"
+
+using namespace ::ULIS;
 
 /******************************************************************************/
 class MyWidget: public QWidget
@@ -64,7 +65,10 @@ public:
         mCircle->UpdateMatrix( *mBLContext );
 */
         /*mContext->DrawVectorObject ( *mCanvas, *mCubicPath, *mBLContext );*/
-        mContext->DrawVectorObject ( *mCanvas, *mScene, *mBLContext );
+        /*mContext->DrawVectorObject ( *mCanvas, *mScene, *mBLContext );*/
+
+        mScene->Draw( *mCanvas, *mBLContext );
+
         mContext->Finish();
 
         p.drawImage( rect(), *mQImage );
@@ -104,7 +108,26 @@ public:
                 circle->UpdateMatrix( *mBLContext );
 
                 mScene->AddChild( circle );
+                mScene->Select( *mBLContext, *circle );
             } 
+            break;
+
+            case Qt::Key_A:
+            {
+                mAction = 3;
+            }
+            break;
+
+            case Qt::Key_P:
+            {
+                FVectorPathBuilder* builder = new FVectorPathBuilder();
+
+                /*builder->Translate(mQImage->width() / 2,mQImage->height() / 2);*/
+                builder->UpdateMatrix(*mBLContext);
+
+                mScene->AddChild(builder);
+                mScene->Select( *mBLContext, *builder );
+            }
             break;
 
             case Qt::Key_R:
@@ -115,6 +138,7 @@ public:
                 rectangle->UpdateMatrix( *mBLContext );
 
                 mScene->AddChild( rectangle );
+                mScene->Select( *mBLContext, *rectangle );
             }
             break;
 
@@ -140,10 +164,17 @@ public:
         update(); // redraw
     }
 
+    virtual void mouseReleaseEvent(QMouseEvent* event)
+    {
+        if ( ( mMouseX == event->x() ) &&
+             ( mMouseY == event->y() ) ) 
+        {
+            mScene->Select( *mBLContext, event->x(),event->y() );
+        }
+    }
+
     virtual void mousePressEvent(QMouseEvent* event)
     {
-        mScene->Select( *mBLContext, event->x(),event->y() );
-
         mSelectedObject = mScene->GetLastSelected();
 
         mMouseX = event->x();
@@ -185,6 +216,15 @@ public:
                     case 2:
                         mSelectedObject->Scale( mSelectedObject->GetScalingX() + difx * 0.01f
                                               , mSelectedObject->GetScalingY() + dify * 0.01f );
+                    break;
+
+                    case 3:
+                        if( typeid( *mSelectedObject ) == typeid( FVectorPathBuilder ) )
+                        {
+                            FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mSelectedObject );
+
+                            currentPathBuilder->AppendPoint( new FVectorPoint( event->x(), event->y() ) );
+                        }
                     break;
 
                     default :

@@ -1,7 +1,5 @@
-#include <ULIS>
 #include <blend2d.h>
-
-using namespace ::ULIS;
+#include "Vector/Vector.h"
 
 FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
                                         , FVectorPoint* iPoint1 )

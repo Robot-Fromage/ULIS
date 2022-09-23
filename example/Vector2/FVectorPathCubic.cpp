@@ -1,7 +1,5 @@
-#include <ULIS>
 #include <blend2d.h>
-
-using namespace ::ULIS;
+#include "Vector/Vector.h"
 
 FVectorPathCubic::FVectorPathCubic()
     : FVectorPath()

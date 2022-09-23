@@ -4,12 +4,10 @@
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
-#include <Vector/FVectorObject.h>
-#include <Vector/FVectorSegment.h>
+#include "Vector/VectorObject.h"
+#include "Vector/VectorSegment.h"
 
-ULIS_NAMESPACE_BEGIN
-
-class ULIS_API FVectorPath : public FVectorObject
+class FVectorPath : public FVectorObject
 {
     private:
         FVectorPoint* mLastPoint;
@@ -25,7 +23,7 @@ class ULIS_API FVectorPath : public FVectorObject
     public:
         ~FVectorPath();
         FVectorPath();
-        virtual FVectorSegment* AppendPoint(FVectorPoint* iPoint);
+        FVectorSegment* AppendPoint(FVectorPoint* iPoint);
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         FVectorPoint *GetLastPoint();
         void SetLastPoint( FVectorPoint* iLastPoint );
@@ -34,7 +32,5 @@ class ULIS_API FVectorPath : public FVectorObject
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
 
 };
-
-ULIS_NAMESPACE_END
 
 #endif // _FVECTORPATH_H_

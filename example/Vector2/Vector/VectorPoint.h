@@ -4,11 +4,9 @@
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
-#include <Vector/FVectorSegment.h>
+#include "Vector/VectorSegment.h"
 
-ULIS_NAMESPACE_BEGIN
-
-class ULIS_API FVectorPoint
+class FVectorPoint
 {
     private:
 
@@ -29,7 +27,5 @@ class ULIS_API FVectorPoint
         void Set( double iX, double iY );
 
 };
-
-ULIS_NAMESPACE_END
 
 #endif // _FVECTORPOINT_H_

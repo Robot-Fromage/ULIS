@@ -4,13 +4,10 @@
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
-#include <Vector/FVectorObject.h>
-#include <Vector/FVectorSegment.h>
+#include "Vector/VectorObject.h"
+#include "Vector/VectorSegment.h"
 
-ULIS_NAMESPACE_BEGIN
-
-
-class ULIS_API FVectorRectangle : public FVectorObject
+class FVectorRectangle : public FVectorObject
 {
     private:
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
@@ -25,7 +22,5 @@ class ULIS_API FVectorRectangle : public FVectorObject
         FVectorRectangle();
         FVectorRectangle( double iWidth, double iHeight );
 };
-
-ULIS_NAMESPACE_END
 
 #endif // _FVECTORRECTANGLE_H_

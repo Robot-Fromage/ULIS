@@ -1,14 +1,13 @@
 #ifndef _FVECTORROOT_H_
 #define _FVECTORROOT_H_
 
+#include <ULIS>
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
-#include <Vector/FVectorObject.h>
+#include "Vector/VectorObject.h"
 
-ULIS_NAMESPACE_BEGIN
-
-class ULIS_API FVectorRoot : public FVectorObject
+class FVectorRoot : public FVectorObject
 {
     private:
         void RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y );
@@ -23,9 +22,8 @@ class ULIS_API FVectorRoot : public FVectorObject
         ~FVectorRoot();
         FVectorRoot();
         void Select( BLContext& iBLContext, double x, double y );
+        void Select( BLContext& iBLContext, FVectorObject& iVecObj );
         FVectorObject* GetLastSelected();
 };
-
-ULIS_NAMESPACE_END
 
 #endif // _FVECTORROOT_H_

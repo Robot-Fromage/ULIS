@@ -1,14 +1,13 @@
 #ifndef _FVECTOROBJECT_H_
 #define _FVECTOROBJECT_H_
 
-
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
 
-ULIS_NAMESPACE_BEGIN
+using namespace ::ULIS;
 
-class ULIS_API FVectorObject
+class FVectorObject
 {
     private:
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext ) = 0;
@@ -41,7 +40,5 @@ class ULIS_API FVectorObject
         BLMatrix2D& GetLocalMatrix();
         std::list<FVectorObject*>& GetChildrenList();
 };
-
-ULIS_NAMESPACE_END
 
 #endif // _FVECTOROBJECT_H_

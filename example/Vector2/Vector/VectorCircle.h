@@ -1,12 +1,11 @@
 #ifndef _FVECTORCIRCLE_H_
 #define _FVECTORCIRCLE_H_
 
-#include <ULIS>
 #include <blend2d.h>
+#include <Core/Core.h>
+#include <Image/Block.h>
 
-ULIS_NAMESPACE_BEGIN
-
-class ULIS_API FVectorCircle : public FVectorObject
+class FVectorCircle : public FVectorObject
 {
     private:
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
@@ -20,7 +19,5 @@ class ULIS_API FVectorCircle : public FVectorObject
         FVectorCircle();
         FVectorCircle( double iRadius );
 };
-
-ULIS_NAMESPACE_END
 
 #endif // _FVECTORCIRCLE_H_
