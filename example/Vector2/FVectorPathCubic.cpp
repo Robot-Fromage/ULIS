@@ -7,7 +7,7 @@ FVectorPathCubic::FVectorPathCubic()
 
 }
 
-FVectorSegment*
+FVectorSegmentCubic*
 FVectorPathCubic::AppendPoint( FVectorPoint* iPoint )
 {
     FVectorPoint* lastPoint = GetLastPoint();

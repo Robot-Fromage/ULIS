@@ -18,9 +18,19 @@ FVectorSegment::FVectorSegment( FVectorPoint* iPoint0, FVectorPoint* iPoint1 )
     mPoint[1]->AddSegment( this );
 }
 
-FVectorPoint* FVectorSegment::GetPoint( int iPointNum )
+FVectorPoint*
+FVectorSegment::GetPoint( int iPointNum )
 {
     return mPoint[iPointNum];
+}
+
+double
+FVectorSegment::GetStraightDistance()
+{
+    FVec2D vec = { mPoint[1]->GetX() - mPoint[0]->GetX(),
+                   mPoint[1]->GetY() - mPoint[0]->GetY() };
+
+    return vec.Distance();
 }
 
 void

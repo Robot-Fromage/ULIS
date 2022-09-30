@@ -12,7 +12,7 @@ class FVectorPathCubic: public FVectorPath
 {
     public:
         FVectorPathCubic();
-        FVectorSegment* AppendPoint( FVectorPoint* iPoint );
+        FVectorSegmentCubic* AppendPoint( FVectorPoint* iPoint );
         void Pick(double iX,double iY,double iRadius);
         void Unselect(FVectorPoint* iPoint);
 };

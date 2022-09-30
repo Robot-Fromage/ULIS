@@ -164,21 +164,68 @@ public:
         update(); // redraw
     }
 
-    virtual void mouseReleaseEvent(QMouseEvent* event)
+virtual void mouseReleaseEvent( QMouseEvent* event )
+{
+    // select if the mouse hasnt moved
+    if( ( mMouseX == event->x() ) &&
+        ( mMouseY == event->y() ) )
     {
-        if ( ( mMouseX == event->x() ) &&
-             ( mMouseY == event->y() ) ) 
-        {
-            mScene->Select( *mBLContext, event->x(),event->y() );
-        }
+        mScene->Select(*mBLContext,event->x(),event->y());
     }
+    /*else
+    {*/
+        // otherwise do your thing
+        if( event->button() == Qt::LeftButton )
+        {
+            if( mSelectedObject )
+            {
+                switch( mAction )
+                {
+                case 3:
+                    if( typeid( *mSelectedObject ) == typeid( FVectorPathBuilder ) )
+                    {
+                        FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mSelectedObject );
+
+                        currentPathBuilder->Close( event->x(), event->y() );
+
+                        FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
+
+                        currentPathBuilder->CopyTransformation( *cubicPath );
+
+                        cubicPath->UpdateMatrix(*mBLContext);
+
+                        mScene->AddChild( cubicPath );
+                        mScene->RemoveChild( currentPathBuilder );
+                    }
+                break;
+
+                default:
+                break;
+                }
+            }
+        }
+    /*}*/
+}
 
     virtual void mousePressEvent(QMouseEvent* event)
     {
-        mSelectedObject = mScene->GetLastSelected();
+
 
         mMouseX = event->x();
         mMouseY = event->y();
+
+/***************/
+        FVectorPathBuilder* builder = new FVectorPathBuilder();
+
+        /*builder->Translate(mQImage->width() / 2,mQImage->height() / 2);*/
+        builder->UpdateMatrix(*mBLContext);
+
+        mScene->AddChild(builder);
+        mScene->Select(*mBLContext,*builder);
+
+/*************/
+
+        mSelectedObject = mScene->GetLastSelected();
 /*
         mCubicPath->Unselect(nullptr);
 
@@ -223,7 +270,7 @@ public:
                         {
                             FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mSelectedObject );
 
-                            currentPathBuilder->AppendPoint( new FVectorPoint( event->x(), event->y() ) );
+                            currentPathBuilder->AppendPoint( event->x(), event->y() );
                         }
                     break;
 

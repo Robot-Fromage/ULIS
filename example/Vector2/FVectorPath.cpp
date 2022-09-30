@@ -9,6 +9,7 @@ FVectorPath::FVectorPath()
     : FVectorObject()
 {
     mLastPoint = NULL;
+    mLastSegment = NULL;
 }
 
 std::list<FVectorPoint*> 
@@ -30,6 +31,7 @@ void
 FVectorPath::AddSegment( FVectorSegment* iSegment )
 {
     mSegmentList.push_back( iSegment );
+    mLastSegment = iSegment;
 }
 
 FVectorPoint*

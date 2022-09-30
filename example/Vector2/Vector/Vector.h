@@ -1,6 +1,7 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
+#include <ULIS>
 #include "Vector/VectorObject.h"
 #include "Vector/VectorRoot.h"
 #include "Vector/VectorPoint.h"

@@ -126,6 +126,20 @@ FVectorObject::AddChild( FVectorObject* iChild )
     mChildrenList.push_back( iChild );
 }
 
+void
+FVectorObject::RemoveChild( FVectorObject* iChild )
+{
+    mChildrenList.remove(iChild);
+}
+
+void 
+FVectorObject::CopyTransformation( FVectorObject& iObject )
+{
+    iObject.mRotation    = mRotation;
+    iObject.mScaling     = mScaling;
+    iObject.mTranslation = mTranslation;
+}
+
 std::list<FVectorObject*>&
 FVectorObject::GetChildrenList()
 {

@@ -9,12 +9,9 @@
 
 class FVectorPath : public FVectorObject
 {
-    private:
-        FVectorPoint* mLastPoint;
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext );
-        bool PickShape( BLContext& iBLContext, double iX, double iY ) { return false; };
-
     protected :
+        FVectorPoint* mLastPoint;
+        FVectorSegment* mLastSegment;
         std::list<FVectorPoint*> mPointList;
         std::list<FVectorSegment*> mSegmentList;
         std::list<FVectorPoint*> mSelectedPointList;
@@ -24,6 +21,8 @@ class FVectorPath : public FVectorObject
         ~FVectorPath();
         FVectorPath();
         FVectorSegment* AppendPoint(FVectorPoint* iPoint);
+        void DrawShape(FBlock& iBlock,BLContext& iBLContext);
+        bool PickShape(BLContext& iBLContext,double iX,double iY) { return false; };
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         FVectorPoint *GetLastPoint();
         void SetLastPoint( FVectorPoint* iLastPoint );

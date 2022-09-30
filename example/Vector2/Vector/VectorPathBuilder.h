@@ -7,21 +7,29 @@
 #include "Vector/VectorObject.h"
 #include "Vector/VectorSegment.h"
 #include "Vector/VectorPath.h"
+#include "Vector/VectorPathCubic.h"
 
 class FVectorPathBuilder : public FVectorPath
 {
     private:
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext );
-        bool PickShape( BLContext& iBLContext, double iX, double iY ) { return false; };
+        FVec2D mLastSmoothedSegmentVector;
+        double mLastSmoothedSegmentVectorDistance;
 
     protected :
- 
+        std::list<FVectorPoint*> mSmoothedPointList;
+        FVectorPathCubic* mCubicPath;
+        FVectorSegment* AppendPoint( double iX, double iY, bool iEnforce );
+
     public:
-        ~FVectorPathBuilder();
-         FVectorPathBuilder();
-         FVectorSegment* AppendPoint(FVectorPoint* iPoint);
-         void Pick(double iX,double iY,double iRadius);
-         void Unselect(FVectorPoint* iPoint);
+       ~FVectorPathBuilder();
+        FVectorPathBuilder();
+        FVectorSegment* AppendPoint( double iX, double iY );
+        void DrawShape(FBlock& iBlock,BLContext& iBLContext);
+        bool PickShape(BLContext& iBLContext,double iX,double iY) { return false; };
+        void Pick(double iX,double iY,double iRadius);
+        void Unselect(FVectorPoint* iPoint);
+        FVectorSegment* Close( double iX, double iY );
+        FVectorPathCubic* GetSmoothedPath( );
 };
 
 #endif // _FVECTORPATHBUILDER_H_
