@@ -34,22 +34,15 @@ FVectorSegment::GetStraightDistance()
 }
 
 void
+FVectorSegment::DrawControllers( FBlock& iBlock
+                               , BLContext& iBLContext )
+{
+
+}
+
+void
 FVectorSegment::Draw( FBlock& iBlock
                     , BLContext& iBLContext )
 {
-    BLPath path;
 
-    BLPoint point0;
-    BLPoint point1;
-
-    point0.x = mPoint[0]->GetX();
-    point0.y = mPoint[0]->GetY();
-
-    point1.x = mPoint[1]->GetX();
-    point1.y = mPoint[1]->GetY();
-
-    iBLContext.setStrokeStyle( BLRgba32(0xFFFF0000) );
-    path.moveTo( point0.x, point0.y );
-    path.lineTo( point1.x, point1.y );
-    iBLContext.strokePath( path );
 }

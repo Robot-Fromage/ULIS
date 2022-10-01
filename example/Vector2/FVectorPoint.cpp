@@ -50,3 +50,9 @@ FVectorPoint::AddSegment( FVectorSegment* iSegment )
 {
     mSegmentList.push_back( iSegment );
 }
+
+uint32
+FVectorPoint::GetSegmentCount( )
+{
+    return mSegmentList.size();
+}

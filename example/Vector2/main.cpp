@@ -185,7 +185,7 @@ virtual void mouseReleaseEvent( QMouseEvent* event )
                     if( typeid( *mSelectedObject ) == typeid( FVectorPathBuilder ) )
                     {
                         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mSelectedObject );
-
+printf("release\n");
                         currentPathBuilder->Close( event->x(), event->y() );
 
                         FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();

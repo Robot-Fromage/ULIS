@@ -57,9 +57,6 @@ FVectorPathBuilder::AppendPoint( double iX
 
                 if( lastSegment )
                 {
-                    static double angle = 0.0f;
-                    static double angleLimit = 90.0f;
-
                     double lastSegmentTotalX = ( lastSegment->GetPoint(0)->GetX() + lastSegment->GetPoint(1)->GetX() );
                     double lastSegmentTotalY = ( lastSegment->GetPoint(0)->GetY() + lastSegment->GetPoint(1)->GetY() );
                     double     segmentTotalX = (     segment->GetPoint(0)->GetX() +     segment->GetPoint(1)->GetX() );
@@ -73,38 +70,64 @@ FVectorPathBuilder::AppendPoint( double iX
                     // actually this is unneeded because the segment's length was checked at the previous call
                     if( lastSegVectorDistance )
                     {
+                        double angle = 0.0f;
+                        double angleLimit = 90.0f;
+
+                        static double cumulAngle = 0.0f;
+
                         lastSegVector.Normalize();
 
-                        angle += acos(ULIS::FMath::Clamp<double>(segVector.DotProduct( lastSegVector ), -1.0f, 1.0f)) / 3.14159 * 180;
+                        angle = acos(ULIS::FMath::Clamp<double>(segVector.DotProduct( lastSegVector ), -1.0f, 1.0f)) / 3.14159 * 180;
+                        cumulAngle += angle;
 
                         double ratio = lastSegVector.Distance() / segVector.Distance();
 
-                        if( ( angle > angleLimit ) || iEnforce == true )
+                        if( ( cumulAngle > angleLimit ) || iEnforce == true )
                         {
                             FVectorPoint* lastSmoothedPoint = mCubicPath->GetLastPoint();
+                            FVectorSegmentCubic* lastCubicSegment =  static_cast<FVectorSegmentCubic*>( mCubicPath->GetLastSegment() );
                             FVectorSegmentCubic* cubicSegment = mCubicPath->AppendPoint( new FVectorPoint( lastPoint->GetX()
                                                                                                          , lastPoint->GetY() ) );
 
                             double straightDistance = cubicSegment->GetStraightDistance();
                             // Note: lastSegVector is now normalized
-        printf("adding %f\n", straightDistance);
-                            FVec2D ctrlPt0 = { lastSmoothedPoint->GetX() + mLastSmoothedSegmentVector.x * straightDistance * 0.5f
-                                             , lastSmoothedPoint->GetY() + mLastSmoothedSegmentVector.y * straightDistance * 0.5f };
-                            FVec2D ctrlPt1 = { lastPoint->GetX() - lastSegVector.x * straightDistance * 0.5f
-                                             , lastPoint->GetY() - lastSegVector.y * straightDistance * 0.5f };
 
-                            cubicSegment->GetControlPoint(0)->SetX( ctrlPt0.x );
-                            cubicSegment->GetControlPoint(0)->SetY( ctrlPt0.y );
-                            cubicSegment->GetControlPoint(1)->SetX( ctrlPt1.x );
-                            cubicSegment->GetControlPoint(1)->SetY( ctrlPt1.y );
+                            FVec2D ctrlPt0 = { lastSmoothedPoint->GetX() + mLastSmoothedSegmentVector.x * straightDistance * 0.3f
+                                             , lastSmoothedPoint->GetY() + mLastSmoothedSegmentVector.y * straightDistance * 0.3f };
+                            FVec2D ctrlPt1 = { lastPoint->GetX() - lastSegVector.x * straightDistance * 0.3f
+                                             , lastPoint->GetY() - lastSegVector.y * straightDistance * 0.3f };
 
+                            cubicSegment->GetControlPoint( 0 )->SetX( ctrlPt0.x );
+                            cubicSegment->GetControlPoint( 0 )->SetY( ctrlPt0.y );
+                            cubicSegment->GetControlPoint( 1 )->SetX( ctrlPt1.x );
+                            cubicSegment->GetControlPoint( 1 )->SetY( ctrlPt1.y );
+/*
+                            if( lastCubicSegment )
+                            {
+                                if( angle <= 45.0f )
+                                {
+                                    FVec2D vec = { lastCubicSegment->GetControlPoint(1)->GetX() - lastCubicSegment->GetPoint(1)->GetX(),
+                                                   lastCubicSegment->GetControlPoint(1)->GetY() - lastCubicSegment->GetPoint(1)->GetY() };
+ 
+                                    vec.Normalize();
+
+                                    //vec = ( vec + mLastSmoothedSegmentVector ) * 0.5f;
+
+                                    ctrlPt0 = { lastSmoothedPoint->GetX() - vec.x * straightDistance * 0.3f
+                                              , lastSmoothedPoint->GetY() - vec.y * straightDistance * 0.3f };
+
+                                    cubicSegment->GetControlPoint( 0 )->SetX( ctrlPt0.x );
+                                    cubicSegment->GetControlPoint( 0 )->SetY( ctrlPt0.y );
+                                }
+                            }
+*/
                             mSmoothedPointList.push_back( mLastPoint );
 
                             mLastSmoothedSegmentVector.x = segVector.x;
                             mLastSmoothedSegmentVector.y = segVector.y;
                             mLastSmoothedSegmentVectorDistance = segVectorDistance;
 
-                            angle = 0;
+                            cumulAngle = 0;
                         }
 
         /*
@@ -161,18 +184,37 @@ FVectorPathBuilder::Close( double iX
 void
 FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext )
 {
+    BLPath path;
+
     iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
     /*iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
     iBLContext.setStrokeStyle(BLRgba32(0xFF000000));*/
 
     mCubicPath->DrawShape( iBlock, iBLContext );
 
+    iBLContext.setStrokeWidth(15.0f);
     for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
     {
         FVectorSegment *segment = (*it);
+        BLPoint point0;
+        BLPoint point1;
 
-        segment->Draw( iBlock, iBLContext );
+        point0.x = segment->GetPoint(0)->GetX();
+        point0.y = segment->GetPoint(0)->GetY();
+
+        point1.x = segment->GetPoint(1)->GetX();
+        point1.y = segment->GetPoint(1)->GetY();
+
+        iBLContext.setStrokeStyle( BLRgba32(0xFF000000) );
+
+        if( segment->GetPoint(0)->GetSegmentCount() == 1 )
+        {
+            path.moveTo( point0.x,point0.y );
+        }
+
+        path.lineTo( point1.x,point1.y );
     }
+    iBLContext.strokePath( path );
 
     for(std::list<FVectorPoint*>::iterator it = mSmoothedPointList.begin(); it != mSmoothedPointList.end(); ++it)
     {

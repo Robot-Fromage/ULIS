@@ -25,6 +25,7 @@ class FVectorPoint
         void SetX( double iX );
         void SetY( double iY );
         void Set( double iX, double iY );
+        uint32 GetSegmentCount();
 
 };
 

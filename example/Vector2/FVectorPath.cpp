@@ -34,6 +34,12 @@ FVectorPath::AddSegment( FVectorSegment* iSegment )
     mLastSegment = iSegment;
 }
 
+FVectorSegment*
+FVectorPath::GetLastSegment()
+{
+    return mLastSegment;
+}
+
 FVectorPoint*
 FVectorPath::GetLastPoint()
 {
