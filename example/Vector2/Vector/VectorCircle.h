@@ -18,6 +18,8 @@ class FVectorCircle : public FVectorObject
         ~FVectorCircle();
         FVectorCircle();
         FVectorCircle( double iRadius );
+        void SetRadius( double iRadius );
+        double GetRadius( );
 };
 
 #endif // _FVECTORCIRCLE_H_

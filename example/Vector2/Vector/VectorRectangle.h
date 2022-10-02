@@ -21,6 +21,9 @@ class FVectorRectangle : public FVectorObject
         ~FVectorRectangle();
         FVectorRectangle();
         FVectorRectangle( double iWidth, double iHeight );
+        void SetSize( double iWidth, double iHeight );
+        double GetWidth();
+        double GetHeight();
 };
 
 #endif // _FVECTORRECTANGLE_H_

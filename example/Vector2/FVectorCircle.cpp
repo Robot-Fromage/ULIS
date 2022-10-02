@@ -36,3 +36,15 @@ FVectorCircle::PickShape( BLContext& iBLContext, double iX, double iY )
 
     return false;
 }
+
+void
+FVectorCircle::SetRadius( double iRadius )
+{
+    mRadius = iRadius;
+}
+
+double
+FVectorCircle::GetRadius()
+{
+    return mRadius;
+}

@@ -44,3 +44,20 @@ FVectorRectangle::PickShape( BLContext& iBLContext, double iX, double iY )
 
     return false;
 }
+
+void
+FVectorRectangle::SetSize( double iWidth, double iHeight )
+{
+    mWidth  = iWidth;
+    mHeight = iHeight;
+}
+
+double FVectorRectangle::GetWidth()
+{
+    return mWidth;
+}
+
+double FVectorRectangle::GetHeight()
+{
+    return mHeight;
+}
