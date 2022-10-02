@@ -18,7 +18,7 @@ public:
     FVectorSegment( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
     FVectorPoint* GetPoint( int iPointNum );
     virtual void Draw( FBlock& iBlock, BLContext& iBLContext );
-    virtual void DrawControllers( FBlock& iBlock, BLContext& iBLContext );
+    virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
     double GetStraightDistance();
 };
 

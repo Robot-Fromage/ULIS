@@ -10,26 +10,26 @@
 class FVectorPath : public FVectorObject
 {
     protected :
-        FVectorPoint* mLastPoint;
-        FVectorSegment* mLastSegment;
         std::list<FVectorPoint*> mPointList;
         std::list<FVectorSegment*> mSegmentList;
         std::list<FVectorPoint*> mSelectedPointList;
         void AddSegment( FVectorSegment* iSegment );
-  
+        void RemoveSegment( FVectorSegment* iSegment );
+
     public:
         ~FVectorPath();
         FVectorPath();
         FVectorSegment* AppendPoint(FVectorPoint* iPoint);
         virtual void DrawShape(FBlock& iBlock,BLContext& iBLContext);
+        virtual void DrawStructure(FBlock& iBlock,BLContext& iBLContext);
         bool PickShape(BLContext& iBLContext,double iX,double iY) { return false; };
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
-        FVectorPoint *GetLastPoint();
-        FVectorSegment *GetLastSegment();
-        void SetLastPoint( FVectorPoint* iLastPoint );
+        FVectorPoint* GetLastPoint();
+        FVectorSegment* GetLastSegment();
         std::list<FVectorPoint*> GetSelectedPointList();
         virtual void Pick( double iX, double iY, double iRadius ) = 0;
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
+        void Clear();
 
 };
 

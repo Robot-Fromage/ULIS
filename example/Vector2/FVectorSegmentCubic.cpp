@@ -28,8 +28,8 @@ FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
 }
 
 void
-FVectorSegmentCubic::DrawControllers( FBlock& iBlock
-                                    , BLContext& iBLContext )
+FVectorSegmentCubic::DrawStructure( FBlock& iBlock
+                                  , BLContext& iBLContext )
 {
     BLPath ctrlPath0;
     BLPath ctrlPath1;
@@ -51,15 +51,22 @@ FVectorSegmentCubic::DrawControllers( FBlock& iBlock
     point1.x = mPoint[1]->GetX();
     point1.y = mPoint[1]->GetY();
 
-    iBLContext.setStrokeStyle( BLRgba32( 0xFFFF0000 ) );
     ctrlPath0.moveTo( point0.x, point0.y );
     ctrlPath0.lineTo( ctrlPoint0.x,ctrlPoint0.y );
-    iBLContext.strokePath( ctrlPath0 );
 
     iBLContext.setStrokeStyle( BLRgba32( 0xFFFF0000 ) );
+    iBLContext.setStrokeWidth( 1.0f );
+
+    iBLContext.strokePath( ctrlPath0 );
+
     ctrlPath1.moveTo( point1.x, point1.y );
     ctrlPath1.lineTo( ctrlPoint1.x,ctrlPoint1.y );
+
     iBLContext.strokePath( ctrlPath1 );
+
+    iBLContext.setFillStyle( BLRgba32( 0xFFFF0000 ) );
+    iBLContext.fillRect( ctrlPoint0.x - 2, ctrlPoint0.y - 2, 4, 4 );
+    iBLContext.fillRect( ctrlPoint1.x - 2, ctrlPoint1.y - 2, 4, 4 );
 }
 
 void

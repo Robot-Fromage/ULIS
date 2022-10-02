@@ -8,8 +8,7 @@ FVectorPath::~FVectorPath()
 FVectorPath::FVectorPath()
     : FVectorObject()
 {
-    mLastPoint = NULL;
-    mLastSegment = NULL;
+
 }
 
 std::list<FVectorPoint*> 
@@ -22,7 +21,6 @@ FVectorSegment*
 FVectorPath::AppendPoint( FVectorPoint* iPoint )
 {
     mPointList.push_back( iPoint );
-    mLastPoint = iPoint;
 
     return NULL;
 }
@@ -31,25 +29,63 @@ void
 FVectorPath::AddSegment( FVectorSegment* iSegment )
 {
     mSegmentList.push_back( iSegment );
-    mLastSegment = iSegment;
+
+    iSegment->GetPoint( 0 )->AddSegment( iSegment );
+    iSegment->GetPoint( 1 )->AddSegment( iSegment );
+}
+
+void
+FVectorPath::Clear()
+{
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != --mSegmentList.end(); ++it )
+    {
+        FVectorSegment *segment = (*it);
+
+        segment->GetPoint(0)->RemoveSegment(segment);
+        segment->GetPoint(1)->RemoveSegment(segment);
+        /*RemoveSegment( segment );*/ // this alters the list, hence the loop and leads to a crash
+    }
+
+    mSegmentList.erase( mSegmentList.begin(), --mSegmentList.end() );
+}
+
+void
+FVectorPath::RemoveSegment( FVectorSegment* iSegment )
+{
+    mSegmentList.remove( iSegment );
+
+    iSegment->GetPoint(0)->RemoveSegment( iSegment );
+    iSegment->GetPoint(1)->RemoveSegment( iSegment );
 }
 
 FVectorSegment*
 FVectorPath::GetLastSegment()
 {
-    return mLastSegment;
+    if( mSegmentList.empty() == true ) return NULL;
+
+    return mSegmentList.back();
 }
 
 FVectorPoint*
 FVectorPath::GetLastPoint()
 {
-    return mLastPoint;
+    if( mPointList.empty() == true ) return NULL;
+
+    return mPointList.back();
 }
 
 void
-FVectorPath::SetLastPoint(FVectorPoint* iLastPoint)
+FVectorPath::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
 {
-    mLastPoint = iLastPoint;
+    iBLContext.setStrokeStyle(BLRgba32(0xFF00FF00));
+    iBLContext.setStrokeWidth(1.0f);
+
+    for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
+    {
+        FVectorSegment *segment = (*it);
+
+        segment->DrawStructure( iBlock, iBLContext );
+    }
 }
 
 void

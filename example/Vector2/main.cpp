@@ -300,7 +300,38 @@ printf("release\n");
     }
 };
 
+class MyAction : public QAction {
+    public :
+        MyAction(){};
+        void Triggered(bool checked){printf("triggered\n");};
+};
+
+void MyWidget::SelectAction(void (*)(MyWidget*, QEevent*) )
+{
+
+}
+
+void
+MyWidget::CreatePath(QEvent *e)
+{
+
+}
+
+void
+MyWidget::EditPath(QEvent *e)
+{
+
+}
+
 MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
+    QToolBar *toolbar = new QToolBar(this);
+    QPixmap pathPix("new.png");
+
+    MyAction *pathAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), "Path") );
+
+    connect( pathAction, &MyAction::triggered, pathAction, &MyAction::Triggered );
+
+    toolbar->move(0, 0);
 
     BLImageData data;
     eFormat fmt = Format_RGBA8;
@@ -328,46 +359,14 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
 
     mScene = new FVectorRoot();
     mScene->UpdateMatrix( *mBLContext );
-/*
-    mCubicPath = new FVectorPathCubic();
-    mCircle = new FVectorCircle();
 
-    FVectorPoint* point0 = new FVectorPoint( 26, 31 );
-    FVectorPoint* point1 = new FVectorPoint( 25, 464 );
-    FVectorPoint* point2 = new FVectorPoint( 200, 31 );
-
-    FVectorSegmentCubic* segment;
-    FVectorPoint* ctrlPoint0;
-    FVectorPoint* ctrlPoint1;
-
-    mCubicPath->AppendPoint( point0 );
-
-    segment = static_cast<FVectorSegmentCubic*>( mCubicPath->AppendPoint( point1 ) );
-
-    ctrlPoint0 = segment->GetControlPoint( 0 );
-    ctrlPoint1 = segment->GetControlPoint( 1 );
-
-    ctrlPoint0->SetX( 50 );
-    ctrlPoint0->SetY( 50 );
-    ctrlPoint1->SetX( 50 );
-    ctrlPoint1->SetY( 400 );
-
-    segment = static_cast<FVectorSegmentCubic*>( mCubicPath->AppendPoint( point2 ) );
-    ctrlPoint0 = segment->GetControlPoint( 0 );
-    ctrlPoint1 = segment->GetControlPoint( 1 );
-
-    ctrlPoint0->SetX( 560 );
-    ctrlPoint0->SetY( 404 );
-    ctrlPoint1->SetX( 144 );
-    ctrlPoint1->SetY( 267 );
-*/
 }
 
 int
 main(int argc, char* argv[])
 {
-    int width = 640;
-    int height = 480;
+    int width = 1024;
+    int height = 768;
 
     QApplication app(argc,argv);
 

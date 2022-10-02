@@ -51,6 +51,12 @@ FVectorPoint::AddSegment( FVectorSegment* iSegment )
     mSegmentList.push_back( iSegment );
 }
 
+void
+FVectorPoint::RemoveSegment( FVectorSegment* iSegment )
+{
+    mSegmentList.remove( iSegment );
+}
+
 uint32
 FVectorPoint::GetSegmentCount( )
 {

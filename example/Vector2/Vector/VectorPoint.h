@@ -14,12 +14,13 @@ class FVectorPoint
         double mX;
         double mY;
 
-        std::vector<FVectorSegment*> mSegmentList;
+        std::list<FVectorSegment*> mSegmentList;
     public:
         ~FVectorPoint();
         FVectorPoint();
         FVectorPoint( double iX,double iY );
         void AddSegment( FVectorSegment* iSegment );
+        void RemoveSegment( FVectorSegment* iSegment );
         double GetX();
         double GetY();
         void SetX( double iX );

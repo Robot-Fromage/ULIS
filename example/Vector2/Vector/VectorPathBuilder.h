@@ -14,9 +14,10 @@ class FVectorPathBuilder : public FVectorPath
     private:
         FVec2D mLastSmoothedSegmentVector;
         double mLastSmoothedSegmentVectorDistance;
+        double mLastSmoothedAngle;
 
     protected :
-        std::list<FVectorPoint*> mSmoothedPointList;
+        /*std::list<FVectorPoint*> mSmoothedPointList;*/
         FVectorPathCubic* mCubicPath;
         FVectorSegment* AppendPoint( double iX, double iY, bool iEnforce );
 
