@@ -9,6 +9,7 @@
 #include <QToolBar>
 #include <QIcon>
 #include <QAction>
+#include <QColorDialog>
 #include <chrono>
 
 #include <blend2d.h>
@@ -45,6 +46,7 @@ public:
     void MyWidget::RotateObject(QEvent *e);
     void MyWidget::CreateCircle(QEvent *e);
     void MyWidget::CreateRectangle(QEvent *e);
+
     void MyWidget::SelectCreatePath( bool checked );
     void MyWidget::SelectEditPath( bool checked );
     void MyWidget::SelectMoveObject( bool checked );
@@ -52,6 +54,8 @@ public:
     void MyWidget::SelectRotateObject( bool checked );
     void MyWidget::SelectCreateCircle( bool checked );
     void MyWidget::SelectCreateRectangle( bool checked );
+    void MyWidget::SelectStrokeColor( bool checked );
+    void MyWidget::SelectFillColor( bool checked );
 
     virtual ~MyWidget() {
         delete mQImage; mBLContext->end();
@@ -334,6 +338,8 @@ printf("release\n");
 #define ROTATE_OBJECT    "Rotate Object"
 #define CREATE_CIRCLE    "Circle"
 #define CREATE_RECTANGLE "Rectangle"
+#define STROKE_COLOR     "Stroke Color"
+#define FILL_COLOR       "Fill Color"
 
 class MyAction : public QAction {
     public :
@@ -348,6 +354,21 @@ void MyWidget::SelectScaleObject    ( bool checked ) { mTool = &MyWidget::ScaleO
 void MyWidget::SelectRotateObject   ( bool checked ) { mTool = &MyWidget::RotateObject;   }
 void MyWidget::SelectCreateCircle   ( bool checked ) { mTool = &MyWidget::CreateCircle;   }
 void MyWidget::SelectCreateRectangle( bool checked ) { mTool = &MyWidget::CreateRectangle;}
+void MyWidget::SelectStrokeColor    ( bool checked )
+{
+    QColor color = QColorDialog::getColor( Qt::white, this );
+    if( color.isValid() )
+    {
+        FVectorObject *selectedObject = static_cast<FVectorObject*>( mScene->GetLastSelected() );
+
+        selectedObject->SetStrokeColor( color.rgba() );
+    }
+}
+
+void MyWidget::SelectFillColor      ( bool checked )
+{
+
+}
 
 void
 MyWidget::CreatePath(QEvent *event)
@@ -400,6 +421,9 @@ MyWidget::EditPath( QEvent *event )
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
         FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mScene->GetLastSelected() );
 
+        mMouseX = e->x();
+        mMouseY = e->y();
+
         cubicPath->Unselect( nullptr );
 
         cubicPath->Pick( e->x(), e->y(), 10.0f );
@@ -410,15 +434,33 @@ MyWidget::EditPath( QEvent *event )
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
         FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mScene->GetLastSelected() );
 
+        double difx = e->x() - mMouseX;
+        double dify = e->y() - mMouseY;
+
         std::list<FVectorPoint*> selectedPointList = cubicPath->GetSelectedPointList();
 
         for( std::list<FVectorPoint*>::iterator it = selectedPointList.begin(); it != selectedPointList.end(); ++it )
         {
             FVectorPoint *selectedPoint = *it;
+            std::list<FVectorSegment*> segmentList = selectedPoint->GetSegmentList();
 
-            selectedPoint->SetX( e->x() );
-            selectedPoint->SetY( e->y() );
+            selectedPoint->Set( selectedPoint->GetX() + difx
+                              , selectedPoint->GetY() + dify );
+
+            for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
+            {
+                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*segit);
+                FVectorPointControl* ctrlPoint = ( cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorPointControl*>( cubicSegment->GetControlPoint( 0 ) ) :
+                                                                                                  static_cast<FVectorPointControl*>( cubicSegment->GetControlPoint( 1 ) );
+
+                ctrlPoint->Set( ctrlPoint->GetX() + difx
+                              , ctrlPoint->GetY() + dify );
+
+            }
         }
+
+        mMouseX = e->x();
+        mMouseY = e->y();
     }
 
     update();
@@ -593,23 +635,27 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     QToolBar *toolbar = new QToolBar(this);
     QPixmap pathPix("new.png");
 
-    MyAction *createPathAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_PATH      ) );
-    MyAction *editPathAction        = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), EDIT_PATH        ) );
-    MyAction *moveObjectAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MOVE_OBJECT      ) );
-    MyAction *scaleObjectAction     = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), SCALE_OBJECT     ) );
-    MyAction *rotateObjectAction    = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), ROTATE_OBJECT    ) );
-    MyAction *createCircleAction    = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_CIRCLE    ) );
-    MyAction *createRectangleAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_RECTANGLE ) );
+    MyAction *createPathAction        = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_PATH      ) );
+    MyAction *editPathAction          = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), EDIT_PATH        ) );
+    MyAction *moveObjectAction        = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MOVE_OBJECT      ) );
+    MyAction *scaleObjectAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), SCALE_OBJECT     ) );
+    MyAction *rotateObjectAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), ROTATE_OBJECT    ) );
+    MyAction *createCircleAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_CIRCLE    ) );
+    MyAction *createRectangleAction   = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_RECTANGLE ) );
+    MyAction *createStrokeColorAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), STROKE_COLOR     ) );
+    MyAction *createFillColorAction   = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), FILL_COLOR       ) );
 
-    connect( createPathAction     , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
-    connect( editPathAction       , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
-    connect( moveObjectAction     , &MyAction::triggered, this, &MyWidget::SelectMoveObject      );
-    connect( scaleObjectAction    , &MyAction::triggered, this, &MyWidget::SelectScaleObject     );
-    connect( rotateObjectAction   , &MyAction::triggered, this, &MyWidget::SelectRotateObject    );
-    connect( createCircleAction   , &MyAction::triggered, this, &MyWidget::SelectCreateCircle    );
-    connect( createRectangleAction, &MyAction::triggered, this, &MyWidget::SelectCreateRectangle );
+    connect( createPathAction       , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
+    connect( editPathAction         , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
+    connect( moveObjectAction       , &MyAction::triggered, this, &MyWidget::SelectMoveObject      );
+    connect( scaleObjectAction      , &MyAction::triggered, this, &MyWidget::SelectScaleObject     );
+    connect( rotateObjectAction     , &MyAction::triggered, this, &MyWidget::SelectRotateObject    );
+    connect( createCircleAction     , &MyAction::triggered, this, &MyWidget::SelectCreateCircle    );
+    connect( createRectangleAction  , &MyAction::triggered, this, &MyWidget::SelectCreateRectangle );
+    connect( createStrokeColorAction, &MyAction::triggered, this, &MyWidget::SelectStrokeColor     );
+    connect( createFillColorAction  , &MyAction::triggered, this, &MyWidget::SelectFillColor       );
 
-    toolbar->move(0, 0);
+    toolbar->move( 0, 0 );
 
     BLImageData data;
     eFormat fmt = Format_RGBA8;

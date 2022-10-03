@@ -5,6 +5,7 @@
 #include "Vector/VectorObject.h"
 #include "Vector/VectorRoot.h"
 #include "Vector/VectorPoint.h"
+#include "Vector/VectorPointControl.h"
 #include "Vector/VectorSegment.h"
 #include "Vector/VectorSegmentCubic.h"
 #include "Vector/VectorSegmentQuadratic.h"

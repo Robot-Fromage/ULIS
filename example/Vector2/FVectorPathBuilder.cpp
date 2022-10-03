@@ -118,7 +118,7 @@ FVectorPathBuilder::AppendPoint( double iX
                                     vec.Normalize();
 
                                     // uncomment to round based on average vectors
-                                    /*vec = ( vec + mLastSmoothedSegmentVector ) * 0.5f;*/
+                                    vec = ( vec + mLastSmoothedSegmentVector ) * 0.5f;
 
                                     FVec2D ctrlPtcurr = { lastSmoothedPoint->GetX() + vec.x * cubicSegmentStraightDistance     * 0.3f
                                                         , lastSmoothedPoint->GetY() + vec.y * cubicSegmentStraightDistance     * 0.3f };
@@ -193,7 +193,9 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     /*iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
     iBLContext.setStrokeStyle(BLRgba32(0xFF000000));*/
 
-    iBLContext.setStrokeWidth(15.0f);
+    iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );
+    iBLContext.setStrokeWidth( mStrokeWidth );
+
     for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
     {
         FVectorSegment *segment = (*it);

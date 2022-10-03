@@ -9,6 +9,9 @@ FVectorObject::FVectorObject()
     : mTranslation( 0, 0 )
     , mRotation( 0 )
     , mScaling ( 1.0f, 1.0f )
+    , mStrokeColor ( 0xFF000000 )
+    , mFillColor ( 0xFF000000 )
+    , mStrokeWidth ( 4.0f )
 {
 }
 
@@ -130,6 +133,24 @@ void
 FVectorObject::RemoveChild( FVectorObject* iChild )
 {
     mChildrenList.remove(iChild);
+}
+
+void
+FVectorObject::SetStrokeColor( uint32 iColor )
+{
+    mStrokeColor = iColor;
+}
+
+void
+FVectorObject::SetFillColor( uint32 iColor )
+{
+    mFillColor = iColor;
+}
+
+void
+FVectorObject::SetStrokeWidth( double iWidth )
+{
+    mStrokeWidth = iWidth;
 }
 
 void 

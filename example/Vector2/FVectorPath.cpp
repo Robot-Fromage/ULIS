@@ -11,7 +11,7 @@ FVectorPath::FVectorPath()
 
 }
 
-std::list<FVectorPoint*> 
+std::list<FVectorPoint*>&
 FVectorPath::GetSelectedPointList()
 {
     return mSelectedPointList;
@@ -77,7 +77,7 @@ FVectorPath::GetLastPoint()
 void
 FVectorPath::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
 {
-    iBLContext.setStrokeStyle(BLRgba32(0xFF00FF00));
+    iBLContext.setStrokeStyle( BLRgba32( 0xFF00FF00 ) );
     iBLContext.setStrokeWidth(1.0f);
 
     for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)

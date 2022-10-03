@@ -13,12 +13,12 @@ class FVectorPoint
     protected:
         double mX;
         double mY;
-
         std::list<FVectorSegment*> mSegmentList;
+
     public:
         ~FVectorPoint();
         FVectorPoint();
-        FVectorPoint( double iX,double iY );
+        FVectorPoint( double iX, double iY );
         void AddSegment( FVectorSegment* iSegment );
         void RemoveSegment( FVectorSegment* iSegment );
         double GetX();
@@ -27,7 +27,7 @@ class FVectorPoint
         void SetY( double iY );
         void Set( double iX, double iY );
         uint32 GetSegmentCount();
-
+        std::list<FVectorSegment*>& GetSegmentList();
 };
 
 #endif // _FVECTORPOINT_H_

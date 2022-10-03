@@ -23,7 +23,8 @@ void
 FVectorRectangle::DrawShape( FBlock& iBlock, BLContext& iBLContext )
 {
     iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
-    iBLContext.setStrokeStyle(BLRgba32(0xFF000000));
+    iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );
+    iBLContext.setStrokeWidth( mStrokeWidth );
 
     iBLContext.strokeRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
 }

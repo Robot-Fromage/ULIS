@@ -62,3 +62,9 @@ FVectorPoint::GetSegmentCount( )
 {
     return mSegmentList.size();
 }
+
+std::list<FVectorSegment*>&
+FVectorPoint::GetSegmentList()
+{
+    return mSegmentList;
+}

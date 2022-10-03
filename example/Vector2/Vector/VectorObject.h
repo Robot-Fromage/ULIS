@@ -16,6 +16,9 @@ class FVectorObject
         BLMatrix2D mLocalMatrix;
         BLMatrix2D mWorldMatrix;
         std::list<FVectorObject*> mChildrenList;
+        uint32 mStrokeColor;
+        double mStrokeWidth;
+        uint32 mFillColor;
 
     public:
         ~FVectorObject();
@@ -39,7 +42,9 @@ class FVectorObject
         void CopyTransformation( FVectorObject& iObject );
         BLMatrix2D& GetLocalMatrix();
         std::list<FVectorObject*>& GetChildrenList();
-
+        void SetStrokeColor( uint32 iColor );
+        void SetFillColor( uint32 iColor );
+        void SetStrokeWidth( double iWidth );
 };
 
 #endif // _FVECTOROBJECT_H_
