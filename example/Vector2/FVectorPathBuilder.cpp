@@ -223,9 +223,9 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext )
 }
 
 void
-FVectorPathBuilder::Pick( double iX
-                        , double iY
-                        , double iRadius )
+FVectorPathBuilder::PickPoint( double iX
+                             , double iY
+                             , double iRadius )
 {
     for( std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it )
     {

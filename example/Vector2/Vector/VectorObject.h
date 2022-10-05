@@ -19,14 +19,16 @@ class FVectorObject
         uint32 mStrokeColor;
         double mStrokeWidth;
         uint32 mFillColor;
+        FVectorObject* mParent;
+        bool mIsFilled;
 
     public:
         ~FVectorObject();
         FVectorObject();
         virtual void Draw( FBlock& iBlock, BLContext& iBLContext ) final; // cannot be overridden
-        virtual bool Pick( BLContext& iBLContext, double iX, double iY ) final; // cannot be overridden
+        virtual bool Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
         virtual void DrawShape(FBlock& iBlock,BLContext& iBLContext) = 0;
-        virtual bool PickShape(BLContext& iBLContext,double iX,double iY) = 0;
+        virtual bool PickShape(BLContext& iBLContext,double iX, double iY, double iRadius ) = 0;
         void DrawChildren( FBlock& iBlock,BLContext& iBLContext );
         void UpdateMatrix( BLContext& iBLContext );
         void Translate( double iX, double iY );
@@ -41,10 +43,13 @@ class FVectorObject
         double GetRotation();
         void CopyTransformation( FVectorObject& iObject );
         BLMatrix2D& GetLocalMatrix();
+        BLMatrix2D& GetWorldMatrix();
         std::list<FVectorObject*>& GetChildrenList();
         void SetStrokeColor( uint32 iColor );
         void SetFillColor( uint32 iColor );
+        void SetFilled(bool iIsFilled);
         void SetStrokeWidth( double iWidth );
+        FVec2D FVectorObject::WorldCoordinatesToLocal( double iX, double iY );
 };
 
 #endif // _FVECTOROBJECT_H_

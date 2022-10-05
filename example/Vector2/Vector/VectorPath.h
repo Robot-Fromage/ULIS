@@ -19,15 +19,15 @@ class FVectorPath : public FVectorObject
     public:
         ~FVectorPath();
         FVectorPath();
-        FVectorSegment* AppendPoint(FVectorPoint* iPoint);
-        virtual void DrawShape(FBlock& iBlock,BLContext& iBLContext);
-        virtual void DrawStructure(FBlock& iBlock,BLContext& iBLContext);
-        bool PickShape(BLContext& iBLContext,double iX,double iY) { return false; };
+        FVectorSegment* AppendPoint( FVectorPoint* iPoint );
+        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext );
+        virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext);
+        bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         FVectorPoint* GetLastPoint();
         FVectorSegment* GetLastSegment();
         std::list<FVectorPoint*>& GetSelectedPointList();
-        virtual void Pick( double iX, double iY, double iRadius ) = 0;
+        virtual void PickPoint( double iX, double iY, double iRadius ) = 0;
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
         void Clear();
 

@@ -27,13 +27,19 @@ FVectorRectangle::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     iBLContext.setStrokeWidth( mStrokeWidth );
 
     iBLContext.strokeRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
+
+    if( mIsFilled )
+    {
+        iBLContext.setFillStyle( BLRgba32( mFillColor ) );
+        iBLContext.fillRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
+    }
 }
 
 bool
-FVectorRectangle::PickShape( BLContext& iBLContext, double iX, double iY )
+FVectorRectangle::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
-    double x1 = -mWidth  * 0.5f;
-    double y1 = -mHeight * 0.5f;
+    double x1 = - mWidth  * 0.5f;
+    double y1 = - mHeight * 0.5f;
     double x2 = x1 + mWidth;
     double y2 = y1 + mHeight;
 

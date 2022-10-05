@@ -11,7 +11,7 @@ class FVectorRectangle : public FVectorObject
 {
     private:
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
-        bool PickShape( BLContext& iBLContext, double iX, double iY );
+        bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
 
     protected :
         double mWidth;

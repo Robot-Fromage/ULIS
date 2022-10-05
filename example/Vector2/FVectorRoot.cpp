@@ -19,11 +19,11 @@ FVectorRoot::Select( BLContext& iBLContext, FVectorObject& iVecObj )
 }
 
 void
-FVectorRoot::Select( BLContext& iBLContext, double x, double y )
+FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     mSelectedObjectList.clear();
 
-    RecursiveSelect( iBLContext, *this, x, y );
+    RecursiveSelect( iBLContext, *this, iX, iY, iRadius );
 }
 
 FVectorObject*
@@ -38,16 +38,21 @@ FVectorRoot::GetLastSelected()
 }
 
 void
-FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double iX, double iY )
+FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double iX, double iY, double iRadius )
 {
     BLMatrix2D inverseLocalMatrix;
     BLPoint localCoords;
+    BLPoint localSize;
+    double localRadius;
 
     BLMatrix2D::invert( inverseLocalMatrix, iChild.GetLocalMatrix() );
 
-    localCoords = inverseLocalMatrix.mapPoint( iX, iY);
+    localCoords = inverseLocalMatrix.mapPoint( iX, iY );
+    localSize   = inverseLocalMatrix.mapPoint( iX + iRadius, 0.0f );
 
-    if( iChild.Pick( iBLContext, localCoords.x, localCoords.y ) )
+    localRadius = localSize.x - localCoords.x;
+
+    if( iChild.Pick( iBLContext, localCoords.x, localCoords.y, localRadius ) )
     {
         mSelectedObjectList.push_back( &iChild );
     }
@@ -56,6 +61,6 @@ FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, doub
     {
         FVectorObject *obj = (*it);
 
-        RecursiveSelect( iBLContext, *obj, localCoords.x, localCoords.y );
+        RecursiveSelect( iBLContext, *obj, localCoords.x, localCoords.y, localRadius );
     }
 }

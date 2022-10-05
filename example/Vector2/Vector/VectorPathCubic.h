@@ -13,10 +13,11 @@ class FVectorPathCubic: public FVectorPath
     public:
         FVectorPathCubic();
         FVectorSegmentCubic* AppendPoint( FVectorPoint* iPoint );
-        void Pick(double iX,double iY,double iRadius);
-        void Unselect(FVectorPoint* iPoint);
-        void DrawShape(FBlock& iBlock,BLContext& iBLContext);
-        void DrawStructure(FBlock& iBlock,BLContext& iBLContext);
+        bool PickShape ( double iX, double iY, double iRadius );
+        void PickPoint ( double iX, double iY, double iRadius );
+        void Unselect( FVectorPoint* iPoint );
+        void DrawShape( FBlock& iBlock, BLContext& iBLContext );
+        void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
 };
 
 #endif // _FVECTORPATHCUBIC_H_

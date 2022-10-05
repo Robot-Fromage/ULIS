@@ -12,6 +12,8 @@ FVectorObject::FVectorObject()
     , mStrokeColor ( 0xFF000000 )
     , mFillColor ( 0xFF000000 )
     , mStrokeWidth ( 4.0f )
+    , mParent( nullptr )
+    , mIsFilled( false )
 {
 }
 
@@ -77,9 +79,21 @@ FVectorObject::UpdateMatrix( BLContext& iBLContext )
     iBLContext.restore();
 
     iBLContext.save();
-    iBLContext.transform( mLocalMatrix );
+
+    if( mParent)
+    {
+        iBLContext.setMatrix( mParent->mWorldMatrix );
+        iBLContext.transform( mLocalMatrix );
+        mWorldMatrix = iBLContext.userMatrix();
+    }
+     else
+    {
+        iBLContext.resetMatrix();
+        mWorldMatrix = iBLContext.userMatrix();
+    }
+
     iBLContext.restore();
-    mWorldMatrix = iBLContext.userMatrix();
+
 }
 
 void
@@ -112,26 +126,48 @@ FVectorObject::DrawShape( FBlock& iBlock, BLContext& iBLContext )
 }
 
 bool
-FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY )
+FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     return false;
 }
 
-bool
-FVectorObject::Pick( BLContext& iBLContext, double iX, double iY )
+FVec2D
+FVectorObject::WorldCoordinatesToLocal( double iX, double iY )
 {
-    return PickShape( iBLContext, iX, iY );
+    BLMatrix2D inverseWorldMatrix;
+    BLPoint localCoords;
+    BLPoint localSize;
+    FVec2D localPoint;
+
+    BLMatrix2D::invert( inverseWorldMatrix, mWorldMatrix );
+
+    localCoords = inverseWorldMatrix.mapPoint( iX, iY );
+
+    localPoint.x = localCoords.x;
+    localPoint.y = localCoords.y;
+
+    return localPoint;
+}
+
+bool
+FVectorObject::Pick( BLContext& iBLContext, double iX, double iY, double iRadius )
+{
+    return PickShape( iBLContext, iX, iY, iRadius );
 }
 
 void
 FVectorObject::AddChild( FVectorObject* iChild )
 {
+    iChild->mParent = this;
+
     mChildrenList.push_back( iChild );
 }
 
 void
 FVectorObject::RemoveChild( FVectorObject* iChild )
 {
+    iChild->mParent = nullptr;
+
     mChildrenList.remove(iChild);
 }
 
@@ -145,6 +181,12 @@ void
 FVectorObject::SetFillColor( uint32 iColor )
 {
     mFillColor = iColor;
+}
+
+void
+FVectorObject::SetFilled( bool iIsFilled)
+{
+    mIsFilled = iIsFilled;
 }
 
 void
@@ -171,4 +213,10 @@ BLMatrix2D&
 FVectorObject::GetLocalMatrix()
 {
     return mLocalMatrix;
+}
+
+BLMatrix2D&
+FVectorObject::GetWorldMatrix()
+{
+    return mWorldMatrix;
 }

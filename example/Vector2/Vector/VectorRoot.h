@@ -10,7 +10,7 @@
 class FVectorRoot : public FVectorObject
 {
     private:
-        void RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y );
+        void RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y, double iRadius );
 
     protected:
         std::list<FVectorObject*> mSelectedObjectList;
@@ -18,11 +18,11 @@ class FVectorRoot : public FVectorObject
     public:
         ~FVectorRoot();
         FVectorRoot();
-        void Select( BLContext& iBLContext, double x, double y );
+        void Select( BLContext& iBLContext, double x, double y, double iRadius );
         void Select( BLContext& iBLContext, FVectorObject& iVecObj );
         FVectorObject* GetLastSelected();
         void DrawShape(FBlock& iBlock,BLContext& iBLContext) {};
-        bool PickShape(BLContext& iBLContext,double iX,double iY) { return false; };
+        bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
 };
 
 #endif // _FVECTORROOT_H_

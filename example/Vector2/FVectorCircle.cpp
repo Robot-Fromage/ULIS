@@ -25,10 +25,16 @@ FVectorCircle::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     iBLContext.setStrokeWidth( mStrokeWidth );
 
     iBLContext.strokeCircle( 0.0f, 0.0f, mRadius );
+
+    if( mIsFilled )
+    {
+        iBLContext.setFillStyle( BLRgba32( mFillColor ) );
+        iBLContext.fillCircle( 0.0f, 0.0f, mRadius );
+    }
 }
 
 bool
-FVectorCircle::PickShape( BLContext& iBLContext, double iX, double iY )
+FVectorCircle::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     if( FMath::Sqrt((iX*iX) + (iY*iY)) <= mRadius )
     {

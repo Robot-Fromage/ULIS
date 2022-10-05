@@ -27,10 +27,18 @@ FVectorPathCubic::AppendPoint( FVectorPoint* iPoint )
     return NULL;
 }
 
+bool
+FVectorPathCubic::PickShape( double iX
+                           , double iY
+                           , double iRadius )
+{
+    return false;
+}
+
 void
-FVectorPathCubic::Pick( double iX
-                      , double iY
-                      , double iRadius )
+FVectorPathCubic::PickPoint( double iX
+                           , double iY
+                           , double iRadius )
 {
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {

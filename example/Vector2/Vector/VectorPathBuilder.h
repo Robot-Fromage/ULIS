@@ -26,8 +26,8 @@ class FVectorPathBuilder : public FVectorPath
         FVectorPathBuilder();
         FVectorSegment* AppendPoint( double iX, double iY );
         void DrawShape(FBlock& iBlock,BLContext& iBLContext);
-        bool PickShape(BLContext& iBLContext,double iX,double iY) { return false; };
-        void Pick(double iX,double iY,double iRadius);
+        bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
+        void PickPoint( double iX, double iY, double iRadius );
         void Unselect(FVectorPoint* iPoint);
         FVectorSegment* Close( double iX, double iY );
         FVectorPathCubic* GetSmoothedPath( );
