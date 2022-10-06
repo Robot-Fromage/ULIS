@@ -15,6 +15,7 @@ class FVectorPath : public FVectorObject
         std::list<FVectorPoint*> mSelectedPointList;
         void AddSegment( FVectorSegment* iSegment );
         void RemoveSegment( FVectorSegment* iSegment );
+        BLPath mPath;
 
     public:
         ~FVectorPath();

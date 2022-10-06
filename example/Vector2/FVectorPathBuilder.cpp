@@ -32,7 +32,7 @@ FVectorPathBuilder::AppendPoint( double iX
         double difY = ( iY - lastPoint->GetY() );
         double distanceSq = ( difX * difX ) + ( difY * difY );
 
-        /*** do not pick to many input points ***/
+        // do not pick to many input points
         if ( ( distanceSq > 144 ) || iEnforce == true )
         {
             FVec2D segVector( iX - lastPoint->GetX()
@@ -178,9 +178,18 @@ FVectorPathBuilder::GetSmoothedPath()
 }
 
 FVectorSegment*
-FVectorPathBuilder::Close( double iX
-                         , double iY )
+FVectorPathBuilder::End( double iX
+                       , double iY )
 {
+    FVectorPoint* lastPoint = GetLastPoint();
+
+    if ( lastPoint->GetX() == iX && lastPoint->GetY() == iY )
+    {
+        // We delete the last point to prevent both points being at the same location
+        // which would fake the result of AppendPoint() with iEnforce = true
+        mPointList.remove( lastPoint );
+    }
+
     return AppendPoint ( iX, iY, true );
 }
 

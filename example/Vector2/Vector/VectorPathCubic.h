@@ -10,6 +10,10 @@
 
 class FVectorPathCubic: public FVectorPath
 {
+    private:
+        void DrawSegment( BLPath& iPath, FVectorSegmentCubic& iSegment, FVec2D* iDrift0, FVec2D* iDrift1 );
+        void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext );
+
     public:
         FVectorPathCubic();
         FVectorSegmentCubic* AppendPoint( FVectorPoint* iPoint );
@@ -18,6 +22,7 @@ class FVectorPathCubic: public FVectorPath
         void Unselect( FVectorPoint* iPoint );
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
         void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
+
 };
 
 #endif // _FVECTORPATHCUBIC_H_

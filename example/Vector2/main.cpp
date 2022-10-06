@@ -246,7 +246,7 @@ virtual void mouseReleaseEvent( QMouseEvent* event )
                     {
                         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mSelectedObject );
 
-                        currentPathBuilder->Close( event->x(), event->y() );
+                        currentPathBuilder->End( event->x(), event->y() );
 
                         FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
 
@@ -408,7 +408,7 @@ MyWidget::CreatePath(QEvent *event)
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>(mScene->GetLastSelected());
 
-        currentPathBuilder->Close( e->x(), e->y() );
+        currentPathBuilder->End( e->x(), e->y() );
 
         FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
 

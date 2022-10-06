@@ -29,7 +29,7 @@ class FVectorPathBuilder : public FVectorPath
         bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
         void PickPoint( double iX, double iY, double iRadius );
         void Unselect(FVectorPoint* iPoint);
-        FVectorSegment* Close( double iX, double iY );
+        FVectorSegment* End( double iX, double iY );
         FVectorPathCubic* GetSmoothedPath( );
 };
 
