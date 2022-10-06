@@ -11,6 +11,7 @@
 class FVectorPathCubic: public FVectorPath
 {
     private:
+        void DrawSegmentVariable( FBlock& iBlock, BLContext& iBLContext, FVectorSegmentCubic& iSegment, double iStartRadius, double iEndRadius );
         void DrawSegment( BLPath& iPath, FVectorSegmentCubic& iSegment, FVec2D* iDrift0, FVec2D* iDrift1, bool iIsStandalone );
         void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext );
 

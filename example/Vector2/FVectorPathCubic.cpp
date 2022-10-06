@@ -233,6 +233,105 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     }
 }
 
+void
+FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
+                                     , BLContext& iBLContext
+                                     , FVectorSegmentCubic& iSegment
+                                     , double iStartRadius
+                                     , double iEndRadius )
+{
+    BLPoint point0;
+    BLPoint point1;
+    BLPoint ctrlPoint0;
+    BLPoint ctrlPoint1;
+    FVec2D  samplePoint0;
+    FVec2D  samplePoint1;
+    FVec2D  perpendicularVec0;
+    FVec2D  perpendicularVec1;
+    FVec2D  parallelVec0;
+    FVec2D  parallelVec1;
+
+    point0.x = iSegment.GetPoint(0).GetX();
+    point0.y = iSegment.GetPoint(0).GetY();
+
+    ctrlPoint0.x = iSegment.GetControlPoint(0).GetX();
+    ctrlPoint0.y = iSegment.GetControlPoint(0).GetY();
+
+    ctrlPoint1.x = iSegment.GetControlPoint(1).GetX();
+    ctrlPoint1.y = iSegment.GetControlPoint(1).GetY();
+
+    point1.x = iSegment.GetPoint(1).GetX();
+    point1.y = iSegment.GetPoint(1).GetY();
+
+    samplePoint0 = CubicBezierPointAtParameter<FVec2D>( iSegment.GetPoint(0).GetCoords()
+                                                      , iSegment.GetControlPoint(0).GetCoords()
+                                                      , iSegment.GetControlPoint(1).GetCoords()
+                                                      , iSegment.GetPoint(1).GetCoords()
+                                                      , 0.01f );
+
+    parallelVec0 = samplePoint0 - iSegment.GetPoint(0).GetCoords();
+    perpendicularVec0.x =   parallelVec0.y;
+    perpendicularVec0.y = - parallelVec0.x;
+
+    samplePoint1 = CubicBezierPointAtParameter<FVec2D>( iSegment.GetPoint(0).GetCoords()
+                                                      , iSegment.GetControlPoint(0).GetCoords()
+                                                      , iSegment.GetControlPoint(1).GetCoords()
+                                                      , iSegment.GetPoint(1).GetCoords()
+                                                      , 0.99f );
+
+    parallelVec1 = iSegment.GetPoint(1).GetCoords() - samplePoint1;
+    perpendicularVec1.x =   parallelVec1.y;
+    perpendicularVec1.y = - parallelVec1.x;
+
+    if( perpendicularVec0.DistanceSquared() && perpendicularVec1.DistanceSquared() )
+    {
+        FVec2D perpendicularVec0Right;
+        FVec2D perpendicularVec0Left;
+        FVec2D perpendicularVec1Right;
+        FVec2D perpendicularVec1Left;
+        BLPoint perpendicularPoint0Right;
+        BLPoint perpendicularPoint0Left;
+        BLPoint perpendicularPoint1Right;
+        BLPoint perpendicularPoint1Left;
+        BLPath path0;
+        BLPath path1;
+
+        perpendicularVec0.Normalize();
+        perpendicularVec1.Normalize();
+
+        perpendicularVec0Right =   ( perpendicularVec0 * iStartRadius );
+        perpendicularVec0Left  = - ( perpendicularVec0Right );
+
+        perpendicularVec1Right =   ( perpendicularVec1 * iEndRadius   );
+        perpendicularVec1Left  = - ( perpendicularVec1Right   );
+
+        perpendicularPoint0Right.x = point0.x + perpendicularVec0Right.x;
+        perpendicularPoint0Right.y = point0.y + perpendicularVec0Right.y;
+
+        perpendicularPoint0Left.x  = point0.x + perpendicularVec0Left.x;
+        perpendicularPoint0Left.y  = point0.y + perpendicularVec0Left.y;
+
+        path0.moveTo( perpendicularPoint0Left  );
+        path0.lineTo( perpendicularPoint0Right );
+
+        // because path1 is going to be reversed (then concatenated), its first point must be "lineTo"
+        /*path0.lineTo( perpendicularPoint0Right.x , perpendicularPoint0Right.y  );*/
+        path1.lineTo( perpendicularPoint0Left.x , perpendicularPoint0Left.y  );
+
+        DrawSegment( path0, iSegment, &perpendicularVec0Right, &perpendicularVec1Right, false );
+        DrawSegment( path1, iSegment, &perpendicularVec0Left , &perpendicularVec1Left , false );
+
+        perpendicularPoint1Left.x  = point1.x + perpendicularVec1Left.x;
+        perpendicularPoint1Left.y  = point1.y + perpendicularVec1Left.y;
+
+        path0.lineTo( perpendicularPoint1Left );
+        path0.addReversedPath( path1, BL_PATH_REVERSE_MODE_COMPLETE );
+
+        iBLContext.fillPath( path0 );
+    }
+}
+
+/*
 FVec2D
 FVectorPathCubic::GetPointPerpendicularVector( FVectorPoint& iPoint )
 {
@@ -284,24 +383,20 @@ FVectorPathCubic::GetPointPerpendicularVector( FVectorPoint& iPoint )
 
     return perpendicular;
 }
+*/
+
+
 
 void
 FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
 {
-    BLPath path0;
-    BLPath path1;
-    BLPoint perpendicularPoint0Right = { 0.0f, 0.0f };
-    BLPoint perpendicularPoint0Left = { 0.0f, 0.0f };
-    BLPoint perpendicularPoint1Right = { 0.0f, 0.0f };
-    BLPoint perpendicularPoint1Left = { 0.0f, 0.0f };
-
     double mStartRadius = 10.0f;
     double mEndRadius = 0.0f;
 
     iBLContext.setCompOp( BL_COMP_OP_SRC_COPY );
 
-    iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );
-    iBLContext.setStrokeWidth( mStrokeWidth );
+    // We fill with stroke color because our curve is made of filled shapes.
+    iBLContext.setFillStyle(BLRgba32(mStrokeColor));
 
     if( mSegmentList.size() )
     {
@@ -312,93 +407,15 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
-            BLPoint point0;
-            BLPoint point1;
-            BLPoint ctrlPoint0;
-            BLPoint ctrlPoint1;
-            BLPoint samplePoint0;
-            BLPoint samplePoint1;
-            FVec2D  perpendicularVec0;
-            FVec2D  perpendicularVec1;
+            BLPoint point0 = { segment->GetPoint(0).GetX()
+                             , segment->GetPoint(0).GetY() };
 
-            point0.x = segment->GetPoint(0).GetX();
-            point0.y = segment->GetPoint(0).GetY();
+            DrawSegmentVariable ( iBlock, iBLContext, *segment, segmentStartRadius, segmentEndRadius );
 
-            ctrlPoint0.x = segment->GetControlPoint(0).GetX();
-            ctrlPoint0.y = segment->GetControlPoint(0).GetY();
-
-            ctrlPoint1.x = segment->GetControlPoint(1).GetX();
-            ctrlPoint1.y = segment->GetControlPoint(1).GetY();
-
-            point1.x = segment->GetPoint(1).GetX();
-            point1.y = segment->GetPoint(1).GetY();
-
-            // We build the perpendicular segment from all connected segment to these points
-            perpendicularVec0 = GetPointPerpendicularVector( segment->GetPoint(0) );
-            perpendicularVec1 = GetPointPerpendicularVector( segment->GetPoint(1) );
-
-            if ( perpendicularVec0.DistanceSquared() && perpendicularVec1.DistanceSquared() )
-            {
-                FVec2D perpendicularVec0Right;
-                FVec2D perpendicularVec0Left;
-                FVec2D perpendicularVec1Right;
-                FVec2D perpendicularVec1Left;
-
-                perpendicularVec0.Normalize();
-                perpendicularVec1.Normalize();
-
-                perpendicularVec0Right =   ( perpendicularVec0 * segmentStartRadius );
-                perpendicularVec0Left  = - ( perpendicularVec0Right );
-
-                perpendicularVec1Right =   ( perpendicularVec1 * segmentEndRadius   );
-                perpendicularVec1Left  = - ( perpendicularVec1Right   );
-
-                // remember this point to close the path at its inception
-                if( it == mSegmentList.begin() )
-                {
-                    perpendicularPoint0Right.x = point0.x + perpendicularVec0Right.x;
-                    perpendicularPoint0Right.y = point0.y + perpendicularVec0Right.y;
-
-                    perpendicularPoint0Left.x  = point0.x + perpendicularVec0Left.x;
-                    perpendicularPoint0Left.y  = point0.y + perpendicularVec0Left.y;
-
-                    path0.moveTo( perpendicularPoint0Left  );
-                    path0.lineTo( perpendicularPoint0Right );
-
-                    // because path1 is going to be reversed, its first point must be "lineTo"
-                    path0.lineTo( perpendicularPoint0Right.x, perpendicularPoint0Right.y );
-                    path1.lineTo( perpendicularPoint0Left.x , perpendicularPoint0Left.y  );
-                }
-
-                DrawSegment( path0, *segment, &perpendicularVec0Right, &perpendicularVec1Right, false );
-                DrawSegment( path1, *segment, &perpendicularVec0Left , &perpendicularVec1Left , false );
-
-                // remember this point to close the path at its inception
-                if( std::next( it, 1 ) ==  mSegmentList.end() )
-                {
-                    perpendicularPoint1Left.x  = point1.x + perpendicularVec1Left.x;
-                    perpendicularPoint1Left.y  = point1.y + perpendicularVec1Left.y;
-
-                    path0.lineTo( perpendicularPoint1Left );
-                }
-            }
+            iBLContext.fillCircle( point0.x, point0.y, segmentStartRadius );
 
             segmentStartRadius = segmentEndRadius;
             segmentEndRadius  += stepRadius;
         }
     }
-
-    /*iBLContext.strokePath( path0 );
-    iBLContext.strokePath( path1 );*/
-
-    /*path0.addPath( path1 );*/
-    path0.addReversedPath( path1, BL_PATH_REVERSE_MODE_COMPLETE );
-    // close the path
-    /*path0.lineTo( perpendicularPoint1Left );*/
-
-    /*iBLContext.setStrokeWidth(1.0f);
-    iBLContext.strokePath(path0);*/
-
-    iBLContext.setFillStyle( BLRgba32( mFillColor ) );
-    iBLContext.fillPath( path0 );
 }
