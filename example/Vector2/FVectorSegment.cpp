@@ -15,10 +15,10 @@ FVectorSegment::FVectorSegment( FVectorPoint* iPoint0, FVectorPoint* iPoint1 )
     mPoint[1] = iPoint1;
 }
 
-FVectorPoint*
+FVectorPoint&
 FVectorSegment::GetPoint( int iPointNum )
 {
-    return mPoint[iPointNum];
+    return *mPoint[iPointNum];
 }
 
 double

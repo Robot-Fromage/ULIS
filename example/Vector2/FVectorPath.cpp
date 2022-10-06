@@ -30,8 +30,8 @@ FVectorPath::AddSegment( FVectorSegment* iSegment )
 {
     mSegmentList.push_back( iSegment );
 
-    iSegment->GetPoint( 0 )->AddSegment( iSegment );
-    iSegment->GetPoint( 1 )->AddSegment( iSegment );
+    iSegment->GetPoint( 0 ).AddSegment( iSegment );
+    iSegment->GetPoint( 1 ).AddSegment( iSegment );
 }
 
 void
@@ -41,8 +41,8 @@ FVectorPath::Clear()
     {
         FVectorSegment *segment = (*it);
 
-        segment->GetPoint(0)->RemoveSegment(segment);
-        segment->GetPoint(1)->RemoveSegment(segment);
+        segment->GetPoint(0).RemoveSegment(segment);
+        segment->GetPoint(1).RemoveSegment(segment);
         /*RemoveSegment( segment );*/ // this alters the list, hence the loop and leads to a crash
     }
 
@@ -54,8 +54,8 @@ FVectorPath::RemoveSegment( FVectorSegment* iSegment )
 {
     mSegmentList.remove( iSegment );
 
-    iSegment->GetPoint(0)->RemoveSegment( iSegment );
-    iSegment->GetPoint(1)->RemoveSegment( iSegment );
+    iSegment->GetPoint(0).RemoveSegment( iSegment );
+    iSegment->GetPoint(1).RemoveSegment( iSegment );
 }
 
 FVectorSegment*

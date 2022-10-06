@@ -11,8 +11,7 @@ class FVectorPoint
     private:
 
     protected:
-        double mX;
-        double mY;
+        FVec2D mCoords;
         std::list<FVectorSegment*> mSegmentList;
 
     public:
@@ -21,6 +20,7 @@ class FVectorPoint
         FVectorPoint( double iX, double iY );
         void AddSegment( FVectorSegment* iSegment );
         void RemoveSegment( FVectorSegment* iSegment );
+        FVec2D& GetCoords();
         double GetX();
         double GetY();
         void SetX( double iX );

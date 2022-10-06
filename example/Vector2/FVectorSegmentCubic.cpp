@@ -9,10 +9,10 @@ FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
     mCtrlPoint[1].Set( iPoint1->GetX(), iPoint1->GetY() );
 }
 
-FVectorPoint*
+FVectorPoint&
 FVectorSegmentCubic::GetControlPoint( int iCtrlPointNum )
 {
-    return &mCtrlPoint[iCtrlPointNum];
+    return mCtrlPoint[iCtrlPointNum];
 }
 
 FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0

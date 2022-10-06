@@ -392,6 +392,8 @@ MyWidget::CreatePath(QEvent *event)
         builder->UpdateMatrix( *mBLContext );
 
         mScene->AddChild( builder );
+
+        mScene->ClearSelection();
         mScene->Select( *mBLContext, *builder );
     }
 
@@ -431,6 +433,7 @@ MyWidget::PickObject( QEvent *event )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
 
+        mScene->ClearSelection();
         mScene->Select( *mBLContext, e->x(), e->y(), 10.0f );
     }
 }
@@ -490,8 +493,8 @@ MyWidget::EditPath( QEvent *event )
             for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
             {
                 FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*segit);
-                FVectorPointControl* ctrlPoint = ( cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorPointControl*>( cubicSegment->GetControlPoint( 0 ) ) :
-                                                                                                  static_cast<FVectorPointControl*>( cubicSegment->GetControlPoint( 1 ) );
+                FVectorPointControl* ctrlPoint = ( &cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorPointControl*>( &cubicSegment->GetControlPoint( 0 ) ) :
+                                                                                                   static_cast<FVectorPointControl*>( &cubicSegment->GetControlPoint( 1 ) );
 
                 ctrlPoint->Set( ctrlPoint->GetX() + difx
                               , ctrlPoint->GetY() + dify );

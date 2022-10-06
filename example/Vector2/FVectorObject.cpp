@@ -14,7 +14,14 @@ FVectorObject::FVectorObject()
     , mStrokeWidth ( 4.0f )
     , mParent( nullptr )
     , mIsFilled( false )
+    , mIsSelected( false )
 {
+}
+
+void
+FVectorObject::SetIsSelected( bool iIsSelected )
+{
+    mIsSelected = iIsSelected;
 }
 
 void

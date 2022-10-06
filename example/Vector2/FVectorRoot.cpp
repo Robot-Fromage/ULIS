@@ -11,18 +11,29 @@ FVectorRoot::FVectorRoot()
 }
 
 void
+FVectorRoot::ClearSelection()
+{
+    for( std::list<FVectorObject*>::iterator it = mSelectedObjectList.begin(); it != mSelectedObjectList.end(); ++it )
+    {
+        FVectorObject *obj = (*it);
+
+        obj->SetIsSelected ( false );
+    }
+
+    mSelectedObjectList.clear();
+}
+
+void
 FVectorRoot::Select( BLContext& iBLContext, FVectorObject& iVecObj )
 {
-    mSelectedObjectList.clear();
+    iVecObj.SetIsSelected( true );
 
-    mSelectedObjectList.push_back(&iVecObj);
+    mSelectedObjectList.push_back( &iVecObj );
 }
 
 void
 FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
-    mSelectedObjectList.clear();
-
     RecursiveSelect( iBLContext, *this, iX, iY, iRadius );
 }
 
@@ -54,7 +65,7 @@ FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, doub
 
     if( iChild.Pick( iBLContext, localCoords.x, localCoords.y, localRadius ) )
     {
-        mSelectedObjectList.push_back( &iChild );
+        Select ( iBLContext, iChild );
     }
 
     for( std::list<FVectorObject*>::iterator it = iChild.GetChildrenList().begin(); it != iChild.GetChildrenList().end(); ++it )

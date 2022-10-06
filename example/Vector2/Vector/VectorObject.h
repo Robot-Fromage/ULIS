@@ -21,6 +21,7 @@ class FVectorObject
         uint32 mFillColor;
         FVectorObject* mParent;
         bool mIsFilled;
+        bool mIsSelected;
 
     public:
         ~FVectorObject();
@@ -49,7 +50,8 @@ class FVectorObject
         void SetFillColor( uint32 iColor );
         void SetFilled(bool iIsFilled);
         void SetStrokeWidth( double iWidth );
-        FVec2D FVectorObject::WorldCoordinatesToLocal( double iX, double iY );
+        FVec2D WorldCoordinatesToLocal( double iX, double iY );
+        void SetIsSelected( bool iIsSelected );
 };
 
 #endif // _FVECTOROBJECT_H_

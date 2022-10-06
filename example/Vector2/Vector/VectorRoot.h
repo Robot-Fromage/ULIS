@@ -20,6 +20,7 @@ class FVectorRoot : public FVectorObject
         FVectorRoot();
         void Select( BLContext& iBLContext, double x, double y, double iRadius );
         void Select( BLContext& iBLContext, FVectorObject& iVecObj );
+        void ClearSelection();
         FVectorObject* GetLastSelected();
         void DrawShape(FBlock& iBlock,BLContext& iBLContext) {};
         bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };

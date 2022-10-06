@@ -16,7 +16,7 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorSegmentCubic( );
         FVectorSegmentCubic( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
         FVectorSegmentCubic( FVectorPoint* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPoint* iPoint1 );
-        FVectorPoint* GetControlPoint( int iCtrlPointNum );
+        FVectorPoint& GetControlPoint( int iCtrlPointNum );
         void Draw( FBlock& iBlock, BLContext& iBLContext );
         void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
 };

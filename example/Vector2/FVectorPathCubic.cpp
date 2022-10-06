@@ -55,19 +55,19 @@ FVectorPathCubic::PickPoint( double iX
     for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
     {
         FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-        FVectorPoint* ctrlPoint0 = segment->GetControlPoint( 0 );
-        FVectorPoint* ctrlPoint1 = segment->GetControlPoint( 1 );
+        FVectorPoint& ctrlPoint0 = segment->GetControlPoint( 0 );
+        FVectorPoint& ctrlPoint1 = segment->GetControlPoint( 1 );
 
-        if( ( fabs( ctrlPoint0->GetX() - iX ) <= iRadius ) &&
-            ( fabs( ctrlPoint0->GetY() - iY ) <= iRadius ) )
+        if( ( fabs( ctrlPoint0.GetX() - iX ) <= iRadius ) &&
+            ( fabs( ctrlPoint0.GetY() - iY ) <= iRadius ) )
         {
-            mSelectedPointList.push_back(ctrlPoint0);
+            mSelectedPointList.push_back( &ctrlPoint0 );
         }
 
-        if( ( fabs( ctrlPoint1->GetX() - iX ) <= iRadius ) &&
-            ( fabs( ctrlPoint1->GetY() - iY ) <= iRadius ) )
+        if( ( fabs( ctrlPoint1.GetX() - iX ) <= iRadius ) &&
+            ( fabs( ctrlPoint1.GetY() - iY ) <= iRadius ) )
         {
-            mSelectedPointList.push_back( ctrlPoint1 );
+            mSelectedPointList.push_back( &ctrlPoint1 );
         }
     }
 }
@@ -102,19 +102,19 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
         BLPoint ctrlPoint0;
         BLPoint ctrlPoint1;
 
-        point0.x = segment->GetPoint( 0 )->GetX();
-        point0.y = segment->GetPoint( 0 )->GetY();
+        point0.x = segment->GetPoint( 0 ).GetX();
+        point0.y = segment->GetPoint( 0 ).GetY();
 
-        ctrlPoint0.x = segment->GetControlPoint( 0 )->GetX();
-        ctrlPoint0.y = segment->GetControlPoint( 0 )->GetY();
+        ctrlPoint0.x = segment->GetControlPoint( 0 ).GetX();
+        ctrlPoint0.y = segment->GetControlPoint( 0 ).GetY();
 
-        ctrlPoint1.x = segment->GetControlPoint( 1 )->GetX();
-        ctrlPoint1.y = segment->GetControlPoint( 1 )->GetY();
+        ctrlPoint1.x = segment->GetControlPoint( 1 ).GetX();
+        ctrlPoint1.y = segment->GetControlPoint( 1 ).GetY();
 
-        point1.x = segment->GetPoint( 1 )->GetX();
-        point1.y = segment->GetPoint( 1 )->GetY();
+        point1.x = segment->GetPoint( 1 ).GetX();
+        point1.y = segment->GetPoint( 1 ).GetY();
 
-        if ( segment->GetPoint( 0 )->GetSegmentCount() == 1 )
+        if ( segment->GetPoint( 0 ).GetSegmentCount() == 1 )
         {
             path.moveTo( point0.x, point0.y );
         }
@@ -151,24 +151,25 @@ void
 FVectorPathCubic::DrawSegment( BLPath& iPath
                              , FVectorSegmentCubic& iSegment
                              , FVec2D* iDrift0
-                             , FVec2D* iDrift1 )
+                             , FVec2D* iDrift1
+                             , bool    iIsStandalone )
 {
     BLPoint point0;
     BLPoint point1;
     BLPoint ctrlPoint0;
     BLPoint ctrlPoint1;
 
-    point0.x = iSegment.GetPoint(0)->GetX();
-    point0.y = iSegment.GetPoint(0)->GetY();
+    point0.x = iSegment.GetPoint(0).GetX();
+    point0.y = iSegment.GetPoint(0).GetY();
 
-    ctrlPoint0.x = iSegment.GetControlPoint(0)->GetX();
-    ctrlPoint0.y = iSegment.GetControlPoint(0)->GetY();
+    ctrlPoint0.x = iSegment.GetControlPoint(0).GetX();
+    ctrlPoint0.y = iSegment.GetControlPoint(0).GetY();
 
-    ctrlPoint1.x = iSegment.GetControlPoint(1)->GetX();
-    ctrlPoint1.y = iSegment.GetControlPoint(1)->GetY();
+    ctrlPoint1.x = iSegment.GetControlPoint(1).GetX();
+    ctrlPoint1.y = iSegment.GetControlPoint(1).GetY();
 
-    point1.x = iSegment.GetPoint(1)->GetX();
-    point1.y = iSegment.GetPoint(1)->GetY();
+    point1.x = iSegment.GetPoint(1).GetX();
+    point1.y = iSegment.GetPoint(1).GetY();
 
     if( iDrift0 )
     {
@@ -188,10 +189,9 @@ FVectorPathCubic::DrawSegment( BLPath& iPath
         ctrlPoint1.y += iDrift1->y;
     }
 
-    if ( iSegment.GetPoint(0)->GetSegmentCount() == 1 )
+    if ( iIsStandalone == true )
     {
-        /*iPath.moveTo( point0.x, point0.y );*/
-        iPath.lineTo( point0.x, point0.y );
+        iPath.moveTo( point0.x, point0.y );
     }
 
     iPath.cubicTo( ctrlPoint0.x
@@ -218,15 +218,71 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
     {
         FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
+        bool isStandalone = ( segment->GetPoint(0).GetSegmentCount() == 1 );
 
-        DrawSegment( path, *segment, nullptr, nullptr );
+        DrawSegment( path, *segment, nullptr, nullptr, isStandalone );
     }
 
     iBLContext.strokePath( path );
-
-    DrawStructure( iBlock, iBLContext );
 */
-DrawShapeVariable( iBlock, iBLContext );
+    DrawShapeVariable( iBlock, iBLContext );
+
+    if( mIsSelected )
+    {
+        DrawStructure( iBlock, iBLContext );
+    }
+}
+
+FVec2D
+FVectorPathCubic::GetPointPerpendicularVector( FVectorPoint& iPoint )
+{
+    std::list<FVectorSegment*>& segmentList = iPoint.GetSegmentList();
+    FVec2D average = { 0.0f, 0.0f };
+    FVec2D point = { iPoint.GetX()
+                   , iPoint.GetY() };
+    FVec2D perpendicular = { 0.0f
+                           , 0.0f };
+
+    for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
+    {
+        FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
+
+        if( &segment->GetPoint(0) == &iPoint )
+        {
+            // Get a sample point to build a parallel vector first
+            FVec2D segPoint = CubicBezierPointAtParameter<FVec2D>( segment->GetPoint(0).GetCoords()
+                                                                 , segment->GetControlPoint(0).GetCoords()
+                                                                 , segment->GetControlPoint(1).GetCoords()
+                                                                 , segment->GetPoint(1).GetCoords()
+                                                                 , 0.01f );
+
+            average.x += segPoint.x - point.x;
+            average.y += segPoint.y - point.y;
+        }
+
+        if( &segment->GetPoint(1) == &iPoint )
+        {
+            // Get a sample point to build a parallel vector first
+            FVec2D segPoint = CubicBezierPointAtParameter<FVec2D>( segment->GetPoint(0).GetCoords()
+                                                                 , segment->GetControlPoint(0).GetCoords()
+                                                                 , segment->GetControlPoint(1).GetCoords()
+                                                                 , segment->GetPoint(1).GetCoords()
+                                                                 , 0.99f );
+
+            average.x += point.x - segPoint.x;
+            average.y += point.y - segPoint.y;
+        }
+    }
+
+    if( segmentList.size() )
+    {
+        average /= segmentList.size();
+
+        perpendicular.x =   ( average.y );
+        perpendicular.y = - ( average.x );
+    }
+
+    return perpendicular;
 }
 
 void
@@ -262,53 +318,39 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
             BLPoint ctrlPoint1;
             BLPoint samplePoint0;
             BLPoint samplePoint1;
-            FVec2D  parallelVec0;
-            FVec2D  parallelVec1;
+            FVec2D  perpendicularVec0;
+            FVec2D  perpendicularVec1;
 
-            point0.x = segment->GetPoint(0)->GetX();
-            point0.y = segment->GetPoint(0)->GetY();
+            point0.x = segment->GetPoint(0).GetX();
+            point0.y = segment->GetPoint(0).GetY();
 
-            ctrlPoint0.x = segment->GetControlPoint(0)->GetX();
-            ctrlPoint0.y = segment->GetControlPoint(0)->GetY();
+            ctrlPoint0.x = segment->GetControlPoint(0).GetX();
+            ctrlPoint0.y = segment->GetControlPoint(0).GetY();
 
-            ctrlPoint1.x = segment->GetControlPoint(1)->GetX();
-            ctrlPoint1.y = segment->GetControlPoint(1)->GetY();
+            ctrlPoint1.x = segment->GetControlPoint(1).GetX();
+            ctrlPoint1.y = segment->GetControlPoint(1).GetY();
 
-            point1.x = segment->GetPoint(1)->GetX();
-            point1.y = segment->GetPoint(1)->GetY();
+            point1.x = segment->GetPoint(1).GetX();
+            point1.y = segment->GetPoint(1).GetY();
 
-            samplePoint0 = CubicBezierPointAtParameter<BLPoint>( point0
-                                                               , ctrlPoint0
-                                                               , ctrlPoint1
-                                                               , point1
-                                                               , 0.01f );
+            // We build the perpendicular segment from all connected segment to these points
+            perpendicularVec0 = GetPointPerpendicularVector( segment->GetPoint(0) );
+            perpendicularVec1 = GetPointPerpendicularVector( segment->GetPoint(1) );
 
-            samplePoint1   = CubicBezierPointAtParameter<BLPoint>( point0
-                                                                 , ctrlPoint0
-                                                                 , ctrlPoint1
-                                                                 , point1
-                                                                 , 0.99f );
-
-            parallelVec0.x =   ( samplePoint0.y - point0.y );
-            parallelVec0.y = - ( samplePoint0.x - point0.x );
-
-            parallelVec1.x   =   ( point1.y - samplePoint1.y );
-            parallelVec1.y   = - ( point1.x - samplePoint1.x );
-
-            if ( parallelVec0.Distance() && parallelVec1.Distance() )
+            if ( perpendicularVec0.DistanceSquared() && perpendicularVec1.DistanceSquared() )
             {
                 FVec2D perpendicularVec0Right;
                 FVec2D perpendicularVec0Left;
                 FVec2D perpendicularVec1Right;
                 FVec2D perpendicularVec1Left;
 
-                parallelVec0.Normalize();
-                parallelVec1.Normalize();
+                perpendicularVec0.Normalize();
+                perpendicularVec1.Normalize();
 
-                perpendicularVec0Right =   ( parallelVec0 * segmentStartRadius );
+                perpendicularVec0Right =   ( perpendicularVec0 * segmentStartRadius );
                 perpendicularVec0Left  = - ( perpendicularVec0Right );
 
-                perpendicularVec1Right =   ( parallelVec1 * segmentEndRadius   );
+                perpendicularVec1Right =   ( perpendicularVec1 * segmentEndRadius   );
                 perpendicularVec1Left  = - ( perpendicularVec1Right   );
 
                 // remember this point to close the path at its inception
@@ -322,10 +364,14 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
 
                     path0.moveTo( perpendicularPoint0Left  );
                     path0.lineTo( perpendicularPoint0Right );
+
+                    // because path1 is going to be reversed, its first point must be "lineTo"
+                    path0.lineTo( perpendicularPoint0Right.x, perpendicularPoint0Right.y );
+                    path1.lineTo( perpendicularPoint0Left.x , perpendicularPoint0Left.y  );
                 }
 
-                DrawSegment( path0, *segment, &perpendicularVec0Right, &perpendicularVec1Right );
-                DrawSegment( path1, *segment, &perpendicularVec0Left , &perpendicularVec1Left  );
+                DrawSegment( path0, *segment, &perpendicularVec0Right, &perpendicularVec1Right, false );
+                DrawSegment( path1, *segment, &perpendicularVec0Left , &perpendicularVec1Left , false );
 
                 // remember this point to close the path at its inception
                 if( std::next( it, 1 ) ==  mSegmentList.end() )
@@ -347,13 +393,12 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
 
     /*path0.addPath( path1 );*/
     path0.addReversedPath( path1, BL_PATH_REVERSE_MODE_COMPLETE );
-    path0.lineTo( perpendicularPoint1Left );
+    // close the path
+    /*path0.lineTo( perpendicularPoint1Left );*/
 
-    iBLContext.setStrokeWidth(1.0f);
-    /*iBLContext.strokePath(path0);*/
+    /*iBLContext.setStrokeWidth(1.0f);
+    iBLContext.strokePath(path0);*/
 
     iBLContext.setFillStyle( BLRgba32( mFillColor ) );
     iBLContext.fillPath( path0 );
-
-    DrawStructure( iBlock, iBLContext );
 }

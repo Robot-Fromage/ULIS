@@ -10,13 +10,13 @@ class FVectorPoint;
 class FVectorSegment
 {
 protected:
-    FVectorPoint *mPoint[2];
+    FVectorPoint* mPoint[2];
 
 public:
     ~FVectorSegment();
     FVectorSegment();
     FVectorSegment( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
-    FVectorPoint* GetPoint( int iPointNum );
+    FVectorPoint& GetPoint( int iPointNum );
     virtual void Draw( FBlock& iBlock, BLContext& iBLContext );
     virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
     double GetStraightDistance();

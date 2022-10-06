@@ -59,13 +59,13 @@ FVectorPathBuilder::AppendPoint( double iX
 
                 if( lastSegment )
                 {
-                    double lastSegmentTotalX = ( lastSegment->GetPoint(0)->GetX() + lastSegment->GetPoint(1)->GetX() );
-                    double lastSegmentTotalY = ( lastSegment->GetPoint(0)->GetY() + lastSegment->GetPoint(1)->GetY() );
-                    double     segmentTotalX = (     segment->GetPoint(0)->GetX() +     segment->GetPoint(1)->GetX() );
-                    double     segmentTotalY = (     segment->GetPoint(0)->GetY() +     segment->GetPoint(1)->GetY() );
+                    double lastSegmentTotalX = ( lastSegment->GetPoint(0).GetX() + lastSegment->GetPoint(1).GetX() );
+                    double lastSegmentTotalY = ( lastSegment->GetPoint(0).GetY() + lastSegment->GetPoint(1).GetY() );
+                    double     segmentTotalX = (     segment->GetPoint(0).GetX() +     segment->GetPoint(1).GetX() );
+                    double     segmentTotalY = (     segment->GetPoint(0).GetY() +     segment->GetPoint(1).GetY() );
 
-                    FVec2D lastSegVector( lastSegment->GetPoint(1)->GetX() - lastSegment->GetPoint(0)->GetX()
-                                        , lastSegment->GetPoint(1)->GetY() - lastSegment->GetPoint(0)->GetY() );
+                    FVec2D lastSegVector( lastSegment->GetPoint(1).GetX() - lastSegment->GetPoint(0).GetX()
+                                        , lastSegment->GetPoint(1).GetY() - lastSegment->GetPoint(0).GetY() );
 
                     double lastSegVectorDistance = lastSegVector.Distance();
 
@@ -99,10 +99,10 @@ FVectorPathBuilder::AppendPoint( double iX
                             FVec2D ctrlPt1 = { lastPoint->GetX() - lastSegVector.x * cubicSegmentStraightDistance * 0.3f
                                              , lastPoint->GetY() - lastSegVector.y * cubicSegmentStraightDistance * 0.3f };
 
-                            cubicSegment->GetControlPoint( 0 )->SetX( ctrlPt0.x );
-                            cubicSegment->GetControlPoint( 0 )->SetY( ctrlPt0.y );
-                            cubicSegment->GetControlPoint( 1 )->SetX( ctrlPt1.x );
-                            cubicSegment->GetControlPoint( 1 )->SetY( ctrlPt1.y );
+                            cubicSegment->GetControlPoint( 0 ).SetX( ctrlPt0.x );
+                            cubicSegment->GetControlPoint( 0 ).SetY( ctrlPt0.y );
+                            cubicSegment->GetControlPoint( 1 ).SetX( ctrlPt1.x );
+                            cubicSegment->GetControlPoint( 1 ).SetY( ctrlPt1.y );
 
                             if( lastCubicSegment )
                             {
@@ -112,8 +112,8 @@ FVectorPathBuilder::AppendPoint( double iX
                                 {
                                     double lastCubicSegmentStraightDistance = lastCubicSegment->GetStraightDistance();
 
-                                    FVec2D vec = { lastCubicSegment->GetPoint(1)->GetX() - lastCubicSegment->GetControlPoint(1)->GetX(),
-                                                   lastCubicSegment->GetPoint(1)->GetY() - lastCubicSegment->GetControlPoint(1)->GetY() };
+                                    FVec2D vec = { lastCubicSegment->GetPoint(1).GetX() - lastCubicSegment->GetControlPoint(1).GetX(),
+                                                   lastCubicSegment->GetPoint(1).GetY() - lastCubicSegment->GetControlPoint(1).GetY() };
 
                                     vec.Normalize();
 
@@ -125,8 +125,8 @@ FVectorPathBuilder::AppendPoint( double iX
                                     FVec2D ctrlPtprev = { lastSmoothedPoint->GetX() - vec.x * lastCubicSegmentStraightDistance * 0.3f
                                                         , lastSmoothedPoint->GetY() - vec.y * lastCubicSegmentStraightDistance * 0.3f };
 
-                                    lastCubicSegment->GetControlPoint( 1 )->Set( ctrlPtprev.x, ctrlPtprev.y );
-                                        cubicSegment->GetControlPoint( 0 )->Set( ctrlPtcurr.x, ctrlPtcurr.y );
+                                    lastCubicSegment->GetControlPoint( 1 ).Set( ctrlPtprev.x, ctrlPtprev.y );
+                                        cubicSegment->GetControlPoint( 0 ).Set( ctrlPtcurr.x, ctrlPtcurr.y );
                                 }
                                 /*else
                                 {
@@ -211,15 +211,15 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext )
         BLPoint point0;
         BLPoint point1;
 
-        point0.x = segment->GetPoint(0)->GetX();
-        point0.y = segment->GetPoint(0)->GetY();
+        point0.x = segment->GetPoint(0).GetX();
+        point0.y = segment->GetPoint(0).GetY();
 
-        point1.x = segment->GetPoint(1)->GetX();
-        point1.y = segment->GetPoint(1)->GetY();
+        point1.x = segment->GetPoint(1).GetX();
+        point1.y = segment->GetPoint(1).GetY();
 
         iBLContext.setStrokeStyle( BLRgba32(0xFF000000) );
 
-        if( segment->GetPoint(0)->GetSegmentCount() == 1 )
+        if( segment->GetPoint(0).GetSegmentCount() == 1 )
         {
             path.moveTo( point0.x,point0.y );
         }

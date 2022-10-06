@@ -14,35 +14,41 @@ FVectorPoint::FVectorPoint( double iX, double iY )
     Set( iX, iY );
 }
 
+FVec2D&
+FVectorPoint::GetCoords()
+{
+    return mCoords;
+}
+
 double 
 FVectorPoint::GetX()
 {
-    return mX;
+    return mCoords.x;
 }
 
 double 
 FVectorPoint::GetY()
 {
-    return mY;
+    return mCoords.y;
 }
 
 void 
 FVectorPoint::SetX( double iX )
 {
-    mX  = iX;
+    mCoords.x  = iX;
 }
 
 void 
 FVectorPoint::SetY( double iY )
 {
-    mY = iY;
+    mCoords.y = iY;
 }
 
 void 
 FVectorPoint::Set( double iX, double iY )
 {
-    mX = iX;
-    mY = iY;
+    mCoords.x = iX;
+    mCoords.y = iY;
 }
 
 void
