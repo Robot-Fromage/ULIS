@@ -12,7 +12,7 @@ class FVectorSegmentCubic : public FVectorSegment
     private:
         FVectorPoint mCtrlPoint[2];
     public:
-        ~FVectorSegmentCubic();
+        ~FVectorSegmentCubic(){};
         FVectorSegmentCubic( );
         FVectorSegmentCubic( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
         FVectorSegmentCubic( FVectorPoint* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPoint* iPoint1 );
