@@ -7,6 +7,7 @@ FVectorPoint::~FVectorPoint()
 
 FVectorPoint::FVectorPoint()
 {
+    Set( 0.0f, 0.0f );
 }
 
 FVectorPoint::FVectorPoint( double iX, double iY )

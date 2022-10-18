@@ -19,17 +19,17 @@ class FVectorPathBuilder : public FVectorPath
     protected :
         /*std::list<FVectorPoint*> mSmoothedPointList;*/
         FVectorPathCubic* mCubicPath;
-        FVectorSegment* AppendPoint( double iX, double iY, bool iEnforce );
+        FVectorSegment* AppendPoint( double iX, double iY, double iRadius, bool iEnforce );
 
     public:
        ~FVectorPathBuilder();
         FVectorPathBuilder();
-        FVectorSegment* AppendPoint( double iX, double iY );
+        FVectorSegment* AppendPoint( double iX, double iY, double iRadius );
         void DrawShape(FBlock& iBlock,BLContext& iBLContext);
         bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
         void PickPoint( double iX, double iY, double iRadius );
         void Unselect(FVectorPoint* iPoint);
-        FVectorSegment* End( double iX, double iY );
+        FVectorSegment* End( double iX, double iY, double iRadius );
         FVectorPathCubic* GetSmoothedPath( );
 };
 

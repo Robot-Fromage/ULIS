@@ -140,10 +140,15 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
 
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {
-        FVectorPoint *point = static_cast<FVectorPoint*>(*it);
+        FVectorPointCubic *point = static_cast<FVectorPointCubic*>(*it);
+        double ctrlX = point->GetX() + point->GetControlPointDistance();
+        double ctrlY = point->GetY() + point->GetControlPointDistance();
 
         iBLContext.setFillStyle( BLRgba32( 0xFFFF00FF ) );
         iBLContext.fillRect( point->GetX() - 3, point->GetY() - 3, 6, 6 );
+
+        iBLContext.setFillStyle( BLRgba32( 0xFF808080 ) );
+        iBLContext.fillRect( ctrlX - 3, ctrlY - 3, 6, 6 );
     }
 }
 
@@ -259,10 +264,10 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
                                               , double iEndRadius )
 {
     // TODO: use references for speed
-    FVec2D point0 = iSegment.GetPoint(0).GetCoords();
-    FVec2D point1 = iSegment.GetPoint(1).GetCoords();
-    FVec2D ctrlPoint0 = iSegment.GetControlPoint(0).GetCoords();
-    FVec2D ctrlPoint1 = iSegment.GetControlPoint(1).GetCoords();
+    FVec2D& point0 = iSegment.GetPoint(0).GetCoords();
+    FVec2D& point1 = iSegment.GetPoint(1).GetCoords();
+    FVec2D& ctrlPoint0 = iSegment.GetControlPoint(0).GetCoords();
+    FVec2D& ctrlPoint1 = iSegment.GetControlPoint(1).GetCoords();
     // prepare sample points to compute average perpendicular vectors
     double rangeDiff = iToT - iFromT;
     double rangeStep = rangeDiff / 10;
@@ -285,29 +290,51 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
     /*BLPath path;*/
     BLPoint vertex[4];
 
-    if ( perpendicularVecFrom.DistanceSquared() )
-    {
-        perpendicularVecFrom.Normalize();
-    }
+    //printf("%f %f\n", parallelVecFrom[0].DotProduct(parallelVecFrom[1]), parallelVecTo[0].DotProduct(parallelVecTo[1]) );
 
-    if ( perpendicularVecTo.DistanceSquared() )
-    {
-        perpendicularVecTo.Normalize();
-    }
+    /*if( parallelVecFrom[0].DotProduct(parallelVecFrom[1]) != 0.0f && parallelVecTo[0].DotProduct(parallelVecTo[1]) != 0.0f )
+    {*/
+        if(perpendicularVecFrom.DistanceSquared())
+        {
+            perpendicularVecFrom.Normalize();
+        }
 
-    vertex[0].x = iFromPoint.x + ( perpendicularVecFrom.x * iStartRadius );
-    vertex[0].y = iFromPoint.y + ( perpendicularVecFrom.y * iStartRadius );
+        if(perpendicularVecTo.DistanceSquared())
+        {
+            perpendicularVecTo.Normalize();
+        }
 
-    vertex[1].x = iToPoint.x + (perpendicularVecTo.x * iEndRadius);
-    vertex[1].y = iToPoint.y + (perpendicularVecTo.y * iEndRadius);
+        vertex[0].x = iFromPoint.x + (perpendicularVecFrom.x * iStartRadius);
+        vertex[0].y = iFromPoint.y + (perpendicularVecFrom.y * iStartRadius);
 
-    vertex[2].x = iToPoint.x - (perpendicularVecTo.x * iEndRadius);
-    vertex[2].y = iToPoint.y - (perpendicularVecTo.y * iEndRadius);
+        vertex[1].x = iToPoint.x + (perpendicularVecTo.x * iEndRadius);
+        vertex[1].y = iToPoint.y + (perpendicularVecTo.y * iEndRadius);
 
-    vertex[3].x = iFromPoint.x - (perpendicularVecFrom.x * iStartRadius);
-    vertex[3].y = iFromPoint.y - (perpendicularVecFrom.y * iStartRadius);
+        vertex[2].x = iToPoint.x - (perpendicularVecTo.x * iEndRadius);
+        vertex[2].y = iToPoint.y - (perpendicularVecTo.y * iEndRadius);
 
-    iBLContext.fillPolygon( vertex, 4 );
+        vertex[3].x = iFromPoint.x - (perpendicularVecFrom.x * iStartRadius);
+        vertex[3].y = iFromPoint.y - (perpendicularVecFrom.y * iStartRadius);
+
+        iBLContext.strokePolyline(vertex , 4);
+        iBLContext.fillPolygon(vertex , 4);
+
+/*
+        vertex[0].x = iToPoint.x; //+ (perpendicularVecFrom.x * iStartRadius);
+        vertex[0].y = iToPoint.y; //+ (perpendicularVecFrom.y * iStartRadius);
+
+        vertex[1].x = iFromPoint.x //+ (perpendicularVecTo.x * iEndRadius);
+        vertex[1].y = iFromPoint.y //+ (perpendicularVecTo.y * iEndRadius);
+
+        vertex[2].x = iFromPoint.x + (perpendicularVecFrom.x * iStartRadius);
+        vertex[2].y = iFromPoint.y + (perpendicularVecFrom.y * iStartRadius);
+
+        vertex[3].x = iToPoint.x + (perpendicularVecTo.x * iEndRadius);
+        vertex[3].y = iToPoint.y + (perpendicularVecTo.y * iEndRadius);
+
+        iBLContext.fillPolygon(vertex,4);
+*/
+    /*}*/
 }
 
 void
@@ -317,7 +344,10 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
                                      , double iFromT
                                      , double iToT
                                      , double iStartRadius
-                                     , double iEndRadius )
+                                     , double iEndRadius
+                                     , FVec2D* iPrevSegmentVector
+                                     , FVec2D* iNextSegmentVector
+                                     , int32 iMaxRecurseDepth )
 {
     FVec2D point0 = iSegment.GetPoint(0).GetCoords();
     FVec2D point1 = iSegment.GetPoint(1).GetCoords();
@@ -337,6 +367,22 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
                              { samplePoint[3].x - samplePoint[2].x, samplePoint[3].y - samplePoint[2].y } };
     bool doRefine = false;
     double radius = iStartRadius;
+    FVec2D *prevSegmentVector = iPrevSegmentVector;
+    FVec2D *nextSegmentVector = iNextSegmentVector;
+    double angleCosineLimit = 0.995f;
+// DEBUG
+    uint32 debugColor[3] = { 0xFFFF0000, 0xFF00FF00, 0xFF0000FF };
+// END DEBUG
+
+    if( prevSegmentVector && ( prevSegmentVector->DotProduct( subSegment[0] ) <= angleCosineLimit ) )
+    {
+        doRefine = true;
+    }
+
+    if( nextSegmentVector && ( nextSegmentVector->DotProduct( subSegment[2] ) <= angleCosineLimit ) )
+    {
+        doRefine = true;
+    }
 
     for( int i = 0; i < 2; i++ )
     {
@@ -356,7 +402,7 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
                 subSegment[n].Normalize();
             }
 
-            if( fabs( subSegment[i].DotProduct( subSegment[n] ) <= 0.99f ) )
+            if( subSegment[i].DotProduct( subSegment[n] ) <= angleCosineLimit )
             {
                 doRefine = true;
             }
@@ -367,19 +413,24 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
     {
         int n = ( i + 1 );
 
-        if( doRefine == true )
+        nextSegmentVector = ( i == 0x02 ) ? nullptr : &subSegment[n];
+
+        if( doRefine == true && --iMaxRecurseDepth >= 0 )
         {
+
             DrawSegmentVariable( iBlock
                                , iBLContext
                                , iSegment
                                , sampleRange[i]
                                , sampleRange[n]
                                , radius
-                               , radius + radiusStep );
+                               , radius + radiusStep
+                               , prevSegmentVector
+                               , nextSegmentVector
+                               , iMaxRecurseDepth );
         }
         else
         {
-
             DrawSegmentVariableThickness( iBlock
                                         , iBLContext
                                         , iSegment
@@ -398,6 +449,8 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
             iBLContext.strokePath( path );
 */
         }
+
+        prevSegmentVector = &subSegment[i];
 
         radius += radiusStep;
     }
@@ -422,15 +475,26 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
         double stepRadius = ( mEndRadius - mStartRadius ) / mSegmentList.size();
         double segmentStartRadius = mStartRadius;
 
-
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-            double segmentEndRadius = segmentStartRadius + stepRadius;
+            double segmentStartRadius = segment->GetPoint(0).GetControlPointDistance();
+            double segmentEndRadius = segment->GetPoint(1).GetControlPointDistance();
             FVec2D point0 = segment->GetPoint(0).GetCoords();
+           
 
-            DrawSegmentVariable ( iBlock, iBLContext, *segment, 0.0f, 1.0f, segmentStartRadius, segmentEndRadius );
+            DrawSegmentVariable ( iBlock
+                                , iBLContext
+                                , *segment
+                                , 0.0f
+                                , 1.0f
+                                , segmentStartRadius
+                                , segmentEndRadius
+                                , nullptr
+                                , nullptr
+                                , 6 );
 
+            iBLContext.strokeCircle( point0.x, point0.y, segmentStartRadius );
             iBLContext.fillCircle( point0.x, point0.y, segmentStartRadius );
 
             segmentStartRadius = segmentEndRadius;

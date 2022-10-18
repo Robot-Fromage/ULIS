@@ -26,7 +26,10 @@ class FVectorPathCubic: public FVectorPath
                                 , double iFromT
                                 , double iToT
                                 , double iStartRadius
-                                , double iEndRadius );
+                                , double iEndRadius
+                                , FVec2D* iPrevSegmentVector
+                                , FVec2D* iNextSegmentVector
+                                , int32 iMaxRecurseDepth );
         void DrawSegment( BLPath& iPath, FVectorSegmentCubic& iSegment, FVec2D* iDrift0, FVec2D* iDrift1, double iFactor0, double iFactor1, bool iIsStandalone );
         void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext );
 

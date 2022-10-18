@@ -19,6 +19,7 @@ FVectorPathBuilder::FVectorPathBuilder()
 FVectorSegment*
 FVectorPathBuilder::AppendPoint( double iX
                                , double iY
+                               , double iRadius
                                , bool   iEnforce )
 {
     FVectorPoint* lastPoint = GetLastPoint();
@@ -88,8 +89,9 @@ FVectorPathBuilder::AppendPoint( double iX
                         {
                             FVectorPoint* lastSmoothedPoint = mCubicPath->GetLastPoint();
                             FVectorSegmentCubic* lastCubicSegment =  static_cast<FVectorSegmentCubic*>( mCubicPath->GetLastSegment() );
-                            FVectorSegmentCubic* cubicSegment = mCubicPath->AppendPoint( new FVectorPoint( lastPoint->GetX()
-                                                                                                         , lastPoint->GetY() ) );
+                            FVectorSegmentCubic* cubicSegment = mCubicPath->AppendPoint( new FVectorPointCubic( lastPoint->GetX()
+                                                                                                              , lastPoint->GetY()
+                                                                                                              , iRadius ) );
 
                             double cubicSegmentStraightDistance = cubicSegment->GetStraightDistance();
                             // Note: lastSegVector is now normalized
@@ -158,7 +160,7 @@ FVectorPathBuilder::AppendPoint( double iX
     {
         FVectorPath::AppendPoint( new FVectorPoint( iX, iY ) );
 
-        mCubicPath->AppendPoint( new FVectorPoint( iX, iY ) );
+        mCubicPath->AppendPoint( new FVectorPointCubic( iX, iY, iRadius ) );
     }
 
     return NULL;
@@ -166,9 +168,10 @@ FVectorPathBuilder::AppendPoint( double iX
 
 FVectorSegment*
 FVectorPathBuilder::AppendPoint( double iX
-                               , double iY )
+                               , double iY
+                               , double iRadius )
 {
-    return AppendPoint ( iX, iY, false );
+    return AppendPoint ( iX, iY, iRadius, false );
 }
 
 FVectorPathCubic* 
@@ -179,7 +182,8 @@ FVectorPathBuilder::GetSmoothedPath()
 
 FVectorSegment*
 FVectorPathBuilder::End( double iX
-                       , double iY )
+                       , double iY
+                       , double iRadius )
 {
     FVectorPoint* lastPoint = GetLastPoint();
 
@@ -190,7 +194,7 @@ FVectorPathBuilder::End( double iX
         mPointList.remove( lastPoint );
     }
 
-    return AppendPoint ( iX, iY, true );
+    return AppendPoint ( iX, iY, iRadius, true );
 }
 
 void

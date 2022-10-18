@@ -13,5 +13,5 @@ FVectorPointControl::FVectorPointControl()
 FVectorPointControl::FVectorPointControl( double iX, double iY )
     : FVectorPoint( iX, iY )
 {
-    Set( iX, iY );
+
 }

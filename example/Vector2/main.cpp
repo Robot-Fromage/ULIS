@@ -402,7 +402,7 @@ MyWidget::CreatePath(QEvent *event)
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mScene->GetLastSelected() );
 
-        currentPathBuilder->AppendPoint( e->x(), e->y() );
+        currentPathBuilder->AppendPoint( e->x(), e->y(), 4.0f );
     }
 
     if( event->type() == QEvent::MouseButtonRelease )
@@ -410,7 +410,7 @@ MyWidget::CreatePath(QEvent *event)
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>(mScene->GetLastSelected());
 
-        currentPathBuilder->End( e->x(), e->y() );
+        currentPathBuilder->End( e->x(), e->y(), 1.0f );
 
         FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
 
@@ -756,6 +756,10 @@ main(int argc, char* argv[])
 {
     int width = 1024;
     int height = 768;
+
+// DEBUG
+srand(time(0));
+// END DEBUG
 
     QApplication app(argc,argv);
 
