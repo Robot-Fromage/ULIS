@@ -1,5 +1,4 @@
-#ifndef _FVECTOROBJECT_H_
-#define _FVECTOROBJECT_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -53,5 +52,3 @@ class FVectorObject
         FVec2D WorldCoordinatesToLocal( double iX, double iY );
         void SetIsSelected( bool iIsSelected );
 };
-
-#endif // _FVECTOROBJECT_H_

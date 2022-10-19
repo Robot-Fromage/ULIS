@@ -1,5 +1,4 @@
-#ifndef _FVECTORRECTANGLE_H_
-#define _FVECTORRECTANGLE_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -25,5 +24,3 @@ class FVectorRectangle : public FVectorObject
         double GetWidth();
         double GetHeight();
 };
-
-#endif // _FVECTORRECTANGLE_H_

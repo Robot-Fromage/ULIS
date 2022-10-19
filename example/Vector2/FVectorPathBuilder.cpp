@@ -87,7 +87,7 @@ FVectorPathBuilder::AppendPoint( double iX
 
                         if( ( cumulAngle > angleLimit ) || iEnforce == true )
                         {
-                            FVectorPoint* lastSmoothedPoint = mCubicPath->GetLastPoint();
+                            FVectorPointCubic* lastSmoothedPoint = static_cast<FVectorPointCubic*>( mCubicPath->GetLastPoint() );
                             FVectorSegmentCubic* lastCubicSegment =  static_cast<FVectorSegmentCubic*>( mCubicPath->GetLastSegment() );
                             FVectorSegmentCubic* cubicSegment = mCubicPath->AppendPoint( new FVectorPointCubic( lastPoint->GetX()
                                                                                                               , lastPoint->GetY()

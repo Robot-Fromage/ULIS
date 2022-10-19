@@ -1,5 +1,4 @@
-#ifndef _FVECTORPATH_H_
-#define _FVECTORPATH_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -33,5 +32,3 @@ class FVectorPath : public FVectorObject
         void Clear();
 
 };
-
-#endif // _FVECTORPATH_H_

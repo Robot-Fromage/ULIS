@@ -12,7 +12,7 @@ FVectorPathCubic::AppendPoint( FVectorPoint* iPoint )
 {
     FVectorPoint* lastPoint = GetLastPoint();
 
-    FVectorPath::AppendPoint(iPoint);
+    FVectorPath::AppendPoint( iPoint );
 
     // lastPoint is NULL if this is the first point added
     if(lastPoint)
@@ -39,16 +39,22 @@ FVectorPathCubic::PickShape( double iX
 void
 FVectorPathCubic::PickPoint( double iX
                            , double iY
-                           , double iRadius )
+                           , double iSelectionRadius )
 {
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {
-        FVectorPoint* point = *it;
+        FVectorPointCubic* point = static_cast<FVectorPointCubic*>(*it);
 
-        if( ( fabs( point->GetX() - iX ) <= iRadius ) &&
-            ( fabs( point->GetY() - iY ) <= iRadius ) )
+        if( ( fabs( point->GetX() - iX ) <= iSelectionRadius ) &&
+            ( fabs( point->GetY() - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back(point);
+        }
+
+        if( ( fabs( point->GetX() + ( point->GetPerpendicularVector().x * point->GetRadius() ) - iX ) <= iSelectionRadius ) &&
+            ( fabs( point->GetY() + ( point->GetPerpendicularVector().y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
+        {
+            mSelectedPointList.push_back( &point->GetControlPoint() );
         }
     }
 
@@ -58,14 +64,14 @@ FVectorPathCubic::PickPoint( double iX
         FVectorPoint& ctrlPoint0 = segment->GetControlPoint( 0 );
         FVectorPoint& ctrlPoint1 = segment->GetControlPoint( 1 );
 
-        if( ( fabs( ctrlPoint0.GetX() - iX ) <= iRadius ) &&
-            ( fabs( ctrlPoint0.GetY() - iY ) <= iRadius ) )
+        if( ( fabs( ctrlPoint0.GetX() - iX ) <= iSelectionRadius ) &&
+            ( fabs( ctrlPoint0.GetY() - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back( &ctrlPoint0 );
         }
 
-        if( ( fabs( ctrlPoint1.GetX() - iX ) <= iRadius ) &&
-            ( fabs( ctrlPoint1.GetY() - iY ) <= iRadius ) )
+        if( ( fabs( ctrlPoint1.GetX() - iX ) <= iSelectionRadius ) &&
+            ( fabs( ctrlPoint1.GetY() - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back( &ctrlPoint1 );
         }
@@ -141,8 +147,10 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {
         FVectorPointCubic *point = static_cast<FVectorPointCubic*>(*it);
-        double ctrlX = point->GetX() + point->GetControlPointDistance();
-        double ctrlY = point->GetY() + point->GetControlPointDistance();
+        FVec2D perpendicular = point->GetPerpendicularVector();
+        double pointRadius = point->GetRadius();
+        double ctrlX = point->GetX() + ( perpendicular.x * pointRadius );
+        double ctrlY = point->GetY() + ( perpendicular.y * pointRadius );
 
         iBLContext.setFillStyle( BLRgba32( 0xFFFF00FF ) );
         iBLContext.fillRect( point->GetX() - 3, point->GetY() - 3, 6, 6 );
@@ -260,6 +268,8 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
                                               , double iToT
                                               , FVec2D& iFromPoint // that way we dont have to query the cubic curve at point0 and point1
                                               , FVec2D& iToPoint // that way we dont have to query the cubic curve at point0 and point1
+                                              , FVec2D* iPrevSegmentVector
+                                              , FVec2D* iNextSegmentVector
                                               , double iStartRadius
                                               , double iEndRadius )
 {
@@ -275,14 +285,10 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
     double fromTplus = iFromT + rangeStep;
     double toTminus = iToT - rangeStep;
     double toTplus = iToT + rangeStep;
-    FVec2D samplePoint[4] = { CubicBezierPointAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, /*ULIS::FMath::Min<double>( */fromTminus/*, 0.0f )*/ ),
-                              CubicBezierPointAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, /*ULIS::FMath::Max<double>( */fromTplus/* , 0.0f )*/ ),
-                              CubicBezierPointAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, /*ULIS::FMath::Min<double>( */toTminus/*  , 1.0f )*/ ),
-                              CubicBezierPointAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, /*ULIS::FMath::Max<double>( */toTplus/*   , 1.0f )*/ ) };
-    FVec2D parallelVecFrom[2] = { ( iFromPoint     - samplePoint[0] )
-                                , ( samplePoint[1] - iFromPoint     ) };
-    FVec2D   parallelVecTo[2] = { ( iToPoint       - samplePoint[2] )
-                                , ( samplePoint[3] - iToPoint       ) };
+    FVec2D sampleTangent[2] = { CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iFromT ),
+                                CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iToT   ) };
+    FVec2D parallelVecFrom[2] = { *iPrevSegmentVector, sampleTangent[0]    };
+    FVec2D   parallelVecTo[2] = { sampleTangent[1]   , *iNextSegmentVector };
     FVec2D averageVecFrom = ( parallelVecFrom[0] + parallelVecFrom[1] ) * 0.5f;
     FVec2D averageVecTo = ( parallelVecTo[0] + parallelVecTo[1] ) * 0.5f;
     FVec2D perpendicularVecFrom = { averageVecFrom.y, -averageVecFrom.x };
@@ -317,7 +323,7 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
         vertex[3].y = iFromPoint.y - (perpendicularVecFrom.y * iStartRadius);
 
         iBLContext.strokePolyline(vertex , 4);
-        iBLContext.fillPolygon(vertex , 4);
+        /*iBLContext.fillPolygon(vertex , 4);*/
 
 /*
         vertex[0].x = iToPoint.x; //+ (perpendicularVecFrom.x * iStartRadius);
@@ -368,18 +374,18 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
     bool doRefine = false;
     double radius = iStartRadius;
     FVec2D *prevSegmentVector = iPrevSegmentVector;
-    FVec2D *nextSegmentVector = iNextSegmentVector;
+    FVec2D *nextSegmentVector;
     double angleCosineLimit = 0.995f;
 // DEBUG
     uint32 debugColor[3] = { 0xFFFF0000, 0xFF00FF00, 0xFF0000FF };
 // END DEBUG
 
-    if( prevSegmentVector && ( prevSegmentVector->DotProduct( subSegment[0] ) <= angleCosineLimit ) )
+    if( iPrevSegmentVector && ( iPrevSegmentVector->DotProduct( subSegment[0] ) <= angleCosineLimit ) )
     {
         doRefine = true;
     }
 
-    if( nextSegmentVector && ( nextSegmentVector->DotProduct( subSegment[2] ) <= angleCosineLimit ) )
+    if( iNextSegmentVector && ( iNextSegmentVector->DotProduct( subSegment[2] ) <= angleCosineLimit ) )
     {
         doRefine = true;
     }
@@ -413,7 +419,7 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
     {
         int n = ( i + 1 );
 
-        nextSegmentVector = ( i == 0x02 ) ? nullptr : &subSegment[n];
+        nextSegmentVector = ( i == 0x02 ) ? iNextSegmentVector : &subSegment[n];
 
         if( doRefine == true && --iMaxRecurseDepth >= 0 )
         {
@@ -438,16 +444,10 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
                                         , sampleRange[n]
                                         , samplePoint[i]
                                         , samplePoint[n]
+                                        , prevSegmentVector
+                                        , nextSegmentVector
                                         , radius
                                         , radius + radiusStep );
-/*
-            BLPath path;
-
-            path.moveTo( samplePoint[i].x, samplePoint[i].y );
-            path.lineTo( samplePoint[n].x, samplePoint[n].y );
-
-            iBLContext.strokePath( path );
-*/
         }
 
         prevSegmentVector = &subSegment[i];
@@ -478,11 +478,12 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-            double segmentStartRadius = segment->GetPoint(0).GetControlPointDistance();
-            double segmentEndRadius = segment->GetPoint(1).GetControlPointDistance();
+            double segmentStartRadius = segment->GetPoint(0).GetRadius();
+            double segmentEndRadius = segment->GetPoint(1).GetRadius();
             FVec2D point0 = segment->GetPoint(0).GetCoords();
-           
-
+            FVec2D prevSegmentVector = segment->GetPreviousVector();
+            FVec2D nextSegmentVector = segment->GetNextVector();
+printf("%f %f\n", prevSegmentVector.x, prevSegmentVector.y );
             DrawSegmentVariable ( iBlock
                                 , iBLContext
                                 , *segment
@@ -490,12 +491,12 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
                                 , 1.0f
                                 , segmentStartRadius
                                 , segmentEndRadius
-                                , nullptr
-                                , nullptr
-                                , 6 );
+                                , &prevSegmentVector
+                                , &nextSegmentVector
+                                , 0 );
 
-            iBLContext.strokeCircle( point0.x, point0.y, segmentStartRadius );
-            iBLContext.fillCircle( point0.x, point0.y, segmentStartRadius );
+            /*iBLContext.strokeCircle( point0.x, point0.y, segmentStartRadius );*/
+            /*iBLContext.fillCircle( point0.x, point0.y, segmentStartRadius );*/
 
             segmentStartRadius = segmentEndRadius;
         }

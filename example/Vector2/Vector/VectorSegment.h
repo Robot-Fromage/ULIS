@@ -1,5 +1,4 @@
-#ifndef _FVECTORSEGMENT_H_
-#define _FVECTORSEGMENT_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -21,5 +20,3 @@ public:
     virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
     double GetStraightDistance();
 };
-
-#endif //  _FVECTORSEGMENT_H_

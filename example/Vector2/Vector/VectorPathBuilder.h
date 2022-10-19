@@ -1,5 +1,4 @@
-#ifndef _FVECTORPATHBUILDER_H_
-#define _FVECTORPATHBUILDER_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -32,5 +31,3 @@ class FVectorPathBuilder : public FVectorPath
         FVectorSegment* End( double iX, double iY, double iRadius );
         FVectorPathCubic* GetSmoothedPath( );
 };
-
-#endif // _FVECTORPATHBUILDER_H_

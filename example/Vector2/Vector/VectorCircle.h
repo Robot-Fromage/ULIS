@@ -1,5 +1,4 @@
-#ifndef _FVECTORCIRCLE_H_
-#define _FVECTORCIRCLE_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -21,5 +20,3 @@ class FVectorCircle : public FVectorObject
         void SetRadius( double iRadius );
         double GetRadius( );
 };
-
-#endif // _FVECTORCIRCLE_H_

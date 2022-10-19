@@ -1,5 +1,4 @@
-#ifndef _FVECTORSEGMENTQUADRATIC_H_
-#define _FVECTORSEGMENTQUADRATIC_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -19,5 +18,3 @@ class FVectorSegmentQuadratic : public FVectorSegment
         FVectorSegmentQuadratic( FVectorPoint* iPoint0, double iCtrlx, double iCtrly, FVectorPoint* iPoint1 );
         void Draw( FBlock& iBlock, BLContext& iBLContext );
 };
-
-#endif // _FVECTORSEGMENTQUADRATIC_H_

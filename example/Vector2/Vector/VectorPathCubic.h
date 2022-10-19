@@ -1,5 +1,4 @@
-#ifndef _FVECTORPATHCUBIC_H_
-#define _FVECTORPATHCUBIC_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -18,6 +17,8 @@ class FVectorPathCubic: public FVectorPath
                                          , double iToT
                                          , FVec2D& iFromPoint // that way we dont have to query the cubic curve at point0 and point1
                                          , FVec2D& iToPoint // that way we dont have to query the cubic curve at point0 and point1
+                                         , FVec2D* iPrevSegmentVector
+                                         , FVec2D* iNextSegmentVector
                                          , double iStartRadius
                                          , double iEndRadius );
         void DrawSegmentVariable( FBlock& iBlock
@@ -58,5 +59,3 @@ class FVectorPathCubic: public FVectorPath
         FVec2D FVectorPathCubic::GetPointPerpendicularVector( FVectorPoint& iPoint );
 
 };
-
-#endif // _FVECTORPATHCUBIC_H_

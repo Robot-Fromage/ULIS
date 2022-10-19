@@ -1,5 +1,4 @@
-#ifndef _FVECTORROOT_H_
-#define _FVECTORROOT_H_
+#pragma once
 
 #include <ULIS>
 #include <blend2d.h>
@@ -25,5 +24,3 @@ class FVectorRoot : public FVectorObject
         void DrawShape(FBlock& iBlock,BLContext& iBLContext) {};
         bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
 };
-
-#endif // _FVECTORROOT_H_

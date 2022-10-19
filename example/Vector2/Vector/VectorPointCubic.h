@@ -1,5 +1,4 @@
-#ifndef _FVECTORPOINTCUBIC_H_
-#define _FVECTORPOINTCUBIC_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -9,7 +8,8 @@
 class FVectorPointCubic : public FVectorPoint
 {
     private:
-        FVectorPointControl mCtrlPoint;
+        FVectorHandlePoint mCtrlPoint;
+        double mRadius;
 
     protected:
 
@@ -18,8 +18,8 @@ class FVectorPointCubic : public FVectorPoint
         FVectorPointCubic();
         FVectorPointCubic( double iX, double iY );
         FVectorPointCubic( double iX, double iY, double iRadius );
-        FVectorPointControl& GetControlPoint();
-        double GetControlPointDistance();
+        FVectorHandlePoint& GetControlPoint();
+        double GetRadius();
+        void SetRadius( double iRadius );
+        FVec2D GetPerpendicularVector();
 };
-
-#endif // _FVECTORPOINTCUBIC_H_

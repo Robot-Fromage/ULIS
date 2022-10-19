@@ -1,5 +1,4 @@
-#ifndef _FVECTORPOINT_H_
-#define _FVECTORPOINT_H_
+#pragma once
 
 #include <blend2d.h>
 #include <Core/Core.h>
@@ -28,6 +27,5 @@ class FVectorPoint
         void Set( double iX, double iY );
         uint32 GetSegmentCount();
         std::list<FVectorSegment*>& GetSegmentList();
+        virtual uint32 GetType();
 };
-
-#endif // _FVECTORPOINT_H_

@@ -487,18 +487,38 @@ MyWidget::EditPath( QEvent *event )
             FVectorPoint *selectedPoint = *it;
             std::list<FVectorSegment*> segmentList = selectedPoint->GetSegmentList();
 
-            selectedPoint->Set( selectedPoint->GetX() + difx
-                              , selectedPoint->GetY() + dify );
-
-            for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
+            switch ( selectedPoint->GetType() )
             {
-                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*segit);
-                FVectorPointControl* ctrlPoint = ( &cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorPointControl*>( &cubicSegment->GetControlPoint( 0 ) ) :
-                                                                                                   static_cast<FVectorPointControl*>( &cubicSegment->GetControlPoint( 1 ) );
+                case FVectorHandlePoint::HANDLE_TYPE_POINT :
+                {
+                    FVectorHandlePoint* pointHandle = static_cast<FVectorHandlePoint*>( selectedPoint );
+                    FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( pointHandle->GetParent() );
+                    FVec2D dif = { cubicPoint->GetX() - e->x(), cubicPoint->GetY() - e->y() };
 
-                ctrlPoint->Set( ctrlPoint->GetX() + difx
-                              , ctrlPoint->GetY() + dify );
+                    cubicPoint->SetRadius( dif.Distance() );
+                }
+                break;
 
+                case FVectorHandleSegment::HANDLE_TYPE_SEGMENT :
+                    selectedPoint->Set( selectedPoint->GetX() + difx
+                                      , selectedPoint->GetY() + dify );
+                break;
+
+                default :
+                    selectedPoint->Set( selectedPoint->GetX() + difx
+                                      , selectedPoint->GetY() + dify );
+
+                    for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
+                    {
+                        FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*segit);
+                        FVectorHandleSegment* ctrlPoint = ( &cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 0 ) ) :
+                                                                                                            static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 1 ) );
+
+                        ctrlPoint->Set( ctrlPoint->GetX() + difx
+                                      , ctrlPoint->GetY() + dify );
+
+                    }
+                break;
             }
         }
 

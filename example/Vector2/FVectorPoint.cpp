@@ -75,3 +75,9 @@ FVectorPoint::GetSegmentList()
 {
     return mSegmentList;
 }
+
+uint32
+FVectorPoint::GetType()
+{
+    return 0; // default type;
+}
