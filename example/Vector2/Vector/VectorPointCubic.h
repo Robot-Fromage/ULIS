@@ -21,5 +21,5 @@ class FVectorPointCubic : public FVectorPoint
         FVectorHandlePoint& GetControlPoint();
         double GetRadius();
         void SetRadius( double iRadius );
-        FVec2D GetPerpendicularVector();
+        FVec2D GetPerpendicularVector( bool iNormalize );
 };

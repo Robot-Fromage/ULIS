@@ -43,7 +43,7 @@ FVectorPointCubic::SetRadius( double iRadius )
 }
 
 FVec2D
-FVectorPointCubic::GetPerpendicularVector()
+FVectorPointCubic::GetPerpendicularVector( bool iNormalize )
 {
     FVec2D parallel = { 0.0f, 0.0f };
     FVec2D perpendicular = { 0.0f, 0.0f };
@@ -55,13 +55,22 @@ FVectorPointCubic::GetPerpendicularVector()
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
-            FVectorPoint& point0 = segment->GetPoint(0);
-            FVectorPoint& point1 = segment->GetPoint(1);
+            FVectorPoint& p0 = segment->GetPoint(0);
+            FVectorPoint& p1 = segment->GetPoint(1);
+            FVec2D& point0 = segment->GetPoint(0).GetCoords();
+            FVec2D& point1 = segment->GetPoint(1).GetCoords();
+            FVec2D& ctrlPoint0 = segment->GetControlPoint(0).GetCoords();
+            FVec2D& ctrlPoint1 = segment->GetControlPoint(1).GetCoords();
 
-            if( this == &point0 )
+            if( this == &p0 )
             {
-                FVec2D vec =  { segment->GetControlPoint(0).GetX() - segment->GetPoint(0).GetX(),
-                                segment->GetControlPoint(0).GetY() - segment->GetPoint(0).GetY() };
+                // this is less computation-heavy
+                FVec2D vec = { ctrlPoint0 - point0 };
+                /*FVec2D vec =  { CubicBezierTangentAtParameter<FVec2D>( point0.GetCoords()
+                                                                     , ctrlPoint0.GetCoords()
+                                                                     , ctrlPoint1.GetCoords()
+                                                                     , point1.GetCoords()
+                                                                     , 0.0f ) };*/
 
                 if ( vec.DistanceSquared() )
                 {
@@ -69,15 +78,17 @@ FVectorPointCubic::GetPerpendicularVector()
 
                     parallel.x += vec.x;
                     parallel.y += vec.y;
-
-                    count ++;
                 }
             }
 
-            if( this == &point1 )
+            if( this == &p1 )
             {
-                FVec2D vec =  { segment->GetPoint(1).GetX() - segment->GetControlPoint(1).GetX(),
-                                segment->GetPoint(1).GetY() - segment->GetControlPoint(1).GetY() };
+                FVec2D vec = { point1 - ctrlPoint1 };
+                /*FVec2D vec =  { CubicBezierTangentAtParameter<FVec2D>( point0.GetCoords()
+                                                                     , ctrlPoint0.GetCoords()
+                                                                     , ctrlPoint1.GetCoords()
+                                                                     , point1.GetCoords()
+                                                                     , 1.0f ) };*/
 
                 if ( vec.DistanceSquared() )
                 {
@@ -85,17 +96,16 @@ FVectorPointCubic::GetPerpendicularVector()
 
                     parallel.x += vec.x;
                     parallel.y += vec.y;
-
-                    count ++;
                 }
             }
         }
 
-        if ( count )
+        if ( iNormalize == true )
         {
-            parallel /= count;
-
-            parallel.Normalize();
+            if ( parallel.DistanceSquared() )
+            {
+                parallel.Normalize();
+            }
 
             perpendicular.x =   parallel.y;
             perpendicular.y = - parallel.x;

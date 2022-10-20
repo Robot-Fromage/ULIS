@@ -44,6 +44,7 @@ FVectorPathCubic::PickPoint( double iX
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {
         FVectorPointCubic* point = static_cast<FVectorPointCubic*>(*it);
+        FVec2D perpendicularVector = point->GetPerpendicularVector( true );
 
         if( ( fabs( point->GetX() - iX ) <= iSelectionRadius ) &&
             ( fabs( point->GetY() - iY ) <= iSelectionRadius ) )
@@ -51,8 +52,8 @@ FVectorPathCubic::PickPoint( double iX
             mSelectedPointList.push_back(point);
         }
 
-        if( ( fabs( point->GetX() + ( point->GetPerpendicularVector().x * point->GetRadius() ) - iX ) <= iSelectionRadius ) &&
-            ( fabs( point->GetY() + ( point->GetPerpendicularVector().y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
+        if( ( fabs( point->GetX() + ( perpendicularVector.x * point->GetRadius() ) - iX ) <= iSelectionRadius ) &&
+            ( fabs( point->GetY() + ( perpendicularVector.y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back( &point->GetControlPoint() );
         }
@@ -147,7 +148,7 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {
         FVectorPointCubic *point = static_cast<FVectorPointCubic*>(*it);
-        FVec2D perpendicular = point->GetPerpendicularVector();
+        FVec2D perpendicular = point->GetPerpendicularVector( true );
         double pointRadius = point->GetRadius();
         double ctrlX = point->GetX() + ( perpendicular.x * pointRadius );
         double ctrlY = point->GetY() + ( perpendicular.y * pointRadius );
@@ -163,10 +164,6 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
 void
 FVectorPathCubic::DrawSegment( BLPath& iPath
                              , FVectorSegmentCubic& iSegment
-                             , FVec2D* iDrift0
-                             , FVec2D* iDrift1
-                             , double iFactor0
-                             , double iFactor1
                              , bool    iIsStandalone )
 {
     BLPoint point0;
@@ -185,36 +182,6 @@ FVectorPathCubic::DrawSegment( BLPath& iPath
 
     point1.x = iSegment.GetPoint(1).GetX();
     point1.y = iSegment.GetPoint(1).GetY();
-
-    if( iDrift0 )
-    {
-        FVec2D vec0 = { ctrlPoint0.x - point0.x,
-                        ctrlPoint0.y - point0.y };
-
-        point0.x += iDrift0->x;
-        point0.y += iDrift0->y;
-
-        ctrlPoint0.x = point0.x + ( vec0.x * iFactor0 );
-        ctrlPoint0.y = point0.y + ( vec0.y * iFactor0 );
-
-        point0Tmp = point0;
-        ctrlPoint0Tmp = ctrlPoint0;
-    }
-
-    if( iDrift1 )
-    {
-    FVec2D vec1 = { ctrlPoint1.x - point1.x,
-                    ctrlPoint1.y - point1.y };
-
-        point1.x += iDrift1->x;
-        point1.y += iDrift1->y;
-
-        ctrlPoint1.x = point1.x + ( vec1.x * iFactor1 );
-        ctrlPoint1.y = point1.y + ( vec1.y * iFactor1 );
-
-        point1Tmp = point1;
-        ctrlPoint1Tmp = ctrlPoint1;
-    }
 
     if ( iIsStandalone == true )
     {
@@ -238,7 +205,7 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
 
     iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );
-    iBLContext.setStrokeWidth( mStrokeWidth );
+    iBLContext.setStrokeWidth( 20 );
 
     path.clear();
 
@@ -247,7 +214,7 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext )
         FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
         bool isStandalone = ( segment->GetPoint(0).GetSegmentCount() == 1 );
 
-        DrawSegment( path, *segment, nullptr, nullptr, isStandalone );
+        DrawSegment( path, *segment, isStandalone );
     }
 
     iBLContext.strokePath( path );
@@ -287,10 +254,18 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
     double toTplus = iToT + rangeStep;
     FVec2D sampleTangent[2] = { CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iFromT ),
                                 CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iToT   ) };
+
+    sampleTangent[0].Normalize();
+    sampleTangent[1].Normalize();
+
     FVec2D parallelVecFrom[2] = { *iPrevSegmentVector, sampleTangent[0]    };
     FVec2D   parallelVecTo[2] = { sampleTangent[1]   , *iNextSegmentVector };
-    FVec2D averageVecFrom = ( parallelVecFrom[0] + parallelVecFrom[1] ) * 0.5f;
-    FVec2D averageVecTo = ( parallelVecTo[0] + parallelVecTo[1] ) * 0.5f;
+    FVec2D averageVecFrom = ( parallelVecFrom[0] + parallelVecFrom[1] );
+    FVec2D averageVecTo = ( parallelVecTo[0] + parallelVecTo[1] );
+
+    averageVecFrom.Normalize();
+    averageVecTo.Normalize();
+
     FVec2D perpendicularVecFrom = { averageVecFrom.y, -averageVecFrom.x };
     FVec2D perpendicularVecTo = { averageVecTo.y, -averageVecTo.x };
     /*BLPath path;*/
@@ -300,7 +275,7 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
 
     /*if( parallelVecFrom[0].DotProduct(parallelVecFrom[1]) != 0.0f && parallelVecTo[0].DotProduct(parallelVecTo[1]) != 0.0f )
     {*/
-        if(perpendicularVecFrom.DistanceSquared())
+        /*if(perpendicularVecFrom.DistanceSquared())
         {
             perpendicularVecFrom.Normalize();
         }
@@ -308,7 +283,7 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
         if(perpendicularVecTo.DistanceSquared())
         {
             perpendicularVecTo.Normalize();
-        }
+        }*/
 
         vertex[0].x = iFromPoint.x + (perpendicularVecFrom.x * iStartRadius);
         vertex[0].y = iFromPoint.y + (perpendicularVecFrom.y * iStartRadius);
@@ -322,7 +297,7 @@ FVectorPathCubic::DrawSegmentVariableThickness( FBlock& iBlock
         vertex[3].x = iFromPoint.x - (perpendicularVecFrom.x * iStartRadius);
         vertex[3].y = iFromPoint.y - (perpendicularVecFrom.y * iStartRadius);
 
-        iBLContext.strokePolyline(vertex , 4);
+        iBLContext.strokePolygon(vertex , 4);
         /*iBLContext.fillPolygon(vertex , 4);*/
 
 /*
@@ -371,57 +346,91 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
     FVec2D subSegment[3] = { { samplePoint[1].x - samplePoint[0].x, samplePoint[1].y - samplePoint[0].y },
                              { samplePoint[2].x - samplePoint[1].x, samplePoint[2].y - samplePoint[1].y },
                              { samplePoint[3].x - samplePoint[2].x, samplePoint[3].y - samplePoint[2].y } };
+    FVec2D subTangent[3] = { CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, sampleRange[0] ),
+                             CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, sampleRange[1] ),
+                             CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, sampleRange[2] ) };
     bool doRefine = false;
     double radius = iStartRadius;
     FVec2D *prevSegmentVector = iPrevSegmentVector;
     FVec2D *nextSegmentVector;
-    double angleCosineLimit = 0.995f;
+    double angleCosineLimit = 0.999f;
+    static FVec2D nilVector = { 0.0f, 0.0F };
 // DEBUG
     uint32 debugColor[3] = { 0xFFFF0000, 0xFF00FF00, 0xFF0000FF };
 // END DEBUG
 
-    if( iPrevSegmentVector && ( iPrevSegmentVector->DotProduct( subSegment[0] ) <= angleCosineLimit ) )
+    if( ( *iPrevSegmentVector != nilVector ) && iPrevSegmentVector->DotProduct( subTangent[0] ) <= angleCosineLimit )
     {
         doRefine = true;
     }
 
-    if( iNextSegmentVector && ( iNextSegmentVector->DotProduct( subSegment[2] ) <= angleCosineLimit ) )
+    if( ( *iNextSegmentVector != nilVector ) && iNextSegmentVector->DotProduct( subTangent[2] ) <= angleCosineLimit )
     {
         doRefine = true;
     }
 
-    for( int i = 0; i < 2; i++ )
+    /*straightVector.Normalize();
+    straightVector.Normalize();*/
+   /* subTangent[0].Normalize();
+    subSegment[0].Normalize();*/
+
+    /*if( subTangent[0].DotProduct( subSegment[0] ) <= angleCosineLimit )
+    {
+        doRefine = true;
+    }*/
+
+    /*if( subTangent[2].DotProduct( straightVector ) <= angleCosineLimit )
+    {
+        doRefine = true;
+    }*/
+
+    for( int i = 0; i < 3; i++ )
     {
         int n = ( i + 1 );
-        double subSegDistanceSquaredi = subSegment[i].DistanceSquared();
-        double subSegDistanceSquaredn = subSegment[n].DistanceSquared();
+        double subTanDistanceSquared = subTangent[i].DistanceSquared();
+        double subSegDistanceSquared = subSegment[i].DistanceSquared();
 
-        if( subSegDistanceSquaredi && subSegDistanceSquaredn )
+        if( subTanDistanceSquared && subSegDistanceSquared )
         {
-            if( ULIS::FMath::EpsilonComp( subSegDistanceSquaredi, 1.0f ) == false )
-            {
+            /*if( ULIS::FMath::EpsilonComp( subTanDistanceSquared, 1.0f ) == false )
+            {*/
+                subTangent[i].Normalize();
                 subSegment[i].Normalize();
-            }
 
-            if( ULIS::FMath::EpsilonComp( subSegDistanceSquaredn, 1.0f ) == false )
-            {
-                subSegment[n].Normalize();
-            }
-
-            if( subSegment[i].DotProduct( subSegment[n] ) <= angleCosineLimit )
-            {
-                doRefine = true;
-            }
+                if(subTangent[i].DotProduct(subSegment[i]) <= angleCosineLimit)
+                {
+                    doRefine = true;
+                }
+            /*}*/
         }
     }
+
+    // TODO : case when the line is straight or almost straight
+    /*if( subTangent[0].DotProduct( subTangent[2] ) >= angleCosineLimit )
+    {
+        doRefine = true;
+    }*/
+
+    /*for( int i = 0; i < 2; i++ )
+    {
+        int n = ( i + 1 );
+
+        if( subTangent[i].DotProduct( subSegment[i] ) <= angleCosineLimit )
+        {
+            doRefine = true;
+        }
+    }*/
 
     for( int i = 0; i < 3; i++ )
     {
         int n = ( i + 1 );
 
-        nextSegmentVector = ( i == 0x02 ) ? iNextSegmentVector : &subSegment[n];
-
-        if( doRefine == true && --iMaxRecurseDepth >= 0 )
+        nextSegmentVector = ( i == 0x02 ) ? iNextSegmentVector : &subTangent[n];
+/*
+        if( prevSegmentVector->x == 0.0f && prevSegmentVector->y == 0.0f ) doRefine = true;
+        if( nextSegmentVector->x == 0.0f && nextSegmentVector->y == 0.0f ) doRefine = true;
+*/
+        if( ( doRefine == true ) && --iMaxRecurseDepth >= 0 )
         {
 
             DrawSegmentVariable( iBlock
@@ -449,11 +458,66 @@ FVectorPathCubic::DrawSegmentVariable( FBlock& iBlock
                                         , radius
                                         , radius + radiusStep );
         }
-
-        prevSegmentVector = &subSegment[i];
+       // Note: within the segment, the previous vector (at origin) is the segment's vector itself
+        prevSegmentVector = &subTangent[n];
 
         radius += radiusStep;
     }
+}
+
+void
+FVectorPathCubic::DrawJoint( FBlock& iBlock
+                           , BLContext& iBLContext
+                           , FVectorSegmentCubic& iPrevSegment
+                           , FVectorSegmentCubic& iSegment
+                           , double iRadius
+                           , FVec2D* iPrevSegmentVector )
+{
+    FVec2D& point0 = iSegment.GetPoint(0).GetCoords();
+    FVec2D& point1 = iSegment.GetPoint(0).GetCoords();
+    FVec2D& ctrlPoint0 = iSegment.GetControlPoint(0).GetCoords();
+    FVec2D vec = { ctrlPoint0 - point0 };
+
+    vec.Normalize();
+
+    FVec2D currPerpendicularVec = { vec.y, - vec.x };
+    FVec2D prevPerpendicularVec = { iPrevSegmentVector->y, - iPrevSegmentVector->x };
+    FVec2D edgePrevPoint = point0 + ( prevPerpendicularVec * iRadius );
+    FVec2D edgePoint = point0 + ( currPerpendicularVec * iRadius );
+    FVec2D testvec = edgePoint - edgePrevPoint;
+    double angle = acos(currPerpendicularVec.DotProduct(prevPerpendicularVec));
+    double a = angle / 12;
+
+    if ( testvec.DotProduct( *iPrevSegmentVector ) < 0 )
+    {
+        FVec2D tmp = currPerpendicularVec;
+a = -a;
+        currPerpendicularVec = -tmp;
+
+               tmp = prevPerpendicularVec;
+        prevPerpendicularVec = -tmp;
+    }
+
+    BLPoint vertex[3];
+
+    vertex[0].x = (point0.x);
+    vertex[0].y = (point0.y);
+
+    for ( int i = 0; i < 12; i++ )
+    {
+        FVec2D interpolatedVector = { currPerpendicularVec.x * cos(a) + currPerpendicularVec.y * sin(a),
+                                     -currPerpendicularVec.x * sin(a) + currPerpendicularVec.y * cos(a) };
+
+        vertex[1].x = vertex[0].x + (currPerpendicularVec.x * iRadius);
+        vertex[1].y = vertex[0].y + (currPerpendicularVec.y * iRadius);
+
+        vertex[2].x = vertex[0].x + (interpolatedVector.x * iRadius);
+        vertex[2].y = vertex[0].y + (interpolatedVector.y * iRadius);
+
+        iBLContext.strokePolygon( vertex , 3 );  
+
+        currPerpendicularVec = interpolatedVector;
+    }    
 }
 
 void
@@ -474,6 +538,7 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
     {
         double stepRadius = ( mEndRadius - mStartRadius ) / mSegmentList.size();
         double segmentStartRadius = mStartRadius;
+        FVectorSegmentCubic* prevSegment = nullptr;
 
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
@@ -483,7 +548,11 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
             FVec2D point0 = segment->GetPoint(0).GetCoords();
             FVec2D prevSegmentVector = segment->GetPreviousVector();
             FVec2D nextSegmentVector = segment->GetNextVector();
-printf("%f %f\n", prevSegmentVector.x, prevSegmentVector.y );
+            static FVec2D zeroVector = { 0.0f, 0.0f };
+/*
+printf("prev: %f %f\n", prevSegmentVector.x, prevSegmentVector.y );
+printf("next: %f %f\n", nextSegmentVector.x, nextSegmentVector.y );
+*/
             DrawSegmentVariable ( iBlock
                                 , iBLContext
                                 , *segment
@@ -491,14 +560,26 @@ printf("%f %f\n", prevSegmentVector.x, prevSegmentVector.y );
                                 , 1.0f
                                 , segmentStartRadius
                                 , segmentEndRadius
-                                , &prevSegmentVector
-                                , &nextSegmentVector
-                                , 0 );
+                                , &zeroVector/*prevSegmentVector*/
+                                , &zeroVector/*nextSegmentVector*/
+                                , 8 );
+
+            if ( prevSegment )
+            {
+                DrawJoint( iBlock
+                         , iBLContext
+                         , *prevSegment
+                         , *segment
+                         , segmentStartRadius
+                         , &prevSegmentVector );
+            }
 
             /*iBLContext.strokeCircle( point0.x, point0.y, segmentStartRadius );*/
             /*iBLContext.fillCircle( point0.x, point0.y, segmentStartRadius );*/
 
             segmentStartRadius = segmentEndRadius;
+
+            prevSegment = segment;
         }
     }
 }
