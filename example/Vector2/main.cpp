@@ -403,8 +403,11 @@ MyWidget::CreatePath(QEvent *event)
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mScene->GetLastSelected() );
+        FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
 
         currentPathBuilder->AppendPoint( e->x(), e->y(), 4.0f );
+
+        cubicPath->DrawShape( *mCanvas, *mBLContext );
     }
 
     if( event->type() == QEvent::MouseButtonRelease )
@@ -497,18 +500,28 @@ MyWidget::EditPath( QEvent *event )
                     FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( pointHandle->GetParent() );
                     FVec2D dif = { cubicPoint->GetX() - e->x(), cubicPoint->GetY() - e->y() };
 
-                    cubicPoint->SetRadius( dif.Distance() );
+                    cubicPoint->SetRadius( dif.Distance(), true );
                 }
                 break;
 
                 case FVectorHandleSegment::HANDLE_TYPE_SEGMENT :
+                {
+                    FVectorHandleSegment* segmentHandle = static_cast<FVectorHandleSegment*>( selectedPoint );
+                    FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segmentHandle->GetParent());
+
                     selectedPoint->Set( selectedPoint->GetX() + difx
                                       , selectedPoint->GetY() + dify );
-                break;
+
+                    cubicSegment->BuildVariable();
+                }
+                break;;
 
                 default :
-                    selectedPoint->Set( selectedPoint->GetX() + difx
-                                      , selectedPoint->GetY() + dify );
+                {
+                    FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( selectedPoint );
+
+                    cubicPoint->Set( selectedPoint->GetX() + difx
+                                   , selectedPoint->GetY() + dify, false );
 
                     for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
                     {
@@ -518,8 +531,10 @@ MyWidget::EditPath( QEvent *event )
 
                         ctrlPoint->Set( ctrlPoint->GetX() + difx
                                       , ctrlPoint->GetY() + dify );
-
                     }
+
+                    cubicPoint->BuildSegments();
+                }
                 break;
             }
         }

@@ -21,3 +21,15 @@ FVectorHandleSegment::GetType()
 {
     return HANDLE_TYPE_SEGMENT;
 }
+
+void
+FVectorHandleSegment::SetParent(FVectorSegment* iParentSegment)
+{
+    mParentSegment = iParentSegment;
+}
+
+FVectorSegment*
+FVectorHandleSegment::GetParent()
+{
+    return mParentSegment;
+}

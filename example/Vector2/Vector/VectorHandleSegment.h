@@ -8,6 +8,8 @@
 class FVectorHandleSegment : public FVectorHandle
 {
     private:
+        FVectorSegment* mParentSegment;
+
     protected:
 
     public:
@@ -17,4 +19,6 @@ class FVectorHandleSegment : public FVectorHandle
         FVectorHandleSegment();
         FVectorHandleSegment( double iX, double iY );
         uint32 GetType();
+        void SetParent( FVectorSegment* iParentSegment );
+        FVectorSegment* GetParent();
 };

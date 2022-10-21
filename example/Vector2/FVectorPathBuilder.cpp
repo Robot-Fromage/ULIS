@@ -89,9 +89,10 @@ FVectorPathBuilder::AppendPoint( double iX
                         {
                             FVectorPointCubic* lastSmoothedPoint = static_cast<FVectorPointCubic*>( mCubicPath->GetLastPoint() );
                             FVectorSegmentCubic* lastCubicSegment =  static_cast<FVectorSegmentCubic*>( mCubicPath->GetLastSegment() );
-                            FVectorSegmentCubic* cubicSegment = mCubicPath->AppendPoint( new FVectorPointCubic( lastPoint->GetX()
-                                                                                                              , lastPoint->GetY()
-                                                                                                              , iRadius ) );
+                            FVectorPointCubic* cubicPoint = new FVectorPointCubic( lastPoint->GetX()
+                                                                                 , lastPoint->GetY()
+                                                                                 , iRadius );
+                            FVectorSegmentCubic* cubicSegment = mCubicPath->AppendPoint( cubicPoint, false );
 
                             double cubicSegmentStraightDistance = cubicSegment->GetStraightDistance();
                             // Note: lastSegVector is now normalized
@@ -105,6 +106,11 @@ FVectorPathBuilder::AppendPoint( double iX
                             cubicSegment->GetControlPoint( 0 ).SetY( ctrlPt0.y );
                             cubicSegment->GetControlPoint( 1 ).SetX( ctrlPt1.x );
                             cubicSegment->GetControlPoint( 1 ).SetY( ctrlPt1.y );
+
+                            // this must be done after setting the control points, as segment 
+                            // building needs control points to be at different position from 
+                            // the points at the tips of the segments.
+                            cubicPoint->BuildSegments();
 
                             if( lastCubicSegment )
                             {
@@ -160,7 +166,7 @@ FVectorPathBuilder::AppendPoint( double iX
     {
         FVectorPath::AppendPoint( new FVectorPoint( iX, iY ) );
 
-        mCubicPath->AppendPoint( new FVectorPointCubic( iX, iY, iRadius ) );
+        mCubicPath->AppendPoint( new FVectorPointCubic( iX, iY, iRadius ), false );
     }
 
     return NULL;

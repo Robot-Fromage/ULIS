@@ -24,7 +24,7 @@ class FVectorPoint
         double GetY();
         void SetX( double iX );
         void SetY( double iY );
-        void Set( double iX, double iY );
+        virtual void Set( double iX, double iY );
         uint32 GetSegmentCount();
         std::list<FVectorSegment*>& GetSegmentList();
         virtual uint32 GetType();

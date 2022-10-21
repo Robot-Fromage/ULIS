@@ -6,10 +6,32 @@
 #include "Vector/VectorPoint.h"
 #include "Vector/VectorSegment.h"
 
+typedef struct _FPolygon {
+    BLPoint vertex[4];
+} FPolygon;
+
 class FVectorSegmentCubic : public FVectorSegment
 {
     private:
         FVectorHandleSegment mCtrlPoint[2];
+        std::vector<FPolygon> mPolygonCache;
+        uint32 mPolygonSlot;
+
+        void BuildVariableAdaptive( double iFromT
+                                  , double iToT
+                                  , double iStartRadius
+                                  , double iEndRadius
+                                  , FVec2D* iPrevSegmentVector
+                                  , FVec2D* iNextSegmentVector
+                                  , int32 iMaxRecurseDepth );
+        void BuildVariableThickness( double iFromT
+                                   , double iToT
+                                   , FVec2D& iFromPoint
+                                   , FVec2D& iToPoint
+                                   , FVec2D* iPrevSegmentVector
+                                   , FVec2D* iNextSegmentVector
+                                   , double iStartRadius
+                                   , double iEndRadius );
 
     public:
         ~FVectorSegmentCubic(){};
@@ -24,4 +46,11 @@ class FVectorSegmentCubic : public FVectorSegment
         FVec2D GetNextVector(bool iNormalize);
         FVec2D GetVectorAtEnd( bool iNormalize );
         FVec2D GetVectorAtStart( bool iNormalize );
+
+        bool Pick( double iX, double iY, double iRadius );
+        void IncreasePolygonCache(uint32 iSize);
+        void ResetPolygonCache();
+        FPolygon* GetPolygonCacheSlot();
+
+        void BuildVariable();
 };

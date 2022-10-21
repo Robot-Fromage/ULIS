@@ -10,7 +10,7 @@ FVectorPointCubic::FVectorPointCubic( double iX,double iY )
 {
     mCtrlPoint.SetParent( this );
 
-    SetRadius( 1.0f );
+    SetRadius( 1.0f, false );
 }
 
 FVectorPointCubic::FVectorPointCubic()
@@ -21,7 +21,7 @@ FVectorPointCubic::FVectorPointCubic()
 FVectorPointCubic::FVectorPointCubic( double iX, double iY, double iRadius )
     : FVectorPointCubic ( iX, iY )
 {
-    SetRadius( iRadius );
+    SetRadius( iRadius, false );
 }
 
 FVectorHandlePoint&
@@ -37,9 +37,56 @@ FVectorPointCubic::GetRadius()
 }
 
 void
-FVectorPointCubic::SetRadius( double iRadius )
+FVectorPointCubic::SetRadius( double iRadius
+                            , bool iBuildSegments )
 {
     mRadius = iRadius;
+
+    if ( iBuildSegments == true )
+    {
+        BuildSegments();
+    }
+}
+
+void
+FVectorPointCubic::Set(double iX
+                      ,double iY
+                      ,bool iBuildSegments)
+{
+    FVectorPoint::Set(iX,iY);
+
+    if(iBuildSegments == true)
+    {
+        BuildSegments();
+    }
+}
+
+void
+FVectorPointCubic::Set( double iX
+                      , double iY )
+{
+    FVectorPointCubic::Set( iX, iY, true );
+}
+
+void
+FVectorPointCubic::Set( double iX
+                      , double iY
+                      , double iRadius
+                      , bool iBuildSegments )
+{
+    SetRadius( iRadius, false );
+    Set( iX, iY, iBuildSegments );
+}
+
+void
+FVectorPointCubic::BuildSegments()
+{
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
+
+        segment->BuildVariable();
+    }
 }
 
 FVec2D

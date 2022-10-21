@@ -20,6 +20,10 @@ class FVectorPointCubic : public FVectorPoint
         FVectorPointCubic( double iX, double iY, double iRadius );
         FVectorHandlePoint& GetControlPoint();
         double GetRadius();
-        void SetRadius( double iRadius );
+        void SetRadius( double iRadius, bool iBuildSegments );
+        void Set( double iX, double iY );
+        void Set( double iX, double iY, bool iBuildSegments );
+        void Set( double iX, double iY, double iRadius, bool iBuildSegments );
         FVec2D GetPerpendicularVector( bool iNormalize );
+        void BuildSegments();
 };
