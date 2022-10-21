@@ -312,7 +312,7 @@ _drawRadialJoint( FBlock& iBlock
         vertex[2].x = vertex[0].x + ( interpolatedVector.x * iRadius );
         vertex[2].y = vertex[0].y + ( interpolatedVector.y * iRadius );
 
-        iBLContext.strokePolygon( vertex , 3 );
+        /*iBLContext.strokePolygon( vertex , 3 );*/
         iBLContext.fillPolygon( vertex, 3 );
 
         currPerpendicularVec = interpolatedVector;
@@ -354,7 +354,7 @@ _drawLinearJoint( FBlock& iBlock
     vertex[2].x = vertex[0].x + ( prevPerpendicularVec.x * iRadius );
     vertex[2].y = vertex[0].y + ( prevPerpendicularVec.y * iRadius );
 
-    iBLContext.strokePolygon( vertex, 3 );
+    /*iBLContext.strokePolygon( vertex, 3 );*/
     iBLContext.fillPolygon( vertex, 3 );
 }
 
@@ -377,7 +377,7 @@ FVectorPathCubic::DrawJoint( FBlock& iBlock
             segmentVector.Normalize();
 
             // if the dot product equals to 1.0f, then the point is perfectly smooth, hence there is no need for joints.
-            if ( prevSegmentVector.DotProduct(segmentVector) != 1.0f )
+            if ( prevSegmentVector.DotProduct(segmentVector) < 1.0f )
             {
                 switch ( mJointType )
                 {
@@ -416,16 +416,17 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
+            double segmentStartRadius = segment->GetPoint(0).GetRadius();
 
             segment->Draw( iBlock, iBLContext );
 
             if ( prevSegment )
             {
-                /*DrawJoint( iBlock
+                DrawJoint( iBlock
                          , iBLContext
                          , prevSegment
                          , *segment
-                         , segmentStartRadius );*/
+                         , segmentStartRadius );
             }
 
             prevSegment = segment;

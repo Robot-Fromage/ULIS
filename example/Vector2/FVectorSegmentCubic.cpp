@@ -204,9 +204,13 @@ void
 FVectorSegmentCubic::Draw( FBlock& iBlock
                          , BLContext& iBLContext )
 {
+
+
     for ( int i = 0; i < mPolygonSlot; i++ )
     {
-        /*iBLContext.strokePolygon( mPolygonCache[i].vertex, 4 );*/
+        int n = i + 1;
+
+        /*iBLContext.strokeLine( mPolygonCache[i].vertex[1], mPolygonCache[i].vertex[2] );*/
         iBLContext.fillPolygon( mPolygonCache[i].vertex, 4 );
     }
 }
@@ -239,7 +243,7 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
         FVec2D averageVecTo   = (   parallelVecTo[0] +   parallelVecTo[1] ) * 0.5f;
         FVec2D perpendicularVecFrom = { averageVecFrom.y, -averageVecFrom.x };
         FVec2D perpendicularVecTo = { averageVecTo.y, -averageVecTo.x };
-        BLPoint vertex[4];
+        uint32 prevPolygonSlot = mPolygonSlot;
         FPolygon* cachedPolygon = GetPolygonCacheSlot();
 
         if ( perpendicularVecFrom.DistanceSquared() && perpendicularVecTo.DistanceSquared() )
@@ -251,17 +255,35 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
         perpendicularVecFrom *= iStartRadius;
         perpendicularVecTo *= iEndRadius;
 
-        cachedPolygon->vertex[0].x = iFromPoint.x + perpendicularVecFrom.x;
-        cachedPolygon->vertex[0].y = iFromPoint.y + perpendicularVecFrom.y;
+        if ( prevPolygonSlot ) {
+            FPolygon* prevCachedPolygon = cachedPolygon - 1;
 
-        cachedPolygon->vertex[1].x = iToPoint.x + perpendicularVecTo.x;
-        cachedPolygon->vertex[1].y = iToPoint.y + perpendicularVecTo.y;
+            cachedPolygon->vertex[0].x = prevCachedPolygon->vertex[1].x;
+            cachedPolygon->vertex[0].y = prevCachedPolygon->vertex[1].y;
 
-        cachedPolygon->vertex[2].x = iToPoint.x - perpendicularVecTo.x;
-        cachedPolygon->vertex[2].y = iToPoint.y - perpendicularVecTo.y;
+            cachedPolygon->vertex[1].x = iToPoint.x + perpendicularVecTo.x;
+            cachedPolygon->vertex[1].y = iToPoint.y + perpendicularVecTo.y;
 
-        cachedPolygon->vertex[3].x = iFromPoint.x - perpendicularVecFrom.x;
-        cachedPolygon->vertex[3].y = iFromPoint.y - perpendicularVecFrom.y;
+            cachedPolygon->vertex[2].x = iToPoint.x - perpendicularVecTo.x;
+            cachedPolygon->vertex[2].y = iToPoint.y - perpendicularVecTo.y;
+
+            cachedPolygon->vertex[3].x = prevCachedPolygon->vertex[2].x;
+            cachedPolygon->vertex[3].y = prevCachedPolygon->vertex[2].y;
+        }
+        else
+        {
+            cachedPolygon->vertex[0].x = iFromPoint.x + perpendicularVecFrom.x;
+            cachedPolygon->vertex[0].y = iFromPoint.y + perpendicularVecFrom.y;
+
+            cachedPolygon->vertex[1].x = iToPoint.x + perpendicularVecTo.x;
+            cachedPolygon->vertex[1].y = iToPoint.y + perpendicularVecTo.y;
+
+            cachedPolygon->vertex[2].x = iToPoint.x - perpendicularVecTo.x;
+            cachedPolygon->vertex[2].y = iToPoint.y - perpendicularVecTo.y;
+
+            cachedPolygon->vertex[3].x = iFromPoint.x - perpendicularVecFrom.x;
+            cachedPolygon->vertex[3].y = iFromPoint.y - perpendicularVecFrom.y;
+        }
     }
 }
 

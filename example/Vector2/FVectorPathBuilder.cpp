@@ -107,11 +107,6 @@ FVectorPathBuilder::AppendPoint( double iX
                             cubicSegment->GetControlPoint( 1 ).SetX( ctrlPt1.x );
                             cubicSegment->GetControlPoint( 1 ).SetY( ctrlPt1.y );
 
-                            // this must be done after setting the control points, as segment 
-                            // building needs control points to be at different position from 
-                            // the points at the tips of the segments.
-                            cubicPoint->BuildSegments();
-
                             if( lastCubicSegment )
                             {
                                 double mRoundedAngle = acos(ULIS::FMath::Clamp<double>(mLastSmoothedSegmentVector.DotProduct(lastSegVector),-1.0f,1.0f)) / 3.14159 * 180;
@@ -142,6 +137,11 @@ FVectorPathBuilder::AppendPoint( double iX
                                     cubicSegment->GetControlPoint(0)->SetY(lastSmoothedPoint->GetY());
                                 }*/
                             }
+
+                            // this must be done after setting the control points, as segment 
+                            // building needs control points to be at different position from 
+                            // the points at the tips of the segments.
+                            cubicSegment->GetPoint(0).BuildSegments();
 
                             /*mSmoothedPointList.push_back( lastPoint );*/
 

@@ -440,12 +440,16 @@ MyWidget::PickObject( QEvent *event )
 
         mScene->ClearSelection();
         mScene->Select( *mBLContext, e->x(), e->y(), 10.0f );
+
+        update();
     }
 }
 
 void
 MyWidget::EditPath( QEvent *event )
 {
+    static BLMatrix2D inverseWorldMatrix;
+
     if( event->type() == QEvent::MouseButtonPress )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
@@ -453,7 +457,7 @@ MyWidget::EditPath( QEvent *event )
 
         if ( cubicPath )
         {
-            BLMatrix2D inverseLocalMatrix;
+
             BLPoint localCoords;
             BLPoint localSize;
             double localRadius;
@@ -461,15 +465,15 @@ MyWidget::EditPath( QEvent *event )
             double x = e->x();
             double y = e->y();
 
-            BLMatrix2D::invert( inverseLocalMatrix, cubicPath->GetLocalMatrix() );
+            BLMatrix2D::invert( inverseWorldMatrix, cubicPath->GetWorldMatrix() );
 
-            localCoords = inverseLocalMatrix.mapPoint( x, y );
-            localSize   = inverseLocalMatrix.mapPoint( x + radius,0.0f );
+            localCoords = inverseWorldMatrix.mapPoint( x, y );
+            localSize   = inverseWorldMatrix.mapPoint( x + radius, 0.0f );
 
             localRadius = localSize.x - localCoords.x;
 
-            mMouseX = x;
-            mMouseY = y;
+            mMouseX = localCoords.x;
+            mMouseY = localCoords.y;
 
             cubicPath->Unselect( nullptr );
 
@@ -481,9 +485,12 @@ MyWidget::EditPath( QEvent *event )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
         FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mScene->GetLastSelected() );
-
-        double difx = e->x() - mMouseX;
-        double dify = e->y() - mMouseY;
+        double radius = 10.0f;
+        double x = e->x();
+        double y = e->y();
+        BLPoint localCoords = inverseWorldMatrix.mapPoint( x, y );
+        double difx = localCoords.x - mMouseX;
+        double dify = localCoords.y - mMouseY;
 
         std::list<FVectorPoint*> selectedPointList = cubicPath->GetSelectedPointList();
 
@@ -498,7 +505,7 @@ MyWidget::EditPath( QEvent *event )
                 {
                     FVectorHandlePoint* pointHandle = static_cast<FVectorHandlePoint*>( selectedPoint );
                     FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( pointHandle->GetParent() );
-                    FVec2D dif = { cubicPoint->GetX() - e->x(), cubicPoint->GetY() - e->y() };
+                    FVec2D dif = { cubicPoint->GetX() - localCoords.x, cubicPoint->GetY() - localCoords.y };
 
                     cubicPoint->SetRadius( dif.Distance(), true );
                 }
@@ -539,8 +546,8 @@ MyWidget::EditPath( QEvent *event )
             }
         }
 
-        mMouseX = e->x();
-        mMouseY = e->y();
+        mMouseX = localCoords.x;
+        mMouseY = localCoords.y;
     }
 
     update();
