@@ -93,6 +93,8 @@ public:
         mContext->Finish();
 
         p.drawImage( rect(), *mQImage );
+
+        p.end();
     }
 
     virtual void keyReleaseEvent(QKeyEvent* event)

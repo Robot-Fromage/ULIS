@@ -20,6 +20,8 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorPointCubic& GetPoint( int iPointNum );
         void Draw( FBlock& iBlock, BLContext& iBLContext );
         void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
-        FVec2D GetPreviousVector();
-        FVec2D GetNextVector();
+        FVec2D GetPreviousVector(bool iNormalize);
+        FVec2D GetNextVector(bool iNormalize);
+        FVec2D GetVectorAtEnd( bool iNormalize );
+        FVec2D GetVectorAtStart( bool iNormalize );
 };

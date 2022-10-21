@@ -10,6 +10,10 @@
 class FVectorPathCubic: public FVectorPath
 {
     private:
+        static const uint32 JOINT_TYPE_RADIAL = 0;
+        static const uint32 JOINT_TYPE_LINEAR = 1;
+        static const uint32 JOINT_TYPE_NONE   = 2;
+
         void DrawSegmentVariableThickness( FBlock& iBlock
                                          , BLContext& iBLContext
                                          , FVectorSegmentCubic& iSegment
@@ -33,27 +37,14 @@ class FVectorPathCubic: public FVectorPath
                                 , int32 iMaxRecurseDepth );
         void DrawJoint( FBlock& iBlock
                       , BLContext& iBLContext
-                      , FVectorSegmentCubic& iPrevSegment
+                      , FVectorSegmentCubic* iPrevSegment
                       , FVectorSegmentCubic& iSegment
-                      , double iRadius
-                      , FVec2D* iPrevSegmentVector );
+                      , double iRadius );
         void DrawSegment( BLPath& iPath, FVectorSegmentCubic& iSegment, bool iIsStandalone );
         void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext );
 
-        BLPoint point0Tmp;
-        BLPoint point1Tmp;
-        BLPoint ctrlPoint0Tmp;
-        BLPoint ctrlPoint1Tmp;
-
-        BLPoint point0RightTmp;
-        BLPoint point1RightTmp;
-        BLPoint ctrlPoint0RightTmp;
-        BLPoint ctrlPoint1RightTmp;
-
-        BLPoint point0LeftTmp;
-        BLPoint point1LeftTmp;
-        BLPoint ctrlPoint0LeftTmp;
-        BLPoint ctrlPoint1LeftTmp;
+        uint32 mJointType;
+        
     public:
         FVectorPathCubic();
         FVectorSegmentCubic* AppendPoint( FVectorPoint* iPoint );
@@ -62,6 +53,8 @@ class FVectorPathCubic: public FVectorPath
         void Unselect( FVectorPoint* iPoint );
         void DrawShape( FBlock& iBlock, BLContext& iBLContext );
         void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
-        FVec2D FVectorPathCubic::GetPointPerpendicularVector( FVectorPoint& iPoint );
-
+        FVec2D GetPointPerpendicularVector( FVectorPoint& iPoint );
+        void setJointRadial();
+        void setJointLinear();
+        void setJointNone();
 };

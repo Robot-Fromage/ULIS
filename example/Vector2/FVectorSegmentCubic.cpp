@@ -15,35 +15,36 @@ FVectorSegmentCubic::GetPoint( int iPointNum )
     return static_cast<FVectorPointCubic&>( FVectorSegment::GetPoint( iPointNum ) );
 }
 
-FVec2D FVectorSegmentCubic::GetPreviousVector()
+FVec2D FVectorSegmentCubic::GetVectorAtEnd( bool iNormalize )
 {
-    std::list<FVectorSegment*>& segmentList = mPoint[0]->GetSegmentList();
-    FVec2D vec = { 0.0f, 0.0f };
+    FVec2D vec = { GetPoint(1).GetX() - GetControlPoint(1).GetX(),
+                   GetPoint(1).GetY() - GetControlPoint(1).GetY() };
 
-    for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
+    if( iNormalize && vec.DistanceSquared() )
     {
-        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-
-        if ( segment != this ) 
-        {
-            vec.x += segment->GetPoint(1).GetX() - segment->GetControlPoint(1).GetX();
-            vec.y += segment->GetPoint(1).GetY() - segment->GetControlPoint(1).GetY();
-
-    vec.Normalize();
-
-            return vec;
-        }
+        vec.Normalize();
     }
-
-    /*vec.Normalize();*/
 
     return vec;
 }
 
-FVec2D FVectorSegmentCubic::GetNextVector()
+FVec2D FVectorSegmentCubic::GetVectorAtStart( bool iNormalize )
+{
+    FVec2D vec = { GetControlPoint(0).GetX() - GetPoint(0).GetX(),
+                   GetControlPoint(0).GetY() - GetPoint(0).GetY() };
+
+    if( iNormalize && vec.DistanceSquared() )
+    {
+        vec.Normalize();
+    }
+
+    return vec;
+}
+
+FVec2D FVectorSegmentCubic::GetNextVector( bool iNormalize )
 {
     std::list<FVectorSegment*>& segmentList = mPoint[1]->GetSegmentList();
-    FVec2D vec = { 0.0f, 0.0f };
+     static FVec2D zero = { 0.0f, 0.0f };
 
     for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
     {
@@ -51,18 +52,29 @@ FVec2D FVectorSegmentCubic::GetNextVector()
 
         if ( segment != this ) 
         {
-            vec.x += segment->GetControlPoint(0).GetX() - segment->GetPoint(0).GetX();
-            vec.y += segment->GetControlPoint(0).GetY() - segment->GetPoint(0).GetY();
-
-    vec.Normalize();
-
-            return vec;
+            return segment->GetVectorAtStart ( iNormalize );
         }
     }
 
-    /*vec.Normalize();*/
+    return zero;
+}
 
-    return vec;
+FVec2D FVectorSegmentCubic::GetPreviousVector( bool iNormalize )
+{
+    std::list<FVectorSegment*>& segmentList = mPoint[0]->GetSegmentList();
+     static FVec2D zero = { 0.0f, 0.0f };
+
+    for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
+    {
+        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
+
+        if ( segment != this ) 
+        {
+            return segment->GetVectorAtEnd ( iNormalize );
+        }
+    }
+
+    return zero;
 }
 
 FVectorHandleSegment&
