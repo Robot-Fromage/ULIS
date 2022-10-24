@@ -83,9 +83,9 @@ FVectorObject::UpdateMatrix( BLContext& iBLContext )
     iBLContext.rotate( mRotation );
     iBLContext.scale( mScaling.x, mScaling.y );
     mLocalMatrix = iBLContext.userMatrix();
-    iBLContext.restore();
+    /*iBLContext.restore();
 
-    iBLContext.save();
+    iBLContext.save();*/
 
     if( mParent)
     {
@@ -95,40 +95,78 @@ FVectorObject::UpdateMatrix( BLContext& iBLContext )
     }
      else
     {
-        iBLContext.resetMatrix();
-        mWorldMatrix = iBLContext.userMatrix();
+        memcpy( &mWorldMatrix, &mLocalMatrix, sizeof ( mLocalMatrix ) );
+    }
+
+    BLMatrix2D::invert( mInverseWorldMatrix, mWorldMatrix );
+
+    // recurse
+    for( std::list<FVectorObject*>::iterator it = mChildrenList.begin(); it != mChildrenList.end(); ++it )
+    {
+        FVectorObject *child = (*it);
+
+        child->UpdateMatrix( iBLContext );
     }
 
     iBLContext.restore();
-
 }
 
 void
-FVectorObject::DrawChildren( FBlock& iBlock,BLContext& iBLContext )
+FVectorObject::DrawChildren( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
     for( std::list<FVectorObject*>::iterator it = mChildrenList.begin(); it != mChildrenList.end(); ++it )
     {
         FVectorObject *child = (*it);
 
-        child->Draw( iBlock, iBLContext );
+        child->Draw( iBlock, iBLContext, iRoi );
     }
 }
 
 void
-FVectorObject::Draw( FBlock& iBlock, BLContext& iBLContext )
+FVectorObject::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
+    static FRectD zeroRectangle = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+    // Adapt the Region-Of-Interest to the local coordinates
+    if( iRoi != zeroRectangle )
+    {
+        BLPoint roiCornerTop = { iRoi.x, iRoi.y };
+        BLPoint roiCornerBottom = { iRoi.x + iRoi.w, iRoi.y + iRoi.h };
+        BLPoint localRoiCornerTop = mInverseWorldMatrix.mapPoint( roiCornerTop.x, roiCornerTop.y );
+        BLPoint localRoiCornerBottom = mInverseWorldMatrix.mapPoint( roiCornerBottom.x, roiCornerBottom.y );
+
+        iRoi.x = localRoiCornerTop.x;
+        iRoi.y = localRoiCornerTop.y;
+        iRoi.w = localRoiCornerBottom.x - localRoiCornerTop.x;
+        iRoi.h = localRoiCornerBottom.y - localRoiCornerTop.y;
+    }
+
     iBLContext.save();
     iBLContext.transform( mLocalMatrix );
     /*iBLContext.translate( mTranslation.x, mTranslation.y );*/
-    DrawShape( iBlock, iBLContext );
+    DrawShape( iBlock, iBLContext, iRoi );
 
-    DrawChildren( iBlock, iBLContext );
+    DrawChildren( iBlock, iBLContext, iRoi );
+
+    // Restore the ROI to the parent coordinates. At this step it may have been modified by some child
+    if( iRoi != zeroRectangle )
+    {
+        BLPoint roiCornerTop = { iRoi.x, iRoi.y };
+        BLPoint roiCornerBottom = { iRoi.x + iRoi.w, iRoi.y + iRoi.h };
+        BLPoint parentRoiCornerTop = mLocalMatrix.mapPoint( roiCornerTop.x, roiCornerTop.y );
+        BLPoint parentRoiCornerBottom = mLocalMatrix.mapPoint( roiCornerBottom.x, roiCornerBottom.y );
+
+        iRoi.x = parentRoiCornerTop.x;
+        iRoi.y = parentRoiCornerTop.y;
+        iRoi.w = parentRoiCornerBottom.x - parentRoiCornerTop.x;
+        iRoi.h = parentRoiCornerBottom.y - parentRoiCornerTop.y;
+    }
 
     iBLContext.restore();
 }
 
 void
-FVectorObject::DrawShape( FBlock& iBlock, BLContext& iBLContext )
+FVectorObject::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
 }
 
@@ -141,19 +179,22 @@ FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY, double iR
 FVec2D
 FVectorObject::WorldCoordinatesToLocal( double iX, double iY )
 {
-    BLMatrix2D inverseWorldMatrix;
     BLPoint localCoords;
     BLPoint localSize;
     FVec2D localPoint;
 
-    BLMatrix2D::invert( inverseWorldMatrix, mWorldMatrix );
-
-    localCoords = inverseWorldMatrix.mapPoint( iX, iY );
+    localCoords = mInverseWorldMatrix.mapPoint( iX, iY );
 
     localPoint.x = localCoords.x;
     localPoint.y = localCoords.y;
 
     return localPoint;
+}
+
+FVectorObject*
+FVectorObject::GetParent()
+{
+    return mParent;
 }
 
 bool
@@ -200,6 +241,12 @@ void
 FVectorObject::SetStrokeWidth( double iWidth )
 {
     mStrokeWidth = iWidth;
+}
+
+double
+FVectorObject::GetStrokeWidth()
+{
+    return mStrokeWidth;
 }
 
 void 

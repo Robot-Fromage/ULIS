@@ -135,7 +135,7 @@ FVectorPathCubic::Unselect( FVectorPoint *iPoint )
 }
 
 void
-FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
+FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
     BLPath path;
 
@@ -184,7 +184,7 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
     {
         FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
 
-        segment->DrawStructure( iBlock, iBLContext );
+        segment->DrawStructure( iBlock, iBLContext, iRoi );
     }
 
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
@@ -233,7 +233,7 @@ FVectorPathCubic::DrawSegment( BLPath& iPath
 */
 
 void
-FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext )
+FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
 /*
     BLPath path;
@@ -255,11 +255,11 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext )
 
     iBLContext.strokePath( path );
 */
-    DrawShapeVariable( iBlock, iBLContext );
+    DrawShapeVariable( iBlock, iBLContext, iRoi );
 
     if( mIsSelected )
     {
-        DrawStructure( iBlock, iBLContext );
+        DrawStructure( iBlock, iBLContext, iRoi );
     }
 }
 
@@ -398,7 +398,7 @@ FVectorPathCubic::DrawJoint( FBlock& iBlock
 }
 
 void
-FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
+FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
     double mStartRadius = 10.0f;
     double mEndRadius = 0.0f;
@@ -417,8 +417,14 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext )
         {
             FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
             double segmentStartRadius = segment->GetPoint(0).GetRadius();
+            FRectD clip = iRoi & mBBox;
 
-            segment->Draw( iBlock, iBLContext );
+            if( !iRoi.Area() || clip.Area() )
+            {
+                iRoi = clip;
+
+                segment->Draw( iBlock, iBLContext, iRoi );
+            }
 
             if ( prevSegment )
             {

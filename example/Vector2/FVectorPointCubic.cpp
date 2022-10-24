@@ -30,24 +30,6 @@ FVectorPointCubic::GetControlPoint()
     return mCtrlPoint;
 }
 
-double
-FVectorPointCubic::GetRadius()
-{
-    return mRadius;
-}
-
-void
-FVectorPointCubic::SetRadius( double iRadius
-                            , bool iBuildSegments )
-{
-    mRadius = iRadius;
-
-    if ( iBuildSegments == true )
-    {
-        BuildSegments();
-    }
-}
-
 void
 FVectorPointCubic::Set(double iX
                       ,double iY
@@ -76,6 +58,17 @@ FVectorPointCubic::Set( double iX
 {
     SetRadius( iRadius, false );
     Set( iX, iY, iBuildSegments );
+}
+
+void
+FVectorPointCubic::SetRadius( double iRadius, bool iBuildSegments )
+{
+    FVectorPoint::SetRadius ( iRadius, iBuildSegments );
+
+    if ( iBuildSegments == true )
+    {
+        BuildSegments();
+    }
 }
 
 void

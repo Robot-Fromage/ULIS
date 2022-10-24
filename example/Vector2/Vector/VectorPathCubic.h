@@ -28,11 +28,11 @@ class FVectorPathCubic: public FVectorPath
         bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
         void PickPoint ( double iX, double iY, double iRadius );
         void Unselect( FVectorPoint* iPoint );
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext );
-        void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
+        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         void setJointRadial();
         void setJointLinear();
         void setJointNone();
 
-        void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext );
+        void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
 };

@@ -104,6 +104,30 @@ FVec2D FVectorSegmentCubic::GetVectorAtStart( bool iNormalize )
     return vec;
 }
 
+void
+FVectorSegmentCubic::UpdateBoundingBox ()
+{
+   mBBox.x = ULIS::FMath::Min4<double>( mPoint[0]->GetX() + mPoint[0]->GetRadius()
+                                      , mCtrlPoint[0].GetX()
+                                      , mPoint[1]->GetX() + mPoint[1]->GetRadius()
+                                      , mCtrlPoint[1].GetX() );
+
+   mBBox.y = ULIS::FMath::Min4<double>( mPoint[0]->GetY() + mPoint[0]->GetRadius()
+                                      , mCtrlPoint[0].GetY()
+                                      , mPoint[1]->GetY() + mPoint[1]->GetRadius()
+                                      , mCtrlPoint[1].GetY() );
+
+   mBBox.w = ULIS::FMath::Max4<double>( mPoint[0]->GetX() + mPoint[0]->GetRadius()
+                                      , mCtrlPoint[0].GetX()
+                                      , mPoint[1]->GetX() + mPoint[1]->GetRadius()
+                                      , mCtrlPoint[1].GetX() ) - mBBox.x;
+
+   mBBox.h = ULIS::FMath::Max4<double>( mPoint[0]->GetY() + mPoint[0]->GetRadius()
+                                      , mCtrlPoint[0].GetY()
+                                      , mPoint[1]->GetY() + mPoint[1]->GetRadius()
+                                      , mCtrlPoint[1].GetY() ) - mBBox.y;
+}
+
 FVec2D FVectorSegmentCubic::GetNextVector( bool iNormalize )
 {
     std::list<FVectorSegment*>& segmentList = mPoint[1]->GetSegmentList();
@@ -146,6 +170,12 @@ FVectorSegmentCubic::GetControlPoint( int iCtrlPointNum )
     return mCtrlPoint[iCtrlPointNum];
 }
 
+FRectD&
+FVectorSegmentCubic::GetBoundingBox( )
+{
+    return mBBox;
+}
+
 FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
                                         , double iCtrlPoint0x
                                         , double iCtrlPoint0y
@@ -160,7 +190,8 @@ FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
 
 void
 FVectorSegmentCubic::DrawStructure( FBlock& iBlock
-                                  , BLContext& iBLContext )
+                                  , BLContext& iBLContext
+                                  , FRectD &iRoi )
 {
     BLPath ctrlPath0;
     BLPath ctrlPath1;
@@ -202,15 +233,17 @@ FVectorSegmentCubic::DrawStructure( FBlock& iBlock
 
 void
 FVectorSegmentCubic::Draw( FBlock& iBlock
-                         , BLContext& iBLContext )
+                         , BLContext& iBLContext
+                         , FRectD &iRoi )
 {
-
+    iBLContext.setStrokeWidth( 0.1f );
 
     for ( int i = 0; i < mPolygonSlot; i++ )
     {
-        int n = i + 1;
+       /* int n = i + 1;*/
 
-        /*iBLContext.strokeLine( mPolygonCache[i].vertex[1], mPolygonCache[i].vertex[2] );*/
+        // the strokeLine thing is very slow and slows the all thing, we have to find something better
+        iBLContext.strokeLine( mPolygonCache[i].vertex[1], mPolygonCache[i].vertex[2] );
         iBLContext.fillPolygon( mPolygonCache[i].vertex, 4 );
     }
 }
@@ -386,6 +419,8 @@ FVectorSegmentCubic::BuildVariable()
     static FVec2D zeroVector = { 0.0f, 0.0f };
 
     ResetPolygonCache();
+
+    UpdateBoundingBox();
 
     // a segment is at least subdivided once anyways
     IncreasePolygonCache ( 3 );

@@ -16,6 +16,7 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorHandleSegment mCtrlPoint[2];
         std::vector<FPolygon> mPolygonCache;
         uint32 mPolygonSlot;
+        FRectD mBBox;
 
         void BuildVariableAdaptive( double iFromT
                                   , double iToT
@@ -24,6 +25,7 @@ class FVectorSegmentCubic : public FVectorSegment
                                   , FVec2D* iPrevSegmentVector
                                   , FVec2D* iNextSegmentVector
                                   , int32 iMaxRecurseDepth );
+
         void BuildVariableThickness( double iFromT
                                    , double iToT
                                    , FVec2D& iFromPoint
@@ -40,12 +42,14 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorSegmentCubic( FVectorPoint* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPoint* iPoint1 );
         FVectorHandleSegment& GetControlPoint( int iCtrlPointNum );
         FVectorPointCubic& GetPoint( int iPointNum );
-        void Draw( FBlock& iBlock, BLContext& iBLContext );
-        void DrawStructure( FBlock& iBlock, BLContext& iBLContext );
+        void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         FVec2D GetPreviousVector(bool iNormalize);
         FVec2D GetNextVector(bool iNormalize);
         FVec2D GetVectorAtEnd( bool iNormalize );
         FVec2D GetVectorAtStart( bool iNormalize );
+        FRectD& GetBoundingBox();
+        void UpdateBoundingBox();
 
         bool Pick( double iX, double iY, double iRadius );
         void IncreasePolygonCache(uint32 iSize);

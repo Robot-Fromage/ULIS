@@ -24,7 +24,8 @@ FVectorSegmentQuadratic::FVectorSegmentQuadratic( FVectorPoint* iPoint0
 
 void
 FVectorSegmentQuadratic::Draw( FBlock& iBlock
-                             , BLContext& iBLContext )
+                             , BLContext& iBLContext
+                             , FRectD &iRoi )
 {
     BLPath path;
     BLPath ctrlPath0;

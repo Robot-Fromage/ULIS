@@ -12,6 +12,7 @@ class FVectorPoint
     protected:
         FVec2D mCoords;
         std::list<FVectorSegment*> mSegmentList;
+        double mRadius;
 
     public:
         ~FVectorPoint();
@@ -28,4 +29,6 @@ class FVectorPoint
         uint32 GetSegmentCount();
         std::list<FVectorSegment*>& GetSegmentList();
         virtual uint32 GetType();
+        double GetRadius();
+        virtual void SetRadius( double iRadius, bool iBuildSegments );
 };

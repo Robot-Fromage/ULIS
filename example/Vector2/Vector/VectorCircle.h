@@ -7,7 +7,7 @@
 class FVectorCircle : public FVectorObject
 {
     private:
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext );
+        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
 
     protected :

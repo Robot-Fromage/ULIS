@@ -31,8 +31,7 @@ private:
     FThreadPool* mPool;
     FCommandQueue* mQueue;
     FContext* mContext;
-    FVectorRoot* mScene;
-    FVectorObject* mSelectedObject;
+    FVectorEngine mVEngine;
     double mMouseX, mMouseY;
     int32 mAction;
     void (MyWidget::*mTool)(QEvent*);
@@ -58,6 +57,7 @@ public:
     void MyWidget::SelectCreateRectangle( bool checked );
     void MyWidget::SelectStrokeColor( bool checked );
     void MyWidget::SelectFillColor( bool checked );
+    void MyWidget::SelectDeleteObject( bool checked );
 
     virtual ~MyWidget() {
         delete mQImage; mBLContext->end();
@@ -72,7 +72,8 @@ public:
 
         mBLContext->setFillStyle(BLRgba32(0xFFFFFFFF));
         mBLContext->setCompOp(BL_COMP_OP_SRC_COPY);
-        mBLContext->fillAll();
+
+
 
         /*mCubicPath->Draw( *mCanvas, *mBLContext );*/
 /*
@@ -88,7 +89,7 @@ public:
         /*mContext->DrawVectorObject ( *mCanvas, *mCubicPath, *mBLContext );*/
         /*mContext->DrawVectorObject ( *mCanvas, *mScene, *mBLContext );*/
 
-        mScene->Draw( *mCanvas, *mBLContext );
+        mVEngine.Draw( *mCanvas, *mBLContext );
 
         mContext->Finish();
 
@@ -130,8 +131,8 @@ public:
                 circle->Translate( mQImage->width() / 2, mQImage->height() / 2 );
                 circle->UpdateMatrix( *mBLContext );
 
-                mScene->AddChild( circle );
-                mScene->Select( *mBLContext, *circle );
+                mVEngine.GetScene().AddChild( circle );
+                mVEngine.GetScene().Select( *mBLContext, *circle );
             } 
             break;
 
@@ -148,8 +149,8 @@ public:
                 /*builder->Translate(mQImage->width() / 2,mQImage->height() / 2);*/
                 builder->UpdateMatrix(*mBLContext);
 
-                mScene->AddChild(builder);
-                mScene->Select( *mBLContext, *builder );
+                mVEngine.GetScene().AddChild(builder);
+                mVEngine.GetScene().Select( *mBLContext, *builder );
             }
             break;
 
@@ -160,26 +161,28 @@ public:
                 rectangle->Translate( mQImage->width() / 2, mQImage->height() / 2 );
                 rectangle->UpdateMatrix( *mBLContext );
 
-                mScene->AddChild( rectangle );
-                mScene->Select( *mBLContext, *rectangle );
+                mVEngine.GetScene().AddChild( rectangle );
+                mVEngine.GetScene().Select( *mBLContext, *rectangle );
             }
             break;
 
             case Qt::Key_Plus:
             {
                 FVectorRectangle* rectangle = new FVectorRectangle(50,80);
+                FVectorRoot& scene = mVEngine.GetScene();
 
-                mScene->Scale( mScene->GetScalingX() + 0.01f, mScene->GetScalingY() + 0.01f );
-                mScene->UpdateMatrix( *mBLContext );
+                scene.Scale( scene.GetScalingX() + 0.01f, scene.GetScalingY() + 0.01f );
+                scene.UpdateMatrix( *mBLContext );
             }
             break;
 
             case Qt::Key_Minus:
             {
                 FVectorRectangle* rectangle = new FVectorRectangle(50,80);
+                FVectorRoot& scene = mVEngine.GetScene();
 
-                mScene->Scale( mScene->GetScalingX() - 0.01f,mScene->GetScalingY() - 0.01f );
-                mScene->UpdateMatrix( *mBLContext );
+                scene.Scale( scene.GetScalingX() - 0.01f, scene.GetScalingY() - 0.01f );
+                scene.UpdateMatrix( *mBLContext );
             }
             break;
         }
@@ -191,147 +194,17 @@ public:
 virtual void mousePressEvent(QMouseEvent* event)
 {
     if ( mTool ) ((*this).*(mTool))( event );
-
-#ifdef unused
-        mMouseX = event->x();
-        mMouseY = event->y();
-
-/***************/
-        FVectorPathBuilder* builder = new FVectorPathBuilder();
-
-        /*builder->Translate(mQImage->width() / 2,mQImage->height() / 2);*/
-        builder->UpdateMatrix(*mBLContext);
-
-        mScene->AddChild(builder);
-        mScene->Select(*mBLContext,*builder);
-
-/*************/
-
-        mSelectedObject = mScene->GetLastSelected();
-/*
-        mCubicPath->Unselect(nullptr);
-
-        mCubicPath->Pick(event->x(),event->y(), 10.0f);
-*/
-/*
-        const uint32_t someColor = rand();
-        const size_t frameBufferSizeWords = frameBufferSizeBytes/sizeof(uint32_t);
-        uint32* fb32 = (uint32* ) frameBuffer;
-        for(size_t i=0; i<frameBufferSizeWords; i++) fb32[i] = someColor;
-*/
-        update(); // redraw
-#endif
 }
 
 virtual void mouseReleaseEvent( QMouseEvent* event )
 {
     if ( mTool ) ((*this).*(mTool))( event );
-
-#ifdef unused
-    // select if the mouse hasnt moved
-    if( ( mMouseX == event->x() ) &&
-        ( mMouseY == event->y() ) )
-    {
-        mScene->Select(*mBLContext,event->x(),event->y());
-    }
-    /*else
-    {*/
-        // otherwise do your thing
-        if( event->button() == Qt::LeftButton )
-        {
-            if( mSelectedObject )
-            {
-                switch( mAction )
-                {
-                case 3:
-                    if( typeid( *mSelectedObject ) == typeid( FVectorPathBuilder ) )
-                    {
-                        FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mSelectedObject );
-
-                        currentPathBuilder->End( event->x(), event->y() );
-
-                        FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
-
-                        currentPathBuilder->CopyTransformation( *cubicPath );
-
-                        cubicPath->UpdateMatrix(*mBLContext);
-
-                        mScene->AddChild( cubicPath );
-                        mScene->RemoveChild( currentPathBuilder );
-                    }
-                break;
-
-                default:
-                break;
-                }
-            }
-        }
-    /*}*/
-#endif
 }
 
 
  virtual void mouseMoveEvent(QMouseEvent* event)
  {
     if ( mTool ) ((*this).*(mTool))( event );
-
-#ifdef unused
-        double difx = event->x() - mMouseX;
-        double dify = event->y() - mMouseY;
-
-        if (event->buttons() == Qt::LeftButton )
-        {
-            if( mSelectedObject )
-            {
-                switch ( mAction )
-                {
-                    case 0:
-                        mSelectedObject->Translate( mSelectedObject->GetTranslationX() + difx
-                                                  , mSelectedObject->GetTranslationY() + dify );
-                    break;
-
-                    case 1:
-                        mSelectedObject->Rotate( mSelectedObject->GetRotation() + difx * 0.01f );
-                    break;
-
-                    case 2:
-                        mSelectedObject->Scale( mSelectedObject->GetScalingX() + difx * 0.01f
-                                              , mSelectedObject->GetScalingY() + dify * 0.01f );
-                    break;
-
-                    case 3:
-                        if( typeid( *mSelectedObject ) == typeid( FVectorPathBuilder ) )
-                        {
-                            FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mSelectedObject );
-
-                            currentPathBuilder->AppendPoint( event->x(), event->y() );
-                        }
-                    break;
-
-                    default :
-                    break;
-                }
-
-                mSelectedObject->UpdateMatrix( *mBLContext );
-            }
-/*
-            std::list<FVectorPoint*> selectedPointList = mCubicPath->GetSelectedPointList();
-
-            for(std::list<FVectorPoint*>::iterator it = selectedPointList.begin(); it != selectedPointList.end(); ++it)
-            {
-                FVectorPoint *selectedPoint = *it;
-
-                selectedPoint->SetX(event->x());
-                selectedPoint->SetY(event->y());
-            }
-*/
-
-            update();
-        }
-
-        mMouseX = event->x();
-        mMouseY = event->y();
-#endif
  }
 };
 
@@ -345,6 +218,7 @@ virtual void mouseReleaseEvent( QMouseEvent* event )
 #define CREATE_RECTANGLE "Rectangle"
 #define STROKE_COLOR     "Stroke Color"
 #define FILL_COLOR       "Fill Color"
+#define DELETE_OBJECT    "Delete Object"
 
 class MyAction : public QAction {
     public :
@@ -365,7 +239,7 @@ void MyWidget::SelectStrokeColor    ( bool checked )
     QColor color = QColorDialog::getColor( Qt::white, this );
     if( color.isValid() )
     {
-        FVectorObject *selectedObject = static_cast<FVectorObject*>( mScene->GetLastSelected() );
+        FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
 
         selectedObject->SetStrokeColor( color.rgba() );
     }
@@ -376,46 +250,85 @@ void MyWidget::SelectFillColor ( bool checked )
     QColor color = QColorDialog::getColor(Qt::white,this);
     if(color.isValid())
     {
-        FVectorObject *selectedObject = static_cast<FVectorObject*>(mScene->GetLastSelected());
+        FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected());
 
         selectedObject->SetFilled(true);
         selectedObject->SetFillColor(color.rgba());
     }
 }
 
+void MyWidget::SelectDeleteObject ( bool checked )
+{
+    FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected());
+
+    mVEngine.GetScene().RemoveChild( selectedObject );
+
+    update();
+}
+
 void
 MyWidget::CreatePath(QEvent *event)
 {
+    static BLMatrix2D inverseWorldMatrix;
+
     if( event->type() == QEvent::MouseButtonPress )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
         FVectorPathBuilder* builder = new FVectorPathBuilder();
 
+        mVEngine.GetScene().AddChild( builder );
+
         builder->UpdateMatrix( *mBLContext );
 
-        mScene->AddChild( builder );
+        mVEngine.GetScene().ClearSelection();
+        mVEngine.GetScene().Select( *mBLContext, *builder );
 
-        mScene->ClearSelection();
-        mScene->Select( *mBLContext, *builder );
+        BLMatrix2D::invert( inverseWorldMatrix, builder->GetWorldMatrix() );
     }
 
     if( event->type() == QEvent::MouseMove )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
-        FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mScene->GetLastSelected() );
+        FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mVEngine.GetScene().GetLastSelected() );
         FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
+        BLPoint localCoords = inverseWorldMatrix.mapPoint( e->x(), e->y() );
+        FRectD invalidateRegion = { e->x() - 100.0f, e->y() - 100.0f, 200.0f, 200.0f };
+        FRectD finalRegion = invalidateRegion;
 
-        currentPathBuilder->AppendPoint( e->x(), e->y(), 4.0f );
+        invalidateRegion.Sanitize();
 
-        cubicPath->DrawShape( *mCanvas, *mBLContext );
+        currentPathBuilder->AppendPoint( localCoords.x, localCoords.y, 4.0f );
+        FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(cubicPath->GetLastSegment());
+
+        if ( cubicSegment )
+        {
+            FRectD& bbox = cubicSegment->GetBoundingBox();
+            BLPoint localBBoxPoint = currentPathBuilder->GetWorldMatrix().mapPoint( bbox.x, bbox.y );
+            BLPoint localBBoxSize  = currentPathBuilder->GetWorldMatrix().mapVector( bbox.w, bbox.h );
+            FRectD worldBBox = { localBBoxPoint.x
+                               , localBBoxPoint.y
+                               , localBBoxSize.x
+                               , localBBoxSize.y };
+
+            worldBBox.Sanitize();
+
+            invalidateRegion = finalRegion | worldBBox;
+        } 
+/*
+        mVEngine.InvalidateRegion( invalidateRegion.x, invalidateRegion.y, invalidateRegion.w, invalidateRegion.h );
+*/
+        /*mVEngine.InvalidateRegion(  );*/
+
+        /*cubicPath->DrawShape( *mCanvas, *mBLContext );*/
     }
 
     if( event->type() == QEvent::MouseButtonRelease )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
-        FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>(mScene->GetLastSelected());
+        FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mVEngine.GetScene().GetLastSelected());
+        BLPoint localCoords = inverseWorldMatrix.mapPoint( e->x(), e->y() );
 
-        currentPathBuilder->End( e->x(), e->y(), 1.0f );
+        currentPathBuilder->End( localCoords.x, localCoords.y, 1.0f );
 
         FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
 
@@ -423,9 +336,9 @@ MyWidget::CreatePath(QEvent *event)
 
         cubicPath->UpdateMatrix( *mBLContext );
 
-        mScene->AddChild( cubicPath );
-        mScene->RemoveChild( currentPathBuilder );
-        mScene->Select( *mBLContext, *cubicPath );
+        mVEngine.GetScene().AddChild( cubicPath );
+        mVEngine.GetScene().RemoveChild( currentPathBuilder );
+        mVEngine.GetScene().Select( *mBLContext, *cubicPath );
     }
 
     update();
@@ -438,8 +351,8 @@ MyWidget::PickObject( QEvent *event )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
 
-        mScene->ClearSelection();
-        mScene->Select( *mBLContext, e->x(), e->y(), 10.0f );
+        mVEngine.GetScene().ClearSelection();
+        mVEngine.GetScene().Select( *mBLContext, e->x(), e->y(), 10.0f );
 
         update();
     }
@@ -453,7 +366,7 @@ MyWidget::EditPath( QEvent *event )
     if( event->type() == QEvent::MouseButtonPress )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
-        FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mScene->GetLastSelected() );
+        FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mVEngine.GetScene().GetLastSelected() );
 
         if ( cubicPath )
         {
@@ -484,7 +397,7 @@ MyWidget::EditPath( QEvent *event )
     if( event->type() == QEvent::MouseMove )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
-        FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mScene->GetLastSelected() );
+        FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mVEngine.GetScene().GetLastSelected() );
         double radius = 10.0f;
         double x = e->x();
         double y = e->y();
@@ -557,35 +470,46 @@ void
 MyWidget::MoveObject(QEvent *event)
 {
     QMouseEvent *e = static_cast<QMouseEvent*>(event);
+    static BLMatrix2D inverseWorldMatrix;
 
     if( event->type() == QEvent::MouseButtonPress )
     {
         PickObject( event );
 
-        mMouseX = e->x();
-        mMouseY = e->y();
+        if ( mVEngine.GetScene().GetLastSelected() )
+        {
+            FVectorObject* parentObject = mVEngine.GetScene().GetLastSelected()->GetParent();
+            BLMatrix2D::invert( inverseWorldMatrix, parentObject->GetWorldMatrix() );
+            BLPoint localCoords = inverseWorldMatrix.mapPoint(  e->x(),  e->y() );
+
+            mMouseX = localCoords.x;
+            mMouseY = localCoords.y;
+        }
     }
 
     if( event->type() == QEvent::MouseMove )
     {
-        double difx = e->x() - mMouseX;
-        double dify = e->y() - mMouseY;
-
         if( e->buttons() == Qt::LeftButton )
         {
-            FVectorObject *selectedObject = static_cast<FVectorObject*>( mScene->GetLastSelected() );
+            FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
 
             if( selectedObject )
             {
+                FVectorObject* parentObject = mVEngine.GetScene().GetLastSelected()->GetParent();
+                BLMatrix2D::invert( inverseWorldMatrix, parentObject->GetWorldMatrix() );
+                BLPoint localCoords = inverseWorldMatrix.mapPoint(  e->x(),  e->y() );
+                double difx = localCoords.x - mMouseX;
+                double dify = localCoords.y - mMouseY;
+
                 selectedObject->Translate( selectedObject->GetTranslationX() + difx
                                          , selectedObject->GetTranslationY() + dify );
 
                 selectedObject->UpdateMatrix( *mBLContext );
+
+                mMouseX = localCoords.x;
+                mMouseY = localCoords.y;
             }
         }
-
-        mMouseX = e->x();
-        mMouseY = e->y();
     }
 
     update();
@@ -611,7 +535,7 @@ MyWidget::ScaleObject(QEvent *event)
 
         if( e->buttons() == Qt::LeftButton )
         {
-            FVectorObject *selectedObject = static_cast<FVectorObject*>( mScene->GetLastSelected() );
+            FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
 
             if( selectedObject )
             {
@@ -647,13 +571,13 @@ MyWidget::RotateObject(QEvent *event)
 
         if(e->buttons() == Qt::LeftButton)
         {
-            FVectorObject *selectedObject = static_cast<FVectorObject*>(mScene->GetLastSelected());
+            FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
 
             if( selectedObject )
             {
                 selectedObject->Rotate( selectedObject->GetRotation() + difx * 0.01f );
 
-                selectedObject->UpdateMatrix(*mBLContext);
+                selectedObject->UpdateMatrix( *mBLContext );
             }
         }
 
@@ -667,34 +591,38 @@ void
 MyWidget::CreateCircle( QEvent *event )
 {
     QMouseEvent *e = static_cast<QMouseEvent*>(event);
+    static int mouseX, mouseY;
 
-    if(event->type() == QEvent::MouseButtonPress)
+    if( event->type() == QEvent::MouseButtonPress )
     {
         FVectorCircle* circle = new FVectorCircle( 0.0f );
-        FVec2D localCoordinates = mScene->WorldCoordinatesToLocal( e->x(), e->y() );
+        FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
-        mScene->AddChild( circle );
+        mouseX = e->x();
+        mouseY = e->y();
+
+        mVEngine.GetScene().AddChild( circle );
+
         circle->Translate( localCoordinates.x, localCoordinates.y );
         circle->UpdateMatrix( *mBLContext );
 
-        mScene->Select( *mBLContext, *circle );
-
-        mMouseX = e->x();
-        mMouseX = e->y();
+        mVEngine.GetScene().Select( *mBLContext, *circle );
     }
 
-    if(event->type() == QEvent::MouseMove)
+    if( event->type() == QEvent::MouseMove )
     {
-        FVectorObject *selectedObject = static_cast<FVectorObject*>(mScene->GetLastSelected());
-        FVectorCircle* circle = static_cast<FVectorCircle*>(selectedObject);
-        FVec2D localCoordinates = mScene->WorldCoordinatesToLocal( e->x(), e->y() );
+        FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
+        FVectorCircle* circle = static_cast<FVectorCircle*>( selectedObject );
+        FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
         FVec2D dif = { localCoordinates.x - circle->GetTranslationX(),
                        localCoordinates.y - circle->GetTranslationY() };
 
         circle->SetRadius( dif.Distance() );
 
-        mMouseX = e->x();
-        mMouseY = e->y();
+        mVEngine.InvalidateRegion( mouseX - ( circle->GetRadius() + circle->GetStrokeWidth() )
+                                 , mouseY - ( circle->GetRadius() + circle->GetStrokeWidth() )
+                                 , ( circle->GetRadius() + circle->GetStrokeWidth() ) * 2
+                                 , ( circle->GetRadius() + circle->GetStrokeWidth() ) * 2 );
     }
 
     update();
@@ -705,33 +633,27 @@ MyWidget::CreateRectangle(QEvent *event)
 {
     QMouseEvent *e = static_cast<QMouseEvent*>(event);
 
-    if(event->type() == QEvent::MouseButtonPress)
+    if( event->type() == QEvent::MouseButtonPress )
     {
         FVectorRectangle* rectangle = new FVectorRectangle( 0.0f, 0.0f );
+        FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
-        rectangle->Translate(e->x(),e->y());
+        rectangle->Translate( localCoordinates.x, localCoordinates.y );
         rectangle->UpdateMatrix( *mBLContext );
 
-        mScene->AddChild( rectangle );
-        mScene->Select( *mBLContext, *rectangle );
-
-        mMouseX = e->x();
-        mMouseY = e->y();
+        mVEngine.GetScene().AddChild( rectangle );
+        mVEngine.GetScene().Select( *mBLContext, *rectangle );
     }
 
-    if(event->type() == QEvent::MouseMove)
+    if( event->type() == QEvent::MouseMove )
     {
-        FVectorObject *selectedObject = static_cast<FVectorObject*>(mScene->GetLastSelected());
-        FVectorRectangle* rectangle = static_cast<FVectorRectangle*>(selectedObject);
+        FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
+        FVectorRectangle* rectangle = static_cast<FVectorRectangle*>( selectedObject );
+        FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
+        FVec2D dif = { localCoordinates.x - rectangle->GetTranslationX(),
+                       localCoordinates.y - rectangle->GetTranslationY() };
 
-        double difx = e->x() - mMouseX;
-        double dify = e->y() - mMouseY;
-
-        rectangle->SetSize( rectangle->GetWidth()  + difx
-                          , rectangle->GetHeight() + dify );
-
-        mMouseX = e->x();
-        mMouseY = e->y();
+        rectangle->SetSize( dif.x * 2.0f, dif.y * 2.0f );
     }
 
     update();
@@ -741,27 +663,29 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     QToolBar *toolbar = new QToolBar(this);
     QPixmap pathPix("new.png");
 
-    MyAction *createPathAction        = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_PATH      ) );
-    MyAction *editPathAction          = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), EDIT_PATH        ) );
-    MyAction *pickObjectAction        = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), PICK_OBJECT      ) );
-    MyAction *moveObjectAction        = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MOVE_OBJECT      ) );
-    MyAction *scaleObjectAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), SCALE_OBJECT     ) );
-    MyAction *rotateObjectAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), ROTATE_OBJECT    ) );
-    MyAction *createCircleAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_CIRCLE    ) );
-    MyAction *createRectangleAction   = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_RECTANGLE ) );
-    MyAction *createStrokeColorAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), STROKE_COLOR     ) );
-    MyAction *createFillColorAction   = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), FILL_COLOR       ) );
+    MyAction *createPathAction         = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_PATH      ) );
+    MyAction *editPathAction           = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), EDIT_PATH        ) );
+    MyAction *pickObjectAction         = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), PICK_OBJECT      ) );
+    MyAction *moveObjectAction         = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MOVE_OBJECT      ) );
+    MyAction *scaleObjectAction        = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), SCALE_OBJECT     ) );
+    MyAction *rotateObjectAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), ROTATE_OBJECT    ) );
+    MyAction *createCircleAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_CIRCLE    ) );
+    MyAction *createRectangleAction    = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CREATE_RECTANGLE ) );
+    MyAction *createStrokeColorAction  = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), STROKE_COLOR     ) );
+    MyAction *createFillColorAction    = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), FILL_COLOR       ) );
+    MyAction *createDeleteObjectAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), DELETE_OBJECT    ) );
 
-    connect( createPathAction       , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
-    connect( editPathAction         , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
-    connect( pickObjectAction       , &MyAction::triggered, this, &MyWidget::SelectPickObject      );
-    connect( moveObjectAction       , &MyAction::triggered, this, &MyWidget::SelectMoveObject      );
-    connect( scaleObjectAction      , &MyAction::triggered, this, &MyWidget::SelectScaleObject     );
-    connect( rotateObjectAction     , &MyAction::triggered, this, &MyWidget::SelectRotateObject    );
-    connect( createCircleAction     , &MyAction::triggered, this, &MyWidget::SelectCreateCircle    );
-    connect( createRectangleAction  , &MyAction::triggered, this, &MyWidget::SelectCreateRectangle );
-    connect( createStrokeColorAction, &MyAction::triggered, this, &MyWidget::SelectStrokeColor     );
-    connect( createFillColorAction  , &MyAction::triggered, this, &MyWidget::SelectFillColor       );
+    connect( createPathAction        , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
+    connect( editPathAction          , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
+    connect( pickObjectAction        , &MyAction::triggered, this, &MyWidget::SelectPickObject      );
+    connect( moveObjectAction        , &MyAction::triggered, this, &MyWidget::SelectMoveObject      );
+    connect( scaleObjectAction       , &MyAction::triggered, this, &MyWidget::SelectScaleObject     );
+    connect( rotateObjectAction      , &MyAction::triggered, this, &MyWidget::SelectRotateObject    );
+    connect( createCircleAction      , &MyAction::triggered, this, &MyWidget::SelectCreateCircle    );
+    connect( createRectangleAction   , &MyAction::triggered, this, &MyWidget::SelectCreateRectangle );
+    connect( createStrokeColorAction , &MyAction::triggered, this, &MyWidget::SelectStrokeColor     );
+    connect( createFillColorAction   , &MyAction::triggered, this, &MyWidget::SelectFillColor       );
+    connect( createDeleteObjectAction, &MyAction::triggered, this, &MyWidget::SelectDeleteObject    );
 
     toolbar->move( 0, 0 );
 
@@ -782,16 +706,13 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     mBLContext = new BLContext(*mBLImage);
     mBLImage->getData( &data );
 
-    mSelectedObject = nullptr;
-
     mQImage = new QImage( (uchar*) data.pixelData
                                  , data.size.w
                                  , data.size.h
                                  , data.stride
                                  , QImage::Format_ARGB32_Premultiplied );
 
-    mScene = new FVectorRoot();
-    mScene->UpdateMatrix( *mBLContext );
+    mVEngine.GetScene().UpdateMatrix( *mBLContext );
 
 }
 

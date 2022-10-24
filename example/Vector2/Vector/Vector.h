@@ -16,3 +16,4 @@
 #include "Vector/VectorPath.h"
 #include "Vector/VectorPathBuilder.h"
 #include "Vector/VectorPathCubic.h"
+#include "Vector/VectorEngine.h"

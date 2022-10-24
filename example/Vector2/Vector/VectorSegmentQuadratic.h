@@ -16,5 +16,5 @@ class FVectorSegmentQuadratic : public FVectorSegment
         FVectorSegmentQuadratic();
         FVectorSegmentQuadratic( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
         FVectorSegmentQuadratic( FVectorPoint* iPoint0, double iCtrlx, double iCtrly, FVectorPoint* iPoint1 );
-        void Draw( FBlock& iBlock, BLContext& iBLContext );
+        void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
 };

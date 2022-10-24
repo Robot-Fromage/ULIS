@@ -204,7 +204,7 @@ FVectorPathBuilder::End( double iX
 }
 
 void
-FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext )
+FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
     BLPath path;
 
@@ -238,7 +238,7 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     }
     iBLContext.strokePath( path );
 
-    mCubicPath->DrawShape( iBlock, iBLContext );
+    mCubicPath->DrawShape( iBlock, iBLContext, iRoi );
 }
 
 void

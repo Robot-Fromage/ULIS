@@ -18,7 +18,7 @@ FVectorCircle::FVectorCircle( double iRadius )
 }
 
 void
-FVectorCircle::DrawShape( FBlock& iBlock, BLContext& iBLContext )
+FVectorCircle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
     iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
     iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );

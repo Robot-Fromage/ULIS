@@ -32,14 +32,16 @@ FVectorSegment::GetStraightDistance()
 
 void
 FVectorSegment::DrawStructure( FBlock& iBlock
-                             , BLContext& iBLContext )
+                             , BLContext& iBLContext
+                             , FRectD &iRoi )
 {
 
 }
 
 void
 FVectorSegment::Draw( FBlock& iBlock
-                    , BLContext& iBLContext )
+                    , BLContext& iBLContext
+                    , FRectD &iRoi )
 {
 
 }

@@ -14,6 +14,7 @@ class FVectorObject
         FVec2D mScaling;
         BLMatrix2D mLocalMatrix;
         BLMatrix2D mWorldMatrix;
+        BLMatrix2D mInverseWorldMatrix;
         std::list<FVectorObject*> mChildrenList;
         uint32 mStrokeColor;
         double mStrokeWidth;
@@ -21,15 +22,17 @@ class FVectorObject
         FVectorObject* mParent;
         bool mIsFilled;
         bool mIsSelected;
+        FRectD mBBox;
 
     public:
         ~FVectorObject();
         FVectorObject();
-        virtual void Draw( FBlock& iBlock, BLContext& iBLContext ) final; // cannot be overridden
+        virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) final; // cannot be overridden
         virtual bool Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
-        virtual void DrawShape(FBlock& iBlock,BLContext& iBLContext) = 0;
-        virtual bool PickShape(BLContext& iBLContext,double iX, double iY, double iRadius ) = 0;
-        void DrawChildren( FBlock& iBlock,BLContext& iBLContext );
+        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &roi ) = 0;
+        virtual bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) = 0;
+        /*virtual void UpdateBoundingBox() = 0;*/
+        void DrawChildren( FBlock& iBlock,BLContext& iBLContext, FRectD& iRoi );
         void UpdateMatrix( BLContext& iBLContext );
         void Translate( double iX, double iY );
         void Rotate( double iAngle );
@@ -41,6 +44,7 @@ class FVectorObject
         double GetTranslationX();
         double GetTranslationY();
         double GetRotation();
+        FVectorObject* GetParent();
         void CopyTransformation( FVectorObject& iObject );
         BLMatrix2D& GetLocalMatrix();
         BLMatrix2D& GetWorldMatrix();
@@ -49,6 +53,7 @@ class FVectorObject
         void SetFillColor( uint32 iColor );
         void SetFilled(bool iIsFilled);
         void SetStrokeWidth( double iWidth );
+        double GetStrokeWidth( );
         FVec2D WorldCoordinatesToLocal( double iX, double iY );
         void SetIsSelected( bool iIsSelected );
 };

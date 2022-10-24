@@ -81,3 +81,16 @@ FVectorPoint::GetType()
 {
     return 0; // default type;
 }
+
+double
+FVectorPoint::GetRadius()
+{
+    return mRadius;
+}
+
+void
+FVectorPoint::SetRadius( double iRadius
+                       , bool iBuildSegments )
+{
+    mRadius = iRadius;
+}

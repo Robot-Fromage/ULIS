@@ -20,7 +20,7 @@ FVectorRectangle::FVectorRectangle( double iWidth, double iHeight )
 }
 
 void
-FVectorRectangle::DrawShape( FBlock& iBlock, BLContext& iBLContext )
+FVectorRectangle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
     iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
     iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );

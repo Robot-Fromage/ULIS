@@ -20,8 +20,8 @@ class FVectorPath : public FVectorObject
         ~FVectorPath();
         FVectorPath();
         FVectorSegment* AppendPoint( FVectorPoint* iPoint );
-        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext );
-        virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext);
+        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         FVectorPoint* GetLastPoint();

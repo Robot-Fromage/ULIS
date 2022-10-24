@@ -75,7 +75,7 @@ FVectorPath::GetLastPoint()
 }
 
 void
-FVectorPath::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
+FVectorPath::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
     iBLContext.setStrokeStyle( BLRgba32( 0xFF00FF00 ) );
     iBLContext.setStrokeWidth(1.0f);
@@ -84,12 +84,12 @@ FVectorPath::DrawStructure( FBlock& iBlock, BLContext& iBLContext )
     {
         FVectorSegment *segment = (*it);
 
-        segment->DrawStructure( iBlock, iBLContext );
+        segment->DrawStructure( iBlock, iBLContext, iRoi );
     }
 }
 
 void
-FVectorPath::DrawShape( FBlock& iBlock, BLContext& iBLContext )
+FVectorPath::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
 
 
@@ -101,6 +101,6 @@ FVectorPath::DrawShape( FBlock& iBlock, BLContext& iBLContext )
     {
         FVectorSegment *segment = (*it);
 
-        segment->Draw( iBlock, iBLContext );
+        segment->Draw( iBlock, iBLContext, iRoi );
     }
 }
