@@ -35,6 +35,7 @@ private:
     double mMouseX, mMouseY;
     int32 mAction;
     void (MyWidget::*mTool)(QEvent*);
+    FRectD mScreen;
 
 public:
     MyWidget::MyWidget(uint32 iWidth,uint32 iHeight);
@@ -46,6 +47,7 @@ public:
     void MyWidget::RotateObject(QEvent *e);
     void MyWidget::CreateCircle(QEvent *e);
     void MyWidget::CreateRectangle(QEvent *e);
+    void MyWidget::PanView(QEvent *e);
 
     void MyWidget::SelectCreatePath( bool checked );
     void MyWidget::SelectEditPath( bool checked );
@@ -58,6 +60,7 @@ public:
     void MyWidget::SelectStrokeColor( bool checked );
     void MyWidget::SelectFillColor( bool checked );
     void MyWidget::SelectDeleteObject( bool checked );
+    void MyWidget::SelectPanView( bool checked );
 
     virtual ~MyWidget() {
         delete mQImage; mBLContext->end();
@@ -66,6 +69,8 @@ public:
     virtual void paintEvent( QPaintEvent* e )
     {
         QPainter p(this);
+        QRect region;
+        FRectD& invalidateRegion = mVEngine.GetInvalidateRegion();
 
         mContext->Clear(*mCanvas);
         mContext->Finish();
@@ -89,10 +94,16 @@ public:
         /*mContext->DrawVectorObject ( *mCanvas, *mCubicPath, *mBLContext );*/
         /*mContext->DrawVectorObject ( *mCanvas, *mScene, *mBLContext );*/
 
+        region.setRect( invalidateRegion.x
+                      , invalidateRegion.y
+                      , invalidateRegion.w
+                      , invalidateRegion.h );
+
         mVEngine.Draw( *mCanvas, *mBLContext );
 
         mContext->Finish();
 
+        /*p.drawImage( region, *mQImage, region );*/
         p.drawImage( rect(), *mQImage );
 
         p.end();
@@ -191,21 +202,21 @@ public:
     }
 
 
-virtual void mousePressEvent(QMouseEvent* event)
-{
-    if ( mTool ) ((*this).*(mTool))( event );
-}
+    virtual void mousePressEvent(QMouseEvent* event)
+    {
+        if ( mTool ) ((*this).*(mTool))( event );
+    }
 
-virtual void mouseReleaseEvent( QMouseEvent* event )
-{
-    if ( mTool ) ((*this).*(mTool))( event );
-}
+    virtual void mouseReleaseEvent( QMouseEvent* event )
+    {
+        if ( mTool ) ((*this).*(mTool))( event );
+    }
 
 
- virtual void mouseMoveEvent(QMouseEvent* event)
- {
-    if ( mTool ) ((*this).*(mTool))( event );
- }
+     virtual void mouseMoveEvent(QMouseEvent* event)
+     {
+        if ( mTool ) ((*this).*(mTool))( event );
+     }
 };
 
 #define CREATE_PATH      "Create Path"
@@ -219,6 +230,7 @@ virtual void mouseReleaseEvent( QMouseEvent* event )
 #define STROKE_COLOR     "Stroke Color"
 #define FILL_COLOR       "Fill Color"
 #define DELETE_OBJECT    "Delete Object"
+#define PAN_VIEW         "Pan View"
 
 class MyAction : public QAction {
     public :
@@ -234,6 +246,7 @@ void MyWidget::SelectScaleObject    ( bool checked ) { mTool = &MyWidget::ScaleO
 void MyWidget::SelectRotateObject   ( bool checked ) { mTool = &MyWidget::RotateObject;   }
 void MyWidget::SelectCreateCircle   ( bool checked ) { mTool = &MyWidget::CreateCircle;   }
 void MyWidget::SelectCreateRectangle( bool checked ) { mTool = &MyWidget::CreateRectangle;}
+void MyWidget::SelectPanView        ( bool checked ) { mTool = &MyWidget::PanView        ;}
 void MyWidget::SelectStrokeColor    ( bool checked )
 {
     QColor color = QColorDialog::getColor( Qt::white, this );
@@ -295,8 +308,6 @@ MyWidget::CreatePath(QEvent *event)
         FRectD invalidateRegion = { e->x() - 100.0f, e->y() - 100.0f, 200.0f, 200.0f };
         FRectD finalRegion = invalidateRegion;
 
-        invalidateRegion.Sanitize();
-
         currentPathBuilder->AppendPoint( localCoords.x, localCoords.y, 4.0f );
         FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(cubicPath->GetLastSegment());
 
@@ -310,16 +321,18 @@ MyWidget::CreatePath(QEvent *event)
                                , localBBoxSize.x
                                , localBBoxSize.y };
 
-            worldBBox.Sanitize();
+            /*worldBBox.Sanitize();*/
 
             invalidateRegion = finalRegion | worldBBox;
         } 
-/*
-        mVEngine.InvalidateRegion( invalidateRegion.x, invalidateRegion.y, invalidateRegion.w, invalidateRegion.h );
-*/
-        /*mVEngine.InvalidateRegion(  );*/
 
-        /*cubicPath->DrawShape( *mCanvas, *mBLContext );*/
+        invalidateRegion.Sanitize();
+
+        finalRegion = invalidateRegion & mScreen;
+
+        mVEngine.InvalidateRegion( finalRegion.x, finalRegion.y, finalRegion.w, finalRegion.h );
+
+        /*mVEngine.InvalidateRegion(  );*/
     }
 
     if( event->type() == QEvent::MouseButtonRelease )
@@ -467,6 +480,48 @@ MyWidget::EditPath( QEvent *event )
 }
 
 void
+MyWidget::PanView(QEvent *event)
+{
+    QMouseEvent *e = static_cast<QMouseEvent*>(event);
+    static BLMatrix2D inverseWorldMatrix;
+
+    if( event->type() == QEvent::MouseButtonPress )
+    {
+        FVectorObject* sceneObject = static_cast<FVectorObject*>( &mVEngine.GetScene() );
+        BLMatrix2D::invert( inverseWorldMatrix, sceneObject->GetWorldMatrix() );
+        BLPoint localCoords = inverseWorldMatrix.mapPoint(  e->x(),  e->y() );
+
+        mMouseX = localCoords.x;
+        mMouseY = localCoords.y;
+    }
+
+    if( event->type() == QEvent::MouseMove )
+    {
+        if( e->buttons() == Qt::LeftButton )
+        {
+            FVectorObject *sceneObject = static_cast<FVectorObject*>( &mVEngine.GetScene() );
+
+            BLMatrix2D::invert( inverseWorldMatrix, sceneObject->GetWorldMatrix() );
+            BLPoint localCoords = inverseWorldMatrix.mapPoint(  e->x(),  e->y() );
+            double difx = localCoords.x - mMouseX;
+            double dify = localCoords.y - mMouseY;
+
+            sceneObject->Translate( /*sceneObject->GetTranslationX() +*/ difx
+                                  , /*sceneObject->GetTranslationY() +*/ dify );
+
+            sceneObject->UpdateMatrix( *mBLContext );
+
+           /* mMouseX = localCoords.x;
+            mMouseY = localCoords.y;*/
+
+            /*mVEngine.InvalidateRegion( beforeBBox | selectedObject->GetBBox( true ) );*/
+        }
+    }
+
+    update();
+}
+
+void
 MyWidget::MoveObject(QEvent *event)
 {
     QMouseEvent *e = static_cast<QMouseEvent*>(event);
@@ -500,6 +555,7 @@ MyWidget::MoveObject(QEvent *event)
                 BLPoint localCoords = inverseWorldMatrix.mapPoint(  e->x(),  e->y() );
                 double difx = localCoords.x - mMouseX;
                 double dify = localCoords.y - mMouseY;
+                FRectD beforeBBox = selectedObject->GetBBox( true );
 
                 selectedObject->Translate( selectedObject->GetTranslationX() + difx
                                          , selectedObject->GetTranslationY() + dify );
@@ -508,6 +564,8 @@ MyWidget::MoveObject(QEvent *event)
 
                 mMouseX = localCoords.x;
                 mMouseY = localCoords.y;
+
+                mVEngine.InvalidateRegion( beforeBBox | selectedObject->GetBBox( true ) );
             }
         }
     }
@@ -616,13 +674,11 @@ MyWidget::CreateCircle( QEvent *event )
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
         FVec2D dif = { localCoordinates.x - circle->GetTranslationX(),
                        localCoordinates.y - circle->GetTranslationY() };
+        FRectD circleRegion = circle->GetBBox( true );
 
         circle->SetRadius( dif.Distance() );
 
-        mVEngine.InvalidateRegion( mouseX - ( circle->GetRadius() + circle->GetStrokeWidth() )
-                                 , mouseY - ( circle->GetRadius() + circle->GetStrokeWidth() )
-                                 , ( circle->GetRadius() + circle->GetStrokeWidth() ) * 2
-                                 , ( circle->GetRadius() + circle->GetStrokeWidth() ) * 2 );
+        mVEngine.InvalidateRegion( circleRegion );
     }
 
     update();
@@ -652,8 +708,11 @@ MyWidget::CreateRectangle(QEvent *event)
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
         FVec2D dif = { localCoordinates.x - rectangle->GetTranslationX(),
                        localCoordinates.y - rectangle->GetTranslationY() };
+        FRectD rectangleRegion = rectangle->GetBBox( true );
 
         rectangle->SetSize( dif.x * 2.0f, dif.y * 2.0f );
+
+        mVEngine.InvalidateRegion( rectangleRegion );
     }
 
     update();
@@ -674,6 +733,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     MyAction *createStrokeColorAction  = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), STROKE_COLOR     ) );
     MyAction *createFillColorAction    = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), FILL_COLOR       ) );
     MyAction *createDeleteObjectAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), DELETE_OBJECT    ) );
+    MyAction *createPanViewAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), PAN_VIEW         ) );
 
     connect( createPathAction        , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
     connect( editPathAction          , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
@@ -686,11 +746,19 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     connect( createStrokeColorAction , &MyAction::triggered, this, &MyWidget::SelectStrokeColor     );
     connect( createFillColorAction   , &MyAction::triggered, this, &MyWidget::SelectFillColor       );
     connect( createDeleteObjectAction, &MyAction::triggered, this, &MyWidget::SelectDeleteObject    );
+    connect( createPanViewAction     , &MyAction::triggered, this, &MyWidget::SelectPanView         );
+
+    /*setAttribute(Qt::WA_OpaquePaintEvent);*/
 
     toolbar->move( 0, 0 );
 
     BLImageData data;
     eFormat fmt = Format_RGBA8;
+
+    mScreen.x = 0;
+    mScreen.y = 0;
+    mScreen.w = iWidth;
+    mScreen.h = iHeight;
 
     mAction = -1;
     mTool = nullptr;
@@ -710,7 +778,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
                                  , data.size.w
                                  , data.size.h
                                  , data.stride
-                                 , QImage::Format_ARGB32_Premultiplied );
+                                 , QImage::Format_ARGB32 );
 
     mVEngine.GetScene().UpdateMatrix( *mBLContext );
 

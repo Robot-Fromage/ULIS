@@ -11,6 +11,12 @@ FVectorPath::FVectorPath()
 
 }
 
+FVectorPath::FVectorPath( std::string iName )
+    : FVectorObject( iName )
+{
+
+}
+
 std::list<FVectorPoint*>&
 FVectorPath::GetSelectedPointList()
 {

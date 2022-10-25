@@ -7,6 +7,12 @@ FVectorPathCubic::FVectorPathCubic()
     setJointRadial();
 }
 
+FVectorPathCubic::FVectorPathCubic( std::string iName )
+    : FVectorPath( iName )
+{
+
+}
+
 void
 FVectorPathCubic::setJointRadial()
 {
@@ -255,6 +261,7 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi
 
     iBLContext.strokePath( path );
 */
+
     DrawShapeVariable( iBlock, iBLContext, iRoi );
 
     if( mIsSelected )
@@ -417,12 +424,10 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRec
         {
             FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
             double segmentStartRadius = segment->GetPoint(0).GetRadius();
-            FRectD clip = iRoi & mBBox;
+            FRectD clip = iRoi & segment->GetBoundingBox();
 
-            if( !iRoi.Area() || clip.Area() )
+            if( ( iRoi.Area() == 0.0f ) || clip.Area() )
             {
-                iRoi = clip;
-
                 segment->Draw( iBlock, iBLContext, iRoi );
             }
 

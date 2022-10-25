@@ -13,6 +13,7 @@ class FVectorObject
         double mRotation;
         FVec2D mScaling;
         BLMatrix2D mLocalMatrix;
+        BLMatrix2D mInverseLocalMatrix;
         BLMatrix2D mWorldMatrix;
         BLMatrix2D mInverseWorldMatrix;
         std::list<FVectorObject*> mChildrenList;
@@ -23,10 +24,12 @@ class FVectorObject
         bool mIsFilled;
         bool mIsSelected;
         FRectD mBBox;
+        std::string mName;
 
     public:
         ~FVectorObject();
         FVectorObject();
+        FVectorObject( std::string iName );
         virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) final; // cannot be overridden
         virtual bool Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &roi ) = 0;
@@ -56,4 +59,5 @@ class FVectorObject
         double GetStrokeWidth( );
         FVec2D WorldCoordinatesToLocal( double iX, double iY );
         void SetIsSelected( bool iIsSelected );
+        FRectD GetBBox( bool iWorld );
 };

@@ -12,10 +12,20 @@ FVectorObject::FVectorObject()
     , mStrokeColor ( 0xFF000000 )
     , mFillColor ( 0xFF000000 )
     , mStrokeWidth ( 4.0f )
-    , mParent( nullptr )
-    , mIsFilled( false )
-    , mIsSelected( false )
+    , mParent ( nullptr )
+    , mIsFilled ( false )
+    , mIsSelected ( false )
 {
+    mLocalMatrix.reset();
+    mInverseLocalMatrix.reset();
+    mWorldMatrix.reset();
+    mInverseWorldMatrix.reset();
+}
+
+FVectorObject::FVectorObject( std::string iName )
+    : FVectorObject( )
+{
+    mName.assign( iName );
 }
 
 void
@@ -98,6 +108,7 @@ FVectorObject::UpdateMatrix( BLContext& iBLContext )
         memcpy( &mWorldMatrix, &mLocalMatrix, sizeof ( mLocalMatrix ) );
     }
 
+    BLMatrix2D::invert( mInverseLocalMatrix, mLocalMatrix );
     BLMatrix2D::invert( mInverseWorldMatrix, mWorldMatrix );
 
     // recurse
@@ -109,6 +120,23 @@ FVectorObject::UpdateMatrix( BLContext& iBLContext )
     }
 
     iBLContext.restore();
+}
+
+FRectD
+FVectorObject::GetBBox( bool iWorld )
+{
+
+    if ( iWorld == true )
+    {
+        BLPoint origin = mWorldMatrix.mapPoint( mBBox.x, mBBox.y );
+        BLPoint size = mWorldMatrix.mapVector( mBBox.w, mBBox.h );
+        FRectD worldBBox = { origin.x, origin.y, size.x, size.y };
+        
+        return worldBBox;
+    }
+    
+
+    return mBBox;
 }
 
 void
@@ -125,42 +153,30 @@ FVectorObject::DrawChildren( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi
 void
 FVectorObject::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
-    static FRectD zeroRectangle = { 0.0f, 0.0f, 0.0f, 0.0f };
+    FRectD localRoi = { 0.0f, 0.0f, 0.0f, 0.0f };
 
     // Adapt the Region-Of-Interest to the local coordinates
-    if( iRoi != zeroRectangle )
+    if( iRoi.Area() != 0.0f )
     {
-        BLPoint roiCornerTop = { iRoi.x, iRoi.y };
-        BLPoint roiCornerBottom = { iRoi.x + iRoi.w, iRoi.y + iRoi.h };
-        BLPoint localRoiCornerTop = mInverseWorldMatrix.mapPoint( roiCornerTop.x, roiCornerTop.y );
-        BLPoint localRoiCornerBottom = mInverseWorldMatrix.mapPoint( roiCornerBottom.x, roiCornerBottom.y );
+        BLPoint roiCornerOrigin = { iRoi.x, iRoi.y };
+        BLPoint roiCornerSize = { iRoi.w, iRoi.h };
+        BLPoint localRoiCornerOrigin = mInverseLocalMatrix.mapPoint( roiCornerOrigin.x, roiCornerOrigin.y );
+        BLPoint localRoiCornerSize = mInverseLocalMatrix.mapVector( roiCornerSize.x, roiCornerSize.y );
 
-        iRoi.x = localRoiCornerTop.x;
-        iRoi.y = localRoiCornerTop.y;
-        iRoi.w = localRoiCornerBottom.x - localRoiCornerTop.x;
-        iRoi.h = localRoiCornerBottom.y - localRoiCornerTop.y;
+        localRoi.x = localRoiCornerOrigin.x;
+        localRoi.y = localRoiCornerOrigin.y;
+        localRoi.w = localRoiCornerSize.x;
+        localRoi.h = localRoiCornerSize.y;
     }
+
+            /*printf("%s : %f %f %f %f\n",mName.c_str(), iRoi.x,iRoi.y,iRoi.w,iRoi.h);*/
 
     iBLContext.save();
     iBLContext.transform( mLocalMatrix );
     /*iBLContext.translate( mTranslation.x, mTranslation.y );*/
-    DrawShape( iBlock, iBLContext, iRoi );
+    DrawShape( iBlock, iBLContext, localRoi );
 
-    DrawChildren( iBlock, iBLContext, iRoi );
-
-    // Restore the ROI to the parent coordinates. At this step it may have been modified by some child
-    if( iRoi != zeroRectangle )
-    {
-        BLPoint roiCornerTop = { iRoi.x, iRoi.y };
-        BLPoint roiCornerBottom = { iRoi.x + iRoi.w, iRoi.y + iRoi.h };
-        BLPoint parentRoiCornerTop = mLocalMatrix.mapPoint( roiCornerTop.x, roiCornerTop.y );
-        BLPoint parentRoiCornerBottom = mLocalMatrix.mapPoint( roiCornerBottom.x, roiCornerBottom.y );
-
-        iRoi.x = parentRoiCornerTop.x;
-        iRoi.y = parentRoiCornerTop.y;
-        iRoi.w = parentRoiCornerBottom.x - parentRoiCornerTop.x;
-        iRoi.h = parentRoiCornerBottom.y - parentRoiCornerTop.y;
-    }
+    DrawChildren( iBlock, iBLContext, localRoi );
 
     iBLContext.restore();
 }

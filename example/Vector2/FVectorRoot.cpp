@@ -10,6 +10,12 @@ FVectorRoot::FVectorRoot()
 {
 }
 
+FVectorRoot::FVectorRoot( std::string iName )
+    : FVectorObject( iName )
+{
+
+}
+
 void
 FVectorRoot::ClearSelection()
 {

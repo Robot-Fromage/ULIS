@@ -17,6 +17,7 @@ class FVectorRoot : public FVectorObject
     public:
         ~FVectorRoot();
         FVectorRoot();
+        FVectorRoot( std::string iName );
         void Select( BLContext& iBLContext, double x, double y, double iRadius );
         void Select( BLContext& iBLContext, FVectorObject& iVecObj );
         void ClearSelection();

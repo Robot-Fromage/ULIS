@@ -20,9 +20,21 @@ FVectorCircle::FVectorCircle( double iRadius )
 void
 FVectorCircle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
+
+
     iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
     iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );
     iBLContext.setStrokeWidth( mStrokeWidth );
+
+    if ( iRoi.Area() != 0.0f )
+    {
+        FRectD clip = ( iRoi & mBBox );
+
+        if ( clip.Area() )
+        {
+            iBLContext.clipToRect ( iRoi.x, iRoi.y, iRoi.w, iRoi.h );
+        }
+    }
 
     iBLContext.strokeCircle( 0.0f, 0.0f, mRadius );
 
@@ -48,6 +60,11 @@ void
 FVectorCircle::SetRadius( double iRadius )
 {
     mRadius = iRadius;
+
+    mBBox.x = -mRadius - mStrokeWidth;
+    mBBox.y = -mRadius - mStrokeWidth;
+    mBBox.w =  ( mRadius +  mStrokeWidth ) * 2;
+    mBBox.h =  ( mRadius +  mStrokeWidth ) * 2;
 }
 
 double

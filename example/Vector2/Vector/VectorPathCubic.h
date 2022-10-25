@@ -24,6 +24,8 @@ class FVectorPathCubic: public FVectorPath
         
     public:
         FVectorPathCubic();
+        FVectorPathCubic( std::string iName );
+
         FVectorSegmentCubic* AppendPoint( FVectorPointCubic* iPoint, bool iBuildSegments );
         bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
         void PickPoint ( double iX, double iY, double iRadius );

@@ -236,14 +236,16 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
                          , BLContext& iBLContext
                          , FRectD &iRoi )
 {
-    iBLContext.setStrokeWidth( 0.1f );
+    iBLContext.setStrokeWidth( 1.0f );
 
     for ( int i = 0; i < mPolygonSlot; i++ )
     {
        /* int n = i + 1;*/
 
-        // the strokeLine thing is very slow and slows the all thing, we have to find something better
-        iBLContext.strokeLine( mPolygonCache[i].vertex[1], mPolygonCache[i].vertex[2] );
+        /*iBLContext.strokeLine( mPolygonCache[i].vertex[1], mPolygonCache[i].vertex[2] );*/
+
+        // the stroke thing is very slow and slows the all thing, we have to find something better
+        iBLContext.strokePolygon( mPolygonCache[i].vertex, 4 );
         iBLContext.fillPolygon( mPolygonCache[i].vertex, 4 );
     }
 }

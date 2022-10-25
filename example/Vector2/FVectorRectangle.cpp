@@ -57,6 +57,11 @@ FVectorRectangle::SetSize( double iWidth, double iHeight )
 {
     mWidth  = iWidth;
     mHeight = iHeight;
+
+    mBBox.x = (-mWidth * 0.5f ) - mStrokeWidth;
+    mBBox.y = (-mHeight * 0.5f ) - mStrokeWidth;
+    mBBox.w =  ( ( mWidth * 0.5f ) +  mStrokeWidth ) * 2;
+    mBBox.h =  ( ( mHeight * 0.5f ) +  mStrokeWidth ) * 2;
 }
 
 double FVectorRectangle::GetWidth()

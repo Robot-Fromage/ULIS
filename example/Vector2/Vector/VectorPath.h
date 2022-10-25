@@ -19,6 +19,7 @@ class FVectorPath : public FVectorObject
     public:
         ~FVectorPath();
         FVectorPath();
+        FVectorPath( std::string iName );
         FVectorSegment* AppendPoint( FVectorPoint* iPoint );
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );

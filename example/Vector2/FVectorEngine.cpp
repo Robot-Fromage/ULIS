@@ -6,8 +6,15 @@ FVectorEngine::~FVectorEngine()
 }
 
 FVectorEngine::FVectorEngine()
+    : mScene ( "Vector Scene" )
 {
 
+}
+
+FRectD&
+FVectorEngine::GetInvalidateRegion()
+{
+    return mRoi;
 }
 
 void
@@ -19,9 +26,11 @@ FVectorEngine::Draw( FBlock& iBlock, BLContext& iBLContext )
     {
         iBLContext.fillRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
 
-        /*iBLContext.setStrokeStyle(BLRgba32(0xFFFF0000));
+/*
+        iBLContext.setStrokeStyle(BLRgba32(0xFFFF0000));
         iBLContext.setStrokeWidth(1.0f);
-        iBLContext.strokeRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );*/
+        iBLContext.strokeRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
+*/
     }
     else
     {
@@ -49,4 +58,13 @@ FVectorEngine::InvalidateRegion( double x, double y, double w, double h )
     mRoi.y = y;
     mRoi.w = w;
     mRoi.h = h;
+}
+
+void
+FVectorEngine::InvalidateRegion( FRectD& iRegion )
+{
+    mRoi.x = iRegion.x;
+    mRoi.y = iRegion.y;
+    mRoi.w = iRegion.w;
+    mRoi.h = iRegion.h;
 }
