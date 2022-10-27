@@ -19,4 +19,6 @@ public:
     virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
     virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
     double GetStraightDistance();
+    FVectorSegment* GetPreviousSegment();
+    FVectorSegment* GetNextSegment();
 };

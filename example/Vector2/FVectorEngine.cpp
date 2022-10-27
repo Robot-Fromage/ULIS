@@ -26,11 +26,11 @@ FVectorEngine::Draw( FBlock& iBlock, BLContext& iBLContext )
     {
         iBLContext.fillRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
 
-/*
+
         iBLContext.setStrokeStyle(BLRgba32(0xFFFF0000));
         iBLContext.setStrokeWidth(1.0f);
         iBLContext.strokeRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
-*/
+
     }
     else
     {

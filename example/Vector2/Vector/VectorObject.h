@@ -60,4 +60,7 @@ class FVectorObject
         FVec2D WorldCoordinatesToLocal( double iX, double iY );
         void SetIsSelected( bool iIsSelected );
         FRectD GetBBox( bool iWorld );
+        bool IsFilled();
+        void MoveBehind();
+        void MoveBefore();
 };

@@ -97,19 +97,21 @@ FVectorObject::UpdateMatrix( BLContext& iBLContext )
 
     iBLContext.save();*/
 
+    BLMatrix2D::invert( mInverseLocalMatrix, mLocalMatrix );
+
     if( mParent)
     {
         iBLContext.setMatrix( mParent->mWorldMatrix );
         iBLContext.transform( mLocalMatrix );
         mWorldMatrix = iBLContext.userMatrix();
+
+        BLMatrix2D::invert( mInverseWorldMatrix, mWorldMatrix );
     }
      else
     {
-        memcpy( &mWorldMatrix, &mLocalMatrix, sizeof ( mLocalMatrix ) );
+        memcpy( &mWorldMatrix       , &mLocalMatrix       , sizeof ( mLocalMatrix        ) );
+        memcpy( &mInverseWorldMatrix, &mInverseLocalMatrix, sizeof ( mInverseLocalMatrix ) );
     }
-
-    BLMatrix2D::invert( mInverseLocalMatrix, mLocalMatrix );
-    BLMatrix2D::invert( mInverseWorldMatrix, mWorldMatrix );
 
     // recurse
     for( std::list<FVectorObject*>::iterator it = mChildrenList.begin(); it != mChildrenList.end(); ++it )
@@ -190,6 +192,21 @@ bool
 FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     return false;
+}
+
+bool
+FVectorObject::IsFilled()
+{
+    return mIsFilled;
+}
+
+void
+FVectorObject::MoveBack()
+{
+    if ( mParent )
+    {
+        mParent->
+    }
 }
 
 FVec2D

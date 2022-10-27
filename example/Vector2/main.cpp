@@ -330,7 +330,7 @@ MyWidget::CreatePath(QEvent *event)
 
         finalRegion = invalidateRegion & mScreen;
 
-        mVEngine.InvalidateRegion( finalRegion.x, finalRegion.y, finalRegion.w, finalRegion.h );
+       /* mVEngine.InvalidateRegion( finalRegion.x, finalRegion.y, finalRegion.w, finalRegion.h ); */
 
         /*mVEngine.InvalidateRegion(  );*/
     }
@@ -411,69 +411,73 @@ MyWidget::EditPath( QEvent *event )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
         FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mVEngine.GetScene().GetLastSelected() );
-        double radius = 10.0f;
-        double x = e->x();
-        double y = e->y();
-        BLPoint localCoords = inverseWorldMatrix.mapPoint( x, y );
-        double difx = localCoords.x - mMouseX;
-        double dify = localCoords.y - mMouseY;
 
-        std::list<FVectorPoint*> selectedPointList = cubicPath->GetSelectedPointList();
-
-        for( std::list<FVectorPoint*>::iterator it = selectedPointList.begin(); it != selectedPointList.end(); ++it )
+        if ( cubicPath )
         {
-            FVectorPoint *selectedPoint = *it;
-            std::list<FVectorSegment*> segmentList = selectedPoint->GetSegmentList();
+            double radius = 10.0f;
+            double x = e->x();
+            double y = e->y();
+            BLPoint localCoords = inverseWorldMatrix.mapPoint( x, y );
+            double difx = localCoords.x - mMouseX;
+            double dify = localCoords.y - mMouseY;
 
-            switch ( selectedPoint->GetType() )
+            std::list<FVectorPoint*> selectedPointList = cubicPath->GetSelectedPointList();
+
+            for( std::list<FVectorPoint*>::iterator it = selectedPointList.begin(); it != selectedPointList.end(); ++it )
             {
-                case FVectorHandlePoint::HANDLE_TYPE_POINT :
+                FVectorPoint *selectedPoint = *it;
+                std::list<FVectorSegment*> segmentList = selectedPoint->GetSegmentList();
+
+                switch ( selectedPoint->GetType() )
                 {
-                    FVectorHandlePoint* pointHandle = static_cast<FVectorHandlePoint*>( selectedPoint );
-                    FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( pointHandle->GetParent() );
-                    FVec2D dif = { cubicPoint->GetX() - localCoords.x, cubicPoint->GetY() - localCoords.y };
-
-                    cubicPoint->SetRadius( dif.Distance(), true );
-                }
-                break;
-
-                case FVectorHandleSegment::HANDLE_TYPE_SEGMENT :
-                {
-                    FVectorHandleSegment* segmentHandle = static_cast<FVectorHandleSegment*>( selectedPoint );
-                    FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segmentHandle->GetParent());
-
-                    selectedPoint->Set( selectedPoint->GetX() + difx
-                                      , selectedPoint->GetY() + dify );
-
-                    cubicSegment->BuildVariable();
-                }
-                break;;
-
-                default :
-                {
-                    FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( selectedPoint );
-
-                    cubicPoint->Set( selectedPoint->GetX() + difx
-                                   , selectedPoint->GetY() + dify, false );
-
-                    for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
+                    case FVectorHandlePoint::HANDLE_TYPE_POINT :
                     {
-                        FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*segit);
-                        FVectorHandleSegment* ctrlPoint = ( &cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 0 ) ) :
-                                                                                                            static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 1 ) );
+                        FVectorHandlePoint* pointHandle = static_cast<FVectorHandlePoint*>( selectedPoint );
+                        FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( pointHandle->GetParent() );
+                        FVec2D dif = { cubicPoint->GetX() - localCoords.x, cubicPoint->GetY() - localCoords.y };
 
-                        ctrlPoint->Set( ctrlPoint->GetX() + difx
-                                      , ctrlPoint->GetY() + dify );
+                        cubicPoint->SetRadius( dif.Distance(), true );
                     }
+                    break;
 
-                    cubicPoint->BuildSegments();
+                    case FVectorHandleSegment::HANDLE_TYPE_SEGMENT :
+                    {
+                        FVectorHandleSegment* segmentHandle = static_cast<FVectorHandleSegment*>( selectedPoint );
+                        FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segmentHandle->GetParent());
+
+                        selectedPoint->Set( selectedPoint->GetX() + difx
+                                          , selectedPoint->GetY() + dify );
+
+                        cubicSegment->BuildVariable();
+                    }
+                    break;;
+
+                    default :
+                    {
+                        FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( selectedPoint );
+
+                        cubicPoint->Set( selectedPoint->GetX() + difx
+                                       , selectedPoint->GetY() + dify, false );
+
+                        for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
+                        {
+                            FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*segit);
+                            FVectorHandleSegment* ctrlPoint = ( &cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 0 ) ) :
+                                                                                                                static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 1 ) );
+
+                            ctrlPoint->Set( ctrlPoint->GetX() + difx
+                                          , ctrlPoint->GetY() + dify );
+                        }
+
+                        cubicPoint->BuildSegments();
+                    }
+                    break;
                 }
-                break;
             }
-        }
 
-        mMouseX = localCoords.x;
-        mMouseY = localCoords.y;
+            mMouseX = localCoords.x;
+            mMouseY = localCoords.y;
+        }
     }
 
     update();
@@ -488,8 +492,8 @@ MyWidget::PanView(QEvent *event)
     if( event->type() == QEvent::MouseButtonPress )
     {
         FVectorObject* sceneObject = static_cast<FVectorObject*>( &mVEngine.GetScene() );
-        BLMatrix2D::invert( inverseWorldMatrix, sceneObject->GetWorldMatrix() );
-        BLPoint localCoords = inverseWorldMatrix.mapPoint(  e->x(),  e->y() );
+        /*BLMatrix2D::invert( inverseWorldMatrix, sceneObject->GetWorldMatrix() );*/
+        BLPoint localCoords = { (double) e->x(),  (double) e->y() };
 
         mMouseX = localCoords.x;
         mMouseY = localCoords.y;
@@ -500,19 +504,18 @@ MyWidget::PanView(QEvent *event)
         if( e->buttons() == Qt::LeftButton )
         {
             FVectorObject *sceneObject = static_cast<FVectorObject*>( &mVEngine.GetScene() );
-
-            BLMatrix2D::invert( inverseWorldMatrix, sceneObject->GetWorldMatrix() );
-            BLPoint localCoords = inverseWorldMatrix.mapPoint(  e->x(),  e->y() );
+            /*BLMatrix2D::invert( inverseWorldMatrix, sceneObject->GetWorldMatrix() );*/
+            BLPoint localCoords = { (double) e->x(),  (double) e->y() };
             double difx = localCoords.x - mMouseX;
             double dify = localCoords.y - mMouseY;
 
-            sceneObject->Translate( /*sceneObject->GetTranslationX() +*/ difx
-                                  , /*sceneObject->GetTranslationY() +*/ dify );
+            sceneObject->Translate( sceneObject->GetTranslationX() + difx
+                                  , sceneObject->GetTranslationY() + dify );
 
             sceneObject->UpdateMatrix( *mBLContext );
 
-           /* mMouseX = localCoords.x;
-            mMouseY = localCoords.y;*/
+            mMouseX = localCoords.x;
+            mMouseY = localCoords.y;
 
             /*mVEngine.InvalidateRegion( beforeBBox | selectedObject->GetBBox( true ) );*/
         }
@@ -656,29 +659,31 @@ MyWidget::CreateCircle( QEvent *event )
         FVectorCircle* circle = new FVectorCircle( 0.0f );
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
-        mouseX = e->x();
-        mouseY = e->y();
-
         mVEngine.GetScene().AddChild( circle );
 
         circle->Translate( localCoordinates.x, localCoordinates.y );
         circle->UpdateMatrix( *mBLContext );
 
+        mVEngine.GetScene().ClearSelection();
         mVEngine.GetScene().Select( *mBLContext, *circle );
     }
 
     if( event->type() == QEvent::MouseMove )
     {
         FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
-        FVectorCircle* circle = static_cast<FVectorCircle*>( selectedObject );
-        FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
-        FVec2D dif = { localCoordinates.x - circle->GetTranslationX(),
-                       localCoordinates.y - circle->GetTranslationY() };
-        FRectD circleRegion = circle->GetBBox( true );
 
-        circle->SetRadius( dif.Distance() );
+        if ( selectedObject )
+        {
+            FVectorCircle* circle = static_cast<FVectorCircle*>(selectedObject);
+            FVec2D localCoordinates = selectedObject->WorldCoordinatesToLocal( e->x(),e->y() );
+            FVec2D dif ={ localCoordinates.x,
+                          localCoordinates.y };
+            FRectD beforeBBox = selectedObject->GetBBox(true);
 
-        mVEngine.InvalidateRegion( circleRegion );
+            circle->SetRadius( dif.Distance() );
+
+            mVEngine.InvalidateRegion(beforeBBox | selectedObject->GetBBox(true));
+        }
     }
 
     update();
@@ -694,25 +699,31 @@ MyWidget::CreateRectangle(QEvent *event)
         FVectorRectangle* rectangle = new FVectorRectangle( 0.0f, 0.0f );
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
+        mVEngine.GetScene().AddChild( rectangle );
+
         rectangle->Translate( localCoordinates.x, localCoordinates.y );
         rectangle->UpdateMatrix( *mBLContext );
 
-        mVEngine.GetScene().AddChild( rectangle );
+        mVEngine.GetScene().ClearSelection();
         mVEngine.GetScene().Select( *mBLContext, *rectangle );
     }
 
     if( event->type() == QEvent::MouseMove )
     {
         FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
-        FVectorRectangle* rectangle = static_cast<FVectorRectangle*>( selectedObject );
-        FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
-        FVec2D dif = { localCoordinates.x - rectangle->GetTranslationX(),
-                       localCoordinates.y - rectangle->GetTranslationY() };
-        FRectD rectangleRegion = rectangle->GetBBox( true );
 
-        rectangle->SetSize( dif.x * 2.0f, dif.y * 2.0f );
+        if ( selectedObject )
+        {
+            FVectorRectangle* rectangle = static_cast<FVectorRectangle*>( selectedObject );
+            FVec2D localCoordinates = selectedObject->WorldCoordinatesToLocal( e->x(), e->y() );
+            FVec2D dif = { localCoordinates.x,
+                           localCoordinates.y };
+            FRectD beforeBBox = selectedObject->GetBBox( true );
 
-        mVEngine.InvalidateRegion( rectangleRegion );
+            rectangle->SetSize( dif.x * 2.0f, dif.y * 2.0f );
+
+            mVEngine.InvalidateRegion( beforeBBox | selectedObject->GetBBox( true ) );
+        }
     }
 
     update();

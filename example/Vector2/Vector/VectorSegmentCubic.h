@@ -38,8 +38,8 @@ class FVectorSegmentCubic : public FVectorSegment
     public:
         ~FVectorSegmentCubic(){};
         FVectorSegmentCubic( );
-        FVectorSegmentCubic( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
-        FVectorSegmentCubic( FVectorPoint* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPoint* iPoint1 );
+        FVectorSegmentCubic( FVectorPointCubic* iPoint0, FVectorPointCubic* iPoint1 );
+        FVectorSegmentCubic( FVectorPointCubic* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPointCubic* iPoint1 );
         FVectorHandleSegment& GetControlPoint( int iCtrlPointNum );
         FVectorPointCubic& GetPoint( int iPointNum );
         void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );

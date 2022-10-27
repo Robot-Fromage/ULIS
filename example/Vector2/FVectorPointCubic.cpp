@@ -31,9 +31,9 @@ FVectorPointCubic::GetControlPoint()
 }
 
 void
-FVectorPointCubic::Set(double iX
-                      ,double iY
-                      ,bool iBuildSegments)
+FVectorPointCubic::Set( double iX
+                      , double iY
+                      , bool iBuildSegments )
 {
     FVectorPoint::Set(iX,iY);
 

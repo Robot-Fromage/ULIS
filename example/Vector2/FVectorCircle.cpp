@@ -6,13 +6,13 @@ FVectorCircle::~FVectorCircle()
 }
 
 FVectorCircle::FVectorCircle()
-    : FVectorObject()
+    : FVectorObject("Circle")
 {
     mRadius = 0.0f;
 }
 
 FVectorCircle::FVectorCircle( double iRadius )
-    : FVectorObject()
+    : FVectorObject("Circle")
 {
     mRadius = iRadius;
 }

@@ -24,6 +24,12 @@ FVectorPathBuilder::AppendPoint( double iX
 {
     FVectorPoint* lastPoint = GetLastPoint();
 
+    // we already have a loop. don't go further
+    if ( mCubicPath->IsLoop() == true )
+    {
+        return nullptr;
+    }
+
     // lastPoint is NULL if this is the first point added
     if( lastPoint )
     {
@@ -89,9 +95,25 @@ FVectorPathBuilder::AppendPoint( double iX
                         {
                             FVectorPointCubic* lastSmoothedPoint = static_cast<FVectorPointCubic*>( mCubicPath->GetLastPoint() );
                             FVectorSegmentCubic* lastCubicSegment =  static_cast<FVectorSegmentCubic*>( mCubicPath->GetLastSegment() );
-                            FVectorPointCubic* cubicPoint = new FVectorPointCubic( lastPoint->GetX()
-                                                                                 , lastPoint->GetY()
-                                                                                 , iRadius );
+                            FVectorPointCubic* firstPoint = static_cast<FVectorPointCubic*>(  mCubicPath->GetFirstPoint() );
+                            FVec2D lastPointToFirstVector = { firstPoint->GetX() - lastPoint->GetX()
+                                                            , firstPoint->GetY() - lastPoint->GetY() };
+                            FVectorPointCubic* cubicPoint;
+                            
+                            // go for a loop
+                            if ( lastPointToFirstVector.DistanceSquared() < 64.0f )
+                            {
+                                cubicPoint = firstPoint;
+printf("looping\n");
+                            }
+                            // dont loop
+                            else
+                            {
+                                cubicPoint = new FVectorPointCubic( lastPoint->GetX()
+                                                                  , lastPoint->GetY()
+                                                                  , iRadius );
+                            }
+
                             FVectorSegmentCubic* cubicSegment = mCubicPath->AppendPoint( cubicPoint, false );
 
                             double cubicSegmentStraightDistance = cubicSegment->GetStraightDistance();

@@ -6,14 +6,14 @@ FVectorRectangle::~FVectorRectangle()
 }
 
 FVectorRectangle::FVectorRectangle()
-    : FVectorObject()
+    : FVectorObject("Rectangle")
     , mWidth( 0 )
     , mHeight( 0 )
 {
 }
 
 FVectorRectangle::FVectorRectangle( double iWidth, double iHeight )
-    : FVectorObject()
+    : FVectorObject("Rectangle")
     , mWidth( iWidth )
     , mHeight( iHeight )
 {

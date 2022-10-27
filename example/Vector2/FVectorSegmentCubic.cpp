@@ -1,8 +1,8 @@
 #include <blend2d.h>
 #include "Vector/Vector.h"
 
-FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
-                                        , FVectorPoint* iPoint1 )
+FVectorSegmentCubic::FVectorSegmentCubic( FVectorPointCubic* iPoint0
+                                        , FVectorPointCubic* iPoint1 )
    : FVectorSegment( iPoint0, iPoint1 )
    , mPolygonSlot( 0 )
 {
@@ -128,42 +128,6 @@ FVectorSegmentCubic::UpdateBoundingBox ()
                                       , mCtrlPoint[1].GetY() ) - mBBox.y;
 }
 
-FVec2D FVectorSegmentCubic::GetNextVector( bool iNormalize )
-{
-    std::list<FVectorSegment*>& segmentList = mPoint[1]->GetSegmentList();
-     static FVec2D zero = { 0.0f, 0.0f };
-
-    for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
-    {
-        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-
-        if ( segment != this ) 
-        {
-            return segment->GetVectorAtStart ( iNormalize );
-        }
-    }
-
-    return zero;
-}
-
-FVec2D FVectorSegmentCubic::GetPreviousVector( bool iNormalize )
-{
-    std::list<FVectorSegment*>& segmentList = mPoint[0]->GetSegmentList();
-     static FVec2D zero = { 0.0f, 0.0f };
-
-    for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
-    {
-        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-
-        if ( segment != this ) 
-        {
-            return segment->GetVectorAtEnd ( iNormalize );
-        }
-    }
-
-    return zero;
-}
-
 FVectorHandleSegment&
 FVectorSegmentCubic::GetControlPoint( int iCtrlPointNum )
 {
@@ -176,12 +140,12 @@ FVectorSegmentCubic::GetBoundingBox( )
     return mBBox;
 }
 
-FVectorSegmentCubic::FVectorSegmentCubic( FVectorPoint* iPoint0
+FVectorSegmentCubic::FVectorSegmentCubic( FVectorPointCubic* iPoint0
                                         , double iCtrlPoint0x
                                         , double iCtrlPoint0y
                                         , double iCtrlPoint1x
                                         , double iCtrlPoint1y
-                                        , FVectorPoint* iPoint1 )
+                                        , FVectorPointCubic* iPoint1 )
     : FVectorSegment( iPoint0, iPoint1 )
 {
     mCtrlPoint[0].Set( iCtrlPoint0x, iCtrlPoint0y );
@@ -245,7 +209,7 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
         /*iBLContext.strokeLine( mPolygonCache[i].vertex[1], mPolygonCache[i].vertex[2] );*/
 
         // the stroke thing is very slow and slows the all thing, we have to find something better
-        iBLContext.strokePolygon( mPolygonCache[i].vertex, 4 );
+        //iBLContext.strokePolygon( mPolygonCache[i].vertex, 4 );
         iBLContext.fillPolygon( mPolygonCache[i].vertex, 4 );
     }
 }
@@ -354,7 +318,7 @@ FVectorSegmentCubic::BuildVariableAdaptive( double iFromT
     double radius = iStartRadius;
     FVec2D *prevSegmentVector = iPrevSegmentVector;
     FVec2D *nextSegmentVector;
-    double angleCosineLimit = 0.998f;
+    double angleCosineLimit = 0.999f;
     static FVec2D nilVector = { 0.0f, 0.0f };
 
     for( int i = 0; i < 3; i++ )

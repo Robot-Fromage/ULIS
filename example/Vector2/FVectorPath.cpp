@@ -64,6 +64,12 @@ FVectorPath::RemoveSegment( FVectorSegment* iSegment )
     iSegment->GetPoint(1).RemoveSegment( iSegment );
 }
 
+std::list<FVectorSegment*>&
+FVectorPath::GetSegmentList()
+{
+    return mSegmentList;
+}
+
 FVectorSegment*
 FVectorPath::GetLastSegment()
 {
@@ -78,6 +84,27 @@ FVectorPath::GetLastPoint()
     if( mPointList.empty() == true ) return NULL;
 
     return mPointList.back();
+}
+
+bool
+FVectorPath::IsLoop()
+{
+FVectorPoint* firstPoint = GetFirstPoint();
+
+    if ( firstPoint && ( firstPoint->GetSegmentCount() == 2 ) )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+FVectorPoint*
+FVectorPath::GetFirstPoint()
+{
+    if( mPointList.empty() == true ) return NULL;
+
+    return mPointList.front();
 }
 
 void
