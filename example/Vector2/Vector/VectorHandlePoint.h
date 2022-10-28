@@ -13,8 +13,6 @@ class FVectorHandlePoint : public FVectorHandle
     protected:
 
     public:
-        static  const uint32 HANDLE_TYPE_POINT = 1;
-
         ~FVectorHandlePoint();
         FVectorHandlePoint();
         FVectorHandlePoint( FVectorPoint* iParentPoint );

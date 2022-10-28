@@ -32,5 +32,5 @@ FVectorHandlePoint::GetParent()
 uint32
 FVectorHandlePoint::GetType()
 {
-    return HANDLE_TYPE_POINT;
+    return FVectorPoint::POINT_TYPE_HANDLE_POINT;
 }

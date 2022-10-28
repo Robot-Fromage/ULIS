@@ -203,10 +203,10 @@ FVectorObject::IsFilled()
 void
 FVectorObject::MoveBack()
 {
-    if ( mParent )
+    /*if ( mParent )
     {
         mParent->
-    }
+    }*/
 }
 
 FVec2D

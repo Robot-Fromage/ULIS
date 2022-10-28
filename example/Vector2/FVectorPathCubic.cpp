@@ -63,6 +63,33 @@ FVectorPathCubic::PickShape( BLContext& iBLContext
                            , double iY
                            , double iRadius )
 {
+    BLPath path;
+    BLPoint testPoint = { iX, iY };
+    uint32 hitResult;
+/*
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
+        FVec2D& point0 = segment->GetPoint(0).GetCoords();
+        FVec2D& point1 = segment->GetPoint(1).GetCoords();
+        FVec2D& ctrlPoint0 = segment->GetControlPoint(0).GetCoords();
+        FVec2D& ctrlPoint1 = segment->GetControlPoint(1).GetCoords();
+
+        path.moveTo( point0.x, point0.y );
+        path.cubicTo( ctrlPoint0.x
+                    , ctrlPoint0.y
+                    , ctrlPoint1.x
+                    , ctrlPoint1.y
+                    , point1.x
+                    , point1.y );
+    }
+
+    if ( path.hitTest( testPoint, BL_FILL_RULE_NON_ZERO ) == BL_HIT_TEST_IN )
+    {
+        return true;
+    }
+*/
+    // Pick inside the polygons that makes the segment
     for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
     {
         FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
@@ -160,22 +187,10 @@ FVectorPathCubic::Fill( FBlock& iBlock
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
-            BLPoint point0;
-            BLPoint point1;
-            BLPoint ctrlPoint0;
-            BLPoint ctrlPoint1;
-
-            point0.x = segment->GetPoint( 0 ).GetX();
-            point0.y = segment->GetPoint( 0 ).GetY();
-
-            ctrlPoint0.x = segment->GetControlPoint( 0 ).GetX();
-            ctrlPoint0.y = segment->GetControlPoint( 0 ).GetY();
-
-            ctrlPoint1.x = segment->GetControlPoint( 1 ).GetX();
-            ctrlPoint1.y = segment->GetControlPoint( 1 ).GetY();
-
-            point1.x = segment->GetPoint( 1 ).GetX();
-            point1.y = segment->GetPoint( 1 ).GetY();
+            FVec2D& point0 = segment->GetPoint(0).GetCoords();
+            FVec2D& point1 = segment->GetPoint(1).GetCoords();
+            FVec2D& ctrlPoint0 = segment->GetControlPoint(0).GetCoords();
+            FVec2D& ctrlPoint1 = segment->GetControlPoint(1).GetCoords();
 
             path.cubicTo( ctrlPoint0.x
                         , ctrlPoint0.y
@@ -195,6 +210,11 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
 {
     BLPath path;
     FVectorPointCubic *firstPoint = static_cast<FVectorPointCubic*>( GetFirstPoint() );
+    BLPoint localVector = mInverseWorldMatrix.mapVector ( 1.0f, 0.0f );
+    FVec2D ulisVector = { localVector.x, localVector.y };
+    double zoomFactor = ulisVector.Distance();
+    double handleSize = 6 * zoomFactor;
+    double handleHalfSize = handleSize * 0.5f;
 
     if ( firstPoint )
     {
@@ -202,7 +222,7 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
         /*iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
         iBLContext.setStrokeStyle(BLRgba32(0xFF000000));*/
 
-        path.moveTo( firstPoint->GetX(), firstPoint->GetY() );
+
 
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
@@ -224,6 +244,7 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
             point1.x = segment->GetPoint( 1 ).GetX();
             point1.y = segment->GetPoint( 1 ).GetY();
 
+            path.moveTo( point0.x, point0.y );
             path.cubicTo( ctrlPoint0.x
                         , ctrlPoint0.y
                         , ctrlPoint1.x
@@ -233,17 +254,18 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
         }
 
         iBLContext.setStrokeStyle( BLRgba32( 0xFF00FF00 ) );
-        iBLContext.setStrokeWidth( 1.0f );
+        iBLContext.setStrokeWidth( zoomFactor );
         iBLContext.strokePath( path );
 
         for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
         {
             FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
 
-            segment->DrawStructure( iBlock, iBLContext, iRoi );
+            segment->DrawStructure( iBlock, iBLContext, iRoi, zoomFactor );
         }
     }
 
+    // Points and Point size handles
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {
         FVectorPointCubic *point = static_cast<FVectorPointCubic*>(*it);
@@ -252,12 +274,23 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
         double ctrlX = ( perpendicular.x * pointRadius );
         double ctrlY = ( perpendicular.y * pointRadius );
 
+
         iBLContext.setFillStyle( BLRgba32( 0xFFFF00FF ) );
-        iBLContext.fillRect( point->GetX() - 3, point->GetY() - 3, 6, 6 );
+        iBLContext.fillRect( point->GetX() - handleHalfSize
+                           , point->GetY() - handleHalfSize
+                           , handleSize
+                           , handleSize );
 
         iBLContext.setFillStyle( BLRgba32( 0xFF808080 ) );
-        iBLContext.fillRect( point->GetX() + ctrlX - 3, point->GetY() + ctrlY - 3, 6, 6 );
-        iBLContext.fillRect( point->GetX() - ctrlX - 3, point->GetY() - ctrlY - 3, 6, 6 );
+        iBLContext.fillRect( point->GetX() + ctrlX - handleHalfSize
+                           , point->GetY() + ctrlY - handleHalfSize
+                           , handleSize
+                           , handleSize );
+
+        iBLContext.fillRect( point->GetX() - ctrlX - handleHalfSize
+                           , point->GetY() - ctrlY - handleHalfSize
+                           , handleSize
+                           , handleSize );
     }
 }
 /*

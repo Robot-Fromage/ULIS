@@ -51,10 +51,10 @@ FVectorSegmentCubic::Pick( double iX
         for ( int j = 0; j < 4; j++ )
         {
             int n = ( j + 1 ) % 4;
-            FVec2D vivn = { mPolygonCache[i].vertex[n].x - mPolygonCache[i].vertex[j].x
-                          , mPolygonCache[i].vertex[n].y - mPolygonCache[i].vertex[j].y };
-            FVec2D vivt = { iX - mPolygonCache[i].vertex[j].x
-                          , iY - mPolygonCache[i].vertex[j].y };
+            FVec2D vivn = { mPolygonCache[i].quadVertex[n].x - mPolygonCache[i].quadVertex[j].x
+                          , mPolygonCache[i].quadVertex[n].y - mPolygonCache[i].quadVertex[j].y };
+            FVec2D vivt = { iX - mPolygonCache[i].quadVertex[j].x
+                          , iY - mPolygonCache[i].quadVertex[j].y };
             // https://stackoverflow.com/questions/15490795/determine-if-a-2d-point-is-within-a-quadrilateral
             // Compute the quantity
             double quantity = (vivt.x) * (vivn.y) - (vivn.x) * (vivt.y);
@@ -152,47 +152,133 @@ FVectorSegmentCubic::FVectorSegmentCubic( FVectorPointCubic* iPoint0
     mCtrlPoint[1].Set( iCtrlPoint1x, iCtrlPoint1y );
 }
 
+// https://stackoverflow.com/questions/35473936/find-whether-two-line-segments-intersect-or-not-in-c
+bool intersection( FVec2D& line0p0
+                 , FVec2D& line0p1
+                 , FVec2D& line1p0
+                 , FVec2D& line1p1
+                 , double* line0t
+                 , double* line1t )
+{
+    FVec2D L0Vec   = { line0p1.x - line0p0.x, line0p1.y - line0p0.y };
+    FVec2D L1Vec   = { line1p1.x - line1p0.x, line1p1.y - line1p0.y };
+    FVec2D L0L1Vec = { line1p0.x - line0p0.x, line1p0.y - line0p0.y };
+
+    double det = L0Vec.x * L1Vec.y - L0Vec.y * L1Vec.x;
+
+    if ( fabs(det) < 0.001f ) return false;
+
+    double r = ( L0L1Vec.x * L1Vec.y   - L0L1Vec.y * L1Vec.x   ) / det;
+    double s = (   L0Vec.x * L0L1Vec.y -   L0Vec.y * L0L1Vec.x ) / det;
+
+    *line0t = r;
+    *line1t = s;
+
+    return !(r < 0 || r > 1 || s < 0 || s > 1);
+}
+
+void
+FVectorSegmentCubic::IntersectPath( FVectorPathCubic& iPath )
+{
+    std::list<FVectorSegment*>& segmentList = iPath.GetSegmentList();
+
+    for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
+    {
+        FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*it);
+
+        if ( cubicSegment != this ) 
+        {
+            Intersect( *cubicSegment ); 
+        }
+    }
+}
+
+void
+FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
+{
+    FVec2D point0 = { mPoint[0]->GetX(), mPoint[0]->GetY() };
+    FVec2D point1 = { mPoint[1]->GetX(), mPoint[1]->GetY() };
+    FVec2D ctrlPoint0 = { mCtrlPoint[0].GetX(), mCtrlPoint[0].GetY() };
+    FVec2D ctrlPoint1 = { mCtrlPoint[1].GetX(), mCtrlPoint[1].GetY() };
+
+    for ( int i = 0; i < mPolygonSlot; i++ )
+    {
+        FPolygon* poly = &mPolygonCache[i];
+
+        for( int j = 0; j < mPolygonSlot; j++ )
+        {
+            FPolygon* interPoly = &iOther.mPolygonCache[j];
+            double polyT, interPolyT;
+
+            if ( intersection ( poly->lineVertex[0]
+                              , poly->lineVertex[1]
+                              , interPoly->lineVertex[0]
+                              , interPoly->lineVertex[1]
+                              , &polyT
+                              , &interPolyT ) )
+            {
+                FVec2D polyVector = ( poly->lineVertex[1] - poly->lineVertex[0] );
+                FVec2D coords = { poly->lineVertex[0].x + ( polyVector.x * polyT )
+                                , poly->lineVertex[0].y + ( polyVector.y * polyT ) };
+printf("intersection detected at %f %f %f\n", coords.x, coords.y, polyT );
+                mIntersectionPointList.push_back( new FVectorPointIntersection ( coords.x, coords.y ) );
+            }
+        }
+    }
+}
+
+void
+FVectorSegmentCubic::DrawIntersections ( FBlock& iBlock
+                                       , BLContext& iBLContext
+                                       , FRectD &iRoi
+                                       , double iZoomFactor )
+{
+    double intersectionSize = 4 * iZoomFactor;
+    double intersectionHalfSize = intersectionSize * 0.5f;
+
+    for( std::list<FVectorPointIntersection*>::iterator it = mIntersectionPointList.begin(); it != mIntersectionPointList.end(); ++it )
+    {
+        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
+
+        iBLContext.setFillStyle( BLRgba32( 0xFFFF8000 ) );
+        iBLContext.fillRect( intersectionPoint->GetX() - intersectionHalfSize
+                           , intersectionPoint->GetY() - intersectionHalfSize, intersectionSize, intersectionSize );
+    }
+}
+
 void
 FVectorSegmentCubic::DrawStructure( FBlock& iBlock
                                   , BLContext& iBLContext
-                                  , FRectD &iRoi )
+                                  , FRectD &iRoi
+                                  , double iZoomFactor )
 {
     BLPath ctrlPath0;
     BLPath ctrlPath1;
-
-    BLPoint point0;
-    BLPoint point1;
-    BLPoint ctrlPoint0;
-    BLPoint ctrlPoint1;
-
-    point0.x = mPoint[0]->GetX();
-    point0.y = mPoint[0]->GetY();
-
-    ctrlPoint0.x = mCtrlPoint[0].GetX();
-    ctrlPoint0.y = mCtrlPoint[0].GetY();
-
-    ctrlPoint1.x = mCtrlPoint[1].GetX();
-    ctrlPoint1.y = mCtrlPoint[1].GetY();
-
-    point1.x = mPoint[1]->GetX();
-    point1.y = mPoint[1]->GetY();
+/*
+    BLPoint point0 = { mPoint[0]->GetX(), mPoint[0]->GetY() };
+    BLPoint point1 = { mPoint[1]->GetX(), mPoint[1]->GetY() };
+    BLPoint ctrlPoint0 = { mCtrlPoint[0].GetX(), mCtrlPoint[0].GetY() };
+    BLPoint ctrlPoint1 = { mCtrlPoint[1].GetX(), mCtrlPoint[1].GetY() };
+    double handleSize = 4 * iZoomFactor;
+    double handleHalfSize = handleSize * 0.5f;
 
     ctrlPath0.moveTo( point0.x, point0.y );
-    ctrlPath0.lineTo( ctrlPoint0.x,ctrlPoint0.y );
+    ctrlPath0.lineTo( ctrlPoint0.x, ctrlPoint0.y );
 
     iBLContext.setStrokeStyle( BLRgba32( 0xFFFF0000 ) );
-    iBLContext.setStrokeWidth( 1.0f );
 
     iBLContext.strokePath( ctrlPath0 );
 
     ctrlPath1.moveTo( point1.x, point1.y );
-    ctrlPath1.lineTo( ctrlPoint1.x,ctrlPoint1.y );
+    ctrlPath1.lineTo( ctrlPoint1.x, ctrlPoint1.y );
 
     iBLContext.strokePath( ctrlPath1 );
 
     iBLContext.setFillStyle( BLRgba32( 0xFFFF0000 ) );
-    iBLContext.fillRect( ctrlPoint0.x - 2, ctrlPoint0.y - 2, 4, 4 );
-    iBLContext.fillRect( ctrlPoint1.x - 2, ctrlPoint1.y - 2, 4, 4 );
+    iBLContext.fillRect( ctrlPoint0.x - handleHalfSize, ctrlPoint0.y - handleHalfSize, handleSize, handleSize );
+    iBLContext.fillRect( ctrlPoint1.x - handleHalfSize, ctrlPoint1.y - handleHalfSize, handleSize, handleSize );
+*/
+    DrawIntersections (  iBlock, iBLContext, iRoi, iZoomFactor );
 }
 
 void
@@ -210,7 +296,12 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
 
         // the stroke thing is very slow and slows the all thing, we have to find something better
         //iBLContext.strokePolygon( mPolygonCache[i].vertex, 4 );
-        iBLContext.fillPolygon( mPolygonCache[i].vertex, 4 );
+        BLPoint pt[4] = { { mPolygonCache[i].quadVertex[0].x, mPolygonCache[i].quadVertex[0].y }
+                        , { mPolygonCache[i].quadVertex[1].x, mPolygonCache[i].quadVertex[1].y }
+                        , { mPolygonCache[i].quadVertex[2].x, mPolygonCache[i].quadVertex[2].y }
+                        , { mPolygonCache[i].quadVertex[3].x, mPolygonCache[i].quadVertex[3].y } };
+
+        iBLContext.fillPolygon( pt, 4 );
     }
 }
 
@@ -254,35 +345,44 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
         perpendicularVecFrom *= iStartRadius;
         perpendicularVecTo *= iEndRadius;
 
+        cachedPolygon->fromT = iFromT;
+        cachedPolygon->toT = iToT;
+
         if ( prevPolygonSlot ) {
             FPolygon* prevCachedPolygon = cachedPolygon - 1;
 
-            cachedPolygon->vertex[0].x = prevCachedPolygon->vertex[1].x;
-            cachedPolygon->vertex[0].y = prevCachedPolygon->vertex[1].y;
+            cachedPolygon->quadVertex[0].x = prevCachedPolygon->quadVertex[1].x;
+            cachedPolygon->quadVertex[0].y = prevCachedPolygon->quadVertex[1].y;
 
-            cachedPolygon->vertex[1].x = iToPoint.x + perpendicularVecTo.x;
-            cachedPolygon->vertex[1].y = iToPoint.y + perpendicularVecTo.y;
+            cachedPolygon->quadVertex[1].x = iToPoint.x + perpendicularVecTo.x;
+            cachedPolygon->quadVertex[1].y = iToPoint.y + perpendicularVecTo.y;
 
-            cachedPolygon->vertex[2].x = iToPoint.x - perpendicularVecTo.x;
-            cachedPolygon->vertex[2].y = iToPoint.y - perpendicularVecTo.y;
+            cachedPolygon->quadVertex[2].x = iToPoint.x - perpendicularVecTo.x;
+            cachedPolygon->quadVertex[2].y = iToPoint.y - perpendicularVecTo.y;
 
-            cachedPolygon->vertex[3].x = prevCachedPolygon->vertex[2].x;
-            cachedPolygon->vertex[3].y = prevCachedPolygon->vertex[2].y;
+            cachedPolygon->quadVertex[3].x = prevCachedPolygon->quadVertex[2].x;
+            cachedPolygon->quadVertex[3].y = prevCachedPolygon->quadVertex[2].y;
         }
         else
         {
-            cachedPolygon->vertex[0].x = iFromPoint.x + perpendicularVecFrom.x;
-            cachedPolygon->vertex[0].y = iFromPoint.y + perpendicularVecFrom.y;
+            cachedPolygon->quadVertex[0].x = iFromPoint.x + perpendicularVecFrom.x;
+            cachedPolygon->quadVertex[0].y = iFromPoint.y + perpendicularVecFrom.y;
 
-            cachedPolygon->vertex[1].x = iToPoint.x + perpendicularVecTo.x;
-            cachedPolygon->vertex[1].y = iToPoint.y + perpendicularVecTo.y;
+            cachedPolygon->quadVertex[1].x = iToPoint.x + perpendicularVecTo.x;
+            cachedPolygon->quadVertex[1].y = iToPoint.y + perpendicularVecTo.y;
 
-            cachedPolygon->vertex[2].x = iToPoint.x - perpendicularVecTo.x;
-            cachedPolygon->vertex[2].y = iToPoint.y - perpendicularVecTo.y;
+            cachedPolygon->quadVertex[2].x = iToPoint.x - perpendicularVecTo.x;
+            cachedPolygon->quadVertex[2].y = iToPoint.y - perpendicularVecTo.y;
 
-            cachedPolygon->vertex[3].x = iFromPoint.x - perpendicularVecFrom.x;
-            cachedPolygon->vertex[3].y = iFromPoint.y - perpendicularVecFrom.y;
+            cachedPolygon->quadVertex[3].x = iFromPoint.x - perpendicularVecFrom.x;
+            cachedPolygon->quadVertex[3].y = iFromPoint.y - perpendicularVecFrom.y;
         }
+
+        cachedPolygon->lineVertex[0].x = iFromPoint.x;
+        cachedPolygon->lineVertex[0].y = iFromPoint.y;
+
+        cachedPolygon->lineVertex[1].x = iToPoint.x;
+        cachedPolygon->lineVertex[1].y = iToPoint.y;
     }
 }
 

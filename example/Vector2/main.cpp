@@ -430,7 +430,7 @@ MyWidget::EditPath( QEvent *event )
 
                 switch ( selectedPoint->GetType() )
                 {
-                    case FVectorHandlePoint::HANDLE_TYPE_POINT :
+                    case FVectorPoint::POINT_TYPE_HANDLE_POINT :
                     {
                         FVectorHandlePoint* pointHandle = static_cast<FVectorHandlePoint*>( selectedPoint );
                         FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( pointHandle->GetParent() );
@@ -440,7 +440,7 @@ MyWidget::EditPath( QEvent *event )
                     }
                     break;
 
-                    case FVectorHandleSegment::HANDLE_TYPE_SEGMENT :
+                    case FVectorPoint::POINT_TYPE_HANDLE_SEGMENT :
                     {
                         FVectorHandleSegment* segmentHandle = static_cast<FVectorHandleSegment*>( selectedPoint );
                         FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segmentHandle->GetParent());

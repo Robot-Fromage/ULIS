@@ -13,8 +13,6 @@ class FVectorHandleSegment : public FVectorHandle
     protected:
 
     public:
-        static  const uint32 HANDLE_TYPE_SEGMENT = 2;
-
         ~FVectorHandleSegment();
         FVectorHandleSegment();
         FVectorHandleSegment( double iX, double iY );

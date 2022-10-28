@@ -61,6 +61,6 @@ class FVectorObject
         void SetIsSelected( bool iIsSelected );
         FRectD GetBBox( bool iWorld );
         bool IsFilled();
-        void MoveBehind();
-        void MoveBefore();
+        void MoveBack();
+        void MoveFront();
 };

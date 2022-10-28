@@ -19,7 +19,7 @@ FVectorHandleSegment::FVectorHandleSegment( double iX, double iY )
 uint32
 FVectorHandleSegment::GetType()
 {
-    return HANDLE_TYPE_SEGMENT;
+    return FVectorPoint::POINT_TYPE_HANDLE_SEGMENT;
 }
 
 void

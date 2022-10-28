@@ -165,6 +165,8 @@ printf("looping\n");
                             // the points at the tips of the segments.
                             cubicSegment->GetPoint(0).BuildSegments();
 
+                            cubicSegment->IntersectPath( *mCubicPath );
+
                             /*mSmoothedPointList.push_back( lastPoint );*/
 
                             mLastSmoothedSegmentVector.x = segVector.x;

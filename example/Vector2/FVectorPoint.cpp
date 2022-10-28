@@ -79,7 +79,7 @@ FVectorPoint::GetSegmentList()
 uint32
 FVectorPoint::GetType()
 {
-    return 0; // default type;
+    return POINT_TYPE_REGULAR; // default type;
 }
 
 double

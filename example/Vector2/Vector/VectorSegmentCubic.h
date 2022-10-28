@@ -6,14 +6,20 @@
 #include "Vector/VectorPoint.h"
 #include "Vector/VectorSegment.h"
 
+class FVectorPathCubic;
+
 typedef struct _FPolygon {
-    BLPoint vertex[4];
+    FVec2D quadVertex[4];
+    FVec2D lineVertex[2];
+    double fromT;
+    double toT;
 } FPolygon;
 
 class FVectorSegmentCubic : public FVectorSegment
 {
     private:
         FVectorHandleSegment mCtrlPoint[2];
+        std::list<FVectorPointIntersection*> mIntersectionPointList;
         std::vector<FPolygon> mPolygonCache;
         uint32 mPolygonSlot;
         FRectD mBBox;
@@ -43,7 +49,8 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorHandleSegment& GetControlPoint( int iCtrlPointNum );
         FVectorPointCubic& GetPoint( int iPointNum );
         void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi, double iZoomFactor );
+        void DrawIntersections ( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi, double iZoomFactor );
         FVec2D GetPreviousVector(bool iNormalize);
         FVec2D GetNextVector(bool iNormalize);
         FVec2D GetVectorAtEnd( bool iNormalize );
@@ -55,6 +62,9 @@ class FVectorSegmentCubic : public FVectorSegment
         void IncreasePolygonCache(uint32 iSize);
         void ResetPolygonCache();
         FPolygon* GetPolygonCacheSlot();
+
+        void IntersectPath( FVectorPathCubic& iPath );
+        void Intersect( FVectorSegmentCubic& iOther );
 
         void BuildVariable();
 };

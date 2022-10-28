@@ -15,6 +15,11 @@ class FVectorPoint
         double mRadius;
 
     public:
+        static  const uint32 POINT_TYPE_REGULAR        = 0;
+        static  const uint32 POINT_TYPE_INTERSECTION   = 1;
+        static  const uint32 POINT_TYPE_HANDLE_POINT   = 2;
+        static  const uint32 POINT_TYPE_HANDLE_SEGMENT = 3;
+
         ~FVectorPoint();
         FVectorPoint();
         FVectorPoint( double iX, double iY );
