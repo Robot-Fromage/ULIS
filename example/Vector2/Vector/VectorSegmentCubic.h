@@ -17,13 +17,13 @@ typedef struct _FPolygon {
 
 class FVectorSegmentCubic : public FVectorSegment
 {
-    private:
+    protected:
         FVectorHandleSegment mCtrlPoint[2];
-        std::list<FVectorPointIntersection*> mIntersectionPointList;
         std::vector<FPolygon> mPolygonCache;
         uint32 mPolygonSlot;
         FRectD mBBox;
 
+    private:
         void BuildVariableAdaptive( double iFromT
                                   , double iToT
                                   , double iStartRadius

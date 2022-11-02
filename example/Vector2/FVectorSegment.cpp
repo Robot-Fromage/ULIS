@@ -38,7 +38,14 @@ FVectorSegment::DrawStructure( FBlock& iBlock
 
 }
 
-FVectorSegment* FVectorSegment::GetNextSegment( )
+std::list<FVectorPointIntersection*>&
+FVectorSegment::GetIntersectionPointList()
+{
+    return mIntersectionPointList;
+}
+
+FVectorSegment*
+FVectorSegment::GetNextSegment( )
 {
     std::list<FVectorSegment*>& segmentList = mPoint[1]->GetSegmentList();
 

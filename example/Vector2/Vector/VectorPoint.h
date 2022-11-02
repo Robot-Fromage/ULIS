@@ -5,6 +5,8 @@
 #include <Image/Block.h>
 #include "Vector/VectorSegment.h"
 
+class FVectorPathLoop;
+
 class FVectorPoint
 {
     private:
@@ -24,6 +26,7 @@ class FVectorPoint
         FVectorPoint();
         FVectorPoint( double iX, double iY );
         void AddSegment( FVectorSegment* iSegment );
+        FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );
         void RemoveSegment( FVectorSegment* iSegment );
         FVec2D& GetCoords();
         double GetX();
@@ -36,4 +39,6 @@ class FVectorPoint
         virtual uint32 GetType();
         double GetRadius();
         virtual void SetRadius( double iRadius, bool iBuildSegments );
+        FVectorPoint* GetNextPoint( FVectorSegment& iCurrentSegment, double iT );
+        void March( FVectorPointIntersection& iInitiatorPoint );
 };

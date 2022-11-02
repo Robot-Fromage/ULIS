@@ -166,7 +166,7 @@ bool intersection( FVec2D& line0p0
 
     double det = L0Vec.x * L1Vec.y - L0Vec.y * L1Vec.x;
 
-    if ( fabs(det) < 0.001f ) return false;
+    if ( fabs(det) == 0.0f ) return false;
 
     double r = ( L0L1Vec.x * L1Vec.y   - L0L1Vec.y * L1Vec.x   ) / det;
     double s = (   L0Vec.x * L0L1Vec.y -   L0Vec.y * L0L1Vec.x ) / det;
@@ -205,7 +205,7 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
     {
         FPolygon* poly = &mPolygonCache[i];
 
-        for( int j = 0; j < mPolygonSlot; j++ )
+        for( int j = 0; j < iOther.mPolygonSlot; j++ )
         {
             FPolygon* interPoly = &iOther.mPolygonCache[j];
             double polyT, interPolyT;
@@ -220,8 +220,14 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
                 FVec2D polyVector = ( poly->lineVertex[1] - poly->lineVertex[0] );
                 FVec2D coords = { poly->lineVertex[0].x + ( polyVector.x * polyT )
                                 , poly->lineVertex[0].y + ( polyVector.y * polyT ) };
+                FVectorPointIntersection* intersectionPoint = new FVectorPointIntersection ( coords.x, coords.y, polyT );
+
 printf("intersection detected at %f %f %f\n", coords.x, coords.y, polyT );
-                mIntersectionPointList.push_back( new FVectorPointIntersection ( coords.x, coords.y ) );
+                mIntersectionPointList.push_back( intersectionPoint );
+
+                intersectionPoint->AddSegment ( this );
+                intersectionPoint->AddSegment ( &iOther );
+                intersectionPoint->March( *intersectionPoint );
             }
         }
     }
@@ -243,6 +249,8 @@ FVectorSegmentCubic::DrawIntersections ( FBlock& iBlock
         iBLContext.setFillStyle( BLRgba32( 0xFFFF8000 ) );
         iBLContext.fillRect( intersectionPoint->GetX() - intersectionHalfSize
                            , intersectionPoint->GetY() - intersectionHalfSize, intersectionSize, intersectionSize );
+
+        intersectionPoint->DrawLoops ( iBlock, iBLContext, iRoi );
     }
 }
 
@@ -254,7 +262,7 @@ FVectorSegmentCubic::DrawStructure( FBlock& iBlock
 {
     BLPath ctrlPath0;
     BLPath ctrlPath1;
-/*
+
     BLPoint point0 = { mPoint[0]->GetX(), mPoint[0]->GetY() };
     BLPoint point1 = { mPoint[1]->GetX(), mPoint[1]->GetY() };
     BLPoint ctrlPoint0 = { mCtrlPoint[0].GetX(), mCtrlPoint[0].GetY() };
@@ -277,7 +285,7 @@ FVectorSegmentCubic::DrawStructure( FBlock& iBlock
     iBLContext.setFillStyle( BLRgba32( 0xFFFF0000 ) );
     iBLContext.fillRect( ctrlPoint0.x - handleHalfSize, ctrlPoint0.y - handleHalfSize, handleSize, handleSize );
     iBLContext.fillRect( ctrlPoint1.x - handleHalfSize, ctrlPoint1.y - handleHalfSize, handleSize, handleSize );
-*/
+
     DrawIntersections (  iBlock, iBLContext, iRoi, iZoomFactor );
 }
 
@@ -292,7 +300,7 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
     {
        /* int n = i + 1;*/
 
-        /*iBLContext.strokeLine( mPolygonCache[i].vertex[1], mPolygonCache[i].vertex[2] );*/
+
 
         // the stroke thing is very slow and slows the all thing, we have to find something better
         //iBLContext.strokePolygon( mPolygonCache[i].vertex, 4 );
@@ -300,6 +308,11 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
                         , { mPolygonCache[i].quadVertex[1].x, mPolygonCache[i].quadVertex[1].y }
                         , { mPolygonCache[i].quadVertex[2].x, mPolygonCache[i].quadVertex[2].y }
                         , { mPolygonCache[i].quadVertex[3].x, mPolygonCache[i].quadVertex[3].y } };
+
+        iBLContext.strokeLine( pt[1].x
+                             , pt[1].y
+                             , pt[2].x
+                             , pt[2].y );
 
         iBLContext.fillPolygon( pt, 4 );
     }
@@ -345,9 +358,6 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
         perpendicularVecFrom *= iStartRadius;
         perpendicularVecTo *= iEndRadius;
 
-        cachedPolygon->fromT = iFromT;
-        cachedPolygon->toT = iToT;
-
         if ( prevPolygonSlot ) {
             FPolygon* prevCachedPolygon = cachedPolygon - 1;
 
@@ -383,6 +393,9 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
 
         cachedPolygon->lineVertex[1].x = iToPoint.x;
         cachedPolygon->lineVertex[1].y = iToPoint.y;
+
+        cachedPolygon->fromT = iFromT;
+        cachedPolygon->toT = iToT;
     }
 }
 

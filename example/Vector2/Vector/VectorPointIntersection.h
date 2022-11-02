@@ -3,20 +3,23 @@
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
-#include "Vector/VectorSegmentSub.h"
+
+class FVectorPath;
+class FVectorPathLoop;
 
 class FVectorPointIntersection : public FVectorPoint
 {
-    private:
-        uint64 mIntersectionID;
-        std::list<FVectorSegmentSub*> mSubSegmentList;
-        double mT;
-
     protected:
+        uint64 mIntersectionID;
+        std::list<FVectorPathLoop*> mLoopList; // list of loops
+        double mT;
 
     public:
         ~FVectorPointIntersection();
         FVectorPointIntersection();
-        FVectorPointIntersection( double iX, double iY );
+        FVectorPointIntersection( double iX, double iY, double iT );
         uint32 GetType();
+        double GetT();
+        void AddLoop( FVectorPathLoop* iLoop );
+        void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
 };
