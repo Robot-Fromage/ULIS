@@ -568,7 +568,7 @@ MyWidget::MoveObject(QEvent *event)
                 mMouseX = localCoords.x;
                 mMouseY = localCoords.y;
 
-                mVEngine.InvalidateRegion( beforeBBox | selectedObject->GetBBox( true ) );
+                /*mVEngine.InvalidateRegion( beforeBBox | selectedObject->GetBBox( true ) );*/
             }
         }
     }

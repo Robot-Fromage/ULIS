@@ -25,8 +25,10 @@ class FVectorPoint
         ~FVectorPoint();
         FVectorPoint();
         FVectorPoint( double iX, double iY );
-        void AddSegment( FVectorSegment* iSegment );
-        FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );
+        virtual void AddSegment( FVectorSegment* iSegment );
+        FVectorSegment* GetLastSegment();
+        FVectorSegment* GetFirstSegment();
+        virtual FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );
         void RemoveSegment( FVectorSegment* iSegment );
         FVec2D& GetCoords();
         double GetX();
@@ -41,4 +43,5 @@ class FVectorPoint
         virtual void SetRadius( double iRadius, bool iBuildSegments );
         FVectorPoint* GetNextPoint( FVectorSegment& iCurrentSegment, double iT );
         void March( FVectorPointIntersection& iInitiatorPoint );
+
 };

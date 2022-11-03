@@ -323,6 +323,17 @@ FVectorPathCubic::DrawSegment( BLPath& iPath
 */
 
 void
+FVectorPathCubic::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+{
+    for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
+    {
+        FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
+
+        segment->DrawLoops( iBlock, iBLContext, iRoi );
+    }
+}
+
+void
 FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
 /*
@@ -350,6 +361,8 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi
     {
         Fill( iBlock, iBLContext, iRoi );
     }
+
+    DrawLoops( iBlock, iBLContext, iRoi  );
 
     DrawShapeVariable( iBlock, iBLContext, iRoi );
 

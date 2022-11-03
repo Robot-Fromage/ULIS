@@ -20,7 +20,7 @@ class FVectorSegmentCubic : public FVectorSegment
     protected:
         FVectorHandleSegment mCtrlPoint[2];
         std::vector<FPolygon> mPolygonCache;
-        uint32 mPolygonSlot;
+        uint32 mPolygonSlot;  // TODO: use vector size() method.
         FRectD mBBox;
 
     private:
@@ -57,11 +57,13 @@ class FVectorSegmentCubic : public FVectorSegment
         FVec2D GetVectorAtStart( bool iNormalize );
         FRectD& GetBoundingBox();
         void UpdateBoundingBox();
-
         bool Pick( double iX, double iY, double iRadius );
         void IncreasePolygonCache(uint32 iSize);
         void ResetPolygonCache();
         FPolygon* GetPolygonCacheSlot();
+        uint32 GetPolygonCount(); // TODO: use vector size() method.
+        std::vector<FPolygon>& GetPolygonCache();
+        void DrawLoops ( FBlock& iBlock,BLContext& iBLContext, FRectD &iRoi );
 
         void IntersectPath( FVectorPathCubic& iPath );
         void Intersect( FVectorSegmentCubic& iOther );

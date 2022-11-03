@@ -107,13 +107,25 @@ FVectorPoint::GetNextPoint( FVectorSegment& iCurrentSegment, double iT )
     {
         FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*iter);
 
-        if( intersectionPoint->GetT() > iT )
+        if( intersectionPoint->GetT(iCurrentSegment) > iT )
         {
             return intersectionPoint;
         }
     }
 
     return ( this == &endPoint ) ? nullptr : &endPoint;
+}
+
+FVectorSegment*
+FVectorPoint::GetLastSegment()
+{
+    return mSegmentList.back();
+}
+
+FVectorSegment*
+FVectorPoint::GetFirstSegment()
+{
+    return mSegmentList.front();
 }
 
 void
@@ -132,7 +144,7 @@ FVectorPoint::March( FVectorPointIntersection& iInitiatorPoint )
         switch ( GetType() )
         {
             case POINT_TYPE_INTERSECTION :
-                t =  static_cast<FVectorPointIntersection*>(this)->GetT();
+                t =  static_cast<FVectorPointIntersection*>(this)->GetT(*segment);
             break;
 
             default : // POINT_TYPE_REGULAR

@@ -36,6 +36,7 @@ class FVectorPathCubic: public FVectorPath
         void setJointLinear();
         void setJointNone();
         void Fill( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
 
         void Merge( FVectorPathCubic& iCubicPath );
         void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
