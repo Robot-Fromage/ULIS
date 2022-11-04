@@ -33,28 +33,32 @@ FVectorPathCubic::setJointNone()
 
 FVectorSegmentCubic*
 FVectorPathCubic::AppendPoint( FVectorPointCubic* iPoint
+                             , bool iConnect
                              , bool iBuildSegments )
 {
     FVectorPointCubic* lastPoint = static_cast<FVectorPointCubic*>( GetLastPoint() );
 
     FVectorPath::AppendPoint( iPoint );
 
-    // lastPoint is NULL if this is the first point added
-    if( lastPoint )
+    if ( iConnect == true )
     {
-        FVectorSegmentCubic* segment = new FVectorSegmentCubic( lastPoint, iPoint );
-
-        AddSegment( segment );
-
-        if( iBuildSegments == true )
+        // lastPoint is NULL if this is the first point added
+        if( lastPoint )
         {
-            iPoint->BuildSegments();
-        }
+            FVectorSegmentCubic* segment = new FVectorSegmentCubic( lastPoint, iPoint );
 
-        return segment;
+            AddSegment( segment );
+
+            if( iBuildSegments == true )
+            {
+                iPoint->BuildSegments();
+            }
+
+            return segment;
+        }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 bool

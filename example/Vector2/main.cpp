@@ -153,18 +153,6 @@ public:
             }
             break;
 
-            case Qt::Key_P:
-            {
-                FVectorPathBuilder* builder = new FVectorPathBuilder();
-
-                /*builder->Translate(mQImage->width() / 2,mQImage->height() / 2);*/
-                builder->UpdateMatrix(*mBLContext);
-
-                mVEngine.GetScene().AddChild(builder);
-                mVEngine.GetScene().Select( *mBLContext, *builder );
-            }
-            break;
-
             case Qt::Key_R:
             {
                 FVectorRectangle* rectangle = new FVectorRectangle( 50,80 );
@@ -287,7 +275,22 @@ MyWidget::CreatePath(QEvent *event)
     if( event->type() == QEvent::MouseButtonPress )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
-        FVectorPathBuilder* builder = new FVectorPathBuilder();
+        FVectorPathCubic *cubicPath = nullptr;
+        FVectorPathBuilder* builder;
+
+        if ( QApplication::keyboardModifiers().testFlag( Qt::ControlModifier ) == true )
+        {
+            cubicPath =  static_cast<FVectorPathCubic*>( mVEngine.GetScene().GetLastSelected() );
+        }
+
+        if ( cubicPath == nullptr ) 
+        {
+            cubicPath = new FVectorPathCubic();
+
+            mVEngine.GetScene().AddChild( cubicPath );
+        }
+
+        builder = new FVectorPathBuilder( cubicPath );
 
         mVEngine.GetScene().AddChild( builder );
 
@@ -303,12 +306,13 @@ MyWidget::CreatePath(QEvent *event)
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mVEngine.GetScene().GetLastSelected() );
-        FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
+        FVectorPathCubic* cubicPath = currentPathBuilder->GetCubicPath();
         BLPoint localCoords = inverseWorldMatrix.mapPoint( e->x(), e->y() );
         FRectD invalidateRegion = { e->x() - 100.0f, e->y() - 100.0f, 200.0f, 200.0f };
         FRectD finalRegion = invalidateRegion;
 
         currentPathBuilder->AppendPoint( localCoords.x, localCoords.y, 4.0f );
+
         FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(cubicPath->GetLastSegment());
 
         if ( cubicSegment )
@@ -343,7 +347,7 @@ MyWidget::CreatePath(QEvent *event)
 
         currentPathBuilder->End( localCoords.x, localCoords.y, 1.0f );
 
-        FVectorPathCubic* cubicPath = currentPathBuilder->GetSmoothedPath();
+        FVectorPathCubic* cubicPath = currentPathBuilder->GetCubicPath();
 
         currentPathBuilder->CopyTransformation( *cubicPath );
 

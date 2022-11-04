@@ -22,12 +22,13 @@ class FVectorPathBuilder : public FVectorPath
 
     public:
        ~FVectorPathBuilder();
-        FVectorPathBuilder();
+        //FVectorPathBuilder();
+        FVectorPathBuilder( FVectorPathCubic* iCubicPath );
         FVectorSegment* AppendPoint( double iX, double iY, double iRadius );
         void DrawShape(FBlock& iBlock,BLContext& iBLContext, FRectD &iRoi );
         bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
         void PickPoint( double iX, double iY, double iRadius );
         void Unselect(FVectorPoint* iPoint);
         FVectorSegment* End( double iX, double iY, double iRadius );
-        FVectorPathCubic* GetSmoothedPath( );
+        FVectorPathCubic* GetCubicPath( );
 };

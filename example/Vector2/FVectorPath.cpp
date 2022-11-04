@@ -73,7 +73,7 @@ FVectorPath::GetSegmentList()
 FVectorSegment*
 FVectorPath::GetLastSegment()
 {
-    if( mSegmentList.empty() == true ) return NULL;
+    if( mSegmentList.size() == 0 ) return nullptr;
 
     return mSegmentList.back();
 }
@@ -81,7 +81,7 @@ FVectorPath::GetLastSegment()
 FVectorPoint*
 FVectorPath::GetLastPoint()
 {
-    if( mPointList.empty() == true ) return NULL;
+    if( mPointList.size() == 0 ) return nullptr;
 
     return mPointList.back();
 }
@@ -102,7 +102,7 @@ FVectorPoint* firstPoint = GetFirstPoint();
 FVectorPoint*
 FVectorPath::GetFirstPoint()
 {
-    if( mPointList.empty() == true ) return NULL;
+    if( mPointList.size() == 0 ) return nullptr;
 
     return mPointList.front();
 }
