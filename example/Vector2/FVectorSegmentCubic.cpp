@@ -161,7 +161,7 @@ bool intersection( FVec2D& line0p0
                  , double* line1t )
 {
     FVec2D L0Vec   = { line0p1.x - line0p0.x, line0p1.y - line0p0.y };
-    FVec2D L1Vec   = { line1p1.x - line1p0.x, line1p1.y - line1p0.y };
+    FVec2D L1Vec   = { line1p0.x - line1p1.x, line1p0.y - line1p1.y }; // reverted order is normal
     FVec2D L0L1Vec = { line1p0.x - line0p0.x, line1p0.y - line0p0.y };
 
     double det = L0Vec.x * L1Vec.y - L0Vec.y * L1Vec.x;
@@ -224,7 +224,8 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
 
 printf("intersection detected at %f %f %f\n", coords.x, coords.y, polySubT );
 
-                mIntersectionPointList.push_back( intersectionPoint );
+                 this->mIntersectionPointList.push_back( intersectionPoint );
+                iOther.mIntersectionPointList.push_back( intersectionPoint );
 
                 intersectionPoint->AddSegment (    this,      poly->fromT + (      polySubT * (      poly->toT -      poly->fromT ) ) );
                 intersectionPoint->AddSegment ( &iOther, interPoly->fromT + ( interPolySubT * ( interPoly->toT - interPoly->fromT ) ) );

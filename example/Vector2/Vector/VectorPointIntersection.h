@@ -30,6 +30,7 @@ class FVectorPointIntersection : public FVectorPoint
         double GetT( FVectorSegment& );
         void AddLoop( FVectorPathLoop* iLoop );
         void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         void AddSegment( FVectorSegmentCubic* iSegment, double t );
         // overloaded
         FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );

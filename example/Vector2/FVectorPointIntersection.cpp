@@ -47,6 +47,20 @@ FVectorPointIntersection::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRec
 }
 
 void
+FVectorPointIntersection::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+{
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
+
+        FVec2D position = GetPosition(*segment);
+
+        iBLContext.setFillStyle( BLRgba32( 0xFFFF80FF) );
+        iBLContext.fillRect( position.x - 5, position.y - 5, 10, 10 );
+    }
+}
+
+void
 FVectorPointIntersection::AddSegment( FVectorSegmentCubic* iSegment, double t )
 {
     FVec2D& point0 = iSegment->GetPoint(0).GetCoords();
@@ -72,9 +86,20 @@ FVectorPointIntersection::GetSegment( FVectorPoint& iOtherPoint )
     {
         FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
 
-        if ( ( &segment->GetPoint(0) == &iOtherPoint )
-          || ( &segment->GetPoint(1) == &iOtherPoint ) ) {
-            return segment;
+        if ( iOtherPoint.GetType() == POINT_TYPE_REGULAR )
+        {
+            if ( ( &segment->GetPoint(0) == &iOtherPoint )
+              || ( &segment->GetPoint(1) == &iOtherPoint ) ) {
+                return segment;
+            }
+        }
+
+        if ( iOtherPoint.GetType() == POINT_TYPE_INTERSECTION )
+        {
+            if ( segment->HasIntersectionPoint ( static_cast<FVectorPointIntersection&>(iOtherPoint) ) )
+            {
+                return segment;
+            }
         }
     }
 

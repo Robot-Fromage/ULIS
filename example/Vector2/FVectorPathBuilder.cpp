@@ -130,7 +130,7 @@ printf("looping\n");
                                 cubicSegment->GetControlPoint( 1 ).SetX( ctrlPt1.x );
                                 cubicSegment->GetControlPoint( 1 ).SetY( ctrlPt1.y );
 
-                                if( lastCubicSegment )
+                                if( cubicPoint->GetSegmentCount() == 2 && lastCubicSegment )
                                 {
                                     double mRoundedAngle = acos(ULIS::FMath::Clamp<double>(mLastSmoothedSegmentVector.DotProduct(lastSegVector),-1.0f,1.0f)) / 3.14159 * 180;
 

@@ -365,15 +365,18 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi
     {
         Fill( iBlock, iBLContext, iRoi );
     }
-
+/*
     DrawLoops( iBlock, iBLContext, iRoi  );
-
+*/
     DrawShapeVariable( iBlock, iBLContext, iRoi );
 
     if( mIsSelected )
     {
         DrawStructure( iBlock, iBLContext, iRoi );
     }
+
+        iBLContext.setStrokeWidth( 6 );
+    DrawLoops( iBlock, iBLContext, iRoi  );
 }
 
 static void

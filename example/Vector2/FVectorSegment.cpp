@@ -44,6 +44,56 @@ FVectorSegment::GetIntersectionPointList()
     return mIntersectionPointList;
 }
 
+bool
+FVectorSegment::HasIntersectionPoint( FVectorPointIntersection& mIntersectionPoint )
+{
+    for( std::list<FVectorPointIntersection*>::iterator it = mIntersectionPointList.begin(); it != mIntersectionPointList.end(); ++it )
+    {
+        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
+
+        if ( intersectionPoint == &mIntersectionPoint ) 
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+FVectorPoint*
+FVectorSegment::GetNextPoint( double iT )
+{
+    // Search intersection point between this intersection point and the next segment point
+    for(std::list<FVectorPointIntersection*>::iterator iter = mIntersectionPointList.begin(); iter != mIntersectionPointList.end(); ++iter)
+    {
+        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*iter);
+
+        if(intersectionPoint->GetT(*this) > iT)
+        {
+            return intersectionPoint;
+        }
+    }
+
+    return ( iT == 1.0f ) ? nullptr : mPoint[1];
+}
+
+FVectorPoint*
+FVectorSegment::GetPreviousPoint( double iT )
+{
+    // Search intersection point between this intersection point and the next segment point
+    for( std::list<FVectorPointIntersection*>::iterator iter = mIntersectionPointList.begin(); iter != mIntersectionPointList.end(); ++iter )
+    {
+        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*iter);
+
+        if( intersectionPoint->GetT(*this) < iT )
+        {
+            return intersectionPoint;
+        }
+    }
+
+    return ( iT == 0.0f ) ? nullptr : mPoint[0];
+}
+
 FVectorSegment*
 FVectorSegment::GetNextSegment( )
 {

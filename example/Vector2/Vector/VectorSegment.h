@@ -24,4 +24,7 @@ class FVectorSegment
         FVectorSegment* GetPreviousSegment();
         FVectorSegment* GetNextSegment();
         std::list<FVectorPointIntersection*>& GetIntersectionPointList();
+        bool HasIntersectionPoint( FVectorPointIntersection& mIntersectionPoint );
+        FVectorPoint* GetNextPoint( double iT );
+        FVectorPoint* GetPreviousPoint( double iT );
 };

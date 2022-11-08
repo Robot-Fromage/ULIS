@@ -47,8 +47,6 @@ class FVectorPoint
         virtual uint32 GetType();
         double GetRadius();
         virtual void SetRadius( double iRadius, bool iBuildSegments );
-        FVectorPoint* GetNextPoint( FVectorSegment& iCurrentSegment, double iT );
-        FVectorPoint* GetPreviousPoint( FVectorSegment& iCurrentSegment, double iT );
 
         void March( FVectorPointIntersection& iInitiatorPoint );
 };
