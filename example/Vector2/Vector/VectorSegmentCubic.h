@@ -20,17 +20,17 @@ class FVectorSegmentCubic : public FVectorSegment
     protected:
         FVectorHandleSegment mCtrlPoint[2];
         std::vector<FPolygon> mPolygonCache;
-        uint32 mPolygonSlot;  // TODO: use vector size() method.
         FRectD mBBox;
 
     private:
-        void BuildVariableAdaptive( double iFromT
-                                  , double iToT
-                                  , double iStartRadius
-                                  , double iEndRadius
+        void BuildVariableAdaptive( double  iFromT
+                                  , double  iToT
+                                  , double  iStartRadius
+                                  , double  iEndRadius
                                   , FVec2D* iPrevSegmentVector
                                   , FVec2D* iNextSegmentVector
-                                  , int32 iMaxRecurseDepth );
+                                  , int32   iMaxRecurseDepth
+                                  , int    *iPolygonID );
 
         void BuildVariableThickness( double iFromT
                                    , double iToT
@@ -39,7 +39,8 @@ class FVectorSegmentCubic : public FVectorSegment
                                    , FVec2D* iPrevSegmentVector
                                    , FVec2D* iNextSegmentVector
                                    , double iStartRadius
-                                   , double iEndRadius );
+                                   , double iEndRadius
+                                   , int    iPolygonID );
 
     public:
         ~FVectorSegmentCubic(){};
@@ -60,7 +61,6 @@ class FVectorSegmentCubic : public FVectorSegment
         bool Pick( double iX, double iY, double iRadius );
         void IncreasePolygonCache(uint32 iSize);
         void ResetPolygonCache();
-        FPolygon* GetPolygonCacheSlot();
         uint32 GetPolygonCount(); // TODO: use vector size() method.
         std::vector<FPolygon>& GetPolygonCache();
         void DrawLoops ( FBlock& iBlock,BLContext& iBLContext, FRectD &iRoi );

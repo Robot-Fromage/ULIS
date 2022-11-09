@@ -4,7 +4,6 @@
 FVectorSegmentCubic::FVectorSegmentCubic( FVectorPointCubic* iPoint0
                                         , FVectorPointCubic* iPoint1 )
    : FVectorSegment( iPoint0, iPoint1 )
-   , mPolygonSlot( 0 )
 {
     mCtrlPoint[0].Set( iPoint0->GetX(), iPoint0->GetY() );
     mCtrlPoint[1].Set( iPoint1->GetX(), iPoint1->GetY() );
@@ -29,13 +28,6 @@ void
 FVectorSegmentCubic::ResetPolygonCache( )
 {
     mPolygonCache.clear();
-    mPolygonSlot = 0;
-}
-
-FPolygon*
-FVectorSegmentCubic::GetPolygonCacheSlot()
-{
-    return &mPolygonCache[mPolygonSlot++];
 }
 
 bool
@@ -43,7 +35,7 @@ FVectorSegmentCubic::Pick( double iX
                          , double iY
                          , double iRadius )
 {
-    for ( int i = 0; i < mPolygonSlot; i++ )
+    for ( int i = 0; i < mPolygonCache.size(); i++ )
     {
         double refQuantity;
         bool collide = true;
@@ -201,11 +193,11 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
     FVec2D ctrlPoint0 = { mCtrlPoint[0].GetX(), mCtrlPoint[0].GetY() };
     FVec2D ctrlPoint1 = { mCtrlPoint[1].GetX(), mCtrlPoint[1].GetY() };
 
-    for ( int i = 0; i < mPolygonSlot; i++ )
+    for ( int i = 0; i < mPolygonCache.size(); i++ )
     {
         FPolygon* poly = &mPolygonCache[i];
 
-        for( int j = 0; j < iOther.mPolygonSlot; j++ )
+        for( int j = 0; j < iOther.mPolygonCache.size(); j++ )
         {
             FPolygon* interPoly = &iOther.mPolygonCache[j];
             double polySubT, interPolySubT;
@@ -311,7 +303,7 @@ FVectorSegmentCubic::DrawStructure( FBlock& iBlock
 uint32
 FVectorSegmentCubic::GetPolygonCount()
 {
-    return mPolygonSlot;
+    return mPolygonCache.size();
 }
 
 std::vector<FPolygon>&
@@ -327,7 +319,7 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
 {
     iBLContext.setStrokeWidth( 1.0f );
 
-    for ( int i = 0; i < mPolygonSlot; i++ )
+    for ( int i = 0; i < mPolygonCache.size(); i++ )
     {
        /* int n = i + 1;*/
 
@@ -357,7 +349,8 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
                                            , FVec2D* iPrevSegmentVector
                                            , FVec2D* iNextSegmentVector
                                            , double iStartRadius
-                                           , double iEndRadius )
+                                           , double iEndRadius
+                                           , int    iPolygonID )
 {
     // TODO: use references for speed
     FVec2D& point0 = mPoint[0]->GetCoords();
@@ -367,6 +360,7 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
     FVec2D sampleTangent[2] = { CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iFromT ),
                                 CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iToT   ) };
     static FVec2D zeroVector = { 0.0f, 0.0f };
+    FPolygon* cachedPolygon = &mPolygonCache[iPolygonID];
 
     if ( ( sampleTangent[0] != zeroVector ) &&  ( sampleTangent[1] != zeroVector ) )
     {
@@ -377,8 +371,7 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
         FVec2D averageVecTo   = (   parallelVecTo[0] +   parallelVecTo[1] ) * 0.5f;
         FVec2D perpendicularVecFrom = { averageVecFrom.y, -averageVecFrom.x };
         FVec2D perpendicularVecTo = { averageVecTo.y, -averageVecTo.x };
-        uint32 prevPolygonSlot = mPolygonSlot;
-        FPolygon* cachedPolygon = GetPolygonCacheSlot();
+        int prevPolygonID = iPolygonID - 1;
 
         if ( perpendicularVecFrom.DistanceSquared() && perpendicularVecTo.DistanceSquared() )
         {
@@ -389,8 +382,8 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
         perpendicularVecFrom *= iStartRadius;
         perpendicularVecTo *= iEndRadius;
 
-        if ( prevPolygonSlot ) {
-            FPolygon* prevCachedPolygon = cachedPolygon - 1;
+        if ( prevPolygonID >= 0 ) {
+            FPolygon* prevCachedPolygon = &mPolygonCache[prevPolygonID];
 
             cachedPolygon->quadVertex[0].x = prevCachedPolygon->quadVertex[1].x;
             cachedPolygon->quadVertex[0].y = prevCachedPolygon->quadVertex[1].y;
@@ -428,16 +421,19 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
         cachedPolygon->fromT = iFromT;
         cachedPolygon->toT = iToT;
     }
+
+    /*printf("cached polygon: %f %f\n", cachedPolygon->fromT, cachedPolygon->toT );*/
 }
 
 void
-FVectorSegmentCubic::BuildVariableAdaptive( double iFromT
-                                          , double iToT
-                                          , double iStartRadius
-                                          , double iEndRadius
+FVectorSegmentCubic::BuildVariableAdaptive( double  iFromT
+                                          , double  iToT
+                                          , double  iStartRadius
+                                          , double  iEndRadius
                                           , FVec2D* iPrevSegmentVector
                                           , FVec2D* iNextSegmentVector
-                                          , int32 iMaxRecurseDepth )
+                                          , int32   iMaxRecurseDepth
+                                          , int    *iPolygonID )
 {
     FVec2D& point0 = mPoint[0]->GetCoords();
     FVec2D& point1 = mPoint[1]->GetCoords();
@@ -484,15 +480,15 @@ FVectorSegmentCubic::BuildVariableAdaptive( double iFromT
         }
     }
 
-    for( int i = 0; i < 3; i++ )
+    --iMaxRecurseDepth;
+
+    if( ( doRefine == true ) && iMaxRecurseDepth >= 0 )
     {
-        int n = ( i + 1 );
-
-        nextSegmentVector = ( i == 0x02 ) ? iNextSegmentVector : &subTangent[n];
-
-        if( ( doRefine == true ) && --iMaxRecurseDepth >= 0 )
+        for( int i = 0; i < 3; i++ )
         {
-            IncreasePolygonCache ( 3 );
+            int n = ( i + 1 );
+
+            nextSegmentVector = ( i == 0x02 ) ? iNextSegmentVector : &subTangent[n];
 
             BuildVariableAdaptive( sampleRange[i]
                                  , sampleRange[n]
@@ -500,24 +496,43 @@ FVectorSegmentCubic::BuildVariableAdaptive( double iFromT
                                  , radius + radiusStep
                                  , prevSegmentVector
                                  , nextSegmentVector
-                                 , iMaxRecurseDepth );
+                                 , iMaxRecurseDepth
+                                 , iPolygonID );
+
+            // Note: within the segment, the previous vector (at origin) is the segment's vector itself
+            prevSegmentVector = &subTangent[n];
         }
-        else
+    }
+    else
+    {
+        IncreasePolygonCache (3);
+
+        /*printf("increasing cache %d\n",mPolygonCache.size());*/
+
+        for( int i = 0; i < 3; i++ )
         {
-            BuildVariableThickness( sampleRange[i]
-                                  , sampleRange[n]
-                                  , samplePoint[i]
-                                  , samplePoint[n]
-                                  , prevSegmentVector
-                                  , nextSegmentVector
-                                  , radius
-                                  , radius + radiusStep );
+            int n = ( i + 1 );
+
+            nextSegmentVector = ( i == 0x02 ) ? iNextSegmentVector : &subTangent[n];
+
+    /*printf("%f %f - %f %f\n", iFromT, iToT, sampleRange[i], sampleRange[n] );*/
+                BuildVariableThickness( sampleRange[i]
+                                      , sampleRange[n]
+                                      , samplePoint[i]
+                                      , samplePoint[n]
+                                      , prevSegmentVector
+                                      , nextSegmentVector
+                                      , radius
+                                      , radius + radiusStep
+                                      , *iPolygonID );
+    /*printf("%f %f\n", mPolygonCache[(*iPolygonID)].fromT, mPolygonCache[(*iPolygonID)].toT );*/
+                (*iPolygonID)++; // insures polygons are ordered
+
+            // Note: within the segment, the previous vector (at origin) is the segment's vector itself
+            prevSegmentVector = &subTangent[n];
+
+            /*radius += radiusStep;*/
         }
-
-       // Note: within the segment, the previous vector (at origin) is the segment's vector itself
-        prevSegmentVector = &subTangent[n];
-
-        radius += radiusStep;
     }
 }
 
@@ -527,19 +542,19 @@ FVectorSegmentCubic::BuildVariable()
     double segmentStartRadius = static_cast<FVectorPointCubic*>(mPoint[0])->GetRadius();
     double segmentEndRadius = static_cast<FVectorPointCubic*>(mPoint[1])->GetRadius();
     static FVec2D zeroVector = { 0.0f, 0.0f };
+    int polygonID = 0;
 
     ResetPolygonCache();
 
     UpdateBoundingBox();
 
-    // a segment is at least subdivided once anyways
-    IncreasePolygonCache ( 3 );
-
+/*printf("\n");*/
     BuildVariableAdaptive ( 0.0f
                           , 1.0f
                           , segmentStartRadius
                           , segmentEndRadius
                           , &zeroVector
                           , &zeroVector
-                          , 8 );
+                          , 8
+                          , &polygonID );
 }

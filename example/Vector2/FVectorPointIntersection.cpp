@@ -42,7 +42,7 @@ FVectorPointIntersection::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRec
     {
         FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
 
-        loop->DrawShape( iBlock, iBLContext, iRoi );
+        loop->DrawPoints( iBlock, iBLContext, iRoi );
     }
 }
 

@@ -147,6 +147,7 @@ FVectorPoint::MarchForward( FVectorPointIntersection& iInitiatorPoint
             case POINT_TYPE_INTERSECTION :
 
                 t =  static_cast<FVectorPointIntersection*>(this)->GetT(*segment);
+printf("T intersection %f\n", t );
             break;
 
             default : // POINT_TYPE_REGULAR

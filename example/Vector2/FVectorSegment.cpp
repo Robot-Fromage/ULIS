@@ -68,7 +68,7 @@ FVectorSegment::GetNextPoint( double iT )
     {
         FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*iter);
 
-        if(intersectionPoint->GetT(*this) > iT)
+        if( intersectionPoint->GetT(*this) > iT )
         {
             return intersectionPoint;
         }

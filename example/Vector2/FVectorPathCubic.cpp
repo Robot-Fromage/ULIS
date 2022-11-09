@@ -377,6 +377,7 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi
 
         iBLContext.setStrokeWidth( 6 );
     DrawLoops( iBlock, iBLContext, iRoi  );
+
 }
 
 static void

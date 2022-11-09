@@ -30,7 +30,8 @@ FVectorPathLoop::ShapeFromPointList( std::list<FVectorPoint*> iLoopPointist )
     }
 }
 
-static void DrawSegmentCubic( BLPath& iPath
+static void DrawSegmentCubic( BLContext& iBLContext
+                            , std::vector<BLPoint>& iPointArray
                             , FVectorSegmentCubic& iSegment
                             , double iFromT
                             , double iToT )
@@ -41,61 +42,90 @@ static void DrawSegmentCubic( BLPath& iPath
 
     if ( revert == false )
     {
-        // TODO: find why iSegment.GetPolygonCount() differs from polygonCache.size()
         for( int i = 0; i < polyCount; i++ )
         {
-            if( polygonCache[i].toT > iFromT && polygonCache[i].fromT < iToT )
+            if( polygonCache[i].toT >= iFromT && polygonCache[i].fromT <= iToT )
             {
-                BLPoint to = { polygonCache[i].lineVertex[1].x, polygonCache[i].lineVertex[1].y };
+                FVec2D to   = { polygonCache[i].lineVertex[1].x, polygonCache[i].lineVertex[1].y };
+                FVec2D from = { polygonCache[i].lineVertex[0].x, polygonCache[i].lineVertex[0].y };
 
-                iPath.lineTo ( to.x, to.y );
+                // clipping part
+                if ( polygonCache[i].toT > iToT )
+                {
+                    FVec2D dir = polygonCache[i].lineVertex[1] - polygonCache[i].lineVertex[0];
+
+                    to.x = polygonCache[i].lineVertex[0].x + dir.x * ( ( iToT - polygonCache[i].fromT ) / ( polygonCache[i].toT - polygonCache[i].fromT ) );
+                    to.y = polygonCache[i].lineVertex[0].y + dir.y * ( ( iToT - polygonCache[i].fromT ) / ( polygonCache[i].toT - polygonCache[i].fromT ) );
+                }
+
+                BLPoint p = { to.x, to.y };
+
+                iPointArray.push_back(p);
             }
         }
     }
     else
     {
         double tmp = iFromT;
-
         iFromT = iToT;
-        iToT = iFromT;
+        iToT = tmp;
 
-        for( int i = polyCount - 1; i >= 0; i-- )
+        for( int i = polyCount - 1; i > 0; i-- )
         {
-            /*if( polygonCache[i].toT > iFromT && polygonCache[i].fromT < iToT )
-            {*/
-                BLPoint to = { polygonCache[i].lineVertex[0].x, polygonCache[i].lineVertex[0].y };
+            if( polygonCache[i].toT >= iFromT && polygonCache[i].fromT <= iToT )
+            {
+                FVec2D to   = { polygonCache[i].lineVertex[1].x, polygonCache[i].lineVertex[1].y };
+                FVec2D from = { polygonCache[i].lineVertex[0].x, polygonCache[i].lineVertex[0].y };
 
-                iPath.lineTo ( to.x, to.y );
-            /*}*/
+                // clipping part
+                if ( polygonCache[i].fromT < iFromT )
+                {
+                    FVec2D dir = polygonCache[i].lineVertex[1] - polygonCache[i].lineVertex[0];
+
+                    from.x = polygonCache[i].lineVertex[0].x + dir.x * ( ( iFromT - polygonCache[i].fromT ) / ( polygonCache[i].toT - polygonCache[i].fromT ) );
+                    from.y = polygonCache[i].lineVertex[0].y + dir.y * ( ( iFromT - polygonCache[i].fromT ) / ( polygonCache[i].toT - polygonCache[i].fromT ) );
+                }
+
+                BLPoint p = { from.x, from.y };
+
+                iPointArray.push_back(p);
+            }
         }
     }
-/*
-    // TODO: find why iSegment.GetPolygonCount() differs from polygonCache.size()
-    for ( int i = 0; i < iSegment.GetPolygonCount(); i++ )
+}
+
+void
+FVectorPathLoop::DrawPoints( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+{
+    iBLContext.setStrokeStyle( BLRgba32( 0xFFFF8000 ) );
+    iBLContext.setFillStyle( BLRgba32( 0xFFFF8000 ) );
+
+    if ( mPointList.size() ) 
     {
-        if ( polygonCache[i].toT >= iFromT )
+        std::list<FVectorPoint*>::iterator it;
+
+        for( it = mPointList.begin(); it != mPointList.end(); ++it )
         {
-            BLPoint to = { polygonCache[i].lineVertex[1].x, polygonCache[i].lineVertex[1].y };
+            FVectorPoint* point = static_cast<FVectorPoint*>(*it);
+            FVec2D pointAt = point->GetCoords();
 
-            // clipping part
-            if ( iToT < polygonCache[i].toT )
+            if ( point->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION )
             {
-                FVec2D dir = polygonCache[i].lineVertex[1] - polygonCache[i].lineVertex[0];
-
-                to.x = polygonCache[i].lineVertex[0].x + dir.x * ( iToT - polygonCache[i].fromT );
-                to.y = polygonCache[i].lineVertex[0].y + dir.y * ( iToT - polygonCache[i].fromT );
+                pointAt = static_cast<FVectorPointIntersection*>(point)->GetPosition(*point->GetFirstSegment());
             }
 
-            iPath.lineTo ( to.x, to.y );
+            iBLContext.fillRect ( pointAt.x - 5, pointAt.y - 5, 10, 10 );
         }
     }
-*/
 }
 
 void
 FVectorPathLoop::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 {
-    BLPath path;
+   std::vector<BLPoint> pointArray;
+    int seg = 0;
+
+    pointArray.reserve(64);
 
     iBLContext.setStrokeStyle( BLRgba32( 0xFFFF8000 ) );
     iBLContext.setFillStyle( BLRgba32( 0xFFFF8000 ) );
@@ -107,84 +137,84 @@ FVectorPathLoop::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi 
         std::list<FVectorPoint*>::iterator     it;
         std::list<FVectorPoint*>::iterator nextit;
 
-        for( it = mPointList.begin(), nextit = ++mPointList.begin(); it != mPointList.end(); ++it )
+        for( it = mPointList.begin(), nextit = mPointList.begin(); it != mPointList.end(); ++it )
         {
             FVectorPoint* point = static_cast<FVectorPoint*>(*it);
-            FVectorPoint* nextPoint = ( point == lastPoint ) ? firstPoint : static_cast<FVectorPoint*>(*nextit++);
+            FVectorPoint* nextPoint = ( point == lastPoint ) ? firstPoint : static_cast<FVectorPoint*>(*(++nextit));
 
             if ( point == firstPoint ) {
                 FVec2D pointAt = static_cast<FVectorPointIntersection*>(point)->GetPosition(*point->GetFirstSegment());
+                BLPoint p = { pointAt.x, pointAt.y };
 
-                path.moveTo ( pointAt.x, pointAt.y );
+                pointArray.push_back(p);
             }
 
-/*
-                if ( (     point->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION )
-                  && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_REGULAR      ) )
+            if ( (     point->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION )
+              && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_REGULAR      ) )
+            {
+                FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(point);
+                FVectorSegment* segment = intersectionPoint->GetSegment( *nextPoint );
+                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segment);
+
+                if ( nextPoint == &segment->GetPoint(0) )
                 {
-                    FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(point);
-                    FVectorSegment* segment = intersectionPoint->GetSegment( *nextPoint );
-                    FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segment);
-
-                    DrawSegmentCubic ( path, *cubicSegment, intersectionPoint->GetT(*segment), 1.0f );
+                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, 0.0f, intersectionPoint->GetT(*segment) );
                 }
-
-                if ( (     point->GetType() == FVectorPoint::POINT_TYPE_REGULAR )
-                  && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_REGULAR ) )
+                else
                 {
-                    FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(point->GetSegment( *nextPoint ));
-
-                    if ( segment )
-                    {
-                        FVec2D& point0 = segment->GetPoint(0).GetCoords();
-                        FVec2D& point1 = segment->GetPoint(1).GetCoords();
-                        FVec2D& ctrlPoint0 = segment->GetControlPoint(0).GetCoords();
-                        FVec2D& ctrlPoint1 = segment->GetControlPoint(1).GetCoords();
-
-                        path.cubicTo ( ctrlPoint0.x
-                                     , ctrlPoint0.y
-                                     , ctrlPoint1.x
-                                     , ctrlPoint1.y
-                                     , point1.x
-                                     , point1.y  );
-
-                    }
+                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, intersectionPoint->GetT(*segment), 1.0f );
                 }
-*/
+            }
 
-                if ( (     point->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION )
-                  && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION ) )
+            if ( (     point->GetType() == FVectorPoint::POINT_TYPE_REGULAR )
+              && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_REGULAR ) )
+            {
+                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(point->GetSegment( *nextPoint ));
+
+                if ( cubicSegment )
                 {
-                    FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(point->GetSegment( *nextPoint ));
+                    double     pointT =     static_cast<FVectorPointIntersection*>(point)->GetT(*cubicSegment);
+                    double nextPointT = static_cast<FVectorPointIntersection*>(nextPoint)->GetT(*cubicSegment);
 
-                    if ( cubicSegment )
-                    {
-                        double     pointT =     static_cast<FVectorPointIntersection*>(point)->GetT(*cubicSegment);
-                        double nextPointT = static_cast<FVectorPointIntersection*>(nextPoint)->GetT(*cubicSegment);
-
-                        FVec2D     pointAt = static_cast<FVectorPointIntersection*>(point)->GetPosition(*cubicSegment);
-                        FVec2D nextPointAt = static_cast<FVectorPointIntersection*>(nextPoint)->GetPosition(*cubicSegment);
-
-/*iBLContext.strokeLine( pointAt.x, pointAt.y, nextPointAt.x, nextPointAt.y );*/
-                        DrawSegmentCubic ( path, *cubicSegment, nextPointT, pointT );
-                    }
+                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, pointT, nextPointT );
                 }
+            }
 
-/*
-                if ( (     point->GetType() == FVectorPoint::POINT_TYPE_REGULAR      )
-                  && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION ) )
+            if ( (     point->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION )
+              && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION ) )
+            {
+                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(point->GetSegment( *nextPoint ));
+
+                if ( cubicSegment )
                 {
-                    FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(nextPoint);
-                    FVectorSegment* segment = intersectionPoint->GetSegment(*point);
-                    FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segment);
+                    double     pointT =     static_cast<FVectorPointIntersection*>(point)->GetT(*cubicSegment);
+                    double nextPointT = static_cast<FVectorPointIntersection*>(nextPoint)->GetT(*cubicSegment);
 
-                    DrawSegmentCubic ( path, *cubicSegment, 0.0f, intersectionPoint->GetT(*segment) );
+                    FVec2D     pointAt = static_cast<FVectorPointIntersection*>(point)->GetPosition(*cubicSegment);
+                    FVec2D nextPointAt = static_cast<FVectorPointIntersection*>(nextPoint)->GetPosition(*cubicSegment);
+
+                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, pointT, nextPointT );
                 }
-*/
+            }
+
+            if (   (     point->GetType() == FVectorPoint::POINT_TYPE_REGULAR      )
+                && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION ) )
+            {
+                FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(nextPoint);
+                FVectorSegment* segment = intersectionPoint->GetSegment(*point);
+                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segment);
+
+                if ( point == &segment->GetPoint(0) )
+                {
+                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, 0.0f, intersectionPoint->GetT(*segment) );
+                }
+                else
+                {
+                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, intersectionPoint->GetT(*segment), 1.0f );
+                }
+            }
         }
     }
 
-
-    iBLContext.fillPath( path );
-
+   iBLContext.fillPolygon( &pointArray[0], pointArray.size() );
 }
