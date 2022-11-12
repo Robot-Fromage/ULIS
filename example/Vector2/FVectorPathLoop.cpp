@@ -78,7 +78,6 @@ FVectorPathLoop::GenerateID( std::list<FVectorPoint*> iLoopPointist, FVectorPoin
         }
     }
 
-    printf("loopID: %d\n", loopID );
     return loopID;
 }
 

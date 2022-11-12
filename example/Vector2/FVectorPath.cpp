@@ -46,7 +46,10 @@ FVectorPath::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
     {
         FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
 
-        loop->DrawShape( iBlock, iBLContext, iRoi );
+        /*if ( loop->IsFilled() == true )
+        {*/
+            loop->DrawShape( iBlock, iBLContext, iRoi );
+        /*}*/
     }
 }
 

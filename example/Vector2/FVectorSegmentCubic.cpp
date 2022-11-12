@@ -214,13 +214,18 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
                                 , poly->lineVertex[0].y + ( polyVector.y * polySubT ) };
                 FVectorPointIntersection* intersectionPoint = new FVectorPointIntersection ();
 
-printf("intersection detected at %f %f %f\n", coords.x, coords.y, polySubT );
+
 
                  this->mIntersectionPointList.push_back( intersectionPoint );
                 iOther.mIntersectionPointList.push_back( intersectionPoint );
 
-                intersectionPoint->AddSegment (    this,      poly->fromT + (      polySubT * (      poly->toT -      poly->fromT ) ) );
-                intersectionPoint->AddSegment ( &iOther, interPoly->fromT + ( interPolySubT * ( interPoly->toT - interPoly->fromT ) ) );
+                double segmentT =      poly->fromT + (      polySubT * (      poly->toT -      poly->fromT ) );
+                double iOtherT  = interPoly->fromT + ( interPolySubT * ( interPoly->toT - interPoly->fromT ) );
+
+printf("new intersection Point: %d - %f %f\n", intersectionPoint, segmentT, iOtherT );
+
+                intersectionPoint->AddSegment (    this, segmentT );
+                intersectionPoint->AddSegment ( &iOther,  iOtherT );
 
                 intersectionPoint->March( *intersectionPoint, *this );
             }

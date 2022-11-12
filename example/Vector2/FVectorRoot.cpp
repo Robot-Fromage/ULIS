@@ -48,9 +48,9 @@ FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius
         {
             pickedObject = pickedObject->GetParent();
         }
-    }
 
-    Select ( iBLContext, *pickedObject );
+        Select ( iBLContext, *pickedObject );
+    }
 }
 
 void
@@ -60,6 +60,7 @@ FVectorRoot::Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillCo
 
     if ( pickedObject )
     {
+        pickedObject->SetFilled(true);
         pickedObject->SetFillColor( iFillColor );
     }
 }

@@ -72,35 +72,53 @@ FVectorSegment::HasIntersectionPoint( FVectorPointIntersection& mIntersectionPoi
 FVectorPoint*
 FVectorSegment::GetNextPoint( double iT )
 {
+    FVectorPoint* closestPoint = nullptr;
+    double closestT = 1.0f;
+
     // Search intersection point between this intersection point and the next segment point
     for(std::list<FVectorPointIntersection*>::iterator iter = mIntersectionPointList.begin(); iter != mIntersectionPointList.end(); ++iter)
     {
         FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*iter);
+        double pointT = intersectionPoint->GetT(*this);
 
-        if( intersectionPoint->GetT(*this) > iT )
+        if( pointT > iT )
         {
-            return intersectionPoint;
+            if ( pointT <= closestT )
+            {
+                closestPoint = intersectionPoint;
+
+                closestT = pointT;
+            }
         }
     }
 
-    return nullptr;
+    return closestPoint;
 }
 
 FVectorPoint*
 FVectorSegment::GetPreviousPoint( double iT )
 {
+    FVectorPoint* closestPoint = nullptr;
+    double closestT = 0.0f;
+
     // Search intersection point between this intersection point and the next segment point
-    for( std::list<FVectorPointIntersection*>::iterator iter = mIntersectionPointList.begin(); iter != mIntersectionPointList.end(); ++iter )
+    for(std::list<FVectorPointIntersection*>::iterator iter = mIntersectionPointList.begin(); iter != mIntersectionPointList.end(); ++iter)
     {
         FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*iter);
+        double pointT = intersectionPoint->GetT(*this);
 
-        if( intersectionPoint->GetT(*this) < iT )
+        if( pointT < iT )
         {
-            return intersectionPoint;
+            if ( pointT >= closestT )
+            {
+                closestPoint = intersectionPoint;
+
+                closestT = pointT;
+            }
         }
     }
 
-    return nullptr;
+    return closestPoint;
 }
 
 FVectorSegment*
