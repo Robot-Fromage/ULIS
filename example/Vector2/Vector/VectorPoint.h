@@ -10,12 +10,6 @@ class FVectorPathLoop;
 class FVectorPoint
 {
     private:
-        void MarchForward( FVectorPointIntersection& iInitiatorPoint
-                           , std::list<FVectorPoint*>& loopPointList
-                           , std::list<FVectorPoint*>& intersectionPointList );
-        void MarchBackward( FVectorPointIntersection& iInitiatorPoint
-                           , std::list<FVectorPoint*>& loopPointList
-                           , std::list<FVectorPoint*>& intersectionPointList );
 
     protected:
         FVec2D mCoords;
@@ -48,5 +42,6 @@ class FVectorPoint
         double GetRadius();
         virtual void SetRadius( double iRadius, bool iBuildSegments );
 
-        void March( FVectorPointIntersection& iInitiatorPoint );
+        void March( FVectorPointIntersection&  iInitiatorPoint
+                   , FVectorSegment&       iCurrentSegment );
 };

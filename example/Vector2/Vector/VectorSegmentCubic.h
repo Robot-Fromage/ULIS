@@ -44,7 +44,6 @@ class FVectorSegmentCubic : public FVectorSegment
 
     public:
         ~FVectorSegmentCubic(){};
-        FVectorSegmentCubic( );
         FVectorSegmentCubic( FVectorPointCubic* iPoint0, FVectorPointCubic* iPoint1 );
         FVectorSegmentCubic( FVectorPointCubic* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPointCubic* iPoint1 );
         FVectorHandleSegment& GetControlPoint( int iCtrlPointNum );
@@ -63,7 +62,6 @@ class FVectorSegmentCubic : public FVectorSegment
         void ResetPolygonCache();
         uint32 GetPolygonCount(); // TODO: use vector size() method.
         std::vector<FPolygon>& GetPolygonCache();
-        void DrawLoops ( FBlock& iBlock,BLContext& iBLContext, FRectD &iRoi );
 
         void IntersectPath( FVectorPathCubic& iPath );
         void Intersect( FVectorSegmentCubic& iOther );

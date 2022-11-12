@@ -26,7 +26,7 @@ class FVectorPathBuilder : public FVectorPath
         FVectorPathBuilder( FVectorPathCubic* iCubicPath );
         FVectorSegment* AppendPoint( double iX, double iY, double iRadius );
         void DrawShape(FBlock& iBlock,BLContext& iBLContext, FRectD &iRoi );
-        bool PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
+        FVectorObject* PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
         void PickPoint( double iX, double iY, double iRadius );
         void Unselect(FVectorPoint* iPoint);
         FVectorSegment* End( double iX, double iY, double iRadius );

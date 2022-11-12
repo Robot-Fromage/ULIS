@@ -30,23 +30,6 @@ FVectorPointIntersection::GetPosition( FVectorSegment& iSegment )
 }
 
 void
-FVectorPointIntersection::AddLoop( FVectorPathLoop* iLoop )
-{
-    mLoopList.push_back( iLoop );
-}
-
-void
-FVectorPointIntersection::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
-{
-    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
-    {
-        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
-
-        loop->DrawPoints( iBlock, iBLContext, iRoi );
-    }
-}
-
-void
 FVectorPointIntersection::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
     for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )

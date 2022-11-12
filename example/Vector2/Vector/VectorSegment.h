@@ -5,6 +5,7 @@
 #include <Image/Block.h>
 
 class FVectorPoint;
+class FVectorPath;
 class FVectorPointIntersection;
 
 class FVectorSegment
@@ -12,10 +13,10 @@ class FVectorSegment
     protected:
         FVectorPoint* mPoint[2];
         std::list<FVectorPointIntersection*> mIntersectionPointList;
+        FVectorPath* mPath;
 
     public:
         ~FVectorSegment();
-        FVectorSegment();
         FVectorSegment( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
         FVectorPoint& GetPoint( int iPointNum );
         virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
@@ -26,5 +27,7 @@ class FVectorSegment
         std::list<FVectorPointIntersection*>& GetIntersectionPointList();
         bool HasIntersectionPoint( FVectorPointIntersection& mIntersectionPoint );
         FVectorPoint* GetNextPoint( double iT );
-        FVectorPoint* GetPreviousPoint( double iT );
+        FVectorPoint* GetPreviousPoint( double iT ); 
+        FVectorPath* GetPath();
+        void SetPath( FVectorPath* );
 };

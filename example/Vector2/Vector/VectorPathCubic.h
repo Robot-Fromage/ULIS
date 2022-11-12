@@ -27,7 +27,7 @@ class FVectorPathCubic: public FVectorPath
         FVectorPathCubic( std::string iName );
 
         FVectorSegmentCubic* AppendPoint( FVectorPointCubic* iPoint, bool iConnect, bool iBuildSegments );
-        bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
         void PickPoint ( double iX, double iY, double iRadius );
         void Unselect( FVectorPoint* iPoint );
         void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
@@ -36,8 +36,6 @@ class FVectorPathCubic: public FVectorPath
         void setJointLinear();
         void setJointNone();
         void Fill( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
-        void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-
         void Merge( FVectorPathCubic& iCubicPath );
         void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
 };

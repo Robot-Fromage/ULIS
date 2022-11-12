@@ -35,7 +35,7 @@ FVectorRectangle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi
     iBLContext.strokeRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
 }
 
-bool
+FVectorObject*
 FVectorRectangle::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     double x1 = - mWidth  * 0.5f;
@@ -46,10 +46,10 @@ FVectorRectangle::PickShape( BLContext& iBLContext, double iX, double iY, double
     if( ( iX >= x1 ) && ( iX <= x2 ) &&
         ( iY >= y1 ) && ( iY <= y2 ) )
     {
-        return true;
+        return this;
     }
 
-    return false;
+    return nullptr;
 }
 
 void

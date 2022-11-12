@@ -107,6 +107,14 @@ FVectorPoint::GetFirstSegment()
     return mSegmentList.front();
 }
 
+static uintptr_t
+GenerateSegmentID( FVectorSegment* iSegment, FVectorPoint* iP0, FVectorPoint* iP1 )
+{
+    uintptr_t xorPoint = reinterpret_cast<uintptr_t>(iP0) ^ reinterpret_cast<uintptr_t>(iP1);
+
+    return xorPoint ^ reinterpret_cast<uintptr_t>(iSegment);
+}
+
 static bool seekPoint( std::list<FVectorPoint*>& iPointList
                      , FVectorPoint* iPoint )
 {
@@ -121,148 +129,86 @@ static bool seekPoint( std::list<FVectorPoint*>& iPointList
     return false;
 }
 
-void
-FVectorPoint::MarchForward( FVectorPointIntersection& iInitiatorPoint
-                           , std::list<FVectorPoint*>& loopPointList
-                           , std::list<FVectorPoint*>& intersectionPointList )
+static bool seekSegment( std::list<uintptr_t>& iSegmentIDList
+                       , uintptr_t iSegmentID )
 {
-    FVectorPoint* previousLoopPoint = ( loopPointList.size() ) ? loopPointList.back() : nullptr;
-
-    loopPointList.push_back ( this );
-
-    if ( this->GetType() == POINT_TYPE_INTERSECTION )
+    for( std::list<uintptr_t>::iterator it = iSegmentIDList.begin(); it != iSegmentIDList.end(); ++it )
     {
-        intersectionPointList.push_back( this );
-    }
-
-
-    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
-    {
-        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-        FVectorPoint* nextPoint;
-        double t = 0.0f;
-
-        switch ( GetType() )
+        if ( static_cast<uintptr_t>(*it) == iSegmentID )
         {
-            case POINT_TYPE_INTERSECTION :
-
-                t =  static_cast<FVectorPointIntersection*>(this)->GetT(*segment);
-printf("T intersection %f\n", t );
-            break;
-
-            default : // POINT_TYPE_REGULAR
-                t = ( this == &segment->GetPoint(0) ) ? 0.0f : 1.0f;
-            break;
-        }
-
-        nextPoint = segment->GetNextPoint( t );
-
-        if ( nextPoint )
-        {
-            // prevent going backwards (useful for interconnected paths going different in directions )
-            if ( nextPoint != previousLoopPoint )
-            {
-                if ( nextPoint == &iInitiatorPoint )
-                {
-                    printf("forward intersected loop detected size:%d\n", loopPointList.size() );
-                    FVectorPathLoop *loopPath = new FVectorPathLoop ( loopPointList );
-
-                    iInitiatorPoint.AddLoop( loopPath );
-                }
-                else
-                {
-                    // detect loops within loop
-                    if ( seekPoint ( intersectionPointList, nextPoint ) == false )
-                    {
-                        nextPoint->March( iInitiatorPoint );
-                    }
-                }
-            }
+            return true;
         }
     }
 
-    if( this->GetType() == POINT_TYPE_INTERSECTION )
-    {
-        intersectionPointList.pop_back ( );
-    }
-
-    loopPointList.pop_back ( );
+    return false;
 }
 
 void
-FVectorPoint::MarchBackward( FVectorPointIntersection& iInitiatorPoint
-                           , std::list<FVectorPoint*>& loopPointList
-                           , std::list<FVectorPoint*>& intersectionPointList )
-{
-    FVectorPoint* previousLoopPoint = ( loopPointList.size() ) ? loopPointList.back() : nullptr;
-
-    loopPointList.push_back ( this );
-
-    if ( this->GetType() == POINT_TYPE_INTERSECTION )
-    {
-        intersectionPointList.push_back( this );
-    }
-
-    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
-    {
-        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-        FVectorPoint* prevPoint;
-        double t = 0.0f;
-
-        switch ( GetType() )
-        {
-            case POINT_TYPE_INTERSECTION :
-                t =  static_cast<FVectorPointIntersection*>(this)->GetT(*segment);
-            break;
-
-            default : // POINT_TYPE_REGULAR
-                t = ( this == &segment->GetPoint(0) ) ? 0.0f : 1.0f;
-            break;
-        }
-
-        prevPoint = segment->GetPreviousPoint( t );
-
-        if ( prevPoint )
-        {
-            // prevent going backwards (useful for interconnected paths going different in directions )
-            if ( prevPoint != previousLoopPoint )
-            {
-                if ( prevPoint == &iInitiatorPoint )
-                {
-                    printf("backward intersected loop detected size:%d\n", loopPointList.size() );
-                    FVectorPathLoop *loopPath = new FVectorPathLoop ( loopPointList );
-
-                    iInitiatorPoint.AddLoop( loopPath );
-                }
-                else
-                {
-                    // detect loops within loop
-                    if ( seekPoint ( intersectionPointList, prevPoint ) == false )
-                    {
-                        prevPoint->March( iInitiatorPoint );
-                    }
-                }
-            }
-        }
-    }
-
-    if( this->GetType() == POINT_TYPE_INTERSECTION )
-    {
-        intersectionPointList.pop_back ( );
-    }
-
-    loopPointList.pop_back ( );
-}
-
-void
-FVectorPoint::March( FVectorPointIntersection& iInitiatorPoint )
+FVectorPoint::March( FVectorPointIntersection&  iInitiatorPoint
+                   , FVectorSegment&       iCurrentSegment )
 {
     static std::list<FVectorPoint*> loopPointList;
-    // this is only for faster searching loops within loops
-    static std::list<FVectorPoint*> intersectionPointList;
+    static std::list<uintptr_t> iSegmentIDList;
 
-    MarchForward( iInitiatorPoint, loopPointList, intersectionPointList );
-    /*MarchBackward( iInitiatorPoint, loopPointList, intersectionPointList );*/
+    loopPointList.push_back ( this );
+
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
+        double t =  static_cast<FVectorPointIntersection*>(this)->GetT(*segment);
+        FVectorPoint* forwardPoint = segment->GetNextPoint(t);
+        FVectorPoint* backwardPoint = segment->GetPreviousPoint(t);
+
+        if ( forwardPoint )
+        {
+            if ( seekPoint( loopPointList, forwardPoint ) == false )
+            {
+                iSegmentIDList.push_back( GenerateSegmentID( segment, this, forwardPoint) );
+                forwardPoint->March( iInitiatorPoint, *segment );
+                iSegmentIDList.pop_back();
+            }
+            else
+            {
+                if ( seekSegment( iSegmentIDList, GenerateSegmentID( segment, this, forwardPoint ) ) == false )
+                {
+                    uint64 loopID = FVectorPathLoop::GenerateID( loopPointList, forwardPoint );
+
+                    if ( segment->GetPath()->GetPathLoopByID( loopID ) == nullptr )
+                    {
+                        FVectorPathLoop *loopPath = new FVectorPathLoop ( loopID, loopPointList, forwardPoint );
+
+                        segment->GetPath()->AddLoop( loopPath );
+                    } else printf("loop exists!!\n");
+                }
+            }
+        }
+
+        if( backwardPoint )
+        {
+            if( seekPoint( loopPointList, backwardPoint ) == false )
+            {
+                iSegmentIDList.push_back( GenerateSegmentID( segment, this, backwardPoint ) );
+                backwardPoint->March( iInitiatorPoint, *segment );
+                iSegmentIDList.pop_back();
+            }
+            else
+            {
+                if ( seekSegment( iSegmentIDList, GenerateSegmentID( segment, this, backwardPoint ) ) == false )
+                {
+                    uint64 loopID = FVectorPathLoop::GenerateID( loopPointList, backwardPoint );
+
+                    if ( segment->GetPath()->GetPathLoopByID( loopID ) == nullptr )
+                    {
+                        FVectorPathLoop *loopPath = new FVectorPathLoop ( loopID, loopPointList, backwardPoint );
+
+                        segment->GetPath()->AddLoop( loopPath );
+                    } else printf("loop exists!!\n");
+                }
+            }
+        }
+    }
+
+    loopPointList.pop_back ( );
 }
 
 FVectorSegment*
@@ -278,4 +224,6 @@ FVectorPoint::GetSegment( FVectorPoint& iOtherPoint )
             return segment;
         }
     }
+
+    return nullptr;
 }

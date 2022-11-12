@@ -61,7 +61,7 @@ FVectorPathCubic::AppendPoint( FVectorPointCubic* iPoint
     return nullptr;
 }
 
-bool
+FVectorObject*
 FVectorPathCubic::PickShape( BLContext& iBLContext
                            , double iX
                            , double iY
@@ -96,15 +96,15 @@ FVectorPathCubic::PickShape( BLContext& iBLContext
     // Pick inside the polygons that makes the segment
     for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
     {
-        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
+        FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*it);
 
-        if ( segment->Pick ( iX, iY, iRadius ) == true )
+        if ( cubicSegment->Pick ( iX, iY, iRadius ) == true )
         {
-            return true;
+            return this;
         }
     }
 
-    return false;
+    return PickLoops( iBLContext, iX, iY, iRadius );
 }
 
 void
@@ -327,17 +327,6 @@ FVectorPathCubic::DrawSegment( BLPath& iPath
 */
 
 void
-FVectorPathCubic::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
-{
-    for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
-    {
-        FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
-
-        segment->DrawLoops( iBlock, iBLContext, iRoi );
-    }
-}
-
-void
 FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
 /*
@@ -365,19 +354,19 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi
     {
         Fill( iBlock, iBLContext, iRoi );
     }
-/*
+
     DrawLoops( iBlock, iBLContext, iRoi  );
-*/
+
     DrawShapeVariable( iBlock, iBLContext, iRoi );
 
     if( mIsSelected )
     {
         DrawStructure( iBlock, iBLContext, iRoi );
     }
-
+/*
         iBLContext.setStrokeWidth( 6 );
     DrawLoops( iBlock, iBLContext, iRoi  );
-
+*/
 }
 
 static void

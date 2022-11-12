@@ -32,12 +32,65 @@ FVectorPath::AppendPoint( FVectorPoint* iPoint )
 }
 
 void
+FVectorPath::AddLoop( FVectorPathLoop* iLoop )
+{
+    mLoopList.push_back( iLoop );
+
+    iLoop->mParent = this;
+}
+
+void
+FVectorPath::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+{
+    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
+    {
+        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+
+        loop->DrawShape( iBlock, iBLContext, iRoi );
+    }
+}
+
+FVectorObject*
+FVectorPath::PickLoops( BLContext& iBLContext, double iX, double iY, double iRadius )
+{
+    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
+    {
+        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+
+        if ( loop->PickShape( iBLContext, iX, iY, iRadius ) )
+        {
+            return loop;
+        }
+    }
+
+    return nullptr;
+}
+
+FVectorPathLoop*
+FVectorPath::GetPathLoopByID( uint64 iID )
+{
+    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
+    {
+        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+
+        if ( iID == loop->GetID() )
+        {
+            return loop;
+        }
+    }
+
+    return nullptr;
+}
+
+void
 FVectorPath::AddSegment( FVectorSegment* iSegment )
 {
     mSegmentList.push_back( iSegment );
 
     iSegment->GetPoint( 0 ).AddSegment( iSegment );
     iSegment->GetPoint( 1 ).AddSegment( iSegment );
+
+    iSegment->SetPath( this );
 }
 
 void
@@ -136,4 +189,6 @@ FVectorPath::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 
         segment->Draw( iBlock, iBLContext, iRoi );
     }
+
+    DrawLoops( iBlock, iBLContext, iRoi );
 }

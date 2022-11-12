@@ -5,11 +5,8 @@ FVectorSegment::~FVectorSegment()
 {
 }
 
-FVectorSegment::FVectorSegment()
-{
-}
-
-FVectorSegment::FVectorSegment( FVectorPoint* iPoint0, FVectorPoint* iPoint1 )
+FVectorSegment::FVectorSegment( FVectorPoint* iPoint0
+                              , FVectorPoint* iPoint1 )
 {
     mPoint[0] = iPoint0;
     mPoint[1] = iPoint1;
@@ -19,6 +16,18 @@ FVectorPoint&
 FVectorSegment::GetPoint( int iPointNum )
 {
     return *mPoint[iPointNum];
+}
+
+FVectorPath*
+FVectorSegment::GetPath()
+{
+    return mPath;
+}
+
+void
+FVectorSegment::SetPath( FVectorPath* iPath )
+{
+    mPath = iPath;
 }
 
 double
@@ -74,7 +83,7 @@ FVectorSegment::GetNextPoint( double iT )
         }
     }
 
-    return ( iT == 1.0f ) ? nullptr : mPoint[1];
+    return nullptr;
 }
 
 FVectorPoint*
@@ -91,7 +100,7 @@ FVectorSegment::GetPreviousPoint( double iT )
         }
     }
 
-    return ( iT == 0.0f ) ? nullptr : mPoint[0];
+    return nullptr;
 }
 
 FVectorSegment*

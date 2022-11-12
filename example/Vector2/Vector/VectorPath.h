@@ -6,9 +6,12 @@
 #include "Vector/VectorObject.h"
 #include "Vector/VectorSegment.h"
 
+class FVectorPathLoop;
+
 class FVectorPath : public FVectorObject
 {
     protected :
+        std::list<FVectorPathLoop*> mLoopList; // list of loops
         std::list<FVectorPoint*> mPointList;
         std::list<FVectorSegment*> mSegmentList;
         std::list<FVectorPoint*> mSelectedPointList;
@@ -21,9 +24,11 @@ class FVectorPath : public FVectorObject
         FVectorPath();
         FVectorPath( std::string iName );
         FVectorSegment* AppendPoint( FVectorPoint* iPoint );
+        FVectorObject* PickLoops(BLContext& iBLContext,double iX,double iY,double iRadius);
+        void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
+        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         std::list<FVectorSegment*>& GetSegmentList();
         FVectorPoint* GetFirstPoint();
@@ -34,5 +39,6 @@ class FVectorPath : public FVectorObject
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
         void Clear();
         bool IsLoop();
-
+        FVectorPathLoop* GetPathLoopByID( uint64 iID );
+        void AddLoop( FVectorPathLoop* iLoop );
 };

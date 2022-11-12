@@ -36,6 +36,7 @@ private:
     int32 mAction;
     void (MyWidget::*mTool)(QEvent*);
     FRectD mScreen;
+    uint32 mFillColor;
 
 public:
     MyWidget::MyWidget(uint32 iWidth,uint32 iHeight);
@@ -48,6 +49,7 @@ public:
     void MyWidget::CreateCircle(QEvent *e);
     void MyWidget::CreateRectangle(QEvent *e);
     void MyWidget::PanView(QEvent *e);
+    void MyWidget::Bucket(QEvent *e);
 
     void MyWidget::SelectCreatePath( bool checked );
     void MyWidget::SelectEditPath( bool checked );
@@ -61,6 +63,7 @@ public:
     void MyWidget::SelectFillColor( bool checked );
     void MyWidget::SelectDeleteObject( bool checked );
     void MyWidget::SelectPanView( bool checked );
+    void MyWidget::SelectBucket( bool checked );
 
     virtual ~MyWidget() {
         delete mQImage; mBLContext->end();
@@ -219,6 +222,7 @@ public:
 #define FILL_COLOR       "Fill Color"
 #define DELETE_OBJECT    "Delete Object"
 #define PAN_VIEW         "Pan View"
+#define BUCKET           "Bucket"
 
 class MyAction : public QAction {
     public :
@@ -235,6 +239,7 @@ void MyWidget::SelectRotateObject   ( bool checked ) { mTool = &MyWidget::Rotate
 void MyWidget::SelectCreateCircle   ( bool checked ) { mTool = &MyWidget::CreateCircle;   }
 void MyWidget::SelectCreateRectangle( bool checked ) { mTool = &MyWidget::CreateRectangle;}
 void MyWidget::SelectPanView        ( bool checked ) { mTool = &MyWidget::PanView        ;}
+void MyWidget::SelectBucket         ( bool checked ) { mTool = &MyWidget::Bucket         ;}
 void MyWidget::SelectStrokeColor    ( bool checked )
 {
     QColor color = QColorDialog::getColor( Qt::white, this );
@@ -255,6 +260,8 @@ void MyWidget::SelectFillColor ( bool checked )
 
         selectedObject->SetFilled(true);
         selectedObject->SetFillColor(color.rgba());
+
+        mFillColor = color.rgba(); // save for loop filling
     }
 }
 
@@ -311,7 +318,7 @@ MyWidget::CreatePath(QEvent *event)
         FRectD invalidateRegion = { e->x() - 100.0f, e->y() - 100.0f, 200.0f, 200.0f };
         FRectD finalRegion = invalidateRegion;
 
-        currentPathBuilder->AppendPoint( localCoords.x, localCoords.y, 4.0f );
+        currentPathBuilder->AppendPoint( localCoords.x, localCoords.y, 1.0f );
 
         FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(cubicPath->GetLastSegment());
 
@@ -653,6 +660,21 @@ MyWidget::RotateObject(QEvent *event)
 }
 
 void
+MyWidget::Bucket(QEvent *event)
+{
+    QMouseEvent *e = static_cast<QMouseEvent*>(event);
+
+    if( event->type() == QEvent::MouseButtonPress )
+    {
+        FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
+
+        mVEngine.GetScene().Bucket( *mBLContext, localCoordinates.x, localCoordinates.y, mFillColor );
+    }
+
+    update();
+}
+
+void
 MyWidget::CreateCircle( QEvent *event )
 {
     QMouseEvent *e = static_cast<QMouseEvent*>(event);
@@ -749,6 +771,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     MyAction *createFillColorAction    = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), FILL_COLOR       ) );
     MyAction *createDeleteObjectAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), DELETE_OBJECT    ) );
     MyAction *createPanViewAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), PAN_VIEW         ) );
+    MyAction *createBucketAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), BUCKET           ) );
 
     connect( createPathAction        , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
     connect( editPathAction          , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
@@ -762,6 +785,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     connect( createFillColorAction   , &MyAction::triggered, this, &MyWidget::SelectFillColor       );
     connect( createDeleteObjectAction, &MyAction::triggered, this, &MyWidget::SelectDeleteObject    );
     connect( createPanViewAction     , &MyAction::triggered, this, &MyWidget::SelectPanView         );
+    connect( createBucketAction      , &MyAction::triggered, this, &MyWidget::SelectBucket          );
 
     /*setAttribute(Qt::WA_OpaquePaintEvent);*/
 
@@ -797,6 +821,37 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
 
     mVEngine.GetScene().UpdateMatrix( *mBLContext );
 
+/*
+    FVectorPathCubic* testPath = new FVectorPathCubic();
+    FVectorPointCubic* cubicPoints[4] = { new FVectorPointCubic( 200, 300, 1 )
+                                        , new FVectorPointCubic( 500, 250, 1 )
+                                        , new FVectorPointCubic( 540, 220, 1 )
+                                        , new FVectorPointCubic( 230, 270, 1 ) };
+
+    FVectorSegmentCubic* cubicSegments[2];
+
+                       testPath->AppendPoint( cubicPoints[0],  true, false );
+    cubicSegments[0] = testPath->AppendPoint( cubicPoints[1],  true, false );
+                       testPath->AppendPoint( cubicPoints[2], false, false );
+    cubicSegments[1] = testPath->AppendPoint( cubicPoints[3],  true, false );
+
+    cubicSegments[0]->GetControlPoint(0).Set( 230, 250 );
+    cubicSegments[0]->GetControlPoint(1).Set( 470, 200 );
+printf("FirstSegment = %d\n", cubicSegments[0] );
+printf("SecondSegment = %d\n", cubicSegments[1] );
+    cubicPoints[1]->BuildSegments();
+
+    cubicSegments[1]->GetControlPoint(0).Set( 539, 220 );
+    cubicSegments[1]->GetControlPoint(1).Set( 231, 270 );
+
+    cubicPoints[3]->BuildSegments();
+
+    mVEngine.GetScene().AddChild( testPath );
+
+    testPath->UpdateMatrix( *mBLContext );
+
+    cubicSegments[0]->IntersectPath(*testPath);
+*/
 }
 
 int

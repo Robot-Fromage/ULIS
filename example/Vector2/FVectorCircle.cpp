@@ -43,15 +43,15 @@ FVectorCircle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
     iBLContext.strokeCircle  ( 0.0f, 0.0f, mRadius );
 }
 
-bool
+FVectorObject*
 FVectorCircle::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     if( FMath::Sqrt((iX*iX) + (iY*iY)) <= mRadius )
     {
-        return true;
+        return this;
     }
 
-    return false;
+    return nullptr;
 }
 
 void

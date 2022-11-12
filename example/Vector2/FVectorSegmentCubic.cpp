@@ -222,7 +222,7 @@ printf("intersection detected at %f %f %f\n", coords.x, coords.y, polySubT );
                 intersectionPoint->AddSegment (    this,      poly->fromT + (      polySubT * (      poly->toT -      poly->fromT ) ) );
                 intersectionPoint->AddSegment ( &iOther, interPoly->fromT + ( interPolySubT * ( interPoly->toT - interPoly->fromT ) ) );
 
-                intersectionPoint->March( *intersectionPoint );
+                intersectionPoint->March( *intersectionPoint, *this );
             }
         }
     }
@@ -249,19 +249,6 @@ FVectorSegmentCubic::DrawIntersections ( FBlock& iBlock
         iBLContext.setFillStyle( BLRgba32( 0xFFFF8000 ) );
         iBLContext.fillRect( pt.x - intersectionHalfSize
                            , pt.y - intersectionHalfSize, intersectionSize, intersectionSize );
-    }
-}
-
-void
-FVectorSegmentCubic::DrawLoops ( FBlock& iBlock
-                               , BLContext& iBLContext
-                               , FRectD &iRoi )
-{
-    for( std::list<FVectorPointIntersection*>::iterator it = mIntersectionPointList.begin(); it != mIntersectionPointList.end(); ++it )
-    {
-        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
-
-        intersectionPoint->DrawLoops ( iBlock, iBLContext, iRoi );
     }
 }
 
@@ -331,12 +318,12 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
                         , { mPolygonCache[i].quadVertex[1].x, mPolygonCache[i].quadVertex[1].y }
                         , { mPolygonCache[i].quadVertex[2].x, mPolygonCache[i].quadVertex[2].y }
                         , { mPolygonCache[i].quadVertex[3].x, mPolygonCache[i].quadVertex[3].y } };
-/*
+
         iBLContext.strokeLine( pt[1].x
                              , pt[1].y
                              , pt[2].x
                              , pt[2].y );
-*/
+
         iBLContext.fillPolygon( pt, 4 );
     }
 }

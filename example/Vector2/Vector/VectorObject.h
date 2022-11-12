@@ -31,9 +31,9 @@ class FVectorObject
         FVectorObject();
         FVectorObject( std::string iName );
         virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) final; // cannot be overridden
-        virtual bool Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
+        virtual FVectorObject* Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &roi ) = 0;
-        virtual bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) = 0;
+        virtual FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) = 0;
         /*virtual void UpdateBoundingBox() = 0;*/
         void DrawChildren( FBlock& iBlock,BLContext& iBLContext, FRectD& iRoi );
         void UpdateMatrix( BLContext& iBLContext );

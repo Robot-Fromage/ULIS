@@ -188,10 +188,10 @@ FVectorObject::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
 }
 
-bool
+FVectorObject*
 FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
-    return false;
+    return nullptr;
 }
 
 bool
@@ -230,7 +230,7 @@ FVectorObject::GetParent()
     return mParent;
 }
 
-bool
+FVectorObject*
 FVectorObject::Pick( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     return PickShape( iBLContext, iX, iY, iRadius );

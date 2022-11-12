@@ -18,7 +18,6 @@ class FVectorPointIntersection : public FVectorPoint
 
     protected:
         uint64 mIntersectionID;
-        std::list<FVectorPathLoop*> mLoopList; // list of loops
         // map for intersection positions
         std::map<FVectorSegment*, FIntersection> mTMap;
 
@@ -28,8 +27,6 @@ class FVectorPointIntersection : public FVectorPoint
         uint32 GetType();
         FVec2D GetPosition( FVectorSegment& );
         double GetT( FVectorSegment& );
-        void AddLoop( FVectorPathLoop* iLoop );
-        void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         void AddSegment( FVectorSegmentCubic* iSegment, double t );
         // overloaded

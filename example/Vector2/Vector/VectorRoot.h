@@ -9,7 +9,7 @@
 class FVectorRoot : public FVectorObject
 {
     private:
-        void RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y, double iRadius );
+        FVectorObject* RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y, double iRadius );
 
     protected:
         std::list<FVectorObject*> mSelectedObjectList;
@@ -23,5 +23,7 @@ class FVectorRoot : public FVectorObject
         void ClearSelection();
         FVectorObject* GetLastSelected();
         void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) {};
-        bool PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return false; };
+        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
+
+        void Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillColor );
 };
