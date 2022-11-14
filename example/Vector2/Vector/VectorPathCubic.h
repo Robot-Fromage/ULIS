@@ -28,7 +28,7 @@ class FVectorPathCubic: public FVectorPath
 
         FVectorSegmentCubic* AppendPoint( FVectorPointCubic* iPoint, bool iConnect, bool iBuildSegments );
         FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
-        void PickPoint ( double iX, double iY, double iRadius );
+        bool PickPoint ( double iX, double iY, double iRadius );
         void Unselect( FVectorPoint* iPoint );
         void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );

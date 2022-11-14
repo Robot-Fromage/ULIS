@@ -5,29 +5,39 @@ FVectorSegment::~FVectorSegment()
 {
 }
 
-FVectorSegment::FVectorSegment( FVectorPoint* iPoint0
+FVectorSegment::FVectorSegment( FVectorPath& iPath
+                              , FVectorPoint* iPoint0
                               , FVectorPoint* iPoint1 )
+    : mPath ( iPath )
 {
     mPoint[0] = iPoint0;
     mPoint[1] = iPoint1;
 }
 
-FVectorPoint&
+FVectorPoint*
 FVectorSegment::GetPoint( int iPointNum )
 {
-    return *mPoint[iPointNum];
+    return mPoint[iPointNum];
 }
 
-FVectorPath*
+FVectorPath&
 FVectorSegment::GetPath()
 {
     return mPath;
 }
 
 void
-FVectorSegment::SetPath( FVectorPath* iPath )
+FVectorSegment::Invalidate()
 {
-    mPath = iPath;
+    for( std::list<FVectorPointIntersection*>::iterator it = mIntersectionPointList.begin(); it != mIntersectionPointList.end(); ++it )
+    {
+        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
+
+        intersectionPoint->InvalidateLoops();
+    }
+
+    mPath.InvalidateSegment( this );
+    mPath.Invalidate();
 }
 
 double

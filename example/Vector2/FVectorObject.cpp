@@ -201,6 +201,38 @@ FVectorObject::IsFilled()
 }
 
 void
+FVectorObject::Invalidate()
+{
+    FVectorObject* obj = GetRoot();
+
+    if ( obj && ( obj != this ) )
+    {
+        if ( typeid ( *obj ) == typeid ( FVectorRoot ) )
+        {
+            FVectorRoot* root = static_cast<FVectorRoot*>(obj);
+
+            root->InvalidateObject( this );
+        }
+    }
+}
+
+FVectorRoot*
+FVectorObject::GetRoot()
+{
+    FVectorObject* parent = mParent;
+    FVectorObject* root = nullptr;
+
+    while ( parent )
+    {
+        root = parent;
+
+        parent = parent->GetParent();
+    }
+
+    return static_cast<FVectorRoot*>(root);
+}
+
+void
 FVectorObject::MoveBack()
 {
     /*if ( mParent )

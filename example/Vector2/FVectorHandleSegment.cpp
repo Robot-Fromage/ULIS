@@ -5,13 +5,9 @@ FVectorHandleSegment::~FVectorHandleSegment()
 {
 }
 
-FVectorHandleSegment::FVectorHandleSegment()
-    : FVectorHandle()
-{
-}
-
-FVectorHandleSegment::FVectorHandleSegment( double iX, double iY )
+FVectorHandleSegment::FVectorHandleSegment( FVectorSegment& iParentSegment, double iX, double iY )
     : FVectorHandle( iX, iY )
+   , mParentSegment ( iParentSegment )
 {
 
 }
@@ -22,14 +18,33 @@ FVectorHandleSegment::GetType()
     return FVectorPoint::POINT_TYPE_HANDLE_SEGMENT;
 }
 
-void
-FVectorHandleSegment::SetParent(FVectorSegment* iParentSegment)
-{
-    mParentSegment = iParentSegment;
-}
-
-FVectorSegment*
+FVectorSegment&
 FVectorHandleSegment::GetParent()
 {
     return mParentSegment;
+}
+
+void 
+FVectorHandleSegment::SetX( double iX )
+{
+    mCoords.x  = iX;
+
+    mParentSegment.Invalidate();
+}
+
+void 
+FVectorHandleSegment::SetY( double iY )
+{
+    mCoords.y = iY;
+
+    mParentSegment.Invalidate();
+}
+
+void 
+FVectorHandleSegment::Set( double iX, double iY )
+{
+    mCoords.x = iX;
+    mCoords.y = iY;
+
+    mParentSegment.Invalidate();
 }

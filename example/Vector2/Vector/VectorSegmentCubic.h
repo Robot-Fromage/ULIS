@@ -44,10 +44,9 @@ class FVectorSegmentCubic : public FVectorSegment
 
     public:
         ~FVectorSegmentCubic(){};
-        FVectorSegmentCubic( FVectorPointCubic* iPoint0, FVectorPointCubic* iPoint1 );
-        FVectorSegmentCubic( FVectorPointCubic* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPointCubic* iPoint1 );
+        FVectorSegmentCubic( FVectorPathCubic& iPath, FVectorPointCubic* iPoint0, FVectorPointCubic* iPoint1 );
+        FVectorSegmentCubic( FVectorPathCubic& iPath, FVectorPointCubic* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPointCubic* iPoint1 );
         FVectorHandleSegment& GetControlPoint( int iCtrlPointNum );
-        FVectorPointCubic& GetPoint( int iPointNum );
         void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi, double iZoomFactor );
         void DrawIntersections ( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi, double iZoomFactor );
@@ -65,6 +64,6 @@ class FVectorSegmentCubic : public FVectorSegment
 
         void IntersectPath( FVectorPathCubic& iPath );
         void Intersect( FVectorSegmentCubic& iOther );
-
+        void Update();
         void BuildVariable();
 };

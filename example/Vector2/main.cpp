@@ -110,6 +110,8 @@ public:
         p.drawImage( rect(), *mQImage );
 
         p.end();
+
+        mBLContext->flush(BL_CONTEXT_FLUSH_SYNC);
     }
 
     virtual void keyReleaseEvent(QKeyEvent* event)
@@ -318,7 +320,7 @@ MyWidget::CreatePath(QEvent *event)
         FRectD invalidateRegion = { e->x() - 100.0f, e->y() - 100.0f, 200.0f, 200.0f };
         FRectD finalRegion = invalidateRegion;
 
-        currentPathBuilder->AppendPoint( localCoords.x, localCoords.y, 1.0f );
+        currentPathBuilder->AppendPoint( localCoords.x, localCoords.y, 4.0f );
 
         FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(cubicPath->GetLastSegment());
 
@@ -391,6 +393,7 @@ MyWidget::EditPath( QEvent *event )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
         FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mVEngine.GetScene().GetLastSelected() );
+        bool picked = false;
 
         if ( cubicPath )
         {
@@ -414,8 +417,18 @@ MyWidget::EditPath( QEvent *event )
 
             cubicPath->Unselect( nullptr );
 
-            cubicPath->PickPoint( localCoords.x, localCoords.y, localRadius );
+            picked = cubicPath->PickPoint( localCoords.x, localCoords.y, localRadius );
         }
+
+        if ( picked == false )
+        {
+            PickObject ( event );
+        }
+    }
+
+    if( event->type() == QEvent::MouseButtonRelease )
+    {
+
     }
 
     if( event->type() == QEvent::MouseMove )
@@ -444,22 +457,22 @@ MyWidget::EditPath( QEvent *event )
                     case FVectorPoint::POINT_TYPE_HANDLE_POINT :
                     {
                         FVectorHandlePoint* pointHandle = static_cast<FVectorHandlePoint*>( selectedPoint );
-                        FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>( pointHandle->GetParent() );
-                        FVec2D dif = { cubicPoint->GetX() - localCoords.x, cubicPoint->GetY() - localCoords.y };
+                        FVectorPointCubic& cubicPoint = static_cast<FVectorPointCubic&>(pointHandle->GetParent());
+                        FVec2D dif = { cubicPoint.GetX() - localCoords.x, cubicPoint.GetY() - localCoords.y };
 
-                        cubicPoint->SetRadius( dif.Distance(), true );
+                        cubicPoint.SetRadius( dif.Distance(), true );
                     }
                     break;
 
                     case FVectorPoint::POINT_TYPE_HANDLE_SEGMENT :
                     {
                         FVectorHandleSegment* segmentHandle = static_cast<FVectorHandleSegment*>( selectedPoint );
-                        FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segmentHandle->GetParent());
+                        FVectorSegmentCubic& cubicSegment = static_cast<FVectorSegmentCubic&>(segmentHandle->GetParent());
 
                         selectedPoint->Set( selectedPoint->GetX() + difx
                                           , selectedPoint->GetY() + dify );
 
-                        cubicSegment->BuildVariable();
+                        /*cubicSegment.BuildVariable();*/
                     }
                     break;;
 
@@ -473,18 +486,20 @@ MyWidget::EditPath( QEvent *event )
                         for( std::list<FVectorSegment*>::iterator segit = segmentList.begin(); segit != segmentList.end(); ++segit )
                         {
                             FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*segit);
-                            FVectorHandleSegment* ctrlPoint = ( &cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 0 ) ) :
-                                                                                                                static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 1 ) );
+                            FVectorHandleSegment* ctrlPoint = ( cubicSegment->GetPoint(0) == selectedPoint ) ? static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 0 ) ) :
+                                                                                                               static_cast<FVectorHandleSegment*>( &cubicSegment->GetControlPoint( 1 ) );
 
                             ctrlPoint->Set( ctrlPoint->GetX() + difx
                                           , ctrlPoint->GetY() + dify );
                         }
 
-                        cubicPoint->BuildSegments();
+                        /*cubicPoint->BuildSegments();*/
                     }
                     break;
                 }
             }
+
+            mVEngine.GetScene().Update();
 
             mMouseX = localCoords.x;
             mMouseY = localCoords.y;
@@ -809,9 +824,19 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     mCanvas = new FBlock( iWidth, iHeight, fmt);
 
     // Blend2D part
+   /* BLContextCreateInfo createInfo{};*/
+
+    // Configure the number of threads to use.
+    /*createInfo.threadCount = 1;*/
+
+    mBLContext = new BLContext();
     mBLImage = new BLImage(iWidth,iHeight,BL_FORMAT_PRGB32);
-    mBLContext = new BLContext(*mBLImage);
     mBLImage->getData( &data );
+
+     BLResult result = mBLContext->begin(*mBLImage/*, createInfo*/);
+
+     if(result != BL_SUCCESS)
+printf("failure\n");
 
     mQImage = new QImage( (uchar*) data.pixelData
                                  , data.size.w

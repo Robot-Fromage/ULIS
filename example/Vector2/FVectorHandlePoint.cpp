@@ -5,25 +5,14 @@ FVectorHandlePoint::~FVectorHandlePoint()
 {
 }
 
-FVectorHandlePoint::FVectorHandlePoint()
+FVectorHandlePoint::FVectorHandlePoint( FVectorPoint& iParentPoint )
     : FVectorHandle()
+    , mParentPoint ( iParentPoint )
 {
-    SetParent( nullptr );
+
 }
 
-FVectorHandlePoint::FVectorHandlePoint( FVectorPoint* iParentPoint )
-    : FVectorHandle()
-{
-   SetParent( iParentPoint );
-}
-
-void
-FVectorHandlePoint::SetParent( FVectorPoint* iParentPoint )
-{
-    mParentPoint = iParentPoint;
-}
-
-FVectorPoint*
+FVectorPoint&
 FVectorHandlePoint::GetParent()
 {
     return mParentPoint;

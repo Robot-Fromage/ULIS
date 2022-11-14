@@ -11,7 +11,6 @@
 #include "Vector/VectorPointIntersection.h"
 #include "Vector/VectorSegment.h"
 #include "Vector/VectorSegmentCubic.h"
-#include "Vector/VectorSegmentQuadratic.h"
 #include "Vector/VectorRectangle.h"
 #include "Vector/VectorCircle.h"
 #include "Vector/VectorPath.h"

@@ -5,12 +5,18 @@ FVectorPathLoop::~FVectorPathLoop()
 {
 }
 
-FVectorPathLoop::FVectorPathLoop( uint64 iID, std::list<FVectorPoint*> iLoopPointist, FVectorPoint* iLoopPoint )
+FVectorPathLoop::FVectorPathLoop( FVectorPath& iParent
+                                , uint64 iID
+                                , std::list<FVectorPoint*>& iLoopPointist
+                                , FVectorPoint* iLoopPoint )
     : FVectorPath()
     , mID ( iID )
 {
+    mParent = &iParent;
+
     ShapeFromPointList ( iLoopPointist, iLoopPoint );
 
+    Build();
 printf("new loop of size : %d - ID: %d\n", mPointList.size(), iID );
 }
 
@@ -20,13 +26,26 @@ FVectorPathLoop::GetID()
     return mID;
 }
 
+void
+FVectorPathLoop::Invalidate()
+{
+    static_cast<FVectorPath*>(mParent)->InvalidateLoop( this );
+}
+
+void
+FVectorPathLoop::UpdateShape()
+{
+    Build();
+}
+
 FVectorObject*
 FVectorPathLoop::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
-    BLPath path;
+    /*BLPath path;*/
     BLPoint p = { iX, iY };
     BLBox bbox;
 
+/*
     if ( mPointArray.size() )
     {
         path.moveTo ( mPointArray[0].x, mPointArray[0].y );
@@ -38,8 +57,8 @@ FVectorPathLoop::PickShape( BLContext& iBLContext, double iX, double iY, double 
 
         path.lineTo ( mPointArray[0].x, mPointArray[0].y );
     }
-
-    path.getBoundingBox( &bbox );
+*/
+    mPath.getBoundingBox( &bbox );
 
     if ( ( iX > bbox.x0 ) && ( iX < bbox.x1 ) && ( iY > bbox.y0 ) && ( iY < bbox.y1 ) )
     {
@@ -47,14 +66,13 @@ FVectorPathLoop::PickShape( BLContext& iBLContext, double iX, double iY, double 
     }
 
 /*
-    if ( path.hitTest( p, BL_FILL_RULE_NON_ZERO ) == BL_HIT_TEST_IN  )
+    if ( mPath.hitTest( p, BL_FILL_RULE_NON_ZERO ) == BL_HIT_TEST_IN  )
     {
-
+printf("%d\n", mID );
         return this;
     }
 */
-
-    return false;
+    return nullptr;
 };
 
 uint64
@@ -104,6 +122,8 @@ FVectorPathLoop::ShapeFromPointList( std::list<FVectorPoint*> iLoopPointist, FVe
             {
                 FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(point);
 
+                intersectionPoint->AddLoop( this );
+
                 if ( intersectionPoint > higherPoint )
                 {
                     higherPoint = intersectionPoint;
@@ -113,11 +133,11 @@ FVectorPathLoop::ShapeFromPointList( std::list<FVectorPoint*> iLoopPointist, FVe
     }
 }
 
-static void DrawSegmentCubic( BLContext& iBLContext
-                            , std::vector<BLPoint>& iPointArray
-                            , FVectorSegmentCubic& iSegment
-                            , double iFromT
-                            , double iToT )
+void
+FVectorPathLoop::BuildSegmentCubic( std::vector<BLPoint>& iPointArray
+                                  , FVectorSegmentCubic& iSegment
+                                  , double iFromT
+                                  , double iToT )
 {
     std::vector<FPolygon>& polygonCache = iSegment.GetPolygonCache();
     uint32 polyCount = iSegment.GetPolygonCount();
@@ -143,7 +163,9 @@ static void DrawSegmentCubic( BLContext& iBLContext
 
                 BLPoint p = { to.x, to.y };
 
-                iPointArray.push_back(p);
+                /*iPointArray.push_back(p);*/
+
+                mPath.lineTo( p );
             }
         }
     }
@@ -171,7 +193,9 @@ static void DrawSegmentCubic( BLContext& iBLContext
 
                 BLPoint p = { from.x, from.y };
 
-                iPointArray.push_back(p);
+                /*iPointArray.push_back(p);*/
+
+                mPath.lineTo( p );
             }
         }
     }
@@ -203,15 +227,15 @@ FVectorPathLoop::DrawPoints( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi
 }
 
 void
-FVectorPathLoop::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorPathLoop::Build()
 {
     int seg = 0;
 
+    mPath.clear();
+/*
      mPointArray.clear();
      mPointArray.reserve(200);
-
-    iBLContext.setFillStyle( BLRgba32( mFillColor ) );
-
+*/
     if ( mPointList.size() ) 
     {
         FVectorPoint* firstPoint = mPointList.front();
@@ -219,49 +243,15 @@ FVectorPathLoop::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi 
         std::list<FVectorPoint*>::iterator     it;
         std::list<FVectorPoint*>::iterator nextit;
 
+        FVec2D firstAt = static_cast<FVectorPointIntersection*>(firstPoint)->GetPosition(*firstPoint->GetFirstSegment());
+
+        mPath.moveTo( firstAt.x, firstAt.y );
+
         for( it = mPointList.begin(), nextit = mPointList.begin(); it != mPointList.end(); ++it )
         {
             FVectorPoint* point = static_cast<FVectorPoint*>(*it);
             FVectorPoint* nextPoint = ( point == lastPoint ) ? firstPoint : static_cast<FVectorPoint*>(*(++nextit));
 
-            if ( point == firstPoint ) {
-                FVec2D pointAt = static_cast<FVectorPointIntersection*>(point)->GetPosition(*point->GetFirstSegment());
-                BLPoint p = { pointAt.x, pointAt.y };
-
-                mPointArray.push_back(p);
-            }
-/*
-            if ( (     point->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION )
-              && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_REGULAR      ) )
-            {
-                FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(point);
-                FVectorSegment* segment = intersectionPoint->GetSegment( *nextPoint );
-                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segment);
-
-                if ( nextPoint == &segment->GetPoint(0) )
-                {
-                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, 0.0f, intersectionPoint->GetT(*segment) );
-                }
-                else
-                {
-                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, intersectionPoint->GetT(*segment), 1.0f );
-                }
-            }
-
-            if ( (     point->GetType() == FVectorPoint::POINT_TYPE_REGULAR )
-              && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_REGULAR ) )
-            {
-                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(point->GetSegment( *nextPoint ));
-
-                if ( cubicSegment )
-                {
-                    double     pointT =     static_cast<FVectorPointIntersection*>(point)->GetT(*cubicSegment);
-                    double nextPointT = static_cast<FVectorPointIntersection*>(nextPoint)->GetT(*cubicSegment);
-
-                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, pointT, nextPointT );
-                }
-            }
-*/
             if ( (     point->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION )
               && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION ) )
             {
@@ -275,29 +265,27 @@ FVectorPathLoop::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi 
                     FVec2D     pointAt = static_cast<FVectorPointIntersection*>(point)->GetPosition(*cubicSegment);
                     FVec2D nextPointAt = static_cast<FVectorPointIntersection*>(nextPoint)->GetPosition(*cubicSegment);
 
-                    DrawSegmentCubic ( iBLContext, mPointArray, *cubicSegment, pointT, nextPointT );
+                    BuildSegmentCubic ( mPointArray, *cubicSegment, pointT, nextPointT );
                 }
             }
-/*
-            if (   (     point->GetType() == FVectorPoint::POINT_TYPE_REGULAR      )
-                && ( nextPoint->GetType() == FVectorPoint::POINT_TYPE_INTERSECTION ) )
-            {
-                FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(nextPoint);
-                FVectorSegment* segment = intersectionPoint->GetSegment(*point);
-                FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(segment);
-
-                if ( point == &segment->GetPoint(0) )
-                {
-                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, 0.0f, intersectionPoint->GetT(*segment) );
-                }
-                else
-                {
-                    DrawSegmentCubic ( iBLContext, pointArray, *cubicSegment, intersectionPoint->GetT(*segment), 1.0f );
-                }
-            }
-*/
         }
-    }
 
-   iBLContext.fillPolygon( &mPointArray[0], mPointArray.size() );
+        mPath.close();
+    }
+}
+
+
+void
+FVectorPathLoop::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+{
+    if ( IsFilled() )
+    {
+    /*if ( mPointList.size() ) 
+    {*/
+       iBLContext.setFillStyle( BLRgba32( mFillColor ) );
+
+       /*iBLContext.fillPolygon( &mPointArray[0], mPointArray.size() );*/
+       iBLContext.fillPath( mPath );
+    /*}*/
+    }
 }

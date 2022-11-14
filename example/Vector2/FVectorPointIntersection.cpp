@@ -44,10 +44,27 @@ FVectorPointIntersection::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &i
 }
 
 void
+FVectorPointIntersection::AddLoop( FVectorPathLoop* iLoop )
+{
+    mLoopList.push_back( iLoop );
+}
+
+void
+FVectorPointIntersection::InvalidateLoops()
+{
+    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
+    {
+        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+
+        loop->Invalidate();
+    }
+}
+
+void
 FVectorPointIntersection::AddSegment( FVectorSegmentCubic* iSegment, double t )
 {
-    FVec2D& point0 = iSegment->GetPoint(0).GetCoords();
-    FVec2D& point1 = iSegment->GetPoint(1).GetCoords();
+    FVec2D& point0 = iSegment->GetPoint(0)->GetCoords();
+    FVec2D& point1 = iSegment->GetPoint(1)->GetCoords();
     FVec2D& ctrlPoint0 = iSegment->GetControlPoint(0).GetCoords();
     FVec2D& ctrlPoint1 = iSegment->GetControlPoint(1).GetCoords();
     FVec2D intersectAt = CubicBezierPointAtParameter<FVec2D>( point0
@@ -71,8 +88,8 @@ FVectorPointIntersection::GetSegment( FVectorPoint& iOtherPoint )
 
         if ( iOtherPoint.GetType() == POINT_TYPE_REGULAR )
         {
-            if ( ( &segment->GetPoint(0) == &iOtherPoint )
-              || ( &segment->GetPoint(1) == &iOtherPoint ) ) {
+            if ( ( segment->GetPoint(0) == &iOtherPoint )
+              || ( segment->GetPoint(1) == &iOtherPoint ) ) {
                 return segment;
             }
         }

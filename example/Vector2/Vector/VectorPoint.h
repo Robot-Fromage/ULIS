@@ -33,15 +33,15 @@ class FVectorPoint
         FVec2D& GetCoords();
         double GetX();
         double GetY();
-        void SetX( double iX );
-        void SetY( double iY );
+        virtual void SetX( double iX );
+        virtual void SetY( double iY );
         virtual void Set( double iX, double iY );
         uint32 GetSegmentCount();
         std::list<FVectorSegment*>& GetSegmentList();
         virtual uint32 GetType();
         double GetRadius();
         virtual void SetRadius( double iRadius, bool iBuildSegments );
-
+        void InvalidateSegments();
         void March( FVectorPointIntersection&  iInitiatorPoint
                    , FVectorSegment&       iCurrentSegment );
 };

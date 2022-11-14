@@ -6,6 +6,8 @@
 
 using namespace ::ULIS;
 
+class FVectorRoot;
+
 class FVectorObject
 {
     protected:
@@ -63,4 +65,7 @@ class FVectorObject
         bool IsFilled();
         void MoveBack();
         void MoveFront();
+        virtual void UpdateShape() { };
+        void Invalidate();
+        FVectorRoot* GetRoot();
 };

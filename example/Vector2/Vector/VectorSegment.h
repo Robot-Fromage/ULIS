@@ -13,12 +13,12 @@ class FVectorSegment
     protected:
         FVectorPoint* mPoint[2];
         std::list<FVectorPointIntersection*> mIntersectionPointList;
-        FVectorPath* mPath;
+        FVectorPath& mPath;
 
     public:
         ~FVectorSegment();
-        FVectorSegment( FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
-        FVectorPoint& GetPoint( int iPointNum );
+        FVectorSegment( FVectorPath& iPath, FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
+        FVectorPoint* GetPoint( int iPointNum );
         virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         double GetStraightDistance();
@@ -28,6 +28,7 @@ class FVectorSegment
         bool HasIntersectionPoint( FVectorPointIntersection& mIntersectionPoint );
         FVectorPoint* GetNextPoint( double iT );
         FVectorPoint* GetPreviousPoint( double iT ); 
-        FVectorPath* GetPath();
-        void SetPath( FVectorPath* );
+        FVectorPath& GetPath();
+        virtual void Update() {};
+        void Invalidate();
 };

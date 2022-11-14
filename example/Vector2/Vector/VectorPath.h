@@ -14,6 +14,8 @@ class FVectorPath : public FVectorObject
         std::list<FVectorPathLoop*> mLoopList; // list of loops
         std::list<FVectorPoint*> mPointList;
         std::list<FVectorSegment*> mSegmentList;
+        std::list<FVectorSegment*> mInvalidatedSegmentList;
+        std::list<FVectorPathLoop*> mInvalidatedLoopList;
         std::list<FVectorPoint*> mSelectedPointList;
         void AddSegment( FVectorSegment* iSegment );
         void RemoveSegment( FVectorSegment* iSegment );
@@ -35,10 +37,13 @@ class FVectorPath : public FVectorObject
         FVectorPoint* GetLastPoint();
         FVectorSegment* GetLastSegment();
         std::list<FVectorPoint*>& GetSelectedPointList();
-        virtual void PickPoint( double iX, double iY, double iRadius ) = 0;
+        virtual bool PickPoint( double iX, double iY, double iRadius ) = 0;
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
         void Clear();
         bool IsLoop();
         FVectorPathLoop* GetPathLoopByID( uint64 iID );
         void AddLoop( FVectorPathLoop* iLoop );
+        void UpdateShape();
+        void InvalidateSegment(FVectorSegment* iSegment);
+        void InvalidateLoop(FVectorPathLoop* iLoop);
 };

@@ -7,9 +7,8 @@ FVectorPointCubic::~FVectorPointCubic()
 
 FVectorPointCubic::FVectorPointCubic( double iX,double iY )
     : FVectorPoint( iX, iY )
+    , mCtrlPoint ( *this )
 {
-    mCtrlPoint.SetParent( this );
-
     SetRadius( 1.0f, false );
 }
 
@@ -35,9 +34,9 @@ FVectorPointCubic::Set( double iX
                       , double iY
                       , bool iBuildSegments )
 {
-    FVectorPoint::Set(iX,iY);
+    FVectorPoint::Set( iX, iY );
 
-    if(iBuildSegments == true)
+    if( iBuildSegments == true )
     {
         BuildSegments();
     }
@@ -95,14 +94,14 @@ FVectorPointCubic::GetPerpendicularVector( bool iNormalize )
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
-            FVectorPoint& p0 = segment->GetPoint(0);
-            FVectorPoint& p1 = segment->GetPoint(1);
-            FVec2D& point0 = segment->GetPoint(0).GetCoords();
-            FVec2D& point1 = segment->GetPoint(1).GetCoords();
+            FVectorPoint* p0 = segment->GetPoint(0);
+            FVectorPoint* p1 = segment->GetPoint(1);
+            FVec2D& point0 = segment->GetPoint(0)->GetCoords();
+            FVec2D& point1 = segment->GetPoint(1)->GetCoords();
             FVec2D& ctrlPoint0 = segment->GetControlPoint(0).GetCoords();
             FVec2D& ctrlPoint1 = segment->GetControlPoint(1).GetCoords();
 
-            if( this == &p0 )
+            if( this == p0 )
             {
                 // this is less computation-heavy
                 FVec2D vec = { ctrlPoint0 - point0 };
@@ -121,7 +120,7 @@ FVectorPointCubic::GetPerpendicularVector( bool iNormalize )
                 }
             }
 
-            if( this == &p1 )
+            if( this == p1 )
             {
                 FVec2D vec = { point1 - ctrlPoint1 };
                 /*FVec2D vec =  { CubicBezierTangentAtParameter<FVec2D>( point0.GetCoords()

@@ -33,16 +33,31 @@ FVectorPoint::GetY()
     return mCoords.y;
 }
 
+void
+FVectorPoint::InvalidateSegments()
+{
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
+
+        segment->Invalidate();
+    }
+}
+
 void 
 FVectorPoint::SetX( double iX )
 {
     mCoords.x  = iX;
+
+    InvalidateSegments();
 }
 
 void 
 FVectorPoint::SetY( double iY )
 {
     mCoords.y = iY;
+
+    InvalidateSegments();
 }
 
 void 
@@ -50,6 +65,8 @@ FVectorPoint::Set( double iX, double iY )
 {
     mCoords.x = iX;
     mCoords.y = iY;
+
+    InvalidateSegments();
 }
 
 void
@@ -173,11 +190,11 @@ FVectorPoint::March( FVectorPointIntersection&  iInitiatorPoint
                 {
                     uint64 loopID = FVectorPathLoop::GenerateID( loopPointList, forwardPoint );
 
-                    if ( segment->GetPath()->GetPathLoopByID( loopID ) == nullptr )
+                    if ( segment->GetPath().GetPathLoopByID( loopID ) == nullptr )
                     {
-                        FVectorPathLoop *loopPath = new FVectorPathLoop ( loopID, loopPointList, forwardPoint );
+                        FVectorPathLoop *loopPath = new FVectorPathLoop ( segment->GetPath(), loopID, loopPointList, forwardPoint );
 
-                        segment->GetPath()->AddLoop( loopPath );
+                        segment->GetPath().AddLoop( loopPath );
                     } else printf("loop exists!!\n");
                 }
             }
@@ -197,11 +214,11 @@ FVectorPoint::March( FVectorPointIntersection&  iInitiatorPoint
                 {
                     uint64 loopID = FVectorPathLoop::GenerateID( loopPointList, backwardPoint );
 
-                    if ( segment->GetPath()->GetPathLoopByID( loopID ) == nullptr )
+                    if ( segment->GetPath().GetPathLoopByID( loopID ) == nullptr )
                     {
-                        FVectorPathLoop *loopPath = new FVectorPathLoop ( loopID, loopPointList, backwardPoint );
+                        FVectorPathLoop *loopPath = new FVectorPathLoop ( segment->GetPath(), loopID, loopPointList, backwardPoint );
 
-                        segment->GetPath()->AddLoop( loopPath );
+                        segment->GetPath().AddLoop( loopPath );
                     } else printf("loop exists!!\n");
                 }
             }
@@ -218,8 +235,8 @@ FVectorPoint::GetSegment( FVectorPoint& iOtherPoint )
     {
         FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
 
-        if ( ( ( &segment->GetPoint(0) == this ) && ( &segment->GetPoint(1) == &iOtherPoint ) ) 
-          || ( ( &segment->GetPoint(1) == this ) && ( &segment->GetPoint(0) == &iOtherPoint ) ) )
+        if ( ( ( segment->GetPoint(0) == this ) && ( segment->GetPoint(1) == &iOtherPoint ) ) 
+          || ( ( segment->GetPoint(1) == this ) && ( segment->GetPoint(0) == &iOtherPoint ) ) )
         {
             return segment;
         }

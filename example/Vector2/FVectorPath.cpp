@@ -40,6 +40,42 @@ FVectorPath::AddLoop( FVectorPathLoop* iLoop )
 }
 
 void
+FVectorPath::UpdateShape()
+{
+    // update segments
+    for ( std::list<FVectorSegment*>::iterator it = mInvalidatedSegmentList.begin(); it != mInvalidatedSegmentList.end(); ++it )
+    {
+        FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
+
+        segment->Update();
+    }
+
+    mInvalidatedSegmentList.clear();
+
+    // then update Loops
+    for ( std::list<FVectorPathLoop*>::iterator it = mInvalidatedLoopList.begin(); it != mInvalidatedLoopList.end(); ++it )
+    {
+        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+
+        loop->UpdateShape();
+    }
+
+    mInvalidatedLoopList.clear();
+}
+
+void
+FVectorPath::InvalidateSegment( FVectorSegment* iSegment )
+{
+    mInvalidatedSegmentList.push_back( iSegment );
+}
+
+void
+FVectorPath::InvalidateLoop( FVectorPathLoop* iLoop )
+{
+    mInvalidatedLoopList.push_back ( iLoop );
+}
+
+void
 FVectorPath::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
     for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
@@ -90,10 +126,8 @@ FVectorPath::AddSegment( FVectorSegment* iSegment )
 {
     mSegmentList.push_back( iSegment );
 
-    iSegment->GetPoint( 0 ).AddSegment( iSegment );
-    iSegment->GetPoint( 1 ).AddSegment( iSegment );
-
-    iSegment->SetPath( this );
+    iSegment->GetPoint(0)->AddSegment( iSegment );
+    iSegment->GetPoint(1)->AddSegment( iSegment );
 }
 
 void
@@ -103,8 +137,8 @@ FVectorPath::Clear()
     {
         FVectorSegment *segment = (*it);
 
-        segment->GetPoint(0).RemoveSegment(segment);
-        segment->GetPoint(1).RemoveSegment(segment);
+        segment->GetPoint(0)->RemoveSegment(segment);
+        segment->GetPoint(1)->RemoveSegment(segment);
         /*RemoveSegment( segment );*/ // this alters the list, hence the loop and leads to a crash
     }
 
@@ -116,8 +150,8 @@ FVectorPath::RemoveSegment( FVectorSegment* iSegment )
 {
     mSegmentList.remove( iSegment );
 
-    iSegment->GetPoint(0).RemoveSegment( iSegment );
-    iSegment->GetPoint(1).RemoveSegment( iSegment );
+    iSegment->GetPoint(0)->RemoveSegment( iSegment );
+    iSegment->GetPoint(1)->RemoveSegment( iSegment );
 }
 
 std::list<FVectorSegment*>&

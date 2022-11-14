@@ -1,21 +1,27 @@
 #include <blend2d.h>
 #include "Vector/Vector.h"
 
-FVectorSegmentCubic::FVectorSegmentCubic( FVectorPointCubic* iPoint0
+FVectorSegmentCubic::FVectorSegmentCubic( FVectorPathCubic& iPath
+                                        , FVectorPointCubic* iPoint0
                                         , FVectorPointCubic* iPoint1 )
-   : FVectorSegment( iPoint0, iPoint1 )
+   : FVectorSegment( iPath, iPoint0, iPoint1 )
+   , mCtrlPoint { FVectorHandleSegment( *this, iPoint0->GetX(), iPoint0->GetY() )
+                , FVectorHandleSegment( *this, iPoint1->GetX(), iPoint1->GetY() ) }
 {
-    mCtrlPoint[0].Set( iPoint0->GetX(), iPoint0->GetY() );
-    mCtrlPoint[1].Set( iPoint1->GetX(), iPoint1->GetY() );
-
-    mCtrlPoint[0].SetParent( this );
-    mCtrlPoint[1].SetParent( this );
 }
 
-FVectorPointCubic&
-FVectorSegmentCubic::GetPoint( int iPointNum )
+FVectorSegmentCubic::FVectorSegmentCubic( FVectorPathCubic& iPath
+                                        , FVectorPointCubic* iPoint0
+                                        , double iCtrlPoint0x
+                                        , double iCtrlPoint0y
+                                        , double iCtrlPoint1x
+                                        , double iCtrlPoint1y
+                                        , FVectorPointCubic* iPoint1 )
+    : FVectorSegment( iPath, iPoint0, iPoint1 )
+    , mCtrlPoint { FVectorHandleSegment( *this, iCtrlPoint0x, iCtrlPoint0y )
+                ,  FVectorHandleSegment( *this, iCtrlPoint1x, iCtrlPoint1y ) }
 {
-    return static_cast<FVectorPointCubic&>( FVectorSegment::GetPoint( iPointNum ) );
+
 }
 
 void
@@ -72,8 +78,8 @@ FVectorSegmentCubic::Pick( double iX
 
 FVec2D FVectorSegmentCubic::GetVectorAtEnd( bool iNormalize )
 {
-    FVec2D vec = { GetPoint(1).GetX() - GetControlPoint(1).GetX(),
-                   GetPoint(1).GetY() - GetControlPoint(1).GetY() };
+    FVec2D vec = { GetPoint(1)->GetX() - GetControlPoint(1).GetX(),
+                   GetPoint(1)->GetY() - GetControlPoint(1).GetY() };
 
     if( iNormalize && vec.DistanceSquared() )
     {
@@ -85,8 +91,8 @@ FVec2D FVectorSegmentCubic::GetVectorAtEnd( bool iNormalize )
 
 FVec2D FVectorSegmentCubic::GetVectorAtStart( bool iNormalize )
 {
-    FVec2D vec = { GetControlPoint(0).GetX() - GetPoint(0).GetX(),
-                   GetControlPoint(0).GetY() - GetPoint(0).GetY() };
+    FVec2D vec = { GetControlPoint(0).GetX() - GetPoint(0)->GetX(),
+                   GetControlPoint(0).GetY() - GetPoint(0)->GetY() };
 
     if( iNormalize && vec.DistanceSquared() )
     {
@@ -132,17 +138,6 @@ FVectorSegmentCubic::GetBoundingBox( )
     return mBBox;
 }
 
-FVectorSegmentCubic::FVectorSegmentCubic( FVectorPointCubic* iPoint0
-                                        , double iCtrlPoint0x
-                                        , double iCtrlPoint0y
-                                        , double iCtrlPoint1x
-                                        , double iCtrlPoint1y
-                                        , FVectorPointCubic* iPoint1 )
-    : FVectorSegment( iPoint0, iPoint1 )
-{
-    mCtrlPoint[0].Set( iCtrlPoint0x, iCtrlPoint0y );
-    mCtrlPoint[1].Set( iCtrlPoint1x, iCtrlPoint1y );
-}
 
 // https://stackoverflow.com/questions/35473936/find-whether-two-line-segments-intersect-or-not-in-c
 bool intersection( FVec2D& line0p0
@@ -177,11 +172,15 @@ FVectorSegmentCubic::IntersectPath( FVectorPathCubic& iPath )
     for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
     {
         FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*it);
+        FRectD bbox = this->GetBoundingBox() & cubicSegment->GetBoundingBox();
 
-        if ( cubicSegment != this ) 
-        {
-            Intersect( *cubicSegment ); 
-        }
+        /*if ( bbox.Area() > 0.0f )
+        {*/
+            if ( cubicSegment != this ) 
+            {
+                Intersect( *cubicSegment ); 
+            }
+        /*}*/
     }
 }
 
@@ -324,10 +323,10 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
                         , { mPolygonCache[i].quadVertex[2].x, mPolygonCache[i].quadVertex[2].y }
                         , { mPolygonCache[i].quadVertex[3].x, mPolygonCache[i].quadVertex[3].y } };
 
-        iBLContext.strokeLine( pt[1].x
+        /*iBLContext.strokeLine( pt[1].x
                              , pt[1].y
                              , pt[2].x
-                             , pt[2].y );
+                             , pt[2].y );*/
 
         iBLContext.fillPolygon( pt, 4 );
     }
@@ -493,6 +492,8 @@ FVectorSegmentCubic::BuildVariableAdaptive( double  iFromT
 
             // Note: within the segment, the previous vector (at origin) is the segment's vector itself
             prevSegmentVector = &subTangent[n];
+
+            radius += radiusStep;
         }
     }
     else
@@ -523,9 +524,15 @@ FVectorSegmentCubic::BuildVariableAdaptive( double  iFromT
             // Note: within the segment, the previous vector (at origin) is the segment's vector itself
             prevSegmentVector = &subTangent[n];
 
-            /*radius += radiusStep;*/
+            radius += radiusStep;
         }
     }
+}
+
+void
+FVectorSegmentCubic::Update()
+{
+    BuildVariable();
 }
 
 void

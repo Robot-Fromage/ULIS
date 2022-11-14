@@ -54,6 +54,25 @@ FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius
 }
 
 void
+FVectorRoot::InvalidateObject( FVectorObject* iObject )
+{
+    mInvalidatedObjectList.push_back( iObject );
+}
+
+void
+FVectorRoot::Update()
+{
+    for( std::list<FVectorObject*>::iterator it = mInvalidatedObjectList.begin(); it != mInvalidatedObjectList.end(); ++it )
+    {
+        FVectorObject *obj = (*it);
+
+        obj->UpdateShape();
+    }
+
+    mInvalidatedObjectList.clear();
+}
+
+void
 FVectorRoot::Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillColor )
 {
     FVectorObject* pickedObject = RecursiveSelect( iBLContext, *this, iX, iY, 1.0f );
@@ -77,32 +96,34 @@ FVectorRoot::GetLastSelected()
 }
 
 FVectorObject*
-FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double iX, double iY, double iRadius )
+FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iObj, double iX, double iY, double iRadius )
 {
     BLMatrix2D inverseLocalMatrix;
     BLPoint localCoords;
     BLPoint localSize;
     double localRadius;
     FVectorObject* pickedObject = nullptr;
+    FVectorObject* pickedChild = nullptr;
 
-    BLMatrix2D::invert( inverseLocalMatrix, iChild.GetLocalMatrix() );
+    BLMatrix2D::invert( inverseLocalMatrix, iObj.GetLocalMatrix() );
 
     localCoords = inverseLocalMatrix.mapPoint( iX, iY );
     localSize   = inverseLocalMatrix.mapPoint( iX + iRadius, 0.0f );
 
     localRadius = localSize.x - localCoords.x;
 
-    for( std::list<FVectorObject*>::iterator it = iChild.GetChildrenList().begin(); it != iChild.GetChildrenList().end(); ++it )
+    for( std::list<FVectorObject*>::iterator it = iObj.GetChildrenList().begin(); it != iObj.GetChildrenList().end(); ++it )
     {
-        FVectorObject *obj = (*it);
+        FVectorObject *child = (*it);
+        FVectorObject* pickedChild = nullptr;
 
-        pickedObject = RecursiveSelect( iBLContext, *obj, localCoords.x, localCoords.y, localRadius );
+        pickedChild = RecursiveSelect( iBLContext, *child, localCoords.x, localCoords.y, localRadius );
 
-        if ( pickedObject )
+        if ( pickedChild )
         {
-            return pickedObject;
+            pickedObject = pickedChild;
         }
     }
 
-    return iChild.Pick( iBLContext, localCoords.x, localCoords.y, localRadius );
+    return ( pickedObject ) ? pickedObject : iObj.Pick( iBLContext, localCoords.x, localCoords.y, localRadius );
 }

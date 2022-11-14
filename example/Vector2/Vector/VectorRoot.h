@@ -13,6 +13,7 @@ class FVectorRoot : public FVectorObject
 
     protected:
         std::list<FVectorObject*> mSelectedObjectList;
+        std::list<FVectorObject*> mInvalidatedObjectList;
 
     public:
         ~FVectorRoot();
@@ -26,4 +27,6 @@ class FVectorRoot : public FVectorObject
         FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
 
         void Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillColor );
+        void InvalidateObject( FVectorObject* iObject );
+        void Update();
 };

@@ -45,7 +45,7 @@ FVectorPathCubic::AppendPoint( FVectorPointCubic* iPoint
         // lastPoint is NULL if this is the first point added
         if( lastPoint )
         {
-            FVectorSegmentCubic* segment = new FVectorSegmentCubic( lastPoint, iPoint );
+            FVectorSegmentCubic* segment = new FVectorSegmentCubic( *this, lastPoint, iPoint );
 
             AddSegment( segment );
 
@@ -107,7 +107,7 @@ FVectorPathCubic::PickShape( BLContext& iBLContext
     return PickLoops( iBLContext, iX, iY, iRadius );
 }
 
-void
+bool
 FVectorPathCubic::PickPoint( double iX
                            , double iY
                            , double iSelectionRadius )
@@ -121,6 +121,8 @@ FVectorPathCubic::PickPoint( double iX
             ( fabs( point->GetY() - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back(point);
+
+            return true;
         }
 
         // Pick point handle
@@ -128,6 +130,8 @@ FVectorPathCubic::PickPoint( double iX
             ( fabs( point->GetY() + ( perpendicularVector.y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back( &point->GetControlPoint() );
+
+            return true;
         }
 
         // Pick point handle on the other side
@@ -135,6 +139,8 @@ FVectorPathCubic::PickPoint( double iX
             ( fabs( point->GetY() - ( perpendicularVector.y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back( &point->GetControlPoint() );
+
+            return true;
         }
     }
 
@@ -148,14 +154,20 @@ FVectorPathCubic::PickPoint( double iX
             ( fabs( ctrlPoint0.GetY() - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back( &ctrlPoint0 );
+
+            return true;
         }
 
         if( ( fabs( ctrlPoint1.GetX() - iX ) <= iSelectionRadius ) &&
             ( fabs( ctrlPoint1.GetY() - iY ) <= iSelectionRadius ) )
         {
             mSelectedPointList.push_back( &ctrlPoint1 );
+
+            return true;
         }
     }
+
+    return false;
 }
 
 void
@@ -191,8 +203,8 @@ FVectorPathCubic::Fill( FBlock& iBlock
         for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
             FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
-            FVec2D& point0 = segment->GetPoint(0).GetCoords();
-            FVec2D& point1 = segment->GetPoint(1).GetCoords();
+            FVec2D& point0 = segment->GetPoint(0)->GetCoords();
+            FVec2D& point1 = segment->GetPoint(1)->GetCoords();
             FVec2D& ctrlPoint0 = segment->GetControlPoint(0).GetCoords();
             FVec2D& ctrlPoint1 = segment->GetControlPoint(1).GetCoords();
 
@@ -236,8 +248,8 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
             BLPoint ctrlPoint0;
             BLPoint ctrlPoint1;
 
-            point0.x = segment->GetPoint( 0 ).GetX();
-            point0.y = segment->GetPoint( 0 ).GetY();
+            point0.x = segment->GetPoint( 0 )->GetX();
+            point0.y = segment->GetPoint( 0 )->GetY();
 
             ctrlPoint0.x = segment->GetControlPoint( 0 ).GetX();
             ctrlPoint0.y = segment->GetControlPoint( 0 ).GetY();
@@ -245,8 +257,8 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
             ctrlPoint1.x = segment->GetControlPoint( 1 ).GetX();
             ctrlPoint1.y = segment->GetControlPoint( 1 ).GetY();
 
-            point1.x = segment->GetPoint( 1 ).GetX();
-            point1.y = segment->GetPoint( 1 ).GetY();
+            point1.x = segment->GetPoint( 1 )->GetX();
+            point1.y = segment->GetPoint( 1 )->GetY();
 
             path.moveTo( point0.x, point0.y );
             path.cubicTo( ctrlPoint0.x
@@ -475,7 +487,7 @@ FVectorPathCubic::DrawJoint( FBlock& iBlock
     {
         FVec2D prevSegmentVector = iPrevSegment->GetVectorAtEnd( false );
         FVec2D segmentVector = iSegment.GetVectorAtStart( false );
-        FVec2D& origin = iSegment.GetPoint(0).GetCoords();
+        FVec2D& origin = iSegment.GetPoint(0)->GetCoords();
 
         if ( prevSegmentVector.DistanceSquared() && segmentVector.DistanceSquared() )
         {
@@ -521,7 +533,7 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRec
         {
             FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
             FVectorSegmentCubic* prevSegment = static_cast<FVectorSegmentCubic*>( segment->GetPreviousSegment() );
-            double segmentStartRadius = segment->GetPoint(0).GetRadius();
+            double segmentStartRadius = segment->GetPoint(0)->GetRadius();
             FRectD clip = iRoi & segment->GetBoundingBox();
 
             if( ( iRoi.Area() == 0.0f ) || clip.Area() )
@@ -566,9 +578,10 @@ FVectorPathCubic::Merge( FVectorPathCubic& iCubicPath )
     for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
     {
         FVectorSegmentCubic* originalSegment = static_cast<FVectorSegmentCubic*>(*it);
-        FVectorPointCubic* point0 = static_cast<FVectorPointCubic*>( &originalSegment->GetPoint(0) );
-        FVectorPointCubic* point1 = static_cast<FVectorPointCubic*>( &originalSegment->GetPoint(1) );
-        FVectorSegmentCubic* newSegment = new FVectorSegmentCubic( lookupTable[point0]
+        FVectorPointCubic* point0 = static_cast<FVectorPointCubic*>( originalSegment->GetPoint(0) );
+        FVectorPointCubic* point1 = static_cast<FVectorPointCubic*>( originalSegment->GetPoint(1) );
+        FVectorSegmentCubic* newSegment = new FVectorSegmentCubic( *this
+                                                                 , lookupTable[point0]
                                                                  , originalSegment->GetControlPoint(0).GetX()
                                                                  , originalSegment->GetControlPoint(0).GetY()
                                                                  , originalSegment->GetControlPoint(1).GetX()

@@ -8,15 +8,13 @@
 class FVectorHandlePoint : public FVectorHandle
 {
     private:
-        FVectorPoint* mParentPoint;
+        FVectorPoint& mParentPoint;
 
     protected:
 
     public:
         ~FVectorHandlePoint();
-        FVectorHandlePoint();
-        FVectorHandlePoint( FVectorPoint* iParentPoint );
+        FVectorHandlePoint( FVectorPoint& iParentPoint );
         uint32 GetType();
-        void SetParent( FVectorPoint* iParentPoint );
-        FVectorPoint* GetParent();
+        FVectorPoint& GetParent();
 };
