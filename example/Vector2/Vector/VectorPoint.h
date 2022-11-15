@@ -6,6 +6,7 @@
 #include "Vector/VectorSegment.h"
 
 class FVectorPathLoop;
+class FVectorSection;
 
 class FVectorPoint
 {
@@ -14,6 +15,7 @@ class FVectorPoint
     protected:
         FVec2D mCoords;
         std::list<FVectorSegment*> mSegmentList;
+        std::list<FVectorSection*> mSectionList;
         double mRadius;
 
     public:
@@ -26,6 +28,8 @@ class FVectorPoint
         FVectorPoint();
         FVectorPoint( double iX, double iY );
         virtual void AddSegment( FVectorSegment* iSegment );
+        void AddSection( FVectorSection* iSection );
+        void RemoveSection( FVectorSection* iSection );
         FVectorSegment* GetLastSegment();
         FVectorSegment* GetFirstSegment();
         virtual FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );
@@ -39,6 +43,7 @@ class FVectorPoint
         uint32 GetSegmentCount();
         std::list<FVectorSegment*>& GetSegmentList();
         virtual uint32 GetType();
+        virtual double GetT( FVectorSegment& );
         double GetRadius();
         virtual void SetRadius( double iRadius, bool iBuildSegments );
         void InvalidateSegments();

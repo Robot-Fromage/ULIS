@@ -8,6 +8,7 @@ FVectorSegmentCubic::FVectorSegmentCubic( FVectorPathCubic& iPath
    , mCtrlPoint { FVectorHandleSegment( *this, iPoint0->GetX(), iPoint0->GetY() )
                 , FVectorHandleSegment( *this, iPoint1->GetX(), iPoint1->GetY() ) }
 {
+    Update();
 }
 
 FVectorSegmentCubic::FVectorSegmentCubic( FVectorPathCubic& iPath
@@ -21,7 +22,7 @@ FVectorSegmentCubic::FVectorSegmentCubic( FVectorPathCubic& iPath
     , mCtrlPoint { FVectorHandleSegment( *this, iCtrlPoint0x, iCtrlPoint0y )
                 ,  FVectorHandleSegment( *this, iCtrlPoint1x, iCtrlPoint1y ) }
 {
-
+    Update();
 }
 
 void
@@ -184,6 +185,12 @@ FVectorSegmentCubic::IntersectPath( FVectorPathCubic& iPath )
     }
 }
 
+double
+FVectorSegmentCubic::GetDistanceSquared()
+{
+    return mDistanceSquared;
+}
+
 void
 FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
 {
@@ -191,6 +198,8 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
     FVec2D point1 = { mPoint[1]->GetX(), mPoint[1]->GetY() };
     FVec2D ctrlPoint0 = { mCtrlPoint[0].GetX(), mCtrlPoint[0].GetY() };
     FVec2D ctrlPoint1 = { mCtrlPoint[1].GetX(), mCtrlPoint[1].GetY() };
+
+    std::list<FVectorPointIntersection*> intersectionPointList;
 
     for ( int i = 0; i < mPolygonCache.size(); i++ )
     {
@@ -213,10 +222,7 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
                                 , poly->lineVertex[0].y + ( polyVector.y * polySubT ) };
                 FVectorPointIntersection* intersectionPoint = new FVectorPointIntersection ();
 
-
-
-                 this->mIntersectionPointList.push_back( intersectionPoint );
-                iOther.mIntersectionPointList.push_back( intersectionPoint );
+                intersectionPointList.push_back( intersectionPoint );
 
                 double segmentT =      poly->fromT + (      polySubT * (      poly->toT -      poly->fromT ) );
                 double iOtherT  = interPoly->fromT + ( interPolySubT * ( interPoly->toT - interPoly->fromT ) );
@@ -225,9 +231,23 @@ printf("new intersection Point: %d - %f %f\n", intersectionPoint, segmentT, iOth
 
                 intersectionPoint->AddSegment (    this, segmentT );
                 intersectionPoint->AddSegment ( &iOther,  iOtherT );
-
-                intersectionPoint->March( *intersectionPoint, *this );
             }
+        }
+    }
+
+    if ( intersectionPointList.size() )
+    {
+        this->ClearIntersections();
+        iOther->ClearIntersections();
+
+        for( std::list<FVectorPointIntersection*>::iterator it = intersectionPointList.begin(); it != intersectionPointList.end(); ++it )
+        {
+            FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
+
+            this->mIntersectionPointList.push_back( intersectionPoint );
+            iOther.mIntersectionPointList.push_back( intersectionPoint );
+
+            intersectionPoint->March( *intersectionPoint, *this );
         }
     }
 }
@@ -505,6 +525,9 @@ FVectorSegmentCubic::BuildVariableAdaptive( double  iFromT
         for( int i = 0; i < 3; i++ )
         {
             int n = ( i + 1 );
+            FVec2D dist = samplePoint[n] - samplePoint[i];
+
+            mDistanceSquared += dist.DistanceSquared();
 
             nextSegmentVector = ( i == 0x02 ) ? iNextSegmentVector : &subTangent[n];
 
@@ -542,6 +565,8 @@ FVectorSegmentCubic::BuildVariable()
     double segmentEndRadius = static_cast<FVectorPointCubic*>(mPoint[1])->GetRadius();
     static FVec2D zeroVector = { 0.0f, 0.0f };
     int polygonID = 0;
+
+    mDistanceSquared = 0.0f;
 
     ResetPolygonCache();
 

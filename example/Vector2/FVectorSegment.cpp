@@ -26,6 +26,90 @@ FVectorSegment::GetPath()
     return mPath;
 }
 
+double
+FVectorSegment::GetDistanceSquared()
+{
+    FVec2D dist = mPoint[1]->GetCoords() - mPoint[0]->GetCoords();
+
+    return dist.DistanceSquared();
+}
+
+FVectorSection*
+FVectorSegment::GetSection ( double t )
+{
+    for( std::list<FVectorSection*>::iterator it = mSectionList.begin(); it != mSectionList.end(); ++it )
+    {
+        FVectorSection* section = static_cast<FVectorSection*>(*it);
+        FVectorPoint* point0 = section->GetPoint(0);
+        FVectorPoint* point1 = section->GetPoint(1);
+        double fromT = point0->GetT( *this );
+        double   toT = point1->GetT( *this );
+
+        if ( ( t >= fromT ) && ( t <= toT ) )
+        {
+            return section;
+        }
+    }
+
+    return nullptr;
+}
+
+void
+FVectorSegment::AddIntersection ( FVectorPointIntersection* iIntersectionPoint )
+{
+    double t = iIntersectionPoint->GetT( *this );
+    FVectorSection* section = GetSection ( t );
+    FVectorSection* subSection[2];
+    FVectorPoint* point[3] = { nullptr, iIntersectionPoint, nullptr };
+
+    if ( section == nullptr )
+    {
+        point[0] = this->GetPoint(0);
+        point[2] = this->GetPoint(1);
+    }
+    else
+    {
+        point[0] = section->GetPoint(0);
+        point[2] = section->GetPoint(1);
+
+        // We do not release memory so that we can undo that later
+        mSectionList.erase( section );
+    }
+
+    subSection[0] = new FVectorSection ( *this, point[0], point[1] );
+    subSection[1] = new FVectorSection ( *this, point[1], point[2] );
+
+    point[0]->AddSection( subSection[0] );
+    point[1]->AddSection( subSection[0] );
+    point[1]->AddSection( subSection[1] );
+    point[2]->AddSection( subSection[1] );
+
+    mIntersectionPointList.push_back( iIntersectionPoint );
+
+    mSectionList.push_back( subSection[0] );
+    mSectionList.push_back( subSection[1] );
+}
+
+void
+FVectorSegment::ClearIntersections ( )
+{
+    for( std::list<FVectorSection*>::iterator it = mSectionList.begin(); it != mSectionList.end(); ++it )
+    {
+        FVectorSection* section = static_cast<FVectorSection*>(*it);
+        FVectorPoint* point0 = section->GetPoint(0);
+        FVectorPoint* point1 = section->GetPoint(1);
+
+        point0->RemoveSection( section );
+        point1->RemoveSection( section );
+    }
+
+    // We do not release memory so that we can undo that later
+    mSectionList.clear();
+
+    // We do not release memory so that we can undo that later
+    mIntersectionPointList.clear();
+}
+
 void
 FVectorSegment::Invalidate()
 {

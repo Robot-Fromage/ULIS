@@ -179,11 +179,12 @@ FVectorPath::GetLastPoint()
 bool
 FVectorPath::IsLoop()
 {
-FVectorPoint* firstPoint = GetFirstPoint();
-
-    if ( firstPoint && ( firstPoint->GetSegmentCount() == 2 ) )
+    if ( mPointList.size() )
     {
-        return true;
+        if ( mPointList.size() == mSegmentList.size() )
+        {
+            return true;
+        }
     }
 
     return false;

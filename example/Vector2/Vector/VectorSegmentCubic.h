@@ -20,6 +20,7 @@ class FVectorSegmentCubic : public FVectorSegment
     protected:
         FVectorHandleSegment mCtrlPoint[2];
         std::vector<FPolygon> mPolygonCache;
+        double mDistanceSquared;
         FRectD mBBox;
 
     private:
@@ -61,9 +62,9 @@ class FVectorSegmentCubic : public FVectorSegment
         void ResetPolygonCache();
         uint32 GetPolygonCount(); // TODO: use vector size() method.
         std::vector<FPolygon>& GetPolygonCache();
-
         void IntersectPath( FVectorPathCubic& iPath );
         void Intersect( FVectorSegmentCubic& iOther );
         void Update();
         void BuildVariable();
+        double GetDistanceSquared();
 };

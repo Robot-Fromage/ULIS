@@ -7,12 +7,14 @@
 class FVectorPoint;
 class FVectorPath;
 class FVectorPointIntersection;
+class FVectorSection;
 
 class FVectorSegment
 {
     protected:
         FVectorPoint* mPoint[2];
         std::list<FVectorPointIntersection*> mIntersectionPointList;
+        std::list<FVectorSection*> mSectionList;
         FVectorPath& mPath;
 
     public:
@@ -31,4 +33,9 @@ class FVectorSegment
         FVectorPath& GetPath();
         virtual void Update() {};
         void Invalidate();
+        virtual double GetDistanceSquared();
+
+        void ClearIntersections();
+        FVectorSection* GetSection (double t);
+        void AddIntersection ();
 };
