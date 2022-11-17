@@ -50,6 +50,7 @@ class FVectorObject
         double GetTranslationY();
         double GetRotation();
         FVectorObject* GetParent();
+        void SetParent( FVectorObject* iObject );
         void CopyTransformation( FVectorObject& iObject );
         BLMatrix2D& GetLocalMatrix();
         BLMatrix2D& GetWorldMatrix();

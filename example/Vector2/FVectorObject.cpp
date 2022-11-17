@@ -241,6 +241,12 @@ FVectorObject::MoveBack()
     }*/
 }
 
+void
+FVectorObject::SetParent( FVectorObject* iObject )
+{
+    mParent = iObject;
+}
+
 FVec2D
 FVectorObject::WorldCoordinatesToLocal( double iX, double iY )
 {

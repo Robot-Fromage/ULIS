@@ -67,4 +67,5 @@ class FVectorSegmentCubic : public FVectorSegment
         void Update();
         void BuildVariable();
         double GetDistanceSquared();
+        FVec2D GetPointAt(double t);
 };

@@ -25,6 +25,18 @@ FVectorSegmentCubic::FVectorSegmentCubic( FVectorPathCubic& iPath
     Update();
 }
 
+FVec2D
+FVectorSegmentCubic::GetPointAt( double t )
+{
+    FVec2D& point0 = mPoint[0]->GetCoords();
+    FVec2D& point1 = mPoint[1]->GetCoords();
+    FVec2D& ctrlPoint0 = mCtrlPoint[0].GetCoords();
+    FVec2D& ctrlPoint1 = mCtrlPoint[1].GetCoords();
+    FVec2D pointAt = CubicBezierPointAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, t );
+
+    return pointAt;
+}
+
 void
 FVectorSegmentCubic::IncreasePolygonCache( uint32 iSize )
 {
@@ -177,10 +189,10 @@ FVectorSegmentCubic::IntersectPath( FVectorPathCubic& iPath )
 
         /*if ( bbox.Area() > 0.0f )
         {*/
-            if ( cubicSegment != this ) 
-            {
+           /* if ( cubicSegment != this )  // commented out: a bezier can intersect itself
+            {*/
                 Intersect( *cubicSegment ); 
-            }
+           /* }*/
         /*}*/
     }
 }
@@ -201,53 +213,59 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
 
     std::list<FVectorPointIntersection*> intersectionPointList;
 
-    for ( int i = 0; i < mPolygonCache.size(); i++ )
+    // the other segment must not belong to this segment's points or we would get an intersection no matter what
+    if ( ( mPoint[0]->HasSegment( iOther ) == false ) && 
+         ( mPoint[1]->HasSegment( iOther ) == false ) )
     {
-        FPolygon* poly = &mPolygonCache[i];
-
-        for( int j = 0; j < iOther.mPolygonCache.size(); j++ )
+        for ( int i = 0; i < mPolygonCache.size(); i++ )
         {
-            FPolygon* interPoly = &iOther.mPolygonCache[j];
-            double polySubT, interPolySubT;
+            FPolygon* poly = &mPolygonCache[i];
 
-            if ( intersection ( poly->lineVertex[0]
-                              , poly->lineVertex[1]
-                              , interPoly->lineVertex[0]
-                              , interPoly->lineVertex[1]
-                              , &polySubT
-                              , &interPolySubT ) )
+            for( int j = 0; j < iOther.mPolygonCache.size(); j++ )
             {
-                FVec2D polyVector = ( poly->lineVertex[1] - poly->lineVertex[0] );
-                FVec2D coords = { poly->lineVertex[0].x + ( polyVector.x * polySubT )
-                                , poly->lineVertex[0].y + ( polyVector.y * polySubT ) };
-                FVectorPointIntersection* intersectionPoint = new FVectorPointIntersection ();
+                FPolygon* interPoly = &iOther.mPolygonCache[j];
+                double polySubT, interPolySubT;
 
-                intersectionPointList.push_back( intersectionPoint );
+                if ( intersection ( poly->lineVertex[0]
+                                  , poly->lineVertex[1]
+                                  , interPoly->lineVertex[0]
+                                  , interPoly->lineVertex[1]
+                                  , &polySubT
+                                  , &interPolySubT ) )
+                {
+                    FVec2D polyVector = ( poly->lineVertex[1] - poly->lineVertex[0] );
+                    FVec2D coords = { poly->lineVertex[0].x + ( polyVector.x * polySubT )
+                                    , poly->lineVertex[0].y + ( polyVector.y * polySubT ) };
+                    FVectorPointIntersection* intersectionPoint = new FVectorPointIntersection ();
 
-                double segmentT =      poly->fromT + (      polySubT * (      poly->toT -      poly->fromT ) );
-                double iOtherT  = interPoly->fromT + ( interPolySubT * ( interPoly->toT - interPoly->fromT ) );
+                    intersectionPointList.push_back( intersectionPoint );
 
-printf("new intersection Point: %d - %f %f\n", intersectionPoint, segmentT, iOtherT );
+                    double segmentT =      poly->fromT + (      polySubT * (      poly->toT -      poly->fromT ) );
+                    double iOtherT  = interPoly->fromT + ( interPolySubT * ( interPoly->toT - interPoly->fromT ) );
 
-                intersectionPoint->AddSegment (    this, segmentT );
-                intersectionPoint->AddSegment ( &iOther,  iOtherT );
+    printf("new intersection Point: %d - %f %f\n", intersectionPoint, segmentT, iOtherT );
+
+                    intersectionPoint->AddSegment (    this, segmentT );
+                    intersectionPoint->AddSegment ( &iOther,  iOtherT );
+                }
             }
         }
-    }
 
-    if ( intersectionPointList.size() )
-    {
-        this->ClearIntersections();
-        iOther->ClearIntersections();
-
-        for( std::list<FVectorPointIntersection*>::iterator it = intersectionPointList.begin(); it != intersectionPointList.end(); ++it )
+        if ( intersectionPointList.size() )
         {
-            FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
+/*
+            this->ClearIntersections();
+            iOther.ClearIntersections();
+*/
+            for( std::list<FVectorPointIntersection*>::iterator it = intersectionPointList.begin(); it != intersectionPointList.end(); ++it )
+            {
+                FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
 
-            this->mIntersectionPointList.push_back( intersectionPoint );
-            iOther.mIntersectionPointList.push_back( intersectionPoint );
+                this->AddIntersection ( intersectionPoint );
+                iOther.AddIntersection ( intersectionPoint );
 
-            intersectionPoint->March( *intersectionPoint, *this );
+                intersectionPoint->March();
+            }
         }
     }
 }
@@ -581,4 +599,5 @@ FVectorSegmentCubic::BuildVariable()
                           , &zeroVector
                           , 8
                           , &polygonID );
+
 }

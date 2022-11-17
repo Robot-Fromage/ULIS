@@ -35,7 +35,12 @@ class FVectorSegment
         void Invalidate();
         virtual double GetDistanceSquared();
 
+        virtual FVec2D GetPointAt( double t );
+
         void ClearIntersections();
         FVectorSection* GetSection (double t);
-        void AddIntersection ();
+
+        void AddIntersection ( FVectorPointIntersection* iIntersectionPoint );
+        void RemoveSection ( FVectorSection* iSection );
+        void AddSection ( FVectorSection* iSection );
 };

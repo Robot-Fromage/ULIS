@@ -5,7 +5,7 @@
 #include <Image/Block.h>
 #include "Vector/VectorSegment.h"
 
-class FVectorPathLoop;
+class FVectorLoop;
 class FVectorSection;
 
 class FVectorPoint
@@ -16,6 +16,7 @@ class FVectorPoint
         FVec2D mCoords;
         std::list<FVectorSegment*> mSegmentList;
         std::list<FVectorSection*> mSectionList;
+        std::list<FVectorLoop*> mLoopList;
         double mRadius;
 
     public:
@@ -34,7 +35,8 @@ class FVectorPoint
         FVectorSegment* GetFirstSegment();
         virtual FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );
         void RemoveSegment( FVectorSegment* iSegment );
-        FVec2D& GetCoords();
+        virtual FVec2D& GetCoords();
+        virtual FVec2D GetPosition( FVectorSegment& iSegment );
         double GetX();
         double GetY();
         virtual void SetX( double iX );
@@ -47,6 +49,12 @@ class FVectorPoint
         double GetRadius();
         virtual void SetRadius( double iRadius, bool iBuildSegments );
         void InvalidateSegments();
-        void March( FVectorPointIntersection&  iInitiatorPoint
-                   , FVectorSegment&       iCurrentSegment );
+        void March();
+        bool HasSegment( FVectorSegment& iSegment );
+        void AddLoop( FVectorLoop* iLoop );
+        void RemoveLoop( FVectorLoop* iLoop );
+        void InvalidateLoops();
+        std::list<FVectorSection*>& GetSectionList();
+        bool IsClosestSection( FVectorSection& iStartSection
+                             , FVectorSection& iEndSection );
 };

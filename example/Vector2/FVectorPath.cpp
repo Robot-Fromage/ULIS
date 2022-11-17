@@ -32,11 +32,27 @@ FVectorPath::AppendPoint( FVectorPoint* iPoint )
 }
 
 void
-FVectorPath::AddLoop( FVectorPathLoop* iLoop )
+FVectorPath::AddLoop( FVectorLoop* iLoop )
 {
     mLoopList.push_back( iLoop );
 
-    iLoop->mParent = this;
+    iLoop->Attach();
+
+    iLoop->SetParent ( this );
+
+    printf("%s: Adding loop\n", __func__ );
+}
+
+void
+FVectorPath::RemoveLoop( FVectorLoop* iLoop )
+{
+    mLoopList.remove( iLoop );
+
+    iLoop->Detach();
+
+    iLoop->SetParent ( nullptr );
+
+    printf("%s: Removing loop\n", __func__ );
 }
 
 void
@@ -53,9 +69,9 @@ FVectorPath::UpdateShape()
     mInvalidatedSegmentList.clear();
 
     // then update Loops
-    for ( std::list<FVectorPathLoop*>::iterator it = mInvalidatedLoopList.begin(); it != mInvalidatedLoopList.end(); ++it )
+    for ( std::list<FVectorLoop*>::iterator it = mInvalidatedLoopList.begin(); it != mInvalidatedLoopList.end(); ++it )
     {
-        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+        FVectorLoop* loop = static_cast<FVectorLoop*>(*it);
 
         loop->UpdateShape();
     }
@@ -70,7 +86,7 @@ FVectorPath::InvalidateSegment( FVectorSegment* iSegment )
 }
 
 void
-FVectorPath::InvalidateLoop( FVectorPathLoop* iLoop )
+FVectorPath::InvalidateLoop( FVectorLoop* iLoop )
 {
     mInvalidatedLoopList.push_back ( iLoop );
 }
@@ -78,9 +94,9 @@ FVectorPath::InvalidateLoop( FVectorPathLoop* iLoop )
 void
 FVectorPath::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
-    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
+    for( std::list<FVectorLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
     {
-        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+        FVectorLoop* loop = static_cast<FVectorLoop*>(*it);
 
         /*if ( loop->IsFilled() == true )
         {*/
@@ -92,9 +108,9 @@ FVectorPath::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 FVectorObject*
 FVectorPath::PickLoops( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
-    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
+    for( std::list<FVectorLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
     {
-        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+        FVectorLoop* loop = static_cast<FVectorLoop*>(*it);
 
         if ( loop->PickShape( iBLContext, iX, iY, iRadius ) )
         {
@@ -105,12 +121,12 @@ FVectorPath::PickLoops( BLContext& iBLContext, double iX, double iY, double iRad
     return nullptr;
 }
 
-FVectorPathLoop*
-FVectorPath::GetPathLoopByID( uint64 iID )
+FVectorLoop*
+FVectorPath::GetLoopByID( uint64 iID )
 {
-    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
+    for( std::list<FVectorLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
     {
-        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
+        FVectorLoop* loop = static_cast<FVectorLoop*>(*it);
 
         if ( iID == loop->GetID() )
         {

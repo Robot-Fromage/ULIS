@@ -12,6 +12,8 @@ FVectorSegment::FVectorSegment( FVectorPath& iPath
 {
     mPoint[0] = iPoint0;
     mPoint[1] = iPoint1;
+
+    AddSection ( new FVectorSection ( *this, mPoint[0], mPoint[1] ) );
 }
 
 FVectorPoint*
@@ -54,40 +56,59 @@ FVectorSegment::GetSection ( double t )
     return nullptr;
 }
 
+FVec2D
+FVectorSegment::GetPointAt ( double t )
+{
+    FVec2D& p0 =  mPoint[0]->GetCoords();
+    FVec2D& p1 =  mPoint[0]->GetCoords();
+    FVec2D vec = p1 - p0;
+
+    return p0 + ( vec * t );
+}
+
+void
+FVectorSegment::AddSection ( FVectorSection* iSection )
+{
+    iSection->GetPoint(0)->AddSection( iSection );
+    iSection->GetPoint(1)->AddSection( iSection );
+
+    mSectionList.push_back( iSection );
+}
+
+void
+FVectorSegment::RemoveSection ( FVectorSection* iSection )
+{
+    std::list<FVectorLoop*> loopList = iSection->GetLoopList();
+
+    iSection->GetPoint(0)->RemoveSection( iSection );
+    iSection->GetPoint(1)->RemoveSection( iSection );
+
+    mSectionList.remove( iSection );
+
+    for( std::list<FVectorLoop*>::iterator it = loopList.begin(); it != loopList.end(); ++it )
+    {
+        FVectorLoop* loop = static_cast<FVectorLoop*>(*it);
+
+        mPath.RemoveLoop( loop );
+    }
+}
+
 void
 FVectorSegment::AddIntersection ( FVectorPointIntersection* iIntersectionPoint )
 {
     double t = iIntersectionPoint->GetT( *this );
     FVectorSection* section = GetSection ( t );
-    FVectorSection* subSection[2];
-    FVectorPoint* point[3] = { nullptr, iIntersectionPoint, nullptr };
+    FVectorPoint* point[3] = { section->GetPoint(0), iIntersectionPoint, section->GetPoint(1) };
+    FVectorSection* subSection[2] = { new FVectorSection ( *this, point[0], point[1] )
+                                    , new FVectorSection ( *this, point[1], point[2] ) };
 
-    if ( section == nullptr )
-    {
-        point[0] = this->GetPoint(0);
-        point[2] = this->GetPoint(1);
-    }
-    else
-    {
-        point[0] = section->GetPoint(0);
-        point[2] = section->GetPoint(1);
-
-        // We do not release memory so that we can undo that later
-        mSectionList.erase( section );
-    }
-
-    subSection[0] = new FVectorSection ( *this, point[0], point[1] );
-    subSection[1] = new FVectorSection ( *this, point[1], point[2] );
-
-    point[0]->AddSection( subSection[0] );
-    point[1]->AddSection( subSection[0] );
-    point[1]->AddSection( subSection[1] );
-    point[2]->AddSection( subSection[1] );
+    // this does not release memory so that we can undo that later
+    RemoveSection( section );
 
     mIntersectionPointList.push_back( iIntersectionPoint );
 
-    mSectionList.push_back( subSection[0] );
-    mSectionList.push_back( subSection[1] );
+    AddSection ( subSection[0] );
+    AddSection ( subSection[1] );
 }
 
 void
@@ -108,6 +129,9 @@ FVectorSegment::ClearIntersections ( )
 
     // We do not release memory so that we can undo that later
     mIntersectionPointList.clear();
+
+    // Add default section
+    AddSection ( new FVectorSection ( *this, mPoint[0], mPoint[1] ) );
 }
 
 void
@@ -170,9 +194,9 @@ FVectorSegment::GetNextPoint( double iT )
     double closestT = 1.0f;
 
     // Search intersection point between this intersection point and the next segment point
-    for(std::list<FVectorPointIntersection*>::iterator iter = mIntersectionPointList.begin(); iter != mIntersectionPointList.end(); ++iter)
+    for(std::list<FVectorPointIntersection*>::iterator it = mIntersectionPointList.begin(); it != mIntersectionPointList.end(); ++it)
     {
-        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*iter);
+        FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
         double pointT = intersectionPoint->GetT(*this);
 
         if( pointT > iT )
@@ -186,7 +210,7 @@ FVectorSegment::GetNextPoint( double iT )
         }
     }
 
-    return closestPoint;
+    return ( closestPoint ) ? closestPoint : mPoint[1];
 }
 
 FVectorPoint*
@@ -212,7 +236,7 @@ FVectorSegment::GetPreviousPoint( double iT )
         }
     }
 
-    return closestPoint;
+    return ( closestPoint ) ? closestPoint : mPoint[0];
 }
 
 FVectorSegment*

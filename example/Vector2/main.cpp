@@ -835,6 +835,8 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
 
      BLResult result = mBLContext->begin(*mBLImage/*, createInfo*/);
 
+    /*mBLContext->setRenderingQuality(0);*/
+
      if(result != BL_SUCCESS)
 printf("failure\n");
 

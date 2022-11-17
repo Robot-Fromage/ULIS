@@ -5,17 +5,16 @@
 #include <Image/Block.h>
 #include "Vector/VectorObject.h"
 #include "Vector/VectorSegment.h"
-
-class FVectorPathLoop;
+#include "Vector/VectorLoop.h"
 
 class FVectorPath : public FVectorObject
 {
     protected :
-        std::list<FVectorPathLoop*> mLoopList; // list of loops
+        std::list<FVectorLoop*> mLoopList; // list of loops
         std::list<FVectorPoint*> mPointList;
         std::list<FVectorSegment*> mSegmentList;
         std::list<FVectorSegment*> mInvalidatedSegmentList;
-        std::list<FVectorPathLoop*> mInvalidatedLoopList;
+        std::list<FVectorLoop*> mInvalidatedLoopList;
         std::list<FVectorPoint*> mSelectedPointList;
         void AddSegment( FVectorSegment* iSegment );
         void RemoveSegment( FVectorSegment* iSegment );
@@ -41,9 +40,10 @@ class FVectorPath : public FVectorObject
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
         void Clear();
         bool IsLoop();
-        FVectorPathLoop* GetPathLoopByID( uint64 iID );
-        void AddLoop( FVectorPathLoop* iLoop );
+        FVectorLoop* GetLoopByID( uint64 iID );
+        void AddLoop( FVectorLoop* iLoop );
+        void RemoveLoop( FVectorLoop* iLoop );
         void UpdateShape();
         void InvalidateSegment(FVectorSegment* iSegment);
-        void InvalidateLoop(FVectorPathLoop* iLoop);
+        void InvalidateLoop( FVectorLoop* iLoop );
 };

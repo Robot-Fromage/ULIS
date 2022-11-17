@@ -5,7 +5,7 @@
 #include <Image/Block.h>
 
 class FVectorPath;
-class FVectorPathLoop;
+class FVectorLoop;
 class FVectorSegment;
 class FVectorSegmentCubic;
 
@@ -20,18 +20,16 @@ class FVectorPointIntersection : public FVectorPoint
         uint64 mIntersectionID;
         // map for intersection positions
         std::map<FVectorSegment*, FIntersection> mTMap;
-        std::list<FVectorPathLoop*> mLoopList;
 
     public:
         ~FVectorPointIntersection();
         FVectorPointIntersection();
         uint32 GetType();
         FVec2D GetPosition( FVectorSegment& );
+        FVec2D& GetCoords();
         double GetT( FVectorSegment& );
         void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         void AddSegment( FVectorSegmentCubic* iSegment, double t );
         // overloaded
         FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );
-        void AddLoop(FVectorPathLoop*);
-        void InvalidateLoops();
 };

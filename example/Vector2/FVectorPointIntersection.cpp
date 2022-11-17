@@ -29,6 +29,12 @@ FVectorPointIntersection::GetPosition( FVectorSegment& iSegment )
     return mTMap[&iSegment].position;
 }
 
+FVec2D&
+FVectorPointIntersection::GetCoords()
+{
+    return mTMap[GetFirstSegment()].position;
+}
+
 void
 FVectorPointIntersection::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {
@@ -40,23 +46,6 @@ FVectorPointIntersection::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &i
 
         iBLContext.setFillStyle( BLRgba32( 0xFFFF80FF) );
         iBLContext.fillRect( position.x - 5, position.y - 5, 10, 10 );
-    }
-}
-
-void
-FVectorPointIntersection::AddLoop( FVectorPathLoop* iLoop )
-{
-    mLoopList.push_back( iLoop );
-}
-
-void
-FVectorPointIntersection::InvalidateLoops()
-{
-    for( std::list<FVectorPathLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
-    {
-        FVectorPathLoop* loop = static_cast<FVectorPathLoop*>(*it);
-
-        loop->Invalidate();
     }
 }
 

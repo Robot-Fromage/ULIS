@@ -44,7 +44,7 @@ FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius
 
     if ( pickedObject )
     {
-        if( typeid ( *pickedObject ) == typeid ( FVectorPathLoop ) )
+        if( typeid ( *pickedObject ) == typeid ( FVectorLoop ) )
         {
             pickedObject = pickedObject->GetParent();
         }
