@@ -24,9 +24,17 @@ FVectorPath::GetSelectedPointList()
 }
 
 FVectorSegment*
-FVectorPath::AppendPoint( FVectorPoint* iPoint )
+FVectorPath::AppendPoint( FVectorPoint* iPoint, FVectorPoint* iPreviousPoint )
 {
     mPointList.push_back( iPoint );
+
+    if ( iPreviousPoint )
+    {
+        if ( iPreviousPoint->GetSegmentCount() < 2 )
+        {
+            AddSegment( new FVectorSegment ( *this, iPreviousPoint, iPoint ) );
+        }
+    }
 
     return NULL;
 }

@@ -22,6 +22,7 @@ class FVectorSegmentCubic : public FVectorSegment
         std::vector<FPolygon> mPolygonCache;
         double mDistanceSquared;
         FRectD mBBox;
+        BLPath mPath;
 
     private:
         void BuildVariableAdaptive( double  iFromT

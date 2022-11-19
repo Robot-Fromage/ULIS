@@ -28,6 +28,22 @@ FVectorSegment::GetPath()
     return mPath;
 }
 
+FVec2D
+FVectorSegment::GetVector( bool iNormalize )
+{
+    FVec2D vec = mPoint[1]->GetCoords() - mPoint[0]->GetCoords();
+
+    if ( iNormalize == true )
+    {
+        if ( vec.DistanceSquared() )
+        {
+            vec.Normalize();
+        }
+    }
+
+    return vec;
+}
+
 double
 FVectorSegment::GetDistanceSquared()
 {

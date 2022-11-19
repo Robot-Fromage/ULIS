@@ -43,4 +43,5 @@ class FVectorSegment
         void AddIntersection ( FVectorPointIntersection* iIntersectionPoint );
         void RemoveSection ( FVectorSection* iSection );
         void AddSection ( FVectorSection* iSection );
+        FVec2D GetVector( bool iNormalize );
 };

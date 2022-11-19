@@ -91,6 +91,12 @@ FVectorSegmentCubic::Pick( double iX
 
 FVec2D FVectorSegmentCubic::GetVectorAtEnd( bool iNormalize )
 {
+    FVec2D& point0 = mPoint[0]->GetCoords();
+    FVec2D& point1 = mPoint[1]->GetCoords();
+    FVec2D& ctrlPoint0 = mCtrlPoint[0].GetCoords();
+    FVec2D& ctrlPoint1 = mCtrlPoint[1].GetCoords();
+    FVec2D vec = CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, 0.9999f );
+/*
     FVec2D vec = { GetPoint(1)->GetX() - GetControlPoint(1).GetX(),
                    GetPoint(1)->GetY() - GetControlPoint(1).GetY() };
 
@@ -98,12 +104,18 @@ FVec2D FVectorSegmentCubic::GetVectorAtEnd( bool iNormalize )
     {
         vec.Normalize();
     }
-
+*/
     return vec;
 }
 
 FVec2D FVectorSegmentCubic::GetVectorAtStart( bool iNormalize )
 {
+    FVec2D& point0 = mPoint[0]->GetCoords();
+    FVec2D& point1 = mPoint[1]->GetCoords();
+    FVec2D& ctrlPoint0 = mCtrlPoint[0].GetCoords();
+    FVec2D& ctrlPoint1 = mCtrlPoint[1].GetCoords();
+    FVec2D vec = CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, 0.0001f );
+/*
     FVec2D vec = { GetControlPoint(0).GetX() - GetPoint(0)->GetX(),
                    GetControlPoint(0).GetY() - GetPoint(0)->GetY() };
 
@@ -111,7 +123,7 @@ FVec2D FVectorSegmentCubic::GetVectorAtStart( bool iNormalize )
     {
         vec.Normalize();
     }
-
+*/
     return vec;
 }
 
@@ -348,11 +360,10 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
 {
     iBLContext.setStrokeWidth( 1.0f );
 
+#ifdef UNUSED
     for ( int i = 0; i < mPolygonCache.size(); i++ )
     {
        /* int n = i + 1;*/
-
-
 
         // the stroke thing is very slow and slows the all thing, we have to find something better
         //iBLContext.strokePolygon( mPolygonCache[i].vertex, 4 );
@@ -368,6 +379,14 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
 
         iBLContext.fillPolygon( pt, 4 );
     }
+#endif
+/*
+#ifdef UNUSED
+*/
+    iBLContext.fillPath ( mPath );
+/*
+#endif
+*/
 }
 
 void
@@ -387,71 +406,60 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
     FVec2D& ctrlPoint0 = mCtrlPoint[0].GetCoords();
     FVec2D& ctrlPoint1 = mCtrlPoint[1].GetCoords();
     FVec2D sampleTangent[2] = { CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iFromT ),
-                                CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, iToT   ) };
+                                CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, ( iToT == 1.0f ) ? 0.999f : iToT   ) };
     static FVec2D zeroVector = { 0.0f, 0.0f };
     FPolygon* cachedPolygon = &mPolygonCache[iPolygonID];
 
-    if ( ( sampleTangent[0] != zeroVector ) &&  ( sampleTangent[1] != zeroVector ) )
+    // Note: no need to normalize sampleTangent[] vectors. The averaging won't be any different than with a normalized version.
+    FVec2D parallelVecFrom[2] = { *iPrevSegmentVector, sampleTangent[0]    };
+    FVec2D   parallelVecTo[2] = { sampleTangent[1]   , *iNextSegmentVector };
+    FVec2D averageVecFrom = ( parallelVecFrom[0] + parallelVecFrom[1] ) * 0.5f;
+    FVec2D averageVecTo   = (   parallelVecTo[0] +   parallelVecTo[1] ) * 0.5f;
+    FVec2D perpendicularVecFrom = { averageVecFrom.y, -averageVecFrom.x };
+    FVec2D perpendicularVecTo = { averageVecTo.y, -averageVecTo.x };
+    /*int prevPolygonID = iPolygonID - 1;*/
+
+    if ( perpendicularVecFrom.DistanceSquared() && perpendicularVecTo.DistanceSquared() )
     {
-        // Note: no need to normalize sampleTangent[] vectors. The averaging won't be any different than with a normalized version.
-        FVec2D parallelVecFrom[2] = { *iPrevSegmentVector, sampleTangent[0]    };
-        FVec2D   parallelVecTo[2] = { sampleTangent[1]   , *iNextSegmentVector };
-        FVec2D averageVecFrom = ( parallelVecFrom[0] + parallelVecFrom[1] ) * 0.5f;
-        FVec2D averageVecTo   = (   parallelVecTo[0] +   parallelVecTo[1] ) * 0.5f;
-        FVec2D perpendicularVecFrom = { averageVecFrom.y, -averageVecFrom.x };
-        FVec2D perpendicularVecTo = { averageVecTo.y, -averageVecTo.x };
-        int prevPolygonID = iPolygonID - 1;
-
-        if ( perpendicularVecFrom.DistanceSquared() && perpendicularVecTo.DistanceSquared() )
-        {
-            perpendicularVecFrom.Normalize();
-            perpendicularVecTo.Normalize();
-        }
-
-        perpendicularVecFrom *= iStartRadius;
-        perpendicularVecTo *= iEndRadius;
-
-        if ( prevPolygonID >= 0 ) {
-            FPolygon* prevCachedPolygon = &mPolygonCache[prevPolygonID];
-
-            cachedPolygon->quadVertex[0].x = prevCachedPolygon->quadVertex[1].x;
-            cachedPolygon->quadVertex[0].y = prevCachedPolygon->quadVertex[1].y;
-
-            cachedPolygon->quadVertex[1].x = iToPoint.x + perpendicularVecTo.x;
-            cachedPolygon->quadVertex[1].y = iToPoint.y + perpendicularVecTo.y;
-
-            cachedPolygon->quadVertex[2].x = iToPoint.x - perpendicularVecTo.x;
-            cachedPolygon->quadVertex[2].y = iToPoint.y - perpendicularVecTo.y;
-
-            cachedPolygon->quadVertex[3].x = prevCachedPolygon->quadVertex[2].x;
-            cachedPolygon->quadVertex[3].y = prevCachedPolygon->quadVertex[2].y;
-        }
-        else
-        {
-            cachedPolygon->quadVertex[0].x = iFromPoint.x + perpendicularVecFrom.x;
-            cachedPolygon->quadVertex[0].y = iFromPoint.y + perpendicularVecFrom.y;
-
-            cachedPolygon->quadVertex[1].x = iToPoint.x + perpendicularVecTo.x;
-            cachedPolygon->quadVertex[1].y = iToPoint.y + perpendicularVecTo.y;
-
-            cachedPolygon->quadVertex[2].x = iToPoint.x - perpendicularVecTo.x;
-            cachedPolygon->quadVertex[2].y = iToPoint.y - perpendicularVecTo.y;
-
-            cachedPolygon->quadVertex[3].x = iFromPoint.x - perpendicularVecFrom.x;
-            cachedPolygon->quadVertex[3].y = iFromPoint.y - perpendicularVecFrom.y;
-        }
-
-        cachedPolygon->lineVertex[0].x = iFromPoint.x;
-        cachedPolygon->lineVertex[0].y = iFromPoint.y;
-
-        cachedPolygon->lineVertex[1].x = iToPoint.x;
-        cachedPolygon->lineVertex[1].y = iToPoint.y;
-
-        cachedPolygon->fromT = iFromT;
-        cachedPolygon->toT = iToT;
+        perpendicularVecFrom.Normalize();
+        perpendicularVecTo.Normalize();
     }
 
-    /*printf("cached polygon: %f %f\n", cachedPolygon->fromT, cachedPolygon->toT );*/
+    perpendicularVecFrom *= iStartRadius;
+    perpendicularVecTo *= iEndRadius;
+
+    cachedPolygon->quadVertex[0].x = iFromPoint.x + perpendicularVecFrom.x;
+    cachedPolygon->quadVertex[0].y = iFromPoint.y + perpendicularVecFrom.y;
+
+    cachedPolygon->quadVertex[1].x = iToPoint.x + perpendicularVecTo.x;
+    cachedPolygon->quadVertex[1].y = iToPoint.y + perpendicularVecTo.y;
+
+    cachedPolygon->quadVertex[2].x = iToPoint.x - perpendicularVecTo.x;
+    cachedPolygon->quadVertex[2].y = iToPoint.y - perpendicularVecTo.y;
+
+    cachedPolygon->quadVertex[3].x = iFromPoint.x - perpendicularVecFrom.x;
+    cachedPolygon->quadVertex[3].y = iFromPoint.y - perpendicularVecFrom.y;
+
+    cachedPolygon->lineVertex[0].x = iFromPoint.x;
+    cachedPolygon->lineVertex[0].y = iFromPoint.y;
+
+    cachedPolygon->lineVertex[1].x = iToPoint.x;
+    cachedPolygon->lineVertex[1].y = iToPoint.y;
+
+    cachedPolygon->fromT = iFromT;
+    cachedPolygon->toT = iToT;
+
+/*printf("cached polygon: %d - %f %f - %f %f - %f %f - %f %f - %f %f\n", iPolygonID
+                                                                , cachedPolygon->quadVertex[0].x
+                                                                , cachedPolygon->quadVertex[0].y
+                                                                , cachedPolygon->quadVertex[1].x
+                                                                , cachedPolygon->quadVertex[1].y
+                                                                , cachedPolygon->quadVertex[2].x
+                                                                , cachedPolygon->quadVertex[2].y
+                                                                , cachedPolygon->quadVertex[3].x
+                                                                , cachedPolygon->quadVertex[3].y
+                                                                , cachedPolygon->fromT
+                                                                , cachedPolygon->toT );*/
 }
 
 void
@@ -496,10 +504,16 @@ FVectorSegmentCubic::BuildVariableAdaptive( double  iFromT
         double subTanDistanceSquared = subTangent[i].DistanceSquared();
         double subSegDistanceSquared = subSegment[i].DistanceSquared();
 
-        if( subTanDistanceSquared && subSegDistanceSquared )
+
+
+        if( /*subTanDistanceSquared &&*/ subSegDistanceSquared )
         {
             // Note: must be normalized in order to get a correct value for the dot product
-            subTangent[i].Normalize();
+            if ( subTanDistanceSquared )
+            {
+                subTangent[i].Normalize();
+            }
+
             subSegment[i].Normalize();
 
             if( subTangent[i].DotProduct( subSegment[i] ) <= angleCosineLimit )
@@ -600,4 +614,26 @@ FVectorSegmentCubic::BuildVariable()
                           , 8
                           , &polygonID );
 
+    if ( mPolygonCache.size() )
+    {
+        mPath.clear();
+
+        mPath.moveTo ( mPolygonCache[0].quadVertex[0].x
+                     , mPolygonCache[0].quadVertex[0].y );
+
+        for ( int i = 0; i < mPolygonCache.size(); i++ )
+        {
+            mPath.lineTo ( mPolygonCache[i].quadVertex[1].x
+                         , mPolygonCache[i].quadVertex[1].y );
+        }
+
+        for ( int i = mPolygonCache.size(); --i >= 0; )
+        {
+            mPath.lineTo ( mPolygonCache[i].quadVertex[2].x
+                         , mPolygonCache[i].quadVertex[2].y );
+        }
+
+        mPath.lineTo ( mPolygonCache[0].quadVertex[3].x
+                     , mPolygonCache[0].quadVertex[3].y );
+    }
 }

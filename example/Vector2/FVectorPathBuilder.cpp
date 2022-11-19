@@ -7,14 +7,179 @@ FVectorPathBuilder::~FVectorPathBuilder()
 }
 
 FVectorPathBuilder::FVectorPathBuilder( FVectorPathCubic* iCubicPath )
+    : mCubicPath ( iCubicPath )
+    , mCumulAngle ( 0.0f )
+    , mLastCubicAngle ( 0.0f )
+    , mCumulAngleLimit ( 1.5708f ) /* 90 degrees */
+    , mLastCubicAngleLimit ( 0.785398f ) /* 45 degrees */
 {
-    mCubicPath = iCubicPath;
-    mLastSmoothedSegmentVector.x = 0.0f;
-    mLastSmoothedSegmentVector.y = 0.0f;
-    mLastSmoothedSegmentVectorDistance = 0.0f;
-    mLastSmoothedAngle = 0.0f;
+    mStrokeColor = 0xFF808080;
 }
 
+FVectorSegment*
+FVectorPathBuilder::GetLastSampleSegment()
+{
+    if( mSampleSegmentList.size() == 0 ) return nullptr;
+
+    return mSampleSegmentList.back();
+}
+
+FVectorPoint*
+FVectorPathBuilder::GetLastSamplePoint()
+{
+    if( mSamplePointList.size() == 0 ) return nullptr;
+
+    return mSamplePointList.back();
+}
+
+void
+FVectorPathBuilder::Round( FVectorSegmentCubic& cubicSegment
+                         , FVec2D iFirstVector
+                         , FVec2D iLastVector
+                         , FVectorSegmentCubic* iLastCubicSegment
+                         , double iLastCubicAngle )
+{
+    double segmentLength = cubicSegment.GetStraightDistance();
+
+    if ( iLastCubicAngle < mLastCubicAngleLimit )
+    {
+        if ( iLastCubicSegment )
+        {
+            FVec2D lastCubicSegmentVector = iLastCubicSegment->GetVector( true );
+            FVec2D  cubicSegmentVector = cubicSegment.GetVector(  true );
+            FVec2D averageVector = lastCubicSegmentVector + cubicSegmentVector;
+            double length = iLastCubicSegment->GetStraightDistance();
+
+            if ( averageVector.DistanceSquared() )
+            {
+                averageVector.Normalize();
+
+                iLastCubicSegment->GetControlPoint(1).SetX( iLastCubicSegment->GetPoint(1)->GetX() - ( averageVector.x * length * 0.35f ) );
+                iLastCubicSegment->GetControlPoint(1).SetY( iLastCubicSegment->GetPoint(1)->GetY() - ( averageVector.y * length * 0.35f ) );
+
+                iFirstVector.x = averageVector.x;
+                iFirstVector.y = averageVector.y;
+
+                iLastCubicSegment->Update();
+            }
+        }
+    }
+
+    cubicSegment.GetControlPoint(0).Set( cubicSegment.GetPoint(0)->GetX() + ( iFirstVector.x * segmentLength * 0.35f )
+                                       , cubicSegment.GetPoint(0)->GetY() + ( iFirstVector.y * segmentLength * 0.35f ) );
+
+    cubicSegment.GetControlPoint(1).Set( cubicSegment.GetPoint(1)->GetX() + ( iLastVector.x  * segmentLength * 0.35f )
+                                       , cubicSegment.GetPoint(1)->GetY() + ( iLastVector.y  * segmentLength * 0.35f ) );
+
+    cubicSegment.Update();
+}
+
+FVectorSegmentCubic*
+FVectorPathBuilder::Sample( FVectorPoint* iSamplePoint, double iRadius, bool iEnforce )
+{
+    FVectorPoint* lastSamplePoint = GetLastSamplePoint();
+    FVectorSegmentCubic* cubicSegment = nullptr;
+
+    mSamplePointList.push_back( iSamplePoint );
+
+    if ( lastSamplePoint )
+    {
+        FVectorSegment* lastSampleSegment = GetLastSampleSegment();
+        FVectorSegment* sampleSegment = new FVectorSegment ( *this, lastSamplePoint, iSamplePoint );
+
+        mSampleSegmentList.push_back( sampleSegment );
+
+        if ( lastSampleSegment )
+        {
+            FVec2D lastSampleSegmentVector = lastSampleSegment->GetVector( true );
+            FVec2D     sampleSegmentVector =     sampleSegment->GetVector( true );
+            double dot = lastSampleSegmentVector.DotProduct( sampleSegmentVector );
+            double angle = acos( ULIS::FMath::Clamp<double>( dot, -1.0f, 1.0f ) );
+
+            mCumulAngle += angle;
+
+            if (/* ( abs(angle) > 0.785398f )*/ /* 45 degrees */ /*||*/ ( mCumulAngle >= mCumulAngleLimit ) || iEnforce )
+            {
+                FVectorSegmentCubic* lastCubicSegment = static_cast<FVectorSegmentCubic*>(mCubicPath->GetLastSegment());
+                FVectorPointCubic* cubicPoint = new FVectorPointCubic( lastSamplePoint->GetX()
+                                                                        , lastSamplePoint->GetY()
+                                                                        , iRadius );
+                FVec2D p0Vector = mSampleSegmentList.front()->GetVector( true );
+                FVec2D p1Vector = - lastSampleSegment->GetVector( true );
+
+                cubicSegment = mCubicPath->AppendPoint( cubicPoint, true, true );
+
+                Round ( *cubicSegment
+                        , p0Vector
+                        , p1Vector
+                        , lastCubicSegment
+                        , mLastCubicAngle );
+
+                mCumulAngle = 0.0f;
+
+                mLastCubicAngle = angle;
+            }
+        }
+    }
+
+    return cubicSegment;
+}
+
+FVectorSegment*
+FVectorPathBuilder::AppendPoint( double iX
+                               , double iY
+                               , double iRadius
+                               , bool   iEnforce )
+{
+    FVectorPoint* point = new FVectorPoint( iX, iY );
+    FVectorSegment* segment = nullptr;
+    FVectorPoint* lastPoint = GetLastPoint();
+
+    segment = FVectorPath::AppendPoint( point, lastPoint );
+
+    if ( lastPoint == nullptr )
+    {
+        FVectorPointCubic* cubicPoint = new FVectorPointCubic( point->GetX()
+                                                             , point->GetY()
+                                                             , iRadius );
+
+        mCubicPath->AppendPoint( cubicPoint, false, false );
+
+        Sample ( point, iRadius, iEnforce );
+    }
+    else
+    {
+        FVectorPoint* lastSamplePoint = GetLastSamplePoint();
+
+        FVec2D dif = { iX - lastSamplePoint->GetX()
+                     , iY - lastSamplePoint->GetY() };
+        double length = dif.Distance();
+
+        if ( length >= 20.0f || iEnforce == true )
+        {
+            FVectorPoint* samplePoint = new FVectorPoint ( iX, iY );
+            FVectorSegmentCubic* cubicSegment = Sample ( samplePoint, iRadius, iEnforce );
+
+            if ( cubicSegment )
+            {
+                mSampleSegmentList.clear();
+                mSamplePointList.clear();
+                mSegmentList.clear();
+                mPointList.clear();
+
+                // TODO, Free memory except for lastSamplePoint
+
+                // restart
+                FVectorPath::AppendPoint( lastSamplePoint, nullptr );
+                Sample ( lastSamplePoint, iRadius, false );
+            }
+        }
+    }
+
+    return segment;
+}
+
+#ifdef OLDVER
 FVectorSegment*
 FVectorPathBuilder::AppendPoint( double iX
                                , double iY
@@ -199,6 +364,7 @@ printf("looping\n");
 
     return NULL;
 }
+#endif
 
 FVectorSegment*
 FVectorPathBuilder::AppendPoint( double iX
@@ -243,7 +409,7 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iR
     iBLContext.setStrokeStyle( BLRgba32( mStrokeColor ) );
     iBLContext.setStrokeWidth( mStrokeWidth );
 
-    for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
     {
         FVectorSegment *segment = (*it);
         BLPoint point0;
@@ -255,8 +421,6 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iR
         point1.x = segment->GetPoint(1)->GetX();
         point1.y = segment->GetPoint(1)->GetY();
 
-        iBLContext.setStrokeStyle( BLRgba32(0xFF000000) );
-
         if( segment->GetPoint(0)->GetSegmentCount() == 1 )
         {
             path.moveTo( point0.x,point0.y );
@@ -264,7 +428,17 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iR
 
         path.lineTo( point1.x,point1.y );
     }
+
     iBLContext.strokePath( path );
+
+    iBLContext.setFillStyle(BLRgba32(0xFFFF00FF));
+
+    for( std::list<FVectorPoint*>::iterator it = mSamplePointList.begin(); it != mSamplePointList.end(); ++it )
+    {
+        FVectorPoint *samplePoint = (*it);
+
+        iBLContext.fillRect( samplePoint->GetX() - 3, samplePoint->GetY() - 3, 6, 6  );
+    }
 }
 
 bool

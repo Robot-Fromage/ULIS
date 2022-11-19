@@ -24,7 +24,7 @@ class FVectorPath : public FVectorObject
         ~FVectorPath();
         FVectorPath();
         FVectorPath( std::string iName );
-        FVectorSegment* AppendPoint( FVectorPoint* iPoint );
+        virtual FVectorSegment* AppendPoint( FVectorPoint* iPoint, FVectorPoint* iPreviousPoint );
         FVectorObject* PickLoops(BLContext& iBLContext,double iX,double iY,double iRadius);
         void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );

@@ -38,7 +38,7 @@ FVectorPathCubic::AppendPoint( FVectorPointCubic* iPoint
 {
     FVectorPointCubic* lastPoint = static_cast<FVectorPointCubic*>( GetLastPoint() );
 
-    FVectorPath::AppendPoint( iPoint );
+    mPointList.push_back ( iPoint );
 
     if ( iConnect == true )
     {
@@ -572,7 +572,7 @@ FVectorPathCubic::Merge( FVectorPathCubic& iCubicPath )
         lookupTable.insert( std::make_pair( originalPoint, newPoint ) );
 
         // Note: FVectorPath::AppendPoint() does not create any segment
-        FVectorPath::AppendPoint( newPoint );
+        mPointList.push_back ( newPoint );
     }
 
     for( std::list<FVectorSegment*>::iterator it = segmentList.begin(); it != segmentList.end(); ++it )
