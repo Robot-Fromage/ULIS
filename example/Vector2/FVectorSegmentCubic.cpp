@@ -130,14 +130,14 @@ FVec2D FVectorSegmentCubic::GetVectorAtStart( bool iNormalize )
 void
 FVectorSegmentCubic::UpdateBoundingBox ()
 {
-   mBBox.x = ULIS::FMath::Min4<double>( mPoint[0]->GetX() + mPoint[0]->GetRadius()
+   mBBox.x = ULIS::FMath::Min4<double>( mPoint[0]->GetX() - mPoint[0]->GetRadius()
                                       , mCtrlPoint[0].GetX()
-                                      , mPoint[1]->GetX() + mPoint[1]->GetRadius()
+                                      , mPoint[1]->GetX() - mPoint[1]->GetRadius()
                                       , mCtrlPoint[1].GetX() );
 
-   mBBox.y = ULIS::FMath::Min4<double>( mPoint[0]->GetY() + mPoint[0]->GetRadius()
+   mBBox.y = ULIS::FMath::Min4<double>( mPoint[0]->GetY() - mPoint[0]->GetRadius()
                                       , mCtrlPoint[0].GetY()
-                                      , mPoint[1]->GetY() + mPoint[1]->GetRadius()
+                                      , mPoint[1]->GetY() - mPoint[1]->GetRadius()
                                       , mCtrlPoint[1].GetY() );
 
    mBBox.w = ULIS::FMath::Max4<double>( mPoint[0]->GetX() + mPoint[0]->GetRadius()
@@ -384,6 +384,7 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
 #ifdef UNUSED
 */
     iBLContext.fillPath ( mPath );
+    /*iBLContext.strokePath ( mPath );*/
 /*
 #endif
 */

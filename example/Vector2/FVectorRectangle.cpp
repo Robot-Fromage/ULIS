@@ -19,6 +19,14 @@ FVectorRectangle::FVectorRectangle( double iWidth, double iHeight )
 {
 }
 
+FVectorObject*
+FVectorRectangle::CopyShape()
+{
+    FVectorRectangle* rectangleCopy = new FVectorRectangle ( mWidth, mHeight );
+
+    return static_cast<FVectorObject*>( rectangleCopy );
+}
+
 void
 FVectorRectangle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {

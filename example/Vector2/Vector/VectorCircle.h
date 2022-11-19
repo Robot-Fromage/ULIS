@@ -19,4 +19,5 @@ class FVectorCircle : public FVectorObject
         FVectorCircle( double iRadius );
         void SetRadius( double iRadius );
         double GetRadius( );
+        FVectorObject* CopyShape();
 };

@@ -17,6 +17,14 @@ FVectorCircle::FVectorCircle( double iRadius )
     mRadius = iRadius;
 }
 
+FVectorObject*
+FVectorCircle::CopyShape()
+{
+    FVectorCircle* circleCopy = new FVectorCircle ( mRadius );
+
+    return static_cast<FVectorObject*>( circleCopy );
+}
+
 void
 FVectorCircle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 {

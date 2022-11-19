@@ -46,4 +46,6 @@ class FVectorPath : public FVectorObject
         void UpdateShape();
         void InvalidateSegment(FVectorSegment* iSegment);
         void InvalidateLoop( FVectorLoop* iLoop );
+        void UpdateBBox();
+        FVectorObject* CopyShape();
 };

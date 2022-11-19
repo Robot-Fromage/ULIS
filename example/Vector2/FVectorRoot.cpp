@@ -37,6 +37,12 @@ FVectorRoot::Select( BLContext& iBLContext, FVectorObject& iVecObj )
     mSelectedObjectList.push_back( &iVecObj );
 }
 
+FVectorObject*
+FVectorRoot::CopyShape()
+{
+    return new FVectorRoot();
+}
+
 void
 FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
@@ -50,6 +56,21 @@ FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius
         }
 
         Select ( iBLContext, *pickedObject );
+    }
+}
+
+void
+FVectorRoot::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+{
+    for( std::list<FVectorObject*>::iterator it = mSelectedObjectList.begin(); it != mSelectedObjectList.end(); ++it )
+    {
+        FVectorObject *obj = (*it);
+        FRectD bbox = obj->GetBBox( false );
+
+        iBLContext.save();
+        iBLContext.setMatrix( obj->GetWorldMatrix() );
+        iBLContext.strokeRect( bbox.x, bbox.y, bbox.w, bbox.h );
+        iBLContext.restore();
     }
 }
 

@@ -32,6 +32,9 @@ class FVectorObject
         ~FVectorObject();
         FVectorObject();
         FVectorObject( std::string iName );
+        void CopySettings( FVectorObject& iDestinationObject );
+        virtual FVectorObject* Copy() final ;
+        virtual FVectorObject* CopyShape() = 0;
         virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) final; // cannot be overridden
         virtual FVectorObject* Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &roi ) = 0;
@@ -54,6 +57,7 @@ class FVectorObject
         void CopyTransformation( FVectorObject& iObject );
         BLMatrix2D& GetLocalMatrix();
         BLMatrix2D& GetWorldMatrix();
+        BLMatrix2D& GetInverseWorldMatrix();
         std::list<FVectorObject*>& GetChildrenList();
         void SetStrokeColor( uint32 iColor );
         void SetFillColor( uint32 iColor );

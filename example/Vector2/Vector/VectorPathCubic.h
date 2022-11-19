@@ -37,4 +37,5 @@ class FVectorPathCubic: public FVectorPath
         void Fill( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         void Merge( FVectorPathCubic& iCubicPath );
         void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        FVectorObject* CopyShape();
 };

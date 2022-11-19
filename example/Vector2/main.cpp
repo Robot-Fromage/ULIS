@@ -121,6 +121,8 @@ public:
 
     virtual void keyPressEvent( QKeyEvent* event )
     {
+        static FVectorObject* copiedObject;
+
         switch( event->key() )
         {
             case Qt::Key_T:
@@ -142,13 +144,37 @@ public:
 
             case Qt::Key_C :
             {
-                FVectorCircle* circle = new FVectorCircle( 20.0f );
+                if ( QApplication::keyboardModifiers().testFlag( Qt::ControlModifier ) == true )
+                {
+                    FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
 
-                circle->Translate( mQImage->width() / 2, mQImage->height() / 2 );
-                circle->UpdateMatrix( *mBLContext );
+                    if ( selectedObject )
+                    {
+                        if ( copiedObject )
+                        {
+                            delete copiedObject;
+                        }
 
-                mVEngine.GetScene().AddChild( circle );
-                mVEngine.GetScene().Select( *mBLContext, *circle );
+                        copiedObject = selectedObject->Copy();
+                    }
+                }
+            } 
+            break;
+
+            case Qt::Key_V :
+            {
+                if ( QApplication::keyboardModifiers().testFlag( Qt::ControlModifier ) == true )
+                {
+                    if ( copiedObject )
+                    {
+                        FVectorObject* pastedObject =  copiedObject->Copy();
+
+                        mVEngine.GetScene().AddChild( pastedObject );
+                        mVEngine.GetScene().Select( *mBLContext, *pastedObject );
+
+                        pastedObject->UpdateMatrix( *mBLContext );
+                    }
+                }
             } 
             break;
 
@@ -172,7 +198,6 @@ public:
 
             case Qt::Key_Plus:
             {
-                FVectorRectangle* rectangle = new FVectorRectangle(50,80);
                 FVectorRoot& scene = mVEngine.GetScene();
 
                 scene.Scale( scene.GetScalingX() + 0.01f, scene.GetScalingY() + 0.01f );
@@ -182,7 +207,6 @@ public:
 
             case Qt::Key_Minus:
             {
-                FVectorRectangle* rectangle = new FVectorRectangle(50,80);
                 FVectorRoot& scene = mVEngine.GetScene();
 
                 scene.Scale( scene.GetScalingX() - 0.01f, scene.GetScalingY() - 0.01f );
@@ -209,6 +233,38 @@ public:
      virtual void mouseMoveEvent(QMouseEvent* event)
      {
         if ( mTool ) ((*this).*(mTool))( event );
+     }
+
+     void wheelEvent( QWheelEvent *event )
+     {
+         QPoint numPixels = event->pixelDelta();
+         QPoint numDegrees = event->angleDelta() / 8;
+
+         if( !numPixels.isNull() ) {
+             /*scrollWithPixels(numPixels);*/
+         } else if( !numDegrees.isNull() ) {
+             QPoint numSteps = numDegrees / 15;
+             FVectorRoot& scene = mVEngine.GetScene();
+             double step = ( double ) numSteps.y() * 0.05f;
+             BLMatrix2D& worldMatrix = scene.GetWorldMatrix();
+             BLMatrix2D& inverseWorldMatrix = scene.GetInverseWorldMatrix();
+             BLPoint localCoords = inverseWorldMatrix.mapPoint( ( double ) event->x(), ( double ) event->y() );
+
+             scene.Scale( scene.GetScalingX() + step, scene.GetScalingY() + step );
+             scene.UpdateMatrix(*mBLContext);
+
+             BLPoint worldCoords = worldMatrix.mapPoint( localCoords );
+
+             scene.Translate( scene.GetTranslationX() - ( worldCoords.x - ( double ) event->x() )
+                            , scene.GetTranslationY() - ( worldCoords.y - ( double ) event->y() ) );
+             scene.UpdateMatrix(*mBLContext);
+
+             /*scrollWithDegrees(numSteps);*/
+         }
+
+         event->accept();
+
+        update();
      }
 };
 

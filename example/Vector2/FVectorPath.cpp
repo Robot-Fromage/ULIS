@@ -63,6 +63,32 @@ FVectorPath::RemoveLoop( FVectorLoop* iLoop )
     printf("%s: Removing loop\n", __func__ );
 }
 
+FVectorObject*
+FVectorPath::CopyShape()
+{
+    return nullptr;
+}
+
+void
+FVectorPath::UpdateBBox()
+{
+    double x1 = DBL_MAX, y1 = DBL_MAX, x2 = -DBL_MAX, y2 = -DBL_MAX;
+
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
+        FRectD& coords = segment->GetBoundingBox();
+        double rx1 = coords.x, ry1 = coords.y, rx2 = coords.x + coords.w, ry2 = coords.y + coords.h;
+
+        if ( rx1 < x1 ) x1 = rx1;
+        if ( ry1 < y1 ) y1 = ry1;
+        if ( rx2 > x2 ) x2 = rx2;
+        if ( ry2 > y2 ) y2 = ry2;
+    }
+
+    mBBox = TRectangle<double>::FromMinMax( x1, y1, x2, y2 );
+}
+
 void
 FVectorPath::UpdateShape()
 {
@@ -85,6 +111,8 @@ FVectorPath::UpdateShape()
     }
 
     mInvalidatedLoopList.clear();
+
+    UpdateBBox();
 }
 
 void

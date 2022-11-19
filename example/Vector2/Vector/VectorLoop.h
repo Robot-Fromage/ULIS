@@ -44,4 +44,5 @@ class FVectorLoop : public FVectorObject
 
         void Attach();
         void Detach();
+        FVectorObject* CopyShape();
 };

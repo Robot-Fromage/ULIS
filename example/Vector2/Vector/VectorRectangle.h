@@ -23,4 +23,5 @@ class FVectorRectangle : public FVectorObject
         void SetSize( double iWidth, double iHeight );
         double GetWidth();
         double GetHeight();
+        FVectorObject* CopyShape();
 };

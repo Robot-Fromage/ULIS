@@ -16,6 +16,7 @@ class FVectorSegment
         std::list<FVectorPointIntersection*> mIntersectionPointList;
         std::list<FVectorSection*> mSectionList;
         FVectorPath& mPath;
+        FRectD mBBox;
 
     public:
         ~FVectorSegment();
@@ -44,4 +45,6 @@ class FVectorSegment
         void RemoveSection ( FVectorSection* iSection );
         void AddSection ( FVectorSection* iSection );
         FVec2D GetVector( bool iNormalize );
+
+        virtual FRectD& GetBoundingBox() { return mBBox; };
 };

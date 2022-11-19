@@ -554,6 +554,45 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRec
     }
 }
 
+FVectorObject*
+FVectorPathCubic::CopyShape()
+{
+    FVectorPathCubic* cubicPathCopy = new FVectorPathCubic ( );
+    std::map<FVectorPointCubic*, FVectorPointCubic*> lookupTable;
+
+    for( std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it )
+    {
+        FVectorPointCubic* originalPoint = static_cast<FVectorPointCubic*>(*it);
+        FVectorPointCubic* newPoint = new FVectorPointCubic( originalPoint->GetX()
+                                                           , originalPoint->GetY()
+                                                           , originalPoint->GetRadius() );
+
+        lookupTable.insert( std::make_pair( originalPoint, newPoint ) );
+
+        cubicPathCopy->mPointList.push_back ( newPoint );
+    }
+
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegmentCubic* originalSegment = static_cast<FVectorSegmentCubic*>(*it);
+        FVectorPointCubic* point0 = static_cast<FVectorPointCubic*>( originalSegment->GetPoint(0) );
+        FVectorPointCubic* point1 = static_cast<FVectorPointCubic*>( originalSegment->GetPoint(1) );
+        FVectorSegmentCubic* newSegment = new FVectorSegmentCubic( *this
+                                                                 , lookupTable[point0]
+                                                                 , originalSegment->GetControlPoint(0).GetX()
+                                                                 , originalSegment->GetControlPoint(0).GetY()
+                                                                 , originalSegment->GetControlPoint(1).GetX()
+                                                                 , originalSegment->GetControlPoint(1).GetY()
+                                                                 , lookupTable[point1] );
+
+        cubicPathCopy->AddSegment( newSegment );
+
+        newSegment->BuildVariable();
+    }
+
+    return static_cast<FVectorObject*>( cubicPathCopy );
+}
+
 void
 FVectorPathCubic::Merge( FVectorPathCubic& iCubicPath )
 {
@@ -571,7 +610,6 @@ FVectorPathCubic::Merge( FVectorPathCubic& iCubicPath )
 
         lookupTable.insert( std::make_pair( originalPoint, newPoint ) );
 
-        // Note: FVectorPath::AppendPoint() does not create any segment
         mPointList.push_back ( newPoint );
     }
 

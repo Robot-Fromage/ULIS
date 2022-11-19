@@ -21,7 +21,6 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorHandleSegment mCtrlPoint[2];
         std::vector<FPolygon> mPolygonCache;
         double mDistanceSquared;
-        FRectD mBBox;
         BLPath mPath;
 
     private:

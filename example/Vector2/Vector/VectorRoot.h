@@ -23,10 +23,11 @@ class FVectorRoot : public FVectorObject
         void Select( BLContext& iBLContext, FVectorObject& iVecObj );
         void ClearSelection();
         FVectorObject* GetLastSelected();
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) {};
+        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
 
         void Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillColor );
         void InvalidateObject( FVectorObject* iObject );
         void Update();
+        FVectorObject* CopyShape();
 };

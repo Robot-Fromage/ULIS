@@ -13,7 +13,6 @@ class FVectorPathBuilder : public FVectorPath
     private:
         double mCumulAngle;
         double mCumulAngleLimit;
-        double mLastCubicAngle;
         double mLastCubicAngleLimit;
         std::list<FVectorPoint*> mSamplePointList;
         std::list<FVectorSegment*> mSampleSegmentList;
@@ -23,7 +22,7 @@ class FVectorPathBuilder : public FVectorPath
         /*std::list<FVectorPoint*> mSmoothedPointList;*/
         FVectorPathCubic* mCubicPath;
         FVectorSegment* AppendPoint( double iX, double iY, double iRadius, bool iEnforce );
-        void Round( FVectorSegmentCubic& cubicSegment, FVec2D iFirstVector, FVec2D iLastVector, FVectorSegmentCubic* iLastCubicSegment, double iLastCubicAngle );
+        void Round( FVectorSegmentCubic& cubicSegment, FVec2D iFirstVector, FVec2D iLastVector );
 
     public:
        ~FVectorPathBuilder();
@@ -38,4 +37,5 @@ class FVectorPathBuilder : public FVectorPath
         FVectorPathCubic* GetCubicPath( );
         FVectorSegment* GetLastSampleSegment();
         FVectorPoint* GetLastSamplePoint();
+        FVectorObject* CopyShape();
 };

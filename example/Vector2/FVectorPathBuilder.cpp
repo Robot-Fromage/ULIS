@@ -9,9 +9,8 @@ FVectorPathBuilder::~FVectorPathBuilder()
 FVectorPathBuilder::FVectorPathBuilder( FVectorPathCubic* iCubicPath )
     : mCubicPath ( iCubicPath )
     , mCumulAngle ( 0.0f )
-    , mLastCubicAngle ( 0.0f )
     , mCumulAngleLimit ( 1.5708f ) /* 90 degrees */
-    , mLastCubicAngleLimit ( 0.785398f ) /* 45 degrees */
+    , mLastCubicAngleLimit ( 2.35619f ) /* 135 degrees */
 {
     mStrokeColor = 0xFF808080;
 }
@@ -32,35 +31,43 @@ FVectorPathBuilder::GetLastSamplePoint()
     return mSamplePointList.back();
 }
 
+FVectorObject*
+FVectorPathBuilder::CopyShape()
+{
+    return nullptr;
+}
+
 void
 FVectorPathBuilder::Round( FVectorSegmentCubic& cubicSegment
                          , FVec2D iFirstVector
-                         , FVec2D iLastVector
-                         , FVectorSegmentCubic* iLastCubicSegment
-                         , double iLastCubicAngle )
+                         , FVec2D iLastVector )
 {
+    FVectorSegmentCubic* previousCubicSegment = static_cast<FVectorSegmentCubic*>(cubicSegment.GetPreviousSegment());
     double segmentLength = cubicSegment.GetStraightDistance();
 
-    if ( iLastCubicAngle < mLastCubicAngleLimit )
+    if ( previousCubicSegment )
     {
-        if ( iLastCubicSegment )
+        FVec2D previousSegmentVector = previousCubicSegment->GetVectorAtEnd( true );
+        FVec2D cubicSegmentVector = cubicSegment.GetVector( true );
+        double dot = cubicSegmentVector.DotProduct( - previousSegmentVector );
+        double angle = acos( ULIS::FMath::Clamp<double>( dot, -1.0f, 1.0f ) );
+
+        if ( angle > mLastCubicAngleLimit )
         {
-            FVec2D lastCubicSegmentVector = iLastCubicSegment->GetVector( true );
-            FVec2D  cubicSegmentVector = cubicSegment.GetVector(  true );
-            FVec2D averageVector = lastCubicSegmentVector + cubicSegmentVector;
-            double length = iLastCubicSegment->GetStraightDistance();
+            FVec2D averageVector = previousSegmentVector + cubicSegmentVector;
+            double length = previousCubicSegment->GetStraightDistance();
 
             if ( averageVector.DistanceSquared() )
             {
                 averageVector.Normalize();
 
-                iLastCubicSegment->GetControlPoint(1).SetX( iLastCubicSegment->GetPoint(1)->GetX() - ( averageVector.x * length * 0.35f ) );
-                iLastCubicSegment->GetControlPoint(1).SetY( iLastCubicSegment->GetPoint(1)->GetY() - ( averageVector.y * length * 0.35f ) );
+                previousCubicSegment->GetControlPoint(1).SetX( previousCubicSegment->GetPoint(1)->GetX() - ( averageVector.x * length * 0.35f ) );
+                previousCubicSegment->GetControlPoint(1).SetY( previousCubicSegment->GetPoint(1)->GetY() - ( averageVector.y * length * 0.35f ) );
 
                 iFirstVector.x = averageVector.x;
                 iFirstVector.y = averageVector.y;
 
-                iLastCubicSegment->Update();
+                previousCubicSegment->Update();
             }
         }
     }
@@ -100,10 +107,9 @@ FVectorPathBuilder::Sample( FVectorPoint* iSamplePoint, double iRadius, bool iEn
 
             if (/* ( abs(angle) > 0.785398f )*/ /* 45 degrees */ /*||*/ ( mCumulAngle >= mCumulAngleLimit ) || iEnforce )
             {
-                FVectorSegmentCubic* lastCubicSegment = static_cast<FVectorSegmentCubic*>(mCubicPath->GetLastSegment());
                 FVectorPointCubic* cubicPoint = new FVectorPointCubic( lastSamplePoint->GetX()
-                                                                        , lastSamplePoint->GetY()
-                                                                        , iRadius );
+                                                                     , lastSamplePoint->GetY()
+                                                                     , iRadius );
                 FVec2D p0Vector = mSampleSegmentList.front()->GetVector( true );
                 FVec2D p1Vector = - lastSampleSegment->GetVector( true );
 
@@ -111,13 +117,9 @@ FVectorPathBuilder::Sample( FVectorPoint* iSamplePoint, double iRadius, bool iEn
 
                 Round ( *cubicSegment
                         , p0Vector
-                        , p1Vector
-                        , lastCubicSegment
-                        , mLastCubicAngle );
+                        , p1Vector );
 
                 mCumulAngle = 0.0f;
-
-                mLastCubicAngle = angle;
             }
         }
     }

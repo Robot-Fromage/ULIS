@@ -72,6 +72,38 @@ FVectorObject::GetRotation()
     return mRotation;
 }
 
+FVectorObject*
+FVectorObject::Copy() {
+    FVectorObject* objectCopy = CopyShape();
+
+    if ( objectCopy )
+    {
+        CopySettings( *objectCopy );
+    }
+
+    return objectCopy;
+}
+
+void
+FVectorObject::CopySettings( FVectorObject& iDestinationObject )
+{
+    iDestinationObject.mTranslation = mTranslation;
+    iDestinationObject.mRotation = mRotation;
+    iDestinationObject.mScaling = mScaling;
+
+    iDestinationObject.mStrokeColor = mStrokeColor;
+    iDestinationObject.mStrokeWidth = mStrokeWidth;
+    iDestinationObject.mFillColor = mFillColor;
+    iDestinationObject.mIsFilled = mIsFilled;
+
+    iDestinationObject.mBBox = mBBox;
+
+    iDestinationObject.mName = mName;
+    iDestinationObject.mName.append("_Copy");
+
+    /*UpdateMatrix();*/
+}
+
 double
 FVectorObject::GetTranslationX()
 {
@@ -344,4 +376,10 @@ BLMatrix2D&
 FVectorObject::GetWorldMatrix()
 {
     return mWorldMatrix;
+}
+
+BLMatrix2D&
+FVectorObject::GetInverseWorldMatrix()
+{
+    return mInverseWorldMatrix;
 }

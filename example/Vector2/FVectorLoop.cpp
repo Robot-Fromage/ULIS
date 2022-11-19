@@ -40,6 +40,12 @@ FVectorLoop::UpdateShape()
 }
 
 FVectorObject*
+FVectorLoop::CopyShape()
+{
+    return nullptr;
+}
+
+FVectorObject*
 FVectorLoop::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
     /*BLPath path;*/
