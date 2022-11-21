@@ -32,9 +32,12 @@ FVectorRoot::ClearSelection()
 void
 FVectorRoot::Select( BLContext& iBLContext, FVectorObject& iVecObj )
 {
-    iVecObj.SetIsSelected( true );
+    if ( std::find( mSelectedObjectList.begin(), mSelectedObjectList.end(), &iVecObj ) == mSelectedObjectList.end())
+    {
+        iVecObj.SetIsSelected( true );
 
-    mSelectedObjectList.push_back( &iVecObj );
+        mSelectedObjectList.push_back( &iVecObj );
+    }
 }
 
 FVectorObject*
@@ -57,6 +60,50 @@ FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius
 
         Select ( iBLContext, *pickedObject );
     }
+}
+
+FVectorGroup*
+FVectorRoot::GroupSelectdObjects( )
+{
+    FVectorGroup* group = new FVectorGroup();
+    BLPoint averageTranslation = { 0.0f, 0.0f };
+    BLContext& blctx = FVectorEngine::GetBLContext();
+
+    if ( mSelectedObjectList.size() )
+    {
+        for( std::list<FVectorObject*>::iterator it = mSelectedObjectList.begin(); it != mSelectedObjectList.end(); ++it )
+        {
+            FVectorObject *obj = (*it);
+            BLPoint origin = obj->GetWorldMatrix().mapPoint( 0.0f, 0.0f );
+
+            averageTranslation.x += origin.x;
+            averageTranslation.y += origin.y;
+        }
+
+        averageTranslation.x /= mSelectedObjectList.size();
+        averageTranslation.y /= mSelectedObjectList.size();
+
+        averageTranslation = this->GetInverseWorldMatrix().mapPoint ( averageTranslation.x, averageTranslation.y );
+    }
+
+    AddChild ( group );
+
+    group->Translate( averageTranslation.x, averageTranslation.y );
+    group->UpdateMatrix( blctx );
+
+    for( std::list<FVectorObject*>::iterator it = mSelectedObjectList.begin(); it != mSelectedObjectList.end(); ++it )
+    {
+        FVectorObject *obj = (*it);
+
+        obj->GetParent()->RemoveChild( obj );
+
+        group->AddChild( obj );
+    }
+
+    group->UpdateShape();
+
+
+    return group;
 }
 
 void
@@ -124,7 +171,6 @@ FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iObj, double
     BLPoint localSize;
     double localRadius;
     FVectorObject* pickedObject = nullptr;
-    FVectorObject* pickedChild = nullptr;
 
     BLMatrix2D::invert( inverseLocalMatrix, iObj.GetLocalMatrix() );
 

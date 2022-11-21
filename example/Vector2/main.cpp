@@ -64,6 +64,7 @@ public:
     void MyWidget::SelectDeleteObject( bool checked );
     void MyWidget::SelectPanView( bool checked );
     void MyWidget::SelectBucket( bool checked );
+    void MyWidget::SelectGroupObjects( bool checked );
 
     virtual ~MyWidget() {
         delete mQImage; mBLContext->end();
@@ -139,6 +140,28 @@ public:
             case Qt::Key_X :
             {
                 mAction = 2;
+            }
+            break;
+
+            case Qt::Key_Less:
+            {
+                FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
+
+                if( selectedObject )
+                {
+                    selectedObject->MoveBack();
+                }
+            }
+            break;
+
+            case Qt::Key_Greater:
+            {
+                FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
+
+                if( selectedObject )
+                {
+                    selectedObject->MoveFront();
+                }
             }
             break;
 
@@ -281,6 +304,7 @@ public:
 #define DELETE_OBJECT    "Delete Object"
 #define PAN_VIEW         "Pan View"
 #define BUCKET           "Bucket"
+#define GROUP_OBJECTS    "Group Objects"
 
 class MyAction : public QAction {
     public :
@@ -298,6 +322,20 @@ void MyWidget::SelectCreateCircle   ( bool checked ) { mTool = &MyWidget::Create
 void MyWidget::SelectCreateRectangle( bool checked ) { mTool = &MyWidget::CreateRectangle;}
 void MyWidget::SelectPanView        ( bool checked ) { mTool = &MyWidget::PanView        ;}
 void MyWidget::SelectBucket         ( bool checked ) { mTool = &MyWidget::Bucket         ;}
+void MyWidget::SelectGroupObjects   ( bool checked )
+{
+    FVectorGroup* group = mVEngine.GetScene().GroupSelectdObjects();
+
+    mVEngine.GetScene().ClearSelection();
+    mVEngine.GetScene().Select( mVEngine.GetBLContext(), *group );
+
+    /*group->UpdateMatrix( *mBLContext );*/
+
+    /*mVEngine.GetScene().AddChild( group );*/
+
+    update();
+}
+
 void MyWidget::SelectStrokeColor    ( bool checked )
 {
     QColor color = QColorDialog::getColor( Qt::white, this );
@@ -305,7 +343,10 @@ void MyWidget::SelectStrokeColor    ( bool checked )
     {
         FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected() );
 
-        selectedObject->SetStrokeColor( color.rgba() );
+        if ( selectedObject )
+        {
+            selectedObject->SetStrokeColor( color.rgba() );
+        }
     }
 }
 
@@ -316,8 +357,11 @@ void MyWidget::SelectFillColor ( bool checked )
     {
         FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected());
 
-        selectedObject->SetFilled(true);
-        selectedObject->SetFillColor(color.rgba());
+        if( selectedObject )
+        {
+            selectedObject->SetFilled(true);
+            selectedObject->SetFillColor(color.rgba());
+        }
 
         mFillColor = color.rgba(); // save for loop filling
     }
@@ -399,6 +443,8 @@ MyWidget::CreatePath(QEvent *event)
 
         finalRegion = invalidateRegion & mScreen;
 
+        mVEngine.GetScene().Update();
+
        /* mVEngine.InvalidateRegion( finalRegion.x, finalRegion.y, finalRegion.w, finalRegion.h ); */
 
         /*mVEngine.InvalidateRegion(  );*/
@@ -418,9 +464,11 @@ MyWidget::CreatePath(QEvent *event)
 
         cubicPath->UpdateMatrix( *mBLContext );
 
-        mVEngine.GetScene().AddChild( cubicPath );
         mVEngine.GetScene().RemoveChild( currentPathBuilder );
+        mVEngine.GetScene().ClearSelection ( );
         mVEngine.GetScene().Select( *mBLContext, *cubicPath );
+
+        mVEngine.GetScene().Update();
     }
 
     update();
@@ -429,11 +477,15 @@ MyWidget::CreatePath(QEvent *event)
 void
 MyWidget::PickObject( QEvent *event )
 {
-    if(event->type() == QEvent::MouseButtonPress)
+    if( event->type() == QEvent::MouseButtonPress )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>(event);
 
-        mVEngine.GetScene().ClearSelection();
+        if ( QApplication::keyboardModifiers().testFlag( Qt::ControlModifier ) == false )
+        {
+            mVEngine.GetScene().ClearSelection();
+        }
+
         mVEngine.GetScene().Select( *mBLContext, e->x(), e->y(), 10.0f );
 
         update();
@@ -448,35 +500,48 @@ MyWidget::EditPath( QEvent *event )
     if( event->type() == QEvent::MouseButtonPress )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
-        FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mVEngine.GetScene().GetLastSelected() );
-        bool picked = false;
+        FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
 
-        if ( cubicPath )
+        if ( selectedObject )
         {
+            bool picked = false;
 
-            BLPoint localCoords;
-            BLPoint localSize;
-            double localRadius;
-            double radius = 10.0f;
-            double x = e->x();
-            double y = e->y();
+            if ( typeid ( *selectedObject ) == typeid ( FVectorPathCubic ) )
+            {
+                FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( selectedObject );
+                BLPoint localCoords;
+                BLPoint localSize;
+                double localRadius;
+                double radius = 10.0f;
+                double x = e->x();
+                double y = e->y();
+                uint64 selectionFlags = 0;
 
-            BLMatrix2D::invert( inverseWorldMatrix, cubicPath->GetWorldMatrix() );
+                BLMatrix2D::invert( inverseWorldMatrix, cubicPath->GetWorldMatrix() );
 
-            localCoords = inverseWorldMatrix.mapPoint( x, y );
-            localSize   = inverseWorldMatrix.mapPoint( x + radius, 0.0f );
+                localCoords = inverseWorldMatrix.mapPoint( x, y );
+                localSize   = inverseWorldMatrix.mapVector( radius, radius );
 
-            localRadius = localSize.x - localCoords.x;
+                localRadius = sqrt ( ( localSize.x * localSize.x ) + ( localSize.y * localSize.y ) );
 
-            mMouseX = localCoords.x;
-            mMouseY = localCoords.y;
+                mMouseX = localCoords.x;
+                mMouseY = localCoords.y;
 
-            cubicPath->Unselect( nullptr );
+                cubicPath->Unselect( nullptr );
 
-            picked = cubicPath->PickPoint( localCoords.x, localCoords.y, localRadius );
+                if ( QApplication::keyboardModifiers().testFlag( Qt::ControlModifier ) == true )
+                {
+                    selectionFlags = FVectorPath::PICK_HANDLE_POINT;
+                }
+                else
+                {
+                    selectionFlags = FVectorPath::PICK_HANDLE_SEGMENT | FVectorPath::PICK_POINT;
+                }
+
+                picked = cubicPath->PickPoint( localCoords.x, localCoords.y, localRadius, selectionFlags );
+            }
         }
-
-        if ( picked == false )
+        else
         {
             PickObject ( event );
         }
@@ -490,10 +555,11 @@ MyWidget::EditPath( QEvent *event )
     if( event->type() == QEvent::MouseMove )
     {
         QMouseEvent *e = static_cast<QMouseEvent*>( event );
-        FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( mVEngine.GetScene().GetLastSelected() );
+        FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
 
-        if ( cubicPath )
+        if ( selectedObject && ( typeid ( *selectedObject ) == typeid ( FVectorPathCubic ) ) )
         {
+            FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>( selectedObject );
             double radius = 10.0f;
             double x = e->x();
             double y = e->y();
@@ -843,6 +909,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     MyAction *createDeleteObjectAction = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), DELETE_OBJECT    ) );
     MyAction *createPanViewAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), PAN_VIEW         ) );
     MyAction *createBucketAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), BUCKET           ) );
+    MyAction *groupObjectsAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), GROUP_OBJECTS    ) );
 
     connect( createPathAction        , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
     connect( editPathAction          , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
@@ -857,6 +924,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     connect( createDeleteObjectAction, &MyAction::triggered, this, &MyWidget::SelectDeleteObject    );
     connect( createPanViewAction     , &MyAction::triggered, this, &MyWidget::SelectPanView         );
     connect( createBucketAction      , &MyAction::triggered, this, &MyWidget::SelectBucket          );
+    connect( groupObjectsAction      , &MyAction::triggered, this, &MyWidget::SelectGroupObjects    );
 
     /*setAttribute(Qt::WA_OpaquePaintEvent);*/
 
@@ -885,8 +953,8 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     // Configure the number of threads to use.
     /*createInfo.threadCount = 1;*/
 
-    mBLContext = new BLContext();
-    mBLImage = new BLImage(iWidth,iHeight,BL_FORMAT_PRGB32);
+    mBLContext = &FVectorEngine::GetBLContext();
+    mBLImage = new BLImage( iWidth,iHeight,BL_FORMAT_PRGB32 );
     mBLImage->getData( &data );
 
      BLResult result = mBLContext->begin(*mBLImage/*, createInfo*/);

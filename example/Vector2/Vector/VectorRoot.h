@@ -5,6 +5,7 @@
 #include <Core/Core.h>
 #include <Image/Block.h>
 #include "Vector/VectorObject.h"
+#include "Vector/VectorGroup.h"
 
 class FVectorRoot : public FVectorObject
 {
@@ -30,4 +31,5 @@ class FVectorRoot : public FVectorObject
         void InvalidateObject( FVectorObject* iObject );
         void Update();
         FVectorObject* CopyShape();
+        FVectorGroup* GroupSelectdObjects();
 };

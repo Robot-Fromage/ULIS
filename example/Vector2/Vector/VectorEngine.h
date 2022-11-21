@@ -12,7 +12,10 @@ class FVectorEngine
         FVectorRoot mScene;
         FRectD mRoi;
 
+
     public:
+        static BLContext& GetBLContext();
+
         ~FVectorEngine();
         FVectorEngine();
         void Draw( FBlock& iBlock,BLContext& iBLContext );

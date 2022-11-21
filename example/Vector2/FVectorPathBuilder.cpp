@@ -446,21 +446,9 @@ FVectorPathBuilder::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iR
 bool
 FVectorPathBuilder::PickPoint( double iX
                              , double iY
-                             , double iRadius )
+                             , double iRadius
+                             , uint64 iSelectionFlags )
 {
-    for( std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it )
-    {
-        FVectorPoint* point = *it;
-
-        if( ( fabs( point->GetX() - iX ) <= iRadius ) &&
-            ( fabs( point->GetY() - iY ) <= iRadius ) )
-        {
-            mSelectedPointList.push_back( point );
-
-            return true;
-        }
-    }
-
     return false;
 }
 

@@ -14,6 +14,7 @@
 #include "Vector/VectorSegmentCubic.h"
 #include "Vector/VectorRectangle.h"
 #include "Vector/VectorCircle.h"
+#include "Vector/VectorGroup.h"
 #include "Vector/VectorLoop.h"
 #include "Vector/VectorPath.h"
 #include "Vector/VectorPathBuilder.h"

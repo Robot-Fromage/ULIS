@@ -110,60 +110,68 @@ FVectorPathCubic::PickShape( BLContext& iBLContext
 bool
 FVectorPathCubic::PickPoint( double iX
                            , double iY
-                           , double iSelectionRadius )
+                           , double iSelectionRadius
+                           , uint64 iSelectionFlags )
 {
     for(std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it)
     {
         FVectorPointCubic* point = static_cast<FVectorPointCubic*>(*it);
         FVec2D perpendicularVector = point->GetPerpendicularVector( true );
 
-        if( ( fabs( point->GetX() - iX ) <= iSelectionRadius ) &&
-            ( fabs( point->GetY() - iY ) <= iSelectionRadius ) )
+        if ( iSelectionFlags & PICK_POINT )
         {
-            mSelectedPointList.push_back(point);
-
-            return true;
+            if( ( fabs( point->GetX() - iX ) <= iSelectionRadius ) &&
+                ( fabs( point->GetY() - iY ) <= iSelectionRadius ) )
+            {
+                mSelectedPointList.push_back( point );
+            }
         }
 
-        // Pick point handle
-        if( ( fabs( point->GetX() + ( perpendicularVector.x * point->GetRadius() ) - iX ) <= iSelectionRadius ) &&
-            ( fabs( point->GetY() + ( perpendicularVector.y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
+        if( iSelectionFlags & PICK_HANDLE_POINT )
         {
-            mSelectedPointList.push_back( &point->GetControlPoint() );
+            // Pick point handle
+            if( ( fabs( point->GetX() + ( perpendicularVector.x * point->GetRadius() ) - iX ) <= iSelectionRadius ) &&
+                ( fabs( point->GetY() + ( perpendicularVector.y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
+            {
+                mSelectedPointList.push_back( &point->GetControlPoint() );
 
-            return true;
-        }
+                return true;
+            }
 
-        // Pick point handle on the other side
-        if( ( fabs( point->GetX() - ( perpendicularVector.x * point->GetRadius() ) - iX ) <= iSelectionRadius ) &&
-            ( fabs( point->GetY() - ( perpendicularVector.y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
-        {
-            mSelectedPointList.push_back( &point->GetControlPoint() );
+            // Pick point handle on the other side
+            if( ( fabs( point->GetX() - ( perpendicularVector.x * point->GetRadius() ) - iX ) <= iSelectionRadius ) &&
+                ( fabs( point->GetY() - ( perpendicularVector.y * point->GetRadius() ) - iY ) <= iSelectionRadius ) )
+            {
+                mSelectedPointList.push_back( &point->GetControlPoint() );
 
-            return true;
+                return true;
+            }
         }
     }
 
-    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    if( iSelectionFlags & PICK_HANDLE_SEGMENT )
     {
-        FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
-        FVectorPoint& ctrlPoint0 = segment->GetControlPoint( 0 );
-        FVectorPoint& ctrlPoint1 = segment->GetControlPoint( 1 );
-
-        if( ( fabs( ctrlPoint0.GetX() - iX ) <= iSelectionRadius ) &&
-            ( fabs( ctrlPoint0.GetY() - iY ) <= iSelectionRadius ) )
+        for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
         {
-            mSelectedPointList.push_back( &ctrlPoint0 );
+            FVectorSegmentCubic* segment = static_cast<FVectorSegmentCubic*>(*it);
+            FVectorPoint& ctrlPoint0 = segment->GetControlPoint( 0 );
+            FVectorPoint& ctrlPoint1 = segment->GetControlPoint( 1 );
 
-            return true;
-        }
+            if( ( fabs( ctrlPoint0.GetX() - iX ) <= iSelectionRadius ) &&
+                ( fabs( ctrlPoint0.GetY() - iY ) <= iSelectionRadius ) )
+            {
+                mSelectedPointList.push_back( &ctrlPoint0 );
 
-        if( ( fabs( ctrlPoint1.GetX() - iX ) <= iSelectionRadius ) &&
-            ( fabs( ctrlPoint1.GetY() - iY ) <= iSelectionRadius ) )
-        {
-            mSelectedPointList.push_back( &ctrlPoint1 );
+                return true;
+            }
 
-            return true;
+            if( ( fabs( ctrlPoint1.GetX() - iX ) <= iSelectionRadius ) &&
+                ( fabs( ctrlPoint1.GetY() - iY ) <= iSelectionRadius ) )
+            {
+                mSelectedPointList.push_back( &ctrlPoint1 );
+
+                return true;
+            }
         }
     }
 

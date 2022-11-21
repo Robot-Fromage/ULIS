@@ -21,6 +21,10 @@ class FVectorPath : public FVectorObject
         BLPath mPath;
 
     public:
+        static const uint64 PICK_HANDLE_POINT   = 1;
+        static const uint64 PICK_HANDLE_SEGMENT = 1 << 1;
+        static const uint64 PICK_POINT          = 1 << 2;
+
         ~FVectorPath();
         FVectorPath();
         FVectorPath( std::string iName );
@@ -36,7 +40,7 @@ class FVectorPath : public FVectorObject
         FVectorPoint* GetLastPoint();
         FVectorSegment* GetLastSegment();
         std::list<FVectorPoint*>& GetSelectedPointList();
-        virtual bool PickPoint( double iX, double iY, double iRadius ) = 0;
+        virtual bool PickPoint( double iX, double iY, double iRadius, uint64 iSelectionFlags ) = 0;
         virtual void Unselect( FVectorPoint* iPoint ) = 0;
         void Clear();
         bool IsLoop();

@@ -76,9 +76,21 @@ FVectorObject*
 FVectorObject::Copy() {
     FVectorObject* objectCopy = CopyShape();
 
-    if ( objectCopy )
+   // TODO, update matrices once we get a BLContext object
+
+    if( objectCopy )
     {
-        CopySettings( *objectCopy );
+        CopySettings( *objectCopy ); // we need the matrices to properly import the child
+
+        // recurse
+        for( std::list<FVectorObject*>::iterator it = mChildrenList.begin(); it != mChildrenList.end(); ++it )
+        {
+            FVectorObject *child = (*it);
+
+            objectCopy->AddChild( child->Copy() );
+        }
+
+        objectCopy->UpdateShape();
     }
 
     return objectCopy;
@@ -100,6 +112,11 @@ FVectorObject::CopySettings( FVectorObject& iDestinationObject )
 
     iDestinationObject.mName = mName;
     iDestinationObject.mName.append("_Copy");
+
+    iDestinationObject.mLocalMatrix = mLocalMatrix;
+    iDestinationObject.mInverseLocalMatrix = mInverseLocalMatrix;
+    iDestinationObject.mWorldMatrix = mWorldMatrix;
+    iDestinationObject.mInverseWorldMatrix = mInverseWorldMatrix;
 
     /*UpdateMatrix();*/
 }
@@ -265,15 +282,6 @@ FVectorObject::GetRoot()
 }
 
 void
-FVectorObject::MoveBack()
-{
-    /*if ( mParent )
-    {
-        mParent->
-    }*/
-}
-
-void
 FVectorObject::SetParent( FVectorObject* iObject )
 {
     mParent = iObject;
@@ -300,16 +308,107 @@ FVectorObject::GetParent()
     return mParent;
 }
 
+void
+FVectorObject::MoveBack()
+{
+    if ( mParent )
+    {
+        std::list<FVectorObject*>::iterator it1 = mParent->mChildrenList.begin();
+        std::list<FVectorObject*>::iterator it2 = it1++;
+
+        if ( mParent->mChildrenList.size() )
+        {
+            for( ; it1 != mParent->mChildrenList.end(); it1++, it2++ )
+            {
+                FVectorObject *child = static_cast<FVectorObject*>(*it1);
+
+                if ( this == child )
+                {
+                    std::swap(*it1, *it2);
+
+                    return;
+                }
+            }
+        }
+    } 
+}
+
+void
+FVectorObject::MoveFront()
+{
+    if ( mParent )
+    {
+        std::list<FVectorObject*>::iterator it2 = mParent->mChildrenList.begin();
+        std::list<FVectorObject*>::iterator it1 = it2++;
+
+        if ( mParent->mChildrenList.size() )
+        {
+            for( ; it2 != mParent->mChildrenList.end(); it1++, it2++ )
+            {
+                FVectorObject *child = static_cast<FVectorObject*>(*it1);
+
+                if ( this == child )
+                {
+                    std::swap(*it1, *it2);
+
+                    return;
+                }
+            }
+        }
+    } 
+}
+
 FVectorObject*
 FVectorObject::Pick( BLContext& iBLContext, double iX, double iY, double iRadius )
 {
+    if ( this->mParent )
+    {
+        if ( typeid ( *this->mParent ) == typeid ( FVectorGroup ) )
+        {
+            return this->mParent;
+        }
+    }
+
     return PickShape( iBLContext, iX, iY, iRadius );
+}
+
+void
+FVectorObject::ExtractTransformations( BLMatrix2D &iMatrix
+                                     , FVec2D* iTranslation
+                                     , double* iRotation
+                                     , FVec2D* iScaling )
+{
+    if( iTranslation )
+    {
+        iTranslation->x = iMatrix.m20;
+        iTranslation->y = iMatrix.m21;
+    }
+
+    if( iRotation )
+    {
+        *iRotation = atan( iMatrix.m01  / iMatrix.m11 );
+    }
+
+    if( iScaling )
+    {
+        iScaling->x = sqrt( ( iMatrix.m00 * iMatrix.m00 ) + ( iMatrix.m01 * iMatrix.m01 ) );
+        iScaling->y = sqrt( ( iMatrix.m10 * iMatrix.m10 ) + ( iMatrix.m11 * iMatrix.m11 ) );
+    }
 }
 
 void
 FVectorObject::AddChild( FVectorObject* iChild )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
+    BLMatrix2D localMatrix = this->GetInverseWorldMatrix();
+
     iChild->mParent = this;
+
+    localMatrix.transform( iChild->GetWorldMatrix() );
+
+    ExtractTransformations ( localMatrix, &iChild->mTranslation, &iChild->mRotation, &iChild->mScaling );
+
+    iChild->UpdateMatrix( blctx );
 
     mChildrenList.push_back( iChild );
 }

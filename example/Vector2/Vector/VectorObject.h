@@ -47,6 +47,8 @@ class FVectorObject
         void Scale( double iX, double iY );
         void AddChild( FVectorObject* iChild );
         void RemoveChild( FVectorObject* iChild );
+        void ImportChild( FVectorObject* iChild, BLMatrix2D& iInverseWorldMatrix );
+        static void ExtractTransformations( BLMatrix2D &iMatrix, FVec2D* iTranslation, double* iRotation, FVec2D* iScaling );
         double GetScalingX();
         double GetScalingY();
         double GetTranslationX();

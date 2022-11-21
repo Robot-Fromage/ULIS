@@ -11,6 +11,19 @@ FVectorEngine::FVectorEngine()
 
 }
 
+BLContext&
+FVectorEngine::GetBLContext()
+{
+    static BLContext* blctx;
+
+    if ( blctx == nullptr )
+    {
+        blctx = new BLContext();
+    }
+
+    return *blctx;
+}
+
 FRectD&
 FVectorEngine::GetInvalidateRegion()
 {
