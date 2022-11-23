@@ -10,9 +10,10 @@
 class FVectorPathCubic: public FVectorPath
 {
     private:
-        static const uint32 JOINT_TYPE_RADIAL = 0;
-        static const uint32 JOINT_TYPE_LINEAR = 1;
-        static const uint32 JOINT_TYPE_NONE   = 2;
+        static const uint32 JOINT_TYPE_NONE   = 0;
+        static const uint32 JOINT_TYPE_RADIAL = 1;
+        static const uint32 JOINT_TYPE_LINEAR = 2;
+        static const uint32 JOINT_TYPE_MITER  = 3;
 
         void DrawJoint( FBlock& iBlock
                       , BLContext& iBLContext
@@ -21,21 +22,28 @@ class FVectorPathCubic: public FVectorPath
                       , double iRadius );
 
         uint32 mJointType;
-        
+
+        FVectorObject* CopyShape();
+        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+
     public:
         FVectorPathCubic();
         FVectorPathCubic( std::string iName );
         FVectorSegmentCubic* AppendPoint( FVectorPointCubic* iPoint, bool iConnect, bool iBuildSegments );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+
         bool PickPoint ( double iX, double iY, double iRadius, uint64 iSelectionFlags );
         void Unselect( FVectorPoint* iPoint );
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+
         void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         void setJointRadial();
         void setJointLinear();
+        void setJointMiter();
         void setJointNone();
         void Fill( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         void Merge( FVectorPathCubic& iCubicPath );
         void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
-        FVectorObject* CopyShape();
+
+        void Mirror( bool iMirrorX, bool iMirrorY );
+        void Cut( FVec2D& linePoint0, FVec2D& linePoint1 );
 };

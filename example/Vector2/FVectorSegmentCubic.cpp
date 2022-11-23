@@ -215,6 +215,67 @@ FVectorSegmentCubic::GetDistanceSquared()
     return mDistanceSquared;
 }
 
+bool
+FVectorSegmentCubic::Cut( FVec2D& linePoint0
+                        , FVec2D& linePoint1 )
+{
+    FVec2D& point0 = mPoint[0]->GetCoords();
+    FVec2D& point1 = mPoint[1]->GetCoords();
+    FVec2D& ctrlPoint0 = mCtrlPoint[0].GetCoords();
+    FVec2D& ctrlPoint1 = mCtrlPoint[1].GetCoords();
+    // we'll have 3 intersections at most.
+    FVectorPoint* pointChain[5] = { mPoint[0], nullptr, nullptr, nullptr, nullptr };
+    uint32 pointCount = 1;
+
+    for( int i = 0; i < mPolygonCache.size(); i++ )
+    {
+        FPolygon* poly = &mPolygonCache[i];
+        double polySubT, interPolySubT;
+
+        if ( intersection ( poly->lineVertex[0]
+                          , poly->lineVertex[1]
+                          , linePoint0
+                          , linePoint1
+                          , &polySubT
+                          , &interPolySubT ) )
+        {
+            double segmentT = poly->fromT + ( polySubT * ( poly->toT - poly->fromT ) );
+            FVec2D pointAt = CubicBezierPointAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, segmentT );
+            FVectorPointCubic* newCubicPoint = new FVectorPointCubic( pointAt.x, pointAt.y );
+
+            newCubicPoint->SetRadius( ( mPoint[0]->GetRadius() * segmentT ) + ( mPoint[1]->GetRadius() * ( 1.0f - segmentT ) ), false );
+
+            pointChain[pointCount++] = newCubicPoint; 
+        }
+    }
+
+    if ( pointCount > 1 )
+    {
+        pointChain[pointCount] = mPoint[1];
+
+        mPath.RemoveSegment( this );
+
+        for( int i = 1; i < pointCount; i++ )
+        {
+            mPath.AddPoint( pointChain[i] );
+        }
+
+        for( int i = 0; i < pointCount; i++ )
+        {
+            uint32 n = i + 1;
+            FVectorSegmentCubic* segment = new FVectorSegmentCubic ( static_cast<FVectorPathCubic&>(mPath)
+                                                                   , static_cast<FVectorPointCubic*>(pointChain[i])
+                                                                   , static_cast<FVectorPointCubic*>(pointChain[n]) );
+
+            mPath.AddSegment( segment );
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 void
 FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
 {
@@ -383,8 +444,8 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
 /*
 #ifdef UNUSED
 */
-    iBLContext.fillPath ( mPath );
-    /*iBLContext.strokePath ( mPath );*/
+    iBLContext.strokePath ( mBLPath );
+    iBLContext.fillPath ( mBLPath );
 /*
 #endif
 */
@@ -449,8 +510,8 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
 
     cachedPolygon->fromT = iFromT;
     cachedPolygon->toT = iToT;
-
-/*printf("cached polygon: %d - %f %f - %f %f - %f %f - %f %f - %f %f\n", iPolygonID
+/*
+printf("cached polygon: %d - %f %f - %f %f - %f %f - %f %f - %f %f\n", iPolygonID
                                                                 , cachedPolygon->quadVertex[0].x
                                                                 , cachedPolygon->quadVertex[0].y
                                                                 , cachedPolygon->quadVertex[1].x
@@ -460,7 +521,8 @@ FVectorSegmentCubic::BuildVariableThickness( double iFromT
                                                                 , cachedPolygon->quadVertex[3].x
                                                                 , cachedPolygon->quadVertex[3].y
                                                                 , cachedPolygon->fromT
-                                                                , cachedPolygon->toT );*/
+                                                                , cachedPolygon->toT );
+*/
 }
 
 void
@@ -617,24 +679,26 @@ FVectorSegmentCubic::BuildVariable()
 
     if ( mPolygonCache.size() )
     {
-        mPath.clear();
+        mBLPath.clear();
 
-        mPath.moveTo ( mPolygonCache[0].quadVertex[0].x
-                     , mPolygonCache[0].quadVertex[0].y );
+        mBLPath.moveTo ( mPolygonCache[0].quadVertex[0].x
+                       , mPolygonCache[0].quadVertex[0].y );
 
         for ( int i = 0; i < mPolygonCache.size(); i++ )
         {
-            mPath.lineTo ( mPolygonCache[i].quadVertex[1].x
-                         , mPolygonCache[i].quadVertex[1].y );
+            mBLPath.lineTo ( mPolygonCache[i].quadVertex[1].x
+                           , mPolygonCache[i].quadVertex[1].y );
         }
 
         for ( int i = mPolygonCache.size(); --i >= 0; )
         {
-            mPath.lineTo ( mPolygonCache[i].quadVertex[2].x
-                         , mPolygonCache[i].quadVertex[2].y );
+            mBLPath.lineTo ( mPolygonCache[i].quadVertex[2].x
+                           , mPolygonCache[i].quadVertex[2].y );
         }
 
-        mPath.lineTo ( mPolygonCache[0].quadVertex[3].x
-                     , mPolygonCache[0].quadVertex[3].y );
+        mBLPath.lineTo ( mPolygonCache[0].quadVertex[3].x
+                       , mPolygonCache[0].quadVertex[3].y );
+
+        mBLPath.close();
     }
 }

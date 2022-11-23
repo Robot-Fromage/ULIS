@@ -21,7 +21,7 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorHandleSegment mCtrlPoint[2];
         std::vector<FPolygon> mPolygonCache;
         double mDistanceSquared;
-        BLPath mPath;
+        BLPath mBLPath;
 
     private:
         void BuildVariableAdaptive( double  iFromT
@@ -68,4 +68,5 @@ class FVectorSegmentCubic : public FVectorSegment
         void BuildVariable();
         double GetDistanceSquared();
         FVec2D GetPointAt(double t);
+        bool Cut( FVec2D& linePoint0, FVec2D& linePoint1 );
 };

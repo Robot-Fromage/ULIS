@@ -9,6 +9,10 @@
 class FVectorGroup : public FVectorObject
 {
     private:
+        void DrawShape(FBlock& iBlock,BLContext& iBLContext,FRectD& iRoi) { };
+        FVectorObject* PickShape(BLContext& iBLContext,double iX,double iY,double iRadius);
+        FVectorObject* CopyShape();
+        void UpdateShape();
 
     protected:
 
@@ -16,9 +20,4 @@ class FVectorGroup : public FVectorObject
         ~FVectorGroup();
         FVectorGroup();
         FVectorGroup( std::string iName );
-
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) { };
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
-        FVectorObject* CopyShape();
-        void UpdateShape();
 };

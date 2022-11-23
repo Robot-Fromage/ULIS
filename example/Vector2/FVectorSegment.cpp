@@ -13,7 +13,7 @@ FVectorSegment::FVectorSegment( FVectorPath& iPath
     mPoint[0] = iPoint0;
     mPoint[1] = iPoint1;
 
-    AddSection ( new FVectorSection ( *this, mPoint[0], mPoint[1] ) );
+    /*AddSection ( new FVectorSection ( *this, mPoint[0], mPoint[1] ) );*/
 }
 
 FVectorPoint*
@@ -161,7 +161,6 @@ FVectorSegment::Invalidate()
     }
 
     mPath.InvalidateSegment( this );
-    mPath.Invalidate();
 }
 
 double

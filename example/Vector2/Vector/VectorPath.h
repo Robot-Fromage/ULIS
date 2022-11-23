@@ -9,6 +9,12 @@
 
 class FVectorPath : public FVectorObject
 {
+    private:
+        void UpdateShape();
+        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
+        FVectorObject* CopyShape();
+
     protected :
         std::list<FVectorLoop*> mLoopList; // list of loops
         std::list<FVectorPoint*> mPointList;
@@ -16,8 +22,6 @@ class FVectorPath : public FVectorObject
         std::list<FVectorSegment*> mInvalidatedSegmentList;
         std::list<FVectorLoop*> mInvalidatedLoopList;
         std::list<FVectorPoint*> mSelectedPointList;
-        void AddSegment( FVectorSegment* iSegment );
-        void RemoveSegment( FVectorSegment* iSegment );
         BLPath mPath;
 
     public:
@@ -28,16 +32,20 @@ class FVectorPath : public FVectorObject
         ~FVectorPath();
         FVectorPath();
         FVectorPath( std::string iName );
+        void AddSegment(FVectorSegment* iSegment);
+        void RemoveSegment(FVectorSegment* iSegment);
+        void AddPoint( FVectorPoint* iPoint );
         virtual FVectorSegment* AppendPoint( FVectorPoint* iPoint, FVectorPoint* iPreviousPoint );
         FVectorObject* PickLoops(BLContext& iBLContext,double iX,double iY,double iRadius);
         void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+
         virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
+
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         std::list<FVectorSegment*>& GetSegmentList();
         FVectorPoint* GetFirstPoint();
         FVectorPoint* GetLastPoint();
+        FVectorSegment* GetFirstSegment();
         FVectorSegment* GetLastSegment();
         std::list<FVectorPoint*>& GetSelectedPointList();
         virtual bool PickPoint( double iX, double iY, double iRadius, uint64 iSelectionFlags ) = 0;
@@ -47,9 +55,9 @@ class FVectorPath : public FVectorObject
         FVectorLoop* GetLoopByID( uint64 iID );
         void AddLoop( FVectorLoop* iLoop );
         void RemoveLoop( FVectorLoop* iLoop );
-        void UpdateShape();
+
         void InvalidateSegment(FVectorSegment* iSegment);
         void InvalidateLoop( FVectorLoop* iLoop );
         void UpdateBBox();
-        FVectorObject* CopyShape();
+
 };

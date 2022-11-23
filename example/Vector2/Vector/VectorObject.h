@@ -25,6 +25,7 @@ class FVectorObject
         FVectorObject* mParent;
         bool mIsFilled;
         bool mIsSelected;
+        bool mIsInvalidated;
         FRectD mBBox;
         std::string mName;
 
@@ -33,11 +34,13 @@ class FVectorObject
         FVectorObject();
         FVectorObject( std::string iName );
         void CopySettings( FVectorObject& iDestinationObject );
-        virtual FVectorObject* Copy() final ;
+        virtual void Update() final ; // cannot be overridden
+        virtual void UpdateShape() = 0;
+        virtual FVectorObject* Copy() final ; // cannot be overridden
         virtual FVectorObject* CopyShape() = 0;
         virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) final; // cannot be overridden
-        virtual FVectorObject* Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
         virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &roi ) = 0;
+        virtual FVectorObject* Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
         virtual FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) = 0;
         /*virtual void UpdateBoundingBox() = 0;*/
         void DrawChildren( FBlock& iBlock,BLContext& iBLContext, FRectD& iRoi );
@@ -45,7 +48,9 @@ class FVectorObject
         void Translate( double iX, double iY );
         void Rotate( double iAngle );
         void Scale( double iX, double iY );
-        void AddChild( FVectorObject* iChild );
+        void PrependChild( FVectorObject* iChild );
+        void AppendChild( FVectorObject* iChild );
+        void AddChild( FVectorObject* iChild, bool iPrepend );
         void RemoveChild( FVectorObject* iChild );
         void ImportChild( FVectorObject* iChild, BLMatrix2D& iInverseWorldMatrix );
         static void ExtractTransformations( BLMatrix2D &iMatrix, FVec2D* iTranslation, double* iRotation, FVec2D* iScaling );
@@ -72,7 +77,8 @@ class FVectorObject
         bool IsFilled();
         void MoveBack();
         void MoveFront();
-        virtual void UpdateShape() { };
         void Invalidate();
         FVectorRoot* GetRoot();
+        bool IsInvalidated();
+        bool IsSelected();
 };

@@ -15,6 +15,7 @@ FVectorObject::FVectorObject()
     , mParent ( nullptr )
     , mIsFilled ( false )
     , mIsSelected ( false )
+    , mIsInvalidated ( false )
 {
     mLocalMatrix.reset();
     mInverseLocalMatrix.reset();
@@ -26,6 +27,14 @@ FVectorObject::FVectorObject( std::string iName )
     : FVectorObject( )
 {
     mName.assign( iName );
+}
+
+void
+FVectorObject::Update()
+{
+    UpdateShape();
+
+    mIsInvalidated = false;
 }
 
 void
@@ -87,7 +96,7 @@ FVectorObject::Copy() {
         {
             FVectorObject *child = (*it);
 
-            objectCopy->AddChild( child->Copy() );
+            objectCopy->AppendChild( child->Copy() );
         }
 
         objectCopy->UpdateShape();
@@ -249,19 +258,36 @@ FVectorObject::IsFilled()
     return mIsFilled;
 }
 
+bool
+FVectorObject::IsInvalidated()
+{
+    return mIsInvalidated;
+}
+
+bool
+FVectorObject::IsSelected()
+{
+    return mIsSelected;
+}
+
 void
 FVectorObject::Invalidate()
 {
-    FVectorObject* obj = GetRoot();
-
-    if ( obj && ( obj != this ) )
+    if ( mIsInvalidated == false )
     {
-        if ( typeid ( *obj ) == typeid ( FVectorRoot ) )
-        {
-            FVectorRoot* root = static_cast<FVectorRoot*>(obj);
+        FVectorObject* obj = GetRoot();
 
-            root->InvalidateObject( this );
+        if ( obj && ( obj != this ) )
+        {
+            if ( typeid ( *obj ) == typeid ( FVectorRoot ) )
+            {
+                FVectorRoot* root = static_cast<FVectorRoot*>(obj);
+
+                root->InvalidateObject( this );
+            }
         }
+
+        mIsInvalidated = true;
     }
 }
 
@@ -397,7 +423,19 @@ FVectorObject::ExtractTransformations( BLMatrix2D &iMatrix
 }
 
 void
-FVectorObject::AddChild( FVectorObject* iChild )
+FVectorObject::AppendChild( FVectorObject* iChild )
+{
+    AddChild ( iChild, false );
+}
+
+void
+FVectorObject::PrependChild( FVectorObject* iChild )
+{
+    AddChild ( iChild, true );
+}
+
+void
+FVectorObject::AddChild( FVectorObject* iChild, bool iPrepend )
 {
     BLContext& blctx = FVectorEngine::GetBLContext();
     BLMatrix2D localMatrix = this->GetInverseWorldMatrix();
@@ -410,7 +448,14 @@ FVectorObject::AddChild( FVectorObject* iChild )
 
     iChild->UpdateMatrix( blctx );
 
-    mChildrenList.push_back( iChild );
+    if ( iPrepend == true )
+    {
+        mChildrenList.push_front( iChild );
+    }
+    else
+    {
+        mChildrenList.push_back( iChild );
+    }
 }
 
 void

@@ -9,6 +9,9 @@
 class FVectorLoop : public FVectorObject
 {
     private:
+        void UpdateShape();
+        FVectorObject* CopyShape();
+
         void BuildSegmentCubic( std::vector<BLPoint>& iPointArray
                               , FVectorSegmentCubic& iSegment
                               , double iFromT
@@ -32,17 +35,17 @@ class FVectorLoop : public FVectorObject
                                 , std::list<FVectorSection*>& iSectionList );
 
         void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
-        void DrawPoints( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+        void DrawPoints( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+
         void Unselect( FVectorPoint* iPoint ) { };
         bool PickPoint( double iX, double iY, double iRadius ) { return false; };
         uint64 GetID();
         static uint64 GenerateID( std::list<FVectorSection*> iSectionList );
         void Build();
         void Invalidate();
-        void UpdateShape();
 
         void Attach();
         void Detach();
-        FVectorObject* CopyShape();
+
 };

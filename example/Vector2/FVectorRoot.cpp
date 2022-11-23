@@ -68,6 +68,9 @@ FVectorRoot::GroupSelectdObjects( )
     FVectorGroup* group = new FVectorGroup();
     BLPoint averageTranslation = { 0.0f, 0.0f };
     BLContext& blctx = FVectorEngine::GetBLContext();
+    // We don't use the mSelectedObjectList because we want to keep the same order
+    // and we work on a copy to be able to delete the objects while iterating
+    std::list<FVectorObject*> objectList = mChildrenList;
 
     if ( mSelectedObjectList.size() )
     {
@@ -86,21 +89,26 @@ FVectorRoot::GroupSelectdObjects( )
         averageTranslation = this->GetInverseWorldMatrix().mapPoint ( averageTranslation.x, averageTranslation.y );
     }
 
-    AddChild ( group );
+    AppendChild ( group );
 
     group->Translate( averageTranslation.x, averageTranslation.y );
     group->UpdateMatrix( blctx );
 
-    for( std::list<FVectorObject*>::iterator it = mSelectedObjectList.begin(); it != mSelectedObjectList.end(); ++it )
+    while( objectList.size () )
     {
-        FVectorObject *obj = (*it);
+        FVectorObject *obj = objectList.back();
 
-        obj->GetParent()->RemoveChild( obj );
+        if ( obj->IsSelected() == true )
+        {
+            obj->GetParent()->RemoveChild( obj );
 
-        group->AddChild( obj );
+            group->PrependChild( obj );
+        }
+
+        objectList.pop_back();
     }
 
-    group->UpdateShape();
+    group->Update();
 
 
     return group;
@@ -124,17 +132,18 @@ FVectorRoot::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 void
 FVectorRoot::InvalidateObject( FVectorObject* iObject )
 {
+
     mInvalidatedObjectList.push_back( iObject );
 }
 
 void
-FVectorRoot::Update()
+FVectorRoot::UpdateShape()
 {
     for( std::list<FVectorObject*>::iterator it = mInvalidatedObjectList.begin(); it != mInvalidatedObjectList.end(); ++it )
     {
         FVectorObject *obj = (*it);
 
-        obj->UpdateShape();
+        obj->Update();
     }
 
     mInvalidatedObjectList.clear();

@@ -103,11 +103,12 @@ FVectorPath::UpdateShape()
     mInvalidatedSegmentList.clear();
 
     // then update Loops
+
     for ( std::list<FVectorLoop*>::iterator it = mInvalidatedLoopList.begin(); it != mInvalidatedLoopList.end(); ++it )
     {
         FVectorLoop* loop = static_cast<FVectorLoop*>(*it);
 
-        loop->UpdateShape();
+        loop->Update();
     }
 
     mInvalidatedLoopList.clear();
@@ -119,12 +120,16 @@ void
 FVectorPath::InvalidateSegment( FVectorSegment* iSegment )
 {
     mInvalidatedSegmentList.push_back( iSegment );
+
+    Invalidate();
 }
 
 void
 FVectorPath::InvalidateLoop( FVectorLoop* iLoop )
 {
     mInvalidatedLoopList.push_back ( iLoop );
+
+    Invalidate();
 }
 
 void
@@ -174,6 +179,12 @@ FVectorPath::GetLoopByID( uint64 iID )
 }
 
 void
+FVectorPath::AddPoint( FVectorPoint* iPoint )
+{
+    mPointList.push_back( iPoint );
+}
+
+void
 FVectorPath::AddSegment( FVectorSegment* iSegment )
 {
     mSegmentList.push_back( iSegment );
@@ -194,7 +205,7 @@ FVectorPath::Clear()
         /*RemoveSegment( segment );*/ // this alters the list, hence the loop and leads to a crash
     }
 
-    mSegmentList.erase( mSegmentList.begin(), --mSegmentList.end() );
+    mSegmentList.clear();
 }
 
 void
@@ -218,6 +229,14 @@ FVectorPath::GetLastSegment()
     if( mSegmentList.size() == 0 ) return nullptr;
 
     return mSegmentList.back();
+}
+
+FVectorSegment*
+FVectorPath::GetFirstSegment()
+{
+    if( mSegmentList.size() == 0 ) return nullptr;
+
+    return mSegmentList.front();
 }
 
 FVectorPoint*

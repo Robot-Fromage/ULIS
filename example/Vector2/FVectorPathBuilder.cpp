@@ -385,18 +385,49 @@ FVectorPathBuilder::GetCubicPath()
 FVectorSegment*
 FVectorPathBuilder::End( double iX
                        , double iY
-                       , double iRadius )
+                       , double iRadius
+                       , bool iClose )
 {
-    FVectorPoint* lastPoint = GetLastPoint();
+    FVectorPoint* lastPoint = mCubicPath->GetLastPoint();
+    FVectorPoint* firstPoint = mCubicPath->GetFirstPoint();
+    FVectorSegment* firstSegment = mCubicPath->GetFirstSegment();
+    FVectorSegmentCubic* newSegment = nullptr;;
 
-    if ( lastPoint->GetX() == iX && lastPoint->GetY() == iY )
+    if ( lastPoint )
     {
-        // We delete the last point to prevent both points being at the same location
-        // which would fake the result of AppendPoint() with iEnforce = true
-        mPointList.remove( lastPoint );
+        if ( lastPoint->GetX() == iX && lastPoint->GetY() == iY )
+        {
+            // We delete the last point to prevent both points being at the same location
+            // which would fake the result of AppendPoint() with iEnforce = true
+            mPointList.remove( lastPoint );
+        }
+
+        AppendPoint ( iX, iY, iRadius, true );
+
+        newSegment = static_cast<FVectorSegmentCubic*>(mCubicPath->GetLastSegment());
+
+        if ( iClose == true )
+        {
+            if ( firstSegment && newSegment )
+            {
+                FVectorPoint* newPoint = mCubicPath->GetLastPoint();
+
+                if ( firstPoint->GetSegmentCount() == 1 )
+                {
+                    FVectorSegmentCubic* loopSegment = new FVectorSegmentCubic( *mCubicPath
+                                                                               , static_cast<FVectorPointCubic*>(newPoint)
+                                                                               , static_cast<FVectorPointCubic*>(firstPoint) );
+
+
+                    mCubicPath->AddSegment( loopSegment );
+
+                    Round( *loopSegment, newSegment->GetVector( true ), - firstSegment->GetVector( true ) );
+                }
+            }
+        }
     }
 
-    return AppendPoint ( iX, iY, iRadius, true );
+    return nullptr;
 }
 
 void

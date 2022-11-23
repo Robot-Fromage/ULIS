@@ -11,6 +11,8 @@ class FVectorRectangle : public FVectorObject
     private:
         void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
         FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+        FVectorObject* CopyShape();
+        void UpdateShape() {};
 
     protected :
         double mWidth;
@@ -23,5 +25,5 @@ class FVectorRectangle : public FVectorObject
         void SetSize( double iWidth, double iHeight );
         double GetWidth();
         double GetHeight();
-        FVectorObject* CopyShape();
+
 };

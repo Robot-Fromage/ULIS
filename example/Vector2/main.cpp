@@ -41,6 +41,7 @@ private:
 public:
     MyWidget::MyWidget(uint32 iWidth,uint32 iHeight);
     void MyWidget::CreatePath(QEvent *e);
+    void MyWidget::CutPath(QEvent *e);
     void MyWidget::EditPath(QEvent *e);
     void MyWidget::PickObject(QEvent *e);
     void MyWidget::MoveObject(QEvent *e);
@@ -50,8 +51,11 @@ public:
     void MyWidget::CreateRectangle(QEvent *e);
     void MyWidget::PanView(QEvent *e);
     void MyWidget::Bucket(QEvent *e);
+    void MyWidget::MirrorX(QEvent *e);
+    void MyWidget::MirrorY(QEvent *e);
 
     void MyWidget::SelectCreatePath( bool checked );
+    void MyWidget::SelectCutPath( bool checked );
     void MyWidget::SelectEditPath( bool checked );
     void MyWidget::SelectPickObject( bool checked );
     void MyWidget::SelectMoveObject( bool checked );
@@ -65,7 +69,8 @@ public:
     void MyWidget::SelectPanView( bool checked );
     void MyWidget::SelectBucket( bool checked );
     void MyWidget::SelectGroupObjects( bool checked );
-
+    void MyWidget::SelectMirrorX( bool checked );
+    void MyWidget::SelectMirrorY( bool checked );
     virtual ~MyWidget() {
         delete mQImage; mBLContext->end();
     }
@@ -110,9 +115,9 @@ public:
         /*p.drawImage( region, *mQImage, region );*/
         p.drawImage( rect(), *mQImage );
 
-        p.end();
-
         mBLContext->flush(BL_CONTEXT_FLUSH_SYNC);
+
+        p.end();
     }
 
     virtual void keyReleaseEvent(QKeyEvent* event)
@@ -192,7 +197,7 @@ public:
                     {
                         FVectorObject* pastedObject =  copiedObject->Copy();
 
-                        mVEngine.GetScene().AddChild( pastedObject );
+                        mVEngine.GetScene().AppendChild( pastedObject );
                         mVEngine.GetScene().Select( *mBLContext, *pastedObject );
 
                         pastedObject->UpdateMatrix( *mBLContext );
@@ -214,7 +219,7 @@ public:
                 rectangle->Translate( mQImage->width() / 2, mQImage->height() / 2 );
                 rectangle->UpdateMatrix( *mBLContext );
 
-                mVEngine.GetScene().AddChild( rectangle );
+                mVEngine.GetScene().AppendChild( rectangle );
                 mVEngine.GetScene().Select( *mBLContext, *rectangle );
             }
             break;
@@ -292,19 +297,22 @@ public:
 };
 
 #define CREATE_PATH      "Create Path"
+#define CUT_PATH         "Cut Path"
 #define EDIT_PATH        "Edit Path"
-#define PICK_OBJECT      "Pick Object"
-#define MOVE_OBJECT      "Move Object"
-#define SCALE_OBJECT     "Scale Object"
-#define ROTATE_OBJECT    "Rotate Object"
+#define PICK_OBJECT      "Pick"
+#define MOVE_OBJECT      "Move"
+#define SCALE_OBJECT     "Scale"
+#define ROTATE_OBJECT    "Rotate"
 #define CREATE_CIRCLE    "Circle"
 #define CREATE_RECTANGLE "Rectangle"
-#define STROKE_COLOR     "Stroke Color"
-#define FILL_COLOR       "Fill Color"
-#define DELETE_OBJECT    "Delete Object"
-#define PAN_VIEW         "Pan View"
+#define STROKE_COLOR     "Stroke"
+#define FILL_COLOR       "Fill"
+#define DELETE_OBJECT    "Delete"
+#define PAN_VIEW         "Pan"
 #define BUCKET           "Bucket"
-#define GROUP_OBJECTS    "Group Objects"
+#define GROUP_OBJECTS    "Group"
+#define MIRROR_X         "Mirror X"
+#define MIRROR_Y         "Mirror Y"
 
 class MyAction : public QAction {
     public :
@@ -313,6 +321,7 @@ class MyAction : public QAction {
 };
 
 void MyWidget::SelectCreatePath     ( bool checked ) { mTool = &MyWidget::CreatePath;     }
+void MyWidget::SelectCutPath        ( bool checked ) { mTool = &MyWidget::CutPath;        }
 void MyWidget::SelectEditPath       ( bool checked ) { mTool = &MyWidget::EditPath;       }
 void MyWidget::SelectPickObject     ( bool checked ) { mTool = &MyWidget::PickObject;     }
 void MyWidget::SelectMoveObject     ( bool checked ) { mTool = &MyWidget::MoveObject;     }
@@ -322,6 +331,38 @@ void MyWidget::SelectCreateCircle   ( bool checked ) { mTool = &MyWidget::Create
 void MyWidget::SelectCreateRectangle( bool checked ) { mTool = &MyWidget::CreateRectangle;}
 void MyWidget::SelectPanView        ( bool checked ) { mTool = &MyWidget::PanView        ;}
 void MyWidget::SelectBucket         ( bool checked ) { mTool = &MyWidget::Bucket         ;}
+void MyWidget::SelectMirrorX        ( bool checked )
+{
+    FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
+
+    if ( selectedObject )
+    {
+        if( typeid ( *selectedObject ) == typeid ( FVectorPathCubic ) )
+        {
+            FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>(selectedObject);
+
+            cubicPath->Mirror( true, false );
+            cubicPath->Update();
+        }
+    }
+}
+
+void MyWidget::SelectMirrorY        ( bool checked )
+{
+    FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
+
+    if ( selectedObject )
+    {
+        if( typeid ( *selectedObject ) == typeid ( FVectorPathCubic ) )
+        {
+            FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>(selectedObject);
+
+            cubicPath->Mirror( false, true );
+            cubicPath->Update();
+        }
+    }
+}
+
 void MyWidget::SelectGroupObjects   ( bool checked )
 {
     FVectorGroup* group = mVEngine.GetScene().GroupSelectdObjects();
@@ -377,6 +418,55 @@ void MyWidget::SelectDeleteObject ( bool checked )
 }
 
 void
+MyWidget::CutPath(QEvent *event)
+{
+    static BLMatrix2D inverseWorldMatrix;
+    static FVec2D startCutAt;
+    static FVec2D endCutAt;
+
+    if( event->type() == QEvent::MouseButtonPress )
+    {
+        QMouseEvent *e = static_cast<QMouseEvent*>(event);
+        FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
+
+        if ( selectedObject )
+        {
+            BLPoint localCoords = selectedObject->GetInverseWorldMatrix().mapPoint( e->x(), e->y() );
+
+            startCutAt.x = localCoords.x;
+            startCutAt.y = localCoords.y;
+        }
+    }
+
+    if( event->type() == QEvent::MouseButtonRelease )
+    {
+        QMouseEvent *e = static_cast<QMouseEvent*>(event);
+        FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
+
+        if ( selectedObject )
+        {
+            BLPoint localCoords = selectedObject->GetInverseWorldMatrix().mapPoint( e->x(), e->y() );
+
+            endCutAt.x = localCoords.x;
+            endCutAt.y = localCoords.y;
+
+            if( typeid ( *selectedObject ) == typeid ( FVectorPathCubic ) )
+            {
+                FVectorPathCubic *cubicPath = static_cast<FVectorPathCubic*>(selectedObject);
+
+                cubicPath->Cut( startCutAt, endCutAt );
+
+                cubicPath->Update();
+            }
+        }
+
+        mVEngine.GetScene().Update();
+    }
+
+    update();
+}
+
+void
 MyWidget::CreatePath(QEvent *event)
 {
     static BLMatrix2D inverseWorldMatrix;
@@ -396,12 +486,12 @@ MyWidget::CreatePath(QEvent *event)
         {
             cubicPath = new FVectorPathCubic();
 
-            mVEngine.GetScene().AddChild( cubicPath );
+            mVEngine.GetScene().AppendChild( cubicPath );
         }
 
         builder = new FVectorPathBuilder( cubicPath );
 
-        mVEngine.GetScene().AddChild( builder );
+        mVEngine.GetScene().AppendChild( builder );
 
         builder->UpdateMatrix( *mBLContext );
 
@@ -456,7 +546,14 @@ MyWidget::CreatePath(QEvent *event)
         FVectorPathBuilder *currentPathBuilder = static_cast<FVectorPathBuilder*>( mVEngine.GetScene().GetLastSelected());
         BLPoint localCoords = inverseWorldMatrix.mapPoint( e->x(), e->y() );
 
-        currentPathBuilder->End( localCoords.x, localCoords.y, 1.0f );
+        if( QApplication::keyboardModifiers().testFlag(Qt::ControlModifier) == false )
+        {
+            currentPathBuilder->End( localCoords.x, localCoords.y, 1.0f, false );
+        }
+        else
+        {
+            currentPathBuilder->End( localCoords.x, localCoords.y, 1.0f, true );
+        }
 
         FVectorPathCubic* cubicPath = currentPathBuilder->GetCubicPath();
 
@@ -539,6 +636,11 @@ MyWidget::EditPath( QEvent *event )
                 }
 
                 picked = cubicPath->PickPoint( localCoords.x, localCoords.y, localRadius, selectionFlags );
+
+                if ( picked == false )
+                {
+                    PickObject (event);
+                }
             }
         }
         else
@@ -822,7 +924,7 @@ MyWidget::CreateCircle( QEvent *event )
         FVectorCircle* circle = new FVectorCircle( 0.0f );
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
-        mVEngine.GetScene().AddChild( circle );
+        mVEngine.GetScene().AppendChild( circle );
 
         circle->Translate( localCoordinates.x, localCoordinates.y );
         circle->UpdateMatrix( *mBLContext );
@@ -862,7 +964,7 @@ MyWidget::CreateRectangle(QEvent *event)
         FVectorRectangle* rectangle = new FVectorRectangle( 0.0f, 0.0f );
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
-        mVEngine.GetScene().AddChild( rectangle );
+        mVEngine.GetScene().AppendChild( rectangle );
 
         rectangle->Translate( localCoordinates.x, localCoordinates.y );
         rectangle->UpdateMatrix( *mBLContext );
@@ -910,6 +1012,9 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     MyAction *createPanViewAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), PAN_VIEW         ) );
     MyAction *createBucketAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), BUCKET           ) );
     MyAction *groupObjectsAction       = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), GROUP_OBJECTS    ) );
+    MyAction *cutPathAction            = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CUT_PATH         ) );
+    MyAction *mirrorXAction            = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MIRROR_X         ) );
+    MyAction *mirrorYAction            = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MIRROR_Y         ) );
 
     connect( createPathAction        , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
     connect( editPathAction          , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
@@ -925,6 +1030,9 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     connect( createPanViewAction     , &MyAction::triggered, this, &MyWidget::SelectPanView         );
     connect( createBucketAction      , &MyAction::triggered, this, &MyWidget::SelectBucket          );
     connect( groupObjectsAction      , &MyAction::triggered, this, &MyWidget::SelectGroupObjects    );
+    connect( cutPathAction           , &MyAction::triggered, this, &MyWidget::SelectCutPath         );
+    connect( mirrorXAction           , &MyAction::triggered, this, &MyWidget::SelectMirrorX         );
+    connect( mirrorYAction           , &MyAction::triggered, this, &MyWidget::SelectMirrorY         );
 
     /*setAttribute(Qt::WA_OpaquePaintEvent);*/
 

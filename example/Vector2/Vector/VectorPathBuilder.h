@@ -18,6 +18,11 @@ class FVectorPathBuilder : public FVectorPath
         std::list<FVectorSegment*> mSampleSegmentList;
         FVectorSegmentCubic* Sample(FVectorPoint* iPoint, double iRadius, bool iEnforce );
 
+        FVectorObject* CopyShape();
+        void DrawShape(FBlock& iBlock,BLContext& iBLContext,FRectD &iRoi);
+        FVectorObject* PickShape(BLContext& iBLContext,double iX,double iY,double iRadius) { return nullptr; };
+        void UpdateShape() {};
+
     protected :
         /*std::list<FVectorPoint*> mSmoothedPointList;*/
         FVectorPathCubic* mCubicPath;
@@ -29,13 +34,12 @@ class FVectorPathBuilder : public FVectorPath
         //FVectorPathBuilder();
         FVectorPathBuilder( FVectorPathCubic* iCubicPath );
         FVectorSegment* AppendPoint( double iX, double iY, double iRadius );
-        void DrawShape(FBlock& iBlock,BLContext& iBLContext, FRectD &iRoi );
-        FVectorObject* PickShape(BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
+
         bool PickPoint( double iX, double iY, double iRadius, uint64 iSelectionFlags );
         void Unselect(FVectorPoint* iPoint);
-        FVectorSegment* End( double iX, double iY, double iRadius );
+        FVectorSegment* End( double iX, double iY, double iRadius, bool iClose );
         FVectorPathCubic* GetCubicPath( );
         FVectorSegment* GetLastSampleSegment();
         FVectorPoint* GetLastSamplePoint();
-        FVectorObject* CopyShape();
+
 };

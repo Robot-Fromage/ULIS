@@ -11,6 +11,8 @@ class FVectorRoot : public FVectorObject
 {
     private:
         FVectorObject* RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y, double iRadius );
+        void UpdateShape();
+        FVectorObject* CopyShape();
 
     protected:
         std::list<FVectorObject*> mSelectedObjectList;
@@ -29,7 +31,6 @@ class FVectorRoot : public FVectorObject
 
         void Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillColor );
         void InvalidateObject( FVectorObject* iObject );
-        void Update();
-        FVectorObject* CopyShape();
+
         FVectorGroup* GroupSelectdObjects();
 };
