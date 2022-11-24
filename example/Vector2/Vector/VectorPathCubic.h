@@ -23,6 +23,7 @@ class FVectorPathCubic: public FVectorPath
 
         uint32 mJointType;
 
+    protected:
         FVectorObject* CopyShape();
         void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
         FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );

@@ -273,12 +273,12 @@ public:
          } else if( !numDegrees.isNull() ) {
              QPoint numSteps = numDegrees / 15;
              FVectorRoot& scene = mVEngine.GetScene();
-             double step = ( double ) numSteps.y() * 0.05f;
+             double step = ( double ) numSteps.y();
              BLMatrix2D& worldMatrix = scene.GetWorldMatrix();
              BLMatrix2D& inverseWorldMatrix = scene.GetInverseWorldMatrix();
              BLPoint localCoords = inverseWorldMatrix.mapPoint( ( double ) event->x(), ( double ) event->y() );
 
-             scene.Scale( scene.GetScalingX() + step, scene.GetScalingY() + step );
+             scene.Scale( scene.GetScalingX() * ( ( 100 - step ) / 100 ), scene.GetScalingY() * ( ( 100 - step ) / 100 ) );
              scene.UpdateMatrix(*mBLContext);
 
              BLPoint worldCoords = worldMatrix.mapPoint( localCoords );
@@ -921,7 +921,7 @@ MyWidget::CreateCircle( QEvent *event )
 
     if( event->type() == QEvent::MouseButtonPress )
     {
-        FVectorCircle* circle = new FVectorCircle( 0.0f );
+        FVectorCircle* circle = new FVectorCircle( "Circle", 0.0f );
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
         mVEngine.GetScene().AppendChild( circle );
@@ -945,7 +945,7 @@ MyWidget::CreateCircle( QEvent *event )
                           localCoordinates.y };
             FRectD beforeBBox = selectedObject->GetBBox(true);
 
-            circle->SetRadius( dif.Distance() );
+            circle->SetRadius( localCoordinates.x, localCoordinates.y /*dif.Distance()*/ );
 
             mVEngine.InvalidateRegion(beforeBBox | selectedObject->GetBBox(true));
         }

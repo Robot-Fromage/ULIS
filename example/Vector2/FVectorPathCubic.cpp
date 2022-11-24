@@ -704,26 +704,14 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRec
 void
 FVectorPathCubic::Mirror( bool iMirrorX, bool iMirrorY )
 {
-    BLMatrix2D matrix;
-
-    matrix.makeIdentity();
-
-    if ( iMirrorY )
-    {
-        matrix.m00 = -1.0f;
-    }
-
-    if ( iMirrorX )
-    {
-        matrix.m11 = -1.0f;
-    }
+    double factorX = ( iMirrorX ) ? -1.0f : 1.0f;
+    double factorY = ( iMirrorY ) ? -1.0f : 1.0f;
 
     for( std::list<FVectorPoint*>::iterator it = mPointList.begin(); it != mPointList.end(); ++it )
     {
         FVectorPointCubic* cubicPoint = static_cast<FVectorPointCubic*>(*it);
-        BLPoint newCoords = matrix.mapPoint( cubicPoint->GetX(), cubicPoint->GetY() );
 
-        cubicPoint->Set( newCoords.x, newCoords.y );
+        cubicPoint->Set( cubicPoint->GetX() * factorX, cubicPoint->GetY() * factorY );
     }
 
     for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
@@ -731,16 +719,12 @@ FVectorPathCubic::Mirror( bool iMirrorX, bool iMirrorY )
         FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*it);
         FVectorHandleSegment& ctrlPoint0 = static_cast<FVectorHandleSegment&>(cubicSegment->GetControlPoint(0));
         FVectorHandleSegment& ctrlPoint1 = static_cast<FVectorHandleSegment&>(cubicSegment->GetControlPoint(1));
-        BLPoint newCoords0 = matrix.mapPoint( ctrlPoint0.GetX(), ctrlPoint0.GetY() );
-        BLPoint newCoords1 = matrix.mapPoint( ctrlPoint1.GetX(), ctrlPoint1.GetY() );
 
-        ctrlPoint0.Set( newCoords0.x, newCoords0.y );
-        ctrlPoint1.Set( newCoords1.x, newCoords1.y );
+        ctrlPoint0.Set( ctrlPoint0.GetX() * factorX, ctrlPoint0.GetY() * factorY );
+        ctrlPoint1.Set( ctrlPoint1.GetX() * factorX, ctrlPoint1.GetY() * factorY );
     }
 
     /*Update();*/
-
-
 }
 
 FVectorObject*
