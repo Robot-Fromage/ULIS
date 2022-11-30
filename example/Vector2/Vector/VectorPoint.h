@@ -3,8 +3,8 @@
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
-#include "Vector/VectorSegment.h"
 
+class FVectorSegment;
 class FVectorLoop;
 class FVectorSection;
 

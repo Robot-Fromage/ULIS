@@ -8,48 +8,16 @@ FVectorSegment::~FVectorSegment()
 FVectorSegment::FVectorSegment( FVectorPath& iPath
                               , FVectorPoint* iPoint0
                               , FVectorPoint* iPoint1 )
-    : mPath ( iPath )
+    : FVectorLink ( iPoint0, iPoint1 )
+    , mPath ( iPath )
 {
-    mPoint[0] = iPoint0;
-    mPoint[1] = iPoint1;
-
     /*AddSection ( new FVectorSection ( *this, mPoint[0], mPoint[1] ) );*/
-}
-
-FVectorPoint*
-FVectorSegment::GetPoint( int iPointNum )
-{
-    return mPoint[iPointNum];
 }
 
 FVectorPath&
 FVectorSegment::GetPath()
 {
     return mPath;
-}
-
-FVec2D
-FVectorSegment::GetVector( bool iNormalize )
-{
-    FVec2D vec = mPoint[1]->GetCoords() - mPoint[0]->GetCoords();
-
-    if ( iNormalize == true )
-    {
-        if ( vec.DistanceSquared() )
-        {
-            vec.Normalize();
-        }
-    }
-
-    return vec;
-}
-
-double
-FVectorSegment::GetDistanceSquared()
-{
-    FVec2D dist = mPoint[1]->GetCoords() - mPoint[0]->GetCoords();
-
-    return dist.DistanceSquared();
 }
 
 FVectorSection*
@@ -70,16 +38,6 @@ FVectorSegment::GetSection ( double t )
     }
 
     return nullptr;
-}
-
-FVec2D
-FVectorSegment::GetPointAt ( double t )
-{
-    FVec2D& p0 =  mPoint[0]->GetCoords();
-    FVec2D& p1 =  mPoint[0]->GetCoords();
-    FVec2D vec = p1 - p0;
-
-    return p0 + ( vec * t );
 }
 
 void
@@ -161,15 +119,6 @@ FVectorSegment::Invalidate()
     }
 
     mPath.InvalidateSegment( this );
-}
-
-double
-FVectorSegment::GetStraightDistance()
-{
-    FVec2D vec = { mPoint[1]->GetX() - mPoint[0]->GetX(),
-                   mPoint[1]->GetY() - mPoint[0]->GetY() };
-
-    return vec.Distance();
 }
 
 void

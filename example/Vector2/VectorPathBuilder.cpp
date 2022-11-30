@@ -16,12 +16,12 @@ FVectorPathBuilder::FVectorPathBuilder( FVectorPathCubic* iCubicPath )
     mStrokeColor = 0xFF808080;
 }
 
-FVectorSegment*
-FVectorPathBuilder::GetLastSampleSegment()
+FVectorLink*
+FVectorPathBuilder::GetLastSampleLink()
 {
-    if( mSampleSegmentList.size() == 0 ) return nullptr;
+    if( mSampleLinkList.size() == 0 ) return nullptr;
 
-    return mSampleSegmentList.back();
+    return mSampleLinkList.back();
 }
 
 FVectorPoint*
@@ -65,15 +65,15 @@ FVectorPathBuilder::Sample( FVectorPoint* iSamplePoint, double iRadius, bool iEn
 
     if ( lastSamplePoint )
     {
-        FVectorSegment* lastSampleSegment = GetLastSampleSegment();
-        FVectorSegment* sampleSegment = new FVectorSegment ( *this, lastSamplePoint, iSamplePoint );
+        FVectorLink* lastSampleLink = GetLastSampleLink();
+        FVectorLink* sampleLink = new FVectorLink ( lastSamplePoint, iSamplePoint );
 
-        mSampleSegmentList.push_back( sampleSegment );
+        mSampleLinkList.push_back( sampleLink );
 
-        if ( lastSampleSegment )
+        if ( lastSampleLink )
         {
-            FVec2D lastSampleSegmentVector = lastSampleSegment->GetVector( true );
-            FVec2D     sampleSegmentVector =     sampleSegment->GetVector( true );
+            FVec2D lastSampleSegmentVector = lastSampleLink->GetVector( true );
+            FVec2D     sampleSegmentVector =     sampleLink->GetVector( true );
             double dot = lastSampleSegmentVector.DotProduct( sampleSegmentVector );
             double angle = acos( ULIS::FMath::Clamp<double>( dot, -1.0f, 1.0f ) );
 
@@ -84,14 +84,14 @@ FVectorPathBuilder::Sample( FVectorPoint* iSamplePoint, double iRadius, bool iEn
                 FVectorPointCubic* cubicPoint = new FVectorPointCubic( lastSamplePoint->GetX()
                                                                      , lastSamplePoint->GetY()
                                                                      , iRadius );
-                FVec2D entryVector = mSampleSegmentList.front()->GetVector( true );
+                FVec2D entryVector = mSampleLinkList.front()->GetVector( true );
                 FVec2D exitVector =  lastSampleSegmentVector;
 
                 cubicSegment = mCubicPath->AppendPoint( cubicPoint, true, true );
 
                 Sharp ( *cubicSegment
-                        , entryVector
-                        , exitVector );
+                       , entryVector
+                       , exitVector );
 
                 if ( lastCubicSegment )
                 {
@@ -113,60 +113,83 @@ FVectorPathBuilder::Sample( FVectorPoint* iSamplePoint, double iRadius, bool iEn
     return cubicSegment;
 }
 
-FVectorSegment*
+static void
+ClearUntil( std::list<FVectorPoint*>& iPointList
+          , std::list<FVectorPoint*>& iSamplePointList
+          , std::list<FVectorLink*>& iLinkList
+          , std::list<FVectorLink*>& iSampleLinkList
+          , FVectorPoint* iPoint )
+{
+    while ( iPointList.size() && ( iPointList.front() != iPoint ) )
+    {
+        iPointList.pop_front();
+    }
+
+    while ( iSamplePointList.size() && ( iSamplePointList.front() != iPoint ) )
+    {
+        iSamplePointList.pop_front();
+    }
+
+    while ( iLinkList.size() && ( iLinkList.front()->GetPoint(0) != iPoint ) )
+    {
+        iLinkList.pop_front();
+    }
+
+    while ( iSampleLinkList.size() && ( iSampleLinkList.front()->GetPoint(0) != iPoint ) )
+    {
+        iSampleLinkList.pop_front();
+    }
+}
+
+FVectorSegmentCubic*
 FVectorPathBuilder::AppendPoint( double iX
                                , double iY
                                , double iRadius
                                , bool   iEnforce )
 {
     FVectorPoint* point = new FVectorPoint( iX, iY );
-    FVectorSegment* segment = nullptr;
-    FVectorPoint* lastPoint = GetLastPoint();
+    FVectorPoint* lastPoint = ( mPointList.size() ) ? mPointList.back() : nullptr;
+    FVectorSegmentCubic* cubicSegment = nullptr;
 
-    segment = FVectorPath::AppendPoint( point, lastPoint );
+    mPointList.push_back( point );
 
     if ( lastPoint == nullptr )
     {
         FVectorPointCubic* cubicPoint = new FVectorPointCubic( point->GetX()
                                                              , point->GetY()
                                                              , iRadius );
+        FVectorPoint* samplePoint = new FVectorPoint ( point->GetX(), point->GetY() );
 
         mCubicPath->AppendPoint( cubicPoint, false, false );
 
-        Sample ( point, iRadius, iEnforce );
+        Sample ( samplePoint, iRadius, iEnforce );
     }
     else
     {
+        FVectorLink* link = new FVectorLink ( lastPoint, point );
         FVectorPoint* lastSamplePoint = GetLastSamplePoint();
-
         FVec2D dif = { iX - lastSamplePoint->GetX()
                      , iY - lastSamplePoint->GetY() };
         double length = dif.Distance();
 
         if ( length >= 12.0f || iEnforce == true )
         {
-            FVectorPoint* samplePoint = new FVectorPoint ( iX, iY );
-            FVectorSegmentCubic* cubicSegment = Sample ( samplePoint, iRadius, iEnforce );
+            cubicSegment = Sample ( point, iRadius, iEnforce );
 
             if ( cubicSegment )
             {
-                mSampleSegmentList.clear();
-                mSamplePointList.clear();
-                mSegmentList.clear();
-                mPointList.clear();
+                /*FitSegment( *cubicSegment, mSampleLinkList );*/
 
-                // TODO, Free memory except for lastSamplePoint
-
-                // restart
-                FVectorPath::AppendPoint( lastSamplePoint, nullptr );
-                Sample ( lastSamplePoint, iRadius, false );
+                ClearUntil ( mPointList, mSamplePointList, mLinkList, mSampleLinkList, lastSamplePoint );
             }
         }
+
+        mLinkList.push_back ( link );
     }
 
     mCubicPath->Update();
 
-    return segment;
+    return cubicSegment;
 }
 
 FVectorSegment*
@@ -232,6 +255,65 @@ FVectorPathBuilder::End( double iX
 }
 
 void
+FVectorPathBuilder::FitSegment( FVectorSegmentCubic& iSegment
+                              , std::list<FVectorLink*>& iLinkList )
+{
+    FVec2D& point0 = iSegment.GetPoint(0)->GetCoords();
+    FVec2D& point1 = iSegment.GetPoint(1)->GetCoords();
+    FVec2D& ctrlPoint0 = iSegment.GetControlPoint(0).GetCoords();
+    FVec2D& ctrlPoint1 = iSegment.GetControlPoint(1).GetCoords();
+    double sampleLength = 0.0f;
+    double currentT = 0.0f;
+
+    for( std::list<FVectorLink*>::iterator it = iLinkList.begin(); it != iLinkList.end(); ++it )
+    {
+        FVectorLink *link = (*it);
+
+        sampleLength += link->GetStraightDistance();
+    }
+
+    if ( sampleLength )
+    {
+        double A1 = 0.0f, A2 = 0.0f, A12 = 0.0f;
+        FVec2D C1 = { 0.0f, 0.0f };
+        FVec2D C2 = { 0.0f, 0.0f };
+
+        for( std::list<FVectorLink*>::iterator it = iLinkList.begin(); it != iLinkList.end(); ++it )
+        {
+            FVectorLink *link = (*it);
+            double t = currentT + ( link->GetStraightDistance() / sampleLength );
+            double ct = 1.0f - t;
+            double t3 = pow ( t, 3 );
+            double ct3 = pow ( ct, 3 );
+            FVec2D PC = { link->GetPoint(1)->GetX() - ( ct3 * point0.x ) - ( t3 * point1.x )
+                        , link->GetPoint(1)->GetY() - ( ct3 * point0.y ) - ( t3 * point1.y ) };
+
+            A1  += ( pow ( t, 2 ) * pow ( ( ct ), 4 ) );
+            A2  += ( pow ( t, 4 ) * pow ( ( ct ), 2 ) );
+            A12 += ( pow ( t, 3 ) * pow ( ( ct ), 3 ) );
+
+            C1.x += ( 3 * t * pow ( ct, 2 ) * PC.x );
+            C1.y += ( 3 * t * pow ( ct, 2 ) * PC.y );
+
+            C2.x += ( 3 * pow ( t, 2 ) * ct * PC.x );
+            C2.y += ( 3 * pow ( t, 2 ) * ct * PC.y );
+
+            currentT = t;
+        }
+
+        A1  *= 9.0f;
+        A2  *= 9.0f;
+        A12 *= 9.0f;
+
+        ctrlPoint0.x = ( A2 * C1.x - A12 * C2.x ) / ( A1 * A2 - A12 * A12 );
+        ctrlPoint0.y = ( A2 * C1.y - A12 * C2.y ) / ( A1 * A2 - A12 * A12 );
+
+        ctrlPoint1.x = ( A1 * C2.x - A12 * C1.x ) / ( A1 * A2 - A12 * A12 );
+        ctrlPoint1.y = ( A1 * C2.y - A12 * C1.y ) / ( A1 * A2 - A12 * A12 );
+    }
+}
+
+void
 FVectorPathBuilder::DrawShape( FRectD& iRoi, uint64 iFlags )
 {
     BLContext& blctx = FVectorEngine::GetBLContext();
@@ -245,23 +327,19 @@ FVectorPathBuilder::DrawShape( FRectD& iRoi, uint64 iFlags )
     blctx.setStrokeStyle( BLRgba32( mStrokeColor ) );
     blctx.setStrokeWidth( mStrokeWidth );
 
-    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    for( std::list<FVectorLink*>::iterator it = mLinkList.begin(); it != mLinkList.end(); ++it )
     {
-        FVectorSegment *segment = (*it);
+        FVectorLink *link = (*it);
         BLPoint point0;
         BLPoint point1;
 
-        point0.x = segment->GetPoint(0)->GetX();
-        point0.y = segment->GetPoint(0)->GetY();
+        point0.x = link->GetPoint(0)->GetX();
+        point0.y = link->GetPoint(0)->GetY();
 
-        point1.x = segment->GetPoint(1)->GetX();
-        point1.y = segment->GetPoint(1)->GetY();
+        point1.x = link->GetPoint(1)->GetX();
+        point1.y = link->GetPoint(1)->GetY();
 
-        if( segment->GetPoint(0)->GetSegmentCount() == 1 )
-        {
-            path.moveTo( point0.x,point0.y );
-        }
-
+        path.moveTo( point0.x,point0.y );
         path.lineTo( point1.x,point1.y );
     }
 
@@ -284,16 +362,4 @@ FVectorPathBuilder::PickPoint( double iX
                              , uint64 iSelectionFlags )
 {
     return false;
-}
-
-void
-FVectorPathBuilder::Unselect(FVectorPoint *iPoint)
-{
-    if( iPoint == NULL )
-    {
-        mSelectedPointList.clear();
-    } else
-    {
-        mSelectedPointList.remove(iPoint);
-    }
 }

@@ -10,6 +10,7 @@
 #include "Vector/VectorPointCubic.h"
 #include "Vector/VectorPointIntersection.h"
 #include "Vector/VectorSection.h"
+#include "Vector/VectorLink.h"
 #include "Vector/VectorSegment.h"
 #include "Vector/VectorSegmentCubic.h"
 #include "Vector/VectorRectangle.h"

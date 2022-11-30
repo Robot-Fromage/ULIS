@@ -8,25 +8,28 @@
 #include "Vector/VectorPath.h"
 #include "Vector/VectorPathCubic.h"
 
-class FVectorPathBuilder : public FVectorPath
+class FVectorPathBuilder : public FVectorObject
 {
     private:
         double mCumulAngle;
         double mCumulAngleLimit;
         double mLastCubicAngleLimit;
         std::list<FVectorPoint*> mSamplePointList;
-        std::list<FVectorSegment*> mSampleSegmentList;
+        std::list<FVectorLink*> mSampleLinkList;
+        std::list<FVectorPoint*> mPointList;
+        std::list<FVectorLink*> mLinkList;
         FVectorSegmentCubic* Sample( FVectorPoint* iPoint, double iRadius, bool iEnforce );
 
         FVectorObject* CopyShape();
         void DrawShape( FRectD &iRoi, uint64 iFlags );
         FVectorObject* PickShape( double iX, double iY, double iRadius ) { return nullptr; };
         void UpdateShape() {};
+        void FitSegment( FVectorSegmentCubic& iSegment, std::list<FVectorLink*>& iLinkList );
 
     protected :
         /*std::list<FVectorPoint*> mSmoothedPointList;*/
         FVectorPathCubic* mCubicPath;
-        FVectorSegment* AppendPoint( double iX, double iY, double iRadius, bool iEnforce );
+        FVectorSegmentCubic* AppendPoint( double iX, double iY, double iRadius, bool iEnforce );
         void Round( FVectorSegmentCubic& iCubicSegment );
         void Sharp( FVectorSegmentCubic& iCubicSegment, FVec2D iEntryVector, FVec2D iExitVector );
 
@@ -40,7 +43,7 @@ class FVectorPathBuilder : public FVectorPath
         void Unselect(FVectorPoint* iPoint);
         FVectorSegment* End( double iX, double iY, double iRadius, bool iClose );
         FVectorPathCubic* GetCubicPath( );
-        FVectorSegment* GetLastSampleSegment();
+        FVectorLink* GetLastSampleLink();
         FVectorPoint* GetLastSamplePoint();
 
 };

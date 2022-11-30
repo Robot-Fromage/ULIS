@@ -3,16 +3,16 @@
 #include <blend2d.h>
 #include <Core/Core.h>
 #include <Image/Block.h>
+#include "Vector/VectorPoint.h"
+#include "Vector/VectorLink.h"
 
-class FVectorPoint;
 class FVectorPath;
 class FVectorPointIntersection;
 class FVectorSection;
 
-class FVectorSegment
+class FVectorSegment : public FVectorLink
 {
     protected:
-        FVectorPoint* mPoint[2];
         std::list<FVectorPointIntersection*> mIntersectionPointList;
         std::list<FVectorSection*> mSectionList;
         FVectorPath& mPath;
@@ -21,10 +21,9 @@ class FVectorSegment
     public:
         ~FVectorSegment();
         FVectorSegment( FVectorPath& iPath, FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
-        FVectorPoint* GetPoint( int iPointNum );
         virtual void Draw( FRectD &iRoi );
         virtual void DrawStructure( FRectD &iRoi );
-        double GetStraightDistance();
+
         FVectorSegment* GetPreviousSegment();
         FVectorSegment* GetNextSegment();
         std::list<FVectorPointIntersection*>& GetIntersectionPointList();
@@ -34,9 +33,6 @@ class FVectorSegment
         FVectorPath& GetPath();
         virtual void Update() {};
         void Invalidate();
-        virtual double GetDistanceSquared();
-
-        virtual FVec2D GetPointAt( double t );
 
         void ClearIntersections();
         FVectorSection* GetSection (double t);
@@ -44,7 +40,6 @@ class FVectorSegment
         void AddIntersection ( FVectorPointIntersection* iIntersectionPoint );
         void RemoveSection ( FVectorSection* iSection );
         void AddSection ( FVectorSection* iSection );
-        FVec2D GetVector( bool iNormalize );
 
         virtual FRectD& GetBoundingBox() { return mBBox; };
 
