@@ -25,8 +25,7 @@ private:
     QImage* mQImage;
     /*FVectorPathCubic* mCubicPath;
     FVectorCircle* mCircle;*/
-    BLImage* mBLImage;
-    BLContext* mBLContext;
+
     FBlock* mCanvas;
     FThreadPool* mPool;
     FCommandQueue* mQueue;
@@ -71,8 +70,10 @@ public:
     void MyWidget::SelectGroupObjects( bool checked );
     void MyWidget::SelectMirrorX( bool checked );
     void MyWidget::SelectMirrorY( bool checked );
+    void MyWidget::SelectConvertToPath( bool checked );
+
     virtual ~MyWidget() {
-        delete mQImage; mBLContext->end();
+        delete mQImage;
     }
 
     virtual void paintEvent( QPaintEvent* e )
@@ -84,45 +85,19 @@ public:
         mContext->Clear(*mCanvas);
         mContext->Finish();
 
-        mBLContext->setFillStyle(BLRgba32(0xFFFFFFFF));
-        mBLContext->setCompOp(BL_COMP_OP_SRC_COPY);
-
-
-
-        /*mCubicPath->Draw( *mCanvas, *mBLContext );*/
-/*
-        mCubicPath->Translate( 200, 200 );
-        mCubicPath->Rotate( 45 );
-        mCubicPath->Scale( 1.0f, 1.0f );
-        mCubicPath->UpdateMatrix( *mBLContext );
-*/
-        // mandatory for now
-/*
-        mCircle->UpdateMatrix( *mBLContext );
-*/
-        /*mContext->DrawVectorObject ( *mCanvas, *mCubicPath, *mBLContext );*/
-        /*mContext->DrawVectorObject ( *mCanvas, *mScene, *mBLContext );*/
-
         region.setRect( invalidateRegion.x
                       , invalidateRegion.y
                       , invalidateRegion.w
                       , invalidateRegion.h );
 
-        mVEngine.Draw( *mCanvas, *mBLContext );
+        mVEngine.Render( *mCanvas );
 
         mContext->Finish();
 
         /*p.drawImage( region, *mQImage, region );*/
         p.drawImage( rect(), *mQImage );
 
-        mBLContext->flush(BL_CONTEXT_FLUSH_SYNC);
-
         p.end();
-    }
-
-    virtual void keyReleaseEvent(QKeyEvent* event)
-    {
-        mAction = -1;
     }
 
     virtual void keyPressEvent( QKeyEvent* event )
@@ -131,23 +106,6 @@ public:
 
         switch( event->key() )
         {
-            case Qt::Key_T:
-            {
-                mAction = 0;
-            }
-            break;
-            case Qt::Key_O:
-            {
-                mAction = 1;
-            }
-            break;
-
-            case Qt::Key_X :
-            {
-                mAction = 2;
-            }
-            break;
-
             case Qt::Key_Less:
             {
                 FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
@@ -198,48 +156,12 @@ public:
                         FVectorObject* pastedObject =  copiedObject->Copy();
 
                         mVEngine.GetScene().AppendChild( pastedObject );
-                        mVEngine.GetScene().Select( *mBLContext, *pastedObject );
+                        mVEngine.GetScene().Select( *pastedObject );
 
-                        pastedObject->UpdateMatrix( *mBLContext );
+                        pastedObject->UpdateMatrix();
                     }
                 }
             } 
-            break;
-
-            case Qt::Key_A:
-            {
-                mAction = 3;
-            }
-            break;
-
-            case Qt::Key_R:
-            {
-                FVectorRectangle* rectangle = new FVectorRectangle( 50,80 );
-
-                rectangle->Translate( mQImage->width() / 2, mQImage->height() / 2 );
-                rectangle->UpdateMatrix( *mBLContext );
-
-                mVEngine.GetScene().AppendChild( rectangle );
-                mVEngine.GetScene().Select( *mBLContext, *rectangle );
-            }
-            break;
-
-            case Qt::Key_Plus:
-            {
-                FVectorRoot& scene = mVEngine.GetScene();
-
-                scene.Scale( scene.GetScalingX() + 0.01f, scene.GetScalingY() + 0.01f );
-                scene.UpdateMatrix( *mBLContext );
-            }
-            break;
-
-            case Qt::Key_Minus:
-            {
-                FVectorRoot& scene = mVEngine.GetScene();
-
-                scene.Scale( scene.GetScalingX() - 0.01f, scene.GetScalingY() - 0.01f );
-                scene.UpdateMatrix( *mBLContext );
-            }
             break;
         }
 
@@ -258,42 +180,44 @@ public:
     }
 
 
-     virtual void mouseMoveEvent(QMouseEvent* event)
-     {
-        if ( mTool ) ((*this).*(mTool))( event );
-     }
+    virtual void mouseMoveEvent(QMouseEvent* event)
+    {
+       if ( mTool ) ((*this).*(mTool))( event );
+    }
 
-     void wheelEvent( QWheelEvent *event )
-     {
-         QPoint numPixels = event->pixelDelta();
-         QPoint numDegrees = event->angleDelta() / 8;
+    void wheelEvent( QWheelEvent *event )
+    {
+        QPoint numPixels = event->pixelDelta();
+        QPoint numDegrees = event->angleDelta() / 8;
 
-         if( !numPixels.isNull() ) {
-             /*scrollWithPixels(numPixels);*/
-         } else if( !numDegrees.isNull() ) {
-             QPoint numSteps = numDegrees / 15;
-             FVectorRoot& scene = mVEngine.GetScene();
-             double step = ( double ) numSteps.y();
-             BLMatrix2D& worldMatrix = scene.GetWorldMatrix();
-             BLMatrix2D& inverseWorldMatrix = scene.GetInverseWorldMatrix();
-             BLPoint localCoords = inverseWorldMatrix.mapPoint( ( double ) event->x(), ( double ) event->y() );
+        if( !numPixels.isNull() ) {
+            /*scrollWithPixels(numPixels);*/
+        } else if( !numDegrees.isNull() ) {
+            QPoint numSteps = numDegrees / 15;
+            FVectorRoot& scene = mVEngine.GetScene();
+            double step = ( double ) numSteps.y();
+            BLMatrix2D& worldMatrix = scene.GetWorldMatrix();
+            BLMatrix2D& inverseWorldMatrix = scene.GetInverseWorldMatrix();
+            BLPoint localCoords = inverseWorldMatrix.mapPoint( ( double ) event->x(), ( double ) event->y() );
 
-             scene.Scale( scene.GetScalingX() * ( ( 100 - step ) / 100 ), scene.GetScalingY() * ( ( 100 - step ) / 100 ) );
-             scene.UpdateMatrix(*mBLContext);
+            scene.Scale( scene.GetScalingX() * ( ( 100 - step ) / 100 ), scene.GetScalingY() * ( ( 100 - step ) / 100 ) );
 
-             BLPoint worldCoords = worldMatrix.mapPoint( localCoords );
+            scene.UpdateMatrix();
 
-             scene.Translate( scene.GetTranslationX() - ( worldCoords.x - ( double ) event->x() )
-                            , scene.GetTranslationY() - ( worldCoords.y - ( double ) event->y() ) );
-             scene.UpdateMatrix(*mBLContext);
+            BLPoint worldCoords = worldMatrix.mapPoint( localCoords );
 
-             /*scrollWithDegrees(numSteps);*/
-         }
+            scene.Translate( scene.GetTranslationX() - ( worldCoords.x - ( double ) event->x() )
+                           , scene.GetTranslationY() - ( worldCoords.y - ( double ) event->y() ) );
 
-         event->accept();
+            scene.UpdateMatrix();
+
+            /*scrollWithDegrees(numSteps);*/
+        }
+
+        event->accept();
 
         update();
-     }
+    }
 };
 
 #define CREATE_PATH      "Create Path"
@@ -313,6 +237,7 @@ public:
 #define GROUP_OBJECTS    "Group"
 #define MIRROR_X         "Mirror X"
 #define MIRROR_Y         "Mirror Y"
+#define CONVERT_TO_PATH  "Convert"
 
 class MyAction : public QAction {
     public :
@@ -331,6 +256,27 @@ void MyWidget::SelectCreateCircle   ( bool checked ) { mTool = &MyWidget::Create
 void MyWidget::SelectCreateRectangle( bool checked ) { mTool = &MyWidget::CreateRectangle;}
 void MyWidget::SelectPanView        ( bool checked ) { mTool = &MyWidget::PanView        ;}
 void MyWidget::SelectBucket         ( bool checked ) { mTool = &MyWidget::Bucket         ;}
+void MyWidget::SelectConvertToPath  ( bool checked )
+{
+    FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
+
+    if ( selectedObject )
+    {
+        if( typeid ( *selectedObject ) == typeid ( FVectorCircle ) )
+        {
+            FVectorCircle *circle = static_cast<FVectorCircle*>(selectedObject);
+            FVectorPathCubic* cubicPath = circle->Convert( );
+
+            mVEngine.GetScene().RemoveChild( circle );
+            mVEngine.GetScene().AppendChild( cubicPath );
+            mVEngine.GetScene().ClearSelection();
+            mVEngine.GetScene().Select( *cubicPath );
+            cubicPath->Update();
+        }
+    }
+
+    update();
+}
 void MyWidget::SelectMirrorX        ( bool checked )
 {
     FVectorObject* selectedObject = mVEngine.GetScene().GetLastSelected();
@@ -368,7 +314,7 @@ void MyWidget::SelectGroupObjects   ( bool checked )
     FVectorGroup* group = mVEngine.GetScene().GroupSelectdObjects();
 
     mVEngine.GetScene().ClearSelection();
-    mVEngine.GetScene().Select( mVEngine.GetBLContext(), *group );
+    mVEngine.GetScene().Select( *group );
 
     /*group->UpdateMatrix( *mBLContext );*/
 
@@ -412,7 +358,10 @@ void MyWidget::SelectDeleteObject ( bool checked )
 {
     FVectorObject *selectedObject = static_cast<FVectorObject*>( mVEngine.GetScene().GetLastSelected());
 
-    mVEngine.GetScene().RemoveChild( selectedObject );
+    if ( selectedObject )
+    {
+        mVEngine.GetScene().RemoveChild( selectedObject );
+    }
 
     update();
 }
@@ -493,10 +442,10 @@ MyWidget::CreatePath(QEvent *event)
 
         mVEngine.GetScene().AppendChild( builder );
 
-        builder->UpdateMatrix( *mBLContext );
+        builder->UpdateMatrix();
 
         mVEngine.GetScene().ClearSelection();
-        mVEngine.GetScene().Select( *mBLContext, *builder );
+        mVEngine.GetScene().Select( *builder );
 
         BLMatrix2D::invert( inverseWorldMatrix, builder->GetWorldMatrix() );
     }
@@ -559,11 +508,11 @@ MyWidget::CreatePath(QEvent *event)
 
         currentPathBuilder->CopyTransformation( *cubicPath );
 
-        cubicPath->UpdateMatrix( *mBLContext );
+        cubicPath->UpdateMatrix();
 
         mVEngine.GetScene().RemoveChild( currentPathBuilder );
         mVEngine.GetScene().ClearSelection ( );
-        mVEngine.GetScene().Select( *mBLContext, *cubicPath );
+        mVEngine.GetScene().Select( *cubicPath );
 
         mVEngine.GetScene().Update();
     }
@@ -583,7 +532,7 @@ MyWidget::PickObject( QEvent *event )
             mVEngine.GetScene().ClearSelection();
         }
 
-        mVEngine.GetScene().Select( *mBLContext, e->x(), e->y(), 10.0f );
+        mVEngine.GetScene().Select( e->x(), e->y(), 10.0f );
 
         update();
     }
@@ -762,7 +711,7 @@ MyWidget::PanView(QEvent *event)
             sceneObject->Translate( sceneObject->GetTranslationX() + difx
                                   , sceneObject->GetTranslationY() + dify );
 
-            sceneObject->UpdateMatrix( *mBLContext );
+            sceneObject->UpdateMatrix();
 
             mMouseX = localCoords.x;
             mMouseY = localCoords.y;
@@ -813,7 +762,7 @@ MyWidget::MoveObject(QEvent *event)
                 selectedObject->Translate( selectedObject->GetTranslationX() + difx
                                          , selectedObject->GetTranslationY() + dify );
 
-                selectedObject->UpdateMatrix( *mBLContext );
+                selectedObject->UpdateMatrix();
 
                 mMouseX = localCoords.x;
                 mMouseY = localCoords.y;
@@ -853,7 +802,7 @@ MyWidget::ScaleObject(QEvent *event)
                 selectedObject->Scale( selectedObject->GetScalingX() + difx * 0.01f
                                      , selectedObject->GetScalingY() + dify * 0.01f );
 
-                selectedObject->UpdateMatrix(*mBLContext);
+                selectedObject->UpdateMatrix();
             }
         }
 
@@ -888,7 +837,7 @@ MyWidget::RotateObject(QEvent *event)
             {
                 selectedObject->Rotate( selectedObject->GetRotation() + difx * 0.01f );
 
-                selectedObject->UpdateMatrix( *mBLContext );
+                selectedObject->UpdateMatrix();
             }
         }
 
@@ -907,7 +856,7 @@ MyWidget::Bucket(QEvent *event)
     {
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
-        mVEngine.GetScene().Bucket( *mBLContext, localCoordinates.x, localCoordinates.y, mFillColor );
+        mVEngine.GetScene().Bucket( localCoordinates.x, localCoordinates.y, mFillColor );
     }
 
     update();
@@ -927,10 +876,10 @@ MyWidget::CreateCircle( QEvent *event )
         mVEngine.GetScene().AppendChild( circle );
 
         circle->Translate( localCoordinates.x, localCoordinates.y );
-        circle->UpdateMatrix( *mBLContext );
+        circle->UpdateMatrix();
 
         mVEngine.GetScene().ClearSelection();
-        mVEngine.GetScene().Select( *mBLContext, *circle );
+        mVEngine.GetScene().Select( *circle );
     }
 
     if( event->type() == QEvent::MouseMove )
@@ -961,16 +910,16 @@ MyWidget::CreateRectangle(QEvent *event)
 
     if( event->type() == QEvent::MouseButtonPress )
     {
-        FVectorRectangle* rectangle = new FVectorRectangle( 0.0f, 0.0f );
+        FVectorRectangle* rectangle = new FVectorRectangle( "Rectangle", 0.0f, 0.0f );
         FVec2D localCoordinates = mVEngine.GetScene().WorldCoordinatesToLocal( e->x(), e->y() );
 
         mVEngine.GetScene().AppendChild( rectangle );
 
         rectangle->Translate( localCoordinates.x, localCoordinates.y );
-        rectangle->UpdateMatrix( *mBLContext );
+        rectangle->UpdateMatrix();
 
         mVEngine.GetScene().ClearSelection();
-        mVEngine.GetScene().Select( *mBLContext, *rectangle );
+        mVEngine.GetScene().Select( *rectangle );
     }
 
     if( event->type() == QEvent::MouseMove )
@@ -994,7 +943,9 @@ MyWidget::CreateRectangle(QEvent *event)
     update();
 }
 
-MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
+MyWidget::MyWidget( uint32 iWidth, uint32 iHeight )
+    : mVEngine ( iWidth, iHeight )
+{
     QToolBar *toolbar = new QToolBar(this);
     QPixmap pathPix("new.png");
 
@@ -1015,6 +966,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     MyAction *cutPathAction            = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CUT_PATH         ) );
     MyAction *mirrorXAction            = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MIRROR_X         ) );
     MyAction *mirrorYAction            = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), MIRROR_Y         ) );
+    MyAction *convertToPathAction      = static_cast<MyAction*>( toolbar->addAction( QIcon( pathPix ), CONVERT_TO_PATH  ) );
 
     connect( createPathAction        , &MyAction::triggered, this, &MyWidget::SelectCreatePath      );
     connect( editPathAction          , &MyAction::triggered, this, &MyWidget::SelectEditPath        );
@@ -1033,6 +985,7 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     connect( cutPathAction           , &MyAction::triggered, this, &MyWidget::SelectCutPath         );
     connect( mirrorXAction           , &MyAction::triggered, this, &MyWidget::SelectMirrorX         );
     connect( mirrorYAction           , &MyAction::triggered, this, &MyWidget::SelectMirrorY         );
+    connect( convertToPathAction     , &MyAction::triggered, this, &MyWidget::SelectConvertToPath   );
 
     /*setAttribute(Qt::WA_OpaquePaintEvent);*/
 
@@ -1055,30 +1008,13 @@ MyWidget::MyWidget( uint32 iWidth, uint32 iHeight ) {
     mContext = new FContext( *mQueue, Format_RGBA8 );
     mCanvas = new FBlock( iWidth, iHeight, fmt);
 
-    // Blend2D part
-   /* BLContextCreateInfo createInfo{};*/
-
-    // Configure the number of threads to use.
-    /*createInfo.threadCount = 1;*/
-
-    mBLContext = &FVectorEngine::GetBLContext();
-    mBLImage = new BLImage( iWidth,iHeight,BL_FORMAT_PRGB32 );
-    mBLImage->getData( &data );
-
-     BLResult result = mBLContext->begin(*mBLImage/*, createInfo*/);
-
-    /*mBLContext->setRenderingQuality(0);*/
-
-     if(result != BL_SUCCESS)
-printf("failure\n");
+    mVEngine.GetBLImage().getData( &data );
 
     mQImage = new QImage( (uchar*) data.pixelData
                                  , data.size.w
                                  , data.size.h
                                  , data.stride
                                  , QImage::Format_ARGB32 );
-
-    mVEngine.GetScene().UpdateMatrix( *mBLContext );
 
 /*
     FVectorPathCubic* testPath = new FVectorPathCubic();

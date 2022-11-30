@@ -173,9 +173,7 @@ FVectorSegment::GetStraightDistance()
 }
 
 void
-FVectorSegment::DrawStructure( FBlock& iBlock
-                             , BLContext& iBLContext
-                             , FRectD &iRoi )
+FVectorSegment::DrawStructure( FRectD &iRoi )
 {
 
 }
@@ -290,9 +288,7 @@ FVectorSegment* FVectorSegment::GetPreviousSegment( )
 }
 
 void
-FVectorSegment::Draw( FBlock& iBlock
-                    , BLContext& iBLContext
-                    , FRectD &iRoi )
+FVectorSegment::Draw( FRectD &iRoi )
 {
 
 }

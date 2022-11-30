@@ -30,6 +30,69 @@ FVectorPointCubic::GetControlPoint()
 }
 
 void
+FVectorPointCubic::SmoothSegments( bool iBuildSegments )
+{
+    FVec2D averageVector( 0.0f, 0.0f );
+
+    if ( this->GetSegmentCount() > 1 )
+    {
+        for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+        {
+            FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*it);
+
+            averageVector += cubicSegment->GetVector( true );
+        }
+
+        if ( averageVector.DistanceSquared() )
+        {
+            averageVector.Normalize();
+        }
+ 
+        for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+        {
+            FVectorSegmentCubic* cubicSegment = static_cast<FVectorSegmentCubic*>(*it);
+            double distance = cubicSegment->GetStraightDistance();
+            FVec2D smoothVector = averageVector;
+
+            if ( this == cubicSegment->GetPoint(0) )
+            {
+                FVec2D segmentVector = cubicSegment->GetVector( false );
+
+                if ( smoothVector.DotProduct( segmentVector ) < 0.0f )
+                {
+                    smoothVector = - smoothVector;
+                }
+
+                cubicSegment->GetControlPoint(0).Set( this->GetX() + ( smoothVector.x * distance * 0.35f ),
+                                                      this->GetY() + ( smoothVector.y * distance * 0.35f ) );
+            }
+
+            if ( this == cubicSegment->GetPoint(1) )
+            {
+                FVec2D segmentVector = - cubicSegment->GetVector( false );
+
+                if ( smoothVector.DotProduct( segmentVector ) < 0.0f )
+                {
+                    smoothVector = - smoothVector;
+                }
+
+                cubicSegment->GetControlPoint(1).Set( this->GetX() + ( smoothVector.x * distance * 0.35f ),
+                                                      this->GetY() + ( smoothVector.y * distance * 0.35f ) );
+            }
+
+            if ( iBuildSegments == true )
+            {
+                cubicSegment->Update();
+            }
+            else
+            {
+                cubicSegment->Invalidate();
+            }
+        }
+    }
+}
+
+void
 FVectorPointCubic::Set( double iX
                       , double iY
                       , bool iBuildSegments )

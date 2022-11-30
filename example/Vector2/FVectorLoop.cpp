@@ -46,7 +46,7 @@ FVectorLoop::CopyShape()
 }
 
 FVectorObject*
-FVectorLoop::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorLoop::PickShape( double iX, double iY, double iRadius )
 {
     /*BLPath path;*/
     BLPoint p = { iX, iY };
@@ -202,10 +202,12 @@ FVectorLoop::BuildSegmentCubic( std::vector<BLPoint>& iPointArray
 }
 
 void
-FVectorLoop::DrawPoints( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorLoop::DrawPoints( FRectD& iRoi )
 {
-    iBLContext.setStrokeStyle( BLRgba32( 0xFFFF8000 ) );
-    iBLContext.setFillStyle( BLRgba32( 0xFFFF8000 ) );
+    BLContext& blctx = FVectorEngine::GetBLContext();
+
+    blctx.setStrokeStyle( BLRgba32( 0xFFFF8000 ) );
+    blctx.setFillStyle( BLRgba32( 0xFFFF8000 ) );
 
     if ( mPointList.size() ) 
     {
@@ -214,7 +216,7 @@ FVectorLoop::DrawPoints( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
             FVectorPoint* point = static_cast<FVectorPoint*>(*it);
             FVec2D& pointAt = point->GetCoords();
 
-            iBLContext.fillRect ( pointAt.x - 5, pointAt.y - 5, 10, 10 );
+            blctx.fillRect ( pointAt.x - 5, pointAt.y - 5, 10, 10 );
         }
     }
 }
@@ -257,16 +259,18 @@ FVectorLoop::Build()
 
 
 void
-FVectorLoop::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorLoop::DrawShape( FRectD& iRoi, uint64 iFlags )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
+
     if ( IsFilled() )
     {
     /*if ( mPointList.size() ) 
     {*/
-       iBLContext.setFillStyle( BLRgba32( mFillColor ) );
+       blctx.setFillStyle( BLRgba32( mFillColor ) );
 
        /*iBLContext.fillPolygon( &mPointArray[0], mPointArray.size() );*/
-       iBLContext.fillPath( mPath );
+       blctx.fillPath( mPath );
     /*}*/
     }
 }

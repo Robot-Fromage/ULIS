@@ -9,8 +9,8 @@
 class FVectorGroup : public FVectorObject
 {
     private:
-        void DrawShape(FBlock& iBlock,BLContext& iBLContext,FRectD& iRoi) { };
-        FVectorObject* PickShape(BLContext& iBLContext,double iX,double iY,double iRadius);
+        void DrawShape( FRectD& iRoi, uint64 iFlags ) { };
+        FVectorObject* PickShape( double iX, double iY, double iRadius );
         FVectorObject* CopyShape();
         void UpdateShape();
 

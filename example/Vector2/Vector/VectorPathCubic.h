@@ -15,9 +15,7 @@ class FVectorPathCubic: public FVectorPath
         static const uint32 JOINT_TYPE_LINEAR = 2;
         static const uint32 JOINT_TYPE_MITER  = 3;
 
-        void DrawJoint( FBlock& iBlock
-                      , BLContext& iBLContext
-                      , FVectorSegmentCubic* iPrevSegment
+        void DrawJoint( FVectorSegmentCubic* iPrevSegment
                       , FVectorSegmentCubic& iSegment
                       , double iRadius );
 
@@ -25,8 +23,8 @@ class FVectorPathCubic: public FVectorPath
 
     protected:
         FVectorObject* CopyShape();
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+        void DrawShape( FRectD& iRoi, uint64 iFlags );
+        FVectorObject* PickShape( double iX, double iY, double iRadius );
 
     public:
         FVectorPathCubic();
@@ -36,14 +34,14 @@ class FVectorPathCubic: public FVectorPath
         bool PickPoint ( double iX, double iY, double iRadius, uint64 iSelectionFlags );
         void Unselect( FVectorPoint* iPoint );
 
-        void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        void DrawStructure( FRectD& iRoi );
         void setJointRadial();
         void setJointLinear();
         void setJointMiter();
         void setJointNone();
-        void Fill( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        void Fill( FRectD& iRoi );
         void Merge( FVectorPathCubic& iCubicPath );
-        void DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        void DrawShapeVariable( FRectD& iRoi, uint64 iFlags );
 
         void Mirror( bool iMirrorX, bool iMirrorY );
         void Cut( FVec2D& linePoint0, FVec2D& linePoint1 );

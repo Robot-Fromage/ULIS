@@ -48,11 +48,11 @@ class FVectorSegmentCubic : public FVectorSegment
         FVectorSegmentCubic( FVectorPathCubic& iPath, FVectorPointCubic* iPoint0, FVectorPointCubic* iPoint1 );
         FVectorSegmentCubic( FVectorPathCubic& iPath, FVectorPointCubic* iPoint0, double iCtrlPoint0x, double iCtrlPoint0y, double iCtrlPoint1x, double iCtrlPoint1y, FVectorPointCubic* iPoint1 );
         FVectorHandleSegment& GetControlPoint( int iCtrlPointNum );
-        void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi, double iZoomFactor );
-        void DrawIntersections ( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi, double iZoomFactor );
-        FVec2D GetPreviousVector(bool iNormalize);
-        FVec2D GetNextVector(bool iNormalize);
+        void Draw( FRectD &iRoi );
+        void DrawStructure( FRectD &iRoi, double iZoomFactor );
+        void DrawIntersections ( FRectD &iRoi, double iZoomFactor );
+        FVec2D GetPreviousVector( bool iNormalize );
+        FVec2D GetNextVector( bool iNormalize );
         FVec2D GetVectorAtEnd( bool iNormalize );
         FVec2D GetVectorAtStart( bool iNormalize );
         FRectD& GetBoundingBox();

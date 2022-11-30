@@ -11,7 +11,7 @@ FVectorGroup::FVectorGroup()
 }
 
 FVectorObject*
-FVectorGroup::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorGroup::PickShape( double iX, double iY, double iRadius )
 {
     if ( ( iX > mBBox.x ) && ( iX < ( mBBox.x + mBBox.w ) )
       && ( iY > mBBox.y ) && ( iY < ( mBBox.y + mBBox.h ) ) )

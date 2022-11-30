@@ -9,8 +9,8 @@
 class FVectorRectangle : public FVectorObject
 {
     private:
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+        void DrawShape( FRectD &iRoi, uint64 iFlags );
+        FVectorObject* PickShape( double iX, double iY, double iRadius );
         FVectorObject* CopyShape();
         void UpdateShape() {};
 
@@ -20,8 +20,8 @@ class FVectorRectangle : public FVectorObject
 
     public:
         ~FVectorRectangle();
-        FVectorRectangle();
-        FVectorRectangle( double iWidth, double iHeight );
+        FVectorRectangle( std::string iName );
+        FVectorRectangle( std::string iName, double iWidth, double iHeight );
         void SetSize( double iWidth, double iHeight );
         double GetWidth();
         double GetHeight();

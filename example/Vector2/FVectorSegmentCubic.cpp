@@ -99,12 +99,12 @@ FVec2D FVectorSegmentCubic::GetVectorAtEnd( bool iNormalize )
 /*
     FVec2D vec = { GetPoint(1)->GetX() - GetControlPoint(1).GetX(),
                    GetPoint(1)->GetY() - GetControlPoint(1).GetY() };
-
+*/
     if( iNormalize && vec.DistanceSquared() )
     {
         vec.Normalize();
     }
-*/
+
     return vec;
 }
 
@@ -118,12 +118,12 @@ FVec2D FVectorSegmentCubic::GetVectorAtStart( bool iNormalize )
 /*
     FVec2D vec = { GetControlPoint(0).GetX() - GetPoint(0)->GetX(),
                    GetControlPoint(0).GetY() - GetPoint(0)->GetY() };
-
+*/
     if( iNormalize && vec.DistanceSquared() )
     {
         vec.Normalize();
     }
-*/
+
     return vec;
 }
 
@@ -223,9 +223,12 @@ FVectorSegmentCubic::Cut( FVec2D& linePoint0
     FVec2D& point1 = mPoint[1]->GetCoords();
     FVec2D& ctrlPoint0 = mCtrlPoint[0].GetCoords();
     FVec2D& ctrlPoint1 = mCtrlPoint[1].GetCoords();
-    // we'll have 3 intersections at most.
-    FVectorPoint* pointChain[5] = { mPoint[0], nullptr, nullptr, nullptr, nullptr };
+    // we'll have 3 intersections at most and 2 points at tips.
+    FVectorPointCubic* pointChain[5] = { static_cast<FVectorPointCubic*>(mPoint[0]), nullptr, nullptr, nullptr, nullptr };
+    FVec2D tangentChain[5] = { GetVectorAtStart( true ), { 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 0.0f } };
     uint32 pointCount = 1;
+    FVec2D ctrlPoint0Vector = GetVectorAtStart( true );
+    FVec2D ctrlPoint1Vector = GetVectorAtEnd( true );
 
     for( int i = 0; i < mPolygonCache.size(); i++ )
     {
@@ -242,16 +245,26 @@ FVectorSegmentCubic::Cut( FVec2D& linePoint0
             double segmentT = poly->fromT + ( polySubT * ( poly->toT - poly->fromT ) );
             FVec2D pointAt = CubicBezierPointAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, segmentT );
             FVectorPointCubic* newCubicPoint = new FVectorPointCubic( pointAt.x, pointAt.y );
+            FVec2D newTangent = CubicBezierTangentAtParameter<FVec2D>( point0, ctrlPoint0, ctrlPoint1, point1, segmentT );
 
             newCubicPoint->SetRadius( ( mPoint[0]->GetRadius() * segmentT ) + ( mPoint[1]->GetRadius() * ( 1.0f - segmentT ) ), false );
 
-            pointChain[pointCount++] = newCubicPoint; 
+            if ( newTangent.DistanceSquared() )
+            {
+                newTangent.Normalize();
+            }
+
+            tangentChain[pointCount] = newTangent;
+            pointChain[pointCount] = newCubicPoint;
+
+            pointCount++;
         }
     }
 
     if ( pointCount > 1 )
     {
-        pointChain[pointCount] = mPoint[1];
+        tangentChain[pointCount] = GetVectorAtEnd( true );
+        pointChain[pointCount] = static_cast<FVectorPointCubic*>(mPoint[1]);
 
         mPath.RemoveSegment( this );
 
@@ -266,6 +279,13 @@ FVectorSegmentCubic::Cut( FVec2D& linePoint0
             FVectorSegmentCubic* segment = new FVectorSegmentCubic ( static_cast<FVectorPathCubic&>(mPath)
                                                                    , static_cast<FVectorPointCubic*>(pointChain[i])
                                                                    , static_cast<FVectorPointCubic*>(pointChain[n]) );
+            double distance = segment->GetStraightDistance();
+
+            segment->GetControlPoint(0).Set( segment->GetPoint(0)->GetX() + ( tangentChain[i].x * distance * 0.35f )
+                                           , segment->GetPoint(0)->GetY() + ( tangentChain[i].y * distance * 0.35f ) );
+
+            segment->GetControlPoint(1).Set( segment->GetPoint(1)->GetX() - ( tangentChain[n].x * distance * 0.35f )
+                                           , segment->GetPoint(1)->GetY() - ( tangentChain[n].y * distance * 0.35f ) );
 
             mPath.AddSegment( segment );
         }
@@ -344,11 +364,10 @@ FVectorSegmentCubic::Intersect( FVectorSegmentCubic& iOther )
 }
 
 void
-FVectorSegmentCubic::DrawIntersections ( FBlock& iBlock
-                                       , BLContext& iBLContext
-                                       , FRectD &iRoi
+FVectorSegmentCubic::DrawIntersections ( FRectD &iRoi
                                        , double iZoomFactor )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
     double intersectionSize = 4 * iZoomFactor;
     double intersectionHalfSize = intersectionSize * 0.5f;
     FVec2D& point0 = mPoint[0]->GetCoords();
@@ -361,21 +380,19 @@ FVectorSegmentCubic::DrawIntersections ( FBlock& iBlock
         FVectorPointIntersection* intersectionPoint = static_cast<FVectorPointIntersection*>(*it);
         FVec2D pt = intersectionPoint->GetPosition(*this);
 
-        iBLContext.setFillStyle( BLRgba32( 0xFFFF8000 ) );
-        iBLContext.fillRect( pt.x - intersectionHalfSize
-                           , pt.y - intersectionHalfSize, intersectionSize, intersectionSize );
+        blctx.setFillStyle( BLRgba32( 0xFFFF8000 ) );
+        blctx.fillRect( pt.x - intersectionHalfSize
+                      , pt.y - intersectionHalfSize, intersectionSize, intersectionSize );
     }
 }
 
 void
-FVectorSegmentCubic::DrawStructure( FBlock& iBlock
-                                  , BLContext& iBLContext
-                                  , FRectD &iRoi
+FVectorSegmentCubic::DrawStructure( FRectD &iRoi
                                   , double iZoomFactor )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
     BLPath ctrlPath0;
     BLPath ctrlPath1;
-
     BLPoint point0 = { mPoint[0]->GetX(), mPoint[0]->GetY() };
     BLPoint point1 = { mPoint[1]->GetX(), mPoint[1]->GetY() };
     BLPoint ctrlPoint0 = { mCtrlPoint[0].GetX(), mCtrlPoint[0].GetY() };
@@ -386,20 +403,20 @@ FVectorSegmentCubic::DrawStructure( FBlock& iBlock
     ctrlPath0.moveTo( point0.x, point0.y );
     ctrlPath0.lineTo( ctrlPoint0.x, ctrlPoint0.y );
 
-    iBLContext.setStrokeStyle( BLRgba32( 0xFFFF0000 ) );
+    blctx.setStrokeStyle( BLRgba32( 0xFFFF0000 ) );
 
-    iBLContext.strokePath( ctrlPath0 );
+    blctx.strokePath( ctrlPath0 );
 
     ctrlPath1.moveTo( point1.x, point1.y );
     ctrlPath1.lineTo( ctrlPoint1.x, ctrlPoint1.y );
 
-    iBLContext.strokePath( ctrlPath1 );
+    blctx.strokePath( ctrlPath1 );
 
-    iBLContext.setFillStyle( BLRgba32( 0xFFFF0000 ) );
-    iBLContext.fillRect( ctrlPoint0.x - handleHalfSize, ctrlPoint0.y - handleHalfSize, handleSize, handleSize );
-    iBLContext.fillRect( ctrlPoint1.x - handleHalfSize, ctrlPoint1.y - handleHalfSize, handleSize, handleSize );
+    blctx.setFillStyle( BLRgba32( 0xFFFF0000 ) );
+    blctx.fillRect( ctrlPoint0.x - handleHalfSize, ctrlPoint0.y - handleHalfSize, handleSize, handleSize );
+    blctx.fillRect( ctrlPoint1.x - handleHalfSize, ctrlPoint1.y - handleHalfSize, handleSize, handleSize );
 
-    DrawIntersections (  iBlock, iBLContext, iRoi, iZoomFactor );
+    DrawIntersections (  iRoi, iZoomFactor );
 }
 
 uint32
@@ -415,11 +432,11 @@ std::vector<FPolygon>&
 }
 
 void
-FVectorSegmentCubic::Draw( FBlock& iBlock
-                         , BLContext& iBLContext
-                         , FRectD &iRoi )
+FVectorSegmentCubic::Draw( FRectD &iRoi )
 {
-    iBLContext.setStrokeWidth( 1.0f );
+    BLContext& blctx = FVectorEngine::GetBLContext();
+
+    blctx.setStrokeWidth( 1.0f );
 
 #ifdef UNUSED
     for ( int i = 0; i < mPolygonCache.size(); i++ )
@@ -438,14 +455,14 @@ FVectorSegmentCubic::Draw( FBlock& iBlock
                              , pt[2].x
                              , pt[2].y );*/
 
-        iBLContext.fillPolygon( pt, 4 );
+        blctx.fillPolygon( pt, 4 );
     }
 #endif
 /*
 #ifdef UNUSED
 */
-    iBLContext.strokePath ( mBLPath );
-    iBLContext.fillPath ( mBLPath );
+    blctx.strokePath ( mBLPath );
+    blctx.fillPath ( mBLPath );
 /*
 #endif
 */

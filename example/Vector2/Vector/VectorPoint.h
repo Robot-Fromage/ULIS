@@ -34,6 +34,7 @@ class FVectorPoint
         FVectorSegment* GetLastSegment();
         FVectorSegment* GetFirstSegment();
         virtual FVectorSegment* GetSegment( FVectorPoint& iOtherPoint );
+        FVectorSegment* GetOtherSegment( FVectorSegment& iCurrentSegment );
         void RemoveSegment( FVectorSegment* iSegment );
         virtual FVec2D& GetCoords();
         virtual FVec2D GetPosition( FVectorSegment& iSegment );

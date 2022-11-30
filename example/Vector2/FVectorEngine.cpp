@@ -3,12 +3,21 @@
 
 FVectorEngine::~FVectorEngine()
 {
+    GetBLContext().end();
 }
 
-FVectorEngine::FVectorEngine()
+FVectorEngine::FVectorEngine( double iWidth, double iHeight )
     : mScene ( "Vector Scene" )
 {
+    mBLImage = new BLImage( iWidth, iHeight, BL_FORMAT_PRGB32 );
 
+    GetBLContext().begin( *mBLImage );
+}
+
+BLImage&
+FVectorEngine::GetBLImage()
+{
+    return *mBLImage;
 }
 
 BLContext&
@@ -31,31 +40,38 @@ FVectorEngine::GetInvalidateRegion()
 }
 
 void
-FVectorEngine::Draw( FBlock& iBlock, BLContext& iBLContext )
+FVectorEngine::Render( FBlock& iBlock )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
     static FRectD zeroRectangle;
+    // Blend2D part
+   /* BLContextCreateInfo createInfo{};*/
+
+    // Configure the number of threads to use.
+    /*createInfo.threadCount = 1;*/
+
+    blctx.setFillStyle(BLRgba32(0xFFFFFFFF));
 
     if ( mRoi != zeroRectangle )
     {
-        iBLContext.fillRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
+        blctx.fillRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
 
-
-        iBLContext.setStrokeStyle(BLRgba32(0xFFFF0000));
-        iBLContext.setStrokeWidth(1.0f);
-        iBLContext.strokeRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
+        blctx.setStrokeStyle(BLRgba32(0xFFFF0000));
+        blctx.setStrokeWidth(1.0f);
+        blctx.strokeRect( mRoi.x, mRoi.y, mRoi.w, mRoi.h );
 
     }
     else
     {
-        iBLContext.fillAll();
+        blctx.fillAll();
     }
 
-
-
-    mScene.Draw( iBlock, iBLContext, mRoi );
+    mScene.Draw( mRoi, 0 );
 
     // Reset region of interest after each draw
     memset ( &mRoi, 0, sizeof ( mRoi ) );
+
+    blctx.flush( BL_CONTEXT_FLUSH_SYNC );
 }
 
 FVectorRoot&

@@ -16,18 +16,19 @@ class FVectorPathBuilder : public FVectorPath
         double mLastCubicAngleLimit;
         std::list<FVectorPoint*> mSamplePointList;
         std::list<FVectorSegment*> mSampleSegmentList;
-        FVectorSegmentCubic* Sample(FVectorPoint* iPoint, double iRadius, bool iEnforce );
+        FVectorSegmentCubic* Sample( FVectorPoint* iPoint, double iRadius, bool iEnforce );
 
         FVectorObject* CopyShape();
-        void DrawShape(FBlock& iBlock,BLContext& iBLContext,FRectD &iRoi);
-        FVectorObject* PickShape(BLContext& iBLContext,double iX,double iY,double iRadius) { return nullptr; };
+        void DrawShape( FRectD &iRoi, uint64 iFlags );
+        FVectorObject* PickShape( double iX, double iY, double iRadius ) { return nullptr; };
         void UpdateShape() {};
 
     protected :
         /*std::list<FVectorPoint*> mSmoothedPointList;*/
         FVectorPathCubic* mCubicPath;
         FVectorSegment* AppendPoint( double iX, double iY, double iRadius, bool iEnforce );
-        void Round( FVectorSegmentCubic& cubicSegment, FVec2D iFirstVector, FVec2D iLastVector );
+        void Round( FVectorSegmentCubic& iCubicSegment );
+        void Sharp( FVectorSegmentCubic& iCubicSegment, FVec2D iEntryVector, FVec2D iExitVector );
 
     public:
        ~FVectorPathBuilder();

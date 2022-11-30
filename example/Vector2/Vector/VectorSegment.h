@@ -22,8 +22,8 @@ class FVectorSegment
         ~FVectorSegment();
         FVectorSegment( FVectorPath& iPath, FVectorPoint* iPoint0, FVectorPoint* iPoint1 );
         FVectorPoint* GetPoint( int iPointNum );
-        virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        virtual void Draw( FRectD &iRoi );
+        virtual void DrawStructure( FRectD &iRoi );
         double GetStraightDistance();
         FVectorSegment* GetPreviousSegment();
         FVectorSegment* GetNextSegment();
@@ -47,4 +47,6 @@ class FVectorSegment
         FVec2D GetVector( bool iNormalize );
 
         virtual FRectD& GetBoundingBox() { return mBBox; };
+
+        FVectorSegment* GetOtherSegment( FVectorSegment& iCurrentSegment );
 };

@@ -133,7 +133,7 @@ FVectorPath::InvalidateLoop( FVectorLoop* iLoop )
 }
 
 void
-FVectorPath::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+FVectorPath::DrawLoops( FRectD &iRoi, uint64 iFlags )
 {
     for( std::list<FVectorLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
     {
@@ -141,19 +141,19 @@ FVectorPath::DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
 
         /*if ( loop->IsFilled() == true )
         {*/
-            loop->DrawShape( iBlock, iBLContext, iRoi );
+            loop->DrawShape( iRoi, iFlags );
         /*}*/
     }
 }
 
 FVectorObject*
-FVectorPath::PickLoops( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorPath::PickLoops( double iX, double iY, double iRadius )
 {
     for( std::list<FVectorLoop*>::iterator it = mLoopList.begin(); it != mLoopList.end(); ++it )
     {
         FVectorLoop* loop = static_cast<FVectorLoop*>(*it);
 
-        if ( loop->PickShape( iBLContext, iX, iY, iRadius ) )
+        if ( loop->PickShape( iX, iY, iRadius ) )
         {
             return loop;
         }
@@ -270,34 +270,30 @@ FVectorPath::GetFirstPoint()
 }
 
 void
-FVectorPath::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorPath::DrawStructure( FRectD& iRoi )
 {
-    iBLContext.setStrokeStyle( BLRgba32( 0xFF00FF00 ) );
-    iBLContext.setStrokeWidth(1.0f);
+    BLContext& blctx = FVectorEngine::GetBLContext();
+
+    blctx.setStrokeStyle( BLRgba32( 0xFF00FF00 ) );
+    blctx.setStrokeWidth(1.0f);
 
     for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
     {
         FVectorSegment *segment = (*it);
 
-        segment->DrawStructure( iBlock, iBLContext, iRoi );
+        segment->DrawStructure( iRoi );
     }
 }
 
 void
-FVectorPath::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorPath::DrawShape( FRectD& iRoi, uint64 iFlags )
 {
-
-
-    iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
-    /*iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
-    iBLContext.setStrokeStyle(BLRgba32(0xFF000000));*/
-
     for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
     {
         FVectorSegment *segment = (*it);
 
-        segment->Draw( iBlock, iBLContext, iRoi );
+        segment->Draw( iRoi );
     }
 
-    DrawLoops( iBlock, iBLContext, iRoi );
+    DrawLoops( iRoi, iFlags );
 }

@@ -34,9 +34,9 @@ class FVectorLoop : public FVectorObject
                                 , std::list<FVectorPoint*>& iPointList
                                 , std::list<FVectorSection*>& iSectionList );
 
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
-        void DrawPoints( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
+        void DrawShape( FRectD& iRoi, uint64 iFlags );
+        FVectorObject* PickShape( double iX, double iY, double iRadius );
+        void DrawPoints( FRectD& iRoi );
 
         void Unselect( FVectorPoint* iPoint ) { };
         bool PickPoint( double iX, double iY, double iRadius ) { return false; };

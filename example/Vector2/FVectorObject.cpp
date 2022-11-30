@@ -6,8 +6,8 @@ FVectorObject::~FVectorObject()
 }
 
 FVectorObject::FVectorObject()
-    : mTranslation( 0, 0 )
-    , mRotation( 0 )
+    : mTranslation( 0.0f, 0.0f )
+    , mRotation( 0.0f )
     , mScaling ( 1.0f, 1.0f )
     , mStrokeColor ( 0xFF000000 )
     , mFillColor ( 0xFF000000 )
@@ -17,14 +17,11 @@ FVectorObject::FVectorObject()
     , mIsSelected ( false )
     , mIsInvalidated ( false )
 {
-    mLocalMatrix.reset();
-    mInverseLocalMatrix.reset();
-    mWorldMatrix.reset();
-    mInverseWorldMatrix.reset();
+    UpdateMatrix();
 }
 
 FVectorObject::FVectorObject( std::string iName )
-    : FVectorObject( )
+    : FVectorObject()
 {
     mName.assign( iName );
 }
@@ -126,8 +123,6 @@ FVectorObject::CopySettings( FVectorObject& iDestinationObject )
     iDestinationObject.mInverseLocalMatrix = mInverseLocalMatrix;
     iDestinationObject.mWorldMatrix = mWorldMatrix;
     iDestinationObject.mInverseWorldMatrix = mInverseWorldMatrix;
-
-    /*UpdateMatrix();*/
 }
 
 double
@@ -143,25 +138,25 @@ FVectorObject::GetTranslationY()
 }
 
 void
-FVectorObject::UpdateMatrix( BLContext& iBLContext )
+FVectorObject::UpdateMatrix( )
 {
-    iBLContext.save();
-    iBLContext.resetMatrix();
-    iBLContext.translate( mTranslation.x, mTranslation.y );
-    iBLContext.rotate( mRotation );
-    iBLContext.scale( mScaling.x, mScaling.y );
-    mLocalMatrix = iBLContext.userMatrix();
-    /*iBLContext.restore();
+    BLContext& blctx = FVectorEngine::GetBLContext();
 
-    iBLContext.save();*/
+    blctx.save();
+
+    blctx.resetMatrix();
+    blctx.translate( mTranslation.x, mTranslation.y );
+    blctx.rotate( mRotation );
+    blctx.scale( mScaling.x, mScaling.y );
+    mLocalMatrix = blctx.userMatrix();
 
     BLMatrix2D::invert( mInverseLocalMatrix, mLocalMatrix );
 
     if( mParent)
     {
-        iBLContext.setMatrix( mParent->mWorldMatrix );
-        iBLContext.transform( mLocalMatrix );
-        mWorldMatrix = iBLContext.userMatrix();
+        blctx.setMatrix( mParent->mWorldMatrix );
+        blctx.transform( mLocalMatrix );
+        mWorldMatrix = blctx.userMatrix();
 
         BLMatrix2D::invert( mInverseWorldMatrix, mWorldMatrix );
     }
@@ -176,16 +171,15 @@ FVectorObject::UpdateMatrix( BLContext& iBLContext )
     {
         FVectorObject *child = (*it);
 
-        child->UpdateMatrix( iBLContext );
+        child->UpdateMatrix( );
     }
 
-    iBLContext.restore();
+    blctx.restore();
 }
 
 FRectD
 FVectorObject::GetBBox( bool iWorld )
 {
-
     if ( iWorld == true )
     {
         BLPoint origin = mWorldMatrix.mapPoint( mBBox.x, mBBox.y );
@@ -194,25 +188,25 @@ FVectorObject::GetBBox( bool iWorld )
         
         return worldBBox;
     }
-    
 
     return mBBox;
 }
 
 void
-FVectorObject::DrawChildren( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorObject::DrawChildren( FRectD& iRoi, uint64 iFlags )
 {
     for( std::list<FVectorObject*>::iterator it = mChildrenList.begin(); it != mChildrenList.end(); ++it )
     {
         FVectorObject *child = (*it);
 
-        child->Draw( iBlock, iBLContext, iRoi );
+        child->Draw( iRoi, iFlags );
     }
 }
 
 void
-FVectorObject::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorObject::Draw( FRectD& iRoi, uint64 iFlags )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
     FRectD localRoi = { 0.0f, 0.0f, 0.0f, 0.0f };
 
     // Adapt the Region-Of-Interest to the local coordinates
@@ -231,23 +225,22 @@ FVectorObject::Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
 
             /*printf("%s : %f %f %f %f\n",mName.c_str(), iRoi.x,iRoi.y,iRoi.w,iRoi.h);*/
 
-    iBLContext.save();
-    iBLContext.transform( mLocalMatrix );
-    /*iBLContext.translate( mTranslation.x, mTranslation.y );*/
-    DrawShape( iBlock, iBLContext, localRoi );
+    blctx.save();
+    blctx.transform( mLocalMatrix );
+    DrawShape( localRoi, iFlags );
 
-    DrawChildren( iBlock, iBLContext, localRoi );
+    DrawChildren( localRoi, iFlags );
 
-    iBLContext.restore();
+    blctx.restore();
 }
 
 void
-FVectorObject::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+FVectorObject::DrawShape( FRectD &iRoi, uint64 iFlags )
 {
 }
 
 FVectorObject*
-FVectorObject::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorObject::PickShape( double iX, double iY, double iRadius )
 {
     return nullptr;
 }
@@ -284,10 +277,10 @@ FVectorObject::Invalidate()
                 FVectorRoot* root = static_cast<FVectorRoot*>(obj);
 
                 root->InvalidateObject( this );
+
+                mIsInvalidated = true;
             }
         }
-
-        mIsInvalidated = true;
     }
 }
 
@@ -385,7 +378,7 @@ FVectorObject::MoveFront()
 }
 
 FVectorObject*
-FVectorObject::Pick( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorObject::Pick( double iX, double iY, double iRadius )
 {
     if ( this->mParent )
     {
@@ -395,7 +388,7 @@ FVectorObject::Pick( BLContext& iBLContext, double iX, double iY, double iRadius
         }
     }
 
-    return PickShape( iBLContext, iX, iY, iRadius );
+    return PickShape( iX, iY, iRadius );
 }
 
 void
@@ -446,7 +439,7 @@ FVectorObject::AddChild( FVectorObject* iChild, bool iPrepend )
 
     ExtractTransformations ( localMatrix, &iChild->mTranslation, &iChild->mRotation, &iChild->mScaling );
 
-    iChild->UpdateMatrix( blctx );
+    iChild->UpdateMatrix();
 
     if ( iPrepend == true )
     {

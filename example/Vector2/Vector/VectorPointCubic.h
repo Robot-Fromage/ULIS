@@ -24,4 +24,5 @@ class FVectorPointCubic : public FVectorPoint
         FVec2D GetPerpendicularVector( bool iNormalize );
         void BuildSegments();
         virtual void SetRadius( double iRadius, bool iBuildSegments );
+        void SmoothSegments( bool iBuildSegments );
 };

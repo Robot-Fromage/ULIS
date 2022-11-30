@@ -5,15 +5,15 @@ FVectorRectangle::~FVectorRectangle()
 {
 }
 
-FVectorRectangle::FVectorRectangle()
-    : FVectorObject("Rectangle")
+FVectorRectangle::FVectorRectangle( std::string iName )
+    : FVectorObject( iName )
     , mWidth( 0 )
     , mHeight( 0 )
 {
 }
 
-FVectorRectangle::FVectorRectangle( double iWidth, double iHeight )
-    : FVectorObject("Rectangle")
+FVectorRectangle::FVectorRectangle( std::string iName, double iWidth, double iHeight )
+    : FVectorObject( iName )
     , mWidth( iWidth )
     , mHeight( iHeight )
 {
@@ -22,29 +22,31 @@ FVectorRectangle::FVectorRectangle( double iWidth, double iHeight )
 FVectorObject*
 FVectorRectangle::CopyShape()
 {
-    FVectorRectangle* rectangleCopy = new FVectorRectangle ( mWidth, mHeight );
+    FVectorRectangle* rectangleCopy = new FVectorRectangle ( mName, mWidth, mHeight );
 
     return static_cast<FVectorObject*>( rectangleCopy );
 }
 
 void
-FVectorRectangle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+FVectorRectangle::DrawShape( FRectD &iRoi, uint64 iFlags )
 {
-    iBLContext.setCompOp(BL_COMP_OP_SRC_COPY);
+    BLContext& blctx = FVectorEngine::GetBLContext();
+
+    blctx.setCompOp(BL_COMP_OP_SRC_COPY);
 
     if( mIsFilled )
     {
-        iBLContext.setFillStyle( BLRgba32( mFillColor ) );
-        iBLContext.fillRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
+        blctx.setFillStyle( BLRgba32( mFillColor ) );
+        blctx.fillRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
     }
 
-    iBLContext.setStrokeStyle ( BLRgba32( mStrokeColor ) );
-    iBLContext.setStrokeWidth ( mStrokeWidth );
-    iBLContext.strokeRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
+    blctx.setStrokeStyle ( BLRgba32( mStrokeColor ) );
+    blctx.setStrokeWidth ( mStrokeWidth );
+    blctx.strokeRoundRect( -mWidth * 0.5f, -mHeight * 0.5f, mWidth, mHeight, 0.0f, 0.0f );
 }
 
 FVectorObject*
-FVectorRectangle::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorRectangle::PickShape( double iX, double iY, double iRadius )
 {
     double x1 = - mWidth  * 0.5f;
     double y1 = - mHeight * 0.5f;

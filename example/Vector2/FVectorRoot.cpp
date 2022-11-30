@@ -5,11 +5,6 @@ FVectorRoot::~FVectorRoot()
 {
 }
 
-FVectorRoot::FVectorRoot()
-    : FVectorObject()
-{
-}
-
 FVectorRoot::FVectorRoot( std::string iName )
     : FVectorObject( iName )
 {
@@ -30,7 +25,7 @@ FVectorRoot::ClearSelection()
 }
 
 void
-FVectorRoot::Select( BLContext& iBLContext, FVectorObject& iVecObj )
+FVectorRoot::Select( FVectorObject& iVecObj )
 {
     if ( std::find( mSelectedObjectList.begin(), mSelectedObjectList.end(), &iVecObj ) == mSelectedObjectList.end())
     {
@@ -43,13 +38,13 @@ FVectorRoot::Select( BLContext& iBLContext, FVectorObject& iVecObj )
 FVectorObject*
 FVectorRoot::CopyShape()
 {
-    return new FVectorRoot();
+    return new FVectorRoot( mName );
 }
 
 void
-FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorRoot::Select( double iX, double iY, double iRadius )
 {
-    FVectorObject* pickedObject = RecursiveSelect( iBLContext, *this, iX, iY, iRadius );
+    FVectorObject* pickedObject = RecursiveSelect( *this, iX, iY, iRadius );
 
     if ( pickedObject )
     {
@@ -58,7 +53,7 @@ FVectorRoot::Select( BLContext& iBLContext, double iX, double iY, double iRadius
             pickedObject = pickedObject->GetParent();
         }
 
-        Select ( iBLContext, *pickedObject );
+        Select ( *pickedObject );
     }
 }
 
@@ -92,7 +87,7 @@ FVectorRoot::GroupSelectdObjects( )
     AppendChild ( group );
 
     group->Translate( averageTranslation.x, averageTranslation.y );
-    group->UpdateMatrix( blctx );
+    group->UpdateMatrix();
 
     while( objectList.size () )
     {
@@ -115,24 +110,25 @@ FVectorRoot::GroupSelectdObjects( )
 }
 
 void
-FVectorRoot::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorRoot::DrawShape( FRectD& iRoi, uint64 iFlags )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
+
     for( std::list<FVectorObject*>::iterator it = mSelectedObjectList.begin(); it != mSelectedObjectList.end(); ++it )
     {
         FVectorObject *obj = (*it);
         FRectD bbox = obj->GetBBox( false );
 
-        iBLContext.save();
-        iBLContext.setMatrix( obj->GetWorldMatrix() );
-        iBLContext.strokeRect( bbox.x, bbox.y, bbox.w, bbox.h );
-        iBLContext.restore();
+        blctx.save();
+        blctx.setMatrix( obj->GetWorldMatrix() );
+        blctx.strokeRect( bbox.x, bbox.y, bbox.w, bbox.h );
+        blctx.restore();
     }
 }
 
 void
 FVectorRoot::InvalidateObject( FVectorObject* iObject )
 {
-
     mInvalidatedObjectList.push_back( iObject );
 }
 
@@ -150,9 +146,9 @@ FVectorRoot::UpdateShape()
 }
 
 void
-FVectorRoot::Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillColor )
+FVectorRoot::Bucket( double iX, double iY, uint32 iFillColor )
 {
-    FVectorObject* pickedObject = RecursiveSelect( iBLContext, *this, iX, iY, 1.0f );
+    FVectorObject* pickedObject = RecursiveSelect( *this, iX, iY, 1.0f );
 
     if ( pickedObject )
     {
@@ -173,7 +169,7 @@ FVectorRoot::GetLastSelected()
 }
 
 FVectorObject*
-FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iObj, double iX, double iY, double iRadius )
+FVectorRoot::RecursiveSelect( FVectorObject& iObj, double iX, double iY, double iRadius )
 {
     BLMatrix2D inverseLocalMatrix;
     BLPoint localCoords;
@@ -193,7 +189,7 @@ FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iObj, double
         FVectorObject *child = (*it);
         FVectorObject* pickedChild = nullptr;
 
-        pickedChild = RecursiveSelect( iBLContext, *child, localCoords.x, localCoords.y, localRadius );
+        pickedChild = RecursiveSelect( *child, localCoords.x, localCoords.y, localRadius );
 
         if ( pickedChild )
         {
@@ -201,5 +197,5 @@ FVectorRoot::RecursiveSelect( BLContext& iBLContext, FVectorObject& iObj, double
         }
     }
 
-    return ( pickedObject ) ? pickedObject : iObj.Pick( iBLContext, localCoords.x, localCoords.y, localRadius );
+    return ( pickedObject ) ? pickedObject : iObj.Pick( localCoords.x, localCoords.y, localRadius );
 }

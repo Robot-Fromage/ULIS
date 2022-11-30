@@ -68,8 +68,7 @@ FVectorPathCubic::AppendPoint( FVectorPointCubic* iPoint
 }
 
 FVectorObject*
-FVectorPathCubic::PickShape( BLContext& iBLContext
-                           , double iX
+FVectorPathCubic::PickShape( double iX
                            , double iY
                            , double iRadius )
 {
@@ -110,7 +109,7 @@ FVectorPathCubic::PickShape( BLContext& iBLContext
         }
     }
 
-    return PickLoops( iBLContext, iX, iY, iRadius );
+    return PickLoops( iX, iY, iRadius );
 }
 
 bool
@@ -220,16 +219,15 @@ FVectorPathCubic::Cut( FVec2D& linePoint0
 }
 
 void
-FVectorPathCubic::Fill( FBlock& iBlock
-                      , BLContext& iBLContext
-                      , FRectD& iRoi )
+FVectorPathCubic::Fill( FRectD& iRoi )
 {
-    BLPath path;
     FVectorPointCubic *firstPoint = static_cast<FVectorPointCubic*>( GetFirstPoint() );
+    BLContext& blctx = FVectorEngine::GetBLContext();
+    BLPath path;
 
     if ( IsLoop() && firstPoint )
     {
-        iBLContext.setCompOp( BL_COMP_OP_SRC_COPY );
+        blctx.setCompOp( BL_COMP_OP_SRC_COPY );
         /*iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
         iBLContext.setStrokeStyle(BLRgba32(0xFF000000));*/
 
@@ -251,14 +249,15 @@ FVectorPathCubic::Fill( FBlock& iBlock
                         , point1.y );
         }
 
-        iBLContext.setFillStyle( BLRgba32( mFillColor ) );
-        iBLContext.fillPath( path );
+        blctx.setFillStyle( BLRgba32( mFillColor ) );
+        blctx.fillPath( path );
     }
 }
 
 void
-FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi )
+FVectorPathCubic::DrawStructure( FRectD& iRoi )
 {
+    BLContext& blctx = FVectorEngine::GetBLContext();
     BLPath path;
     FVectorPointCubic *firstPoint = static_cast<FVectorPointCubic*>( GetFirstPoint() );
     BLPoint localVector = mInverseWorldMatrix.mapVector ( 1.0f, 0.0f );
@@ -269,7 +268,7 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
 
     if ( firstPoint )
     {
-        iBLContext.setCompOp( BL_COMP_OP_SRC_COPY );
+        blctx.setCompOp( BL_COMP_OP_SRC_COPY );
         /*iBLContext.setFillStyle(BLRgba32(0xFFFFFFFF));
         iBLContext.setStrokeStyle(BLRgba32(0xFF000000));*/
 
@@ -301,15 +300,15 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
 */
         }
 
-        iBLContext.setStrokeStyle( BLRgba32( 0xFF00FF00 ) );
-        iBLContext.setStrokeWidth( zoomFactor );
-        iBLContext.strokePath( path );
+        blctx.setStrokeStyle( BLRgba32( 0xFF00FF00 ) );
+        blctx.setStrokeWidth( zoomFactor );
+        blctx.strokePath( path );
 
         for(std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it)
         {
             FVectorSegmentCubic *segment = static_cast<FVectorSegmentCubic*>(*it);
 
-            segment->DrawStructure( iBlock, iBLContext, iRoi, zoomFactor );
+            segment->DrawStructure( iRoi, zoomFactor );
         }
     }
 
@@ -323,55 +322,27 @@ FVectorPathCubic::DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD& 
         double ctrlX = ( perpendicular.x * pointRadius );
         double ctrlY = ( perpendicular.y * pointRadius );
 
-        iBLContext.setFillStyle( BLRgba32( 0xFFFF00FF ) );
-        iBLContext.fillRect( point->GetX() - handleHalfSize
-                           , point->GetY() - handleHalfSize
-                           , handleSize
-                           , handleSize );
+        blctx.setFillStyle( BLRgba32( 0xFFFF00FF ) );
+        blctx.fillRect( point->GetX() - handleHalfSize
+                      , point->GetY() - handleHalfSize
+                      , handleSize
+                      , handleSize );
 
-        iBLContext.setFillStyle( BLRgba32( 0xFF808080 ) );
-        iBLContext.fillRect( point->GetX() + ctrlX - handleHalfSize
-                           , point->GetY() + ctrlY - handleHalfSize
-                           , handleSize
-                           , handleSize );
+        blctx.setFillStyle( BLRgba32( 0xFF808080 ) );
+        blctx.fillRect( point->GetX() + ctrlX - handleHalfSize
+                      , point->GetY() + ctrlY - handleHalfSize
+                      , handleSize
+                      , handleSize );
 
-        iBLContext.fillRect( point->GetX() - ctrlX - handleHalfSize
-                           , point->GetY() - ctrlY - handleHalfSize
-                           , handleSize
-                           , handleSize );
+        blctx.fillRect( point->GetX() - ctrlX - handleHalfSize
+                      , point->GetY() - ctrlY - handleHalfSize
+                      , handleSize
+                      , handleSize );
     }
 }
-/*
-void
-FVectorPathCubic::DrawSegment( BLPath& iPath
-                             , FVectorSegmentCubic& iSegment
-                             , bool iIsStandalone )
-{
-    FVec2D& p0 = iSegment.GetPoint(0).GetCoords();
-    FVec2D& p1 = iSegment.GetPoint(1).GetCoords();
-    FVec2D& c0 = iSegment.GetControlPoint(0).GetCoords();
-    FVec2D& c1 = iSegment.GetControlPoint(1).GetCoords();
-    BLPoint point0 = { p0.x, p0.y };
-    BLPoint point1 = { p1.x, p1.y };
-    BLPoint ctrlPoint0 = { c0.x, c0.y };
-    BLPoint ctrlPoint1 = { c1.x, c1.y };
-
-    if ( iIsStandalone == true )
-    {
-        iPath.moveTo( point0.x, point0.y );
-    }
-
-    iPath.cubicTo( ctrlPoint0.x
-                 , ctrlPoint0.y
-                 , ctrlPoint1.x
-                 , ctrlPoint1.y
-                 , point1.x
-                 , point1.y );
-}
-*/
 
 void
-FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+FVectorPathCubic::DrawShape( FRectD &iRoi, uint64 iFlags )
 {
 /*
     BLPath path;
@@ -396,20 +367,20 @@ FVectorPathCubic::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi
 
     if ( IsFilled() )
     {
-        Fill( iBlock, iBLContext, iRoi );
+        Fill( iRoi );
     }
 
-    DrawLoops( iBlock, iBLContext, iRoi  );
+    DrawLoops( iRoi, iFlags  );
 
-    DrawShapeVariable( iBlock, iBLContext, iRoi );
+    DrawShapeVariable( iRoi, iFlags );
 
     if( mIsSelected )
     {
-        DrawStructure( iBlock, iBLContext, iRoi );
+        DrawStructure( iRoi );
     }
 /*
         iBLContext.setStrokeWidth( 6 );
-    DrawLoops( iBlock, iBLContext, iRoi  );
+    DrawLoops( iRoi  );
 */
 }
 
@@ -435,9 +406,7 @@ static bool intersectLine( FVec2D& iOrigin0
 }
 
 static void
-_drawMiterJoint( FBlock& iBlock
-               , BLContext& iBLContext
-               , FVec2D& iOrigin
+_drawMiterJoint( FVec2D& iOrigin
                , FVec2D& iPrevSegmentVector
                , FVec2D& iSegmentVector
                , double iRadius
@@ -452,6 +421,7 @@ _drawMiterJoint( FBlock& iBlock
     FVec2D shortestTest = edgePoint - edgePrevPoint;
     // have to clamp due to imprecision of the dot product
     double dot = std::clamp<double>( currPerpendicularVec.DotProduct( prevPerpendicularVec ), -1.0f, 1.0f );
+    BLContext& blctx = FVectorEngine::GetBLContext();
 
     FVec2D intersectionPoint;
 
@@ -467,7 +437,6 @@ _drawMiterJoint( FBlock& iBlock
         edgePrevPoint = iOrigin + ( prevPerpendicularVec * iRadius );
         edgePoint = iOrigin + ( currPerpendicularVec * iRadius );
     }
-
 
     if( iRadius )
     {
@@ -496,8 +465,8 @@ _drawMiterJoint( FBlock& iBlock
                 vertex[3].x = edgePrevPoint.x;
                 vertex[3].y = edgePrevPoint.y;
 
-                iBLContext.strokePolygon( vertex, 4 );
-                iBLContext.fillPolygon( vertex, 4 );
+                blctx.strokePolygon( vertex, 4 );
+                blctx.fillPolygon( vertex, 4 );
             }
             else
             {
@@ -517,17 +486,15 @@ _drawMiterJoint( FBlock& iBlock
                 vertex[4].x = edgePrevPoint.x;
                 vertex[4].y = edgePrevPoint.y;
 
-                iBLContext.strokePolygon( vertex, 5 );
-                iBLContext.fillPolygon( vertex, 5 );
+                blctx.strokePolygon( vertex, 5 );
+                blctx.fillPolygon( vertex, 5 );
             }
         }
     }
 }
 
 static void
-_drawRadialJoint( FBlock& iBlock
-                , BLContext& iBLContext
-                , FVec2D& iOrigin
+_drawRadialJoint( FVec2D& iOrigin
                 , FVec2D& iPrevSegmentVector
                 , FVec2D& iSegmentVector
                 , double iRadius
@@ -543,6 +510,7 @@ _drawRadialJoint( FBlock& iBlock
     double angle = acos( dot );
     double a = ( iSteps ) ? angle / iSteps : 0.0f;
     BLPoint vertex[3];
+    BLContext& blctx = FVectorEngine::GetBLContext();
 
     // Find on which side should the joint be drawn by comparing the directions of our vectors
     if ( shortestTest.DotProduct( iPrevSegmentVector ) < 0 )
@@ -573,17 +541,15 @@ _drawRadialJoint( FBlock& iBlock
         vertex[2].x = vertex[0].x + ( interpolatedVector.x * iRadius );
         vertex[2].y = vertex[0].y + ( interpolatedVector.y * iRadius );
 
-        iBLContext.strokePolygon( vertex , 3 );
-        iBLContext.fillPolygon( vertex, 3 );
+        blctx.strokePolygon( vertex , 3 );
+        blctx.fillPolygon( vertex, 3 );
 
         currPerpendicularVec = interpolatedVector;
     }
 }
 
 static void
-_drawLinearJoint( FBlock& iBlock
-                , BLContext& iBLContext
-                , FVec2D& iOrigin
+_drawLinearJoint( FVec2D& iOrigin
                 , FVec2D& iPrevSegmentVector
                 , FVec2D& iSegmentVector
                 , double iRadius )
@@ -593,7 +559,7 @@ _drawLinearJoint( FBlock& iBlock
     FVec2D edgePrevPoint = iOrigin + ( prevPerpendicularVec * iRadius );
     FVec2D edgePoint = iOrigin + ( currPerpendicularVec * iRadius );
     FVec2D shortestTest = edgePoint - edgePrevPoint;
-
+    BLContext& blctx = FVectorEngine::GetBLContext();
     BLPoint vertex[3];
 
     if ( shortestTest.DotProduct( iPrevSegmentVector ) < 0 )
@@ -615,14 +581,12 @@ _drawLinearJoint( FBlock& iBlock
     vertex[2].x = vertex[0].x + ( prevPerpendicularVec.x * iRadius );
     vertex[2].y = vertex[0].y + ( prevPerpendicularVec.y * iRadius );
 
-    iBLContext.strokePolygon( vertex, 3 );
-    iBLContext.fillPolygon( vertex, 3 );
+    blctx.strokePolygon( vertex, 3 );
+    blctx.fillPolygon( vertex, 3 );
 }
 
 void
-FVectorPathCubic::DrawJoint( FBlock& iBlock
-                           , BLContext& iBLContext
-                           , FVectorSegmentCubic* iPrevSegment
+FVectorPathCubic::DrawJoint( FVectorSegmentCubic* iPrevSegment
                            , FVectorSegmentCubic& iSegment
                            , double iRadius )
 {
@@ -643,15 +607,15 @@ FVectorPathCubic::DrawJoint( FBlock& iBlock
                 switch ( mJointType )
                 {
                     case JOINT_TYPE_LINEAR :
-                        _drawLinearJoint ( iBlock, iBLContext, origin, prevSegmentVector, segmentVector, iRadius );
+                        _drawLinearJoint ( origin, prevSegmentVector, segmentVector, iRadius );
                     break;
 
                     case JOINT_TYPE_MITER :
-                        _drawMiterJoint ( iBlock, iBLContext, origin, prevSegmentVector, segmentVector, iRadius, 4.0f );
+                        _drawMiterJoint ( origin, prevSegmentVector, segmentVector, iRadius, 4.0f );
                     break;
 
                     case JOINT_TYPE_RADIAL :
-                        _drawRadialJoint ( iBlock, iBLContext, origin, prevSegmentVector, segmentVector, iRadius, 24 );
+                        _drawRadialJoint ( origin, prevSegmentVector, segmentVector, iRadius, 24 );
                     break;
 
                     default:
@@ -663,16 +627,14 @@ FVectorPathCubic::DrawJoint( FBlock& iBlock
 }
 
 void
-FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+FVectorPathCubic::DrawShapeVariable( FRectD &iRoi, uint64 iFlags )
 {
-    double mStartRadius = 10.0f;
-    double mEndRadius = 0.0f;
-
-    iBLContext.setCompOp( BL_COMP_OP_SRC_OVER );
+    BLContext& blctx = FVectorEngine::GetBLContext();
+    blctx.setCompOp( BL_COMP_OP_SRC_OVER );
 
     // We fill with stroke color because our curve is made of filled shapes.
-    iBLContext.setFillStyle(BLRgba32(mStrokeColor));
-    iBLContext.setStrokeStyle(BLRgba32(mStrokeColor));
+    blctx.setFillStyle(BLRgba32(mStrokeColor));
+    blctx.setStrokeStyle(BLRgba32(mStrokeColor));
 
     if( mSegmentList.size() )
     {
@@ -685,15 +647,12 @@ FVectorPathCubic::DrawShapeVariable( FBlock& iBlock, BLContext& iBLContext, FRec
 
             if( ( iRoi.Area() == 0.0f ) || clip.Area() )
             {
-                segment->Draw( iBlock, iBLContext, iRoi );
+                segment->Draw( iRoi );
             }
-
 
             if ( prevSegment )
             {
-                DrawJoint( iBlock
-                         , iBLContext
-                         , prevSegment
+                DrawJoint( prevSegment
                          , *segment
                          , segmentStartRadius );
             }
@@ -742,7 +701,7 @@ FVectorPathCubic::CopyShape()
 
         lookupTable.insert( std::make_pair( originalPoint, newPoint ) );
 
-        cubicPathCopy->mPointList.push_back ( newPoint );
+        cubicPathCopy->AddPoint( newPoint );
     }
 
     for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
@@ -750,7 +709,7 @@ FVectorPathCubic::CopyShape()
         FVectorSegmentCubic* originalSegment = static_cast<FVectorSegmentCubic*>(*it);
         FVectorPointCubic* point0 = static_cast<FVectorPointCubic*>( originalSegment->GetPoint(0) );
         FVectorPointCubic* point1 = static_cast<FVectorPointCubic*>( originalSegment->GetPoint(1) );
-        FVectorSegmentCubic* newSegment = new FVectorSegmentCubic( *this
+        FVectorSegmentCubic* newSegment = new FVectorSegmentCubic( *cubicPathCopy
                                                                  , lookupTable[point0]
                                                                  , originalSegment->GetControlPoint(0).GetX()
                                                                  , originalSegment->GetControlPoint(0).GetY()

@@ -11,8 +11,8 @@ class FVectorPath : public FVectorObject
 {
     private:
         void UpdateShape();
-        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
+        virtual void DrawShape( FRectD &iRoi, uint64 iFlags );
+        FVectorObject* PickShape( double iX, double iY, double iRadius ) { return nullptr; };
         FVectorObject* CopyShape();
 
     protected :
@@ -36,10 +36,10 @@ class FVectorPath : public FVectorObject
         void RemoveSegment(FVectorSegment* iSegment);
         void AddPoint( FVectorPoint* iPoint );
         virtual FVectorSegment* AppendPoint( FVectorPoint* iPoint, FVectorPoint* iPreviousPoint );
-        FVectorObject* PickLoops(BLContext& iBLContext,double iX,double iY,double iRadius);
-        void DrawLoops( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        FVectorObject* PickLoops( double iX, double iY, double iRadius );
+        void DrawLoops( FRectD &iRoi, uint64 iFlags );
 
-        virtual void DrawStructure( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
+        virtual void DrawStructure( FRectD &iRoi );
 
         /*virtual void InsertPoint( FVectorSegment* iSegment, FVectorPoint* iPoint );*/
         std::list<FVectorSegment*>& GetSegmentList();

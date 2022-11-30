@@ -11,8 +11,8 @@
 class FVectorCircle : public FVectorPathCubic
 {
     private:
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius );
+        void DrawShape( FRectD &iRoi, uint64 iFlags );
+        FVectorObject* PickShape( double iX, double iY, double iRadius );
         void UpdateShape();
  
         FVectorPointCubic* mCubicPoint[4];

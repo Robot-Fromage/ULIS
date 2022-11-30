@@ -80,7 +80,7 @@ FVectorCircle::UpdateShape()
 FVectorObject*
 FVectorCircle::CopyShape()
 {
-    FVectorCircle* circleCopy = new FVectorCircle ( circleCopy->mName, mRadiusX, mRadiusY );
+    FVectorCircle* circleCopy = new FVectorCircle ( mName, mRadiusX, mRadiusY );
 
     return static_cast<FVectorObject*>( circleCopy );
 }
@@ -88,20 +88,24 @@ FVectorCircle::CopyShape()
 FVectorPathCubic*
 FVectorCircle::Convert()
 {
-    return static_cast<FVectorPathCubic*>(this->Copy());
+    FVectorPathCubic* path = static_cast<FVectorPathCubic*>(this->FVectorPathCubic::CopyShape());
+
+    this->CopySettings( *path );
+
+    return path;
 }
 
 void
-FVectorCircle::DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &iRoi )
+FVectorCircle::DrawShape( FRectD &iRoi, uint64 iFlags )
 {
     if ( mRadiusX && mRadiusY )
     {
-        FVectorPathCubic::DrawShape ( iBlock, iBLContext, iRoi );
+        FVectorPathCubic::DrawShape ( iRoi, iFlags );
     }
 }
 
 FVectorObject*
-FVectorCircle::PickShape( BLContext& iBLContext, double iX, double iY, double iRadius )
+FVectorCircle::PickShape( double iX, double iY, double iRadius )
 {
     if( FMath::Sqrt((iX*iX) + (iY*iY)) <= mRadiusX )
     {

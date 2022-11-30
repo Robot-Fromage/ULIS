@@ -10,7 +10,7 @@
 class FVectorRoot : public FVectorObject
 {
     private:
-        FVectorObject* RecursiveSelect( BLContext& iBLContext, FVectorObject& iChild, double x, double y, double iRadius );
+        FVectorObject* RecursiveSelect( FVectorObject& iObj, double x, double y, double iRadius );
         void UpdateShape();
         FVectorObject* CopyShape();
 
@@ -20,16 +20,15 @@ class FVectorRoot : public FVectorObject
 
     public:
         ~FVectorRoot();
-        FVectorRoot();
         FVectorRoot( std::string iName );
-        void Select( BLContext& iBLContext, double x, double y, double iRadius );
-        void Select( BLContext& iBLContext, FVectorObject& iVecObj );
+        void Select( double x, double y, double iRadius );
+        void Select( FVectorObject& iVecObj );
         void ClearSelection();
         FVectorObject* GetLastSelected();
-        void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi );
-        FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) { return nullptr; };
+        void DrawShape( FRectD& iRoi, uint64 iFlags );
+        FVectorObject* PickShape( double iX, double iY, double iRadius ) { return nullptr; };
 
-        void Bucket( BLContext& iBLContext, double iX, double iY, uint32 iFillColor );
+        void Bucket( double iX, double iY, uint32 iFillColor );
         void InvalidateObject( FVectorObject* iObject );
 
         FVectorGroup* GroupSelectdObjects();

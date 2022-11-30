@@ -397,8 +397,8 @@ printf("path already exists\n");
 
 #ifdef ORIGINAL_VERSION
 void
-FVectorPoint::March( FVectorPointIntersection&  iInitiatorPoint
-                   , FVectorSegment&       iCurrentSegment )
+FVectorPoint::March( FVectorPointIntersection& iInitiatorPoint
+                   , FVectorSegment& iCurrentSegment )
 {
     static std::list<FVectorPoint*> loopPointList;
     static std::list<uintptr_t> iSegmentIDList;
@@ -474,6 +474,22 @@ FVectorPoint::GetSegment( FVectorPoint& iOtherPoint )
 
         if ( ( ( segment->GetPoint(0) == this ) && ( segment->GetPoint(1) == &iOtherPoint ) ) 
           || ( ( segment->GetPoint(1) == this ) && ( segment->GetPoint(0) == &iOtherPoint ) ) )
+        {
+            return segment;
+        }
+    }
+
+    return nullptr;
+}
+
+FVectorSegment*
+FVectorPoint::GetOtherSegment( FVectorSegment& iCurrentSegment )
+{
+    for( std::list<FVectorSegment*>::iterator it = mSegmentList.begin(); it != mSegmentList.end(); ++it )
+    {
+        FVectorSegment* segment = static_cast<FVectorSegment*>(*it);
+
+        if ( segment != &iCurrentSegment )
         {
             return segment;
         }

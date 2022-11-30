@@ -38,13 +38,13 @@ class FVectorObject
         virtual void UpdateShape() = 0;
         virtual FVectorObject* Copy() final ; // cannot be overridden
         virtual FVectorObject* CopyShape() = 0;
-        virtual void Draw( FBlock& iBlock, BLContext& iBLContext, FRectD& iRoi ) final; // cannot be overridden
-        virtual void DrawShape( FBlock& iBlock, BLContext& iBLContext, FRectD &roi ) = 0;
-        virtual FVectorObject* Pick( BLContext& iBLContext, double iX, double iY, double iRadius ) final; // cannot be overridden
-        virtual FVectorObject* PickShape( BLContext& iBLContext, double iX, double iY, double iRadius ) = 0;
+        virtual void Draw( FRectD& iRoi, uint64 iFlags ) final; // cannot be overridden
+        virtual void DrawShape( FRectD &roi, uint64 iFlags ) = 0;
+        virtual FVectorObject* Pick( double iX, double iY, double iRadius ) final; // cannot be overridden
+        virtual FVectorObject* PickShape( double iX, double iY, double iRadius ) = 0;
         /*virtual void UpdateBoundingBox() = 0;*/
-        void DrawChildren( FBlock& iBlock,BLContext& iBLContext, FRectD& iRoi );
-        void UpdateMatrix( BLContext& iBLContext );
+        void DrawChildren( FRectD& iRoi, uint64 iFlags );
+        void UpdateMatrix( );
         void Translate( double iX, double iY );
         void Rotate( double iAngle );
         void Scale( double iX, double iY );
